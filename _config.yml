@@ -197,6 +197,9 @@ jekyll-archives:
     tag: /tags/:name/
     category: /categories/:name/
 
+plugins:
+  - jemoji
+
 sitemap:
   filename: "/sitemap.xml"
   exclude:
