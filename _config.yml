@@ -199,14 +199,3 @@ jekyll-archives:
 
 plugins:
   - jemoji
-
-sitemap:
-  filename: "/sitemap.xml"
-  exclude:
-    - "/atom.xml"
-    - "/feed.xml"
-    - "/feed/index.xml"
-  include_posts:
-    - "/index.html"
-  change_frequency: "weekly"
-  priority_name: "0.5"
