@@ -199,3 +199,4 @@ jekyll-archives:
 
 plugins:
   - jemoji
+  - jekyll-sitemap
