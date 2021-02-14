@@ -1,7 +1,7 @@
 ---
 title: queue.h の list を使う
 author: SuzumiyaAoba
-date: 2020-01-12 00:00:00 +0800
+date: 2021-01-12 00:00:00 +0800
 categories: [Programming, C言語, glibc]
 tags: [C言語, Programming]
 math: true

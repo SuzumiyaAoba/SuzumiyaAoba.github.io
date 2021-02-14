@@ -1,7 +1,7 @@
 ---
 title: ArrayListを読んでみる
 author: SuzumiyaAoba
-date: 2020-01-11 00:43:00 +0800
+date: 2021-01-11 00:43:00 +0800
 categories: [Programming, Code Reading]
 tags: [Java]
 math: true

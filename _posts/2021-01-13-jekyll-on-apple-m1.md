@@ -1,7 +1,7 @@
 ---
 title: Apple M1 で Jekyll を実行するまで
 author: SuzumiyaAoba
-date: 2020-01-13 00:19:00 +0800
+date: 2021-01-13 00:19:00 +0800
 categories: [Blog, Jekyll]
 tags: [Jekyll, Apple M1, メモ]
 math: true
