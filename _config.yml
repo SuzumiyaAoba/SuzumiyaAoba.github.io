@@ -7,12 +7,12 @@
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # --------------------------
-title: far beyond the
+title: 猫でもわかるプログラミング
 
-tagline: プログラミングのこととか.  # it will display as the sub-title
+tagline: ネコと和解せよ  # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  灯台だったのかわれ…
+  心からネコを信じなさい
 
 # fill in the base hostname & protocol for your site, e.g., 'https://username.github.io'
 url: 'https://suzumiyaaoba.github.io'
