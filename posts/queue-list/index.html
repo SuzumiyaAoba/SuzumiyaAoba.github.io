@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en" mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="theme" content="Chirpy v2.7.2"><meta name="generator" content="Jekyll v4.2.0" /><meta property="og:title" content="queue.h の list を使う" /><meta name="author" content="SuzumiyaAoba" /><meta property="og:locale" content="en_US" /><meta name="description" content="glibc の queue.h にある list を使ってみる。 glibc の関数やマクロって実際のところC言語での開発でどの程度使われているのだろうか…" /><meta property="og:description" content="glibc の queue.h にある list を使ってみる。 glibc の関数やマクロって実際のところC言語での開発でどの程度使われているのだろうか…" /><link rel="canonical" href="https://suzumiyaaoba.github.io/posts/queue-list/" /><meta property="og:url" content="https://suzumiyaaoba.github.io/posts/queue-list/" /><meta property="og:site_name" content="猫でもわかるプログラミング" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-12T01:00:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="queue.h の list を使う" /><meta name="twitter:site" content="@SuzumiyaAoba" /><meta name="twitter:creator" content="@SuzumiyaAoba" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"description":"glibc の queue.h にある list を使ってみる。 glibc の関数やマクロって実際のところC言語での開発でどの程度使われているのだろうか…","url":"https://suzumiyaaoba.github.io/posts/queue-list/","headline":"queue.h の list を使う","dateModified":"2021-01-12T01:00:00+09:00","@type":"BlogPosting","datePublished":"2021-01-12T01:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://suzumiyaaoba.github.io/posts/queue-list/"},"author":{"@type":"Person","name":"SuzumiyaAoba"},"@context":"https://schema.org"}</script><title>queue.h の list を使う | 猫でもわかるプログラミング</title><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon.png"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon-precomposed.png"><link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-icon-180x180.png"><link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicons/android-icon-192x192.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/manifest.json"><meta name='msapplication-config' content='/assets/img/favicons/browserconfig.xml'><meta name="msapplication-TileColor" content="#ffffff"><meta name="msapplication-TileImage" content="/assets/img/favicons/ms-icon-144x144.png"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="cdn.jsdelivr.net"><link rel="dns-prefetch" href="cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous"><link rel="preload" href="/assets/css/post.css" as="style"><link rel="stylesheet" href="/assets/css/post.css"><link rel="preload" as="style" href="/assets/css/lib/bootstrap-toc.min.css"><link rel="stylesheet" href="/assets/css/lib/bootstrap-toc.min.css" /> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="/assets/js/post.min.js"></script> <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script> <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-114727689-7"></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-114727689-7'); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="/assets/img/avatar.jpg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">猫でもわかるプログラミング</a></div><div class="site-subtitle font-italic">ネコと和解せよ</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/tabs/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tabs/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/tabs/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/tabs/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/SuzumiyaAoba" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href="https://twitter.com/SuzumiyaAoba" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['example','doamin.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Posts </a> </span> <span>queue.h の list を使う</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>queue.h の list を使う</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Tue, Jan 12, 2021, 1:00 AM +0900" > Jan 12 <i class="unloaded">2021-01-12T01:00:00+09:00</i> </span> by <span class="author"> SuzumiyaAoba </span></div><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1828 words">10 min</span></div></div><div class="post-content"><p>glibc の queue.h にある list を使ってみる。 glibc の関数やマクロって実際のところC言語での開発でどの程度使われているのだろうか…</p><p>queue.h には lists, singly linked lists, simple queues, tail queues, circular queues の 5つのデータ構造が定義されている。 中身を見るとわかるけど全てマクロで定義されていてこれがC言語のやり方か、と思った。 どの言語でも習熟度によって結果として同じことをするコードでも書き方に違いが出るが、 自身のC言語に対する知識の無さが自覚できた。</p><h2 id="バージョン">バージョン</h2><p>弱いエンジニアなので Apple M1 で glibc を使う方法がわからなかったので仕方なく実装では BSD libc を使うことにする。</p><ul><li><a href="https://github.com/freebsd/freebsd-src/blob/098dbd7ff7f3da9dda03802cdb2d8755f816eada/sys/sys/queue.h">queue.h</a></ul><p>記事内のコードの説明では GNU libc のコードを用いる。リストの実装なんて対して変わらんやろ (適当)。</p><h2 id="list-の定義">List の定義</h2><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+</pre><td class="rouge-code"><pre><span class="cm">/*
+ * List definitions.
+ */</span>
+<span class="cp">#define        LIST_HEAD(name, type)                                                \
+struct name {                                                                \
+        struct type *lh_first;        </span><span class="cm">/* first element */</span><span class="cp">                        \
+}
+</span> 
+<span class="cp">#define        LIST_HEAD_INITIALIZER(head)                                        \
+        { NULL }
+</span> 
+<span class="cp">#define        LIST_ENTRY(type)                                                \
+struct {                                                                \
+        struct type *le_next;        </span><span class="cm">/* next element */</span><span class="cp">                        \
+        struct type **le_prev;        </span><span class="cm">/* address of previous next element */</span><span class="cp">        \
+}
+</span> 
+<span class="cm">/*
+ * List functions.
+ */</span>
+<span class="cp">#define        LIST_INIT(head) do {                                                \
+        (head)-&gt;lh_first = NULL;                                        \
+} while (</span><span class="cm">/*CONSTCOND*/</span><span class="cp">0)
+</span> 
+<span class="cp">#define        LIST_INSERT_AFTER(listelm, elm, field) do {                        \
+        if (((elm)-&gt;field.le_next = (listelm)-&gt;field.le_next) != NULL)        \
+                (listelm)-&gt;field.le_next-&gt;field.le_prev =                \
+                    &amp;(elm)-&gt;field.le_next;                                \
+        (listelm)-&gt;field.le_next = (elm);                                \
+        (elm)-&gt;field.le_prev = &amp;(listelm)-&gt;field.le_next;                \
+} while (</span><span class="cm">/*CONSTCOND*/</span><span class="cp">0)
+</span> 
+<span class="cp">#define        LIST_INSERT_BEFORE(listelm, elm, field) do {                        \
+        (elm)-&gt;field.le_prev = (listelm)-&gt;field.le_prev;                \
+        (elm)-&gt;field.le_next = (listelm);                                \
+        *(listelm)-&gt;field.le_prev = (elm);                                \
+        (listelm)-&gt;field.le_prev = &amp;(elm)-&gt;field.le_next;                \
+} while (</span><span class="cm">/*CONSTCOND*/</span><span class="cp">0)
+</span> 
+<span class="cp">#define        LIST_INSERT_HEAD(head, elm, field) do {                                \
+        if (((elm)-&gt;field.le_next = (head)-&gt;lh_first) != NULL)                \
+                (head)-&gt;lh_first-&gt;field.le_prev = &amp;(elm)-&gt;field.le_next;\
+        (head)-&gt;lh_first = (elm);                                        \
+        (elm)-&gt;field.le_prev = &amp;(head)-&gt;lh_first;                        \
+} while (</span><span class="cm">/*CONSTCOND*/</span><span class="cp">0)
+</span> 
+<span class="cp">#define        LIST_REMOVE(elm, field) do {                                        \
+        if ((elm)-&gt;field.le_next != NULL)                                \
+                (elm)-&gt;field.le_next-&gt;field.le_prev =                         \
+                    (elm)-&gt;field.le_prev;                                \
+        *(elm)-&gt;field.le_prev = (elm)-&gt;field.le_next;                        \
+} while (</span><span class="cm">/*CONSTCOND*/</span><span class="cp">0)
+</span> 
+<span class="cp">#define        LIST_FOREACH(var, head, field)                                        \
+        for ((var) = ((head)-&gt;lh_first);                                \
+                (var);                                                        \
+                (var) = ((var)-&gt;field.le_next))
+</span> 
+<span class="cm">/*
+ * List access methods.
+ */</span>
+<span class="cp">#define        LIST_EMPTY(head)                ((head)-&gt;lh_first == NULL)
+#define        LIST_FIRST(head)                ((head)-&gt;lh_first)
+#define        LIST_NEXT(elm, field)                ((elm)-&gt;field.le_next)
+</span></pre></table></code></div></div><p>この list の実装については、最近 Gigazine の<a href="https://gigazine.net/news/20201208-linked-list-good-taste/">記事</a>で紹介されていた。 ここで用意されている操作は以下の 9 つ。</p><ul><li><code class="language-plaintext highlighter-rouge">LIST_INIT</code><li><code class="language-plaintext highlighter-rouge">LIST_INSERT_AFTER</code><li><code class="language-plaintext highlighter-rouge">LIST_INSERT_BEFORE</code><li><code class="language-plaintext highlighter-rouge">LIST_INSERT_HEAD</code><li><code class="language-plaintext highlighter-rouge">LIST_REMOVE</code><li><code class="language-plaintext highlighter-rouge">LIST_FOREACH</code><li><code class="language-plaintext highlighter-rouge">LIST_EMPTY</code><li><code class="language-plaintext highlighter-rouge">LIST_FIRST</code><li><code class="language-plaintext highlighter-rouge">LIST_NEXT</code></ul><p>BSD libc ではより多くの操作を提供しているようだ (<a href="https://github.com/freebsd/freebsd-src/blob/098dbd7ff7f3da9dda03802cdb2d8755f816eada/sys/sys/queue.h#L440-L612">該当コード</a>)。 GNU libc の中身を確認してから余裕があればこちらも見ていこうと思う。</p><p>マクロとポインタにある程度慣れている人ならば直ぐにコードを理解できると思うが、ここでは少しずつコードを紐解いていく。 このコードを見ただけだと使い方が想像し難いので list を使う例を示そう。</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre><td class="rouge-code"><pre><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="cp">#include &lt;sys/queue.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">Integer</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+  <span class="n">LIST_ENTRY</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span> <span class="n">entries</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">LIST_HEAD</span><span class="p">(</span><span class="n">IntegerListHead</span><span class="p">,</span> <span class="n">Integer</span><span class="p">)</span> <span class="n">head</span><span class="p">;</span>
+  
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>list で用いるために必要な <code class="language-plaintext highlighter-rouge">struct</code> の定義や <code class="language-plaintext highlighter-rouge">HEAD</code> の変数宣言までを行うと上記のようなコードになる (<code class="language-plaintext highlighter-rouge">#include &lt;sys/queue.h&gt;</code> では BSD libc を読み込んでいるが GNU libc と中身が同じことは確認済み)。 ここでは、list の要素として <code class="language-plaintext highlighter-rouge">Integer</code> を用いる。<code class="language-plaintext highlighter-rouge">Integer</code> はメンバとして <code class="language-plaintext highlighter-rouge">int</code> 型の変数 <code class="language-plaintext highlighter-rouge">data</code> と <code class="language-plaintext highlighter-rouge">LIST_ENTRY(Integer)</code> 型の変数 <code class="language-plaintext highlighter-rouge">entries</code> を持つ。 <code class="language-plaintext highlighter-rouge">LIST_ENTRY(Integer)</code> を展開すると以下のような構造体になっている。</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="k">struct</span> <span class="p">{</span>
+  <span class="k">struct</span> <span class="n">Integer</span> <span class="o">*</span><span class="n">le_next</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">Integer</span> <span class="o">**</span><span class="n">le_prev</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">le_next</code> と <code class="language-plaintext highlighter-rouge">le_prev</code> にどのような値が入るかは後々見ていくので今は気にしなくてよい。 上記からマクロ展開後の <code class="language-plaintext highlighter-rouge">Integer</code> は、</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="k">struct</span> <span class="n">Integer</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Integer</span> <span class="o">*</span><span class="n">le_next</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">Integer</span> <span class="o">**</span><span class="n">le_prev</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">entries</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>であることがわかる。 次に <code class="language-plaintext highlighter-rouge">main</code> 関数を見ると、</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre>  <span class="n">LIST_HEAD</span><span class="p">(</span><span class="n">IntegerListHead</span><span class="p">,</span> <span class="n">Integer</span><span class="p">)</span> <span class="n">head</span><span class="p">;</span>
+</pre></table></code></div></div><p>とあるのでこちらもマクロを展開すると、</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre>  <span class="k">struct</span> <span class="n">IntegerListHead</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">Integer</span> <span class="o">*</span><span class="n">lh_first</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">head</span><span class="p">;</span>
+</pre></table></code></div></div><p>となる。 ここまで見れば list のデータ構造がどのようなものか理解できる。</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre>+-----------------+    +------------+
+| IntegerListHead |    | Integer    |
++-----------------+    +------------+
+| lh_first -------+---&gt;| le_next ---+---&gt; NULL
+| ^               |    | le_prev -+ |
++-+---------------+    | data     | |
+  |                    +----------+-+
+  |                               |
+  +-------------------------------+
+</pre></table></code></div></div><p>下手なアスキーアートになっているが、要素が一つの場合に各変数の値の関係は上記の図のようになっているのだろう (<code class="language-plaintext highlighter-rouge">Integer</code> のメンバ <code class="language-plaintext highlighter-rouge">entities</code> は図を単純にする都合上から平坦化されている)。 このリストの末尾に要素を一つ追加すると、上図の <code class="language-plaintext highlighter-rouge">le_next</code> には追加された <code class="language-plaintext highlighter-rouge">Integer</code> 型の変数のポインタを入れてやり、 末尾に追加される要素の <code class="language-plaintext highlighter-rouge">le_prev</code> には上図の <code class="language-plaintext highlighter-rouge">le_next</code> 変数のポインタを入れてやれば上手いこと繋がる。 doubly linked list を実装したことがある人は、この説明だけで最初に載せたコードを理解できると思う。</p><blockquote><p>A list is headed by a single forward pointer (or an array of forward pointers for a hash table header). The elements are doubly linked so that an arbitrary element can be removed without a need to traverse the list. New elements can be added to the list before or after an existing element or at the head of the list. A list may be traversed in either direction.</p></blockquote><p>そういうこと。 あとは Gigazine の<a href="https://gigazine.net/news/20201208-linked-list-good-taste/">記事</a>読めばわかる。</p><p>最後に動作を見るために書いたコードだけ載せて終わり。 かなり雑な記事になってしまったなぁ…。 今どき glibc の使い方わからん〜〜〜とか言って list の使い方調べる人なんておらんでしょ (確信)。</p><p>list 以外のデータ構造についても同じような調子でマクロだけで書かれてる。 使い方も list と同じような感じ。 正直なところ list, Singly-linked List は使い勝手が悪いし、使い所が限られているように思えた。 実際にどこかで使われているのだろうか…</p><div class="language-c highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+</pre><td class="rouge-code"><pre><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="cp">#include &lt;sys/queue.h&gt;
+</span>
+<span class="cp">#define BOOL_STRING(bool) ((bool) ? "true" : "false")
+</span>
+<span class="k">struct</span> <span class="n">Integer</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+  <span class="n">LIST_ENTRY</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span> <span class="n">entries</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">print_int</span><span class="p">(</span><span class="k">struct</span> <span class="n">Integer</span> <span class="o">*</span><span class="n">integer</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Integer {</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"  data = %d;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">integer</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"  entries {</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"    le_next = %p;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">integer</span><span class="o">-&gt;</span><span class="n">entries</span><span class="p">.</span><span class="n">le_next</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"    &amp;le_next = %p;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">integer</span><span class="o">-&gt;</span><span class="n">entries</span><span class="p">.</span><span class="n">le_next</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"    le_prev = %p;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">integer</span><span class="o">-&gt;</span><span class="n">entries</span><span class="p">.</span><span class="n">le_prev</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"  };</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"};</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">LIST_HEAD</span><span class="p">(</span><span class="n">IntListHead</span><span class="p">,</span> <span class="n">Integer</span><span class="p">)</span> <span class="n">head</span><span class="p">;</span>
+  <span class="k">struct</span> <span class="n">Integer</span> <span class="o">*</span><span class="n">n1</span><span class="p">,</span> <span class="o">*</span><span class="n">n2</span><span class="p">,</span> <span class="o">*</span><span class="n">np</span><span class="p">;</span>
+
+  <span class="n">LIST_INIT</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">);</span>
+
+  <span class="n">n1</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">Integer</span><span class="p">));</span>
+  <span class="n">n1</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">LIST_INSERT_HEAD</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">entries</span><span class="p">);</span>
+
+  <span class="n">LIST_FOREACH</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">np</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="n">n2</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">Integer</span><span class="p">));</span>
+  <span class="n">n2</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">LIST_INSERT_AFTER</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">entries</span><span class="p">);</span>
+
+  <span class="n">LIST_FOREACH</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">head</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">np</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">"list is empty: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">BOOL_STRING</span><span class="p">(</span><span class="n">LIST_EMPTY</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">)));</span>
+
+  <span class="n">LIST_REMOVE</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">entries</span><span class="p">);</span>
+  <span class="n">LIST_REMOVE</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">entries</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">"list is empty: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">BOOL_STRING</span><span class="p">(</span><span class="n">LIST_EMPTY</span><span class="p">(</span><span class="o">&amp;</span><span class="n">head</span><span class="p">)));</span>
+
+  <span class="n">free</span><span class="p">(</span><span class="n">n1</span><span class="p">);</span>
+  <span class="n">free</span><span class="p">(</span><span class="n">n2</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/programming/'>Programming</a>, <a href='/categories/c%E8%A8%80%E8%AA%9E/'>C言語</a>, <a href='/categories/glibc/'>glibc</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/c%E8%A8%80%E8%AA%9E/" class="post-tag no-text-decoration" >C言語</a> <a href="/tags/programming/" class="post-tag no-text-decoration" >Programming</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=queue.h の list を使う - 猫でもわかるプログラミング&url=https://suzumiyaaoba.github.io/posts/queue-list/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=queue.h の list を使う - 猫でもわかるプログラミング&u=https://suzumiyaaoba.github.io/posts/queue-list/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=queue.h の list を使う - 猫でもわかるプログラミング&url=https://suzumiyaaoba.github.io/posts/queue-list/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/apple-m1/">Apple M1</a> <a class="post-tag" href="/tags/c%E8%A8%80%E8%AA%9E/">C言語</a> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/jekyll/">Jekyll</a> <a class="post-tag" href="/tags/programming/">Programming</a> <a class="post-tag" href="/tags/typography/">typography</a> <a class="post-tag" href="/tags/%E3%83%A1%E3%83%A2/">メモ</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/read-ArrayList/"><div class="card-body"> <span class="timeago small" > Jan 11 <i class="unloaded">2021-01-11T01:43:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>ArrayListを読んでみる</h3><div class="text-muted small"><p> 最近、少しばかりC言語を書いているがC言語では何でも自分できる (書く) 反面、 どのように実装するのがベストプラクティスなのかわからないことが多い。 これは普段C言語を書いていないことが原因なのと、標準ライブラリは glibc が どの程度のことを提供しているライブラリなのか知らないのが大きいのかもしれない。 そこで、業務で使っているJavaの知識を身に付けつつそれらしいコードを書くため...</p></div></div></a></div><div class="card"> <a href="/posts/jekyll-on-apple-m1/"><div class="card-body"> <span class="timeago small" > Jan 13 <i class="unloaded">2021-01-13T01:19:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Apple M1 で Jekyll を実行するまで</h3><div class="text-muted small"><p> このブログは Jekyll を使って生成しているが、ここまでの記事はローカルでのプレビューを行わずに書いてきた。 流石に不便だったのでローカルで実行する環境を整えたのでそのメモ。 この記事は 2020/01/13 現在におけるものです。この問題は恐らく時間が解決してくれます。 環境 正攻法 macOS を使っていて Homebrew をインストールしていない人はいないはず。 Ho...</p></div></div></a></div><div class="card"> <a href="/posts/first/"><div class="card-body"> <span class="timeago small" > Aug 8, 2019 <i class="unloaded">2019-08-08T12:33:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Text and Typography</h3><div class="text-muted small"><p> This post is to show Markdown syntax rendering on Chirpy, you can also use it as an example of writing. Now, let’s start looking at text and typography. Titles H1 - heading H2 - heading H3 - h...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/read-ArrayList/" class="btn btn-outline-primary"><p>ArrayListを読んでみる</p></a> <a href="/posts/jekyll-on-apple-m1/" class="btn btn-outline-primary"><p>Apple M1 で Jekyll を実行するまで</p></a></div><div id="disqus" class="pt-2 pb-2"><p class="font-italic text-center text-muted small"> Comments powered by <a href="https://disqus.com/">Disqus</a>.</p></div><script src="/assets/js/lib/jquery.disqusloader.min.js"></script> <script> var options = { scriptUrl: '//fix-f-f-fix-f.disqus.com/embed.js', disqusConfig: function() { this.page.url = 'https://suzumiyaaoba.github.io/posts/queue-list/'; this.page.identifier = '/posts/queue-list/'; } }; $.disqusLoader('#disqus', options); </script></div></div></div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script> <script type="text/javascript"> const imgs = document.querySelectorAll('#post-wrapper img'); const observer = lozad(imgs); observer.observe(); </script><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2021 <a href="https://twitter.com/SuzumiyaAoba">SuzumiyaAoba</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy/" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-xl-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/apple-m1/">Apple M1</a> <a class="post-tag" href="/tags/c%E8%A8%80%E8%AA%9E/">C言語</a> <a class="post-tag" href="/tags/java/">Java</a> <a class="post-tag" href="/tags/jekyll/">Jekyll</a> <a class="post-tag" href="/tags/programming/">Programming</a> <a class="post-tag" href="/tags/typography/">typography</a> <a class="post-tag" href="/tags/%E3%83%A1%E3%83%A2/">メモ</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script> <script> $(function() { let initTheme = "default"; if ($("html[mode=dark]").length > 0 || ($("html[mode]").length == 0 && window.matchMedia("(prefers-color-scheme: dark)").matches ) ) { initTheme = "dark"; } let mermaidConf = { theme: initTheme /* <default|dark|forest|neutral> */ }; /* Markdown converts to HTML */ $("pre").has("code.language-mermaid").each(function() { let svgCode = $(this).children().html(); $(this).addClass("unloaded"); $(this).after(`<div class=\"mermaid\">${svgCode}</div>`); }); mermaid.initialize(mermaidConf); }); </script><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://suzumiyaaoba.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"><div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>{categories}</div><div><i class="fa fa-tag fa-fw"></i>{tags}</div></div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>' }); </script>
