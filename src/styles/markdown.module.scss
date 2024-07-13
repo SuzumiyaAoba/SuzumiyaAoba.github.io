@@ -1,0 +1,48 @@
+.markdown {
+  h1 {
+    font-size: 1.85rem;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  blockquote {
+    font-size: 0.875rem;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: solid;
+    color: rgb(82 82 82);
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5rem;
+  }
+
+  ul[class="contains-task-list"] {
+    list-style-type: none;
+  }
+
+  :not(li) > ul[class="contains-task-list"] {
+    padding-left: 0.25rem;
+  }
+
+  pre {
+    font-size: 0.95rem;
+  }
+
+  :not(pre) > code {
+    font-family: "JetBrains Mono Variable", monospace;
+    color: #ec4899;
+  }
+
+  :not(pre) > code[class*="language-math"] {
+    color: black;
+  }
+}

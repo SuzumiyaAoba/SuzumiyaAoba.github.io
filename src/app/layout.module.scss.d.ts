@@ -1,9 +1,5 @@
 export type Styles = {
-  header: string;
-  menu: string;
-  menus: string;
-  nav: string;
-  title: string;
+  wrapper: string;
 };
 
 export type ClassNames = keyof Styles;
