@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--font-title);
+  font-size: var(--font-xl);
+  display: inline;
+  color: black;
+  text-decoration: none;
+}
+
+.nav {
+  margin-left: 3rem;
+  height: 100%;
+}
+
+.menus {
+  display: flex;
+  padding: 0;
+  margin: 0 top;
+  list-style: none;
+  column-gap: 1.25rem;
+  text-decoration: none;
+  text-underline-offset: 4px;
+
+  :hover {
+    text-decoration: underline;
+  }
+}
+
+.menu {
+  a {
+    text-decoration: none;
+    font-weight: 900;
+  }
+}
