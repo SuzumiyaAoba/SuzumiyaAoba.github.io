@@ -1,11 +1,17 @@
-@import "../styles/reset.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --font-xl: 1.5rem;
-}
+html {
+  font-size: 100%;
 
-body {
-  min-height: 100vh;
-  max-width: 64rem;
-  margin: 0 auto;
+  // 600px以降から、100pxごとに1px大きくなる
+  @media (min-width: 600px) {
+    font-size: calc(112.5% + 4 * (100vw - 600px) / 400);
+  }
+
+  // 1,000px以上は、22pxに
+  @media (min-width: 1000px) {
+    font-size: calc(137.5%);
+  }
 }

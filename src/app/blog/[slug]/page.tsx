@@ -1,15 +1,20 @@
-import { compileMDX } from "next-mdx-remote/rsc";
 import path from "path";
 import { readFile, access } from "fs/promises";
 import { notFound } from "next/navigation";
 
+import matter from "gray-matter";
 import remarkMath from "remark-math";
 import remarkHtmlKatex from "remark-html-katex";
 import remarkGfm from "remark-gfm";
-import rehypeShiki from "@shikijs/rehype";
 
-import styles from "@/styles/markdown.module.scss";
+import markdownStyles from "@/styles/markdown.module.scss";
 import "katex/dist/katex.min.css";
+import { Comments } from "@/components/Comments";
+
+import clsx from "clsx";
+import rehypePrettyCode from "rehype-pretty-code";
+import { serialize } from "next-mdx-remote/serialize";
+import { MdxRemote } from "@/components/MdxRemote";
 
 const POSTS_FOLDER = path.join(process.cwd(), "src/contents/blog");
 
@@ -34,32 +39,44 @@ export default async function Page({ params }: { params: { slug: string } }) {
     notFound();
   }
 
-  const { content, frontmatter } = await compileMDX<{
-    title: string;
-    date: Date;
-    category: string;
-    tags: string[];
-    draft: boolean;
-  }>({
-    source: markdown,
-    options: {
-      parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm, remarkMath, remarkHtmlKatex as any],
-        rehypePlugins: [
-          [
-            rehypeShiki,
-            { themes: { light: "github-light", dark: "github-dark" } },
-          ],
+  const { content, data } = matter(markdown);
+
+  const mdxSource = await serialize(content, {
+    mdxOptions: {
+      remarkPlugins: [remarkGfm, remarkMath, remarkHtmlKatex as any],
+      rehypePlugins: [
+        [
+          rehypePrettyCode,
+          {
+            defaultLang: {
+              block: "plaintext",
+              inline: "plaintext",
+            },
+            theme: "github-light",
+            keepBackground: false,
+          },
         ],
-      },
+      ],
     },
+    scope: data,
   });
 
   return (
-    <article className={styles.markdown}>
-      <h1>{frontmatter.title}</h1>
-      <section>{content}</section>
+    <article
+      className={clsx(markdownStyles.markdown, "max-w-4xl mx-auto px-4")}
+    >
+      <h1></h1>
+      <section>
+        <MdxRemote {...mdxSource} />
+      </section>
+      <hr
+        style={{
+          marginTop: "3rem",
+        }}
+      />
+      <section className="mt-8">
+        <Comments />
+      </section>
     </article>
   );
 }

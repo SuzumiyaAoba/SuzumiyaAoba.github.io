@@ -1,31 +1,5 @@
 import { FC } from "react";
-import styles from "./styles.module.scss";
 import Link from "next/link";
-
-/*
-<VStack alignItems={"center"} fontWeight={300}>
-        <Text mt={0}>
-          &copy; {date.getFullYear()} {copyright}
-        </Text>
-        <Text mt={"0"}>
-          Powered by{" "}
-          {poweredBy instanceof Object ? (
-            <Link
-              href={poweredBy.url}
-              className={css`
-                color: t("colors.link");
-              `}
-              textDecoration={"none"}
-              _hover={{ textDecoration: "underline" }}
-            >
-              {poweredBy.name}
-            </Link>
-          ) : (
-            poweredBy
-          )}
-        </Text>
-      </VStack>
-*/
 
 export const Footer: FC<{
   copyright: string;
@@ -39,7 +13,7 @@ export const Footer: FC<{
   const date = new Date();
 
   return (
-    <footer className={styles.footer}>
+    <footer className="flex flex-col font-light items-center my-4">
       <div>
         &copy; {date.getFullYear()} {copyright}
       </div>

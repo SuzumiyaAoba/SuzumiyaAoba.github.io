@@ -1,8 +1,9 @@
-import { Exo_2, Zen_Maru_Gothic } from "next/font/google";
+import { Exo_2, JetBrains_Mono, Zen_Maru_Gothic } from "next/font/google";
 
 const zen_maru_gothic = Zen_Maru_Gothic({
-  weight: ["300", "400"],
+  weight: ["300", "400", "900"],
   subsets: [],
+  variable: "--font-body",
 });
 
 const exo_2 = Exo_2({
@@ -11,4 +12,10 @@ const exo_2 = Exo_2({
   variable: "--font-title",
 });
 
-export { zen_maru_gothic, exo_2 };
+const mono = JetBrains_Mono({
+  weight: ["400"],
+  subsets: [],
+  variable: "--font-mono",
+});
+
+export { zen_maru_gothic, exo_2, mono };

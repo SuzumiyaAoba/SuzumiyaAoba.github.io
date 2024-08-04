@@ -8,8 +8,28 @@
   h4,
   h5,
   h6 {
-    margin-top: 1.75rem;
+    margin-top: 2rem;
     margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+  }
+
+  h6 {
+    font-size: 1rem;
   }
 
   blockquote {
@@ -18,6 +38,7 @@
     padding-left: 1rem;
     border-left: solid;
     color: rgb(82 82 82);
+    border-color: rgb(82 82 82);
   }
 
   ul,
@@ -33,16 +54,86 @@
     padding-left: 0.25rem;
   }
 
+  table {
+    margin: 1.5rem 0;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+  }
+
+  table tr {
+    border-bottom: solid 1px #eee;
+  }
+
+  table tr:hover {
+    background-color: #d4f0fd;
+  }
+
+  table th {
+    font-weight: 900;
+    @apply bg-blue-500 text-white;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem 0;
+  }
+
+  figure {
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+
   pre {
+    font-family: var(--font-mono);
     font-size: 0.95rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    border-radius: 4px;
+    border: solid 0.5px;
+    margin: 1.5rem 0;
+  }
+
+  pre [data-line] {
+    padding: 0 1rem;
+  }
+
+  pre:has(span[class="katex-display"]) {
+    border: none;
   }
 
   :not(pre) > code {
     font-family: "JetBrains Mono Variable", monospace;
     color: #ec4899;
+    padding: 0px 2px;
   }
 
   :not(pre) > code[class*="language-math"] {
     color: black;
+  }
+
+  code {
+    counter-reset: line;
+  }
+
+  code > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+
+    /* Other styling */
+    display: inline-block;
+    width: 1rem;
+    margin-right: 1rem;
+    text-align: right;
+    color: gray;
+  }
+
+  code[data-line-numbers-max-digits="2"] > [data-line]::before {
+    width: 2rem;
+  }
+
+  code[data-line-numbers-max-digits="3"] > [data-line]::before {
+    width: 3rem;
   }
 }
