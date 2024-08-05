@@ -1,19 +1,26 @@
-import fs from "fs";
-import path from "path";
+import * as blog from "@/libs/blog";
+import { format } from "date-fns";
 
-const POSTS_FOLDER = path.join(process.cwd(), "src/contents/blog");
-
-export default function Home() {
-  const blogs = fs.readdirSync(POSTS_FOLDER);
+export default async function Home() {
+  const blogs = await blog.getAll();
 
   return (
-    <main>
-      <h1>タイトル</h1>
-      <div>
+    <main className="flex flex-col w-full max-w-4xl mx-auto px-4">
+      <h1 className="mt-8 mb-8 text-3xl">ブログ</h1>
+      <div className="flex flex-col gap-6">
         {blogs.map((blog) => {
+          if (!blog) {
+            return <></>;
+          }
+
+          const { slug, frontmatter } = blog;
+
           return (
-            <div key={blog}>
-              <a href={`/blog/${blog}/`}>{blog}</a>
+            <div key={slug}>
+              <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
+              <a href={`/blog/${slug}/`} className="hover:underline">
+                {frontmatter.title}
+              </a>
             </div>
           );
         })}

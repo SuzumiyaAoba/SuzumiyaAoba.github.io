@@ -1,7 +1,7 @@
 import { Exo_2, JetBrains_Mono, Zen_Maru_Gothic } from "next/font/google";
 
 const zen_maru_gothic = Zen_Maru_Gothic({
-  weight: ["300", "400", "900"],
+  weight: ["300", "400", "700", "900"],
   subsets: [],
   variable: "--font-body",
 });

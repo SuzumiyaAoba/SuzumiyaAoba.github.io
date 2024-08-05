@@ -41,9 +41,27 @@
     border-color: rgb(82 82 82);
   }
 
+  a {
+    @apply font-bold text-blue-600;
+    @apply hover:underline;
+  }
+
+  img {
+    @apply p-8;
+    @apply my-8;
+    @apply border border-neutral-600;
+    border-radius: 4px;
+  }
+
   ul,
   ol {
+    @apply list-disc;
     padding-left: 1.5rem;
+  }
+
+  :not(li) > ul,
+  :not(li) > ol {
+    @apply my-4;
   }
 
   ul[class="contains-task-list"] {
@@ -67,12 +85,13 @@
   }
 
   table tr:hover {
-    background-color: #d4f0fd;
+    @apply bg-neutral-200;
   }
 
   table th {
     font-weight: 900;
-    @apply bg-blue-500 text-white;
+    /* @apply bg-blue-500 text-white; */
+    @apply bg-black text-white;
   }
 
   table th,
@@ -117,7 +136,7 @@
     counter-reset: line;
   }
 
-  code > [data-line]::before {
+  pre > code > [data-line]::before {
     counter-increment: line;
     content: counter(line);
 

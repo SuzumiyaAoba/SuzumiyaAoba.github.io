@@ -3,7 +3,6 @@
 import type { FC } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 import { exo_2 } from "@/fonts";
 
 const menus = [
@@ -20,12 +19,10 @@ const menus = [
 export const Header: FC<{
   siteName: string;
 }> = ({ siteName }) => {
-  const pathname = usePathname();
-
   return (
     <>
-      <header className="w-full px-4 py-2">
-        <div className="flex max-w-4xl mx-auto items-center">
+      <header className="w-full py-3">
+        <div className="flex max-w-4xl px-4 mx-auto items-center">
           <Link href={"/"} className={clsx("text-2xl", exo_2.className)}>
             {siteName}
           </Link>
