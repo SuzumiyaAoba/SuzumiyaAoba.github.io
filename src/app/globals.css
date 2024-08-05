@@ -1,17 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-html {
-  font-size: 100%;
-
-  // 600px以降から、100pxごとに1px大きくなる
-  @media (min-width: 600px) {
-    font-size: calc(112.5% + 4 * (100vw - 600px) / 400);
-  }
-
-  // 1,000px以上は、22pxに
-  @media (min-width: 1000px) {
-    font-size: calc(137.5%);
-  }
-}
