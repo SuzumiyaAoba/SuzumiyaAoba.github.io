@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "run-p next:dev tsm storybook",
     "next:dev": "next dev",
-    "build": "next build",
+    "build": "npm run copy:blog:images && next build",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "next lint",
