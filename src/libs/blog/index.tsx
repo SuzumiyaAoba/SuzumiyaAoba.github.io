@@ -10,6 +10,7 @@ import { FC } from "react";
 import rehypeImageSize from "../rehype/rehype-image-size";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import { SsgImage } from "@/components/SsgImage";
 
 const frontmastterSchema = z.object({
   title: z.string(),
@@ -84,18 +85,7 @@ export async function get(slug: string): Promise<Post | null> {
           scope: data,
         }}
         components={{
-          img: (props) => (
-            <Image
-              src={props.src ?? "/"}
-              alt={props.alt ?? ""}
-              width={props.width as number}
-              height={props.height as number}
-              style={{
-                objectFit: "contain",
-                position: "relative",
-              }}
-            />
-          ),
+          img: (props) => <SsgImage {...props} />,
         }}
       />
     ),

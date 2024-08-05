@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "run-p next:dev tsm storybook",
     "next:dev": "next dev",
-    "build": "npm run copy:blog:images && next build",
+    "build": "npm run copy:blog:images && NODE_ENV=production next build && next-export-optimize-images",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "next lint",
@@ -54,6 +54,7 @@
     "eslint-config-next": "14.2.5",
     "eslint-plugin-storybook": "^0.8.0",
     "gray-matter": "^4.0.3",
+    "next-export-optimize-images": "^4.5.0",
     "npm-run-all2": "^6.2.2",
     "postcss": "^8.4.40",
     "postcss-import": "^16.1.0",
