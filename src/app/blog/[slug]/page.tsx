@@ -7,14 +7,22 @@ import { Comments } from "@/components/Comments";
 import clsx from "clsx";
 import * as blog from "@/libs/blog";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const markdown = await blog.get(params.slug);
+export async function generateStaticParams() {
+  const posts = await blog.getAll();
 
-  if (!markdown) {
+  return posts.map((post) => ({
+    slug: post?.slug,
+  }));
+}
+
+export default async function Page({ params }: { params: { slug: string } }) {
+  const posts = await blog.get(params.slug);
+
+  if (!posts) {
     notFound();
   }
 
-  const { frontmatter, Component } = markdown;
+  const { frontmatter, Component } = posts;
 
   return (
     <article
