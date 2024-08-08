@@ -11,6 +11,8 @@ import rehypeImageSize from "../rehype/rehype-image-size";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import { SsgImage } from "@/components/SsgImage";
+import { compareDesc } from "date-fns";
+import rehypeExternalLinks from "rehype-external-links";
 
 const frontmastterSchema = z.object({
   title: z.string(),
@@ -67,6 +69,7 @@ export async function get(slug: string): Promise<Post | null> {
           mdxOptions: {
             remarkPlugins: [remarkGfm, remarkMath, remarkHtmlKatex as any],
             rehypePlugins: [
+              [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
               // @ts-ignore
               rehypeImageSize(slug),
               [
@@ -101,5 +104,10 @@ export async function getAll() {
       return post;
     })
   );
-  return posts;
+
+  return posts.sort((a, b) =>
+    a?.frontmatter.date && b?.frontmatter.date
+      ? compareDesc(a?.frontmatter.date, b?.frontmatter.date)
+      : 0
+  );
 }

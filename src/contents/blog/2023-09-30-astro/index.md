@@ -1,7 +1,7 @@
 ---
 title: Astro を使ってブログを作成する
 date: 2023-09-30
-tags: ["Astro プログラミング"]
+tags: ["Astro", "プログラミング"]
 category: プログラミング
 draft: false
 ---
