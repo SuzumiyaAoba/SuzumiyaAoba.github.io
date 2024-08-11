@@ -1,15 +1,7 @@
 import { MetadataRoute } from "next";
 import * as blog from "@/libs/blog";
 
-export async function generateSitemaps() {
-  return [{ id: 0 }];
-}
-
-export default async function sitemap({
-  id,
-}: {
-  id: number;
-}): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await blog.getAll();
 
   return posts.map((post) => ({
