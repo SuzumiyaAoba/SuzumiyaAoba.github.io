@@ -416,7 +416,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `Arrays#copyOf` を見る前に `Arrays#asList()` で返される `ArrayList` の `toArray` メソッドがどのように実装されているか見てみよう。
 
-```java
+```java showLineNumbers{4145}
         @Override
         public Object[] toArray() {
             return Arrays.copyOf(a, a.length, Object[].class);
@@ -436,7 +436,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `Arrays#copyOf` の実装を見てみよう。
 
-```java "System.arraycopy"
+```java showLineNumbers{3484} "System.arraycopy"
     /**
      * Copies the specified array, truncating or padding with nulls (if necessary)
      * so the copy has the specified length.  For all indices that are
@@ -568,7 +568,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 `UnmodifiableList` は引数で受け取ったリストをフィールドに持ち、
 ミュータブルな操作を行うメソッドは `UnsupportedOperationException` を返すようになラッパーとなっている。
 
-```java "UnsupportedOperationException"
+```java showLineNumbers{1328} "UnsupportedOperationException"
     /**
      * @serial include
      */
@@ -658,7 +658,7 @@ public class Collectors {
 
 ここで気になるのは `SharedSecrets` だ。実装の詳細を見ていこう。
 
-```java "ImmutableCollections$Access"
+```java showLineNumbers{89} "ImmutableCollections$Access"
 /** A repository of "shared secrets", which are a mechanism for
     calling implementation-private methods in another package without
     using reflection. A package-private class implements a public
