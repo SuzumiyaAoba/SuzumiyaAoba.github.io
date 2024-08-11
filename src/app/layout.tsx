@@ -5,6 +5,7 @@ import { exo_2, mono as monoFont, zen_maru_gothic } from "@/fonts";
 import { Header } from "@/components/Header";
 import clsx from "clsx";
 import { Footer } from "@/components/Footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: config.metadata.title,
@@ -37,6 +38,7 @@ export default function RootLayout({
           }}
         />
       </body>
+      <GoogleAnalytics gaId="G-6YJ00MPQBT" />
     </html>
   );
 }
