@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig = {
   reactStrictMode: true,
   // SSG
-  output: "export",
+  output: isProd ? "export" : undefined,
   assetPrefix: isProd ? "https://suzumiyaaoba.github.io" : undefined,
   trailingSlash: true,
 };
