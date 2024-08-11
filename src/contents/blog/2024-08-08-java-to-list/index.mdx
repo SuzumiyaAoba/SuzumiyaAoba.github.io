@@ -528,7 +528,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 
 `UnmodifiableRandomAccesList` の実装の大部分は `UnmodifiableList` の方でされている。
 
-```java showLineNumbers{1427}
+```java showLineNumbers{1427} "extends UnmodifiableList<E>"
     /**
      * @serial include
      */
@@ -568,7 +568,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 `UnmodifiableList` は引数で受け取ったリストをフィールドに持ち、
 ミュータブルな操作を行うメソッドは `UnsupportedOperationException` を返すようになラッパーとなっている。
 
-```java
+```java "UnsupportedOperationException"
     /**
      * @serial include
      */
