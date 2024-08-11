@@ -32,6 +32,11 @@
     font-size: 1rem;
   }
 
+  p {
+    @apply my-4;
+    @apply leading-7;
+  }
+
   blockquote {
     font-size: 0.875rem;
     margin-left: 1.5rem;
@@ -43,7 +48,9 @@
 
   a {
     @apply font-bold text-blue-600;
-    @apply hover:underline;
+    /* @apply underline underline-offset-4 decoration-wavy decoration-neutral-400; */
+    @apply decoration-wavy;
+    @apply hover:underline hover:decoration-blue-600;
   }
 
   img {
@@ -51,6 +58,10 @@
     @apply my-8 mx-auto;
     @apply border border-neutral-600;
     border-radius: 4px;
+  }
+
+  li {
+    @apply my-2;
   }
 
   ul,
@@ -96,7 +107,7 @@
 
   table th,
   table td {
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
   }
 
   figure {
@@ -106,7 +117,7 @@
 
   pre {
     font-family: var(--font-mono);
-    font-size: 0.95rem;
+    @apply text-xs;
     overflow-x: auto;
     padding: 1rem 0;
     border-radius: 4px;
@@ -118,14 +129,28 @@
     padding: 0 1rem;
   }
 
+  span[data-highlighted-line] {
+    @apply bg-neutral-200;
+  }
+
+  mark[data-highlighted-chars] {
+    @apply p-0.5;
+    @apply underline underline-offset-2 decoration-wavy decoration-green-600;
+    @apply bg-transparent;
+  }
+
   pre:has(span[class="katex-display"]) {
     border: none;
   }
 
   :not(pre) > code {
-    font-family: "JetBrains Mono Variable", monospace;
-    color: #ec4899;
-    padding: 0px 2px;
+    font-family: var(--font-mono), monospace;
+    @apply tracking-tighter;
+    /* color: #ec4899; */
+    @apply bg-neutral-100;
+    @apply drop-shadow-sm;
+    @apply border border-neutral-200 rounded;
+    @apply py-0 px-1;
   }
 
   :not(pre) > code[class*="language-math"] {

@@ -1,6 +1,6 @@
 export default {
   metadata: {
-    title: "Less is more",
+    title: "No Risk, No Reward",
     description: "",
   },
 } satisfies Config;

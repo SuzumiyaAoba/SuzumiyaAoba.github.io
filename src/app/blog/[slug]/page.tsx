@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <article
       className={clsx(markdownStyles.markdown, "max-w-4xl w-full mx-auto px-4")}
     >
-      <h1 className="mt-8 text-center">{frontmatter.title}</h1>
+      <h1 className="mt-8 mb-12 text-center">{frontmatter.title}</h1>
       <section>
         <Component />
       </section>

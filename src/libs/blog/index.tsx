@@ -3,16 +3,19 @@ import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
 import remarkGfm from "remark-gfm";
+import remarkEmoji from "remark-emoji";
 import remarkMath from "remark-math";
 import remarkHtmlKatex from "remark-html-katex";
+// @ts-ignore
+import remarkJoinCjkLines from "remark-join-cjk-lines";
 import rehypePrettyCode from "rehype-pretty-code";
 import { FC } from "react";
 import rehypeImageSize from "../rehype/rehype-image-size";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import Image from "next/image";
 import { SsgImage } from "@/components/SsgImage";
 import { compareDesc } from "date-fns";
 import rehypeExternalLinks from "rehype-external-links";
+import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 
 const frontmastterSchema = z.object({
   title: z.string(),
@@ -33,16 +36,24 @@ type Post = {
 
 const POSTS_FOLDER = path.join(process.cwd(), "src/contents/blog");
 
-async function readPostFile(slug: string): Promise<string | null> {
+async function readPostFile(
+  slug: string
+): Promise<{ raw: string; format: "md" | "mdx" } | null> {
   const mdPath = path.resolve(path.join(POSTS_FOLDER, slug, "index.md"));
   const mdxPath = path.resolve(path.join(POSTS_FOLDER, slug, "index.mdx"));
 
   const readFileOptions = { encoding: "utf8" } as const;
   try {
-    return await fs.readFile(mdPath, readFileOptions);
+    return {
+      format: "md",
+      raw: await fs.readFile(mdPath, readFileOptions),
+    };
   } catch (err) {
     try {
-      return await fs.readFile(mdxPath, readFileOptions);
+      return {
+        format: "mdx",
+        raw: await fs.readFile(mdxPath, readFileOptions),
+      };
     } catch {
       return null;
     }
@@ -50,11 +61,12 @@ async function readPostFile(slug: string): Promise<string | null> {
 }
 
 export async function get(slug: string): Promise<Post | null> {
-  const raw = await readPostFile(slug);
-  if (!raw) {
+  const postFile = await readPostFile(slug);
+  if (!postFile) {
     return null;
   }
 
+  const { raw, format } = postFile;
   const { content, data } = matter(raw);
   const frontmatter = frontmastterSchema.parse(data);
 
@@ -67,9 +79,19 @@ export async function get(slug: string): Promise<Post | null> {
         source={content}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkGfm, remarkMath, remarkHtmlKatex as any],
+            format,
+            remarkPlugins: [
+              remarkGfm,
+              remarkEmoji,
+              remarkJoinCjkLines,
+              remarkMath,
+              remarkHtmlKatex as any,
+            ],
             rehypePlugins: [
-              [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
+              [
+                rehypeExternalLinks,
+                { target: "_blank", rel: ["noopener", "noreferrer"] },
+              ],
               // @ts-ignore
               rehypeImageSize(slug),
               [
@@ -89,6 +111,7 @@ export async function get(slug: string): Promise<Post | null> {
         }}
         components={{
           img: (props) => <SsgImage {...props} />,
+          GitHubCodeLink: (props) => <GitHubCodeLink {...props} />,
         }}
       />
     ),
