@@ -1,9 +1,4 @@
-import {
-  Exo_2,
-  Fira_Code,
-  JetBrains_Mono,
-  Zen_Maru_Gothic,
-} from "next/font/google";
+import { Exo_2, Fira_Code, Zen_Maru_Gothic } from "next/font/google";
 
 const zen_maru_gothic = Zen_Maru_Gothic({
   weight: ["300", "400", "700", "900"],

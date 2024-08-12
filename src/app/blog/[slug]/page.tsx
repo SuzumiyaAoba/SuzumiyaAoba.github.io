@@ -6,6 +6,14 @@ import { Comments } from "@/components/Comments";
 
 import clsx from "clsx";
 import * as blog from "@/libs/blog";
+import { Metadata } from "next";
+import config from "@/config";
+
+type Props = {
+  params: {
+    slug: string;
+  };
+};
 
 export async function generateStaticParams() {
   const posts = await blog.getAll();
@@ -15,7 +23,15 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const post = await blog.get(params.slug);
+
+  return {
+    title: `${post?.frontmatter.title} | ${config.metadata.title}`,
+  };
+}
+
+export default async function Page({ params }: Props) {
   const posts = await blog.get(params.slug);
 
   if (!posts) {
