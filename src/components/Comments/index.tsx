@@ -7,9 +7,9 @@ export const Comments = () => {
     <Giscus
       id="comments"
       repo="SuzumiyaAoba/SuzumiyaAoba.github.io"
-      repoId="R_kgDOKadgRw"
+      repoId="R_kgDOMVzVAQ"
       category="Announcements"
-      categoryId="DIC_kwDOKadgR84CZxHy"
+      categoryId="DIC_kwDOMVzVAc4ChaeG"
       mapping="pathname"
       strict="0"
       reactionsEnabled="1"
