@@ -18,14 +18,17 @@
 
   h3 {
     font-size: 1.75rem;
+    @apply border-b-2 border-l-4 border-neutral-600 pl-3 pb-1;
   }
 
   h4 {
     font-size: 1.5rem;
+    @apply border-b-2 border-neutral-600 border-dashed pb-2;
   }
 
   h5 {
     font-size: 1.25rem;
+    @apply border-l-4 border-neutral-600 pl-2 py-1;
   }
 
   h6 {

@@ -23,12 +23,12 @@ category: "プログラミング"
 - 安易に `Stream#collect(Collectors.toList())` を `Stream#toList()` に書き換えてはいけない。
 - [Javadoc](https://docs.oracle.com/javase/jp/21/docs/api/index.html) を読みましょう。
 
-### `Stream` から `List` への変換
+## `Stream` から `List` への変換
 
 Java で `Stream` を `List` への変換するコードを考えてみよう。
 ここでは、件の `Stream#toList()` が JDK に追加される前後での動作の違いを確認する。
 
-#### Java 8
+### Java 8
 
 Java 8 以降、`Stream` から `List` への変換は以下のように行うことができる。
 ここでは `jshell` を使用してコードの実行結果を確認する。
@@ -115,7 +115,7 @@ Java 標準ライブラリの Javadoc に従うと、仕様としては `$1.add(
 確かに `Stream#collect(Collectors.toList())` で `List` に変換した後、その場で `List#add()` を呼ぶことは少ないだろう (その手のコードを見たことあるが…)。
 `List` に変換したその場で呼び出すことはなくとも、今回のように変換した後に `List` としてメソッドから返されると `List#add()` を呼んでしまう可能性が高い。
 
-#### Java 16
+### Java 16
 
 次に Java 16 で追加された `Stream#toList()` を使ってみる。
 `Stream#collect(Collectors.toList())` と同じように `List` に変換できる。
