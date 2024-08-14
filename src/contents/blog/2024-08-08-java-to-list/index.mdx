@@ -378,7 +378,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `ArrayList` のコンストラクタは以下のような実装となっている。
 
-```java "Collection<? extends E> c" "elementData = Arrays.copyOf(a, size, Object[].class);"
+```java showLineNumbers{172} "Collection<? extends E> c" "elementData = Arrays.copyOf(a, size, Object[].class);"
     /**
      * Constructs a list containing the elements of the specified
      * collection, in the order they are returned by the collection's
@@ -870,7 +870,7 @@ Java に限った話ではないかもしれないが、私の (少ないプロ�
 
 - [オプションのオペレーション (およびUnsupportedOperationException)を排除できるように、コア・コレクション・インタフェースで不変性を直接サポートしてはどうでしょうか。](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/designfaq.html#a1)
 
-長々と書かれているが可変性・不変性によって API を分けてもよかったのではないかと素人とながら考えてしまう。
+長々と書かれているが可変性・不変性によって API を分けてもよかったのではないかと素人ながら考えてしまう。
 メソッドを呼び出すまで可変か不変かわからないコレクションと戦うのは辛い。
 中途半端な不変性を持つコレクションがあるからこそ `Stream#toList()` のような罠にはまるのだろう。
 これならば不変なコレクションを作らずに、可変なコレクションを使ってしまえばいいのではないかと思ってしまう。
