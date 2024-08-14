@@ -9,7 +9,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: config.metadata.title,
-  description: config.metadata.description,
   generator: "Next.js",
 };
 
