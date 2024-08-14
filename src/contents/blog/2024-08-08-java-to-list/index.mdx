@@ -30,7 +30,7 @@ Java で `Stream` を `List` への変換するコードを考えてみよう。
 
 ### Java 8
 
-Java 8 以降、`Stream` から `List` への変換は以下のように行うことができる。
+Java 8 以降、`Stream` から `List` への変換は`Stream#collect(Collectors.toList())` で行える。
 ここでは `jshell` を使用してコードの実行結果を確認する。
 
 `Stream#collect(Collectors.toList())` の動作を理解するため、
