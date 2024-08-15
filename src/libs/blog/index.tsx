@@ -16,6 +16,7 @@ import { SsgImage } from "@/components/SsgImage";
 import { compareDesc } from "date-fns";
 import rehypeExternalLinks from "rehype-external-links";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
+import remarkSlug from "remark-slug";
 
 const frontmastterSchema = z.object({
   title: z.string(),
@@ -81,6 +82,7 @@ export async function get(slug: string): Promise<Post | null> {
           mdxOptions: {
             format,
             remarkPlugins: [
+              remarkSlug,
               remarkGfm,
               remarkEmoji,
               remarkJoinCjkLines,
