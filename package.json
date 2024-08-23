@@ -28,6 +28,7 @@
     "next-mdx-remote": "^5.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-share": "^5.1.0",
     "rehype-external-links": "^3.0.0",
     "rehype-pretty-code": "^0.13.2",
     "remark-emoji": "^5.0.1",
@@ -43,7 +44,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
-    "@iconify-json/mdi": "^1.1.68",
+    "@iconify/json": "^2.2.239",
     "@storybook/addon-essentials": "^8.2.6",
     "@storybook/addon-interactions": "^8.2.6",
     "@storybook/addon-links": "^8.2.6",

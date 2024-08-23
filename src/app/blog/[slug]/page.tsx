@@ -8,6 +8,7 @@ import clsx from "clsx";
 import * as blog from "@/libs/blog";
 import { Metadata } from "next";
 import config from "@/config";
+import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 
 type Props = {
   params: {
@@ -56,7 +57,10 @@ export default async function Page({ params }: Props) {
       <section>
         <Component />
       </section>
-      <hr className="my-16 border-dashed border-neutral-600" />
+      <section className="flex justify-end mt-12 mb-4">
+        <TwitterShareButton title={frontmatter.title} />
+      </section>
+      <hr className="mb-16 border-dashed border-neutral-600" />
       <section className="mt-8">
         <Comments />
       </section>
