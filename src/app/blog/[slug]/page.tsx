@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import config from "@/config";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
+import { HatenaButton } from "@/components/share/HatenaButton";
 
 type Props = {
   params: {
@@ -55,7 +56,8 @@ export default async function Page({ params }: Props) {
       <section>
         <Component />
       </section>
-      <section className="flex justify-end mt-12 mb-4">
+      <section className="flex gap-x-2 justify-end mt-12 mb-4">
+        <HatenaButton />
         <TwitterShareButton title={frontmatter.title} />
       </section>
       <hr className="mb-16 border-dashed border-neutral-600" />
