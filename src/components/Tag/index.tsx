@@ -13,8 +13,8 @@ const tagToIcon = (tag: string) => {
 
 export const Tag: FC<{ label: string }> = ({ label: tag }) => {
   return (
-    <div className="flex items-center px-2 py-0.5 border border-slate-300 rounded-2xl">
-      <span className={`${tagToIcon(tag)} text-xl`} />
+    <div className="flex items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
+      <span className={`${tagToIcon(tag)}`} />
       <span>{tag}</span>
     </div>
   );

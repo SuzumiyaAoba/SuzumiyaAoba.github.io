@@ -1,3 +1,4 @@
+import { Tag } from "@/components/Tag";
 import * as blog from "@/libs/blog";
 import { format } from "date-fns";
 
@@ -17,10 +18,18 @@ export default async function Home() {
 
           return (
             <div key={slug}>
-              <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
+              <div className="flex gap-x-1 items-center font-thin">
+                <div className="i-mdi-calendar" />
+                <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
+              </div>
               <a href={`/blog/${slug}/`} className="hover:underline">
                 {frontmatter.title}
               </a>
+              <div className="mt-2 flex gap-x-2 text-xs">
+                {frontmatter.tags.map((tag) => (
+                  <Tag key={tag} label={tag} />
+                ))}
+              </div>
             </div>
           );
         })}
