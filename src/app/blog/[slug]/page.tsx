@@ -48,7 +48,7 @@ export default async function Page({ params }: Props) {
       className={clsx(markdownStyles.markdown, "max-w-4xl w-full mx-auto px-4")}
     >
       <h1 className="mt-8 mb-4 text-center">{frontmatter.title}</h1>
-      <div className="flex gap-x-2 justify-center">
+      <div className="flex gap-x-2 justify-center text-sm">
         {frontmatter.tags.map((tag) => (
           <Tag key={tag} label={tag} />
         ))}
