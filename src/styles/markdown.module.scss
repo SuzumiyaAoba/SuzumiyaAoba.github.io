@@ -1,4 +1,5 @@
 .markdown {
+  
   h1 {
     font-size: 1.85rem;
   }
@@ -8,31 +9,71 @@
   h4,
   h5,
   h6 {
+    font-size: 1.25rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
 
-  h2 {
-    font-size: 2rem;
+  h2:before,
+  h3:before,
+  h4:before,
+  h5:before,
+  h6:before {
+    @apply text-neutral-400;
   }
 
-  h3 {
-    font-size: 1.75rem;
-    @apply border-b-2 border-l-4 border-neutral-600 pl-3 pb-1;
+  h2:before {
+    content: "## ";
   }
 
-  h4 {
-    font-size: 1.5rem;
-    @apply border-b-2 border-neutral-600 border-dashed pb-2;
+  h3:before {
+    content: "### ";
   }
 
-  h5 {
-    font-size: 1.25rem;
-    @apply border-l-4 border-neutral-600 pl-2 py-1;
+  h4:before {
+    content: "#### ";
   }
 
-  h6 {
-    font-size: 1rem;
+  h5:before {
+    content: "##### ";
+  }
+
+  h6:before {
+    content: "###### ";
+  }
+
+  @media(width >= 768px) {
+    padding-left: 5rem;
+
+    h2:before {
+        content: "##";
+        margin-left: -1.75rem;
+        margin-right: 0.5rem;
+    }
+
+    h3:before {
+      content: "###";
+      margin-left: -2.5rem;
+      margin-right: 0.5rem;
+    }
+
+    h4:before {
+      content: "####";
+      margin-left: -3.25rem;
+      margin-right: 0.5rem;
+    }
+
+    h5:before {
+      content: "#####";
+      margin-left: -4rem;
+      margin-right: 0.5rem;
+    }
+
+    h6:before {
+      content: "######";
+      margin-left: -4.75rem;
+      margin-right: 0.5rem;
+    }
   }
 
   p {
@@ -150,9 +191,8 @@
     font-family: var(--font-mono), monospace;
     @apply tracking-tighter;
     /* color: #ec4899; */
-    @apply bg-neutral-100;
+    @apply text-red-600 bg-red-50;
     @apply drop-shadow-sm;
-    @apply border border-neutral-200 rounded;
     @apply py-0 px-1;
   }
 

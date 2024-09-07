@@ -74,5 +74,8 @@
     "typed-scss-modules": "^8.0.1",
     "typescript": "^5",
     "unocss": "^0.62.2"
+  },
+  "volta": {
+    "node": "22.8.0"
   }
 }
