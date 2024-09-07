@@ -16,6 +16,7 @@ import { SsgImage } from "@/components/SsgImage";
 import { compareDesc } from "date-fns";
 import rehypeExternalLinks from "rehype-external-links";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
+import { Message } from "@/components/Mdx/Message";
 import remarkSlug from "remark-slug";
 
 const frontmastterSchema = z.object({
@@ -114,6 +115,7 @@ export async function get(slug: string): Promise<Post | null> {
         components={{
           img: (props) => <SsgImage {...props} />,
           GitHubCodeLink: (props) => <GitHubCodeLink {...props} />,
+          Message: (props) => <Message {...props} />,
         }}
       />
     ),
