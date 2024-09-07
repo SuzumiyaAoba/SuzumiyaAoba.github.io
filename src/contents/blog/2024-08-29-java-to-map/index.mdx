@@ -351,7 +351,7 @@ Stream.of(
 
 ```java
 public class ToMap {
-  BinaryOperator<T> neverDuplicateKey(T existing, T replacement) {
+  public static BinaryOperator<T> neverDuplicateKey(T existing, T replacement) {
     throw new IllegalStateException(...);
   }
 }
