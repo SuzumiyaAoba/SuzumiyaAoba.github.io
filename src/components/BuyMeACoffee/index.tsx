@@ -1,23 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 
 const BuyMeACoffee = () => {
   return (
     <>
-      <a href="https://www.buymeacoffee.com/suzumiyaaoba" target="_blank">
-        <Image
-          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-          width={217}
-          height={60}
-          alt="Buy Me A Coffee"
-          style={{
-            height: "60px !important",
-            width: "217px !important",
-          }}
-        />
-      </a>
       <script
         type="text/javascript"
         src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
@@ -32,6 +19,20 @@ const BuyMeACoffee = () => {
         data-coffee-color="#ffffff"
         async
       ></script>
+      <a href="https://www.buymeacoffee.com/suzumiyaaoba" target="_blank">
+        <img
+          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+          alt="Buy Me A Coffee"
+          width={217}
+          height={60}
+          style={{
+            height: "60px !important",
+            width: "217px !important",
+            padding: "0",
+            border: "none",
+          }}
+        />
+      </a>
     </>
   );
 };
