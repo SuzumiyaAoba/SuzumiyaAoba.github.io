@@ -61,7 +61,7 @@ export default async function Page({ params }: Props) {
         <HatenaButton />
         <TwitterShareButton title={frontmatter.title} />
       </section>
-      <hr className="mb-16 border-dashed border-neutral-600" />
+      <hr className="mb-8 border-dashed border-neutral-600" />
       <BuyMeACoffee />
       <section className="mt-8">
         <Comments />
