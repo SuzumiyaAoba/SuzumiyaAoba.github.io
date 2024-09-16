@@ -11,6 +11,7 @@ import config from "@/config";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
+import BuyMeACoffee from "@/components/BuyMeACoffee";
 
 type Props = {
   params: {
@@ -61,6 +62,7 @@ export default async function Page({ params }: Props) {
         <TwitterShareButton title={frontmatter.title} />
       </section>
       <hr className="mb-16 border-dashed border-neutral-600" />
+      <BuyMeACoffee />
       <section className="mt-8">
         <Comments />
       </section>
