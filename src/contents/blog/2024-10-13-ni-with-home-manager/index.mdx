@@ -1,0 +1,86 @@
+---
+title: home-manager で ni コマンドを使う
+date: 2024-10-13
+category: "Nix"
+tags: ["Node", "Nix", "home-manager"]
+---
+
+## はじめに
+
+[home-manager](https://github.com/nix-community/home-manager) で [ni](https://github.com/antfu-collective/ni) コマンドを使おうとしたら少しハマったのでメモ。
+
+## TL;DL
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    nodePackages."@antfu/ni"
+  ];
+}
+```
+
+## ni とは？
+ 
+ni は npm、yarn、pnpm、bun といった JavaScript のパッケージを管理するためのコマンドラッパーの一つ。
+これらのコマンドはそれぞれサブコマンドやオプションに差違があるため、コマンドごとに使い方を覚えないといけない。
+ni はこれらのコマンドを統一的に扱うためのコマンドを提供していくれる。
+
+例えば、`npm install`、`yarn`、`pnpm install`、`bun install` は `ni` というコマンドで統一的に扱うことができる。
+その他にも `npm install`、`npm install xxx`、`npm ci`、`npm run`、`npx`、`npm upgrade`、`npm uninstall` といったコマンドを `ni` で統一的に扱うことができる。
+
+## home-manager で ni を使う
+
+home-manager で管理したいのであれば `home.packages` に `ni` を追加すれば良いと思いきや、次のように記述しても `ni` コマンドはインストールできない。
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    ni
+  ];
+}
+```
+
+[NixOS Search](https://search.nixos.org/packages?channel=24.05&from=0&size=50&sort=relevance&type=packages&query=ni) で検索をかけるとわかるが、`ni` は登録されていない。
+
+しかし、`nodePackages` で扱えることが [GitHub のリポジトリ](https://github.com/NixOS/nixpkgs/blob/db4fd8f4e35d517264bf5fed5875719d23c6821f/pkgs/development/node-packages/node-packages.json)を見るとわかる。
+パッケージ名が `@antfu/ni` であるため、次のように記述すれば `ni` コマンドをインストールすることができるかと思いきや、これでは上手くいかない。
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with nodePackages; [
+    @antfu/ni
+  ];
+}
+```
+
+Nix の文法を理解していないため、文法として制約があるかわからないが、`@` から始まる変数は使えないようだ。
+しかし、`@antfu/ni` を `"@antfu/ni"` と記述すると文字列として認識されてしまい、これも上手くいかない。
+
+最終的に `with nodePackages;` を使わずに、次のように記述することで `ni` コマンドをインストールすることができた。
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    nodePackages."@antfu/ni"
+  ];
+}
+```
+
+## nushell と衝突
+
+これで解決かと思いきや、もう一つ問題が発生した。
+`npm upgrade` 相当のコマンドである `nu` が [`nushell`](https://www.nushell.sh/) と衝突してしまう。
+`nushell` は常用しているわけではないので `nushell` の方をインストールしないように設定することで回避した。
+
+`nu` コマンドとは別に `nlx` コマンド (`npx` 相当) はもともと `nix` コマンドであったが、Nix のコマンドと衝突してしまうため[名前が変更された過去](https://github.com/antfu-collective/ni/issues/143)がある。
+
+`nushell` が今より普及したら `nu` コマンドも変更されるかもしれない。
+多少長くなってもいいから `ni`、`nu`、`nr` みたいな `n` に一文字を追加するような命名ではなく、`ni add`、`ni run` みたいな命名にして欲しい…
