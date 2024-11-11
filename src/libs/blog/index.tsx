@@ -5,7 +5,7 @@ import matter from "gray-matter";
 import remarkGfm from "remark-gfm";
 import remarkEmoji from "remark-emoji";
 import remarkMath from "remark-math";
-import remarkHtmlKatex from "remark-html-katex";
+import rehypeKatex from "rehype-katex";
 // @ts-ignore
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -17,7 +17,7 @@ import { compareDesc } from "date-fns";
 import rehypeExternalLinks from "rehype-external-links";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
-import remarkSlug from "remark-slug";
+import rehypeSlug from "rehype-slug";
 
 const frontmastterSchema = z.object({
   title: z.string(),
@@ -83,20 +83,20 @@ export async function get(slug: string): Promise<Post | null> {
           mdxOptions: {
             format,
             remarkPlugins: [
-              remarkSlug,
               remarkGfm,
               remarkEmoji,
               remarkJoinCjkLines,
               remarkMath,
-              remarkHtmlKatex as any,
             ],
             rehypePlugins: [
+              rehypeSlug,
               [
                 rehypeExternalLinks,
                 { target: "_blank", rel: ["noopener", "noreferrer"] },
               ],
               // @ts-ignore
               rehypeImageSize(slug),
+              rehypeKatex,
               [
                 rehypePrettyCode,
                 {
