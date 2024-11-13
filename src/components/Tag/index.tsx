@@ -6,6 +6,12 @@ const tagToIcon = (tag: string) => {
       return "i-skill-icons-java-light mr-1.5";
     case "astro":
       return "i-skill-icons-astro mr-1.5";
+    case "nix":
+      return "i-skill-icons-nix-light mr-1.5";
+    case "tmux":
+      return "i-codicon-terminal-tmux mr-1.5";
+    case "プログラミング":
+      return "i-hugeicons-computer-programming-01 mr-1.5"
   }
 
   return "i-material-symbols:tag-rounded";
