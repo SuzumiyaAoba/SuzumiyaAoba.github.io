@@ -1,5 +1,4 @@
 .markdown {
-  
   h1 {
     font-size: 1.85rem;
   }
@@ -42,13 +41,13 @@
     content: "###### ";
   }
 
-  @media(width >= 768px) {
+  @media (width >= 768px) {
     padding-left: 5rem;
 
     h2:before {
-        content: "##";
-        margin-left: -1.75rem;
-        margin-right: 0.5rem;
+      content: "##";
+      margin-left: -1.75rem;
+      margin-right: 0.5rem;
     }
 
     h3:before {
@@ -162,6 +161,7 @@
   pre {
     font-family: var(--font-mono);
     @apply text-xs;
+    @apply bg-slate-50;
     overflow-x: auto;
     padding: 1rem 0;
     border-radius: 4px;
@@ -222,5 +222,22 @@
 
   code[data-line-numbers-max-digits="3"] > [data-line]::before {
     width: 3rem;
+  }
+
+  figure[data-rehype-pretty-code-figure] {
+    @apply my-6;
+
+    figcaption + pre {
+      @apply my-0;
+      @apply border-t-none rounded-t-none;
+    }
+
+    figcaption[data-rehype-pretty-code-title] {
+      @apply text-xs font-bold;
+      @apply px-2 py-0.5;
+      @apply bg-slate-200;
+      @apply rounded-t;
+      border: solid 0.5px;
+    }
   }
 }
