@@ -161,7 +161,6 @@
   pre {
     font-family: var(--font-mono);
     @apply text-xs;
-    @apply bg-slate-50;
     overflow-x: auto;
     padding: 1rem 0;
     border-radius: 4px;
@@ -234,8 +233,8 @@
 
     figcaption[data-rehype-pretty-code-title] {
       @apply text-xs font-bold;
-      @apply px-2 py-0.5;
-      @apply bg-slate-200;
+      @apply px-2 py-1;
+      @apply bg-slate-100;
       @apply rounded-t;
       border: solid 0.5px;
     }
