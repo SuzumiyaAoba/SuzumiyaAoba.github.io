@@ -26,7 +26,7 @@ tags: ["ローカルLLM", "LLM"]
 
 ### ollama をインストール
 
-[Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/) を使って環境を管理しているため、以下の設定を普段管理している設定ファイルで `import` する。
+[Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/) を使って環境を管理しているため、以下の設定を普段使っている設定ファイルから `import` する。
 
 ```nix
 { pkgs, ... }:
@@ -38,10 +38,10 @@ tags: ["ローカルLLM", "LLM"]
 }
 ```
 
- Nix + Home Manager を使って管理していない方は[公式のインストーラ](https://ollama.com/download)をダウンロードして、インストールしてください。
- 
- 正しくインストールされていれば、ターミナルで `ollama` コマンドが使える。
- 
+Nix + Home Manager を使って管理していない方は[公式のインストーラ](https://ollama.com/download)をダウンロードして、インストールしてください。
+
+正しくインストールされていれば、ターミナルで `ollama` コマンドが使える。
+
  ```shell
 $ ollama --version
 Warning: could not connect to a running Ollama instance
@@ -196,7 +196,7 @@ public class Fibonacci {
 
 This will print the first 100 Fibonacci numbers to the console.
 ````
- 
+
 フィボナッチ数列を出力するプログラムを正しく書けてそうだ。
 流石にフィボナッチ数列を出力するプログラムくらいは書けてしまうか。
 
