@@ -161,10 +161,11 @@
   pre {
     font-family: var(--font-mono);
     @apply text-xs;
+    @apply bg-slate-100;
     overflow-x: auto;
     padding: 1rem 0;
     border-radius: 4px;
-    border: solid 0.5px;
+    /* border: solid 0.5px; */
     margin: 1.5rem 0;
   }
 
