@@ -1,0 +1,228 @@
+---
+title: Scala 再入門 (環境構築)
+date: 2024-11-17
+category: "プログラミング"
+tags: ["プログラミング", "Scala", "Emacs"]
+---
+
+## はじめに
+
+最近新しいことを学んでいなかったので [Scala 3](https://docs.scala-lang.org/ja/scala3/new-in-scala3.html) を学んでみようと思う。
+Scala という言語は昔は少しばかり流行っていたのだが、最近ではめっきり話を聞かなくなってしまった。
+単に自分が Scala を使わなくなってしまったのが原因の可能性があるが、昔ほどの勢いは無くなってしまっているように感じる。
+
+Scala 2 を Scala 3 が出る前に少しだけ触っていたので、Scala が流行らない理由はわかる。
+大体思っていることは以下の記事に書かれているが、Scala を触ろうとする人にとっては当たり前すぎで抜けている視点がいくかあるように感じる。
+
+[Scalaの難しさをインターネットから集めてみる - Lambdaカクテル](https://blog.3qe.us/entry/2023/09/18/220005)
+
+私も Scala 自体は好きで C 言語はメモリ管理面倒だし、Java は本質的でない部分の記述が多いし、Kotlin は今でこそサーバサイドでも使われているが、
+まだ発表されて間もない頃で Android アプリ開発専用言語のような立ち位置で汎用的な目的には使いにくいなぁ、と感じていた頃に関数型プログラミングという当時の私にとって未知のパラダイムは惹かれるものがあった。
+どういうわけか、関数型プログラミングというパラダイムを当時の私は素直に受け入れることができたが現代においても取っ付き難さは健在だろう。
+
+上述に一点だけ追加で流行らない理由を上げるとすると、コーディングの根底にある **immutability (不変性)** だ。
+
+え？**immutable (不変な)** なコードを書いて保守性を上げるのは常識でしょ？  
+と思ったあなたはモダンな言語や関数型プログラミングに頭をやられてしまっている。
+現代においてもプログラミング初心者が学ぶ言語は **mutable (可変な)** データを扱うことが前提だ。
+最近流行りの Python を始め、Java、JavaScript、C、Go、PHP、Ruby、etc. は値は可変であることを前提にコードが書かれることが多い。
+もちろん、これらの言語で再代入のないコードを書けないというわけではない。
+これらの言語は変数が可変であることを良しとしているため、入門サイト、入門書、世の中に存在しているコードは変数の値が変更されることが当然のように行なわれている。
+
+しかし、Scala はどうだろうか？
+
+そのようなコードに慣れ親しんだ人が Scala を触るとどうなるか。
+Scala でも `var` を使えば再代入はできるけど多くの場面では `val` が使われる。
+つまり、再代入をしないようなコードの書き方をすることが前提となっている。
+そういったコードを読み慣れていない、書き慣れていない人にとってはこれも最初の障壁となると思う。
+
+昔とは違い ES6 が浸透した現代においては `const` を使って再代入をある程度控えるコーディングが普及しているので、
+初学者の人も再代入をしないことがデフォルトになりつつあるかもしれない。
+そういう意味では、不変性については私が思っているほど障害にはなっていない可能性はある。
+
+閑話休題。
+
+さっそく Scala 3 を学ぶために環境構築する。
+
+## 環境構築
+
+昔は `sbt` だけ入れればよかったが現在では [Coursier](https://get-coursier.io/) というツールを使うのが一般的なようだ。
+インストール後に `cs list` を実行するとわかるが、これらのコマンド管理が行なえるらしい。
+
+```
+$ cs list
+amm
+coursier
+cs
+metals
+sbt
+sbtn
+scala
+scala-cli
+scalac
+scalafmt
+```
+
+Coursier のインストールは Home Manager で管理する。
+Home Manager を使っていない人は[公式サイトに載っている手順](https://get-coursier.io/docs/cli-installation)に従ってインストールしよう。
+
+```nix
+{ pkgs, ...}:
+
+{
+  home.packages = with pkgs; [
+    coursier
+  ];
+}
+```
+
+sbt や Scala コンパイラ、Metals も Home Manager で管理できるが、それらについては Coursier で管理する。
+
+Coursier は `cs` コマンドとしてインストールされる。
+最初に `sbt` や `scala`、`scalac` といった基本的なコマンドをインストールするために次のコマンドを実行。
+
+```shell
+$ cs setup
+```
+
+これで `sbt` がインストールされたが問題がある。
+
+パスが通らない。
+個人の環境に依るが私の環境では `.profile` や `.zprofile` を `zsh` が認識してくれないので、以下の設定を `.zshrc` に追加した。
+
+```zsh
+case ${OSTYPE} in
+    darwin*)
+        export PATH="$PATH:/Users/${USER}/Library/Application Support/Coursier/bin"
+        ;;
+    *)
+        # setting for linux
+        ;;
+esac
+```
+
+手元の環境の macOS でのみ動作する設定を入れている。
+Windows や Linux を使っている人は適宜、設定を修正して欲しい。
+
+晴れて `sbt` コマンドが使えるようになったので基本となるプロジェクトを生成する。
+ミニマムな環境は `sbt new scala/scala3.g8` を実行すればよい。
+
+```shell
+$ sbt new scala/scala3.g8
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+A template to demonstrate a minimal Scala 3 application
+
+name [Scala 3 Project Template]: sample
+
+Template applied in /private/tmp/./sample
+```
+
+これにより `Hello, World` と出力するだけのコードを含むフォルダが生成される。
+
+ディレクトリ構造は以下のようになっている。
+
+```
+tree sample
+sample
+├── README.md
+├── build.sbt
+├── project
+│   └── build.properties
+└── src
+    ├── main
+    │   └── scala
+    │       └── Main.scala
+    └── test
+        └── scala
+            └── MySuite.scala
+
+7 directories, 5 files
+```
+
+`Main.scala` の中身は以下のような簡単なコード。
+
+```shell
+$ cat sample/src/main/scala/Main.scala
+───────┬────────────────────────────────────────────
+       │ File: sample/src/main/scala/Main.scala
+───────┼────────────────────────────────────────────
+   1   │ @main def hello(): Unit =
+   2   │   println("Hello world!")
+   3   │   println(msg)
+   4   │
+   5   │ def msg = "I was compiled by Scala 3. :)"
+───────┴────────────────────────────────────────────
+```
+
+さっそく実行してみよう。
+`sample` ディレクトリに移動して `sbt run` を実行する。
+
+```
+$ cd sample
+$ sbt run
+[info] welcome to sbt 1.10.5 (Azul Systems, Inc. Java 17.0.13)
+[info] loading project definition from /private/tmp/sample/project
+[info] loading settings for project root from build.sbt ...
+[info] set current project to sample (in build file:/private/tmp/sample/)
+[info] compiling 1 Scala source to /private/tmp/sample/target/scala-3.5.2/classes ...
+[info] running hello
+Hello world!
+I was compiled by Scala 3. :)
+[success] Total time: 1 s, completed 2024/11/17 19:24:17
+```
+
+Hello, World を実行できたし Scala 完全に理解した。
+
+## Emacs
+
+開発は Emacs を使って行いたい。
+JetBrains に課金しているので IntelliJ を使ってもいいのだが、新しい Mac mini で Emacs の動作が爆速になったので Emacs でいけるところまで試す。
+
+現代において Language Server は不可欠なので [Metals](https://scalameta.org/metals/) をインストールする。
+Metals のインストールは[公式の手順](https://scalameta.org/metals/docs/editors/emacs/)に従う。
+
+```elisp
+(setup scala-mode
+  (:elpaca t))
+
+(setup sbt-mode
+  (:elpaca t)
+  (:opt sbt:program-options '("-Dsbt.supershell=false"))
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map))
+
+(setup lsp-metals
+  (:elpaca t))
+
+(setup dap-mode
+  (:elpaca t)
+  (:with-mode scala-mode
+    (:hook dap-mode
+           dap-ui-mode))
+  (dap-auto-configure-mode))
+```
+
+`lsp-mode` のインストールは省略している。
+
+これで `.scala` 拡張子のファイルを開くと Metals のインストールを促されるがプロンプトに従ってインストールを進めると Emacs がフリーズする。
+環境の問題か判断がつかなかったが Coursier で Metals をインストールすることで回避できた。
+
+```shell
+$ cs install metals
+```
+
+これにより Scala のソースコードを開いたとき Metals が認識されるのでインストールによるフリーズを回避できる。
+
+![Metals](./images/metals.png)
+
+型が見れるようになった。
+
+## おわり
+
+Scala 3 の環境構築できたし、ブログを書きつつ学習していくぞい。
