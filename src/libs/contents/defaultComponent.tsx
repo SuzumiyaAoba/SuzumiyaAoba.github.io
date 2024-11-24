@@ -13,13 +13,16 @@ import rehypeExternalLinks from "rehype-external-links";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
 import rehypeSlug from "rehype-slug";
+import { PageKey } from ".";
 
 export default ({
+  key,
   slug,
   format,
   data,
   content,
 }: {
+  key: PageKey;
   slug: string;
   format: "md" | "mdx";
   data: { [key: string]: any };
@@ -43,8 +46,7 @@ export default ({
               rehypeExternalLinks,
               { target: "_blank", rel: ["noopener", "noreferrer"] },
             ],
-            // @ts-ignore
-            rehypeImageSize(slug),
+            rehypeImageSize(key, slug),
             rehypeKatex,
             [
               rehypePrettyCode,

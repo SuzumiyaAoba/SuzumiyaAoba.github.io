@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { getIds } from "@/libs/content";
+import { getIds } from "@/libs/contents";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogIds = await getIds("blog");

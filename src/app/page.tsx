@@ -1,5 +1,5 @@
 import { Tag } from "@/components/Tag";
-import { getFrontmatters } from "@/libs/content";
+import { getFrontmatters } from "@/libs/contents";
 import { compareDesc, format } from "date-fns";
 
 export default async function Home() {

@@ -10,6 +10,7 @@ import defaultComponent from "./defaultComponent";
 export const Pages = {
   blog: {
     root: path.join(process.cwd(), "src/contents/blog"),
+    assets: "/assets/blog/",
     frontmatter: z.object({
       title: z.string(),
       date: z.date(),
@@ -21,12 +22,13 @@ export const Pages = {
   },
   profile: {
     root: path.join(process.cwd(), "src/contents/profile"),
+    assets: "/assets/profile/",
     frontmatter: z.null(),
   },
 } as const;
 
 type Pages = typeof Pages;
-type PageKey = keyof Pages;
+export type PageKey = keyof Pages;
 
 type RawContent = {
   path: string;
@@ -146,6 +148,7 @@ export const getContent = async <T extends PageKey>(
   switch (layout) {
     case "default":
       const component = defaultComponent({
+        key,
         slug: id,
         format: rawContent.format,
         ...parsedContent,
