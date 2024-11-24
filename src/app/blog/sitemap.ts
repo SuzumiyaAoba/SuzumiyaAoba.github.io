@@ -1,11 +1,11 @@
 import { MetadataRoute } from "next";
-import * as blog from "@/libs/blog";
+import { getIds } from "@/libs/content";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await blog.getAll();
+  const blogIds = await getIds("blog");
 
-  return posts.map((post) => ({
-    url: `https://suzumiyaaoba.github.io/blog/${post?.slug}`,
+  return blogIds.map((id) => ({
+    url: `https://suzumiyaaoba.github.io/blog/${id}`,
     lastModified: new Date(),
     priority: 1,
   }));

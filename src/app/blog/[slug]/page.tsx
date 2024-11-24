@@ -5,13 +5,13 @@ import "katex/dist/katex.min.css";
 import { Comments } from "@/components/Comments";
 
 import clsx from "clsx";
-import * as blog from "@/libs/blog";
 import { Metadata } from "next";
 import config from "@/config";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
+import { getContent, getFrontmatter, getIds } from "@/libs/content";
 
 type Props = {
   params: {
@@ -20,29 +20,29 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const posts = await blog.getAll();
+  const ids = await getIds("blog");
 
-  return posts.map((post) => ({
-    slug: post?.slug,
+  return ids.map((id) => ({
+    slug: id,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await blog.get(params.slug);
+  const forntmatter = await getFrontmatter("blog", params.slug);
 
   return {
-    title: `${post?.frontmatter.title} | ${config.metadata.title}`,
+    title: `${forntmatter?.title} | ${config.metadata.title}`,
   };
 }
 
 export default async function Page({ params }: Props) {
-  const posts = await blog.get(params.slug);
+  const content = await getContent("blog", params.slug);
 
-  if (!posts) {
+  if (!content) {
     notFound();
   }
 
-  const { frontmatter, Component } = posts;
+  const { frontmatter, Component } = content;
 
   return (
     <article
