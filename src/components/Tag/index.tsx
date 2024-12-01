@@ -4,14 +4,22 @@ const tagToIcon = (tag: string) => {
   switch (tag.toLowerCase()) {
     case "java":
       return "i-skill-icons-java-light mr-1.5";
+    case "scala":
+      return "i-devicon-scala mr-1.5";
     case "astro":
       return "i-skill-icons-astro mr-1.5";
+    case "next.js":
+      return "i-devicon-nextjs mr-1.5";
     case "nix":
       return "i-skill-icons-nix-light mr-1.5";
     case "tmux":
       return "i-codicon-terminal-tmux mr-1.5";
+    case "emacs":
+      return "i-logos-emacs mr-1.5";
+    case "ollama":
+      return "i-simple-icons-ollama mr-1.5";
     case "プログラミング":
-      return "i-hugeicons-computer-programming-01 mr-1.5"
+      return "i-material-symbols-code-blocks-outline mr-1";
   }
 
   return "i-material-symbols:tag-rounded";
