@@ -6,6 +6,8 @@ import {
   presetWebFonts,
   presetWind,
 } from "unocss";
+import presetAnimations from "unocss-preset-animations";
+import { presetShadcn } from "unocss-preset-shadcn";
 
 export default defineConfig({
   content: {
@@ -17,5 +19,7 @@ export default defineConfig({
     presetIcons(),
     presetWebFonts(),
     presetWind(),
+    presetAnimations(),
+    presetShadcn(),
   ],
 });

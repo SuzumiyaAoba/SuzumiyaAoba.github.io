@@ -6,6 +6,7 @@ import matter from "gray-matter";
 
 import { FC } from "react";
 import defaultComponent from "./defaultComponent";
+import codeHikeComponent from "./codeHikeComponent";
 
 export const Pages = {
   blog: {
@@ -161,7 +162,20 @@ export const getContent = async <T extends PageKey>(
         frontmatter: parsedContent.frontmatter,
         Component: component,
       };
-  }
+    case "CodeHike":
+      const codeHike = codeHikeComponent({
+        key,
+        slug: id,
+        format: rawContent.format,
+        ...parsedContent,
+      });
 
-  return null;
+      return {
+        id,
+        rawContent,
+        content: parsedContent.content,
+        frontmatter: parsedContent.frontmatter,
+        Component: codeHike,
+      };
+  }
 };
