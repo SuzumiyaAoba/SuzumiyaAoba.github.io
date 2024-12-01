@@ -1,7 +1,10 @@
+// see: https://codehike.org/docs/code/tabs
+
 import { Block, CodeBlock, parseProps } from "codehike/blocks";
 import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { highlight, Pre, RawCode } from "codehike/code";
+import { highlight, RawCode } from "codehike/code";
+import { CustomCodeBlock } from "./CustomCodeBlock";
 
 const Schema = Block.extend({ tabs: z.array(CodeBlock) });
 
@@ -26,7 +29,7 @@ export async function CodeTabs(props: { tabs: RawCode[] }) {
       </TabsList>
       {tabs.map((tab, i) => (
         <TabsContent key={tab.meta} value={tab.meta}>
-          <Pre code={highlighted[i]} />
+          <CustomCodeBlock code={highlighted[i]} />
         </TabsContent>
       ))}
     </Tabs>
