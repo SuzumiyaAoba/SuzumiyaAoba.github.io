@@ -8,18 +8,26 @@ import { FC } from "react";
 import defaultComponent from "./defaultComponent";
 import codeHikeComponent from "./codeHikeComponent";
 
+export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
+
+export type Layout = z.infer<typeof layoutSchema>;
+
+export const frontmatterSchema = z.object({
+  title: z.string(),
+  date: z.date(),
+  category: z.string(),
+  tags: z.array(z.string()),
+  layout: layoutSchema,
+  draft: z.boolean().optional(),
+});
+
+export type Frontmatter = z.infer<typeof frontmatterSchema>;
+
 export const Pages = {
   blog: {
     root: path.join(process.cwd(), "src/contents/blog"),
     assets: "/assets/blog/",
-    frontmatter: z.object({
-      title: z.string(),
-      date: z.date(),
-      category: z.string(),
-      tags: z.array(z.string()),
-      layout: z.enum(["default", "CodeHike"]).default("default"),
-      draft: z.boolean().optional(),
-    }),
+    frontmatter: frontmatterSchema,
   },
   profile: {
     root: path.join(process.cwd(), "src/contents/profile"),
@@ -76,7 +84,18 @@ export const getIds = async (key: PageKey): Promise<string[]> => {
   return await readdir(Pages[key].root);
 };
 
-export const parseRawContent = (key: PageKey, { raw }: RawContent) => {
+type ParsedContent = {
+  format: "md" | "mdx";
+  page: PageKey;
+  data: { [key: string]: any };
+  frontmatter: Frontmatter;
+  content: string;
+};
+
+export const parseRawContent = (
+  key: PageKey,
+  { raw, format }: RawContent
+): ParsedContent | null => {
   const { content, data } = matter(raw);
   const frontmatter = Pages[key].frontmatter.parse(data);
 
@@ -85,6 +104,7 @@ export const parseRawContent = (key: PageKey, { raw }: RawContent) => {
   }
 
   return {
+    format,
     page: key,
     data,
     frontmatter,
@@ -145,37 +165,30 @@ export const getContent = async <T extends PageKey>(
     return null;
   }
 
-  const layout = parsedContent.frontmatter.layout;
-  switch (layout) {
+  const component = chooseComponent(id, parsedContent);
+
+  return {
+    id,
+    rawContent,
+    content: parsedContent.content,
+    frontmatter: parsedContent.frontmatter,
+    Component: component,
+  };
+};
+
+const chooseComponent = (
+  slug: string,
+  parsedContent: ParsedContent
+): FC<unknown> => {
+  const args = {
+    key: parsedContent.page,
+    slug,
+    ...parsedContent,
+  };
+  switch (parsedContent.frontmatter.layout) {
     case "default":
-      const component = defaultComponent({
-        key,
-        slug: id,
-        format: rawContent.format,
-        ...parsedContent,
-      });
-
-      return {
-        id,
-        rawContent,
-        content: parsedContent.content,
-        frontmatter: parsedContent.frontmatter,
-        Component: component,
-      };
+      return defaultComponent(args);
     case "CodeHike":
-      const codeHike = codeHikeComponent({
-        key,
-        slug: id,
-        format: rawContent.format,
-        ...parsedContent,
-      });
-
-      return {
-        id,
-        rawContent,
-        content: parsedContent.content,
-        frontmatter: parsedContent.frontmatter,
-        Component: codeHike,
-      };
+      return codeHikeComponent(args);
   }
 };
