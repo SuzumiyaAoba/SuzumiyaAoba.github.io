@@ -3,7 +3,7 @@ import { CopyButton } from "./button";
 import { lineNumbers } from "./line-numbers";
 import clsx from "clsx";
 
-export async function CustomCodeBlock({
+export function CustomCodeBlock({
   code,
   className,
 }: {
