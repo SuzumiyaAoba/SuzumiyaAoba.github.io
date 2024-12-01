@@ -22,9 +22,9 @@ export function LanguageSwitcher({
 
   return (
     <div className="relative rounded bg-slate-100">
-      <div className="flex">
+      <div className="flex items-center">
         <Select value={selectedLang} onValueChange={setSelectedLang}>
-          <SelectTrigger className="w-[150px] pl-4 border-none bg-slate-100 focus:ring-none">
+          <SelectTrigger className="w-[150px] pl-4 border-none bg-slate-100 focus:ring-none z-1">
             <SelectValue />
           </SelectTrigger>
           <SelectContent position="item-aligned">
@@ -35,6 +35,14 @@ export function LanguageSwitcher({
             ))}
           </SelectContent>
         </Select>
+
+        {selectedCode.meta ? (
+          <div className="ml-8 bg-slate-100 text-slate-500">
+            {selectedCode.meta}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
 
       <CustomCodeBlock code={selectedCode} />
