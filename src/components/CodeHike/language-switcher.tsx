@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LanguageIcon } from "./language-icon";
 
 export function LanguageSwitcher({
   highlighted,
@@ -30,7 +31,10 @@ export function LanguageSwitcher({
           <SelectContent position="item-aligned">
             {highlighted.map(({ lang }, index) => (
               <SelectItem key={index} value={lang}>
-                {lang}
+                <div className="flex items-center">
+                  <LanguageIcon lang={lang} className="mr-2" />
+                  {lang}
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
