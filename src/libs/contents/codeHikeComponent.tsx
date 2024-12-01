@@ -2,8 +2,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { FC } from "react";
 import { PageKey } from ".";
 
-import { CodeWithTabs } from "@/components/CodeHike/CodeTabs";
-import { Code } from "@/components/CodeHike/Code";
+import { CodeWithTabs } from "@/components/CodeHike/code-tabs";
+import { Code } from "@/components/CodeHike/code";
 
 import type { CodeHikeConfig } from "codehike/mdx";
 import { remarkCodeHike, recmaCodeHike } from "codehike/mdx";

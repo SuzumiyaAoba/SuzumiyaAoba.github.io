@@ -4,7 +4,7 @@ import { Block, CodeBlock, parseProps } from "codehike/blocks";
 import { z } from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { highlight, RawCode } from "codehike/code";
-import { CustomCodeBlock } from "./CustomCodeBlock";
+import { CustomCodeBlock } from "./custom-code-block";
 
 const Schema = Block.extend({ tabs: z.array(CodeBlock) });
 
