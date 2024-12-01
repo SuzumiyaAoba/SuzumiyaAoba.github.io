@@ -28,7 +28,7 @@ export async function CodeTabs(props: { tabs: RawCode[] }) {
         ))}
       </TabsList>
       {tabs.map((tab, i) => (
-        <TabsContent key={tab.meta} value={tab.meta}>
+        <TabsContent key={tab.meta} value={tab.meta} className="relative">
           <CustomCodeBlock code={highlighted[i]} />
         </TabsContent>
       ))}
