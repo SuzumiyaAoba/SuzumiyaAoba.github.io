@@ -2,6 +2,7 @@ import { HighlightedCode, Pre } from "codehike/code";
 import { CopyButton } from "./button";
 import { lineNumbers } from "./line-numbers";
 import clsx from "clsx";
+import { hover } from "./code-mentions";
 
 export function CustomCodeBlock({
   code,
@@ -16,7 +17,7 @@ export function CustomCodeBlock({
       <Pre
         className={clsx("!px-4", "!my-0", className)}
         code={code}
-        handlers={[lineNumbers]}
+        handlers={[lineNumbers, hover]}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import path from "path";
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
+import { readdir } from "fs/promises";
 
 import { z } from "zod";
 import matter from "gray-matter";
@@ -7,6 +8,7 @@ import matter from "gray-matter";
 import { FC } from "react";
 import defaultComponent from "./defaultComponent";
 import codeHikeComponent from "./codeHikeComponent";
+import { globSync } from "fs";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
@@ -50,6 +52,7 @@ type Content<T extends PageKey> = {
   rawContent: RawContent;
   content: string;
   frontmatter: z.infer<Pages[T]["frontmatter"]>;
+  stylesheets: string[];
   Component: FC<unknown>;
 };
 
@@ -78,6 +81,12 @@ export async function getRawContent<T extends PageKey>(
       return null;
     }
   }
+}
+
+export async function getStylesheets(dir: string): Promise<string[]> {
+  return globSync(`${dir}/*.css`).map((absolutePath) =>
+    path.basename(absolutePath)
+  );
 }
 
 export const getIds = async (key: PageKey): Promise<string[]> => {
@@ -160,6 +169,8 @@ export const getContent = async <T extends PageKey>(
     return null;
   }
 
+  const stylesheets = await getStylesheets(path.dirname(rawContent.path));
+
   const parsedContent = parseRawContent(key, rawContent);
   if (!parsedContent) {
     return null;
@@ -172,6 +183,7 @@ export const getContent = async <T extends PageKey>(
     rawContent,
     content: parsedContent.content,
     frontmatter: parsedContent.frontmatter,
+    stylesheets,
     Component: component,
   };
 };
