@@ -23,7 +23,7 @@ export function LanguageSwitcher({
 
   return (
     <div className="relative rounded bg-slate-100">
-      <div className="flex items-center">
+      <div className="flex items-center  border-b">
         <Select value={selectedLang} onValueChange={setSelectedLang}>
           <SelectTrigger className="w-[150px] pl-4 border-none bg-slate-100 focus:ring-none z-1">
             <SelectValue />

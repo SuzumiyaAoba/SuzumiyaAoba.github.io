@@ -3,6 +3,8 @@ import { CopyButton } from "./button";
 import { lineNumbers } from "./line-numbers";
 import clsx from "clsx";
 import { hover } from "./code-mentions";
+import { mark } from "./mark";
+import { className as classNameHandler } from "./classname";
 
 export function CustomCodeBlock({
   code,
@@ -17,7 +19,7 @@ export function CustomCodeBlock({
       <Pre
         className={clsx("!px-4", "!my-0", className)}
         code={code}
-        handlers={[lineNumbers, hover]}
+        handlers={[lineNumbers, hover, mark, classNameHandler]}
       />
     </>
   );

@@ -11,7 +11,7 @@ import { presetShadcn } from "unocss-preset-shadcn";
 
 export default defineConfig({
   content: {
-    filesystem: ["**/*.{html,js,ts,jsx,tsx}"],
+    filesystem: ["**/*.{html,js,ts,jsx,tsx,md,mdx}"],
   },
   presets: [
     presetUno(),
