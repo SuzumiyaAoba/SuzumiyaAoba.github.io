@@ -16,7 +16,7 @@ const nextConfig = {
   reactStrictMode: true,
   // SSG
   output: isProd ? "export" : undefined,
-  assetPrefix: isProd ? "https://suzumiyaaoba.github.io" : undefined,
+  assetPrefix: isProd ? "https://suzumiyaaoba.com" : undefined,
   trailingSlash: true,
 };
 
