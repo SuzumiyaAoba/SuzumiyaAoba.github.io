@@ -5,6 +5,8 @@ import clsx from "clsx";
 import { hover } from "./code-mentions";
 import { mark } from "./mark";
 import { className as classNameHandler } from "./classname";
+import { diff } from "./diff";
+import { collapse, collapseContent, collapseTrigger } from "./collapse";
 
 export function CustomCodeBlock({
   code,
@@ -19,7 +21,16 @@ export function CustomCodeBlock({
       <Pre
         className={clsx("!px-4", "!my-0", className)}
         code={code}
-        handlers={[lineNumbers, hover, mark, classNameHandler]}
+        handlers={[
+          lineNumbers,
+          hover,
+          mark,
+          classNameHandler,
+          diff,
+          collapse,
+          collapseTrigger,
+          collapseContent,
+        ]}
       />
     </>
   );

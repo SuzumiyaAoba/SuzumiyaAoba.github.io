@@ -3,6 +3,8 @@ import remarkMath from "remark-math";
 import remarkEmoji from "remark-emoji";
 // @ts-ignore
 import remarkJoinCjkLines from "remark-join-cjk-lines";
+import { remarkMermaid } from "@theguild/remark-mermaid";
+import { Mermaid } from "@theguild/remark-mermaid/mermaid";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
 import rehypeKatex from "rehype-katex";
@@ -18,6 +20,7 @@ export const defaultRemarkPlugins: any[] = [
   remarkEmoji,
   remarkJoinCjkLines,
   remarkMath,
+  remarkMermaid,
 ];
 
 export const defaultRehypePlugins: (key: PageKey, slug: string) => any[] = (
@@ -34,4 +37,5 @@ export const defaultComponents = {
   img: SsgImage,
   GitHubCodeLink,
   Message,
+  Mermaid,
 };

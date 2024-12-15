@@ -6,7 +6,7 @@ export const mark: AnnotationHandler = {
     const color = annotation?.query || "rgb(14 165 233)";
     return (
       <div
-        className="flex"
+        className="flex w-full"
         style={{
           borderLeft: "solid 2px transparent",
           borderLeftColor: annotation && color,
