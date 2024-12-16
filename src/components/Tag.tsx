@@ -1,7 +1,24 @@
 import { FC } from "react";
 
+export const TAG_LABELS = [
+  "java",
+  "scala",
+  "astro",
+  "next.js",
+  "nix",
+  "tmux",
+  "emacs",
+  "ollama",
+  "プログラミング",
+] as const;
+
+type TagLabel = (typeof TAG_LABELS)[number];
+
+const toTypedTagLabel = (tag: string): TagLabel | undefined =>
+  TAG_LABELS.find((it) => it === tag);
+
 const tagToIcon = (tag: string) => {
-  switch (tag.toLowerCase()) {
+  switch (toTypedTagLabel(tag.toLowerCase())) {
     case "java":
       return "i-skill-icons-java-light mr-1.5";
     case "scala":
@@ -27,7 +44,7 @@ const tagToIcon = (tag: string) => {
 
 export const Tag: FC<{ label: string }> = ({ label: tag }) => {
   return (
-    <div className="flex items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
+    <div className="flex w-fit items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
       <span className={tagToIcon(tag)} />
       <span>{tag}</span>
     </div>
