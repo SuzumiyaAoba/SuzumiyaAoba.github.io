@@ -55,7 +55,7 @@ export default async function Page({ params }: Props) {
       <article
         className={clsx(
           markdownStyles.markdown,
-          "max-w-4xl w-full mx-auto px-4"
+          "max-w-4xl w-full mx-auto px-4 pb-16"
         )}
       >
         <h1 className="mt-8 mb-4 text-center">{frontmatter.title}</h1>

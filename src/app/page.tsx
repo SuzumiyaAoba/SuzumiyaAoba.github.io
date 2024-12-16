@@ -6,8 +6,8 @@ export default async function Home() {
   const posts = await Array.fromAsync(getFrontmatters("blog"));
 
   return (
-    <main className="flex flex-col w-full max-w-4xl mx-auto px-4">
-      <h1 className="mt-8 mb-8 text-3xl">ブログ</h1>
+    <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
+      <h1 className="my-8 text-3xl">ブログ</h1>
       <div className="flex flex-col gap-6">
         {posts
           .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))

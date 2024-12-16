@@ -13,19 +13,26 @@ export const Footer: FC<{
   const date = new Date();
 
   return (
-    <footer className="flex flex-col font-light items-center mt-auto py-8">
-      <div>
-        &copy; {date.getFullYear()} {copyright}
+    <footer className="flex flex-col font-light items-center mt-auto pt-8 pb-8 bg-gray-100">
+      <div className="flex mb-4">
+        <a className="hover:underline" href="/privacy-policy/">
+          プライバシーポリシー
+        </a>
       </div>
-      <div>
-        Powered by{" "}
-        {poweredBy instanceof Object ? (
-          <Link href={poweredBy.url} className="hover:underline">
-            {poweredBy.name}
-          </Link>
-        ) : (
-          poweredBy
-        )}
+      <div className="text-sm">
+        <div>
+          &copy; {date.getFullYear()} {copyright}
+        </div>
+        <div>
+          Powered by{" "}
+          {poweredBy instanceof Object ? (
+            <Link href={poweredBy.url} className="hover:underline">
+              {poweredBy.name}
+            </Link>
+          ) : (
+            poweredBy
+          )}
+        </div>
       </div>
     </footer>
   );
