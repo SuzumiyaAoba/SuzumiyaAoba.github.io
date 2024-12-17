@@ -1,0 +1,734 @@
+---
+title: Optional の話
+date: 2024-09-08
+category: "プログラミング"
+tags: ["Java", "プログラミング"]
+---
+
+## はじめに
+
+> 設計思想を理解せよ![^seizon]
+
+[^seizon]: [メディアの違いを理解せよ!とは (メディアノチガイヲリカイセヨとは) [単語記事] - ニコニコ大百科](https://dic.nicovideo.jp/a/%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A2%E3%81%AE%E9%81%95%E3%81%84%E3%82%92%E7%90%86%E8%A7%A3%E3%81%9B%E3%82%88%21)
+
+## TL;DR
+
+- `Optional` を有効活用しよう
+- `Optional` の設計思想を理解しよう
+- 本記事か [Optionalクラスを意図されたとおりに使うための12のレシピ](https://blogs.oracle.com/otnjp/post/recipes-for-using-the-optional-class-as-its-meant-to-be-used-ja) を読もう
+
+## Optional
+
+[Optional](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html) は Java 8 から標準ライブラリに導入されたクラスだ。
+`Optional` は、値が存在するか、存在しないかのいずれかの状態を表現するクラスとなっている。
+Java において値がない、というのは `null` を意味する。
+Java 8 より前の Java では、変数に代入すべき値が存在していないとき `null` を代入することで値が存在しないことを表現していた。
+`Optional` の導入によって、値が存在しないということを「値が存在しないことを表現するオブジェクト」で表現する方法が公式に提供された。
+
+`Optional` のように値が存在しない可能性がある値をデータ構造で表現する考え方は新しいものではない。
+[Haskell](https://www.haskell.org/) を始めとする多くのプログラミング言語の標準ライブラリで提供されている。
+Haskell の前身 (?) とも言える [Miranda](https://ja.wikipedia.org/wiki/Miranda) の段階で既に存在していたかは不明だが、1990 年代には [`Maybe`](https://hackage.haskell.org/package/base-4.20.0.1/docs/Data-Maybe.html) と呼ばれる型構築子に対する言及が見つけられる。
+正確なところはわからないが、1990 年代には既に登場していた考え方がようやく Java にも導入されたわけだ。
+何なら Haskell は Java が公開された年 (1995 年) よりも前 (1990 年) に公開されたプログラミング言語なわけだが…。
+
+### `Optional` のインスタンス
+
+`Optional` で包まれた値を作るには、
+
+- [`Optional#ofNullable(T)`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#ofNullable(T))
+- [`Optional#of(T)`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#of(T))
+- [`Optional#empty()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#empty())
+
+のいずれかの静的メソッドを呼び出す。
+それぞれ用途が異なるので一つずつ確認していこう。
+
+### `Optional#ofNullable(T)`
+
+```java
+jshell> Optional.ofNullable(null)
+$1 ==> Optional.empty
+```
+
+```java
+jshell> Optional.ofNullable("123")
+$2 ==> Optional[123]
+```
+
+### `Optional#of(T)`
+
+```java
+jshell> Optional.of("123")
+$3 ==> Optional[123]
+```
+
+```java
+jshell> Optional.of(null)
+|  例外java.lang.NullPointerException
+|        at Objects.requireNonNull (Objects.java:209)
+|        at Optional.of (Optional.java:113)
+|        at (#5:1)
+```
+
+### `Optional#empty()`
+
+```java
+jshell> Optional.empty()
+$5 ==> Optional.empty
+```
+
+## `Optional` の使い方
+
+## `Optinoal` を使った例
+
+`Optional` の動作を理解するための例として、文字列から整数への変換を考える。
+文字列から整数への変換は失敗する可能性のある計算の簡単な例だろう。
+そのような処理では文字列が整数の形式ならば整数型 (`Integer`) が返されることが期待される。
+
+Java だと `Integer#parseInt(String)` を使って実装するのが一般的だろう。
+
+```java
+jshell> Integer.parseInt("123")
+$6 ==> 123
+```
+
+文字列が整数に変換できる場合は数値を返せばよいが、
+整数に変換できない文字列の場合はどうなるだろう。
+`Integer#parseInt(String)` では変換に失敗したとき `NumberFormatException` という非検査例外をスローする。
+
+```java
+jshell> Integer.parseInt("abc")
+|  例外java.lang.NumberFormatException: For input string: "abc"
+|        at NumberFormatException.forInputString (NumberFormatException.java:67)
+|        at Integer.parseInt (Integer.java:668)
+|        at Integer.parseInt (Integer.java:786)
+|        at (#8:1)
+```
+
+つまり、整数ではない可能性のある文字列を `Integer` 型に変換したい場合は、次のようなコードを書くことになる。
+
+```java
+Integer number;
+try {
+  number = Integer.parseInt(str);
+} catch (NumberFormatException e) {
+  // 変換に失敗した場合の処理
+  number = ...;
+}
+```
+
+毎回このような処理を書くのは手間なのでユーティリティを定義したくなるのが人の性だろう。
+ここでは、ユーティリティの実装として `Optional` を使わない実装と、`Optional` を使った場合の実装の二つを考える。
+
+### 変換できなかったことを `null` で表現
+
+Java では計算に失敗した場合、例外を投げるか `null` を返すのが一般的だろう。
+`Integer#parseInt(String)` は非検査例外をスローするが、例外をスローされると先に見た例のように都度スローされた例外をキャッチしないといけない。
+
+そこで、例外をスローするのではなく `null` を返すようなメソッドを定義するユーティリティクラスを書いてみよう。
+
+```java
+jshell> public class NumberUtils {
+   ...>
+   ...>   public static Integer parseInt(String str) {
+   ...>     try {
+   ...>       return Integer.parseInt(str);
+   ...>     } catch (NumberFormatException e) {
+   ...>       return null;
+   ...>     }
+   ...>   }
+   ...> }
+|  次を作成しました: クラス NumberUtils
+```
+
+{/*
+public class NumberUtils {
+
+  public static Integer parseInt(String str) {
+    try {
+      return Integer.parseInt(str);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+}
+*/}
+
+実際に整数文字列とそれ以外の文字列を渡してみよう。
+
+```java
+jshell> NumberUtils.parseInt("123")
+$9 ==> 123
+```
+
+整数文字列の場合は数値が返される。
+そして、整数以外の文字列を渡した場合は次のように `null` が返ってくる。
+
+```java
+jshell> NumberUtils.parseInt("abc")
+$10 ==> null
+```
+
+これで文字列を整数に変換したければ次のように書ける。
+
+```java
+Integer number = NumberUtils.parseInt(str);
+```
+
+`try` ~ `catch` で囲むよりコードの見栄えは良くなっただろう。
+しかし、これで何も問題ないのだろうか。
+
+ここでもう少しだけ複雑な例として、文字列として消費税抜きの価格が与えられたとき、消費税 (10%) を考慮した価格を求めるプログラムを書いてみよう。
+
+もう少し詳しくお題目を書くと、
+
+- 価格は `XXX円` という形式で渡される
+- 価格が未定の場合は `未定` という文字列が渡される
+- 価格が未定ではない場合は `XXX` の消費税 (10%) 込みの価格を返す
+- 価格が未定の場合は `未定` という文字列を返す
+- 価格のフォーマットが誤っている場合はそれ以外の値を返す
+
+とする。少しは現実で書く場面があるような例ではないだろうか。
+
+ここでは静的メソッドとしてそのような関数を定義しよう[^static-tax]。
+クラス定義は次のような大枠とする。
+
+[^static-tax]: 消費税が絡む計算を静的メソッドで実装するだと？けしからんという声が聴こえてくる。
+
+```java
+public class Price {
+
+  public static String taxIncluded(String price) {
+    // 消費税 10% を加算した価格を返す処理
+  }
+}
+```
+
+さて、メインの処理を書いてみよう。
+価格の数値部分を取り出すには正規表現を使うこともできるが、ここではよりライトな実装をする。
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     if (jpPrice == null) {
+   ...>       return null;
+   ...>     }
+   ...>
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return "未定";
+   ...>     }
+   ...>
+   ...>     if (jpPrice.length() > 1 && jpPirce.charAt(jpPrice.length() - 1) == '円') {
+   ...>       String price = jpPrice.substring(0, jpPrice.length() - 1);
+   ...>       Integer priceInt = NumberUtils.parseInt(price);
+   ...>
+   ...>       return ((int) Math.floor(priceInt * 1.1)) + "円";
+   ...>     }
+   ...>
+   ...>     return null;
+   ...>   }
+   ...> }
+|  次を作成しました: クラス Price
+```
+
+{/*
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+        
+    if (jpPrice.length() > 1 && jpPirce.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+      
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+*/}
+
+良心的な企業なので消費税は切り捨てで計算[^tax-calc]することにし、
+`未定` や `XXX円` 以外のフォーマットの場合は `null` を返すことにした。
+
+[^tax-calc]: [（Q9)　現在の「税抜価格」を基に「税込価格」を設定する場合に円未満の端数が生じることがありますが、どのように処理して値付けを行えば良いのですか。](https://www.mof.go.jp/tax_policy/summary/consumption/a_001.htm#9)
+
+これは上手く動くだろうか？
+
+```java
+jshell> Price.taxIncluded("1000円")
+$12 ==> "1100円"
+
+jshell> Price.taxIncluded("未定")
+$13 ==> "未定"
+
+jshell> Price.taxIncluded(null)
+$14 ==> null
+
+jshell> Price.taxIncluded("1,000円")
+|  例外java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because "<local2>" is null
+|        at Price.taxIncluded (#18:15)
+|        at (#20:1)
+```
+
+Oops :dizzy_face:
+`NumberUtils#parseInt(String)` は整数に変換できないフォーマットの場合は `null` を返すのだった。
+`null` が返ってくる場合を考慮して修正する。
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     if (jpPrice == null) {
+   ...>       return null;
+   ...>     }
+   ...>
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return "未定";
+   ...>     }
+   ...>
+   ...>     if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+   ...>       String price = jpPrice.substring(0, jpPrice.length() - 1);
+   ...>       Integer priceInt = NumberUtils.parseInt(price);
+   ...>
+   ...>       if (priceInt == null) {
+   ...>         return null;
+   ...>       }
+   ...>
+   ...>       return ((int) Math.floor(priceInt * 1.1)) + "円";
+   ...>     }
+   ...>
+   ...>     return null;
+   ...>   }
+   ...> }
+|  次を変更しました: クラス Price
+```
+
+{/*
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+        
+    if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+      
+      if (priceInt == null) {
+        return null;
+      }
+      
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+*/}
+
+これでいいだろう。しかし、このコードはやりたい事に対して気にしたくない部分がコードに現れている。
+具体的には、
+
+- `jpPrice` が `null` の場合
+- `priceInt` が `null` の場合
+
+の二つの点だ。
+ここでは勿論わざとではあるが `NumberUtils#parseInt(String)` が `null` を返すことを忘れていたため `NullPinterException` を発生するコードを書いてしまった。
+
+次にこのコードを `Optional` を使って書き直してみよう。
+
+### `Optional` を使った場合
+
+`Optional` を使わなかった場合のコードの説明が長くなってしまったが、ようやく本題の `Optional` を使う話だ。
+
+早速コードを見てみよう。
+`Optinoal` を使わない場合と同じように `NumberUtils` の定義から始める。
+
+```java
+jshell> public class NumberUtils {
+   ...>
+   ...>   public static Optional<Integer> parseIntOptional(String str) {
+   ...>     try {
+   ...>       return Optional.of(Integer.parseInt(str));
+   ...>     } catch (NumberFormatException e) {
+   ...>       return Optional.empty();
+   ...>     }
+   ...>   }
+   ...> }
+|  次を置換しました: クラス NumberUtils
+```
+
+{/*
+public class NumberUtils {
+
+  public static Optional<Integer> parseIntOptional(String str) {
+    try {
+      return Optional.of(Integer.parseInt(str));
+    } catch (NumberFormatException e) {
+      return Optional.empty();
+    }
+  }
+}
+*/}
+
+`Optional` を使うときは `null` の代わりに `Oprional.emtpy()` を返し、
+整数に変換できた場合は `Optional#of(T)` で整数を `Optional` で包んで返している。
+
+`NumberUtils#parseIntOptional(String)` を実際に使ってみると、次のような動作をする。
+
+```java
+jshell> NumberUtils.parseIntOptional("abc")
+$18 ==> Optional.empty
+
+jshell> NumberUtils.parseIntOptional("123")
+$19 ==> Optional[123]
+```
+
+さて、この `NumberUtils#parseIntOptional(String)` と `Optinoal` を使って `Price#taxIncluded(String)` を書いてみよう。
+人に依って最終的なコードに差が出るところではあるが、次のような実装をしてみる。
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     return Optional.ofNullable(jpPrice)
+   ...>         .flatMap(str -> {
+   ...>           if (str.equals("未定")) {
+   ...>             return Optional.of("未定");
+   ...>           }
+   ...>
+   ...>           return Optional.of(str)
+   ...>             .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+   ...>             .map(it -> it.substring(0, it.length() - 1))
+   ...>             .flatMap(NumberUtils::parseIntOptional)
+   ...>             .map(it -> (int) (it * 1.1))
+   ...>             .map(it -> it + "円");
+   ...>         })
+   ...>         .orElse(null);
+   ...>   }
+   ...> }
+|  次を作成しました: クラス Price
+```
+
+{/*
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> {
+          if (str.equals("未定")) {
+            return Optional.of("未定");
+          }
+          
+          return Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円");
+        })
+        .orElse(null);
+  }
+}
+*/}
+
+もしくは、以下のように `未定` の部分は `flatMap` の外に出してもいいだろう。
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+  
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> 
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"))
+        .orElse(null);
+  }
+}
+```
+
+{/*
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+  
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> 
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"))
+        .orElse(null);
+  }
+}
+*/}
+
+動作を確認すると次ように上手く動いていることがわかる。
+
+```java
+jshell> Price.taxIncluded("1000円")
+$21 ==> "1100円"
+
+jshell> Price.taxIncluded("未定")
+$22 ==> "未定"
+
+jshell> Price.taxIncluded(null)
+$23 ==> null
+
+jshell> Price.taxIncluded("1,000円")
+$24 ==> null
+```
+
+さて、`Optional` を使った場合のコードと使わなかった場合のコードを見比べるとどうだろうか。
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+        
+    if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+      
+      if (priceInt == null) {
+        return null;
+      }
+      
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+```
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+  
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> 
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"))
+        .orElse(null);
+  }
+}
+```
+
+コードの行数を見ると `Optional` を使った場合の方が短くなっているが、ここで重要なのはそこではない。
+`Optional` を使ったコードでは計算途中で値が `null` になることを気にすることなくやりたいこと (文字列から整数に変換し、消費税込みの価格を計算) を表現できている。
+
+また、`Optional` を使わない書いたときは、`NumberUtils#parseInt(String)` が `null` を返していたため `NullPointerException` を発生させてしまったが、
+`Optional` を使うと `NumberUtils#parseIntOptional(String)` が整数への変換に失敗した場合は `Optional#empty()` が返されるため、`NullPointerException` が発生しない。
+
+計算結果が `Optional` になるような入れ子は `flatMap` によって潰すことできるため、
+計算が成功した場合だけ実行されるような処理を後続の `map` で書ける。
+
+これにより、文字列から整数への変換、消費税込みの価格計算までの途中で失敗した場合のことは最後 (`Optional#orElse(T)`) でだけ考えればよくなる。
+今回の要件では、消費税込みの価格が計算できない場合は、**それ以外** の値を返すとなっていたため、`null` を返すような実装をしたが `Optional` を使わない例に引っぱられていたようだ。
+計算が失敗する可能性があるのであれば `Optional` をそのまま返すのでいいではないか。
+
+```java
+jshell> public class Price {
+   ...>   public static Optional<String> taxIncluded(String jpPrice) {
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return Optional.of("未定");
+   ...>     }
+   ...>
+   ...>     return Optional.ofNullable(jpPrice)
+   ...>         .flatMap(str ->
+   ...>           Optional.of(str)
+   ...>             .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+   ...>             .map(it -> it.substring(0, it.length() - 1))
+   ...>             .flatMap(NumberUtils::parseIntOptional)
+   ...>             .map(it -> (int) (it * 1.1))
+   ...>             .map(it -> it + "円"));
+   ...>   }
+   ...> }
+|  次を置換しました: クラス Price
+```
+
+{/*
+public class Price {
+  public static Optional<String> taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return Optional.of("未定");
+    }
+  
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> 
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"));
+  }
+}
+*/}
+
+このコードを見て「別に `null` を返すのでもいいじゃないか？」と思ったあなた m9
+
+`NumberUtils#parseInt(String)` の誤ちを忘れてしまっているようだ。
+この静的メソッドを使うとき、返ってくる値の `null` チェックを忘れない自信のほどは？
+
+## `Optional` は失敗する可能性のある計算を表現
+
+`Optional` を使わないコードと使ったコードを見てきたわけだが、
+ここで Javadoc をもう一度見てみよう。
+
+> null以外の値を含む場合と含まない場合があるコンテナ・オブジェクト。 
+>
+> ...
+> 
+> APIのノート:  
+> Optionalは、主に、"結果なし、"を表す明確な必要があり、nullを使用するとエラーが発生する可能性があるメソッドの戻り型として使用することを目的としています。 型がOptionalの変数は、それ自体がnullになることはなく、常にOptionalインスタンスを指す必要があります。
+
+確かに `Optional` 単体としては `null` 以外の値を含む場合と含まない場合を表現するオブジェクトという説明で十分ではあるが、
+`Optional.empty()` を計算に失敗した場合に返し、成功した場合は `Optional#of(T)` で値を包んで返すことで単に `null` 以外の値を含むという意味だけではなく、
+計算の成功・失敗を表現することができている[^success-failure]。
+
+[^success-failure]: `null` がない言語で `Optional` に似た型 (e.g. Haskell の `Maybe`) を説明する場合は、このように計算の成功・失敗を表現するといった説明がされることがある。
+
+そして、`Optional` を使えば、成功の場合を中心に処理を記述し、失敗した場合にどのような回復処理を行えばよいか最後にまとめて考えればいいようなコードが書ける。
+
+このことを頭に入れて消費税を計算を計算するコードを見直してみよう。
+
+```java {7-14}
+public class Price {
+  public static Optional<String> taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return Optional.of("未定");
+    }
+    
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str -> 
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"));
+  }
+}
+```
+
+`Optional` を使ったコードでは、計算に成功した場合の処理のみがハイライトされた部分で記述されており、数値への変換に失敗した場合の条件分岐は表立ってコードに現れていない。
+そして、何より失敗した場合に `null` チェックのような明示的な値の検証を意識せず、上手くいったときのことだけを考えていればよい。
+
+一方、`Optional` を使わない例を見ると、ハイライトされた部分では計算に失敗した場合の処理が書かれており、メインの処理である消費税の計算が分断されている。
+
+```java {15-17,22}
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+        
+    if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+      
+      if (priceInt == null) {
+        return null;
+      }
+      
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+```
+
+このことから、`Optional` を使うことで本来やりたかったことをコード上のまとまった位置に書けるようになることがわかるだろう。
+今回の例では、計算が失敗する可能性があるのは、引数が `null` の場合、整数への変換が行えないフォーマットの場合の 2 つだけであったが、
+より多くの失敗する可能性のある計算が増えたとしても `Optional` を上手く使えば実装したい処理にフォーカスしたコードを維持できる。
+
+## `Optional` を使うメリット
+
+`Optional` を使うメリットは主に三つあるだろう。
+
+- メソッドが `Optional` で包まれた値を返すことで失敗する可能性があること明示できる
+- `Optional` で包まれた値をメソッドで返すことで呼び出し元に値が存在しない可能性のある計算という文脈を強制できるため `null` 安全になる[^real-world]
+- `Optional` で値を包むことで失敗した場合 (`null` になるかもしれない計算) を考えずに済む
+
+[^real-world]: 実際には `Optional` の使い方を知らない人が `Optional#get()` を使うため実行時例外が発生する :rage:
+
+## `Optional` の問題点
+
+さて、ここまで `Optional` の良いところを書いてきたわけだが、もちろん `Optional` にも問題点はある。
+
+- 成功・失敗を表現できるが失敗した理由を表現できない
+- `Optional` のようなクラスを使った書き方はやはりメジャーではない
+- `Optional` がモナドでもなければファンクタでもない
+
+### 成功・失敗を表現できるが失敗した理由を表現できない
+
+`Optional` は成功した場合は値を返すことができるが、失敗した場合はすべて `Optional.empty()` に丸められてしまう。
+これでは、失敗した原因によって回復処理を変えるような処理を書けない。
+
+失敗した場合を表現するには一般的に `Either` (`Left`, `Right`) や `Result` (`Ok`, `Err`) と呼ばれる[型](https://ja.wikipedia.org/wiki/Result%E5%9E%8B)が必要だ。
+`Etiher` では `Right` に成功した場合の値 (*right* なので `Right` が正しい場合)、`Left` に失敗した場合の値を入れる。
+これによって、成功・失敗だけでなく、失敗した場合に値も返せる。
+もちろん、`map` や `filter` を始めとするメソッドで `Right` の場合だけ値にアクセスするようなコードを書ける。
+
+将来的に標準ライブラリから提供されるのではないか (提供してくれ…) と思っているが Java 21 時点では提供されていない。
+そのため、[vavr](https://github.com/vavr-io/vavr) のような Java で関数型プログラミングをする支援をしてくるライブラリを導入するのが最も手軽ではあるが、
+このようなライブラリを実務で使うハードルは高い。
+
+エンジニアのスキルの問題もあるが、マイナーなライブラリは[存続の危機](https://github.com/vavr-io/vavr/issues/2756)に陥いってメンテされなくなるリスクも伴う。
+
+### `Optional` のようなクラスを使った書き方はやはりメジャーではない
+
+### `Optional` がモナドでもなければファンクタでもない
+
+## `Optional` を使うときに守るべきこと
+
+- [OptionalがSerializableではない話と使い方まとめ - きしだのHatena](https://nowokay.hatenablog.com/entry/20150901/1441091495)
+
+## おわりに
+
+`Optional` の基本的な使い方からその性質までを説明した。
+
+世界から一つでも `NullPointerException` が減ることを祈りつつ、今回はここで筆を置くことにする。
+
+## あわせて読んで欲しい記事
+
+- [Optionalクラスを意図されたとおりに使うための12のレシピ](https://blogs.oracle.com/otnjp/post/recipes-for-using-the-optional-class-as-its-meant-to-be-used-ja)
+- [チームで取り組む！JavaでNullと真正面から向き合う #NULL - Qiita](https://qiita.com/hondaYoshitaka/items/db0aec0e051fdf73e448)
