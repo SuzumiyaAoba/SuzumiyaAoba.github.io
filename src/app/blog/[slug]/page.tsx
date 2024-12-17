@@ -59,7 +59,7 @@ export default async function Page({ params }: Props) {
         )}
       >
         <h1 className="mt-8 mb-4 text-center">{frontmatter.title}</h1>
-        <div className="flex gap-x-2 justify-center text-sm">
+        <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
           {frontmatter.tags.map((tag) => (
             <Tag key={tag} label={tag} />
           ))}

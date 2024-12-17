@@ -44,9 +44,9 @@ const tagToIcon = (tag: string) => {
 
 export const Tag: FC<{ label: string }> = ({ label: tag }) => {
   return (
-    <div className="flex w-fit items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
+    <span className="flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
       <span className={tagToIcon(tag)} />
       <span>{tag}</span>
-    </div>
+    </span>
   );
 };
