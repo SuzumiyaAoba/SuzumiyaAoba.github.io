@@ -1,7 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { FC } from "react";
-import { PageKey } from ".";
 import {
   defaultComponents,
   defaultRehypePlugins,
@@ -9,13 +8,13 @@ import {
 } from "./mdxOptions";
 
 export default ({
-  key,
+  assetsBasePath,
   slug,
   format,
   data,
   content,
 }: {
-  key: PageKey;
+  assetsBasePath: string;
   slug: string;
   format: "md" | "mdx";
   data: { [key: string]: any };
@@ -29,7 +28,7 @@ export default ({
           format,
           remarkPlugins: [...defaultRemarkPlugins],
           rehypePlugins: [
-            ...defaultRehypePlugins(key, slug),
+            ...defaultRehypePlugins(assetsBasePath, slug),
             [
               rehypePrettyCode,
               {

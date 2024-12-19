@@ -1,6 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { FC } from "react";
-import { PageKey } from ".";
+import { PageKey, Pages } from "../contents/blog";
 
 import { CodeWithTabs } from "@/components/CodeHike/code-tabs";
 import { Code } from "@/components/CodeHike/code";
@@ -20,13 +20,13 @@ const chConfig: CodeHikeConfig = {
 };
 
 export default ({
-  key,
+  assetsBasePath,
   slug,
   format,
   data,
   content,
 }: {
-  key: PageKey;
+  assetsBasePath: string;
   slug: string;
   format: "md" | "mdx";
   data: { [key: string]: any };
@@ -39,7 +39,7 @@ export default ({
         mdxOptions: {
           format,
           remarkPlugins: [...defaultRemarkPlugins, [remarkCodeHike, chConfig]],
-          rehypePlugins: [...defaultRehypePlugins(key, slug)],
+          rehypePlugins: [...defaultRehypePlugins(assetsBasePath, slug)],
           recmaPlugins: [[recmaCodeHike, chConfig]],
         },
         scope: data,

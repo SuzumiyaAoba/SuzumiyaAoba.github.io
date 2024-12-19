@@ -23,11 +23,13 @@ tags: ["Java", "プログラミング"]
 
 Google で Spring Boot を使ってリクエストに `@Pattern` アノテーションを使い正規表現でバリデーションをかける方法を[検索](https://www.google.com/search?q=spring+boot+%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3+%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE)すると次のような例をよく見る。
 
-```java {5} "^" "$"
+```java
 @Value
 @Builder
 public class Example {
 
+    // !className[/\^/] underline decoration-wavy underline-green-600
+    // !className[/\$/] underline decoration-wavy underline-green-600
     @Pattern(regexp = "^[A-Z][a-z]+$")
     String name = "Name";
 }
@@ -44,7 +46,7 @@ Java でバリデーションを実装したい場合は、[Jakarta Bean Validat
 Jakarta Bean Validation は、[JSR 303](https://www.jcp.org/en/jsr/detail?id=303)、[JSR 349](https://www.jcp.org/en/jsr/detail?id=349), [JSR 380](https://www.jcp.org/en/jsr/detail?id=380) で定められた Bean Validation が移管され、
 Eclipse Foundation により管理されている Bean Validation について定めた仕様である [^1]。
 
-[^1]: Java EE と Jakarta EE については [Java EEからJakarta EEへ](https://blogs.oracle.com/otnjp/post/transition-from-java-ee-to-jakarta-ee-ja) を参照。
+[^1]: Java EE と Jakarta EE については [Java EE から Jakarta EE へ](https://blogs.oracle.com/otnjp/post/transition-from-java-ee-to-jakarta-ee-ja) を参照。
 
 Java では Jakarta Bean Validation のように仕様のみが独立して定められ、それを実装するライブラリが複数存在することがある。
 例えば、Jakarta Bean Validation のリファレンス実装として [Hibernate Validator](https://hibernate.org/validator/) がある。
@@ -56,7 +58,7 @@ Hibernate Validator を使うことが多いが、Jakarta Bean Validation に準
 
 `@Pattern` アノテーションのバリデーションは `PatternValidator` で行われる。
 
-```java {59-60} "matches()"
+```java
 /*
  * Hibernate Validator, declare and validate application constraints
  *
@@ -116,6 +118,7 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
 		}
 
 		Matcher m = pattern.matcher( value );
+		// !className[/matches\(\)/] underline decoration-wavy underline-green-600
 		return m.matches();
 	}
 }
@@ -136,7 +139,7 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
 `^` と `$` を付けても動作としては変わらないが、ただのノイズでしかないため、不要な記述は避けるべきだろう。
 よって、始めに見た実装例は次のように書き換えることができる。
 
-```java {5}
+```java
 @Value
 @Builder
 public class Example {

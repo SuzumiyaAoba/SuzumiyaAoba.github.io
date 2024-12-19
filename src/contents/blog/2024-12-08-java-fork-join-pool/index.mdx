@@ -13,14 +13,14 @@ layout: CodeHike
 
 ## `ForkJoinPool` とは？
 
-[`ForkJoinPool`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html>) は [`ForkJoinTask`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html>) を実行するための [`ExecutorServie`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ExecutorService.html>) (Javadoc まま)。
+[`ForkJoinPool`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) は [`ForkJoinTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) を実行するための [`ExecutorServie`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ExecutorService.html) (Javadoc まま)。
 
 `ForkJoinPool` では `ForkJoinTask` を実装したクラスを用いて並列計算を処理していく。
 標準ライブラリでは `ForkJoinTask` を実装したクラスとして次の 3 つを提供している。
 
-- [`CountedCompleter`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/CountedCompleter.html>)
-- [`RecursiveAction`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html>)
-- [`RecursiveTask`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveTask.html>)
+- [`CountedCompleter`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/CountedCompleter.html)
+- [`RecursiveAction`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html)
+- [`RecursiveTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveTask.html)
 
 `CountedCompleter` は馴染みがないクラスだが `Stream` の並列処理を実現するために JDK 内部で使われているようだ[^JDK-CountedCompleter] [^日経XTECH]。
 本記事では `RecursiveAction` と `RecursiveTask` について注目する。
@@ -28,7 +28,7 @@ layout: CodeHike
 つまり、計算の主目的が副作用を発生させることであれば `RecursiveAction` を使い、新しい値を作ることが目的であれば `RecursiveTask` を使うことになる。
 
 [^JDK-CountedCompleter]: [repo:openjdk21 CountedCompleter | Code search results](https://github.com/search?q=repo%3Aopenjdk%2Fjdk21+CountedCompleter&type=code)
-[^日経XTECH]: [詳解 Java SE 8 第22回 Concurrency Utilitiesのアップデート その4 | 日経クロステック（xTECH）](https://xtech.nikkei.com/it/atcl/column/14/224071/012900017/)
+[^日経XTECH]: [詳解 Java SE 8 第 22 回 Concurrency Utilities のアップデート その 4 | 日経クロステック（xTECH）](https://xtech.nikkei.com/it/atcl/column/14/224071/012900017/)
 
 ## `ForkJoinPool` の使い方
 
@@ -100,7 +100,7 @@ Javadoc では直接的に書かれていないがマージソートと Java 標
 
 ### `RecursiveTask`
 
-`RecursiveAction` と違い、`RecursiveTask` で並列化できる処理の簡単な例としてフィボナッチ数列の `n` 番目を求めるような問題が思いつくが、既に Qiita に[フィボナッチ数列](<https://qiita.com/koduki/items/086d42b5a3c74ed8b59e>)を使った解説があるため、ここでは[マージソート](<https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%82%B8%E3%82%BD%E3%83%BC%E3%83%88>)を `RecursiveTask` を使って実装する。
+`RecursiveAction` と違い、`RecursiveTask` で並列化できる処理の簡単な例としてフィボナッチ数列の `n` 番目を求めるような問題が思いつくが、既に Qiita に[フィボナッチ数列](https://qiita.com/koduki/items/086d42b5a3c74ed8b59e)を使った解説があるため、ここでは[マージソート](https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%82%B8%E3%82%BD%E3%83%BC%E3%83%88)を `RecursiveTask` を使って実装する。
 `RecursiveAction` の例と一緒になってしまっているが、こちらは非破壊的なソートとなっている。
 また、要素数によってソートアルゴリズムを切り替えるような工夫はしていない。
 
@@ -179,10 +179,10 @@ public class MergeSortTask<T extends Comparable<? super T>, U extends Comparator
 
 先に紹介した `SortAction`、`MergeSortTask` の他に `Stream#sorted()`、 `Stream#parallelStream()#sorted()` を比較する。
 
-比較するまでもなく `SortAction` > `Stream#parallelStream()#sorted()` > `MergeSortTask` > `Stream#sort()` の順だと思うが要素数 100,000,000 (= 1億) の配列、リストに対して実行した結果を載せておく。
+比較するまでもなく `SortAction` > `Stream#parallelStream()#sorted()` > `MergeSortTask` > `Stream#sort()` の順だと思うが要素数 100,000,000 (= 1 億) の配列、リストに対して実行した結果を載せておく。
 
 | 実装                               | 実行時間 (s)   |
-|:-----------------------------------|:---------------|
+| :--------------------------------- | :------------- |
 | `Stream#sort()`                    | `36.263888375` |
 | `MergeSortTask`                    | `13.619412583` |
 | `SortAction`                       | `1.5119055`    |
@@ -190,7 +190,6 @@ public class MergeSortTask<T extends Comparable<? super T>, U extends Comparator
 
 ソート対象のデータを生成する部分は計測に含めていない。このことからデータ複製は恐しく高コストだし、並列化は高速化にとって有用であることがわかる。
 非破壊的なソートを実装する場合は配列を複製して `SortAction` に渡すのが一番高速になりそうだが、恐らく `paralellStream` を使う例と同じくらいの実行速度になるだろう。
-
 
 実行速度は以下の環境で行った。
 

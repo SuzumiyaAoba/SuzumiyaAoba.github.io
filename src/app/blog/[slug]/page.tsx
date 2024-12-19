@@ -11,7 +11,7 @@ import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
-import { getContent, getFrontmatter, getIds } from "@/libs/contents";
+import { getContent, getFrontmatter, getIds } from "@/libs/contents/blog";
 import Script from "next/script";
 
 type Props = {

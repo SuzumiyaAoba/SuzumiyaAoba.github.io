@@ -3,7 +3,6 @@ title: Hello, World
 date: 2023-09-30
 category: "テスト"
 tags: ["テスト"]
-draft: false
 ---
 
 ## org-mode
@@ -137,7 +136,7 @@ console.log("Hello, World");
 console.log("Hello, World!");
 ```
 
-```java showLineNumbers title=Main.java
+```java Main.java
 public class Main {
   public static void main(args: String[]) {
     System.out.println("Hello, World!");

@@ -13,7 +13,7 @@ category: "プログラミング"
 それにもかかわらず、単に `Stream#collect(Collectors.toList())` を `Stream#toList()` に書き換えるということだけに留まる記事がある。
 
 そこで、注意喚起として本記事を書くことにした。
-問題提起や結論については [JDK 16 : stream.toList() に見るAPI設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000) と重複するが、
+問題提起や結論については [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000) と重複するが、
 本記事ではより詳細な実装と類似の動作をするコードを確認する。
 
 ## **LITERALLY** TL;DL
@@ -36,11 +36,12 @@ Java 8 以降、`Stream` から `List` への変換は`Stream#collect(Collectors
 `Stream#collect(Collectors.toList())` の動作を理解するため、
 `List<Integer>` を受け取って `n` 倍して新しい `List` を返すユーティリティメソッド `timesN` を定義する。
 
-```java ".collect(Collectors.toList())"
+```java
 jshell> class ListUtils {
    ...>     static List<Integer> timesN(List<Integer> xs, int n) {
    ...>         return xs.stream()
    ...>                  .map(x -> x * n)
+   // !className[/.collect\(Collectors.toList\(\)\);/] underline decoration-wavy underline-green-600
    ...>                  .collect(Collectors.toList());
    ...>     }
    ...> }
@@ -76,7 +77,7 @@ $3 ==> class java.util.ArrayList
 また、可変性についても何も保証されないことが書いてある。
 しかし、**Open JDK** の実装を確認すると `ArrayList` が返されることがわかる。
 
-```java "ArrayList"
+```java
 public class Collectors {
     // ...
 
@@ -92,6 +93,7 @@ public class Collectors {
      */
     public static <T>
     Collector<T, ?, List<T>> toList() {
+        // !className[/ArrayList::new/] underline decoration-wavy underline-green-600
         return new CollectorImpl<>(ArrayList::new, List::add,
                                    (left, right) -> { left.addAll(right); return left; },
                                    CH_ID);
@@ -120,11 +122,12 @@ Java 標準ライブラリの Javadoc に従うと、仕様としては `$1.add(
 次に Java 16 で追加された `Stream#toList()` を使ってみる。
 `Stream#collect(Collectors.toList())` と同じように `List` に変換できる。
 
-```java "toList()"
+```java
 jshell> class ListUtils {
    ...>     static List<Integer> timesN(List<Integer> xs, int n) {
    ...>         return xs.stream()
    ...>                  .map(x -> x * n)
+   // !className[/.toList\(\)/] underline decoration-wavy underline-green-600
    ...>                  .toList();
    ...>     }
    ...> }
@@ -173,13 +176,13 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 [Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#toList()>) を確認するとメソッドの仕様について次のように書かれている。
 
-> 返されるListは変更できません。ミューテータ・メソッドを呼び出すと、常にUnsupportedOperationExceptionがスローされます。
+> 返される List は変更できません。ミューテータ・メソッドを呼び出すと、常に UnsupportedOperationException がスローされます。
 
 また、次のような記述もある。
 
 > **実装要件:**
 >
-> このインタフェースの実装は、次のように生成されたListを返します:
+> このインタフェースの実装は、次のように生成された List を返します:
 >
 > `Collections.unmodifiableList(new ArrayList<>(Arrays.asList(this.toArray())))`
 
@@ -200,7 +203,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 ソースコードを見ると `Stream#toArray()` は抽象メソッドとなっている。
 
-```java showLineNumbers{872}
+```java
     /**
      * Returns an array containing the elements of this stream.
      *
@@ -222,7 +225,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 `List` インターフェースを実装するクラスの中で使われることが多いのは `ArrayList` のインスタンスだろう。
 [`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) の実装は `AbstractCollection` クラスでされている。
 
-```java showLineNumbers{727}
+```java
     /**
      * {@inheritDoc}
      *
@@ -271,7 +274,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 次に `Arrays#asList` の実装を確認する。
 
-```java showLineNumbers{4082} "ArrayList"
+```java
     /**
      * Returns a fixed-size list backed by the specified array. Changes made to
      * the array will be visible in the returned list, and changes made to the
@@ -312,6 +315,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
     @SafeVarargs
     @SuppressWarnings("varargs")
     public static <T> List<T> asList(T... a) {
+        // !className[/ArrayList/] underline decoration-wavy underline-green-600
         return new ArrayList<>(a);
     }
 ```
@@ -323,19 +327,22 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 ここで現れる `ArrayList` は、一般的に知られている `java.util.ArrayList` ではなく、`Arrays` クラスの内部クラスとして実装されている `ArrayList` が使われる。
 
-```java showLineNumbers{4125} "AbstractList" "E[] a;" "a = Objects.requireNonNull(array);"
+```java
     /**
      * @serial include
      */
+    // !className[/AbstractList/] underline decoration-wavy underline-green-600
     private static class ArrayList<E> extends AbstractList<E>
         implements RandomAccess, java.io.Serializable
     {
         @java.io.Serial
         private static final long serialVersionUID = -2764017481108945198L;
         @SuppressWarnings("serial") // Conditionally serializable
+        // !className[/private final E.. a/] underline decoration-wavy underline-green-600
         private final E[] a;
 
         ArrayList(E[] array) {
+            // !className[/a = Objects.requireNonNull\(array\);/] underline decoration-wavy underline-green-600
             a = Objects.requireNonNull(array);
         }
 ```
@@ -348,7 +355,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 `ArrayList` の実装を見るとコンストラクタでは引数で渡された配列をフィールドに持つだけであり、渡された配列に対しては `null` チェックだけを行っている。
 また、`add` のようなミュータブルな操作は `ArrayList` 内で実装されておらず、継承している `AbstractList` の方で定義されている。
 
-```java showLineNumbers{139}
+```java
     /**
      * {@inheritDoc}
      *
@@ -378,7 +385,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `ArrayList` のコンストラクタは以下のような実装となっている。
 
-```java showLineNumbers{172} "Collection<? extends E> c" "elementData = Arrays.copyOf(a, size, Object[].class);"
+```java
     /**
      * Constructs a list containing the elements of the specified
      * collection, in the order they are returned by the collection's
@@ -387,12 +394,14 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
      * @param c the collection whose elements are to be placed into this list
      * @throws NullPointerException if the specified collection is null
      */
+    // !className[/Collection<\? extends E> c/] underline decoration-wavy underline-green-600
     public ArrayList(Collection<? extends E> c) {
         Object[] a = c.toArray();
         if ((size = a.length) != 0) {
             if (c.getClass() == ArrayList.class) {
                 elementData = a;
             } else {
+                // !className[/elementData = Arrays.copyOf\(a, size, Object...class\);/] underline decoration-wavy underline-green-600
                 elementData = Arrays.copyOf(a, size, Object[].class);
             }
         } else {
@@ -416,7 +425,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `Arrays#copyOf` を見る前に `Arrays#asList()` で返される `ArrayList` の `toArray` メソッドがどのように実装されているか見てみよう。
 
-```java showLineNumbers{4145}
+```java
         @Override
         public Object[] toArray() {
             return Arrays.copyOf(a, a.length, Object[].class);
@@ -436,7 +445,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 
 `Arrays#copyOf` の実装を見てみよう。
 
-```java showLineNumbers{3484} "System.arraycopy"
+```java
     /**
      * Copies the specified array, truncating or padding with nulls (if necessary)
      * so the copy has the specified length.  For all indices that are
@@ -467,6 +476,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
         T[] copy = ((Object)newType == (Object)Object[].class)
             ? (T[]) new Object[newLength]
             : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        // !className[/System.arraycopy/] underline decoration-wavy underline-green-600
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
         return copy;
@@ -489,7 +499,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 
 最後に `Collections#unmodifiableList()` の実装を見てみよう。
 
-```java showLineNumbers{1301} "new UnmodifiableRandomAccessList<>(list)"
+```java
     /**
      * Returns an <a href="Collection.html#unmodview">unmodifiable view</a> of the
      * specified list. Query operations on the returned list "read through" to the
@@ -513,6 +523,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
         }
 
         return (list instanceof RandomAccess ?
+                // !className[/new UnmodifiableRandomAccessList<>\(list\)/] underline decoration-wavy underline-green-600
                 new UnmodifiableRandomAccessList<>(list) :
                 new UnmodifiableList<>(list));
     }
@@ -528,10 +539,11 @@ Java で実装されたコードとして追えるのはここまでとなる。
 
 `UnmodifiableRandomAccesList` の実装の大部分は `UnmodifiableList` の方でされている。
 
-```java showLineNumbers{1427} "extends UnmodifiableList<E>"
+```java
     /**
      * @serial include
      */
+    // !className[/extends UnmodifiableList<E>/] underline decoration-wavy underline-green-600
     static class UnmodifiableRandomAccessList<E> extends UnmodifiableList<E>
                                               implements RandomAccess
     {
@@ -568,7 +580,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 `UnmodifiableList` は引数で受け取ったリストをフィールドに持ち、
 ミュータブルな操作を行うメソッドは `UnsupportedOperationException` を返すようになラッパーとなっている。
 
-```java showLineNumbers{1328} "UnsupportedOperationException"
+```java
     /**
      * @serial include
      */
@@ -590,9 +602,11 @@ Java で実装されたコードとして追えるのはここまでとなる。
 
         public E get(int index) {return list.get(index);}
         public E set(int index, E element) {
+            // !className[/UnsupportedOperationException/] underline decoration-wavy underline-green-600
             throw new UnsupportedOperationException();
         }
         public void add(int index, E element) {
+            // !className[/UnsupportedOperationException/] underline decoration-wavy underline-green-600
             throw new UnsupportedOperationException();
         }
         // ...
@@ -615,7 +629,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
 
 それでは `Collectors#unmodifiableList()` の実装を見てみよう。
 
-```java showLineNumbers{285}
+```java
 public class Collectors {
     // ...
 
@@ -658,7 +672,7 @@ public class Collectors {
 
 ここで気になるのは `SharedSecrets` だ。実装の詳細を見ていこう。
 
-```java showLineNumbers{89} "ImmutableCollections$Access"
+```java
 /** A repository of "shared secrets", which are a mechanism for
     calling implementation-private methods in another package without
     using reflection. A package-private class implements a public
@@ -675,6 +689,7 @@ public class SharedSecrets {
         var access = javaUtilCollectionAccess;
         if (access == null) {
             try {
+                // !className[/ImmutableCollections\$Access/] underline decoration-wavy underline-green-600
                 Class.forName("java.util.ImmutableCollections$Access", true, null);
                 access = javaUtilCollectionAccess;
             } catch (ClassNotFoundException e) {}
@@ -696,7 +711,7 @@ Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合�
 
 ここでは `java.util.ImmutableCollections$Access` が `JavaUtilCollectionAccess` の実装を提供しているのでそちらを見てみよう。
 
-```java showLineNumbers{120}
+```java
     static class Access {
         static {
             SharedSecrets.setJavaUtilCollectionAccess(new JavaUtilCollectionAccess() {
@@ -720,7 +735,7 @@ Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合�
 `listFromTrustedArray` の実装は次のようになっており、**各要素に対する明示的な `null` チェックが `List` への変換の前に行われている**。
 そのため、**リストの先頭から末尾までの走査が一度行われる**。
 
-```java showLineNumbers{195}
+```java
     /**
      * Creates a new List from a trusted array, checking for and rejecting null
      * elements.
@@ -836,10 +851,10 @@ Java はこれまで伝統的に `List` と言えば基本的には可変なリ�
 ### 中途半端な実装
 
 今日においてコレクションがメソッドやクラスのようなスコープを越えて可変であることを誰が喜ぶのだろうか。
-コレクションが可変であることは、処理を追うのt難しくし、バグを生み出す原因となる。
+コレクションが可変であることは、処理を追うの t 難しくし、バグを生み出す原因となる。
 
 その需要に応える形として Java 10 で [`Collections#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>) が追加されたのだろう。
-`Collections#toUnmodifiableList()` は[変更不可能なList](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable)を返す。
+`Collections#toUnmodifiableList()` は[変更不可能な List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable)を返す。
 
 しかし、実装を追うと `Collectiors#unmodifiableList()` は明らかに他の二つの方法よりも実行時間がかかるため使うのは躊躇われる。
 
@@ -868,7 +883,7 @@ Java に限った話ではないかもしれないが、私の (少ないプロ�
 
 今回の可変性・不変性に対する Q&A は [Collections Framework](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/index.html) の FAQ に記載されている。
 
-- [オプションのオペレーション (およびUnsupportedOperationException)を排除できるように、コア・コレクション・インタフェースで不変性を直接サポートしてはどうでしょうか。](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/designfaq.html#a1)
+- [オプションのオペレーション (および UnsupportedOperationException)を排除できるように、コア・コレクション・インタフェースで不変性を直接サポートしてはどうでしょうか。](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/designfaq.html#a1)
 
 長々と書かれているが可変性・不変性によって API を分けてもよかったのではないかと素人ながら考えてしまう。
 メソッドを呼び出すまで可変か不変かわからないコレクションと戦うのは辛い。
@@ -888,4 +903,4 @@ Java のような可変コレクションをベースに構築された言語が
 
 ## 参考サイト
 
-- [JDK 16 : stream.toList() に見るAPI設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000)
+- [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000)

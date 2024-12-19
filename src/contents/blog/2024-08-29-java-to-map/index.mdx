@@ -7,7 +7,7 @@ tags: ["Java", "プログラミング"]
 
 ## はじめに
 
-本記事では `Stream` から `Map` への変換で使う [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)) の注意点について記す。
+本記事では `Stream` から `Map` への変換で使う [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)>) の注意点について記す。
 [`Stream#toList()` の罠](../2024-08-29-java-to-map) に続いて `Stream` の使い方の話になる。
 `Stream` は便利な反面、Java の柵に囚われた悲しきモンスターな気がしてならない。
 他の言語で同様の処理を実現するためのライブラリと比べると API が全体的に歪ではないだろうか。
@@ -25,7 +25,7 @@ tags: ["Java", "プログラミング"]
 `Collectors#toMap` は 3 つのメソッドをオーバーロードしている。
 それぞれ引数の数が異なり、用途によって使い分けなければならない。
 
-### 引数が 2 つの [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function))
+### 引数が 2 つの [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)>)
 
 引数が 2 つの `Collectors#toMap` のシグネチャは次の通りである。
 
@@ -48,14 +48,6 @@ jshell> Stream.of(
    ...> ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
 $1 ==> {Bob=1972, Alice=1995, Charile=1991}
 ```
-
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991)
-).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-*/}
 
 例を簡単にするため、`Stream` の要素に `Map.Entry` を使っているが、
 現実のコードでは何かしらのクラスからあるフィールドの値をキーにしたマップを作る場面が多いだろう。
@@ -84,15 +76,6 @@ jshell> Stream.of(
 |        at (#3:6)
 ```
 
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-*/}
-
 `Stream` を使ったプログラミング経験が少ないなかったり、
 マップというデータ構造を扱うのであればキーの重複時の動作に思いを巡らす習慣がないと
 このようなパターンのデータが渡された場合のことをケアできずバグの原因となってしまう。
@@ -113,16 +96,17 @@ Java の例外メッセージは親切にも `Alice` というキーで `1995` �
 
 [ERR01-J. センシティブな情報を例外によって外部に漏えいしない](https://www.jpcert.or.jp/java-rules/err01-j.html)で紹介されているように検査例外であれば実装時にクレデンシャルが露呈するリスクに気がつけるが、
 標準 API が投げる非検査例外が例外のメッセージにオブジェクトの値を入れ込んでくるのが非常に厄介だ。
+
 </Message>
 
-## 引数が 3 つの [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator))
+## 引数が 3 つの [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator)>)
 
 引数が 3 つの `Collectors#toMap` のシグネチャは次の通りである。
 
 ```java
 public static <T, K, U> Collector<T,?,Map<K,U>> toMap(
-  Function<? super T,? extends K> keyMapper, 
-  Function<? super T,? extends U> valueMapper, 
+  Function<? super T,? extends K> keyMapper,
+  Function<? super T,? extends U> valueMapper,
   BinaryOperator<U> mergeFunction
 )
 ```
@@ -146,19 +130,6 @@ jshell> Stream.of(
 $2 ==> {Bob=1972, Alice=1992, Charile=1991}
 ```
 
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(
-    Map.Entry::getKey, 
-    Map.Entry::getValue,
-    (existing, replacement) -> replacement
-))
-*/}
-
 `Alice` の値が `1992` になっていることが確認できる。
 `mergeFunction` は単なる `BinaryFunction` のため次のような処理も書ける。
 
@@ -176,34 +147,21 @@ jshell> Stream.of(
 $3 ==> {Bob=1972, Alice=1995,1992, Charile=1991}
 ```
 
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(
-    Map.Entry::getKey, 
-    (entry) -> entry.getValue().toString(),
-    (existing, replacement) -> existing + "," + replacement
-))
-*/}
-
 この例では、`Map.entry` の値を `Integer` から `String` に変換して、
 `Map<String, String>` 型のマップを生成している。
 `mergeFunction` では、キーが重複したときは既存の値と新しい値をカンマ区切りで繋ぐようにした。
 
 このように引数が 3 つある `Collections#toMap` を使えば、キーが重複した場合を考慮したマップを作れる。
 
-## 引数が 4 つの [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator,java.util.function.Supplier))
+## 引数が 4 つの [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator,java.util.function.Supplier)>)
 
 最後に引数が 4 つある `Collectors#toMap` のシグネチャを確認しよう。この関数は使う場面は多くないだろう。
 
 ```java
 public static <T, K, U, M extends Map<K, U>> Collector<T,?,M> toMap(
-  Function<? super T,? extends K> keyMapper, 
-  Function<? super T,? extends U> valueMapper, 
-  BinaryOperator<U> mergeFunction, 
+  Function<? super T,? extends K> keyMapper,
+  Function<? super T,? extends U> valueMapper,
+  BinaryOperator<U> mergeFunction,
   Supplier<M> mapFactory
 )
 ```
@@ -226,20 +184,6 @@ jshell> Stream.of(
 $4 ==> {Bob=1972, Alice=1995,1992, Charile=1991}
 ```
 
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(
-    Map.Entry::getKey, 
-    (entry) -> entry.getValue().toString(),
-    (existing, replacement) -> existing + "," + replacement,
-    HashMap::new
-))
-*/}
-
 ドキュメントでは空のマップのサプライヤと書かかれているが空である必要はないだろう。
 
 ```java
@@ -261,29 +205,11 @@ jshell> Stream.of(
 $7 ==> {Bob=1972, Alice=1995,1992, Charile=1991, Dave=2000}
 ```
 
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(
-    Map.Entry::getKey, 
-    (entry) -> entry.getValue().toString(),
-    (existing, replacement) -> existing + "," + replacement,
-    () -> {
-      var map = new HashMap<String, String>();
-      map.put("Dave", "2000");
-      return map;
-    }
-))
-*/}
-
 このような使い方をすることはないだろうが、初期データを登録されたマップを作ってからデータを追加していくこともできる。
 
 ## 重複したときは `List` にしたいのですが…
 
-[Collectors#groupingBy](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function)) を使いましょう。
+[Collectors#groupingBy](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function)>) を使いましょう。
 
 しかし、この記事を読んで `Collectors#toMap` の動作を理解した人であれば `Collectors#toMap` でも実装できることに気がつくでしょう。
 例えば `valueMapper`、`mergeFunction` に次のような処理を書けば同じような結果が得られる。
@@ -310,28 +236,6 @@ jshell> Stream.of(
    ...> ))
 $8 ==> {Bob=[1972], Alice=[1995, 1992], Charile=[1991]}
 ```
-
-{/*
-Stream.of(
-    Map.entry("Alice", 1995),
-    Map.entry("Bob", 1972),
-    Map.entry("Charile", 1991),
-    Map.entry("Alice", 1992)
-).collect(Collectors.toMap(
-    Map.Entry::getKey, 
-    (entry) -> {
-      var list = new ArrayList<Integer>();
-      list.add(entry.getValue());
-
-      return list;
-    },
-    (existing, replacement) -> {
-      existing.addAll(replacement);
-      
-      return existing;
-    }
-))
-*/}
 
 しかし、毎回これを書くのは億劫なので素直に重複した要素をすべて別のコレクションに集計したい場合は `Collectors#groupingBy` を使いましょう。
 
@@ -365,7 +269,7 @@ Stream.of(
     Map.entry("Bob", 1972),
     Map.entry("Charile", 1991)
 ).collect(Collectors.toMap(
-  Map.Entry::getKey, 
+  Map.Entry::getKey,
   Map.Entry::getValue,
   ToMap::neverDuplicateKey
 ))
@@ -378,4 +282,4 @@ Java に対する愚痴はこの辺にして、読者の方がこの記事を読
 
 ## 類似の記事
 
-- [Collectors.toMap() は第3引数を意識してください - A Memorandum](https://blog1.mammb.com/entry/2017/04/21/122919)
+- [Collectors.toMap() は第 3 引数を意識してください - A Memorandum](https://blog1.mammb.com/entry/2017/04/21/122919)

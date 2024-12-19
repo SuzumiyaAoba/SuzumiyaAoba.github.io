@@ -55,7 +55,7 @@ Java の `Optional` や `Stream` を使ってコードは書いているもの�
 `Optional` では存在する場合と存在しない場合を表現するインスタンスが内部クラスに隠れてしまっているため意識することはなかったかもしれないが、
 値が存在する場合はフィールドに `value` という変数で値を持つ `Optional` のインスタンスと、`value` に `null` が代入された `Optional` のシングルトンインスタンスの二つでそれぞれ表現している[^Optionalの実装]。
 
-[^Option型]: [Option型 - Wikipedia](https://ja.wikipedia.org/wiki/Option%E5%9E%8B)
+[^Option型]: [Option 型 - Wikipedia](https://ja.wikipedia.org/wiki/Option%E5%9E%8B)
 [^Optionalの実装]: https://github.com/openjdk/jdk21/blob/master/src/java.base/share/classes/java/util/Optional.java
 
 `Maybe` では `Just` で値が存在する場合を表現し、`Nothing` で値が存在する。
@@ -373,7 +373,7 @@ public class CallByNeed<T> {
 ```
 
 `ClassByNeed` クラスはコンストラクタで `Supplier` を受け取ってフィールドで値を持つ。
-`Supplier` は呼ぶと値が返ってくる  `get` メソッドを定義する関数型インターフェースだ。
+`Supplier` は呼ぶと値が返ってくる `get` メソッドを定義する関数型インターフェースだ。
 これにより、コンストラクタで受け取った段階では値を求める計算は発生せず、`CallByNeed` の `get` メソッド内で初めて `Supplier` の `get` メソッドを呼んで値を取り出している。
 `Supplier` と `CallByNeed` の違いとして、`Supplier` は呼び出される度に `get` メソッド内の処理がすべて実行されるが、
 `CallByNeed` ではコンストラクタで受け取った `Supplier` の `get` メソッドが一度でも呼ばれると二回目以降は一回目の値をキャッシュして返す。
@@ -716,21 +716,21 @@ public sealed interface Maybe<T> extends Mappable<Maybe, T> {
 
 1. 恒等律の保存
 
-    ```java
-    fa.map(Function.identity()) === Function.identity().apply(fa)
-    ```
+   ```java
+   fa.map(Function.identity()) === Function.identity().apply(fa)
+   ```
 
-    この式は「`fa` の `map` に恒等関数を渡した結果 (左辺)」 と「`fa` に恒等関数を適用した結果 (右辺)」は任意の `fa` について等しいように `map` は定義されなければならない、と言っている。
-    つまり、恒等射を `map` に渡しても `fa` の持つ値は変わらないように `map` を実装せよ、ということだ。
+   この式は「`fa` の `map` に恒等関数を渡した結果 (左辺)」 と「`fa` に恒等関数を適用した結果 (右辺)」は任意の `fa` について等しいように `map` は定義されなければならない、と言っている。
+   つまり、恒等射を `map` に渡しても `fa` の持つ値は変わらないように `map` を実装せよ、ということだ。
 
 2. 合成の保存
 
-    ```java
-    fa.map(f.compose(g)) === fa.map(f).map(g)
-    ```
+   ```java
+   fa.map(f.compose(g)) === fa.map(f).map(g)
+   ```
 
-    この式は「`fa` の `map` に関数 `f`、`g` の合成を渡した結果 (左辺)」と「`fa` の `map` に `f` を渡した結果に対して `map` を呼び出して `g` を渡した結果 (右辺)」は任意の `fa`、`f`、`g` について等しいように `map` は定義されなければならない、と言っている。
-    つまり、`map` の中身に合成された関数を適用した結果と、合成されている関数を別々に `map` に渡しても結果は常に同じくなるように実装せよ、ということだ。
+   この式は「`fa` の `map` に関数 `f`、`g` の合成を渡した結果 (左辺)」と「`fa` の `map` に `f` を渡した結果に対して `map` を呼び出して `g` を渡した結果 (右辺)」は任意の `fa`、`f`、`g` について等しいように `map` は定義されなければならない、と言っている。
+   つまり、`map` の中身に合成された関数を適用した結果と、合成されている関数を別々に `map` に渡しても結果は常に同じくなるように実装せよ、ということだ。
 
 ここで `fa` は `Maybe` や `LazyList` のような `map` を実装するクラスの任意のインスタンスを表している。
 これら二つの規則を満たすような `map` を実装している `Maybe` や `LazyList` は Functor と呼ばれているものになる [^Functor]。
@@ -805,6 +805,7 @@ Functor について知ったところで Java の `Optional` を思い出して
 > A. **Functor ではありません :-1:**
 
 理由は考えてみてください。ヒントとして `null` が絡んだ場合の合成を考えると、合成の保存が成り立たない例を見つけられるでしょう。
+
 </details>
 
 ## Scala で `Maybe`、`LazyList` を実装
@@ -817,7 +818,7 @@ Java では[型クラス](https://ja.wikipedia.org/wiki/%E5%9E%8B%E3%82%AF%E3%83
 
 Java では jshell を使ってシェル上でコードを試していたが、ここからは Scala CLI 上でコードを実行する。
 手元に Scala の実行環境を用意するのが面倒な人は [Scastie](https://scastie.scala-lang.org/) にコードを貼って動作を確認して欲しい。
-Scala CLI の使い方については、日本語の記事だと [初心者向け: Scala CLIでScalaをはじめよう - Lambdaカクテル](https://blog.3qe.us/entry/2023/12/20/011354) が参考になる。
+Scala CLI の使い方については、日本語の記事だと [初心者向け: Scala CLI で Scala をはじめよう - Lambda カクテル](https://blog.3qe.us/entry/2023/12/20/011354) が参考になる。
 
 さっそく Java で定義した `Maybe` と `LazyList` を Scala で実装してみよう。
 
@@ -890,10 +891,10 @@ trait Functor[F[_]]:
 ```
 
 これは解説が必要だろう。`trait` は `Maybe` や `MyLazyList` の定義でも出てきたが Java で言うところの `interface` と同じような意味のキーワードだ。
-`trait Functor[F[_]]` は Javaで表現するなら `interface Function<F<?>>` のようになる。
+`trait Functor[F[_]]` は Java で表現するなら `interface Function<F<?>>` のようになる。
 Java では型を受け取る型を定義できなったが Scala ではそのような型を扱うことができる。
 このような型を受け取る型を**高カインド型**という。
-高カインド型についてより知りたい人は [関数型言語で登場する高カインド型(Higher-Kinded Types; HKT) と(* -> *) -> *みたいなやつの早わかりメモ - Lambdaカクテル](https://blog.3qe.us/entry/2023/10/09/211915) が参考になるだろう。
+高カインド型についてより知りたい人は [関数型言語で登場する高カインド型(Higher-Kinded Types; HKT) と(_ -> _) -> \*みたいなやつの早わかりメモ - Lambda カクテル](https://blog.3qe.us/entry/2023/10/09/211915) が参考になるだろう。
 
 ここで `F[_]` は `Maybe[T]` や `MyLazyList[T]` のような任意の型 `T` を受け取る型である `Maybe`、`MyLazyList` を変数 `F` として扱うことを宣言している。
 つまり、`Functor` は任意の型を受け取る型について定義されるということを表現している。
@@ -905,7 +906,7 @@ Java では型を受け取る型を定義できなったが Scala ではその�
 TypeScript の関数の型も引数の名前がシグネチャに含まれて宣言されるが、それと同じようなものだと思ってもらえればよい [^TypeScript]。
 `extension` についてより詳しい解説が欲しい人は[公式ドキュメント](https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html)を参照して欲しい。
 
-[^TypeScript]: [関数の型の宣言 (function type declaration) | TypeScript入門『サバイバルTypeScript』](https://typescriptbook.jp/reference/functions/function-type-declaration)
+[^TypeScript]: [関数の型の宣言 (function type declaration) | TypeScript 入門『サバイバル TypeScript』](https://typescriptbook.jp/reference/functions/function-type-declaration)
 
 これだけ見ると Java の `interface` と変わないと思うかもしれないが `Functor` を使って `Maybe` や `MyLazyList` に `map` メソッドを追加する方法が異なる。
 Java では `interface` を `implements` を使って実装するしかなかったが Scala では違う方法で `Maybe` や `MyLazyList` に `map` メソッドを追加する。
@@ -972,7 +973,7 @@ scala> given Functor[Maybe] with
 
 そして次のコードを実行する。
 
-``` scala REPL
+```scala REPL
 scala> Just(1).map(_ * 2)
 val res0: Maybe[Int] = Just(2)
 ```

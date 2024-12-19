@@ -6,24 +6,23 @@ import { z } from "zod";
 import matter from "gray-matter";
 
 import { FC } from "react";
-import defaultComponent from "./defaultComponent";
-import codeHikeComponent from "./codeHikeComponent";
+import defaultComponent from "../../markdown/defaultComponent";
+import codeHikeComponent from "../../markdown/codeHikeComponent";
 import { globSync } from "fs";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
 export type Layout = z.infer<typeof layoutSchema>;
 
-export const frontmatterSchema = z.object({
+const frontmatterSchema = z.object({
   title: z.string(),
   date: z.date(),
   category: z.string(),
   tags: z.array(z.string()),
-  layout: layoutSchema,
   draft: z.boolean().optional(),
 });
 
-export type Frontmatter = z.infer<typeof frontmatterSchema>;
+type Frontmatter = z.infer<typeof frontmatterSchema>;
 
 export const Pages = {
   blog: {
@@ -192,15 +191,12 @@ const chooseComponent = (
   slug: string,
   parsedContent: ParsedContent
 ): FC<unknown> => {
+  const key = parsedContent.page;
+  const assetsBasePath = Pages[key].assets;
   const args = {
-    key: parsedContent.page,
+    assetsBasePath,
     slug,
     ...parsedContent,
   };
-  switch (parsedContent.frontmatter.layout) {
-    case "default":
-      return defaultComponent(args);
-    case "CodeHike":
-      return codeHikeComponent(args);
-  }
+  return codeHikeComponent(args);
 };
