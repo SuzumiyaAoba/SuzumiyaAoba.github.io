@@ -1,6 +1,5 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { FC } from "react";
-import { PageKey, Pages } from "../contents/blog";
 
 import { CodeWithTabs } from "@/components/CodeHike/code-tabs";
 import { Code } from "@/components/CodeHike/code";

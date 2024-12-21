@@ -11,8 +11,9 @@ import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
-import { getContent, getFrontmatter, getIds } from "@/libs/contents/blog";
+import { getContent, getIds, Pages } from "@/libs/contents/blog";
 import Script from "next/script";
+import { getFrontmatter } from "@/libs/contents/markdown";
 
 type Props = {
   params: {
@@ -29,7 +30,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const forntmatter = await getFrontmatter("blog", params.slug);
+  const forntmatter = await getFrontmatter(
+    Pages["blog"].frontmatter,
+    Pages["blog"].root,
+    params.slug
+  );
 
   return {
     title: `${forntmatter?.title} | ${config.metadata.title}`,
