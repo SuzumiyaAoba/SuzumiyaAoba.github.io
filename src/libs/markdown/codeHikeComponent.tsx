@@ -19,14 +19,12 @@ const chConfig: CodeHikeConfig = {
 };
 
 export default ({
-  assetsBasePath,
-  slug,
+  paths,
   format,
   data,
   content,
 }: {
-  assetsBasePath: string;
-  slug: string;
+  paths: string[];
   format: "md" | "mdx";
   data: { [key: string]: any };
   content: string;
@@ -38,7 +36,7 @@ export default ({
         mdxOptions: {
           format,
           remarkPlugins: [...defaultRemarkPlugins, [remarkCodeHike, chConfig]],
-          rehypePlugins: [...defaultRehypePlugins(assetsBasePath, slug)],
+          rehypePlugins: [...defaultRehypePlugins(...paths)],
           recmaPlugins: [[recmaCodeHike, chConfig]],
         },
         scope: data,

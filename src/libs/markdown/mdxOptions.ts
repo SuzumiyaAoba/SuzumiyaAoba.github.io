@@ -22,13 +22,10 @@ export const defaultRemarkPlugins: any[] = [
   remarkMermaid,
 ];
 
-export const defaultRehypePlugins: (
-  assetsBasePath: string,
-  slug: string
-) => any[] = (assetsBasePath, slug) => [
+export const defaultRehypePlugins = (...paths: string[]): any[] => [
   rehypeSlug,
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-  rehypeImageSize(assetsBasePath, slug),
+  rehypeImageSize(...paths),
   rehypeKatex,
 ];
 

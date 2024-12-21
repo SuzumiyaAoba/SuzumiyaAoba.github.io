@@ -11,9 +11,9 @@ import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
-import { getContent, getIds, Pages } from "@/libs/contents/blog";
+import { getIds, Pages } from "@/libs/contents/blog";
 import Script from "next/script";
-import { getFrontmatter } from "@/libs/contents/markdown";
+import { getContent, getFrontmatter } from "@/libs/contents/markdown";
 
 type Props = {
   params: {
@@ -42,7 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const content = await getContent("blog", params.slug);
+  const content = await getContent(
+    Pages["blog"].frontmatter,
+    "blog",
+    params.slug
+  );
 
   if (!content) {
     notFound();

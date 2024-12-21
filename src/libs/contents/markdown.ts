@@ -102,6 +102,10 @@ export async function getCSS(...paths: string[]): Promise<string[]> {
   );
 }
 
+const tripContentsPath = (paths: string[]) => {
+  return paths.slice(2);
+};
+
 export const getContent = async <FRONTMATTER>(
   frontmatterParser: Parser<FRONTMATTER>,
   ...paths: string[]
@@ -119,11 +123,8 @@ export const getContent = async <FRONTMATTER>(
     return null;
   }
 
-  const slug = paths.slice(-1)[0];
-
   const component = codeHikeComponent({
-    assetsBasePath: "",
-    slug,
+    paths: ["assets", ...paths],
     ...parsedContent,
   });
 

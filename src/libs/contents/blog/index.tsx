@@ -3,9 +3,7 @@ import { readdir } from "fs/promises";
 
 import { z } from "zod";
 
-import { FC } from "react";
-import codeHikeComponent from "../../markdown/codeHikeComponent";
-import { Content, getRawContent, getCSS, parseRawContent } from "../markdown";
+import { Content, getRawContent, parseRawContent } from "../markdown";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
@@ -47,14 +45,6 @@ export const getIds = async (key: PageKey): Promise<string[]> => {
   );
 };
 
-type ParsedContent = {
-  format: "md" | "mdx";
-  page: PageKey;
-  data: { [key: string]: any };
-  frontmatter: Frontmatter;
-  content: string;
-};
-
 export async function* getFrontmatters(key: PageKey) {
   for await (const dir of await getIds(key)) {
     if (!dir) {
@@ -79,49 +69,3 @@ export async function* getFrontmatters(key: PageKey) {
     };
   }
 }
-
-export const getContent = async <T extends PageKey>(
-  key: T,
-  id: string
-): Promise<BlogContent<T> | null> => {
-  const rawContent = await getRawContent(Pages[key].root, id);
-  if (!rawContent) {
-    return null;
-  }
-
-  const stylesheets = await getCSS(path.dirname(rawContent.path));
-
-  const parsedContent = parseRawContent(Pages[key].frontmatter, rawContent);
-  const frontmatter = parsedContent?.frontmatter;
-  if (!parsedContent || !frontmatter) {
-    return null;
-  }
-
-  const component = chooseComponent(id, {
-    page: key,
-    ...parsedContent,
-    frontmatter,
-  });
-
-  return {
-    rawContent,
-    content: parsedContent.content,
-    frontmatter: parsedContent.frontmatter,
-    stylesheets,
-    Component: component,
-  };
-};
-
-const chooseComponent = (
-  slug: string,
-  parsedContent: ParsedContent
-): FC<unknown> => {
-  const key = parsedContent.page;
-  const assetsBasePath = Pages[key].assets;
-  const args = {
-    assetsBasePath,
-    slug,
-    ...parsedContent,
-  };
-  return codeHikeComponent(args);
-};
