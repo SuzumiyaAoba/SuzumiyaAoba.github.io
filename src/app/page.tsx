@@ -27,7 +27,7 @@ export default async function Home() {
                 <a href={`/blog/${slug}/`} className="hover:underline">
                   {frontmatter.title}
                 </a>
-                <div className="mt-2 flex gap-x-2 text-xs">
+                <div className="flex flex-wrap mt-2 gap-2 text-xs">
                   {frontmatter.tags.map((tag) => (
                     <Tag key={tag} label={tag} />
                   ))}
