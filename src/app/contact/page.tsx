@@ -4,7 +4,7 @@ export default async function Contact() {
       <iframe
         src="https://docs.google.com/forms/d/e/1FAIpQLSeXOZA4Mriinisf4yXq8Y9XxfiSNvWjF_qhg5qFYY8af85bfQ/viewform?embedded=true"
         width="640"
-        height="821"
+        height="1000"
         frameBorder="0"
         marginHeight={0}
         marginWidth={0}
