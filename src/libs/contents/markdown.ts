@@ -183,7 +183,7 @@ export const getFrontmatters = async <FRONTMATTER>({
       }
 
       return {
-        slug: contentPath,
+        path: contentPath,
         frontmatter: content.frontmatter,
       };
     })

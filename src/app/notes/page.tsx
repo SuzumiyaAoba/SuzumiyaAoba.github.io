@@ -1,27 +1,34 @@
+import { Metadata } from "next";
+import config from "@/config";
 import { Tag } from "@/components/Tag";
-import { Pages } from "@/libs/contents/blog";
 import { getFrontmatters } from "@/libs/contents/markdown";
-// import { getFrontmatters } from "@/libs/contents/blog";
 import { compareDesc, format } from "date-fns";
+import { frontmatterSchema } from "@/libs/contents/notes";
 
-export default async function Home() {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: `Notes | ${config.metadata.title}`,
+  };
+}
+
+export default async function Page() {
   const posts = await getFrontmatters({
-    paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    paths: ["notes"],
+    parser: { frontmatter: frontmatterSchema },
   });
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
-      <h1 className="my-8 text-3xl">ブログ</h1>
+      <h1 className="my-8 text-3xl">Notes</h1>
       <div className="flex flex-col gap-6 mb-8">
         {posts
           .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
-          .map((blog) => {
-            if (!blog) {
+          .map((note) => {
+            if (!note) {
               return <></>;
             }
 
-            const { path: slug, frontmatter: frontmatter } = blog;
+            const { path: slug, frontmatter: frontmatter } = note;
 
             return (
               <div key={slug}>
@@ -29,7 +36,7 @@ export default async function Home() {
                   <div className="i-mdi-calendar" />
                   <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
                 </div>
-                <a href={`/blog/${slug}/`} className="hover:underline">
+                <a href={`/notes/${slug}/`} className="hover:underline">
                   {frontmatter.title}
                 </a>
                 <div className="flex flex-wrap mt-2 gap-2 text-xs">
