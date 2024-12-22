@@ -1,5 +1,4 @@
-import { globSync } from "fs";
-import { readFile } from "fs/promises";
+import { readFile, glob } from "fs/promises";
 import matter from "gray-matter";
 import path from "path";
 import { FC } from "react";
@@ -100,9 +99,8 @@ export async function getFrontmatter<FRONTMATTER>({
 }
 
 export async function getStylesheets(...paths: string[]): Promise<string[]> {
-  return globSync(path.resolve(...paths) + "/*.css").map((absolutePath) =>
-    path.basename(absolutePath)
-  );
+  const css = await Array.fromAsync(glob(path.resolve(...paths) + "/*.css"));
+  return css.map((absolutePath) => path.basename(absolutePath));
 }
 
 export const getContent = async <FRONTMATTER>({
@@ -139,4 +137,55 @@ export const getContent = async <FRONTMATTER>({
       scope: parsedContent.data,
     }),
   };
+};
+
+export const getPaths = async (...paths: string[]): Promise<string[]> => {
+  const basePath = ["src", "contents", ...paths];
+  const md = await Array.fromAsync(
+    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.md")))
+  );
+  const mdx = await Array.fromAsync(
+    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")))
+  );
+
+  const dirs = [...md, ...mdx].map((filepath) =>
+    path
+      .parse(filepath)
+      .dir.split("/")
+      .slice(2 + paths.length)
+      .join("/")
+  );
+
+  return dirs;
+};
+
+export const getFrontmatters = async <FRONTMATTER>({
+  paths,
+  parser: { frontmatter },
+}: {
+  paths: string[];
+  parser: {
+    frontmatter: Parser<FRONTMATTER>;
+  };
+}) => {
+  const contentPaths = await getPaths(...paths);
+
+  return Promise.all(
+    contentPaths.map(async (contentPath) => {
+      const rawContent = await getRawContent(...paths, contentPath);
+      if (!rawContent) {
+        throw new Error(`Cannot get content: ${rawContent}`);
+      }
+
+      const content = parseRawContent(frontmatter, rawContent);
+      if (!content?.frontmatter) {
+        throw new Error(`Frontmatter does not exists: ${content}`);
+      }
+
+      return {
+        slug: contentPath,
+        frontmatter: content.frontmatter,
+      };
+    })
+  );
 };

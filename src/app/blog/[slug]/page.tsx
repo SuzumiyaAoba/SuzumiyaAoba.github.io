@@ -11,9 +11,9 @@ import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
-import { getIds, Pages } from "@/libs/contents/blog";
+import { Pages } from "@/libs/contents/blog";
 import Script from "next/script";
-import { getContent, getFrontmatter } from "@/libs/contents/markdown";
+import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
 
 type Props = {
   params: {
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const ids = await getIds("blog");
+  const ids = await getPaths("blog");
 
   return ids.map((id) => ({
     slug: id,

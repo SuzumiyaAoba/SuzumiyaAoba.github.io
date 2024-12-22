@@ -1,9 +1,8 @@
 import path from "path";
-import { readdir } from "fs/promises";
 
 import { z } from "zod";
 
-import { Content, getRawContent, parseRawContent } from "./markdown";
+import { Content, getPaths, getRawContent, parseRawContent } from "./markdown";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
@@ -37,14 +36,9 @@ export const Pages = {
 type Pages = typeof Pages;
 export type PageKey = keyof Pages;
 
-export const getIds = async (key: PageKey): Promise<string[]> => {
-  return await readdir(
-    path.resolve(process.cwd(), "src", "contents", Pages[key].root)
-  );
-};
-
+/*
 export async function* getFrontmatters(key: PageKey) {
-  for await (const dir of await getIds(key)) {
+  for await (const dir of await getPaths(Pages[key].root)) {
     if (!dir) {
       continue;
     }
@@ -67,3 +61,4 @@ export async function* getFrontmatters(key: PageKey) {
     };
   }
 }
+*/

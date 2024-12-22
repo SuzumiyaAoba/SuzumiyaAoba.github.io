@@ -1,9 +1,14 @@
 import { Tag } from "@/components/Tag";
-import { getFrontmatters } from "@/libs/contents/blog";
+import { Pages } from "@/libs/contents/blog";
+import { getFrontmatters } from "@/libs/contents/markdown";
+// import { getFrontmatters } from "@/libs/contents/blog";
 import { compareDesc, format } from "date-fns";
 
 export default async function Home() {
-  const posts = await Array.fromAsync(getFrontmatters("blog"));
+  const posts = await getFrontmatters({
+    paths: ["blog"],
+    parser: { frontmatter: Pages["blog"].frontmatter },
+  });
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
@@ -16,7 +21,7 @@ export default async function Home() {
               return <></>;
             }
 
-            const { slug, frontmatter } = blog;
+            const { slug, frontmatter: frontmatter } = blog;
 
             return (
               <div key={slug}>
