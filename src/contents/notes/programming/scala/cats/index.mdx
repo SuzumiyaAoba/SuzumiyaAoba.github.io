@@ -50,6 +50,8 @@ trait Eq[@sp A] extends Any with Serializable { self =>
 それはかなり面倒な作業となるため、公式ドキュメントによると二つの方法が紹介されている。
 
 一つは、公式ドキュメントに実装が載っている `Eq.fromUniversalEquals` を使う方法。
+もう一つは、[kittens](https://github.com/typelevel/kittens) という Cats を補助するライブラリを使う方法。
+それぞれ実際のコードは次のようになる。
 
 <CodeWithTabs>
 
