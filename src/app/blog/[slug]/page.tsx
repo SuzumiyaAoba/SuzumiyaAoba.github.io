@@ -30,11 +30,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const forntmatter = await getFrontmatter(
-    Pages["blog"].frontmatter,
-    Pages["blog"].root,
-    params.slug
-  );
+  const forntmatter = await getFrontmatter({
+    paths: [Pages["blog"].root, params.slug],
+    parser: Pages["blog"].frontmatter,
+  });
 
   return {
     title: `${forntmatter?.title} | ${config.metadata.title}`,
@@ -42,11 +41,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const content = await getContent(
-    Pages["blog"].frontmatter,
-    "blog",
-    params.slug
-  );
+  const content = await getContent({
+    paths: ["blog", params.slug],
+    parser: {
+      frontmatter: Pages["blog"].frontmatter,
+    },
+  });
 
   if (!content) {
     notFound();

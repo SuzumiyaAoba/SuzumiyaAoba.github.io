@@ -3,7 +3,7 @@ import { readdir } from "fs/promises";
 
 import { z } from "zod";
 
-import { Content, getRawContent, parseRawContent } from "../markdown";
+import { Content, getRawContent, parseRawContent } from "./markdown";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
@@ -20,8 +20,6 @@ const frontmatterSchema = z.object({
   tags: z.array(z.string()),
   draft: z.boolean().optional(),
 });
-
-type Frontmatter = z.infer<typeof frontmatterSchema>;
 
 export const Pages = {
   blog: {

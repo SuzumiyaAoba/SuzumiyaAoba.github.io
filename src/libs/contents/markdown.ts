@@ -28,7 +28,7 @@ export type ParsedContent<FRONTMATTER> = {
   content: string;
 };
 
-type Parser<T> = {
+export type Parser<T> = {
   parse: (data: { [key: string]: any }) => T;
 };
 
@@ -79,10 +79,13 @@ export const parseRawContent = <FRONTMATTER>(
   };
 };
 
-export async function getFrontmatter<FRONTMATTER>(
-  parser: Parser<FRONTMATTER>,
-  ...paths: string[]
-) {
+export async function getFrontmatter<FRONTMATTER>({
+  paths,
+  parser,
+}: {
+  paths: string[];
+  parser: Parser<FRONTMATTER>;
+}) {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
@@ -96,26 +99,25 @@ export async function getFrontmatter<FRONTMATTER>(
   return parsedContent.frontmatter;
 }
 
-export async function getCSS(...paths: string[]): Promise<string[]> {
+export async function getStylesheets(...paths: string[]): Promise<string[]> {
   return globSync(path.resolve(...paths) + "/*.css").map((absolutePath) =>
     path.basename(absolutePath)
   );
 }
 
-const tripContentsPath = (paths: string[]) => {
-  return paths.slice(2);
-};
-
-export const getContent = async <FRONTMATTER>(
-  frontmatterParser: Parser<FRONTMATTER>,
-  ...paths: string[]
-): Promise<Content<FRONTMATTER> | null> => {
+export const getContent = async <FRONTMATTER>({
+  paths,
+  parser: { frontmatter: frontmatterParser },
+}: {
+  paths: string[];
+  parser: {
+    frontmatter: Parser<FRONTMATTER>;
+  };
+}): Promise<Content<FRONTMATTER> | null> => {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
-
-  const stylesheets = await getCSS(path.dirname(rawContent.path));
 
   const parsedContent = parseRawContent(frontmatterParser, rawContent);
   const frontmatter = parsedContent?.frontmatter;
@@ -123,16 +125,18 @@ export const getContent = async <FRONTMATTER>(
     return null;
   }
 
-  const component = codeHikeComponent({
-    paths: ["assets", ...paths],
-    ...parsedContent,
-  });
+  const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
   return {
     rawContent,
     content: parsedContent.content,
     frontmatter: parsedContent.frontmatter,
     stylesheets,
-    Component: component,
+    Component: codeHikeComponent({
+      ...parsedContent,
+      paths,
+      source: parsedContent.content,
+      scope: parsedContent.data,
+    }),
   };
 };

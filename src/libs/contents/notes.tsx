@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Content } from "../markdown";
+import { Content } from "./markdown";
 
 const frontmatterSchema = z.object({
   title: z.string(),

@@ -1,5 +1,4 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { FC } from "react";
 
 import { CodeWithTabs } from "@/components/CodeHike/code-tabs";
 import { Code } from "@/components/CodeHike/code";
@@ -13,33 +12,24 @@ import {
   defaultRehypePlugins,
   defaultRemarkPlugins,
 } from "./mdxOptions";
+import type { MDXComponent } from "./MDXComponent";
 
 const chConfig: CodeHikeConfig = {
   components: { code: "Code" },
 };
 
-export default ({
-  paths,
-  format,
-  data,
-  content,
-}: {
-  paths: string[];
-  format: "md" | "mdx";
-  data: { [key: string]: any };
-  content: string;
-}): FC<unknown> => {
+const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
   return () => (
     <MDXRemote
-      source={content}
+      source={source}
       options={{
         mdxOptions: {
           format,
           remarkPlugins: [...defaultRemarkPlugins, [remarkCodeHike, chConfig]],
-          rehypePlugins: [...defaultRehypePlugins(...paths)],
+          rehypePlugins: [...defaultRehypePlugins("assets", ...paths)],
           recmaPlugins: [[recmaCodeHike, chConfig]],
         },
-        scope: data,
+        scope,
       }}
       components={{
         ...defaultComponents,
@@ -52,3 +42,5 @@ export default ({
     />
   );
 };
+
+export default codeHikeComponent;
