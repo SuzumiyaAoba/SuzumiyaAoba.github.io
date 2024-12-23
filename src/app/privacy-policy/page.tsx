@@ -11,8 +11,8 @@ export default async function PrivacyPolicy() {
         </ul>
         取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。
       </div>
-      <h2>広告について</h2>
-      <div>
+      <h2 className="mb-4 text-xl font-bold">広告について</h2>
+      <div className="mb-8">
         当サイトでは、第三者配信の広告サービス（Googleアドセンス、A8.net）を利用しており、ユーザーの興味に応じた商品やサービスの広告を表示するため、クッキー（Cookie）を使用しております。
         クッキーを使用することで当サイトはお客様のコンピュータを識別できるようになりますが、お客様個人を特定できるものではありません。
         Cookieを無効にする方法やGoogleアドセンスに関する詳細は「
