@@ -5,7 +5,7 @@ export default async function PrivacyPolicy() {
       <h2 className="mb-4 text-xl font-bold">個人情報の利用目的</h2>
       <div className="mb-8">
         当サイトでは、訪問者から取得した個人情報（名前、メールアドレスなど）を以下の目的で利用します。
-        <ul>
+        <ul className="list-disc pl-8 my-4">
           <li>お問い合わせへの対応</li>
           <li>サービス向上のための分析</li>
         </ul>

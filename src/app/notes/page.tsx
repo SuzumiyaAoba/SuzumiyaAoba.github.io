@@ -23,7 +23,9 @@ export default async function Page() {
       <h2 className="mb-4 text-2xl border-b-1 border-neutral-500">
         プログラミング
       </h2>
-      <h3 className="mb-4 text-xl font-bold">Scala</h3>
+      <h3 className="mb-4 text-xl font-bold border-l-4 pl-2 border-neutral-600">
+        Scala
+      </h3>
       <div className="flex flex-col gap-6 mb-8">
         {posts
           .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
