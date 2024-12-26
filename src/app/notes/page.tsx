@@ -28,6 +28,7 @@ export default async function Page() {
       </h3>
       <div className="flex flex-col gap-6 mb-8">
         {posts
+          .filter((post) => post.frontmatter.parent)
           .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
           .map((note) => {
             if (!note) {

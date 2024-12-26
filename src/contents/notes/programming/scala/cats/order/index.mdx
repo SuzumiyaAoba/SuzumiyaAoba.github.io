@@ -1,0 +1,102 @@
+---
+title: Order (Cats)
+date: 2024-12-27
+category: "プログラミング"
+tags: ["Scala", "Cats", "関数型プログラミング"]
+parent: false
+---
+
+## `Order`
+
+`Order` は**全**順序が定義されていることを表す型クラス。
+
+- [Order - cats-docs_2.13 2.12.0 javadoc](https://www.javadoc.io/doc/org.typelevel/cats-docs_2.13/latest/cats/kernel/Order.htm)
+- [cats/kernel/src/main/scala/cats/kernel/Order.scala at v2.12.0 · typelevel/cats](https://github.com/typelevel/cats/blob/v2.12.0/kernel/src/main/scala/cats/kernel/Order.scala)
+
+cats の `Order` は `compare` メソッドが定義されたトレイトとして定義されている。
+
+```scala
+trait Order[@sp A] extends Any with PartialOrder[A] { self =>
+
+  def compare(x: A, y: A): Int
+
+  def comparison(x: A, y: A): Comparison = Comparison.fromInt(compare(x, y))
+
+  def partialCompare(x: A, y: A): Double = compare(x, y).toDouble
+
+  def min(x: A, y: A): A = if (lt(x, y)) x else y
+
+  def max(x: A, y: A): A = if (gt(x, y)) x else y
+
+  override def eqv(x: A, y: A): Boolean =
+    compare(x, y) == 0
+
+  override def neqv(x: A, y: A): Boolean = !eqv(x, y)
+
+  override def lteqv(x: A, y: A): Boolean =
+    compare(x, y) <= 0
+
+  override def lt(x: A, y: A): Boolean =
+    compare(x, y) < 0
+
+  override def gteqv(x: A, y: A): Boolean =
+    compare(x, y) >= 0
+
+  override def gt(x: A, y: A): Boolean =
+    compare(x, y) > 0
+
+  def toOrdering: Ordering[A] =
+    compare(_, _)
+```
+
+`compare` 以外のメソッドは `compare` を使ったデフォルト実装となっている。
+Cats Type Classes の図で `PartialOrder` がハイライトされていないため先に `Order` を確認している。
+しかし、`PartialOrder` で実装を要求しているメソッドは事前に把握しておかないといけない。
+`PartialOrder` では `partialCompare` の実装を要求しているが `Order` では `compare` を使って `partialCompare` と `eqv` を実装できるため、
+最終的に `Order` として `compare` さえ定義できれば `Eq`、`PartialOrder` のインスタンスとしても扱えるようになっている。
+
+`Order` は `Eq.fromUniversalEquals` のような呼ぶだけで `Order` のインスタンスを返してくれるようなメソッドは用意されていないようなので
+インスタンスを自分で定義するか `derive` を使って定義しないといけない。
+
+<CodeWithTabs>
+
+```scala !!tabs given
+import cats.Order
+
+case class Fahrenheit(value: Double)
+
+given Order[Fahrenheit] = Order.from((x, y) => x.value.compareTo(y.value))
+```
+
+```scala !!tabs kittens
+import cats.derived.*
+import cats.Order
+
+case class Celsius(value: Double) derives Order
+```
+
+</CodeWithTabs>
+
+`derives` でインスタンスを導出するためにはすべてのフィールドについて `Order` のインスタンスが定義されてなければならない。
+
+`Order` 型クラスの定義は数学における全順序の定義を知っていれば特筆すべき点はない。
+ただ、半順序 (`PartialOrder`) は離散数学で習う概念 (高校数学ではなかったのか…) なので大学数学をやっていない人にとっては馴染みがないかもしれない。
+それがハイライトされていない理由なのかもしれない。
+
+### `Order` のシンタックス
+
+- https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/order.scala
+- https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/partialOrder.scala
+
+| 型クラス         | シンタックス        | 説明                                                                                                      |
+| :--------------- | :------------------ | :-------------------------------------------------------------------------------------------------------- |
+| `Order`          | `compare`           | 左辺を右辺を比較し、左辺が小さいときは負の値を返し、大きいときは正の値を返す。値が等しいときは 0 を返す。 |
+| `Order`          | `min`               | 左辺と右辺で小さい値を返す。                                                                              |
+| `Order`          | `max`               | 左辺と右辺で大きい値を返す。                                                                              |
+| `Order`          | `comparison`        | `Comparison` を返す。Haskell の `Ordering` 相当の値。                                                     |
+| `ParitalCompare` | `>`                 | 左辺が右辺より大きいときは `true` を返す。                                                                |
+| `ParitalCompare` | `>=`                | 左辺が右辺以上のときは `true` を返す。                                                                    |
+| `ParitalCompare` | `<`                 | 左辺より右辺が大きいときは `true` を返す。                                                                |
+| `ParitalCompare` | `<=`                | 左辺が右辺以下のときは `true` を返す。                                                                    |
+| `ParitalCompare` | `partialCompare`    | `compare` と同じ。                                                                                        |
+| `ParitalCompare` | `partialComparison` | `Comparison` と同じ。                                                                                     |
