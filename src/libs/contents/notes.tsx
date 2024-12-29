@@ -7,6 +7,7 @@ export const frontmatterSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()),
   parent: z.boolean().default(true),
+  draft: z.boolean().default(false),
 });
 
 type NoteContent = Content<z.infer<typeof frontmatterSchema>>;
