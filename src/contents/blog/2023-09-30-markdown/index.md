@@ -3,6 +3,7 @@ title: Hello, World
 date: 2023-09-30
 category: "テスト"
 tags: ["テスト"]
+draft: true
 ---
 
 ## org-mode

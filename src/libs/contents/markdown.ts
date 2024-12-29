@@ -159,7 +159,7 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
   return dirs;
 };
 
-export const getFrontmatters = async <FRONTMATTER>({
+export const getFrontmatters = async <FRONTMATTER extends { draft?: boolean }>({
   paths,
   parser: { frontmatter },
 }: {
@@ -170,22 +170,26 @@ export const getFrontmatters = async <FRONTMATTER>({
 }) => {
   const contentPaths = await getPaths(...paths);
 
-  return Promise.all(
-    contentPaths.map(async (contentPath) => {
-      const rawContent = await getRawContent(...paths, contentPath);
-      if (!rawContent) {
-        throw new Error(`Cannot get content: ${rawContent}`);
-      }
+  return (
+    await Promise.all(
+      contentPaths.map(async (contentPath) => {
+        const rawContent = await getRawContent(...paths, contentPath);
+        if (!rawContent) {
+          throw new Error(`Cannot get content: ${rawContent}`);
+        }
 
-      const content = parseRawContent(frontmatter, rawContent);
-      if (!content?.frontmatter) {
-        throw new Error(`Frontmatter does not exists: ${content}`);
-      }
+        const content = parseRawContent(frontmatter, rawContent);
+        if (!content?.frontmatter) {
+          throw new Error(`Frontmatter does not exists: ${content}`);
+        }
 
-      return {
-        path: contentPath,
-        frontmatter: content.frontmatter,
-      };
-    })
+        return {
+          path: contentPath,
+          frontmatter: content.frontmatter,
+        };
+      })
+    )
+  ).filter(
+    ({ frontmatter }) => frontmatter.draft === undefined || !frontmatter.draft
   );
 };
