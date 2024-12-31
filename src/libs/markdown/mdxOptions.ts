@@ -13,6 +13,7 @@ import rehypeExternalLinks from "rehype-external-links";
 import { SsgImage } from "@/components/SsgImage";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
+import { DependecyInjectionPriciplesPractilcesAndPatterns } from "@/components/Ads/rakuten/ads/DpendencyInjectionPrinciplesPracticesAndPatterns";
 
 export const defaultRemarkPlugins: any[] = [
   remarkGfm,
@@ -34,4 +35,5 @@ export const defaultComponents = {
   GitHubCodeLink,
   Message,
   Mermaid,
+  DependecyInjectionPriciplesPractilcesAndPatterns,
 };

@@ -13,7 +13,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   const posts = await getFrontmatters({
-    paths: ["notes"],
+    paths: ["notes", "programming", "scala"],
+    parser: { frontmatter: frontmatterSchema },
+  });
+
+  const programmingBooks = await getFrontmatters({
+    paths: ["notes", "programming", "books"],
     parser: { frontmatter: frontmatterSchema },
   });
 
@@ -43,7 +48,45 @@ export default async function Page() {
                   <div className="i-mdi-calendar" />
                   <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
                 </div>
-                <a href={`/notes/${slug}/`} className="hover:underline">
+                <a
+                  href={`/notes/programming/scala/${slug}/`}
+                  className="hover:underline"
+                >
+                  {frontmatter.title}
+                </a>
+                <div className="flex flex-wrap mt-2 gap-2 text-xs">
+                  {frontmatter.tags.map((tag) => (
+                    <Tag key={tag} label={tag} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+      </div>
+      <h3 className="mb-4 text-xl font-bold border-l-4 pl-2 border-neutral-600">
+        本
+      </h3>
+      <div className="flex flex-col gap-6 mb-8">
+        {programmingBooks
+          .filter((post) => post.frontmatter.parent)
+          .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
+          .map((note) => {
+            if (!note) {
+              return <></>;
+            }
+
+            const { path: slug, frontmatter } = note;
+
+            return (
+              <div key={slug}>
+                <div className="flex gap-x-1 items-center font-thin">
+                  <div className="i-mdi-calendar" />
+                  <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
+                </div>
+                <a
+                  href={`/notes/programming/books/${slug}/`}
+                  className="hover:underline"
+                >
                   {frontmatter.title}
                 </a>
                 <div className="flex flex-wrap mt-2 gap-2 text-xs">
