@@ -1,0 +1,116 @@
+---
+title: 比較関数の覚え方
+date: 2025-01-01
+tags: ["プログラミング"]
+category: プログラミング
+---
+
+## はじめに
+
+これはプログラミングを始めた頃に知りたかった話の備忘録。
+どのプログラミング言語にもある `compare`/`comp`/`compareTo` といった比較関数の戻り値の意味の覚え方についての話。
+
+二つの値を比較する方法はプログラミングの最初の方に学ぶ。
+はじめは `<`、`>`、`=`、`<=`、`>=` で比較する文法を学ぶが、プログラミング言語によってはプリミティブ型以外をこれらの演算子で比較することができない。
+そのため、比較をするための関数やメソッドに値を渡し、その返り値によって大小比較の結果を判定することになる。
+
+Haskell や Rust のような言語では `GT`/`Greater`, `EQ`/`Equal`, `LT`/`Less` といった抽象データ型 (ADT) で表現されている [^Haskell] [^Rust] が、C 言語や Java、JavaScript、PHP のような言語では二値を比較する関数が負の値、ゼロ、正の値として大小比較の結果を返す。
+C 言語に詳しくないのでこういった場合に引くべきドキュメントがわからないため他の言語についてはドキュメントを載せておく。
+
+[^Haskell]: https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#t:Ordering
+[^Rust]: https://doc.rust-lang.org/std/cmp/enum.Ordering.html
+
+- [Java](<https://docs.oracle.com/javase/jp/17/docs/api/java.base/java/util/Comparator.html#compare(T,T)>)
+- [JavaScript](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/compare)
+- [PHP](https://www.php.net/manual/ja/collator.compare.php)
+
+これらの関数には単純な覚え方があるが、それぞれのドキュメントでも触れられていなかった。
+また、適当に検索して出てくるプログラミング初心者向けのサイトでも比較する値が大きい場合、等しい場合、小さい場合で `-1`、`0`、`1` を返すことには触れているがその覚え方については書かれていなかった。
+定義を見たら気がつく人はすぐにわかることだが、十数年前の私はどこかで言及されていることに気がついて初めて知ったことを数十年越しの備忘録としてプログラミング学びたての人向けに記事にしておく。
+
+次のそれぞれの `if` に書かれた条件式で `x`, `y` がどのような関係のときに真になるか直ぐに判断できる人にとってはこの記事は用済みとさせていただきます！[^用済みとさせていただきます]
+
+[^用済みとさせていただきます]: [ときど「用済みとさせていただきます」](https://www.twitch.tv/yaritaiji/clip/CuteCallousBillLeeroyJenkins-0gxu7omWcGJb6jqR)
+
+```java
+if (Integer.compare(x, y) < 0) {
+  // ...
+}
+
+if (Integer.compare(x, y) == 0) {
+  // ...
+}
+
+if (Integer.compare(x, y) > 0) {
+  // ...
+}
+```
+
+## `comapre` の仕様
+
+はじめに `compare` と名前の付く関数、メソッドの仕様を確認しよう。
+比較関数について比較対象を `x`、`y` としたとき `compare(x, y)`、`x.compareTo(x, y)` のように `x` を比較の基準とした場合を考えよう。
+このとき、多くの言語では次のような仕様となっているはずだ。
+
+> `x` が `y` よりも小さい場合は負の値、`x` と `y` が等しい場合はゼロ、`x` が `y` よりも大きい場合は正の値を返す。
+
+仕様としては上記のように書かれていても `x` が `y` より小さい場合は `-1`、等しい場合は `0`、大きい場合は `-1` を返すような実装となっていることが多い。
+
+## `compare` の覚え方
+
+どのプログラミング言語であっても (基本的には) 整数値を返すような比較関数であれば次のルールに従っている。
+
+| `compare`            | 直観     |
+| :------------------- | :------- |
+| `compare(x, y) < 0`  | `x < y`  |
+| `compare(x, y) == 0` | `x == y` |
+| `comapre(x, y) > 0`  | `x > y`  |
+| `compare(x, y) <= 0` | `x <= y` |
+| `comapre(x, y) >= 0` | `x >= y` |
+
+表にすると一目瞭然だが関数を使って書かれる条件式 (表の左側の列) と演算子を使った場合に表現される意味では不等号の向きが一致する。
+これは**比較対象である `x`、`y` がどのような型であるか依らず**、表のようになっている。
+なっている、というよりは `compare` の仕様として書いた前述の条件を満たすのであれば表のように考えられる、という方が正確だ。
+
+> `x` が `y` よりも小さい場合は負の値、`x` と `y` が等しい場合はゼロ、`x` が `y` よりも大きい場合は正の値を返す。
+
+つまり、`x`、`y` を比較するようなコードを書きたいとき、
+
+```java
+if (x < y) {
+  // ...
+}
+```
+
+と書きたいけど `x`、`y` は `<` をサポートしていない型 (e.g. Java の `Integer`、`Date`、etc.) だから `comapre` を使わないといけない、となった場合は不等号の向きをそのままにして `compare` を呼んだ結果を `0` と比較すればよい。
+
+```java
+if (Integer.compare(x, y) < 0) {
+  // ...
+}
+```
+
+そのため、小さい場合に負の数、大きい場合に正の数を返すからそれぞれ `<`、`>` を使う、といった覚え方をするのではなく、判定したい不等式を最初に考えてから `compare` を呼ぶようにして不等号の向きはそのまま、とすれば `compare` が返す値を気にしなくてよくなる。
+単純だけど一瞬思考したり、調べたりしないで読み書きできるのでこの覚え方をしておいた方がいいと思う。
+読むときは逆方向に考えて、`Integer.compare(x, y) < 0` ということは `x < y` を調べている、と考えるとすんなり頭に入ってくる。
+
+## おわりに
+
+最後に既存のサイトでの解説でどのように書かれているか探していたところ、この記事で書いた内容と同じものに触れた記事が Qiita にあった。
+
+- [[Java] Comparable, Comparator のメモ #Java - Qiita](https://qiita.com/yoshi389111/items/4211a5ea7040ec1c2f60)
+
+`compare` の正負についてどのようなパターンか覚えられないという記事もあってその気持ちもよくわかる。
+
+- [Java の compareTo が覚えられないからメモ #Java - Qiita](https://qiita.com/simodake/items/eae8fd7f59f4a82a5dbb)
+
+私もこの記事で書いた覚え方を見るまでは毎回どっちだったかなーとググったり、ドキュメントを見ていた。
+
+プログラミング初心者向けサイトでは、どこもかしこも `1` を返すだの正の値を返すだの言っているが、そんなことは覚えなくていいんだよ :smile:
+
+- [Java の compareTo とは？ソートを自由自在に操るための compareTo の使い方](https://www.bold.ne.jp/engineer-club/java-compareto)
+- [【Java 入門】compareTo で大小を比較をする方法総まとめ(文字列/日付) | 侍エンジニアブログ](https://www.sejuku.net/blog/24996)
+- [Java の compareTo とは？ソートを自由自在に操るための compareTo の使い方](https://www.bold.ne.jp/engineer-club/java-compareto)
+- [分かりやすく解説！Java で compareTo を使う方法 | TechAcademy マガジン](https://magazine.techacademy.jp/magazine/15328)
+
+`1` を返すから `> 0` よりも `x > y` だから `> 0` の方が覚えやすよね？
