@@ -8,7 +8,7 @@ import { exo_2 } from "@/fonts";
 const menus = [
   {
     name: "Blog",
-    href: "/",
+    href: "/blog/",
   },
   {
     name: "Notes",

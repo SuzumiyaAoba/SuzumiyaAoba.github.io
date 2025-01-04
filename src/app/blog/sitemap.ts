@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogIds = await getPaths("blog");
 
   return blogIds.map((id) => ({
-    url: `https://suzumiyaaoba.github.io/blog/${id}/`,
+    url: `https://suzumiyaaoba.com/blog/${id}/`,
     lastModified: new Date(),
     priority: 1,
   }));
