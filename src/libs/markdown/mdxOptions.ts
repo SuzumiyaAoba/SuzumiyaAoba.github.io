@@ -14,6 +14,7 @@ import { SsgImage } from "@/components/SsgImage";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
 import { DependecyInjectionPriciplesPractilcesAndPatterns } from "@/components/Ads/rakuten/ads/DpendencyInjectionPrinciplesPracticesAndPatterns";
+import { TableWrapper } from "@/components/TableWrapper";
 
 export const defaultRemarkPlugins: any[] = [
   remarkGfm,
@@ -36,4 +37,5 @@ export const defaultComponents = {
   Message,
   Mermaid,
   DependecyInjectionPriciplesPractilcesAndPatterns,
+  table: TableWrapper,
 };

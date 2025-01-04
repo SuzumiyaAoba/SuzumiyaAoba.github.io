@@ -136,11 +136,12 @@
   }
 
   table {
+    width: 100%;
+    white-space: nowrap;
     margin: 1.5rem 0;
 
     border-collapse: collapse;
     border-spacing: 0;
-    width: 100%;
   }
 
   table tr {
@@ -160,6 +161,12 @@
   table th,
   table td {
     padding: 0.5rem 1rem;
+  }
+
+  kbd {
+    @apply px-1;
+    @apply bg-gray-200;
+    @apply border border-rounded border-gray-400 drop-shadow;
   }
 
   // Code block
