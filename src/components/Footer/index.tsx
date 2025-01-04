@@ -15,7 +15,7 @@ export const Footer: FC<{
 
   return (
     <>
-      {/* <FooterAds /> */}
+      <FooterAds />
       <footer className="flex flex-col font-light items-center mt-auto pt-8 pb-8 bg-gray-100">
         <div className="flex gap-x-6 mb-4">
           <a className="hover:underline" href="/privacy-policy/">
