@@ -13,7 +13,7 @@ export const DependecyInjectionPriciplesPractilcesAndPatterns = () => {
         }}
       >
         <tbody>
-          <tr style={{ borderStyle: "none;" }}>
+          <tr style={{ borderStyle: "none" }}>
             <td
               style={{
                 verticalAlign: "top",
