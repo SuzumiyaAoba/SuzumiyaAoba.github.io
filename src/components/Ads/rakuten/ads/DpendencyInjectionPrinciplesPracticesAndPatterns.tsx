@@ -1,11 +1,16 @@
+import rakutenAdsStyle from "@/styles/rakuten-ads.module.scss";
+
 export const DependecyInjectionPriciplesPractilcesAndPatterns = () => {
   return (
-    <>
+    <div className={rakutenAdsStyle["rakuten-ads"]}>
       <table
         cellPadding={0}
         cellSpacing="0"
         border={0}
-        style={{ border: "1px, solid #ccc", width: "300px" }}
+        style={{
+          border: "1px, solid #ccc",
+          width: "300px",
+        }}
       >
         <tbody>
           <tr style={{ borderStyle: "none;" }}>
@@ -76,6 +81,6 @@ export const DependecyInjectionPriciplesPractilcesAndPatterns = () => {
         src="https://www19.a8.net/0.gif?a8mat=3ZM4V6+6HDXWY+2HOM+BWGDT"
         alt=""
       />
-    </>
+    </div>
   );
 };

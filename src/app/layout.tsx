@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 import config from "@/config";
 import { exo_2, mono as monoFont, zen_maru_gothic } from "@/fonts";
 import { Header } from "@/components/Header";
