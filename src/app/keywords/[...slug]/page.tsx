@@ -1,20 +1,17 @@
-import { notFound } from "next/navigation";
-
-import markdownStyles from "@/styles/markdown.module.scss";
-import "katex/dist/katex.min.css";
+import BuyMeACoffee from "@/components/BuyMeACoffee";
 import { Comments } from "@/components/Comments";
-
-import clsx from "clsx";
-import { Metadata } from "next";
-import config from "@/config";
+import { HatenaButton } from "@/components/share/HatenaButton";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { Tag } from "@/components/Tag";
-import { HatenaButton } from "@/components/share/HatenaButton";
-import BuyMeACoffee from "@/components/BuyMeACoffee";
-import Script from "next/script";
+import config from "@/config";
+import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { frontmatterSchema } from "@/libs/contents/notes";
+import clsx from "clsx";
 import { format } from "date-fns";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Script from "next/script";
+import markdownStyles from "@/styles/markdown.module.scss";
 
 type Props = {
   params: {
@@ -22,7 +19,7 @@ type Props = {
   };
 };
 
-const contentBasePath = "notes";
+const contentBasePath = "keywords";
 
 export async function generateStaticParams() {
   const paths = await getPaths(contentBasePath);
@@ -35,7 +32,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const forntmatter = await getFrontmatter({
     paths: [contentBasePath, ...params.slug],
-    parser: frontmatterSchema,
+    parser: keywordFrontmatterSchema,
   });
 
   return {
@@ -47,7 +44,7 @@ export default async function Page({ params }: Props) {
   const content = await getContent({
     paths: [contentBasePath, ...params.slug],
     parser: {
-      frontmatter: frontmatterSchema,
+      frontmatter: keywordFrontmatterSchema,
     },
   });
 

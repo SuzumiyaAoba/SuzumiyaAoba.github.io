@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Content } from "./markdown";
+import type { Content } from "./markdown";
 
 export const frontmatterSchema = z.object({
   title: z.string(),
@@ -10,4 +10,4 @@ export const frontmatterSchema = z.object({
   draft: z.boolean().default(false),
 });
 
-type NoteContent = Content<z.infer<typeof frontmatterSchema>>;
+export type NoteContent = Content<z.infer<typeof frontmatterSchema>>;

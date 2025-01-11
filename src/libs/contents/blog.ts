@@ -1,8 +1,6 @@
-import path from "path";
-
 import { z } from "zod";
 
-import { Content, getPaths, getRawContent, parseRawContent } from "./markdown";
+import type { Content } from "./markdown";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
 
@@ -35,30 +33,3 @@ export const Pages = {
 
 type Pages = typeof Pages;
 export type PageKey = keyof Pages;
-
-/*
-export async function* getFrontmatters(key: PageKey) {
-  for await (const dir of await getPaths(Pages[key].root)) {
-    if (!dir) {
-      continue;
-    }
-
-    const rawContent = await getRawContent(Pages[key].root, dir);
-    if (!rawContent) {
-      continue;
-    }
-
-    const parsedContent = parseRawContent(Pages[key].frontmatter, rawContent);
-    if (!parsedContent) {
-      continue;
-    }
-
-    const { frontmatter } = parsedContent;
-
-    yield {
-      slug: path.basename(dir),
-      frontmatter,
-    };
-  }
-}
-*/

@@ -1,7 +1,7 @@
 import { readFile, glob } from "fs/promises";
 import matter from "gray-matter";
 import path from "path";
-import { FC } from "react";
+import type { FC } from "react";
 import codeHikeComponent from "../markdown/codeHikeComponent";
 
 type Format = "md" | "mdx";

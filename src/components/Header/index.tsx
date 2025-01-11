@@ -14,6 +14,10 @@ const menus = [
     name: "Notes",
     href: "/notes/",
   },
+  {
+    name: "Keywords",
+    href: "/keywords/",
+  },
 ] satisfies { name: string; href: string }[];
 
 export const Header: FC<{

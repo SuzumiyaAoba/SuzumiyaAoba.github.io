@@ -62,16 +62,6 @@ const Notes: FC<{
 };
 
 export default async function Page() {
-  const posts = await getFrontmatters({
-    paths: ["notes", "programming", "scala"],
-    parser: { frontmatter: frontmatterSchema },
-  });
-
-  const programmingBooks = await getFrontmatters({
-    paths: ["notes", "programming", "books"],
-    parser: { frontmatter: frontmatterSchema },
-  });
-
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="my-8 text-3xl">Notes</h1>
@@ -91,14 +81,6 @@ export default async function Page() {
         basePath="programming/books"
         notes={getFrontmatters({
           paths: ["notes", "programming", "books"],
-          parser: { frontmatter: frontmatterSchema },
-        })}
-      />
-      <Notes
-        title="キーワード"
-        basePath="programming/keywords"
-        notes={getFrontmatters({
-          paths: ["notes", "programming", "keywords"],
           parser: { frontmatter: frontmatterSchema },
         })}
       />
