@@ -72,10 +72,6 @@ export default async function Page({ params }: Props) {
         )}
       >
         <h1 className="mt-8 mb-4 text-center">{frontmatter.title}</h1>
-        <div className="flex mt-2 mb-2 justify-center items-center">
-          <span className="i-ic-outline-sync mr-0.5" />
-          {format(frontmatter.date, "yyyy/MM/dd")}
-        </div>
         <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
           {frontmatter.tags.map((tag) => (
             <Tag key={tag} label={tag} />
