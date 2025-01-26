@@ -20,7 +20,7 @@ const Card: FC<CardProps> = ({ title, href, description }) => {
 
 const cards: CardProps[] = [
   {
-    title: "✍️ ブログ",
+    title: "✍️ Blog",
     href: "/blog/",
     description: "プログラミングを中心に散文を。",
   },
