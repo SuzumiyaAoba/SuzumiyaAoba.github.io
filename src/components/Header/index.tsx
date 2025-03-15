@@ -15,6 +15,10 @@ const menus = [
     href: "/notes/",
   },
   {
+    name: "Tools",
+    href: "/tools/",
+  },
+  {
     name: "Keywords",
     href: "/keywords/",
   },
