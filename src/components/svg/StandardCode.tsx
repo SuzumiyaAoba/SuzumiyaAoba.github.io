@@ -90,7 +90,7 @@ const AsciiTable = ({
   onClick: (cell: Cell) => void;
   onMouseOver: (cell: Cell) => void;
 }) => {
-  const { colNum, rowNum, x, y, cellWidth, cellHeight, offsetX, offsetY } =
+  const { colNum, rowNum, x, y, cellWidth, cellHeight, offsetX } =
     ASCII_TABLE_ATTR;
   const hoveredCell = useContext(HoveredCellContext);
   const clickedCell = useContext(ClickedCellContext);
@@ -140,6 +140,7 @@ const LeftSide = () => {
   const { y, cellWidth, cellHeight, offset, color } = LEFT_SIDE_ATTR;
 
   const hoveredValue = useContext(HoveredCellContext);
+  const columnNum = 4;
 
   return (
     <g>
@@ -149,7 +150,7 @@ const LeftSide = () => {
         return [
           ...py
             .toString(2)
-            .padStart(4, "0")
+            .padStart(columnNum, "0")
             .split("")
             .map((b, px) => (
               <RectText
@@ -169,7 +170,7 @@ const LeftSide = () => {
               </RectText>
             )),
           <RectText
-            x={cellWidth * 4}
+            x={cellWidth * columnNum}
             y={y + cellHeight * py}
             width={cellWidth}
             height={cellHeight}
@@ -188,69 +189,57 @@ const LeftSide = () => {
 };
 
 const TopSide = () => {
-  const { x, cellWidth, cellHeight, offsetY } = ASCII_TABLE_ATTR;
+  const { cellWidth, cellHeight } = ASCII_TABLE_ATTR;
+  const x = ASCII_TABLE_ATTR.x + 2;
   const fontSize = "0.8rem";
   const offsetX = ASCII_TABLE_ATTR.offsetX + cellWidth / 5;
   const hoveredValue = useContext(HoveredCellContext);
 
-  return range(8).flatMap((px) => [
-    ...px
-      .toString(2)
-      .padStart(3, "0")
-      .split("")
-      .map((b, py) => {
-        const isHovered = hoveredValue?.[0] === px;
-        return (
-          <RectText
-            x={x + cellWidth * px + 2}
-            y={cellHeight * py}
-            width={cellWidth}
-            height={cellHeight}
-            offsetX={offsetX}
-            sides={["left", "right"]}
-            stroke="black"
-            fill={isHovered ? "oklch(0.723 0.219 149.579)" : "transparent"}
-            fontWeight={isHovered ? "bold" : "normal"}
-            color={isHovered ? "#ffffff" : "black"}
-          >
-            {b}
-          </RectText>
-        );
-      }),
-    <RectText
-      x={x + px * cellWidth + 2}
-      y={cellHeight * 3}
-      width={cellWidth}
-      height={cellHeight * 2}
-      fill={
-        hoveredValue?.[0] === px ? "oklch(0.872 0.01 258.338)" : "transparent"
-      }
-      stroke="black"
-      fontSize={fontSize}
-      offsetX={offsetX - 2}
-      offsetY={cellHeight * 0.75}
-    >
-      {px}
-    </RectText>,
-    <line
-      key={`top-side-${px}-line-horizontal`}
-      x1={x + 2}
-      y1={0}
-      x2={x + 8 * cellWidth + 2}
-      y2={0}
-      stroke="black"
-      strokeWidth="1"
-    />,
-    <line
-      key={`top-side-${px}-line-vertical`}
-      x1={x + 8 * cellWidth + 2}
-      y1={0}
-      x2={x + 8 * cellWidth + 2}
-      y2={3 * cellHeight}
-      stroke="black"
-      strokeWidth="1"
-    />,
-  ]);
+  const columnNum = 8;
+
+  return range(columnNum).flatMap((px) => {
+    const isHovered = hoveredValue?.[0] === px;
+
+    return (
+      <g>
+        {px
+          .toString(2)
+          .padStart(3, "0")
+          .split("")
+          .map((b, py) => {
+            return (
+              <RectText
+                x={x + cellWidth * px}
+                y={cellHeight * py}
+                width={cellWidth}
+                height={cellHeight}
+                offsetX={offsetX}
+                sides={["left", "right"]}
+                stroke="black"
+                fill={isHovered ? "oklch(0.723 0.219 149.579)" : "transparent"}
+                fontWeight={isHovered ? "bold" : "normal"}
+                color={isHovered ? "#ffffff" : "black"}
+              >
+                {b}
+              </RectText>
+            );
+          })}
+        <RectText
+          x={x + cellWidth * px}
+          y={cellHeight * 3}
+          width={cellWidth}
+          height={cellHeight * 2}
+          fill={isHovered ? "oklch(0.872 0.01 258.338)" : "transparent"}
+          stroke="black"
+          fontSize={fontSize}
+          offsetX={offsetX - 2}
+          offsetY={cellHeight * 0.75}
+        >
+          {px}
+        </RectText>
+      </g>
+    );
+  });
 };
 
 const AsciiInfo = ({
