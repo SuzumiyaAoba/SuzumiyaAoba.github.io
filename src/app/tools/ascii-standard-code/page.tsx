@@ -11,7 +11,7 @@ export default async function AsciiStandardCode() {
         >
           RFC 20
         </a>{" "}
-        の Standard Code にあるテーブルの SVG バージョン。 ASCII コードか 16
+        の Standard Code にあるテーブルの SVG バージョン。 ASCII コードから 16
         進数、2進数への変換表。
       </div>
       <StandardCode />

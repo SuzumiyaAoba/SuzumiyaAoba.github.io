@@ -3,6 +3,7 @@
 import { createContext, useContext, useState } from "react";
 import { range } from "d3";
 import Arrow from "./Arrow";
+import { RectText } from "./RectText";
 
 type Cell = [number, number];
 
@@ -37,6 +38,30 @@ const ASCII_TABLE_ATTR = {
   cellHeight: 32,
   offsetX: 15,
   offsetY: -10,
+} as const;
+
+const LEFT_SIDE_ATTR = {
+  y: ASCII_TABLE_ATTR.y,
+  cellWidth: ASCII_TABLE_ATTR.x / 5,
+  cellHeight: ASCII_TABLE_ATTR.cellHeight,
+  offset: {
+    x: 16,
+    y: ASCII_TABLE_ATTR.offsetY,
+  },
+  fontSize: "0.8rem",
+  color: {
+    b1b4: {
+      hover: {
+        background: "oklch(0.685 0.169 237.323)",
+        text: "#ffffff",
+      },
+    },
+    column: {
+      hover: {
+        background: "oklch(0.872 0.01 258.338)",
+      },
+    },
+  },
 } as const;
 
 const ASCII_TABLE: string[][] = [
@@ -78,115 +103,87 @@ const AsciiTable = ({
       const isClicked = clickedCell?.[0] === px && clickedCell?.[1] === py;
 
       return (
-        <>
-          <rect
-            key={`ascii-table-${py}-${px}-rect`}
-            x={x + px * cellWidth + 2}
-            y={y + py * cellHeight}
-            width={cellWidth}
-            height={cellHeight}
-            fill={
-              isHovered
-                ? "oklch(0.885 0.062 18.334)"
-                : isClicked
-                ? "oklch(0.872 0.01 258.338)"
-                : isHoveredRow
-                ? "oklch(0.901 0.058 230.902)"
-                : isHoveredCol
-                ? "oklch(0.925 0.084 155.995)"
-                : "transparent"
-            }
-            stroke="black"
-            onClick={() => {
-              onClick([px, py]);
-            }}
-            onMouseOver={() => {
-              onMouseOver([px, py]);
-            }}
-          />
-          <text
-            key={`ascii-table-${py}-${px}-text`}
-            x={x + (px * cellWidth + offsetX) + 2}
-            y={y + ((py + 1) * cellHeight + offsetY)}
-            fontWeight={isHovered || isClicked ? "bold" : "normal"}
-            onClick={() => {
-              onClick([px, py]);
-            }}
-          >
-            {ASCII_TABLE[py][px]}
-          </text>
-        </>
+        <RectText
+          x={x + px * cellWidth + 2}
+          y={y + py * cellHeight}
+          width={cellWidth}
+          height={cellHeight}
+          fill={
+            isHovered
+              ? "oklch(0.885 0.062 18.334)"
+              : isClicked
+              ? "oklch(0.872 0.01 258.338)"
+              : isHoveredRow
+              ? "oklch(0.901 0.058 230.902)"
+              : isHoveredCol
+              ? "oklch(0.925 0.084 155.995)"
+              : "transparent"
+          }
+          offsetX={offsetX}
+          stroke="black"
+          fontWeight={isHovered || isClicked ? "bold" : "normal"}
+          onClick={() => {
+            onClick([px, py]);
+          }}
+          onMouseOver={() => {
+            onMouseOver([px, py]);
+          }}
+        >
+          {ASCII_TABLE[py][px]}
+        </RectText>
       );
     })
   );
 };
 
 const LeftSide = () => {
-  const { x, y, cellHeight, offsetY } = ASCII_TABLE_ATTR;
+  const { y, cellWidth, cellHeight, offset, color } = LEFT_SIDE_ATTR;
 
   const hoveredValue = useContext(HoveredCellContext);
-  const cellWidth = x / 5;
-  const offsetX = 16;
-  const fontSize = "0.8rem";
 
   return (
-    <>
-      {range(ASCII_TABLE.length).flatMap((py) => [
-        ...py
-          .toString(2)
-          .padStart(4, "0")
-          .split("")
-          .map((b, px) => {
-            const isHovered = hoveredValue?.[1] === py;
-            return (
-              <>
-                <rect
-                  key={`left-side-${py}-${px}-rect`}
-                  x={cellWidth * px}
-                  y={y + py * cellHeight}
-                  width={cellWidth}
-                  height={cellHeight}
-                  fill={
-                    isHovered ? "oklch(0.685 0.169 237.323)" : "transparent"
-                  }
-                  stroke="black"
-                />
-                <text
-                  key={`left-side-${py}-${px}-text`}
-                  x={cellWidth * px + offsetX}
-                  y={y + (py + 1) * cellHeight + offsetY}
-                  fill={isHovered ? "#ffffff" : "black"}
-                  fontSize={fontSize}
-                  fontWeight={isHovered ? "bold" : "normal"}
-                >
-                  {b}
-                </text>
-              </>
-            );
-          }),
-        <rect
-          key={`left-side-${py}-rect`}
-          x={cellWidth * 4}
-          y={y + py * cellHeight}
-          width={cellWidth}
-          height={cellHeight}
-          fill={
-            hoveredValue?.[1] === py
-              ? "oklch(0.872 0.01 258.338)"
-              : "transparent"
-          }
-          stroke="black"
-        />,
-        <text
-          key={`left-side-${py}-text`}
-          x={cellWidth * 4 + offsetX}
-          y={y + (py + 1) * cellHeight + offsetY}
-          fontSize={fontSize}
-        >
-          {py}
-        </text>,
-      ])}
-    </>
+    <g>
+      {range(ASCII_TABLE.length).flatMap((py) => {
+        const isHover = hoveredValue?.[1] === py;
+
+        return [
+          ...py
+            .toString(2)
+            .padStart(4, "0")
+            .split("")
+            .map((b, px) => (
+              <RectText
+                key={`left-side-${py}-${px}`}
+                x={cellWidth * px}
+                y={y + cellHeight * py}
+                width={cellWidth}
+                height={cellHeight}
+                fill={isHover ? color.b1b4.hover.background : "transparent"}
+                stroke="black"
+                offsetX={offset.x}
+                fontSize="0.8rem"
+                fontWeight={isHover ? "bold" : "normal"}
+                color={isHover ? "white" : "black"}
+              >
+                {b}
+              </RectText>
+            )),
+          <RectText
+            x={cellWidth * 4}
+            y={y + cellHeight * py}
+            width={cellWidth}
+            height={cellHeight}
+            fill={isHover ? color.column.hover.background : "transparent"}
+            stroke="black"
+            offsetX={offset.x}
+            fontSize="0.8rem"
+            fontWeight={isHover ? "bold" : "normal"}
+          >
+            {py}
+          </RectText>,
+        ];
+      })}
+    </g>
   );
 };
 
@@ -203,55 +200,38 @@ const TopSide = () => {
       .split("")
       .map((b, py) => {
         const isHovered = hoveredValue?.[0] === px;
-        return [
-          <rect
-            key={`top-side-${px}-${py}-rect`}
-            x={x + px * cellWidth + 2}
-            y={py * cellHeight}
+        return (
+          <RectText
+            x={x + cellWidth * px + 2}
+            y={cellHeight * py}
             width={cellWidth}
             height={cellHeight}
-            fill={isHovered ? "oklch(0.723 0.219 149.579)" : "transparent"}
-          />,
-          <line
-            key={`top-side-${px}-${py}-line`}
-            x1={x + px * cellWidth + 2}
-            y1={0}
-            x2={x + px * cellWidth + 2}
-            y2={3 * cellHeight}
+            offsetX={offsetX}
+            sides={["left", "right"]}
             stroke="black"
-            strokeWidth="1"
-          />,
-          <text
-            key={`top-side-${px}-${py}-text`}
-            x={x + px * cellWidth + offsetX}
-            y={(py + 1) * cellHeight + offsetY}
-            fill={isHovered ? "#ffffff" : "black"}
+            fill={isHovered ? "oklch(0.723 0.219 149.579)" : "transparent"}
             fontWeight={isHovered ? "bold" : "normal"}
-            fontSize={fontSize}
+            color={isHovered ? "#ffffff" : "black"}
           >
             {b}
-          </text>,
-        ];
+          </RectText>
+        );
       }),
-    <rect
-      key={`top-side-${px}-rect`}
+    <RectText
       x={x + px * cellWidth + 2}
-      y={3 * cellHeight}
+      y={cellHeight * 3}
       width={cellWidth}
       height={cellHeight * 2}
       fill={
         hoveredValue?.[0] === px ? "oklch(0.872 0.01 258.338)" : "transparent"
       }
       stroke="black"
-    />,
-    <text
-      key={`top-side-${px}-text`}
-      x={x + px * cellWidth + offsetX}
-      y={4 * cellHeight + offsetY}
       fontSize={fontSize}
+      offsetX={offsetX - 2}
+      offsetY={cellHeight * 0.75}
     >
       {px}
-    </text>,
+    </RectText>,
     <line
       key={`top-side-${px}-line-horizontal`}
       x1={x + 2}
