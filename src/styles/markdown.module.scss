@@ -23,6 +23,15 @@
     @apply text-neutral-400;
   }
 
+  h2:hover:before,
+  h3:hover:before,
+  h4:hover:before,
+  h5:hover:before,
+  h6:hover:before {
+    @apply text-orange-600;
+  }
+
+
   h2:before {
     content: "## ";
   }
