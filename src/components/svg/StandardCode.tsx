@@ -104,6 +104,7 @@ const AsciiTable = ({
 
       return (
         <RectText
+          key={`ascii-table-${px}-${py}`}
           x={x + px * cellWidth + 2}
           y={y + py * cellHeight}
           width={cellWidth}
@@ -170,6 +171,7 @@ const LeftSide = () => {
               </RectText>
             )),
           <RectText
+            key={`left-side-${py}-text`}
             x={cellWidth * columnNum}
             y={y + cellHeight * py}
             width={cellWidth}
@@ -209,6 +211,7 @@ const TopSide = () => {
           .map((b, py) => {
             return (
               <RectText
+                key={`top-side-${px}-${py}`}
                 x={x + cellWidth * px}
                 y={cellHeight * py}
                 width={cellWidth}
@@ -294,7 +297,9 @@ const B1b4Row = () => {
         {`b${4 - px}`}
       </text>
     )),
-    <text x={4 * cellWidth + offsetX / 2} y={y - 10} fontSize="0.8rem">
+    <text
+     key={`row-text`}
+     x={4 * cellWidth + offsetX / 2} y={y - 10} fontSize="0.8rem">
       ROW
     </text>,
   ];

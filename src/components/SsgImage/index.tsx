@@ -1,8 +1,11 @@
 import Picture from "next-export-optimize-images/picture";
+import { StaticImageData, StaticRequire } from "next/dist/shared/lib/get-img-props";
 import { DetailedHTMLProps, FC, ImgHTMLAttributes } from "react";
 
 export const SsgImage: FC<
-  DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+  Omit<DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>, "src"> & {
+    src: string | StaticRequire | StaticImageData
+  }
 > = (props) => {
   return (
     <Picture

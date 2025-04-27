@@ -23,8 +23,8 @@ const chConfig: CodeHikeConfig = {
 };
 
 const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
-  return () => (
-    <MDXRemote
+  return (function mdXRemote() {
+    return <MDXRemote
       source={source}
       options={{
         mdxOptions: {
@@ -45,7 +45,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
         HoverContainer,
       }}
     />
-  );
+  });
 };
 
 export default codeHikeComponent;

@@ -14,9 +14,9 @@ import Script from "next/script";
 import markdownStyles from "@/styles/markdown.module.scss";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 };
 
 const contentBasePath = "keywords";
@@ -30,8 +30,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const forntmatter = await getFrontmatter({
-    paths: [contentBasePath, ...params.slug],
+    paths: [contentBasePath, ...slug],
     parser: keywordFrontmatterSchema,
   });
 
@@ -41,8 +42,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
+  const { slug } = await params;
   const content = await getContent({
-    paths: [contentBasePath, ...params.slug],
+    paths: [contentBasePath, ...slug],
     parser: {
       frontmatter: keywordFrontmatterSchema,
     },
@@ -59,7 +61,7 @@ export default async function Page({ params }: Props) {
       <Script
         stylesheets={stylesheets.map(
           (fileName) =>
-            `/assets/${contentBasePath}/${params.slug.join("/")}/${fileName}`
+            `/assets/${contentBasePath}/${slug.join("/")}/${fileName}`
         )}
       />
       <article

@@ -30,7 +30,7 @@ export const AllTags: StoryObj = {
           "Ollama",
           "プログラミング",
         ].map((name) => (
-          <div className="flex my-2">
+          <div key={name} className="flex my-2">
             <Tag label={name} />
           </div>
         ))}

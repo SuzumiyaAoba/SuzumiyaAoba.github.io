@@ -17,9 +17,9 @@ import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
 import { format } from "date-fns";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -31,8 +31,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const forntmatter = await getFrontmatter({
-    paths: [Pages["blog"].root, params.slug],
+    paths: [Pages["blog"].root, slug],
     parser: Pages["blog"].frontmatter,
   });
 
@@ -42,8 +43,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
+  const { slug } = await params;
   const content = await getContent({
-    paths: ["blog", params.slug],
+    paths: ["blog", slug],
     parser: {
       frontmatter: Pages["blog"].frontmatter,
     },
@@ -59,7 +61,7 @@ export default async function Page({ params }: Props) {
     <>
       <Script
         stylesheets={stylesheets.map(
-          (fileName) => `/assets/blog/${params.slug}/${fileName}`
+          (fileName) => `/assets/blog/${slug}/${fileName}`
         )}
       />
       <article

@@ -14,12 +14,11 @@ import BuyMeACoffee from "@/components/BuyMeACoffee";
 import Script from "next/script";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
 import { frontmatterSchema } from "@/libs/contents/notes";
-import { format } from "date-fns";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 };
 
 const contentBasePath = "notes";
@@ -33,8 +32,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const forntmatter = await getFrontmatter({
-    paths: [contentBasePath, ...params.slug],
+    paths: [contentBasePath, ...slug],
     parser: frontmatterSchema,
   });
 
@@ -44,8 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
+  const { slug } = await params;
   const content = await getContent({
-    paths: [contentBasePath, ...params.slug],
+    paths: [contentBasePath, ...slug],
     parser: {
       frontmatter: frontmatterSchema,
     },
@@ -62,7 +63,7 @@ export default async function Page({ params }: Props) {
       <Script
         stylesheets={stylesheets.map(
           (fileName) =>
-            `/assets/${contentBasePath}/${params.slug.join("/")}/${fileName}`
+            `/assets/${contentBasePath}/${slug.join("/")}/${fileName}`
         )}
       />
       <article
