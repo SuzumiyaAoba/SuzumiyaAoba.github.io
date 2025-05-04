@@ -1,4 +1,7 @@
-import { FC } from "react";
+import { FC, memo } from "react";
+import Link from "next/link";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 export const TAG_LABELS = [
   "java",
@@ -20,33 +23,83 @@ const toTypedTagLabel = (tag: string): TagLabel | undefined =>
 const tagToIcon = (tag: string) => {
   switch (toTypedTagLabel(tag.toLowerCase())) {
     case "java":
-      return "i-skill-icons-java-light mr-1.5";
+      return "i-skill-icons-java-light";
     case "scala":
-      return "i-devicon-scala mr-1.5";
+      return "i-devicon-scala";
     case "astro":
-      return "i-skill-icons-astro mr-1.5";
+      return "i-skill-icons-astro";
     case "next.js":
-      return "i-devicon-nextjs mr-1.5";
+      return "i-devicon-nextjs";
     case "nix":
-      return "i-skill-icons-nix-light mr-1.5";
+      return "i-skill-icons-nix-light";
     case "tmux":
-      return "i-codicon-terminal-tmux mr-1.5";
+      return "i-codicon-terminal-tmux";
     case "emacs":
-      return "i-logos-emacs mr-1.5";
+      return "i-logos-emacs";
     case "ollama":
-      return "i-simple-icons-ollama mr-1.5";
+      return "i-simple-icons-ollama";
     case "プログラミング":
-      return "i-material-symbols-code-blocks-outline mr-1";
+      return "i-material-symbols-code-blocks-outline";
   }
 
   return "i-material-symbols:tag-rounded";
 };
 
-export const Tag: FC<{ label: string }> = ({ label }) => {
-  return (
-    <span className="flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100">
-      <span className={tagToIcon(label)} />
-      <span>{label}</span>
-    </span>
-  );
-};
+const tagVariants = cva(
+  "flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100 transition-colors hover:bg-neutral-200",
+  {
+    variants: {
+      size: {
+        sm: "text-xs",
+        md: "text-sm",
+        lg: "text-base",
+      },
+      variant: {
+        default: "bg-neutral-100 hover:bg-neutral-200",
+        primary: "bg-blue-100 border-blue-400 hover:bg-blue-200",
+        secondary: "bg-green-100 border-green-400 hover:bg-green-200",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      variant: "default",
+    },
+  }
+);
+
+export interface TagProps extends VariantProps<typeof tagVariants> {
+  label: string;
+  href?: string;
+  className?: string;
+}
+
+export const Tag: FC<TagProps> = memo(
+  ({ label, href, size, variant, className }) => {
+    const iconClass = cn(tagToIcon(label), "mr-1.5");
+    const tagContent = (
+      <>
+        <span className={iconClass} />
+        <span>{label}</span>
+      </>
+    );
+
+    if (href) {
+      return (
+        <Link
+          href={href}
+          className={cn(tagVariants({ size, variant }), className)}
+        >
+          {tagContent}
+        </Link>
+      );
+    }
+
+    return (
+      <span className={cn(tagVariants({ size, variant }), className)}>
+        {tagContent}
+      </span>
+    );
+  }
+);
+
+Tag.displayName = "Tag";
