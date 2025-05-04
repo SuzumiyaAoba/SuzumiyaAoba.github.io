@@ -33,9 +33,7 @@ export default async function Home() {
                   {frontmatter.title}
                 </a>
                 <div className="flex flex-wrap mt-2 gap-2 text-xs">
-                  {frontmatter.tags.map((tag) => (
-                    <Tag key={tag} label={tag} />
-                  ))}
+                  {frontmatter.tags.map((tag) => <Tag key={tag} label={tag} />)}
                 </div>
               </div>
             );

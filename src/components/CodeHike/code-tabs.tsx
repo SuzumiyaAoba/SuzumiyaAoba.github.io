@@ -17,7 +17,7 @@ export async function CodeWithTabs(props: unknown) {
 export async function CodeTabs(props: { tabs: RawCode[] }) {
   const { tabs } = props;
   const highlighted = await Promise.all(
-    tabs.map((tab) => highlight(tab, "github-light"))
+    tabs.map((tab) => highlight(tab, "github-light")),
   );
   return (
     <Tabs defaultValue={tabs[0]?.meta}>

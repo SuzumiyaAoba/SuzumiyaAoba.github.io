@@ -40,13 +40,13 @@ export function LanguageSwitcher({
           </SelectContent>
         </Select>
 
-        {selectedCode.meta ? (
-          <div className="ml-8 bg-slate-100 text-slate-500">
-            {selectedCode.meta}
-          </div>
-        ) : (
-          <></>
-        )}
+        {selectedCode.meta
+          ? (
+            <div className="ml-8 bg-slate-100 text-slate-500">
+              {selectedCode.meta}
+            </div>
+          )
+          : <></>}
       </div>
 
       <CustomCodeBlock code={selectedCode} />

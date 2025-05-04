@@ -35,9 +35,7 @@ export default async function Home() {
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16 mt-16">
       <div className="grid sm:grid-cols-2 gap-8">
-        {cards.map((props) => (
-          <Card key={props.title} {...props} />
-        ))}
+        {cards.map((props) => <Card key={props.title} {...props} />)}
       </div>
     </main>
   );

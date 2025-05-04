@@ -11,7 +11,7 @@ export const decorators = [
       className={clsx(
         zen_maru_gothic.className,
         exo_2.variable,
-        monoFont.variable
+        monoFont.variable,
       )}
     >
       <Story />

@@ -25,7 +25,7 @@ export default function RootLayout({
           zen_maru_gothic.className,
           exo_2.variable,
           monoFont.variable,
-          "flex flex-col w-full h-screen"
+          "flex flex-col w-full h-screen",
         )}
       >
         <Header siteName={config.metadata.title} />

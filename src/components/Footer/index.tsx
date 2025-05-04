@@ -6,9 +6,9 @@ export const Footer: FC<{
   copyright: string;
   poweredBy:
     | {
-        name: string;
-        url: string;
-      }
+      name: string;
+      url: string;
+    }
     | string;
 }> = ({ copyright, poweredBy }) => {
   const date = new Date();
@@ -30,14 +30,13 @@ export const Footer: FC<{
             &copy; {date.getFullYear()} {copyright}
           </div>
           <div>
-            Powered by{" "}
-            {poweredBy instanceof Object ? (
-              <Link href={poweredBy.url} className="hover:underline">
-                {poweredBy.name}
-              </Link>
-            ) : (
-              poweredBy
-            )}
+            Powered by {poweredBy instanceof Object
+              ? (
+                <Link href={poweredBy.url} className="hover:underline">
+                  {poweredBy.name}
+                </Link>
+              )
+              : poweredBy}
           </div>
         </div>
       </footer>

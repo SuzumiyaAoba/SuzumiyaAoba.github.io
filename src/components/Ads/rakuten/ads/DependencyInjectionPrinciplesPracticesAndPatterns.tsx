@@ -1,6 +1,6 @@
 import rakutenAdsStyle from "@/styles/rakuten-ads.module.scss";
 
-export const DependecyInjectionPriciplesPractilcesAndPatterns = () => {
+export const DependencyInjectionPrinciplesPracticesAndPatterns = () => {
   return (
     <div className={rakutenAdsStyle["rakuten-ads"]}>
       <table
