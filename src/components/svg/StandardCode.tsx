@@ -109,17 +109,15 @@ const AsciiTable = ({
           y={y + py * cellHeight}
           width={cellWidth}
           height={cellHeight}
-          fill={
-            isHovered
-              ? "oklch(0.885 0.062 18.334)"
-              : isClicked
-              ? "oklch(0.872 0.01 258.338)"
-              : isHoveredRow
-              ? "oklch(0.901 0.058 230.902)"
-              : isHoveredCol
-              ? "oklch(0.925 0.084 155.995)"
-              : "transparent"
-          }
+          fill={isHovered
+            ? "oklch(0.885 0.062 18.334)"
+            : isClicked
+            ? "oklch(0.872 0.01 258.338)"
+            : isHoveredRow
+            ? "oklch(0.901 0.058 230.902)"
+            : isHoveredCol
+            ? "oklch(0.925 0.084 155.995)"
+            : "transparent"}
           offsetX={offsetX}
           stroke="black"
           fontWeight={isHovered || isClicked ? "bold" : "normal"}
@@ -256,9 +254,9 @@ const AsciiInfo = ({
 }) => {
   return (
     <div className="grid grid-cols-[max-content_1fr]">
-      <span className="text-right pr-4 font-bold">ASCII: </span>
+      <span className="text-right pr-4 font-bold">ASCII:</span>
       <span className="font-mono">{char ?? ""}</span>
-      <span className="text-right pr-4 font-bold">Hex: </span>
+      <span className="text-right pr-4 font-bold">Hex:</span>
       <span className="font-mono">
         {hex && (
           <>
@@ -268,7 +266,7 @@ const AsciiInfo = ({
           </>
         )}
       </span>
-      <span className="text-right pr-4 font-bold">Binary: </span>
+      <span className="text-right pr-4 font-bold">Binary:</span>
       <span className="font-mono">
         {binary && (
           <>
@@ -298,8 +296,11 @@ const B1b4Row = () => {
       </text>
     )),
     <text
-     key={`row-text`}
-     x={4 * cellWidth + offsetX / 2} y={y - 10} fontSize="0.8rem">
+      key={`row-text`}
+      x={4 * cellWidth + offsetX / 2}
+      y={y - 10}
+      fontSize="0.8rem"
+    >
       ROW
     </text>,
   ];

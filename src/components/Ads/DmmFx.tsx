@@ -22,7 +22,8 @@ export const DmmFx = () => {
           src="https://www15.a8.net/0.gif?a8mat=3ZM4V6+6GSIB6+1WP2+63OY9"
           alt=""
           loading="lazy"
-        ></img>
+        >
+        </img>
       </div>
       <div className="sm:hidden">
         <a
@@ -45,7 +46,8 @@ export const DmmFx = () => {
           src="https://www10.a8.net/0.gif?a8mat=3ZM4V6+6GSIB6+1WP2+61C2P"
           alt=""
           loading="lazy"
-        ></img>
+        >
+        </img>
       </div>
     </div>
   );

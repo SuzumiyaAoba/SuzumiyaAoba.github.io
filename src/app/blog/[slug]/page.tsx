@@ -61,13 +61,13 @@ export default async function Page({ params }: Props) {
     <>
       <Script
         stylesheets={stylesheets.map(
-          (fileName) => `/assets/blog/${slug}/${fileName}`
+          (fileName) => `/assets/blog/${slug}/${fileName}`,
         )}
       />
       <article
         className={clsx(
           markdownStyles.markdown,
-          "max-w-4xl w-full mx-auto px-4 pb-16"
+          "max-w-4xl w-full mx-auto px-4 pb-16",
         )}
       >
         <h1 className="mt-8 mb-2 text-center">{frontmatter.title}</h1>
@@ -76,9 +76,7 @@ export default async function Page({ params }: Props) {
           {format(frontmatter.date, "yyyy/MM/dd")}
         </div>
         <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
-          {frontmatter.tags.map((tag) => (
-            <Tag key={tag} label={tag} />
-          ))}
+          {frontmatter.tags.map((tag) => <Tag key={tag} label={tag} />)}
         </div>
         <section>
           <Component />

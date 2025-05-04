@@ -18,4 +18,4 @@ const mono = Fira_Code({
   variable: "--font-mono",
 });
 
-export { zen_maru_gothic, exo_2, mono };
+export { exo_2, mono, zen_maru_gothic };
