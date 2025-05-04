@@ -5,14 +5,23 @@ import Giscus from "@giscus/react";
 import type { GiscusProps } from "@giscus/react";
 import { cn } from "@/lib/utils";
 
-// GiscusPropsから必要な型を抽出し拡張する
+// GiscusPropsの必須プロパティをオプショナルにする
+type OptionalGiscusProps = Partial<GiscusProps>;
+
+// 必要なプロパティのみ抽出して拡張
 export interface CommentsProps
   extends Omit<
-    GiscusProps,
+    OptionalGiscusProps,
     "id" | "host" | "strict" | "reactionsEnabled" | "emitMetadata" | "loading"
   > {
   /** コンテナクラス名 */
   className?: string;
+  /** リポジトリ名 */
+  repo?: GiscusProps["repo"];
+  /** リポジトリID */
+  repoId?: string;
+  /** マッピング方法 */
+  mapping?: GiscusProps["mapping"];
 }
 
 export const Comments = memo(
