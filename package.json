@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "run-p next:dev tsm",
+    "dev": "npm run clean && nrun-p next:dev tsm",
     "next:dev": "next dev",
     "build": "npm run clean &&npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
     "start": "next start",
