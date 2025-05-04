@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "run-p next:dev tsm",
     "next:dev": "next dev",
-    "build": "npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
+    "build": "npm run clean &&npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "next lint",
@@ -14,7 +14,8 @@
     "updates": "npx npm-check-updates",
     "copy:blog:images": "cpy 'src/contents/blog/**/*.{png,jpg,jpeg,svg}' 'public/assets/blog'",
     "copy:notes:images": "cpy 'src/contents/notes/**/*.{png,jpg,jpeg,svg}' 'public/assets/notes'",
-    "copy:blog:css": "cpy 'src/contents/blog/**/*.css' 'public/assets/blog'"
+    "copy:blog:css": "cpy 'src/contents/blog/**/*.css' 'public/assets/blog'",
+    "clean": "rimraf .next out"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
