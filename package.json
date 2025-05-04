@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run clean && nrun-p next:dev tsm",
+    "dev": "npm run clean && run-p next:dev tsm",
     "next:dev": "next dev",
     "build": "npm run clean &&npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
     "start": "next start",
@@ -44,6 +44,7 @@
     "react-dom": "19.1.0",
     "react-share": "^5.2.2",
     "react-tooltip": "^5.28.0",
+    "rehype-autolink-headings": "^7.1.0",
     "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.1",
     "rehype-pretty-code": "^0.14.0",

@@ -13,6 +13,14 @@
     font-size: 1.25rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
+
+    @apply cursor-pointer;
+
+    > a,
+    a:hover {
+      @apply text-black font-normal;
+      @apply no-underline;
+    }
   }
 
   h2:before,
@@ -214,9 +222,7 @@
   }
 
   :not(pre) > code {
-    font-family:
-      var(--font-mono),
-      monospace;
+    font-family: var(--font-mono), monospace;
     @apply tracking-tighter;
     /* color: #ec4899; */
     @apply text-red-600 bg-red-50;

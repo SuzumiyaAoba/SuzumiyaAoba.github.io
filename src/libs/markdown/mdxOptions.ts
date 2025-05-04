@@ -15,6 +15,7 @@ import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
 import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/Ads/rakuten/ads/DependencyInjectionPrinciplesPracticesAndPatterns";
 import { TableWrapper } from "@/components/TableWrapper";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 export const defaultRemarkPlugins: any[] = [
   remarkGfm,
@@ -26,6 +27,7 @@ export const defaultRemarkPlugins: any[] = [
 
 export const defaultRehypePlugins = (...paths: string[]): any[] => [
   rehypeSlug,
+  [rehypeAutolinkHeadings, { behavior: "wrap" }],
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
   rehypeImageSize(...paths),
   rehypeKatex,
