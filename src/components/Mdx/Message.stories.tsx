@@ -93,7 +93,7 @@ export const WithMarkdown: Story = {
           <strong>太字</strong>や<em>斜体</em>もサポートされています。
         </p>
         <pre>
-          <code>console.log('コードブロックもサポート');</code>
+          <code>console.log(&apos;コードブロックもサポート&apos;);</code>
         </pre>
       </>
     ),
