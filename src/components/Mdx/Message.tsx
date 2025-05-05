@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, memo } from "react";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const messageVariants = cva("my-8 px-4 py-4 rounded-md border", {
+const messageVariants = cva("my-8 px-4 rounded-md border", {
   variants: {
     variant: {
       info: "border-sky-400 bg-sky-50",
@@ -44,15 +44,24 @@ export interface MessageProps
 export const Message: FC<MessageProps> = memo(
   ({ title, children, variant, className, showIcon = true }) => {
     return (
-      <aside className={cn(messageVariants({ variant }), className)}>
-        {title && (
-          <div className="flex pb-2">
-            {showIcon && <div className={iconVariants({ variant })} />}
-            <div className="font-bold">{title}</div>
-          </div>
+      <details
+        className={cn(
+          messageVariants({ variant }),
+          className,
+          "open:ring",
+          "group"
         )}
+      >
+        <summary className="flex items-center cursor-pointer">
+          {showIcon && <p className={iconVariants({ variant })} />}
+          <p className="font-bold">{title}</p>
+          <span className="ml-auto transform transition-transform rotate-90 group-open:rotate-0 mr-2">
+            ▼
+          </span>
+        </summary>
+
         <div className="prose prose-sm max-w-none">{children}</div>
-      </aside>
+      </details>
     );
   }
 );
