@@ -61,11 +61,18 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
   return (
     <header
       className={clsx(
-        "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled ? "bg-white shadow-sm py-2" : "bg-white py-4"
+        "fixed left-0 right-0 z-50 transition-all duration-300",
+        isScrolled
+          ? "top-4 w-[95%] max-w-4xl mx-auto rounded-xl shadow-lg bg-white/95 backdrop-blur-sm py-2"
+          : "top-0 w-full bg-white py-4"
       )}
     >
-      <div className="flex max-w-4xl px-4 mx-auto items-center justify-between">
+      <div
+        className={clsx(
+          "flex items-center justify-between",
+          isScrolled ? "px-6 mx-auto" : "max-w-4xl px-4 mx-auto"
+        )}
+      >
         <SiteLogo siteName={siteName} />
 
         {/* デスクトップナビゲーション */}
@@ -87,7 +94,8 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       <div
         className={clsx(
           "md:hidden bg-white w-full overflow-hidden transition-all duration-300 ease-in-out",
-          isMobileMenuOpen ? "max-h-64 shadow-md" : "max-h-0"
+          isScrolled && "rounded-b-xl",
+          isMobileMenuOpen ? "max-h-64 shadow-inner" : "max-h-0"
         )}
       >
         <MobileNavigation
