@@ -1,25 +1,26 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import Script from "next/script";
+import { format } from "date-fns";
+import clsx from "clsx";
 
 import markdownStyles from "@/styles/markdown.module.scss";
 import "katex/dist/katex.min.css";
-import { Comments } from "@/components/Comments";
-
-import clsx from "clsx";
-import { Metadata } from "next";
 import config from "@/config";
-import { TwitterShareButton } from "@/components/share/TwitterShareButton";
-import { Tag } from "@/components/Tag";
-import { HatenaButton } from "@/components/share/HatenaButton";
-import BuyMeACoffee from "@/components/BuyMeACoffee";
 import { Pages } from "@/libs/contents/blog";
-import Script from "next/script";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { format } from "date-fns";
+
+// Components
+import { Comments } from "@/components/Comments";
+import { TwitterShareButton } from "@/components/share/TwitterShareButton";
+import { HatenaButton } from "@/components/share/HatenaButton";
+import { Tag } from "@/components/Tag";
+import BuyMeACoffee from "@/components/BuyMeACoffee";
 
 type Props = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
 export async function generateStaticParams() {
@@ -31,19 +32,19 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const forntmatter = await getFrontmatter({
-    paths: [Pages["blog"].root, slug],
+  const { slug } = params;
+  const frontmatter = await getFrontmatter({
+    paths: ["blog", slug],
     parser: Pages["blog"].frontmatter,
   });
 
   return {
-    title: `${forntmatter?.title} | ${config.metadata.title}`,
+    title: `${frontmatter?.title} | ${config.metadata.title}`,
   };
 }
 
 export default async function Page({ params }: Props) {
-  const { slug } = await params;
+  const { slug } = params;
   const content = await getContent({
     paths: ["blog", slug],
     parser: {
@@ -61,13 +62,13 @@ export default async function Page({ params }: Props) {
     <>
       <Script
         stylesheets={stylesheets.map(
-          (fileName) => `/assets/blog/${slug}/${fileName}`,
+          (fileName) => `/assets/blog/${slug}/${fileName}`
         )}
       />
       <article
         className={clsx(
           markdownStyles.markdown,
-          "max-w-4xl w-full mx-auto px-4 pb-16",
+          "max-w-4xl w-full mx-auto px-4 pb-16"
         )}
       >
         <h1 className="mt-8 mb-2 text-center">{frontmatter.title}</h1>
@@ -76,7 +77,9 @@ export default async function Page({ params }: Props) {
           {format(frontmatter.date, "yyyy/MM/dd")}
         </div>
         <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
-          {frontmatter.tags.map((tag) => <Tag key={tag} label={tag} />)}
+          {frontmatter.tags.map((tag) => (
+            <Tag key={tag} label={tag} />
+          ))}
         </div>
         <section>
           <Component />
