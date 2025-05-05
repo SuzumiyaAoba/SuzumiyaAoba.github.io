@@ -2,16 +2,33 @@ import { FC } from "react";
 import Link from "next/link";
 import { FooterAds } from "../Ads/FooterAds";
 
-export const Footer: FC<{
-  copyright: string;
-  poweredBy:
-    | {
+type PoweredBy =
+  | {
       name: string;
       url: string;
     }
-    | string;
-}> = ({ copyright, poweredBy }) => {
+  | string;
+
+type FooterProps = {
+  copyright: string;
+  poweredBy: PoweredBy;
+};
+
+export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
   const date = new Date();
+  const currentYear = date.getFullYear();
+
+  const renderPoweredBy = () => {
+    if (typeof poweredBy === "string") {
+      return poweredBy;
+    }
+
+    return (
+      <Link href={poweredBy.url} className="hover:underline">
+        {poweredBy.name}
+      </Link>
+    );
+  };
 
   return (
     <>
@@ -27,17 +44,9 @@ export const Footer: FC<{
         </div>
         <div className="text-sm">
           <div>
-            &copy; {date.getFullYear()} {copyright}
+            &copy; {currentYear} {copyright}
           </div>
-          <div>
-            Powered by {poweredBy instanceof Object
-              ? (
-                <Link href={poweredBy.url} className="hover:underline">
-                  {poweredBy.name}
-                </Link>
-              )
-              : poweredBy}
-          </div>
+          <div>Powered by {renderPoweredBy()}</div>
         </div>
       </footer>
     </>
