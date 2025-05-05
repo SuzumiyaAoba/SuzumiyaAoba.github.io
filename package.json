@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
-    "@iconify/json": "^2.2.270",
+    "@iconify/json": "^2.2.335",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-interactions": "^8.6.12",
     "@storybook/addon-links": "^8.6.12",
