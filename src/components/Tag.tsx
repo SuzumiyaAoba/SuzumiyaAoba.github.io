@@ -6,13 +6,21 @@ import { cn } from "@/lib/utils";
 export const TAG_LABELS = [
   "java",
   "scala",
+  "node",
   "astro",
   "next.js",
   "nix",
   "tmux",
   "emacs",
   "ollama",
+  "github copilot",
+  "llm",
+  "ローカルllm",
+  "生成ai",
+  "キーボード",
+  "自作キーボード",
   "プログラミング",
+  "日記",
 ] as const;
 
 type TagLabel = (typeof TAG_LABELS)[number];
@@ -26,6 +34,8 @@ const tagToIcon = (tag: string) => {
       return "i-skill-icons-java-light";
     case "scala":
       return "i-devicon-scala";
+    case "node":
+      return "i-fa-brands-node";
     case "astro":
       return "i-skill-icons-astro";
     case "next.js":
@@ -38,8 +48,19 @@ const tagToIcon = (tag: string) => {
       return "i-logos-emacs";
     case "ollama":
       return "i-simple-icons-ollama";
+    case "github copilot":
+      return "i-octicon-mark-github";
+    case "llm":
+    case "ローカルllm":
+    case "生成ai":
+      return "i-ri-speak-ai-line";
+    case "キーボード":
+    case "自作キーボード":
+      return "i-material-symbols-keyboard-outline";
     case "プログラミング":
       return "i-material-symbols-code-blocks-outline";
+    case "日記":
+      return "i-mingcute-diary-line";
   }
 
   return "i-material-symbols:tag-rounded";

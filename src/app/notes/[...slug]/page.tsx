@@ -1,52 +1,56 @@
 import { notFound } from "next/navigation";
-
-import markdownStyles from "@/styles/markdown.module.scss";
 import "katex/dist/katex.min.css";
-import { Comments } from "@/components/Comments";
-
-import clsx from "clsx";
 import { Metadata } from "next";
 import config from "@/config";
-import { TwitterShareButton } from "@/components/share/TwitterShareButton";
-import { Tag } from "@/components/Tag";
-import { HatenaButton } from "@/components/share/HatenaButton";
-import BuyMeACoffee from "@/components/BuyMeACoffee";
-import Script from "next/script";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { frontmatterSchema } from "@/libs/contents/notes";
+import { frontmatterSchema, type NoteContent } from "@/libs/contents/notes";
+import { Article } from "@/components/Article";
+import { StylesheetLoader } from "@/components/StylesheetLoader";
 
-type Props = {
-  params: Promise<{
-    slug: string[];
-  }>;
+const CONTENT_BASE_PATH = "notes";
+
+type PageParams = {
+  slug: string[];
 };
 
-const contentBasePath = "notes";
+type PageProps = {
+  params: Promise<PageParams>;
+};
 
-export async function generateStaticParams() {
-  const paths = await getPaths(contentBasePath);
+export async function generateStaticParams(): Promise<PageParams[]> {
+  const paths = await getPaths(CONTENT_BASE_PATH);
 
   return paths.map((path) => ({
     slug: path.split("/"),
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const forntmatter = await getFrontmatter({
-    paths: [contentBasePath, ...slug],
+  const frontmatter = await getFrontmatter({
+    paths: [CONTENT_BASE_PATH, ...slug],
     parser: frontmatterSchema,
   });
 
+  if (!frontmatter) {
+    return {
+      title: config.metadata.title,
+    };
+  }
+
   return {
-    title: `${forntmatter?.title} | ${config.metadata.title}`,
+    title: `${frontmatter.title} | ${config.metadata.title}`,
+    description: frontmatter.title,
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function NotePage({ params }: PageProps) {
   const { slug } = await params;
-  const content = await getContent({
-    paths: [contentBasePath, ...slug],
+
+  const content = await getContent<typeof frontmatterSchema._type>({
+    paths: [CONTENT_BASE_PATH, ...slug],
     parser: {
       frontmatter: frontmatterSchema,
     },
@@ -60,35 +64,18 @@ export default async function Page({ params }: Props) {
 
   return (
     <>
-      <Script
-        stylesheets={stylesheets.map(
-          (fileName) =>
-            `/assets/${contentBasePath}/${slug.join("/")}/${fileName}`,
-        )}
+      <StylesheetLoader
+        stylesheets={stylesheets}
+        basePath={CONTENT_BASE_PATH}
+        slug={slug}
       />
-      <article
-        className={clsx(
-          markdownStyles.markdown,
-          "max-w-4xl w-full mx-auto px-4 pb-16",
-        )}
+      <Article
+        title={frontmatter.title}
+        date={frontmatter.date}
+        tags={frontmatter.tags}
       >
-        <h1 className="mt-8 mb-4 text-center">{frontmatter.title}</h1>
-        <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
-          {frontmatter.tags.map((tag) => <Tag key={tag} label={tag} />)}
-        </div>
-        <section>
-          <Component />
-        </section>
-        <section className="flex gap-x-2 justify-end mt-12 mb-4">
-          <HatenaButton />
-          <TwitterShareButton title={frontmatter.title} />
-        </section>
-        <hr className="mb-8 border-dashed border-neutral-600" />
-        <BuyMeACoffee />
-        <section className="mt-8">
-          <Comments />
-        </section>
-      </article>
+        <Component />
+      </Article>
     </>
   );
 }

@@ -13,26 +13,30 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const Notes: FC<{
+type NotesProps = {
   title: string;
   basePath: string;
   notes: ReturnType<typeof getFrontmatters<z.infer<typeof frontmatterSchema>>>;
-}> = async ({ title, basePath, notes: promiseNotes }) => {
+};
+
+const Notes: FC<NotesProps> = async ({
+  title,
+  basePath,
+  notes: promiseNotes,
+}) => {
   const notes = await promiseNotes;
 
   return (
-    <>
+    <section className="mb-8">
       <h3 className="mb-4 text-xl font-bold border-l-4 pl-2 border-neutral-600">
         {title}
       </h3>
-      <div className="flex flex-col gap-6 mb-8">
+      <div className="flex flex-col gap-6">
         {notes
           .filter((note) => note.frontmatter.parent)
           .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
           .map((note) => {
-            if (!note) {
-              return <></>;
-            }
+            if (!note) return null;
 
             const { path: slug, frontmatter } = note;
 
@@ -49,39 +53,52 @@ const Notes: FC<{
                   {frontmatter.title}
                 </a>
                 <div className="flex flex-wrap mt-2 gap-2 text-xs">
-                  {frontmatter.tags.map((tag) => <Tag key={tag} label={tag} />)}
+                  {frontmatter.tags.map((tag) => (
+                    <Tag key={tag} label={tag} />
+                  ))}
                 </div>
               </div>
             );
           })}
       </div>
-    </>
+    </section>
   );
 };
 
+const getNotes = (path: string[]) =>
+  getFrontmatters({
+    paths: path,
+    parser: { frontmatter: frontmatterSchema },
+  });
+
 export default async function Page() {
+  const noteCategories = [
+    {
+      title: "Scala",
+      basePath: "programming/scala",
+      notes: getNotes(["notes", "programming", "scala"]),
+    },
+    {
+      title: "本",
+      basePath: "programming/books",
+      notes: getNotes(["notes", "programming", "books"]),
+    },
+  ];
+
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="my-8 text-3xl">Notes</h1>
       <h2 className="mb-4 text-2xl border-b-1 border-neutral-500">
         プログラミング
       </h2>
-      <Notes
-        title="Scala"
-        basePath="programming/scala"
-        notes={getFrontmatters({
-          paths: ["notes", "programming", "scala"],
-          parser: { frontmatter: frontmatterSchema },
-        })}
-      />
-      <Notes
-        title="本"
-        basePath="programming/books"
-        notes={getFrontmatters({
-          paths: ["notes", "programming", "books"],
-          parser: { frontmatter: frontmatterSchema },
-        })}
-      />
+      {noteCategories.map((category) => (
+        <Notes
+          key={category.basePath}
+          title={category.title}
+          basePath={category.basePath}
+          notes={category.notes}
+        />
+      ))}
     </main>
   );
 }
