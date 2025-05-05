@@ -108,10 +108,8 @@ const SiteLogo: FC<SiteLogoProps> = ({ siteName }) => (
     href={"/"}
     className={clsx("text-2xl font-bold relative group", exo_2.className)}
   >
-    <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-      {siteName}
-    </span>
-    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+    <span className="text-neutral-900">{siteName}</span>
+    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neutral-800 transition-all duration-300 group-hover:w-full"></span>
   </Link>
 );
 
@@ -128,7 +126,7 @@ const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
           className="px-2 py-1 relative text-neutral-700 hover:text-neutral-900 transition-colors duration-300 group"
         >
           {menu.name}
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-800 transition-all duration-300 group-hover:w-full"></span>
         </Link>
       </li>
     ))}
