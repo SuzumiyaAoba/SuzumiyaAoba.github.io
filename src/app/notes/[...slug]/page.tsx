@@ -3,42 +3,54 @@ import "katex/dist/katex.min.css";
 import { Metadata } from "next";
 import config from "@/config";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { frontmatterSchema } from "@/libs/contents/notes";
+import { frontmatterSchema, type NoteContent } from "@/libs/contents/notes";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 
-type Props = {
-  params: Promise<{
-    slug: string[];
-  }>;
+const CONTENT_BASE_PATH = "notes";
+
+type PageParams = {
+  slug: string[];
 };
 
-const contentBasePath = "notes";
+type PageProps = {
+  params: Promise<PageParams>;
+};
 
-export async function generateStaticParams() {
-  const paths = await getPaths(contentBasePath);
+export async function generateStaticParams(): Promise<PageParams[]> {
+  const paths = await getPaths(CONTENT_BASE_PATH);
 
   return paths.map((path) => ({
     slug: path.split("/"),
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const frontmatter = await getFrontmatter({
-    paths: [contentBasePath, ...slug],
+    paths: [CONTENT_BASE_PATH, ...slug],
     parser: frontmatterSchema,
   });
 
+  if (!frontmatter) {
+    return {
+      title: config.metadata.title,
+    };
+  }
+
   return {
-    title: `${frontmatter?.title} | ${config.metadata.title}`,
+    title: `${frontmatter.title} | ${config.metadata.title}`,
+    description: frontmatter.title,
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function NotePage({ params }: PageProps) {
   const { slug } = await params;
-  const content = await getContent({
-    paths: [contentBasePath, ...slug],
+
+  const content = await getContent<typeof frontmatterSchema._type>({
+    paths: [CONTENT_BASE_PATH, ...slug],
     parser: {
       frontmatter: frontmatterSchema,
     },
@@ -54,12 +66,12 @@ export default async function Page({ params }: Props) {
     <>
       <StylesheetLoader
         stylesheets={stylesheets}
-        basePath={contentBasePath}
+        basePath={CONTENT_BASE_PATH}
         slug={slug}
       />
       <Article
         title={frontmatter.title}
-        date={frontmatter.date || ""}
+        date={frontmatter.date?.toISOString() || ""}
         tags={frontmatter.tags}
       >
         <Component />
