@@ -71,7 +71,7 @@ export default async function NotePage({ params }: PageProps) {
       />
       <Article
         title={frontmatter.title}
-        date={frontmatter.date?.toISOString() || ""}
+        date={frontmatter.date}
         tags={frontmatter.tags}
       >
         <Component />
