@@ -87,7 +87,7 @@ export default async function Page() {
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
-      <h1 className="my-8 text-3xl">Notes</h1>
+      <h1 className="mb-8 text-3xl">Notes</h1>
       <h2 className="mb-4 text-2xl border-b-1 border-neutral-500">
         プログラミング
       </h2>

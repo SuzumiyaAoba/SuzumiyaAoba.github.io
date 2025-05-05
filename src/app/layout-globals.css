@@ -1,0 +1,46 @@
+:root {
+  --header-height: 72px; /* デフォルト値 */
+}
+
+/* ヘッダーの下のコンテンツコンテナに上部マージンを適用 */
+.mt-header {
+  margin-top: var(--header-height);
+}
+
+/* モバイルメニューが開いているときに追加のマージンを適用 */
+@media (max-width: 767px) {
+  .content-container {
+    transition: margin-top 0.3s ease-in-out;
+  }
+}
+
+/* すべてのメインコンテンツに余白を追加 */
+main {
+  padding-top: 1rem; /* 追加の余白 */
+}
+
+/* ハンバーガーメニューのアニメーション */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* フェードインアニメーションのクラス */
+.menu-item-appear {
+  opacity: 0;
+  animation: fadeInUp 0.3s ease-out forwards;
+  /* 最初は不透明度0で、アニメーションが完了すると1になる */
+}
+
+/* ハンバーガーメニューのトランジション調整 */
+@media (max-width: 767px) {
+  header div[role="navigation"] {
+    will-change: max-height, opacity;
+  }
+}
