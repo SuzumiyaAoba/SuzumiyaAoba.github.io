@@ -18,8 +18,7 @@ const BuyMeACoffee = () => {
         data-font-color="#000000"
         data-coffee-color="#ffffff"
         async
-      >
-      </script>
+      ></script>
       <a href="https://www.buymeacoffee.com/suzumiyaaoba" target="_blank">
         <img
           src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
