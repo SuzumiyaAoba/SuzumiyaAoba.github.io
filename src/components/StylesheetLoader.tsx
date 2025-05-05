@@ -2,32 +2,33 @@
 
 import { useEffect } from "react";
 
+type StylesheetLoaderProps = {
+  stylesheets: string[];
+  basePath: string;
+  slug: string | string[];
+};
+
 export function StylesheetLoader({
   stylesheets,
   basePath,
   slug,
-}: {
-  stylesheets: string[];
-  basePath: string;
-  slug: string | string[];
-}) {
+}: StylesheetLoaderProps) {
   useEffect(() => {
+    if (!stylesheets.length) return;
+
     const slugPath = Array.isArray(slug) ? slug.join("/") : slug;
+    const createdLinks: HTMLLinkElement[] = [];
 
     stylesheets.forEach((fileName) => {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = `/assets/${basePath}/${slugPath}/${fileName}`;
       document.head.appendChild(link);
+      createdLinks.push(link);
     });
 
     return () => {
-      stylesheets.forEach((fileName) => {
-        const links = document.querySelectorAll(
-          `link[href="/assets/${basePath}/${slugPath}/${fileName}"]`
-        );
-        links.forEach((link) => link.remove());
-      });
+      createdLinks.forEach((link) => link.remove());
     };
   }, [stylesheets, basePath, slug]);
 
