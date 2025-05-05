@@ -36,11 +36,11 @@ export function Article({
     <article
       className={cn(
         markdownStyles.markdown,
-        "max-w-4xl w-full mx-auto px-4 pb-16",
+        "max-w-4xl w-full mx-auto px-4 py-4 pb-16",
         className
       )}
     >
-      <h1 className="mt-8 mb-4 text-center">{title}</h1>
+      <h1 className="mb-8 text-center">{title}</h1>
 
       <div className="flex mt-2 mb-2 justify-center items-center">
         <span className="i-ic-outline-sync mr-0.5" />

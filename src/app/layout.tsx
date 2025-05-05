@@ -8,6 +8,9 @@ import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { GoogleAdsenseScript } from "@/components/Ads/GoogleAdsenseScript";
 
+// メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
+import "./layout-globals.css";
+
 export const metadata: Metadata = {
   title: config.metadata.title,
   generator: "Next.js",
@@ -25,11 +28,11 @@ export default function RootLayout({
           zen_maru_gothic.className,
           exo_2.variable,
           monoFont.variable,
-          "flex flex-col w-full h-screen",
+          "flex flex-col w-full h-screen"
         )}
       >
         <Header siteName={config.metadata.title} />
-        {children}
+        <div className="content-container mt-header flex-grow">{children}</div>
         <Footer
           copyright="SuzumiyaAoba"
           poweredBy={{

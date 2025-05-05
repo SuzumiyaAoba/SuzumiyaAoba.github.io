@@ -1,0 +1,20 @@
+:root {
+  --header-height: 72px; /* デフォルト値 */
+}
+
+/* ヘッダーの下のコンテンツコンテナに上部マージンを適用 */
+.mt-header {
+  margin-top: var(--header-height);
+}
+
+/* モバイルメニューが開いているときに追加のマージンを適用 */
+@media (max-width: 767px) {
+  .content-container {
+    transition: margin-top 0.3s ease-in-out;
+  }
+}
+
+/* すべてのメインコンテンツに余白を追加 */
+main {
+  padding-top: 1rem; /* 追加の余白 */
+}
