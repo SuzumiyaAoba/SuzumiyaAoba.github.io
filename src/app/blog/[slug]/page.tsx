@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import Script from "next/script";
 import { format } from "date-fns";
 import clsx from "clsx";
 
@@ -16,11 +15,10 @@ import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import { HatenaButton } from "@/components/share/HatenaButton";
 import { Tag } from "@/components/Tag";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
+import { StylesheetLoader } from "@/components/StylesheetLoader";
 
 type Props = {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
@@ -32,7 +30,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const frontmatter = await getFrontmatter({
     paths: ["blog", slug],
     parser: Pages["blog"].frontmatter,
@@ -44,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const { slug } = params;
+  const { slug } = await params;
   const content = await getContent({
     paths: ["blog", slug],
     parser: {
@@ -60,11 +58,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <>
-      <Script
-        stylesheets={stylesheets.map(
-          (fileName) => `/assets/blog/${slug}/${fileName}`
-        )}
-      />
+      <StylesheetLoader stylesheets={stylesheets} slug={slug} />
       <article
         className={clsx(
           markdownStyles.markdown,
