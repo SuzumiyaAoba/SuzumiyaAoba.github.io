@@ -8,6 +8,7 @@ import { exo_2 } from "@/fonts";
 // メニュー項目を定数として定義
 const MENUS = [
   { name: "Blog", href: "/blog/" },
+  { name: "Tags", href: "/tags/" },
   { name: "Notes", href: "/notes/" },
   { name: "Tools", href: "/tools/" },
   { name: "Keywords", href: "/keywords/" },
@@ -95,14 +96,14 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
         className={clsx(
           "fixed left-0 right-0 z-50 transition-all duration-300",
           isScrolled
-            ? "top-4 w-[95%] max-w-4xl mx-auto rounded-xl shadow-lg bg-white/95 backdrop-blur-sm py-2"
+            ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-white/95 backdrop-blur-sm py-2"
             : "top-0 w-full bg-white py-4"
         )}
       >
         <div
           className={clsx(
             "flex items-center justify-between",
-            isScrolled ? "px-6 mx-auto" : "max-w-4xl px-4 mx-auto"
+            isScrolled ? "px-4 sm:px-6 mx-auto" : "max-w-4xl px-4 mx-auto"
           )}
         >
           <SiteLogo siteName={siteName} />
@@ -205,12 +206,12 @@ type NavigationProps = {
 };
 
 const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
-  <ul className="flex gap-8">
+  <ul className="flex gap-4 sm:gap-8">
     {menus.map((menu) => (
       <li key={menu.href}>
         <Link
           href={menu.href}
-          className="px-2 py-1 relative text-neutral-700 hover:text-neutral-900 transition-colors duration-300 group"
+          className="px-1 sm:px-2 py-1 relative text-neutral-700 hover:text-neutral-900 transition-colors duration-300 group text-sm sm:text-base"
         >
           {menu.name}
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-800 transition-all duration-300 group-hover:w-full"></span>

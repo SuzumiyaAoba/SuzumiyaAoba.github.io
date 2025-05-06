@@ -33,17 +33,17 @@ export default async function RootLayout({
   const keywordTitleMap = await getKeywordTitleMap();
 
   return (
-    <html lang="ja">
+    <html lang="ja" className="overflow-x-hidden h-full">
       <body
         className={clsx(
           zen_maru_gothic.className,
           exo_2.variable,
           monoFont.variable,
-          "flex flex-col w-full h-screen"
+          "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
         <Header siteName={config.metadata.title} />
-        <div className="content-container mt-header flex-grow">
+        <div className="content-container mt-header flex-grow w-full">
           <BreadcrumbNav
             blogTitleMap={blogTitleMap}
             noteTitleMap={noteTitleMap}

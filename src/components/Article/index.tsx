@@ -50,7 +50,11 @@ export function Article({
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
           {tags.map((tag) => (
-            <Tag key={tag} label={tag} />
+            <Tag
+              key={tag}
+              label={tag}
+              href={`/tags/${encodeURIComponent(tag)}/`}
+            />
           ))}
         </div>
       )}
