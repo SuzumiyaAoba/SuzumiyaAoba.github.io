@@ -24,19 +24,27 @@ const INSERTION_POINT = "</head>";
 // 挿入するスクリプトタグ
 const SCRIPT_TAG = `
   <!-- 静的生成時に追加されたPagefindスクリプト -->
-  <script src="/pagefind/pagefind.js" type="module"></script>
   <script>
-    // Pagefindの読み込みイベントを発火
-    window.addEventListener('load', function() {
-      // 少し遅延させてモジュールが確実に読み込まれるようにする
-      setTimeout(function() {
+    // Pagefindの読み込み用初期化
+    window.__pagefind_init = false;
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.__pagefind_init) return;
+      window.__pagefind_init = true;
+      
+      // スクリプトを直接挿入
+      var script = document.createElement('script');
+      script.src = '/pagefind/pagefind.js';
+      script.async = true;
+      script.onload = function() {
+        console.log('Pagefind library loaded from static HTML');
         if (window.pagefind) {
-          console.log('Pagefind library loaded from static HTML');
           document.dispatchEvent(new Event('pagefind-loaded'));
-        } else {
-          console.error('Failed to load Pagefind library');
         }
-      }, 100);
+      };
+      script.onerror = function() {
+        console.error('Failed to load pagefind.js from static HTML');
+      };
+      document.head.appendChild(script);
     });
   </script>
 `;
@@ -58,9 +66,11 @@ async function main() {
       return;
     }
 
-    // pagefind.jsへの参照がすでにあるか確認
-    if (searchPageContent.includes("/pagefind/pagefind.js")) {
-      console.log("pagefind.jsへの参照が見つかりました。スキップします。");
+    // window.__pagefind_initがすでにあるか確認
+    if (searchPageContent.includes("window.__pagefind_init")) {
+      console.log(
+        "Pagefind初期化コードがすでに含まれています。スキップします。"
+      );
       return;
     }
 

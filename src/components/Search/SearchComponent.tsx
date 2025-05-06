@@ -8,19 +8,8 @@ import Script from "next/script";
 // import.meta を使用するためPagefindはESモジュールとして扱います
 declare global {
   interface Window {
-    // Pagefindモジュールが読み込まれたら、このプロパティが設定されます
-    pagefind?: {
-      search: (query: string) => Promise<{
-        results: Array<{
-          id: string;
-          data: () => Promise<{
-            url: string;
-            meta?: { title?: string };
-            excerpt?: string;
-          }>;
-        }>;
-      }>;
-    };
+    pagefind: any;
+    __pagefind_init: boolean;
   }
 }
 
@@ -55,6 +44,11 @@ export default function SearchComponent() {
     if (typeof window !== "undefined") {
       // 積極的にpagefindの読み込みを確認する関数
       const checkPagefindLoaded = () => {
+        // すでに初期化されているかチェック
+        if (window.__pagefind_init) {
+          return true;
+        }
+
         console.log("Checking if pagefind is loaded...");
         if (window.pagefind) {
           console.log("Pagefind is available");
@@ -195,12 +189,35 @@ export default function SearchComponent() {
     }, 300);
   };
 
-  // スクリプトのロード完了を通知するイベント
-  const handleScriptLoad = () => {
-    console.log("Pagefind script loaded");
-    const event = new Event("pagefind-loaded");
-    document.dispatchEvent(event);
-  };
+  // CSRの場合のためのスクリプト読み込み
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      !window.pagefind &&
+      !window.__pagefind_init
+    ) {
+      window.__pagefind_init = true;
+
+      // スクリプトを直接挿入
+      const script = document.createElement("script");
+      script.src = "/pagefind/pagefind.js";
+      script.async = true;
+      script.onload = () => {
+        console.log("Pagefind script loaded by client");
+        if (window.pagefind) {
+          document.dispatchEvent(new Event("pagefind-loaded"));
+        }
+      };
+      script.onerror = () => {
+        console.error("Failed to load Pagefind script from client");
+        setPagefindError(
+          "Failed to load search index. Please try refreshing the page."
+        );
+      };
+
+      document.head.appendChild(script);
+    }
+  }, []);
 
   const handleDevSetup = () => {
     // 開発環境セットアップ用のコマンドを実行するよう指示
@@ -211,17 +228,6 @@ export default function SearchComponent() {
 
   return (
     <div className="w-full">
-      <Script
-        src="/pagefind/pagefind.js"
-        strategy="afterInteractive"
-        type="module"
-        onLoad={handleScriptLoad}
-        onError={() => {
-          console.error("Failed to load Pagefind script");
-          setPagefindError("Failed to load search index.");
-        }}
-      />
-
       <div className="mb-6">
         <div className="flex gap-2">
           <input
