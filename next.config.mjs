@@ -4,7 +4,6 @@ const isProd = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
   images: {
     remotePatterns: [
       {
@@ -12,13 +11,18 @@ const nextConfig = {
         hostname: "cdn.buymeacoffee.com",
         pathname: "/buttons/v2/default-yellow.png",
       },
+      {
+        hostname: "suzumiyaaoba.com",
+        protocol: "https",
+        port: "",
+      },
     ],
     // 画像の最適化
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,
   },
   reactStrictMode: true,
-  // SSG
+  // SSG設定
   output: isProd ? "export" : undefined,
   assetPrefix: isProd ? "https://suzumiyaaoba.com" : undefined,
   trailingSlash: true,
