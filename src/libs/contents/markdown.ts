@@ -61,7 +61,7 @@ export async function getRawContent(
 
 export const parseRawContent = <FRONTMATTER>(
   frontmatterParser: Parser<FRONTMATTER>,
-  { raw, format }: RawContent,
+  { raw, format }: RawContent
 ): ParsedContent<NonNullable<FRONTMATTER>> | null => {
   const { content, data } = matter(raw);
   const frontmatter = frontmatterParser.parse(data);
@@ -142,12 +142,10 @@ export const getContent = async <FRONTMATTER>({
 export const getPaths = async (...paths: string[]): Promise<string[]> => {
   const basePath = ["src", "contents", ...paths];
   const md = await Array.fromAsync(
-    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.md"))),
+    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.md")))
   );
   const mdx = await Array.fromAsync(
-    glob(
-      path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")),
-    ),
+    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")))
   );
 
   const dirs = [...md, ...mdx].map((filepath) =>
@@ -177,21 +175,21 @@ export const getFrontmatters = async <FRONTMATTER extends { draft?: boolean }>({
       contentPaths.map(async (contentPath) => {
         const rawContent = await getRawContent(...paths, contentPath);
         if (!rawContent) {
-          throw new Error(`Cannot get content: ${rawContent}`);
+          throw new Error(`Cannot get content: ${contentPath}`);
         }
 
         const content = parseRawContent(frontmatter, rawContent);
         if (!content?.frontmatter) {
-          throw new Error(`Frontmatter does not exists: ${content}`);
+          throw new Error(`Frontmatter does not exist: ${contentPath}`);
         }
 
         return {
           path: contentPath,
           frontmatter: content.frontmatter,
         };
-      }),
+      })
     )
   ).filter(
-    ({ frontmatter }) => frontmatter.draft === undefined || !frontmatter.draft,
+    ({ frontmatter }) => frontmatter.draft === undefined || !frontmatter.draft
   );
 };

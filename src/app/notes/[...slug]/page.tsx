@@ -61,6 +61,7 @@ export default async function NotePage({ params }: PageProps) {
   }
 
   const { frontmatter, stylesheets, Component } = content;
+  const notePath = slug.join("/");
 
   return (
     <>

@@ -7,6 +7,12 @@ import clsx from "clsx";
 import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { GoogleAdsenseScript } from "@/components/Ads/GoogleAdsenseScript";
+import BreadcrumbNav from "@/components/Breadcrumb";
+import {
+  getBlogTitleMap,
+  getNoteTitleMap,
+  getKeywordTitleMap,
+} from "@/libs/contents/title-map";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -16,11 +22,16 @@ export const metadata: Metadata = {
   generator: "Next.js",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // タイトルマップを取得
+  const blogTitleMap = await getBlogTitleMap();
+  const noteTitleMap = await getNoteTitleMap();
+  const keywordTitleMap = await getKeywordTitleMap();
+
   return (
     <html lang="ja">
       <body
@@ -32,7 +43,14 @@ export default function RootLayout({
         )}
       >
         <Header siteName={config.metadata.title} />
-        <div className="content-container mt-header flex-grow">{children}</div>
+        <div className="content-container mt-header flex-grow">
+          <BreadcrumbNav
+            blogTitleMap={blogTitleMap}
+            noteTitleMap={noteTitleMap}
+            keywordTitleMap={keywordTitleMap}
+          />
+          {children}
+        </div>
         <Footer
           copyright="SuzumiyaAoba"
           poweredBy={{
