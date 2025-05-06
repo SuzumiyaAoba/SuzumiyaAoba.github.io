@@ -24,16 +24,19 @@ const INSERTION_POINT = "</head>";
 // 挿入するスクリプトタグ
 const SCRIPT_TAG = `
   <!-- 静的生成時に追加されたPagefindスクリプト -->
-  <script src="/pagefind/pagefind.js"></script>
+  <script src="/pagefind/pagefind.js" type="module"></script>
   <script>
     // Pagefindの読み込みイベントを発火
     window.addEventListener('load', function() {
-      if (window.pagefind) {
-        console.log('Pagefind library loaded from static HTML');
-        document.dispatchEvent(new Event('pagefind-loaded'));
-      } else {
-        console.error('Failed to load Pagefind library');
-      }
+      // 少し遅延させてモジュールが確実に読み込まれるようにする
+      setTimeout(function() {
+        if (window.pagefind) {
+          console.log('Pagefind library loaded from static HTML');
+          document.dispatchEvent(new Event('pagefind-loaded'));
+        } else {
+          console.error('Failed to load Pagefind library');
+        }
+      }, 100);
     });
   </script>
 `;
