@@ -2,25 +2,27 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Script from "next/script";
+import { z } from "zod";
+// 型定義のインポート
+import type PagefindModule from "/pagefind/pagefind.js";
 
-// インターフェースを修正してグローバルWindowに型を追加
-// import.meta を使用するためPagefindはESモジュールとして扱います
+// PagefindResultのスキーマ定義
+const pagefindResultSchema = z.object({
+  url: z.string(),
+  excerpt: z.string(),
+  meta: z.object({
+    title: z.string().optional(),
+  }),
+});
+
+type PagefindResult = z.infer<typeof pagefindResultSchema>;
+
+// グローバル型定義の追加
 declare global {
   interface Window {
-    pagefind: any;
+    pagefind: typeof PagefindModule;
     __pagefind_init: boolean;
   }
-}
-
-interface SearchResult {
-  id: string;
-  data: {
-    url: string;
-    title: string;
-    content?: string;
-    excerpt?: string;
-  };
 }
 
 export default function SearchComponent() {
@@ -29,91 +31,23 @@ export default function SearchComponent() {
   const initialQuery = searchParams.get("q") || "";
 
   const [query, setQuery] = useState(initialQuery);
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<PagefindResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [pagefindLoaded, setPagefindLoaded] = useState(false);
   const [pagefindError, setPagefindError] = useState<string | null>(null);
 
   // デバウンス用タイマー
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  // PageFind読み込み確認用のタイマー
-  const pagefindCheckTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Pagefindをロード
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // 積極的にpagefindの読み込みを確認する関数
-      const checkPagefindLoaded = () => {
-        // すでに初期化されているかチェック
-        if (window.__pagefind_init) {
-          return true;
-        }
-
-        console.log("Checking if pagefind is loaded...");
-        if (window.pagefind) {
-          console.log("Pagefind is available");
-          setPagefindLoaded(true);
-          setPagefindError(null);
-          clearInterval(pagefindCheckTimerRef.current!);
-
-          if (initialQuery) {
-            performSearch(initialQuery);
-          }
-          return true;
-        }
-        return false;
-      };
-
-      const handlePagefindLoaded = () => {
-        console.log("Pagefind load event received");
-        if (checkPagefindLoaded()) return;
-      };
-
-      // すでにロードされているか確認
-      if (checkPagefindLoaded()) return;
-
-      // イベントリスナーを追加
-      document.addEventListener("pagefind-loaded", handlePagefindLoaded);
-
-      // 定期的にpagefindの読み込みを確認（バックアップメカニズム）
-      pagefindCheckTimerRef.current = setInterval(checkPagefindLoaded, 1000);
-
-      // 20秒後にもロードされていない場合はエラーとする
-      const timeoutTimer = setTimeout(() => {
-        if (!pagefindLoaded && !window.pagefind) {
-          console.error("Pagefind failed to load after timeout");
-          setPagefindError(
-            "Failed to load search index after timeout. Please try refreshing the page."
-          );
-          clearInterval(pagefindCheckTimerRef.current!);
-        }
-      }, 20000);
-
-      return () => {
-        document.removeEventListener("pagefind-loaded", handlePagefindLoaded);
-        if (pagefindCheckTimerRef.current) {
-          clearInterval(pagefindCheckTimerRef.current);
-        }
-        clearTimeout(timeoutTimer);
-      };
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // 検索を実行 - 引数で直接検索クエリを受け取るように変更
+  // 検索を実行
   const performSearch = useCallback(async (searchQuery: string) => {
-    console.log(`performSearch called with query: "${searchQuery}"`);
-
-    if (!searchQuery) {
-      console.log("Empty query, clearing results");
+    if (!searchQuery.trim()) {
       setResults([]);
       return;
     }
 
     if (!window.pagefind) {
-      console.error("Pagefind not loaded");
       setPagefindError(
-        "Pagefind is not loaded. Please wait a moment or reload the page."
+        "検索エンジンがロードされていません。しばらく待つか、ページを更新してください。"
       );
       return;
     }
@@ -131,37 +65,61 @@ export default function SearchComponent() {
         return;
       }
 
-      console.log(`Found ${search.results.length} raw results`);
-
+      // 検索結果をマップして処理
       const searchResults = await Promise.all(
         search.results.map(async (result: any) => {
           const data = await result.data();
-          return {
-            id: result.id,
-            data: {
-              url: data.url,
-              title: data.meta?.title || "No Title",
-              excerpt: data.excerpt,
-            },
-          };
+          return data;
         })
       );
 
-      console.log("Search results:", searchResults.length);
-      setResults(searchResults);
+      // zodで型安全に結果を取得
+      const validResults = z.array(pagefindResultSchema).parse(searchResults);
+      setResults(validResults);
     } catch (error) {
       console.error("Search failed:", error);
       setResults([]);
-      setPagefindError("An error occurred during search.");
+      setPagefindError("検索中にエラーが発生しました。");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // 入力時のハンドラー - デバウンスロジックをここに統合
+  // Pagefindをロード - シンプルなuseEffectで実装
+  useEffect(() => {
+    async function loadPagefind() {
+      if (typeof window === "undefined") return;
+
+      // すでに初期化済みの場合はスキップ
+      if (window.pagefind) return;
+
+      try {
+        console.log("Loading pagefind...");
+        // dynamic importでPagefindをロード
+        const pagefindModule = await import(
+          /* webpackIgnore: true */ "/pagefind/pagefind.js"
+        );
+        window.pagefind = pagefindModule.default;
+        console.log("Pagefind loaded successfully");
+
+        // 初期クエリがある場合は検索を実行
+        if (initialQuery) {
+          performSearch(initialQuery);
+        }
+      } catch (error) {
+        console.error("Failed to load pagefind", error);
+        setPagefindError(
+          "検索インデックスの読み込みに失敗しました。ページを更新してください。"
+        );
+      }
+    }
+
+    loadPagefind();
+  }, [initialQuery, performSearch]);
+
+  // 入力時のハンドラー - デバウンスロジック
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
-    console.log(`Input changed to: "${newQuery}"`);
     setQuery(newQuery);
 
     // 前回のタイマーをクリア
@@ -171,8 +129,6 @@ export default function SearchComponent() {
 
     // 300ms後に検索を実行
     timerRef.current = setTimeout(() => {
-      console.log(`Debounce timer fired for query: "${newQuery}"`);
-
       // URLパラメータを更新
       const params = new URLSearchParams(searchParams.toString());
       if (newQuery) {
@@ -189,40 +145,10 @@ export default function SearchComponent() {
     }, 300);
   };
 
-  // CSRの場合のためのスクリプト読み込み
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      !window.pagefind &&
-      !window.__pagefind_init
-    ) {
-      window.__pagefind_init = true;
-
-      // スクリプトを直接挿入
-      const script = document.createElement("script");
-      script.src = "/pagefind/pagefind.js";
-      script.async = true;
-      script.onload = () => {
-        console.log("Pagefind script loaded by client");
-        if (window.pagefind) {
-          document.dispatchEvent(new Event("pagefind-loaded"));
-        }
-      };
-      script.onerror = () => {
-        console.error("Failed to load Pagefind script from client");
-        setPagefindError(
-          "Failed to load search index. Please try refreshing the page."
-        );
-      };
-
-      document.head.appendChild(script);
-    }
-  }, []);
-
   const handleDevSetup = () => {
     // 開発環境セットアップ用のコマンドを実行するよう指示
     alert(
-      "To use Pagefind in development environment, run these commands:\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev"
+      "開発環境でPagefindを使用するには、以下のコマンドを実行してください：\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev"
     );
   };
 
@@ -234,9 +160,9 @@ export default function SearchComponent() {
             type="text"
             value={query}
             onChange={handleInputChange}
-            placeholder="Enter search terms..."
+            placeholder="検索キーワードを入力..."
             className="flex-1 p-2 border rounded-md"
-            aria-label="Search"
+            aria-label="検索"
             disabled={!!pagefindError}
           />
         </div>
@@ -249,40 +175,51 @@ export default function SearchComponent() {
             onClick={handleDevSetup}
             className="text-blue-600 hover:underline"
           >
-            Show setup instructions
+            開発環境用セットアップ手順を表示
           </button>
         </div>
       )}
 
-      {isLoading && <div className="text-center py-4">Searching...</div>}
-
-      {!isLoading && results.length > 0 && (
-        <div>
-          <p className="mb-4">{results.length} results found:</p>
-          <ul className="space-y-4">
-            {results.map((result) => (
-              <li key={result.id} className="border-b pb-4">
-                <a
-                  href={result.data.url}
-                  className="text-blue-600 hover:underline text-lg font-medium"
-                >
-                  {result.data.title}
-                </a>
-                {result.data.excerpt && (
-                  <p
-                    className="mt-1 text-gray-600"
-                    dangerouslySetInnerHTML={{ __html: result.data.excerpt }}
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
+      {isLoading ? (
+        <div className="py-4">
+          <p>検索中...</p>
         </div>
-      )}
-
-      {!isLoading && query && results.length === 0 && !pagefindError && (
-        <div className="text-center py-4">
-          No results found for &quot;{query}&quot;.
+      ) : (
+        <div>
+          {results.length > 0 ? (
+            <div>
+              <p className="mb-4">{results.length}件の検索結果</p>
+              <div className="space-y-6">
+                {results.map((result, index) => (
+                  <div key={index} className="border-b pb-4">
+                    <h3 className="text-xl font-semibold mb-2">
+                      <a
+                        href={result.url}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {result.meta.title || "タイトルなし"}
+                      </a>
+                    </h3>
+                    {result.excerpt && (
+                      <div
+                        className="text-gray-600"
+                        dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                      />
+                    )}
+                    <p className="text-sm text-gray-500 mt-1">
+                      <a href={result.url} className="hover:underline">
+                        {result.url}
+                      </a>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : query && !isLoading ? (
+            <p>
+              検索結果が見つかりませんでした。別のキーワードをお試しください。
+            </p>
+          ) : null}
         </div>
       )}
     </div>
