@@ -76,7 +76,7 @@ export function Article({
     <article
       className={cn(
         markdownStyles.markdown,
-        "max-w-4xl w-full mx-auto px-4 py-4 pb-16",
+        "max-w-3xl w-full mx-auto px-4 py-4 pb-16 relative",
         className
       )}
     >

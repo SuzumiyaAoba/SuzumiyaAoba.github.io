@@ -277,6 +277,38 @@
 }
 
 // Table of Contents
+.tocWrapper {
+  position: relative;
+
+  @media (min-width: 1280px) {
+    :global(.toc-sidebar) {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 280px;
+      max-height: 90vh;
+      overflow-y: auto;
+      margin-left: 2rem;
+      padding-bottom: 2rem;
+      z-index: 10;
+
+      /* スクロールバーのカスタマイズ */
+      &::-webkit-scrollbar {
+        width: 3px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
 .tocWrapper :global(.toc-container) {
   @apply my-6 max-w-2xl mx-auto;
   @apply bg-white;
@@ -286,12 +318,30 @@
   display: block !important;
   position: relative;
 
+  @media (min-width: 1280px) {
+    margin: 0 !important;
+    max-width: none !important;
+    width: 260px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 2rem;
+  }
+
   &:hover {
     @apply shadow-md;
+
+    @media (min-width: 1280px) {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
   }
 
   :global(.toc-details) {
     @apply w-full relative;
+
+    @media (min-width: 1280px) {
+      @apply w-full;
+      height: auto !important;
+    }
 
     &[open] {
       :global(.toc-summary) {

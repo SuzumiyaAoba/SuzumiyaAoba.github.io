@@ -49,7 +49,7 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
       tagName: "details",
       properties: {
         className: ["toc-details"],
-        open: false,
+        open: true,
       },
       children: [
         {
@@ -80,6 +80,16 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
       children: [details],
     };
 
+    // サイドバーコンテナの作成
+    const sidebarContainer: Element = {
+      type: "element",
+      tagName: "div",
+      properties: {
+        className: ["toc-sidebar"],
+      },
+      children: [tocContainer],
+    };
+
     // ドキュメントの先頭に挿入
     // 最初のコンテンツ要素を探す
     let contentStartIndex = -1;
@@ -92,9 +102,9 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
     }
 
     if (contentStartIndex !== -1) {
-      tree.children.splice(contentStartIndex, 0, tocContainer);
+      tree.children.splice(contentStartIndex, 0, sidebarContainer);
     } else {
-      tree.children.push(tocContainer);
+      tree.children.push(sidebarContainer);
     }
   };
 };
