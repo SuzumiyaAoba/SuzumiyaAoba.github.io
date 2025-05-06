@@ -106,7 +106,7 @@ export function Article({
         </div>
       )}
 
-      <section>{children}</section>
+      <section className={markdownStyles.tocWrapper}>{children}</section>
 
       {showShareButtons && (
         <section className="flex gap-x-2 justify-end mt-12 mb-4">

@@ -43,22 +43,41 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
     // TOCの作成
     const tocList = createNestedTocList(hierarchy);
 
+    // details要素を作成
+    const details: Element = {
+      type: "element",
+      tagName: "details",
+      properties: {
+        className: ["toc-details"],
+        open: false,
+      },
+      children: [
+        {
+          type: "element",
+          tagName: "summary",
+          properties: {
+            className: ["toc-summary"],
+          },
+          children: [
+            {
+              type: "text",
+              value: "コンテンツ",
+            },
+          ],
+        },
+        tocList,
+      ],
+    };
+
     // TOCコンテナの作成
     const tocContainer: Element = {
       type: "element",
       tagName: "nav",
       properties: {
-        className: ["markdown", "toc-container"],
-        ariaLabel: "目次",
+        className: ["toc-container"],
+        ariaLabel: "コンテンツ",
       },
-      children: [
-        {
-          type: "element",
-          tagName: "div",
-          properties: {},
-          children: [tocList],
-        },
-      ],
+      children: [details],
     };
 
     // ドキュメントの先頭に挿入
