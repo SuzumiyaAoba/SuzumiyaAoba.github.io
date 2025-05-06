@@ -274,4 +274,55 @@
       border: solid 0.5px;
     }
   }
+
+  // Table of Contents
+  .toc-container {
+    @apply my-8 p-4 bg-gray-50 border border-gray-200 rounded-lg max-w-2xl mx-auto;
+    display: block !important;
+
+    &::before {
+      content: "目次";
+      @apply block font-bold text-lg mb-2 text-gray-700;
+    }
+
+    .toc-list {
+      @apply list-none p-0 m-0;
+
+      .toc-list-item {
+        @apply my-1;
+        @apply list-none;
+
+        .toc-link {
+          @apply text-blue-600 hover:underline no-underline font-normal;
+          @apply decoration-solid;
+        }
+
+        // ネストされたリスト
+        .toc-list {
+          @apply pl-4 mt-1 mb-1;
+
+          .toc-list-item {
+            @apply my-0.5;
+            position: relative;
+
+            &::before {
+              content: "";
+              @apply absolute w-1.5 h-1.5 bg-gray-300 rounded-full;
+              left: -10px;
+              top: 8px;
+            }
+
+            // 3階層目
+            .toc-list {
+              @apply pl-3;
+
+              .toc-list-item::before {
+                @apply w-1 h-1 bg-gray-200;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
