@@ -237,7 +237,9 @@ export default function SearchComponent() {
       )}
 
       {!isLoading && query && results.length === 0 && !pagefindError && (
-        <div className="text-center py-4">No results found for "{query}".</div>
+        <div className="text-center py-4">
+          No results found for &quot;{query}&quot;.
+        </div>
       )}
     </div>
   );
