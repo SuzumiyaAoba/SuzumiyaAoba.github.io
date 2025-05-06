@@ -5,9 +5,22 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
 // インターフェースを修正してグローバルWindowに型を追加
+// import.meta を使用するためPagefindはESモジュールとして扱います
 declare global {
   interface Window {
-    pagefind: any;
+    // Pagefindモジュールが読み込まれたら、このプロパティが設定されます
+    pagefind?: {
+      search: (query: string) => Promise<{
+        results: Array<{
+          id: string;
+          data: () => Promise<{
+            url: string;
+            meta?: { title?: string };
+            excerpt?: string;
+          }>;
+        }>;
+      }>;
+    };
   }
 }
 
@@ -201,6 +214,7 @@ export default function SearchComponent() {
       <Script
         src="/pagefind/pagefind.js"
         strategy="afterInteractive"
+        type="module"
         onLoad={handleScriptLoad}
         onError={() => {
           console.error("Failed to load Pagefind script");
