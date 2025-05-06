@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
@@ -32,6 +32,9 @@ export default function SearchComponent() {
   const [pagefindLoaded, setPagefindLoaded] = useState(false);
   const [pagefindError, setPagefindError] = useState<string | null>(null);
 
+  // デバウンス用タイマー
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Pagefindをロード
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -41,7 +44,7 @@ export default function SearchComponent() {
         setPagefindError(null);
 
         if (initialQuery) {
-          performSearch();
+          performSearch(initialQuery);
         }
       };
 
@@ -51,7 +54,7 @@ export default function SearchComponent() {
         setPagefindLoaded(true);
 
         if (initialQuery) {
-          performSearch();
+          performSearch(initialQuery);
         }
         return;
       }
@@ -66,11 +69,18 @@ export default function SearchComponent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 検索を実行
-  const performSearch = useCallback(async () => {
-    if (!query) return;
+  // 検索を実行 - 引数で直接検索クエリを受け取るように変更
+  const performSearch = useCallback(async (searchQuery: string) => {
+    console.log(`performSearch called with query: "${searchQuery}"`);
+
+    if (!searchQuery) {
+      console.log("Empty query, clearing results");
+      setResults([]);
+      return;
+    }
 
     if (!window.pagefind) {
+      console.error("Pagefind not loaded");
       setPagefindError(
         "Pagefindがロードされていません。しばらく待つか、ページを再読み込みしてください。"
       );
@@ -80,14 +90,17 @@ export default function SearchComponent() {
     setIsLoading(true);
 
     try {
-      console.log("検索実行:", query);
-      const search = await window.pagefind.search(query);
+      console.log("検索実行:", searchQuery);
+      const search = await window.pagefind.search(searchQuery);
 
       if (!search || !search.results) {
+        console.log("No search results or search object is invalid");
         setResults([]);
         setIsLoading(false);
         return;
       }
+
+      console.log(`Found ${search.results.length} raw results`);
 
       const searchResults = await Promise.all(
         search.results.map(async (result: any) => {
@@ -112,26 +125,44 @@ export default function SearchComponent() {
     } finally {
       setIsLoading(false);
     }
-  }, [query]);
+  }, []);
 
-  // 検索を実行
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  // 入力時のハンドラー - デバウンスロジックをここに統合
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    console.log(`Input changed to: "${newQuery}"`);
+    setQuery(newQuery);
 
-    if (pagefindError) {
-      return;
+    // 前回のタイマーをクリア
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
     }
 
-    // URLパラメータを更新
-    const params = new URLSearchParams(searchParams.toString());
-    if (query) {
-      params.set("q", query);
-    } else {
-      params.delete("q");
-    }
+    // 300ms後に検索を実行
+    timerRef.current = setTimeout(() => {
+      console.log(`Debounce timer fired for query: "${newQuery}"`);
 
-    router.push(`/search?${params.toString()}`);
-    performSearch();
+      // URLパラメータを更新
+      const params = new URLSearchParams(searchParams.toString());
+      if (newQuery) {
+        params.set("q", newQuery);
+      } else {
+        params.delete("q");
+      }
+
+      // URLを更新 (スクロールなし)
+      router.push(`/search?${params.toString()}`, { scroll: false });
+
+      // 実際に検索を実行
+      performSearch(newQuery);
+    }, 300);
+  };
+
+  // スクリプトのロード完了を通知するイベント
+  const handleScriptLoad = () => {
+    console.log("Pagefindスクリプトがロードされました");
+    const event = new Event("pagefind-loaded");
+    document.dispatchEvent(event);
   };
 
   const handleDevSetup = () => {
@@ -141,11 +172,10 @@ export default function SearchComponent() {
     );
   };
 
-  // スクリプトのロード完了を通知するイベント
-  const handleScriptLoad = () => {
-    console.log("Pagefindスクリプトがロードされました");
-    const event = new Event("pagefind-loaded");
-    document.dispatchEvent(event);
+  // デバッグ用の関数
+  const forceSearch = () => {
+    console.log(`強制検索: "${query}"`);
+    performSearch(query);
   };
 
   return (
@@ -160,26 +190,26 @@ export default function SearchComponent() {
         }}
       />
 
-      <form onSubmit={handleSearch} className="mb-6">
+      <div className="mb-6">
         <div className="flex gap-2">
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleInputChange}
             placeholder="検索ワードを入力..."
             className="flex-1 p-2 border rounded-md"
             aria-label="検索"
             disabled={!!pagefindError}
           />
           <button
-            type="submit"
+            onClick={forceSearch}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
             disabled={isLoading || !!pagefindError}
           >
             {isLoading ? "検索中..." : "検索"}
           </button>
         </div>
-      </form>
+      </div>
 
       {pagefindError && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">

@@ -18,6 +18,7 @@ enum ContentType {
   NOTE = "notes",
   KEYWORD = "keywords",
   TOOL = "tools",
+  SEARCH = "search",
 }
 
 // 基本のパスセグメント型
@@ -51,6 +52,11 @@ interface ToolPathSegment extends BasePathSegment {
   type: ContentType.TOOL;
 }
 
+// 検索のパスセグメント
+interface SearchPathSegment extends BasePathSegment {
+  type: ContentType.SEARCH;
+}
+
 // その他のパスセグメント
 interface OtherPathSegment extends BasePathSegment {
   type: string;
@@ -62,6 +68,7 @@ type PathSegment =
   | NotePathSegment
   | KeywordPathSegment
   | ToolPathSegment
+  | SearchPathSegment
   | OtherPathSegment;
 
 // 静的データをサーバーから取得するためのプロップスタイプ
@@ -77,6 +84,7 @@ const segmentMappings: Record<string, string> = {
   [ContentType.NOTE]: "ノート",
   [ContentType.KEYWORD]: "キーワード",
   [ContentType.TOOL]: "ツール",
+  [ContentType.SEARCH]: "Search",
   programming: "プログラミング",
   scala: "Scala",
   cats: "Cats",
@@ -95,6 +103,11 @@ function isNoteSegment(segment: PathSegment): segment is NotePathSegment {
 // 型ガード関数 - キーワードセグメントの判定
 function isKeywordSegment(segment: PathSegment): segment is KeywordPathSegment {
   return segment.type === ContentType.KEYWORD;
+}
+
+// 型ガード関数 - 検索セグメントの判定
+function isSearchSegment(segment: PathSegment): segment is SearchPathSegment {
+  return segment.type === ContentType.SEARCH;
 }
 
 // スラグからパスを解析する
@@ -172,6 +185,12 @@ function getPathSegments(segments: string[]): PathSegment[] {
 
       case ContentType.TOOL:
         return { ...baseSegment, type: ContentType.TOOL } as ToolPathSegment;
+
+      case ContentType.SEARCH:
+        return {
+          ...baseSegment,
+          type: ContentType.SEARCH,
+        } as SearchPathSegment;
 
       default:
         return { ...baseSegment, type: rootSegment } as OtherPathSegment;
