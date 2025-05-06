@@ -8,7 +8,7 @@
     "build": "run-s clean copy:assets build:next build:pagefind fix:pagefind",
     "build:next": "NODE_ENV=production next build",
     "build:pagefind": "pagefind --site out --output-path out/pagefind",
-    "fix:pagefind": "node scripts/fix-pagefind-module.js && node scripts/fix-pagefind-path.js",
+    "fix:pagefind": "node scripts/fix-pagefind-module.js",
     "pagefind:dev": "node scripts/pagefind-dev.js",
     "clean": "rimraf .next out",
     "copy:assets": "run-p copy:blog:images copy:blog:css copy:notes:images",

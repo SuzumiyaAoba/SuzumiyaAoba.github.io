@@ -96,8 +96,9 @@ export default function SearchComponent() {
     }
   }, []);
 
-  // Pagefindをロード - アダプタを使って読み込む
+  // Pagefindをロード
   useEffect(() => {
+    // pagefind:initializedイベントのハンドラを登録
     function handlePagefindInitialized() {
       console.log("Pagefind initialized event received");
       setPagefindLoaded(true);
@@ -118,16 +119,10 @@ export default function SearchComponent() {
     // 初期化イベントのリスナーを設定
     window.addEventListener("pagefind:initialized", handlePagefindInitialized);
 
-    async function loadPagefind() {
-      if (typeof window === "undefined") return;
-
-      // すでに初期化済みまたはロード中の場合はスキップ
-      if (window.__pagefind_loaded || window.__pagefind_loading) return;
-
+    // pagefind-adapter.jsをロード（まだロードされていない場合）
+    if (!document.querySelector('script[src="/pagefind-adapter.js"]')) {
       try {
         console.log("Loading pagefind adapter...");
-
-        // アダプタスクリプトを作成して読み込む
         const script = document.createElement("script");
         script.src = "/pagefind-adapter.js";
         script.async = true;
@@ -137,17 +132,14 @@ export default function SearchComponent() {
             "検索インデックスの読み込みに失敗しました。ページを更新してください。"
           );
         };
-
-        document.body.appendChild(script);
+        document.head.appendChild(script);
       } catch (error) {
-        console.error("Failed to load pagefind", error);
+        console.error("Failed to load pagefind adapter", error);
         setPagefindError(
           "検索インデックスの読み込みに失敗しました。ページを更新してください。"
         );
       }
     }
-
-    loadPagefind();
 
     // クリーンアップ関数
     return () => {

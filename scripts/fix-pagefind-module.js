@@ -1,9 +1,8 @@
 /**
- * Pagefindスクリプトを修正するスクリプト
+ * Pagefindスクリプトの修正と検索ページ準備のスクリプト
  *
  * 主な機能：
- * 1. import.meta の参照を削除して正常に動作するようにする
- * 2. 検索ページにPagefind初期化スクリプトを追加
+ * 1. 検索ページにPagefind初期化スクリプトを追加
  */
 const fs = require("fs");
 const path = require("path");
@@ -11,14 +10,7 @@ const { promisify } = require("util");
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-// パス設定
-const PAGEFIND_SCRIPT_PATH = path.join(
-  process.cwd(),
-  "out",
-  "pagefind",
-  "pagefind.js"
-);
-
+// 検索ページのパス
 const SEARCH_PAGE_PATH = path.join(
   process.cwd(),
   "out",
@@ -28,76 +20,19 @@ const SEARCH_PAGE_PATH = path.join(
 
 // メイン処理関数
 async function main() {
-  console.log("Pagefindスクリプトの修正を開始します...");
+  console.log("Pagefind関連ファイルの修正を開始します...");
 
   try {
-    // 1. import.meta の修正
-    await fixImportMeta();
-
-    // 2. 検索ページへの初期化スクリプト追加
+    // 検索ページへの初期化スクリプト追加
     await addInitScriptToSearchPage();
 
-    console.log("✅ Pagefindスクリプトの修正が完了しました");
+    console.log("✅ Pagefind関連ファイルの修正が完了しました");
   } catch (error) {
     console.error(
-      "⚠️ Pagefindスクリプトの修正中にエラーが発生しました:",
+      "⚠️ Pagefind関連ファイルの修正中にエラーが発生しました:",
       error
     );
     process.exit(1);
-  }
-}
-
-/**
- * import.meta参照を修正する関数
- */
-async function fixImportMeta() {
-  try {
-    // ファイルの存在確認
-    if (!fs.existsSync(PAGEFIND_SCRIPT_PATH)) {
-      console.log(`⚠️ ファイルが見つかりません: ${PAGEFIND_SCRIPT_PATH}`);
-      return;
-    }
-
-    // ファイルの内容を読み込む
-    const content = await readFile(PAGEFIND_SCRIPT_PATH, "utf8");
-
-    // import.meta の使用を確認
-    if (content.includes("import.meta")) {
-      console.log("import.meta の使用を検出しました - ファイルを修正します...");
-
-      // import.meta を window.location.origin に置き換え
-      let modifiedContent = content.replace(
-        /import\.meta/g,
-        "({ url: window.location.origin })"
-      );
-
-      // export文を削除する改良版の処理
-      modifiedContent = modifiedContent
-        // exportブロックの削除
-        .replace(/export\s*{[^}]*}/g, "")
-        // export キーワードの削除
-        .replace(/export\s+(?:const|let|var|function|class)/g, "$1")
-        // export default の削除
-        .replace(/export\s+default/g, "")
-        // 単独のexportステートメントの削除
-        .replace(/export\s*\{[^}]*\};?/g, "")
-        // ファイル末尾の export{...} を削除
-        .replace(/export\s*{.*}$/g, "");
-
-      // ファイル末尾のexport文をより確実に削除
-      if (modifiedContent.includes("export{")) {
-        modifiedContent = modifiedContent.replace(/export\{[^}]*\}/g, "");
-      }
-
-      // 修正した内容を書き込む
-      await writeFile(PAGEFIND_SCRIPT_PATH, modifiedContent, "utf8");
-      console.log("✅ import.meta の参照を正常に修正しました");
-    } else {
-      console.log("import.meta の使用は検出されませんでした。修正は不要です。");
-    }
-  } catch (error) {
-    console.error("❌ import.meta の修正中にエラーが発生しました:", error);
-    throw error;
   }
 }
 
@@ -116,7 +51,7 @@ async function addInitScriptToSearchPage() {
     const searchPageContent = await readFile(SEARCH_PAGE_PATH, "utf8");
 
     // すでにスクリプトが含まれているか確認
-    if (searchPageContent.includes("window.__pagefind_init")) {
+    if (searchPageContent.includes("pagefind-adapter.js")) {
       console.log(
         "Pagefind初期化コードがすでに含まれています。スキップします。"
       );
@@ -125,27 +60,7 @@ async function addInitScriptToSearchPage() {
 
     // 初期化スクリプト
     const initScript = `
-<script>
-  // Pagefind初期化
-  window.__pagefind_init = false;
-  document.addEventListener('DOMContentLoaded', function() {
-    if (window.__pagefind_init) return;
-    window.__pagefind_init = true;
-    
-    // Pagefindスクリプトを動的に読み込み
-    const script = document.createElement('script');
-    script.src = '/pagefind/pagefind.js';
-    script.async = true;
-    script.onload = function() {
-      console.log('Pagefind loaded successfully');
-      document.dispatchEvent(new Event('pagefind-loaded'));
-    };
-    script.onerror = function() {
-      console.error('Failed to load pagefind.js');
-    };
-    document.head.appendChild(script);
-  });
-</script>
+<script src="/pagefind-adapter.js" async></script>
 `;
 
     // </head>タグの前にスクリプトを挿入
