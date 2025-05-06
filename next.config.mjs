@@ -20,15 +20,15 @@ const nextConfig = {
     // 画像の最適化
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,
+    unoptimized: isProd, // 本番ビルドでは画像最適化を無効化（静的エクスポートのため）
   },
   reactStrictMode: true,
   // SSG設定
   output: isProd ? "export" : undefined,
-  assetPrefix: isProd ? "https://suzumiyaaoba.com" : undefined,
   trailingSlash: true,
   // SEO対策
   compress: true, // gzip圧縮を有効化
   poweredByHeader: false, // X-Powered-By ヘッダーを無効化
 };
 
-export default withExportImages(nextConfig);
+export default nextConfig;
