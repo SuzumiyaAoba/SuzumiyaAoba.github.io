@@ -57,11 +57,11 @@ export async function generateStaticParams() {
 }
 
 type Props = {
-  params: { tag: string };
+  params: Promise<{ tag: string }>;
 };
 
 export default async function TagPage({ params }: Props) {
-  const { tag } = params;
+  const { tag } = await params;
   const decodedTag = decodeURIComponent(tag);
 
   const posts = await getFrontmatters({

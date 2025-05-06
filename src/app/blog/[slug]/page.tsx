@@ -26,8 +26,57 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     parser: Pages["blog"].frontmatter,
   });
 
+  if (!frontmatter) {
+    return {
+      title: config.metadata.title,
+    };
+  }
+
+  // 記事の最初の画像を取得するなどの処理があれば良い
+  const ogImageUrl = frontmatter.ogImage || config.metadata.ogImage;
+  const url = `${config.metadata.url}/blog/${slug}/`;
+
   return {
-    title: `${frontmatter?.title} | ${config.metadata.title}`,
+    title: `${frontmatter.title} | ${config.metadata.title}`,
+    description:
+      frontmatter.description ||
+      `${frontmatter.title}に関する記事です。${config.metadata.description}`,
+    keywords: [
+      ...(frontmatter.tags || []),
+      ...(config.metadata.keywords || []),
+    ],
+    authors: [{ name: frontmatter.author || config.metadata.author }],
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: frontmatter.title,
+      description:
+        frontmatter.description || `${frontmatter.title}に関する記事です。`,
+      url,
+      siteName: config.metadata.title,
+      locale: "ja_JP",
+      type: "article",
+      publishedTime: new Date(frontmatter.date).toISOString(),
+      authors: frontmatter.author || config.metadata.author,
+      tags: frontmatter.tags,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: frontmatter.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: frontmatter.title,
+      description:
+        frontmatter.description || `${frontmatter.title}に関する記事です。`,
+      creator: config.metadata.twitterHandle,
+      images: [ogImageUrl],
+    },
   };
 }
 
@@ -45,14 +94,22 @@ export default async function Page({ params }: Props) {
   }
 
   const { frontmatter, stylesheets, Component } = content;
+  const url = `${config.metadata.url}/blog/${slug}/`;
 
   return (
     <>
-      <StylesheetLoader stylesheets={stylesheets} basePath="blog" slug={slug} />
+      <StylesheetLoader
+        stylesheets={stylesheets}
+        basePath="blog"
+        slug={[slug]}
+      />
       <Article
         title={frontmatter.title}
         date={frontmatter.date}
         tags={frontmatter.tags}
+        description={frontmatter.description}
+        author={frontmatter.author || config.metadata.author}
+        url={url}
       >
         <Component />
       </Article>

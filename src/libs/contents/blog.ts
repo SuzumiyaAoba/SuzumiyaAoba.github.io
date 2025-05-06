@@ -16,6 +16,9 @@ const frontmatterSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()),
   draft: z.boolean().optional(),
+  description: z.string().optional(),
+  author: z.string().optional(),
+  ogImage: z.string().optional(),
 });
 
 export const Pages = {

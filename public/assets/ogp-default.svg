@@ -1,0 +1,16 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#121212"/>
+  <rect x="50" y="50" width="1100" height="530" stroke="#444444" stroke-width="2" fill="none"/>
+  
+  <!-- タイトル -->
+  <text x="600" y="250" font-family="sans-serif" font-size="64" fill="white" text-anchor="middle" dominant-baseline="middle" font-weight="bold">All You Need Is</text>
+  
+  <!-- サブタイトル -->
+  <text x="600" y="350" font-family="sans-serif" font-size="36" fill="#AAAAAA" text-anchor="middle" dominant-baseline="middle">プログラミング技術ブログ</text>
+  
+  <!-- 著者 -->
+  <text x="600" y="500" font-family="sans-serif" font-size="28" fill="#888888" text-anchor="middle" dominant-baseline="middle">by SuzumiyaAoba</text>
+  
+  <!-- 装飾線 -->
+  <line x1="300" y1="400" x2="900" y2="400" stroke="#444444" stroke-width="2"/>
+</svg> 

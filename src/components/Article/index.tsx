@@ -7,6 +7,8 @@ import { HatenaButton } from "@/components/share/HatenaButton";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
 import { Comments } from "@/components/Comments";
+import Script from "next/script";
+import config from "@/config";
 
 export type ArticleProps = {
   title: string;
@@ -17,6 +19,9 @@ export type ArticleProps = {
   showComments?: boolean;
   showBuyMeACoffee?: boolean;
   showShareButtons?: boolean;
+  description?: string;
+  author?: string;
+  url?: string;
 };
 
 export function Article({
@@ -28,9 +33,44 @@ export function Article({
   showComments = true,
   showBuyMeACoffee = true,
   showShareButtons = true,
+  description,
+  author = config.metadata.author,
+  url,
 }: ArticleProps) {
   const formattedDate =
     typeof date === "string" ? date : format(date, "yyyy/MM/dd");
+
+  const isoDate =
+    typeof date === "string"
+      ? new Date(date).toISOString()
+      : date.toISOString();
+
+  // JSON-LDデータの構築
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    datePublished: isoDate,
+    dateModified: isoDate,
+    author: {
+      "@type": "Person",
+      name: author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: config.metadata.title,
+      logo: {
+        "@type": "ImageObject",
+        url: `${config.metadata.url}/favicon.ico`,
+      },
+    },
+    description: description || title,
+    keywords: tags.join(","),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url || `${config.metadata.url}`,
+    },
+  };
 
   return (
     <article
@@ -40,6 +80,13 @@ export function Article({
         className
       )}
     >
+      {/* JSON-LD 構造化データ */}
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <h1 className="mb-8 text-center">{title}</h1>
 
       <div className="flex mt-2 mb-2 justify-center items-center">
