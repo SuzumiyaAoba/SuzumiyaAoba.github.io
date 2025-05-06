@@ -7,6 +7,12 @@ import { z } from "zod";
 // PagefindModuleの型定義（直接インポートせず型だけ定義）
 type PagefindModule = {
   search: (query: string) => Promise<any>;
+  filters: () => Promise<any>;
+  debouncedSearch: (
+    query: string,
+    options?: any,
+    debounceTimeoutMs?: number
+  ) => Promise<any>;
 };
 
 // PagefindResultのスキーマ定義
@@ -24,7 +30,8 @@ type PagefindResult = z.infer<typeof pagefindResultSchema>;
 declare global {
   interface Window {
     pagefind: PagefindModule;
-    __pagefind_init: boolean;
+    __pagefind_loaded: boolean;
+    __pagefind_loading: boolean;
   }
 }
 
@@ -37,6 +44,7 @@ export default function SearchComponent() {
   const [results, setResults] = useState<PagefindResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagefindError, setPagefindError] = useState<string | null>(null);
+  const [pagefindLoaded, setPagefindLoaded] = useState(false);
 
   // デバウンス用タイマー
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,7 +56,7 @@ export default function SearchComponent() {
       return;
     }
 
-    if (!window.pagefind) {
+    if (!window.pagefind || !window.__pagefind_loaded) {
       setPagefindError(
         "検索エンジンがロードされていません。しばらく待つか、ページを更新してください。"
       );
@@ -90,12 +98,31 @@ export default function SearchComponent() {
 
   // Pagefindをロード - アダプタを使って読み込む
   useEffect(() => {
+    function handlePagefindInitialized() {
+      console.log("Pagefind initialized event received");
+      setPagefindLoaded(true);
+      if (initialQuery) {
+        performSearch(initialQuery);
+      }
+    }
+
+    // 既に初期化済みの場合
+    if (window.__pagefind_loaded) {
+      setPagefindLoaded(true);
+      if (initialQuery) {
+        performSearch(initialQuery);
+      }
+      return;
+    }
+
+    // 初期化イベントのリスナーを設定
+    window.addEventListener("pagefind:initialized", handlePagefindInitialized);
+
     async function loadPagefind() {
       if (typeof window === "undefined") return;
 
-      // すでに初期化済みの場合はスキップ
-      if (window.pagefind && typeof window.pagefind.search === "function")
-        return;
+      // すでに初期化済みまたはロード中の場合はスキップ
+      if (window.__pagefind_loaded || window.__pagefind_loading) return;
 
       try {
         console.log("Loading pagefind adapter...");
@@ -104,16 +131,6 @@ export default function SearchComponent() {
         const script = document.createElement("script");
         script.src = "/pagefind-adapter.js";
         script.async = true;
-        script.onload = () => {
-          console.log("Pagefind adapter loaded successfully");
-
-          // 一定時間後に検索を試行（ページファインドの初期化を待つ）
-          setTimeout(() => {
-            if (initialQuery) {
-              performSearch(initialQuery);
-            }
-          }, 1000);
-        };
         script.onerror = (e) => {
           console.error("Failed to load pagefind adapter script", e);
           setPagefindError(
@@ -131,6 +148,14 @@ export default function SearchComponent() {
     }
 
     loadPagefind();
+
+    // クリーンアップ関数
+    return () => {
+      window.removeEventListener(
+        "pagefind:initialized",
+        handlePagefindInitialized
+      );
+    };
   }, [initialQuery, performSearch]);
 
   // 入力時のハンドラー - デバウンスロジック
@@ -179,7 +204,7 @@ export default function SearchComponent() {
             placeholder="検索キーワードを入力..."
             className="flex-1 p-2 border rounded-md"
             aria-label="検索"
-            disabled={!!pagefindError}
+            disabled={!!pagefindError || !pagefindLoaded}
           />
         </div>
       </div>
@@ -196,7 +221,11 @@ export default function SearchComponent() {
         </div>
       )}
 
-      {isLoading ? (
+      {!pagefindLoaded && !pagefindError ? (
+        <div className="py-4">
+          <p>検索エンジンを読み込み中...</p>
+        </div>
+      ) : isLoading ? (
         <div className="py-4">
           <p>検索中...</p>
         </div>
