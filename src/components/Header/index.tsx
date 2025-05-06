@@ -29,6 +29,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isManuallyHidden, setIsManuallyHidden] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const lastScrollYRef = useRef(0);
@@ -54,19 +55,19 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       // 最上部にいるかどうかの判定
       isAtTopRef.current = currentScrollY <= 10;
 
-      // スクロール方向の判定
-      if (currentScrollY > 10) {
-        // 上方向のスクロール（前回より小さい値）でヘッダーを表示
-        if (currentScrollY < lastScrollYRef.current) {
-          setIsVisible(true);
+      // 手動で非表示にされていない場合のみ、自動表示/非表示を適用
+      if (!isManuallyHidden) {
+        // スクロール方向の判定
+        if (currentScrollY > 10) {
+          // 上方向のスクロール（前回より小さい値）でヘッダーを表示
+          if (currentScrollY < lastScrollYRef.current) {
+            setIsVisible(true);
+          }
+          // 下方向のスクロール（前回より大きい値）でヘッダーを非表示
+          else if (currentScrollY > lastScrollYRef.current) {
+            setIsVisible(false);
+          }
         }
-        // 下方向のスクロール（前回より大きい値）でヘッダーを非表示
-        else if (currentScrollY > lastScrollYRef.current) {
-          setIsVisible(false);
-        }
-      } else {
-        // 最上部に近いときは常に表示
-        setIsVisible(true);
       }
 
       // トップに達したかどうかでスクロール状態を判定
@@ -81,7 +82,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isManuallyHidden]);
 
   // 画面外クリックでメニューを閉じる
   useEffect(() => {
@@ -122,6 +123,16 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // ヘッダーの表示/非表示を切り替える
+  const toggleHeaderVisibility = () => {
+    const newVisibility = !isVisible;
+    setIsVisible(newVisibility);
+    setIsManuallyHidden(!newVisibility);
+  };
+
+  // 実際の表示状態を計算（最上部では常に表示）
+  const shouldBeVisible = isVisible || isAtTopRef.current;
+
   // モバイルメニュー最大高さ
   const mobileMenuHeight = "450px";
 
@@ -134,7 +145,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       <div
         className={clsx(
           "fixed left-0 right-0 z-50 transition-transform duration-300",
-          !isVisible && "translate-y-[-100%]" // 非表示時は上に完全に隠す
+          !shouldBeVisible && "translate-y-[-100%]" // 表示すべきでない場合のみ上に完全に隠す
         )}
       >
         {/* 内側のheaderでスタイルを条件分岐 */}
@@ -146,11 +157,11 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               : "w-full bg-white py-4"
           )}
           style={{
-            // 表示時のアニメーション（下から上へ）
+            // 表示時のアニメーション（下から上へ）- 最上部では常に適用しない
             transform: `translateY(${
-              isVisible && !isAtTopRef.current ? "16px" : "0"
+              shouldBeVisible && !isAtTopRef.current ? "16px" : "0"
             })`,
-            opacity: isVisible ? 1 : 0,
+            opacity: shouldBeVisible ? 1 : 0, // 表示すべき場合は不透明度1
             transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
           }}
         >
@@ -205,6 +216,47 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           </div>
         </header>
       </div>
+
+      {/* ヘッダー表示/非表示切り替えボタン */}
+      <button
+        onClick={toggleHeaderVisibility}
+        className={clsx(
+          "fixed right-4 bottom-4 z-50 p-3 rounded-full shadow-lg bg-white/90 backdrop-blur-sm hover:bg-white transition-all",
+          "flex items-center justify-center"
+        )}
+        aria-label={isVisible ? "ヘッダーを非表示" : "ヘッダーを表示"}
+      >
+        <span
+          className={clsx(
+            "block w-5 h-5 transition-transform duration-300",
+            isVisible ? "rotate-180" : "rotate-0"
+          )}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {isVisible ? (
+              // 下向き矢印（ヘッダーを隠す）
+              <>
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <polyline points="19 12 12 19 5 12" />
+              </>
+            ) : (
+              // 上向き矢印（ヘッダーを表示）
+              <>
+                <line x1="12" y1="19" x2="12" y2="5" />
+                <polyline points="5 12 12 5 19 12" />
+              </>
+            )}
+          </svg>
+        </span>
+      </button>
 
       {/* フルスクリーンオーバーレイ */}
       <div
