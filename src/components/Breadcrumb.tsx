@@ -113,9 +113,12 @@ function getPathSegments(segments: string[]): PathSegment[] {
     // パスをセグメントの位置まで構築
     const path = `/${segments.slice(0, index + 1).join("/")}`;
 
+    // URLエンコードされたセグメントをデコードする
+    const decodedSegment = decodeURIComponent(segment);
+
     // 基本セグメント情報
     const isLast = index === segments.length - 1;
-    const name = segmentMappings[segment] || segment;
+    const name = segmentMappings[decodedSegment] || decodedSegment;
 
     // 動的ルートやスペシャルケースの処理
     const isDynamicRoute = segment.startsWith("[") && segment.endsWith("]");

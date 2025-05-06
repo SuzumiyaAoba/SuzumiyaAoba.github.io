@@ -17,6 +17,9 @@
 /* すべてのメインコンテンツに余白を追加 */
 main {
   padding-top: 1rem; /* 追加の余白 */
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* ハンバーガーメニューのアニメーション */
@@ -43,4 +46,11 @@ main {
   header div[role="navigation"] {
     will-change: max-height, opacity;
   }
+}
+
+/* 横スクロールのみを防止 */
+.content-container {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }

@@ -67,7 +67,7 @@ const tagToIcon = (tag: string) => {
 };
 
 const tagVariants = cva(
-  "flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100 transition-colors hover:bg-neutral-200",
+  "flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100 transition-colors hover:bg-neutral-200 text-neutral-900 font-normal",
   {
     variants: {
       size: {
@@ -87,6 +87,13 @@ const tagVariants = cva(
     },
   }
 );
+
+// インラインスタイルでリンクのスタイルを上書き
+const tagLinkStyle = {
+  textDecoration: "none",
+  color: "#171717", // text-neutral-900 相当
+  fontWeight: "normal",
+};
 
 export interface TagProps extends VariantProps<typeof tagVariants> {
   label: string;
@@ -108,7 +115,12 @@ export const Tag: FC<TagProps> = memo(
       return (
         <Link
           href={href}
-          className={cn(tagVariants({ size, variant }), className)}
+          className={cn(
+            tagVariants({ size, variant }),
+            "no-underline text-neutral-900 font-normal",
+            className
+          )}
+          style={tagLinkStyle}
         >
           {tagContent}
         </Link>

@@ -1,14 +1,23 @@
-import { getPaths } from "@/libs/contents/markdown";
+import { getFrontmatters } from "@/libs/contents/markdown";
 import { MetadataRoute } from "next";
+import { Pages } from "@/libs/contents/blog";
 
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const blogIds = await getPaths("blog");
+  const blogEntries = await getFrontmatters({
+    paths: [Pages.blog.root],
+    parser: {
+      frontmatter: Pages.blog.frontmatter,
+    },
+  });
 
-  return blogIds.map((id) => ({
-    url: `https://suzumiyaaoba.com/blog/${id}/`,
-    lastModified: new Date(),
-    priority: 1,
-  }));
+  return blogEntries
+    .filter((entry) => !entry.frontmatter.draft)
+    .map((entry) => ({
+      url: `https://suzumiyaaoba.com/blog/${entry.path}/`,
+      lastModified: entry.frontmatter.date,
+      priority: 0.8,
+      changeFrequency: "monthly" as const,
+    }));
 }
