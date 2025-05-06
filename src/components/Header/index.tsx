@@ -27,9 +27,11 @@ type HeaderProps = {
 
 export const Header: FC<HeaderProps> = ({ siteName }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const lastScrollYRef = useRef(0);
 
   // ボディのスクロールをロック（メニュー開放時）
   useEffect(() => {
@@ -45,7 +47,28 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const currentScrollY = window.scrollY;
+
+      // スクロール方向の判定
+      if (currentScrollY > 10) {
+        // 上方向のスクロール（前回より小さい値）でヘッダーを表示
+        if (currentScrollY < lastScrollYRef.current) {
+          setIsVisible(true);
+        }
+        // 下方向のスクロール（前回より大きい値）でヘッダーを非表示
+        else if (currentScrollY > lastScrollYRef.current) {
+          setIsVisible(false);
+        }
+      } else {
+        // 最上部に近いときは常に表示
+        setIsVisible(true);
+      }
+
+      // スクロール状態の判定
+      setIsScrolled(currentScrollY > 10);
+
+      // 現在のスクロール位置を保存
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -101,7 +124,8 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           "fixed left-0 right-0 z-50 transition-all duration-300",
           isScrolled
             ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-white/95 backdrop-blur-sm py-2"
-            : "top-0 w-full bg-white py-4"
+            : "top-0 w-full bg-white py-4",
+          !isVisible && isScrolled && "-translate-y-24" // スクロール状態で非表示の場合、上方向に移動して隠す
         )}
       >
         <div
