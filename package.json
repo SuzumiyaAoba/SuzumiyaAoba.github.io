@@ -8,7 +8,7 @@
     "next:dev": "next dev",
     "build": "npm run clean && npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && npm run pagefind && npm run copy:pagefind && next-export-optimize-images",
     "pagefind": "pagefind --site out --output-path out/pagefind",
-    "copy:pagefind": "cp -r out/pagefind public/",
+    "copy:pagefind": "cp -r out/pagefind public/ && node scripts/fix-pagefind-path.js",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "next lint",

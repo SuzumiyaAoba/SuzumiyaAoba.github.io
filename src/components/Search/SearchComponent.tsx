@@ -34,36 +34,60 @@ export default function SearchComponent() {
 
   // デバウンス用タイマー
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // PageFind読み込み確認用のタイマー
+  const pagefindCheckTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Pagefindをロード
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // 積極的にpagefindの読み込みを確認する関数
+      const checkPagefindLoaded = () => {
+        console.log("Checking if pagefind is loaded...");
+        if (window.pagefind) {
+          console.log("Pagefind is available");
+          setPagefindLoaded(true);
+          setPagefindError(null);
+          clearInterval(pagefindCheckTimerRef.current!);
+
+          if (initialQuery) {
+            performSearch(initialQuery);
+          }
+          return true;
+        }
+        return false;
+      };
+
       const handlePagefindLoaded = () => {
         console.log("Pagefind load event received");
-        setPagefindLoaded(true);
-        setPagefindError(null);
-
-        if (initialQuery) {
-          performSearch(initialQuery);
-        }
+        if (checkPagefindLoaded()) return;
       };
 
       // すでにロードされているか確認
-      if (window.pagefind) {
-        console.log("Pagefind is already loaded");
-        setPagefindLoaded(true);
-
-        if (initialQuery) {
-          performSearch(initialQuery);
-        }
-        return;
-      }
+      if (checkPagefindLoaded()) return;
 
       // イベントリスナーを追加
       document.addEventListener("pagefind-loaded", handlePagefindLoaded);
 
+      // 定期的にpagefindの読み込みを確認（バックアップメカニズム）
+      pagefindCheckTimerRef.current = setInterval(checkPagefindLoaded, 1000);
+
+      // 20秒後にもロードされていない場合はエラーとする
+      const timeoutTimer = setTimeout(() => {
+        if (!pagefindLoaded && !window.pagefind) {
+          console.error("Pagefind failed to load after timeout");
+          setPagefindError(
+            "Failed to load search index after timeout. Please try refreshing the page."
+          );
+          clearInterval(pagefindCheckTimerRef.current!);
+        }
+      }, 20000);
+
       return () => {
         document.removeEventListener("pagefind-loaded", handlePagefindLoaded);
+        if (pagefindCheckTimerRef.current) {
+          clearInterval(pagefindCheckTimerRef.current);
+        }
+        clearTimeout(timeoutTimer);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +200,7 @@ export default function SearchComponent() {
     <div className="w-full">
       <Script
         src="/pagefind/pagefind.js"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         onLoad={handleScriptLoad}
         onError={() => {
           console.error("Failed to load Pagefind script");
