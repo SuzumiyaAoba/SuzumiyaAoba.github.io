@@ -3,6 +3,8 @@ import config from "@/config";
 import { getPaths } from "@/libs/contents/markdown";
 import { Pages } from "@/libs/contents/blog";
 import { getFrontmatter } from "@/libs/contents/markdown";
+import fs from "fs";
+import path from "path";
 
 // メタデータ
 export const size = {
@@ -13,12 +15,13 @@ export const size = {
 export const contentType = "image/png";
 
 // 日本語フォントの読み込み
-const notoSansJp = fetch(
-  new URL(
-    "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff",
-    import.meta.url
+const notoSansJp = fs.promises.readFile(
+  path.join(
+    process.cwd(),
+    "node_modules",
+    "@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff"
   )
-).then((res) => res.arrayBuffer());
+);
 
 // 静的生成のパラメータを提供
 export async function generateStaticParams() {

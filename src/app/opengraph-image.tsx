@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 import config from "@/config";
+import fs from "fs";
+import path from "path";
 
 // メタデータ
 export const size = {
@@ -15,12 +17,13 @@ export const alt = config.metadata.title;
 export const dynamic = "force-static";
 
 // 日本語フォントの読み込み
-const notoSansJp = fetch(
-  new URL(
-    "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff",
-    import.meta.url
+const notoSansJp = fs.promises.readFile(
+  path.join(
+    process.cwd(),
+    "node_modules",
+    "@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff"
   )
-).then((res) => res.arrayBuffer());
+);
 
 // デフォルトのOGP画像を生成
 export default async function Image() {
