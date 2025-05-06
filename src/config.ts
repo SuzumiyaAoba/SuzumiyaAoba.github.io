@@ -15,7 +15,7 @@ export default {
       "Java",
       "TypeScript",
     ],
-    ogImage: "/assets/ogp-default.png", // デフォルトのOGP画像（作成が必要）
+    ogImage: "/opengraph-image", // 動的に生成されるOGP画像
   },
 } satisfies Config;
 

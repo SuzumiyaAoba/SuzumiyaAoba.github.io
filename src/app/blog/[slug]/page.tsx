@@ -32,8 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  // 記事の最初の画像を取得するなどの処理があれば良い
-  const ogImageUrl = frontmatter.ogImage || config.metadata.ogImage;
+  // 動的に生成されたOGP画像URLを設定
+  const ogImageUrl =
+    frontmatter.ogImage ||
+    `${config.metadata.url}/blog/${slug}/opengraph-image`;
   const url = `${config.metadata.url}/blog/${slug}/`;
 
   return {
