@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run clean && run-p next:dev tsm",
     "next:dev": "next dev",
-    "build": "npm run clean &&npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
+    "build": "npm run clean && npm run copy:blog:images && npm run copy:blog:css && npm run copy:notes:images && NODE_ENV=production next build && next-export-optimize-images",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "next lint",
