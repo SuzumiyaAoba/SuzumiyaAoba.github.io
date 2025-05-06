@@ -13,6 +13,39 @@ const ensureDirectoryExists = (directory) => {
   }
 };
 
+// アダプタファイルをコピー
+const copyAdapterFile = async () => {
+  console.log("🔄 Pagefindアダプタファイルをコピーしています...");
+
+  // ソースと出力先の設定
+  const srcAdapterPath = path.join(
+    process.cwd(),
+    "public",
+    "pagefind-adapter.js"
+  );
+  const destAdapterPath = path.join(
+    process.cwd(),
+    "public",
+    "pagefind-adapter.js"
+  );
+
+  try {
+    // アダプタファイルが存在するか確認
+    if (!fs.existsSync(srcAdapterPath)) {
+      console.log("⚠️ アダプタファイルが見つかりません、スキップします");
+      return false;
+    }
+
+    // アダプタファイルをコピー
+    await fs.promises.copyFile(srcAdapterPath, destAdapterPath);
+    console.log("✅ アダプタファイルのコピーが完了しました");
+    return true;
+  } catch (error) {
+    console.error("❌ アダプタファイルのコピーに失敗しました:", error);
+    return false;
+  }
+};
+
 // 開発環境用のPagefindスタブを作成
 const createPagefindStub = async () => {
   console.log("🔍 開発環境用のPagefindスタブファイルを作成しています...");
@@ -27,50 +60,59 @@ const createPagefindStub = async () => {
   // Pagefindスタブファイル（メインJSファイル）
   const pagefindJs = `
 // 開発環境用Pagefindスタブファイル
-window.pagefind = {
-  search: async (query) => {
-    console.log('[開発環境] 検索クエリ:', query);
+const search = async (query) => {
+  console.log('[開発環境] 検索クエリ:', query);
+  
+  // 開発環境用サンプルデータ
+  const sampleResults = [
+    {
+      url: "/blog/2023-09-30-astro/",
+      meta: { title: "Astroを使ったブログサイトの構築" },
+      excerpt: "Astroは<mark>静的</mark>サイトジェネレーターで、高速なウェブサイト構築に適しています。",
+    },
+    {
+      url: "/blog/2024-11-17-scala-rebeginning/",
+      meta: { title: "Scalaの再学習" },
+      excerpt: "関数型プログラミング言語<mark>Scala</mark>の基本から応用まで解説します。",
+    },
+    {
+      url: "/blog/2024-10-14-tmux-with-nix/",
+      meta: { title: "Nixでtmux環境を構築する" },
+      excerpt: "<mark>tmux</mark>と<mark>Nix</mark>を組み合わせた開発環境の構築方法について。",
+    }
+  ];
+  
+  // クエリに基づいてフィルタリング（空の場合は全て返す）
+  const results = query.trim() 
+    ? sampleResults.filter(r => 
+        r.url.toLowerCase().includes(query.toLowerCase()) || 
+        r.meta.title.toLowerCase().includes(query.toLowerCase()) ||
+        r.excerpt.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
     
-    // 開発環境用サンプルデータ
-    const sampleResults = [
-      {
-        url: "/blog/2023-09-30-astro/",
-        meta: { title: "Astroを使ったブログサイトの構築" },
-        excerpt: "Astroは<mark>静的</mark>サイトジェネレーターで、高速なウェブサイト構築に適しています。",
-      },
-      {
-        url: "/blog/2024-11-17-scala-rebeginning/",
-        meta: { title: "Scalaの再学習" },
-        excerpt: "関数型プログラミング言語<mark>Scala</mark>の基本から応用まで解説します。",
-      },
-      {
-        url: "/blog/2024-10-14-tmux-with-nix/",
-        meta: { title: "Nixでtmux環境を構築する" },
-        excerpt: "<mark>tmux</mark>と<mark>Nix</mark>を組み合わせた開発環境の構築方法について。",
-      }
-    ];
-    
-    // クエリに基づいてフィルタリング（空の場合は全て返す）
-    const results = query.trim() 
-      ? sampleResults.filter(r => 
-          r.url.toLowerCase().includes(query.toLowerCase()) || 
-          r.meta.title.toLowerCase().includes(query.toLowerCase()) ||
-          r.excerpt.toLowerCase().includes(query.toLowerCase())
-        )
-      : [];
-      
-    return {
-      results: results.map(result => ({
-        data: async () => result
-      })),
-      term: query,
-      total: results.length
-    };
-  }
+  return {
+    results: results.map(result => ({
+      id: result.url,
+      score: 1.0,
+      data: async () => result
+    })),
+    term: query,
+    total: results.length
+  };
 };
 
+const debouncedSearch = async (query, options, debounceTimeoutMs) => search(query);
+const filters = async () => ({});
+const destroy = async () => {};
+const init = async () => {};
+const mergeIndex = async () => {};
+const options = async () => {};
+const preload = async () => {};
+
+export { search, debouncedSearch, filters, destroy, init, mergeIndex, options, preload };
+
 console.log('[開発環境] Pagefindスタブがロードされました');
-document.dispatchEvent(new Event('pagefind-loaded'));
 `;
 
   // CSSスタブファイル
@@ -113,6 +155,8 @@ document.dispatchEvent(new Event('pagefind-loaded'));
 const main = async () => {
   try {
     await createPagefindStub();
+    // アダプタファイルのコピーは不要になったのでコメントアウト
+    // await copyAdapterFile();
   } catch (error) {
     console.error("❌ 開発環境のPagefind設定に失敗しました:", error);
     process.exit(1);
