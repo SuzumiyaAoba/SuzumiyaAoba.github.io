@@ -25,6 +25,41 @@ This project uses
 [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to
 automatically optimize and load Inter, a custom Google Font.
 
+## サイト内検索
+
+このサイトでは Pagefind を使用したサイト内検索機能を実装しています。
+
+### 開発環境でのサイト内検索
+
+開発環境でサイト内検索を使用するには、以下の手順で行います：
+
+```bash
+# 開発サーバーを起動するだけで自動的にインデックスが作成されます
+npm run dev
+```
+
+`npm run dev`コマンドは以下の処理を行います：
+
+1. 一時的にサイトをビルド
+2. Pagefind を使用してインデックスを作成
+3. 開発サーバーを起動
+
+### 本番環境でのサイト内検索
+
+本番環境のビルド時には自動的に Pagefind のインデックスが作成されます：
+
+```bash
+npm run build
+```
+
+### カスタマイズ
+
+検索機能のカスタマイズは以下のファイルで行えます：
+
+- `src/app/search/page.tsx` - 検索ページ
+- `src/components/Search/SearchComponent.tsx` - 検索コンポーネント
+- `scripts/pagefind-dev.js` - 開発環境用インデックス作成スクリプト
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

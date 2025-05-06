@@ -12,6 +12,7 @@ const MENUS = [
   { name: "Notes", href: "/notes/" },
   { name: "Tools", href: "/tools/" },
   { name: "Keywords", href: "/keywords/" },
+  { name: "検索", href: "/search/" },
 ] as const;
 
 // ヘッダーの高さを定数として定義（外部からも参照できるように）
@@ -90,6 +91,9 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // モバイルメニュー最大高さ
+  const mobileMenuHeight = "450px";
+
   return (
     <>
       <header
@@ -132,12 +136,16 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           ref={menuRef}
           role="navigation"
           className={clsx(
-            "md:hidden bg-white overflow-hidden transition-all duration-300 absolute w-full",
+            "md:hidden bg-white overflow-y-auto transition-all duration-300 absolute w-full left-0 right-0",
             isScrolled && "rounded-b-xl",
             isMobileMenuOpen
-              ? "max-h-[300px] opacity-100 shadow-inner visible"
+              ? "opacity-100 shadow-inner visible"
               : "max-h-0 opacity-0 invisible"
           )}
+          style={{
+            maxHeight: isMobileMenuOpen ? mobileMenuHeight : "0px",
+            zIndex: 40,
+          }}
         >
           <div className="py-2">
             <MobileNavigation
@@ -234,7 +242,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
   if (!isVisible) return null;
 
   return (
-    <ul className="py-4 px-6 space-y-3">
+    <ul className="py-4 px-4 space-y-2">
       {menus.map((menu, index) => (
         <li
           key={menu.href}
@@ -243,7 +251,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
         >
           <Link
             href={menu.href}
-            className="block py-2 px-3 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 rounded-md transition-colors"
+            className="block py-3 px-4 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 rounded-md transition-colors w-full"
             onClick={(e) => {
               e.stopPropagation();
               onNavigate();
