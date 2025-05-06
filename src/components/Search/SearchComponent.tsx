@@ -176,7 +176,7 @@ export default function SearchComponent() {
     <div className="w-full">
       <Script
         src="/pagefind/pagefind.js"
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         onLoad={handleScriptLoad}
         onError={() => {
           console.error("Failed to load Pagefind script");
