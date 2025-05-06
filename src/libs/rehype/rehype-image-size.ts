@@ -12,13 +12,21 @@ export default function rehypeImageSize(...paths: string[]) {
         // 相対パスで始まる場合のみ処理する
         if (
           typeof node.properties.src === "string" &&
-          !node.properties.src.startsWith("http")
+          !node.properties.src.startsWith("http") &&
+          !node.properties.src.startsWith("/")
         ) {
           const originalSrc = node.properties.src;
-          const src = path.join(...paths, originalSrc);
-          // 画像パスを修正せず、publicディレクトリ内の実際のパスを使用して画像サイズを取得
+
+          // パスを修正してルート相対パスに変換
+          // 注意: pathsには既に"assets"が含まれていることを前提とする
+          const newPath = path
+            .join("/", ...paths, originalSrc)
+            .replace(/\\/g, "/");
+          node.properties.src = newPath;
+
+          // 画像サイズを取得して設定
           try {
-            const publicPath = path.resolve("public", src);
+            const publicPath = path.resolve("public", ...paths, originalSrc);
             if (fs.existsSync(publicPath)) {
               const dimensions = sizeOf(publicPath);
               // サイズが取得できた場合のみwidth/heightを設定
@@ -26,9 +34,11 @@ export default function rehypeImageSize(...paths: string[]) {
                 node.properties.width = dimensions.width;
                 node.properties.height = dimensions.height;
               }
+            } else {
+              console.warn(`Image file not found at: ${publicPath}`);
             }
           } catch (error) {
-            console.warn(`Failed to get image size for ${src}:`, error);
+            console.warn(`Failed to get image size for ${originalSrc}:`, error);
           }
         }
       }

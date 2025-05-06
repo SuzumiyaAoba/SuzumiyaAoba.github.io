@@ -15,11 +15,33 @@ type SsgImageProps = Omit<
 export const SsgImage: FC<SsgImageProps> = (props) => {
   const { src, alt, width, height, style, ...rest } = props;
 
-  // 外部URLの場合はそのまま<img>タグを使用
+  // 外部URLまたは/から始まるパスの場合はそのままのパス
   if (
     typeof src === "string" &&
-    (src.startsWith("http://") || src.startsWith("https://"))
+    (src.startsWith("http://") ||
+      src.startsWith("https://") ||
+      src.startsWith("/"))
   ) {
+    // /から始まるローカルパスの場合はimg要素を使用
+    if (src.startsWith("/")) {
+      return (
+        <img
+          src={src}
+          alt={alt ?? ""}
+          width={width}
+          height={height}
+          style={{
+            objectFit: "contain",
+            position: "relative",
+            maxWidth: "100%",
+            ...style,
+          }}
+          {...rest}
+        />
+      );
+    }
+
+    // 外部URLの場合はimg要素を使用
     return (
       <img
         src={src}

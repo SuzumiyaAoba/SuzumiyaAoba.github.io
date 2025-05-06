@@ -22,19 +22,32 @@ const chConfig: CodeHikeConfig = {
   },
 };
 
+/**
+ * MDXコンテンツをレンダリングするためのコンポーネントを生成する
+ * @param paths コンテンツのパス（例: ["blog", "2023-09-30-astro"]）
+ * @param format フォーマット（"md" or "mdx"）
+ * @param scope スコープ
+ * @param source ソースコード
+ * @returns MDXコンポーネント
+ */
 const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
-  return (function mdXRemote() {
+  return function mdXRemote() {
+    // rehype-image-sizeに渡すパス
+    // このパスがpublicディレクトリの中での画像ファイルの場所を指定する
+    // 例: ["assets", "blog", "2023-09-30-astro"]
+    const rehypePaths = ["assets", ...paths];
+
     return (
       <MDXRemote
         source={source}
         options={{
           mdxOptions: {
             format,
-            remarkPlugins: [...defaultRemarkPlugins, [
-              remarkCodeHike,
-              chConfig,
-            ]],
-            rehypePlugins: [...defaultRehypePlugins("assets", ...paths)],
+            remarkPlugins: [
+              ...defaultRemarkPlugins,
+              [remarkCodeHike, chConfig],
+            ],
+            rehypePlugins: [...defaultRehypePlugins(...rehypePaths)],
             recmaPlugins: [[recmaCodeHike, chConfig]],
           },
           scope,
@@ -50,7 +63,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
         }}
       />
     );
-  });
+  };
 };
 
 export default codeHikeComponent;
