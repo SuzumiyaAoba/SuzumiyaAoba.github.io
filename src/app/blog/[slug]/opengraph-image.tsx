@@ -3,6 +3,8 @@ import config from "@/config";
 import { getPaths } from "@/libs/contents/markdown";
 import { Pages } from "@/libs/contents/blog";
 import { getFrontmatter } from "@/libs/contents/markdown";
+import fs from "fs";
+import path from "path";
 
 // メタデータ
 export const size = {
@@ -11,6 +13,15 @@ export const size = {
 };
 
 export const contentType = "image/png";
+
+// 日本語フォントの読み込み
+const notoSansJp = fs.promises.readFile(
+  path.join(
+    process.cwd(),
+    "node_modules",
+    "@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff"
+  )
+);
 
 // 静的生成のパラメータを提供
 export async function generateStaticParams() {
@@ -22,6 +33,9 @@ export async function generateStaticParams() {
 
 // 画像生成
 export default async function Image({ params }: { params: { slug: string } }) {
+  // 日本語フォントデータの取得
+  const notoSansJpData = await notoSansJp;
+
   // frontmatterの取得を試みる
   let title;
   let category = "Blog";
@@ -74,7 +88,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           padding: "0",
           background:
             "linear-gradient(125deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)",
-          fontFamily: "Inter, system-ui, sans-serif",
+          fontFamily: '"Noto Sans JP", Inter, system-ui, sans-serif',
         }}
       >
         {/* トップバー */}
@@ -213,6 +227,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     {
       ...size,
+      fonts: [
+        {
+          name: "Noto Sans JP",
+          data: notoSansJpData,
+          style: "normal",
+          weight: 400,
+        },
+      ],
     }
   );
 }
