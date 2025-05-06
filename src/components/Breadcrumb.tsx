@@ -12,6 +12,58 @@ import {
   BreadcrumbEllipsis,
 } from "@/components/ui/breadcrumb";
 
+// コンテンツの種類を列挙型で定義
+enum ContentType {
+  BLOG = "blog",
+  NOTE = "notes",
+  KEYWORD = "keywords",
+  TOOL = "tools",
+}
+
+// 基本のパスセグメント型
+interface BasePathSegment {
+  name: string;
+  path: string;
+  isLast: boolean;
+  type: ContentType | string;
+}
+
+// ブログのパスセグメント
+interface BlogPathSegment extends BasePathSegment {
+  type: ContentType.BLOG;
+  slug?: string;
+}
+
+// ノートのパスセグメント
+interface NotePathSegment extends BasePathSegment {
+  type: ContentType.NOTE;
+  notePath?: string;
+}
+
+// キーワードのパスセグメント
+interface KeywordPathSegment extends BasePathSegment {
+  type: ContentType.KEYWORD;
+  keywordPath?: string;
+}
+
+// ツールのパスセグメント
+interface ToolPathSegment extends BasePathSegment {
+  type: ContentType.TOOL;
+}
+
+// その他のパスセグメント
+interface OtherPathSegment extends BasePathSegment {
+  type: string;
+}
+
+// すべてのパスセグメントの型ユニオン
+type PathSegment =
+  | BlogPathSegment
+  | NotePathSegment
+  | KeywordPathSegment
+  | ToolPathSegment
+  | OtherPathSegment;
+
 // 静的データをサーバーから取得するためのプロップスタイプ
 interface BreadcrumbNavProps {
   blogTitleMap: Record<string, string>;
@@ -19,28 +71,39 @@ interface BreadcrumbNavProps {
   keywordTitleMap: Record<string, string>;
 }
 
-interface PathSegment {
-  name: string;
-  path: string;
-  isLast: boolean;
-  isSlug: boolean;
-  isNote: boolean;
-  isKeyword: boolean;
-}
-
 // パスセグメントの表示名をマッピングするオブジェクト
 const segmentMappings: Record<string, string> = {
-  blog: "ブログ",
-  notes: "ノート",
-  keywords: "キーワード",
-  tools: "ツール",
+  [ContentType.BLOG]: "ブログ",
+  [ContentType.NOTE]: "ノート",
+  [ContentType.KEYWORD]: "キーワード",
+  [ContentType.TOOL]: "ツール",
   programming: "プログラミング",
   scala: "Scala",
   cats: "Cats",
 };
 
+// 型ガード関数 - ブログセグメントの判定
+function isBlogSegment(segment: PathSegment): segment is BlogPathSegment {
+  return segment.type === ContentType.BLOG;
+}
+
+// 型ガード関数 - ノートセグメントの判定
+function isNoteSegment(segment: PathSegment): segment is NotePathSegment {
+  return segment.type === ContentType.NOTE;
+}
+
+// 型ガード関数 - キーワードセグメントの判定
+function isKeywordSegment(segment: PathSegment): segment is KeywordPathSegment {
+  return segment.type === ContentType.KEYWORD;
+}
+
+// スラグからパスを解析する
+function extractPathFromSlug(path: string, startIndex: number = 1): string {
+  return path.split("/").filter(Boolean).slice(startIndex).join("/");
+}
+
 // URLパスからブレッドクラムの配列を生成する関数
-const getPathSegments = (segments: string[]): PathSegment[] => {
+function getPathSegments(segments: string[]): PathSegment[] {
   // ホームページの場合は空の配列を返す
   if (segments.length === 0) {
     return [];
@@ -50,43 +113,94 @@ const getPathSegments = (segments: string[]): PathSegment[] => {
     // パスをセグメントの位置まで構築
     const path = `/${segments.slice(0, index + 1).join("/")}`;
 
-    // 動的ルートの特別な処理
-    let name = segmentMappings[segment] || segment;
+    // 基本セグメント情報
+    const isLast = index === segments.length - 1;
+    const name = segmentMappings[segment] || segment;
 
-    // [slug]のような動的ルートは特別に処理
-    if (segment.startsWith("[") && segment.endsWith("]")) {
-      name = "詳細";
-    }
+    // 動的ルートやスペシャルケースの処理
+    const isDynamicRoute = segment.startsWith("[") && segment.endsWith("]");
 
-    // ブログのスラグとノートのパスを識別
-    const isSlug =
-      index > 0 &&
-      segments[0] === "blog" &&
-      index === segments.length - 1 &&
-      !segment.startsWith("[");
+    // コンテンツの種類を判定
+    const rootSegment = segments[0];
+    const isContentSegment = index > 0 && isLast && !isDynamicRoute;
 
-    const isNote =
-      index > 0 &&
-      segments[0] === "notes" &&
-      index === segments.length - 1 &&
-      !segment.startsWith("[");
-
-    const isKeyword =
-      index > 0 &&
-      segments[0] === "keywords" &&
-      index === segments.length - 1 &&
-      !segment.startsWith("[");
-
-    return {
-      name,
+    // 共通のベースオブジェクト
+    const baseSegment: BasePathSegment = {
+      name: isDynamicRoute ? "詳細" : name,
       path,
-      isLast: index === segments.length - 1,
-      isSlug,
-      isNote,
-      isKeyword,
+      isLast,
+      type: rootSegment,
     };
+
+    // セグメントの種類に応じて特化した型を返す
+    switch (rootSegment) {
+      case ContentType.BLOG:
+        if (isContentSegment) {
+          return {
+            ...baseSegment,
+            type: ContentType.BLOG,
+            slug: segment,
+          } as BlogPathSegment;
+        }
+        return { ...baseSegment, type: ContentType.BLOG } as BlogPathSegment;
+
+      case ContentType.NOTE:
+        if (isContentSegment) {
+          return {
+            ...baseSegment,
+            type: ContentType.NOTE,
+            notePath: extractPathFromSlug(path),
+          } as NotePathSegment;
+        }
+        return { ...baseSegment, type: ContentType.NOTE } as NotePathSegment;
+
+      case ContentType.KEYWORD:
+        if (isContentSegment) {
+          return {
+            ...baseSegment,
+            type: ContentType.KEYWORD,
+            keywordPath: extractPathFromSlug(path),
+          } as KeywordPathSegment;
+        }
+        return {
+          ...baseSegment,
+          type: ContentType.KEYWORD,
+        } as KeywordPathSegment;
+
+      case ContentType.TOOL:
+        return { ...baseSegment, type: ContentType.TOOL } as ToolPathSegment;
+
+      default:
+        return { ...baseSegment, type: rootSegment } as OtherPathSegment;
+    }
   });
-};
+}
+
+// タイトルを取得する関数
+function getDisplayTitle(
+  segment: PathSegment,
+  blogTitleMap: Record<string, string>,
+  noteTitleMap: Record<string, string>,
+  keywordTitleMap: Record<string, string>
+): string {
+  // ブログ記事の場合
+  if (isBlogSegment(segment) && segment.slug) {
+    return blogTitleMap[segment.slug] || segment.name;
+  }
+
+  // ノートの場合
+  if (isNoteSegment(segment) && segment.notePath) {
+    return noteTitleMap[segment.notePath] || segment.name;
+  }
+
+  // キーワードの場合
+  if (isKeywordSegment(segment) && segment.keywordPath) {
+    return keywordTitleMap[segment.keywordPath] || segment.name;
+  }
+
+  // それ以外の場合はデフォルト名を返す
+  return segment.name;
+}
 
 export default function BreadcrumbNav({
   blogTitleMap,
@@ -117,33 +231,13 @@ export default function BreadcrumbNav({
           <BreadcrumbSeparator />
 
           {segments.map((segment) => {
-            // ブログ記事のスラグ、ノートのパス、キーワードのパスの場合、マップから表示名を取得
-            let displayName = segment.name;
-
-            if (segment.isSlug) {
-              const slug = segment.path.split("/").filter(Boolean).pop() || "";
-              if (blogTitleMap[slug]) {
-                displayName = blogTitleMap[slug];
-              }
-            } else if (segment.isNote) {
-              const notePath = segment.path
-                .split("/")
-                .filter(Boolean)
-                .slice(1)
-                .join("/");
-              if (noteTitleMap[notePath]) {
-                displayName = noteTitleMap[notePath];
-              }
-            } else if (segment.isKeyword) {
-              const keywordPath = segment.path
-                .split("/")
-                .filter(Boolean)
-                .slice(1)
-                .join("/");
-              if (keywordTitleMap[keywordPath]) {
-                displayName = keywordTitleMap[keywordPath];
-              }
-            }
+            // タイトルマップから適切な表示名を取得
+            const displayName = getDisplayTitle(
+              segment,
+              blogTitleMap,
+              noteTitleMap,
+              keywordTitleMap
+            );
 
             return (
               <BreadcrumbItem key={segment.path}>
