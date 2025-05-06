@@ -1,14 +1,15 @@
 /**
- * Pagefindスクリプトの参照パスを修正するスクリプト
- * SSG出力されたHTMLファイルにpagefind.jsのScript要素が適切に含まれているか確認します
+ * Pagefindスクリプトのパス修正スクリプト
+ *
+ * 主な機能：
+ * 1. 静的生成されたHTMLファイルにpagefind.jsのスクリプト要素が適切に含まれているか確認
+ * 2. 必要に応じてスクリプト参照を追加
  */
 const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
-const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-const stat = promisify(fs.stat);
 
 // 検索ページのパス
 const SEARCH_PAGE_PATH = path.join(
@@ -17,9 +18,6 @@ const SEARCH_PAGE_PATH = path.join(
   "search",
   "index.html"
 );
-
-// スクリプトの挿入先の目印となるタグ
-const INSERTION_POINT = "</head>";
 
 // 挿入するスクリプトタグ
 const SCRIPT_TAG = `
@@ -31,64 +29,77 @@ const SCRIPT_TAG = `
       if (window.__pagefind_init) return;
       window.__pagefind_init = true;
       
-      // スクリプトを直接挿入
+      // Pagefindのスクリプトを動的にロード
       var script = document.createElement('script');
       script.src = '/pagefind/pagefind.js';
       script.async = true;
       script.onload = function() {
-        console.log('Pagefind library loaded from static HTML');
+        console.log('Pagefind library loaded successfully');
         if (window.pagefind) {
           document.dispatchEvent(new Event('pagefind-loaded'));
         }
       };
       script.onerror = function() {
-        console.error('Failed to load pagefind.js from static HTML');
+        console.error('Failed to load pagefind.js');
       };
       document.head.appendChild(script);
     });
   </script>
 `;
 
+/**
+ * メイン実行関数
+ */
 async function main() {
-  console.log("検索ページのPagefindスクリプト参照を確認しています...");
+  console.log("検索ページのPagefindスクリプト参照を確認中...");
 
   try {
+    // 検索ページの存在確認
+    if (!fs.existsSync(SEARCH_PAGE_PATH)) {
+      console.log("⚠️ 検索ページが見つかりません:", SEARCH_PAGE_PATH);
+      return;
+    }
+
     // 検索ページの内容を読み込む
     const searchPageContent = await readFile(SEARCH_PAGE_PATH, "utf8");
 
-    // すでにスクリプトが含まれているか確認
+    // スクリプトタグの存在確認
     if (
       searchPageContent.includes(
         "<!-- 静的生成時に追加されたPagefindスクリプト -->"
       )
     ) {
-      console.log("スクリプトはすでに挿入されています。スキップします。");
-      return;
-    }
-
-    // window.__pagefind_initがすでにあるか確認
-    if (searchPageContent.includes("window.__pagefind_init")) {
       console.log(
-        "Pagefind初期化コードがすでに含まれています。スキップします。"
+        "✅ Pagefindスクリプトはすでに挿入されています。スキップします。"
       );
       return;
     }
 
-    // スクリプトを挿入
+    // window.__pagefind_initの存在確認
+    if (searchPageContent.includes("window.__pagefind_init")) {
+      console.log(
+        "✅ Pagefind初期化コードがすでに含まれています。スキップします。"
+      );
+      return;
+    }
+
+    // スクリプトタグを挿入
     const updatedContent = searchPageContent.replace(
-      INSERTION_POINT,
-      `${SCRIPT_TAG}${INSERTION_POINT}`
+      "</head>",
+      `${SCRIPT_TAG}</head>`
     );
 
     // 変更した内容をファイルに書き込む
     await writeFile(SEARCH_PAGE_PATH, updatedContent, "utf8");
-    console.log("✅ Pagefindスクリプトが正常に挿入されました");
+    console.log("✅ Pagefindスクリプトを検索ページに正常に挿入しました");
   } catch (error) {
     console.error(
-      "⚠️ Pagefindスクリプトの挿入中にエラーが発生しました:",
+      "❌ Pagefindスクリプトの挿入中にエラーが発生しました:",
       error
     );
+    process.exit(1);
   }
 }
 
+// スクリプト実行
 main();

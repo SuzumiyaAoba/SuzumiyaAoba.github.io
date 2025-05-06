@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,12 +18,9 @@
       }
     ],
     "paths": {
-      "@/fonts": [
-        "./src/styles/fonts"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
+      "@/fonts": ["./src/styles/fonts"],
+      "@/*": ["./src/*"],
+      "/pagefind/pagefind.js": ["./src/types/pagefind.d.ts"]
     },
     "target": "ES2017"
   },
@@ -38,7 +31,5 @@
     ".next/types/**/*.ts",
     "src/libs/rehype/rehype-image-size.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
