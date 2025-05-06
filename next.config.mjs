@@ -1,5 +1,3 @@
-import withExportImages from "next-export-optimize-images";
-
 const isProd = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
