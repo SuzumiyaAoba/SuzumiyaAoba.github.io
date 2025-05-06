@@ -39,7 +39,7 @@ export default function SearchComponent() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handlePagefindLoaded = () => {
-        console.log("Pagefindロード完了イベントを受信");
+        console.log("Pagefind load event received");
         setPagefindLoaded(true);
         setPagefindError(null);
 
@@ -50,7 +50,7 @@ export default function SearchComponent() {
 
       // すでにロードされているか確認
       if (window.pagefind) {
-        console.log("Pagefindはすでにロード済み");
+        console.log("Pagefind is already loaded");
         setPagefindLoaded(true);
 
         if (initialQuery) {
@@ -82,7 +82,7 @@ export default function SearchComponent() {
     if (!window.pagefind) {
       console.error("Pagefind not loaded");
       setPagefindError(
-        "Pagefindがロードされていません。しばらく待つか、ページを再読み込みしてください。"
+        "Pagefind is not loaded. Please wait a moment or reload the page."
       );
       return;
     }
@@ -90,7 +90,7 @@ export default function SearchComponent() {
     setIsLoading(true);
 
     try {
-      console.log("検索実行:", searchQuery);
+      console.log("Executing search:", searchQuery);
       const search = await window.pagefind.search(searchQuery);
 
       if (!search || !search.results) {
@@ -109,19 +109,19 @@ export default function SearchComponent() {
             id: result.id,
             data: {
               url: data.url,
-              title: data.meta?.title || "タイトルなし",
+              title: data.meta?.title || "No Title",
               excerpt: data.excerpt,
             },
           };
         })
       );
 
-      console.log("検索結果:", searchResults.length);
+      console.log("Search results:", searchResults.length);
       setResults(searchResults);
     } catch (error) {
       console.error("Search failed:", error);
       setResults([]);
-      setPagefindError("検索中にエラーが発生しました。");
+      setPagefindError("An error occurred during search.");
     } finally {
       setIsLoading(false);
     }
@@ -160,7 +160,7 @@ export default function SearchComponent() {
 
   // スクリプトのロード完了を通知するイベント
   const handleScriptLoad = () => {
-    console.log("Pagefindスクリプトがロードされました");
+    console.log("Pagefind script loaded");
     const event = new Event("pagefind-loaded");
     document.dispatchEvent(event);
   };
@@ -168,14 +168,8 @@ export default function SearchComponent() {
   const handleDevSetup = () => {
     // 開発環境セットアップ用のコマンドを実行するよう指示
     alert(
-      "開発環境でPagefindを使用するには、以下のコマンドを実行してください：\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev"
+      "To use Pagefind in development environment, run these commands:\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev"
     );
-  };
-
-  // デバッグ用の関数
-  const forceSearch = () => {
-    console.log(`強制検索: "${query}"`);
-    performSearch(query);
   };
 
   return (
@@ -185,8 +179,8 @@ export default function SearchComponent() {
         strategy="afterInteractive"
         onLoad={handleScriptLoad}
         onError={() => {
-          console.error("Pagefindスクリプトの読み込みに失敗しました");
-          setPagefindError("検索インデックスの読み込みに失敗しました。");
+          console.error("Failed to load Pagefind script");
+          setPagefindError("Failed to load search index.");
         }}
       />
 
@@ -196,18 +190,11 @@ export default function SearchComponent() {
             type="text"
             value={query}
             onChange={handleInputChange}
-            placeholder="検索ワードを入力..."
+            placeholder="Enter search terms..."
             className="flex-1 p-2 border rounded-md"
-            aria-label="検索"
+            aria-label="Search"
             disabled={!!pagefindError}
           />
-          <button
-            onClick={forceSearch}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-            disabled={isLoading || !!pagefindError}
-          >
-            {isLoading ? "検索中..." : "検索"}
-          </button>
         </div>
       </div>
 
@@ -218,16 +205,16 @@ export default function SearchComponent() {
             onClick={handleDevSetup}
             className="text-blue-600 hover:underline"
           >
-            開発環境セットアップ手順を表示
+            Show setup instructions
           </button>
         </div>
       )}
 
-      {isLoading && <div className="text-center py-4">検索中...</div>}
+      {isLoading && <div className="text-center py-4">Searching...</div>}
 
       {!isLoading && results.length > 0 && (
         <div>
-          <p className="mb-4">{results.length}件の検索結果:</p>
+          <p className="mb-4">{results.length} results found:</p>
           <ul className="space-y-4">
             {results.map((result) => (
               <li key={result.id} className="border-b pb-4">
@@ -250,9 +237,7 @@ export default function SearchComponent() {
       )}
 
       {!isLoading && query && results.length === 0 && !pagefindError && (
-        <div className="text-center py-4">
-          「{query}」に一致する結果は見つかりませんでした。
-        </div>
+        <div className="text-center py-4">No results found for "{query}".</div>
       )}
     </div>
   );

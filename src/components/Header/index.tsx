@@ -12,7 +12,7 @@ const MENUS = [
   { name: "Notes", href: "/notes/" },
   { name: "Tools", href: "/tools/" },
   { name: "Keywords", href: "/keywords/" },
-  { name: "検索", href: "/search/" },
+  { name: "Search", href: "/search/" },
 ] as const;
 
 // ヘッダーの高さを定数として定義（外部からも参照できるように）
@@ -122,9 +122,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             ref={buttonRef}
             className="md:hidden flex flex-col justify-center items-center w-10 h-10 relative z-50 focus:outline-none"
             onClick={toggleMenu}
-            aria-label={
-              isMobileMenuOpen ? "メニューを閉じる" : "メニューを開く"
-            }
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
           >
             <HamburgerIcon isOpen={isMobileMenuOpen} />
