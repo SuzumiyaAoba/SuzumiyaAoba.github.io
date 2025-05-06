@@ -1,5 +1,6 @@
 /**
- * Pagefindスクリプトをモジュールとして使用できるように修正するスクリプト
+ * Pagefindスクリプトを修正するスクリプト
+ * import.meta の参照を削除し、正常に動作するようにします
  */
 const fs = require("fs");
 const path = require("path");
@@ -16,7 +17,7 @@ const PAGEFIND_SCRIPT_PATH = path.join(
 );
 
 async function main() {
-  console.log("Pagefindスクリプトをモジュールとして修正しています...");
+  console.log("Pagefindスクリプトを修正しています...");
 
   try {
     // ファイルの内容を読み込む
@@ -26,20 +27,60 @@ async function main() {
     if (content.includes("import.meta")) {
       console.log("import.meta の使用を検出しました - ファイルを修正します...");
 
-      // 新しい内容 - グローバル変数としてwindow.pagefindを明示的に設定
-      const modifiedContent = `// Modified for ESM compatibility
-${content}
-
-// Export pagefind to global scope
-if (typeof window !== 'undefined') {
-  window.pagefind = pagefind;
-}`;
+      // import.meta を window.location.origin に置き換え
+      const modifiedContent = content.replace(
+        /import\.meta/g,
+        "({ url: window.location.origin })"
+      );
 
       // 修正した内容を書き込む
       await writeFile(PAGEFIND_SCRIPT_PATH, modifiedContent, "utf8");
       console.log("✅ Pagefindスクリプトを修正しました");
     } else {
       console.log("import.meta の使用は検出されませんでした。修正は不要です。");
+    }
+
+    // スクロール位置の回復コードを追加
+    const searchPagePath = path.join(
+      process.cwd(),
+      "out",
+      "search",
+      "index.html"
+    );
+
+    // 検索ページの内容を読み込む
+    if (fs.existsSync(searchPagePath)) {
+      const searchPageContent = await readFile(searchPagePath, "utf8");
+
+      // ページロード時のスクリプトを追加
+      if (!searchPageContent.includes("window.__pagefind_init")) {
+        const modifiedSearchPage = searchPageContent.replace(
+          "</head>",
+          `<script>
+  window.__pagefind_init = false;
+  document.addEventListener('DOMContentLoaded', function() {
+    // pagefindライブラリを直接scriptタグで挿入
+    const script = document.createElement('script');
+    script.src = '/pagefind/pagefind.js';
+    script.onload = function() {
+      console.log('Pagefind loaded successfully');
+      window.__pagefind_init = true;
+      if (window.pagefind) {
+        document.dispatchEvent(new Event('pagefind-loaded'));
+      }
+    };
+    script.onerror = function() {
+      console.error('Failed to load pagefind.js');
+    };
+    document.head.appendChild(script);
+  });
+</script>
+</head>`
+        );
+
+        await writeFile(searchPagePath, modifiedSearchPage, "utf8");
+        console.log("✅ 検索ページにPagefind初期化スクリプトを追加しました");
+      }
     }
   } catch (error) {
     console.error(
