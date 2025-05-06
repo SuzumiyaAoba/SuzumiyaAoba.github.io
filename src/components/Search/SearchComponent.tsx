@@ -3,8 +3,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-// 型定義のインポート
-import type PagefindModule from "/pagefind/pagefind.js";
+
+// PagefindModuleの型定義（直接インポートせず型だけ定義）
+type PagefindModule = {
+  search: (query: string) => Promise<any>;
+};
 
 // PagefindResultのスキーマ定義
 const pagefindResultSchema = z.object({
@@ -20,7 +23,7 @@ type PagefindResult = z.infer<typeof pagefindResultSchema>;
 // グローバル型定義の追加
 declare global {
   interface Window {
-    pagefind: typeof PagefindModule;
+    pagefind: PagefindModule;
     __pagefind_init: boolean;
   }
 }
@@ -85,27 +88,40 @@ export default function SearchComponent() {
     }
   }, []);
 
-  // Pagefindをロード - シンプルなuseEffectで実装
+  // Pagefindをロード - アダプタを使って読み込む
   useEffect(() => {
     async function loadPagefind() {
       if (typeof window === "undefined") return;
 
       // すでに初期化済みの場合はスキップ
-      if (window.pagefind) return;
+      if (window.pagefind && typeof window.pagefind.search === "function")
+        return;
 
       try {
-        console.log("Loading pagefind...");
-        // dynamic importでPagefindをロード
-        const pagefindModule = await import(
-          /* webpackIgnore: true */ "/pagefind/pagefind.js"
-        );
-        window.pagefind = pagefindModule.default;
-        console.log("Pagefind loaded successfully");
+        console.log("Loading pagefind adapter...");
 
-        // 初期クエリがある場合は検索を実行
-        if (initialQuery) {
-          performSearch(initialQuery);
-        }
+        // アダプタスクリプトを作成して読み込む
+        const script = document.createElement("script");
+        script.src = "/pagefind-adapter.js";
+        script.async = true;
+        script.onload = () => {
+          console.log("Pagefind adapter loaded successfully");
+
+          // 一定時間後に検索を試行（ページファインドの初期化を待つ）
+          setTimeout(() => {
+            if (initialQuery) {
+              performSearch(initialQuery);
+            }
+          }, 1000);
+        };
+        script.onerror = (e) => {
+          console.error("Failed to load pagefind adapter script", e);
+          setPagefindError(
+            "検索インデックスの読み込みに失敗しました。ページを更新してください。"
+          );
+        };
+
+        document.body.appendChild(script);
       } catch (error) {
         console.error("Failed to load pagefind", error);
         setPagefindError(
