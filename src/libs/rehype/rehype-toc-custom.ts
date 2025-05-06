@@ -1,7 +1,7 @@
 import { visit } from "unist-util-visit";
 import { toString } from "hast-util-to-string";
 import type { Plugin } from "unified";
-import type { Root, Element } from "hast";
+import type { Root, Element, RootContent, ElementContent } from "hast";
 
 interface TocHeading {
   depth: number;
@@ -90,7 +90,7 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
       children: [tocContainer],
     };
 
-    // ドキュメントの先頭に挿入
+    // TOCをドキュメントに追加（コンテンツは移動しない）
     // 最初のコンテンツ要素を探す
     let contentStartIndex = -1;
     for (let i = 0; i < tree.children.length; i++) {
@@ -102,6 +102,7 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
     }
 
     if (contentStartIndex !== -1) {
+      // TOCコンテナをドキュメントに追加
       tree.children.splice(contentStartIndex, 0, sidebarContainer);
     } else {
       tree.children.push(sidebarContainer);

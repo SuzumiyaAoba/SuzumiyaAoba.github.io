@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { GoogleAdsenseScript } from "@/components/Ads/GoogleAdsenseScript";
 import BreadcrumbNav from "@/components/Breadcrumb";
+import Script from "next/script";
 import {
   getBlogTitleMap,
   getNoteTitleMap,
@@ -76,6 +77,30 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
+        <Script id="toc-scroll">
+          {`
+            function adjustTocPosition() {
+              const header = document.querySelector('header');
+              if (!header) return;
+              
+              const headerHeight = header.offsetHeight + 10;
+              document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+            }
+            
+            // 即時実行
+            adjustTocPosition();
+            
+            // DOMContentLoaded時
+            document.addEventListener('DOMContentLoaded', adjustTocPosition);
+            
+            // resize時
+            window.addEventListener('resize', adjustTocPosition);
+            
+            // 遅延実行で確実に
+            setTimeout(adjustTocPosition, 500);
+          `}
+        </Script>
+
         <Header siteName={config.metadata.title} />
         <div className="content-container mt-header flex-grow w-full">
           <BreadcrumbNav
@@ -92,9 +117,9 @@ export default async function RootLayout({
             url: "https://nextjs.org",
           }}
         />
+        <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+        <GoogleAdsenseScript />
       </body>
-      <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-      <GoogleAdsenseScript />
     </html>
   );
 }

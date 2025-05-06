@@ -279,16 +279,30 @@
 // Table of Contents
 .tocWrapper {
   position: relative;
+  width: 100%;
 
   @media (min-width: 1280px) {
+    /* 標準的なレイアウト */
+    display: block;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
     :global(.toc-sidebar) {
-      position: absolute;
-      top: 0;
-      left: 100%;
-      width: 260px;
-      margin-left: 2rem;
-      padding-bottom: 2rem;
+      position: fixed; /* stickyではなくfixedに変更 */
+      top: var(--header-height, 80px); /* JavaScriptで設定される変数を使用 */
+      left: calc(
+        50% + 550px
+      ); /* メインコンテンツの右端からの配置（コンテンツ幅の半分 + 余白） */
+      width: 250px; /* 幅を広げる: 190px → 250px */
       z-index: 10;
+      max-height: calc(100vh - var(--header-height, 100px) - 20px);
+      overflow-y: auto;
+      background-color: transparent; /* 背景を透明に */
     }
   }
 }
@@ -300,15 +314,12 @@
   @apply shadow-sm;
   @apply transition-all duration-200;
   display: block !important;
-  position: relative;
 
   @media (min-width: 1280px) {
     margin: 0 !important;
     max-width: none !important;
-    width: 260px;
+    width: 250px; /* 幅を広げる: 190px → 250px */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 2rem;
   }
 
   &:hover {
