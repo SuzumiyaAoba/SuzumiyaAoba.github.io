@@ -41,43 +41,51 @@ window.__pagefind_loaded = false;
     })
     .then((code) => {
       try {
-        // export文を削除
-        const modifiedCode = code.replace(/export\s*{[^}]*}/g, "");
+        // export文を削除 - 改良版
+        let modifiedCode = code
+          // exportブロックの削除
+          .replace(/export\s*{[^}]*}/g, "")
+          // export キーワードの削除
+          .replace(/export\s+(?:const|let|var|function|class)/g, "$1")
+          // export default の削除
+          .replace(/export\s+default/g, "")
+          // 単独のexportステートメントの削除
+          .replace(/export\s*\{[^}]*\};?/g, "")
+          // ファイル末尾の export{...} を削除
+          .replace(/export\s*{.*}$/g, "");
 
-        // グローバルスコープに公開するためのコードを追加
+        // 明示的に末尾にグローバル化コードを追加
         const finalCode =
           modifiedCode +
           `
-          // グローバルスコープに公開
+          // Pagefindが初期化完了したらフラグを設定
           if (typeof window !== 'undefined') {
-            // 元の実装を保存
-            const originalSearch = search;
-            const originalDebouncedSearch = debouncedSearch;
+            // Pagefindのグローバル登録がまだの場合に備えて
+            if (!window.pagefind && typeof search === 'function') {
+              window.pagefind = {
+                search,
+                debouncedSearch,
+                destroy,
+                filters,
+                init,
+                mergeIndex,
+                options,
+                preload
+              };
+            }
             
-            // グローバルに公開するメソッドを定義
-            window.pagefind = {
-              search: function(query) {
-                console.log('Pagefind search wrapper called with:', query);
-                return originalSearch(query);
-              },
-              debouncedSearch: function(query, options, debounceTimeoutMs) {
-                return originalDebouncedSearch(query, options, debounceTimeoutMs);
-              },
-              destroy,
-              filters,
-              init,
-              mergeIndex,
-              options,
-              preload
-            };
-            
-            // 自動初期化
-            init().then(() => {
-              console.log('Pagefind fully initialized');
-              window.__pagefind_loaded = true;
-              // 初期化完了イベントを発火
-              window.dispatchEvent(new CustomEvent('pagefind:initialized'));
-            });
+            // 自動初期化 (pagefind.js内のグローバル登録後に実行)
+            setTimeout(() => {
+              if (typeof window.pagefind !== 'undefined' && typeof window.pagefind.init === 'function') {
+                console.log('Initializing pagefind via adapter');
+                window.pagefind.init().then(() => {
+                  console.log('Pagefind fully initialized');
+                  window.__pagefind_loaded = true;
+                  // 初期化完了イベントを発火
+                  window.dispatchEvent(new CustomEvent('pagefind:initialized'));
+                });
+              }
+            }, 10);
           }
         `;
 

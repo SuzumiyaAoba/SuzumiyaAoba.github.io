@@ -66,10 +66,28 @@ async function fixImportMeta() {
       console.log("import.meta の使用を検出しました - ファイルを修正します...");
 
       // import.meta を window.location.origin に置き換え
-      const modifiedContent = content.replace(
+      let modifiedContent = content.replace(
         /import\.meta/g,
         "({ url: window.location.origin })"
       );
+
+      // export文を削除する改良版の処理
+      modifiedContent = modifiedContent
+        // exportブロックの削除
+        .replace(/export\s*{[^}]*}/g, "")
+        // export キーワードの削除
+        .replace(/export\s+(?:const|let|var|function|class)/g, "$1")
+        // export default の削除
+        .replace(/export\s+default/g, "")
+        // 単独のexportステートメントの削除
+        .replace(/export\s*\{[^}]*\};?/g, "")
+        // ファイル末尾の export{...} を削除
+        .replace(/export\s*{.*}$/g, "");
+
+      // ファイル末尾のexport文をより確実に削除
+      if (modifiedContent.includes("export{")) {
+        modifiedContent = modifiedContent.replace(/export\{[^}]*\}/g, "");
+      }
 
       // 修正した内容を書き込む
       await writeFile(PAGEFIND_SCRIPT_PATH, modifiedContent, "utf8");
