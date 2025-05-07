@@ -13,7 +13,7 @@ export const NinjaFooterAds = () => {
       </Script>
       <Script
         type="text/javascript"
-        src="https://adm.shinobi.jp/s/t.js"
+        src="https://adm.shinobi.jp/st/t.js"
         async
       />
     </>
