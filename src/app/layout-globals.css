@@ -77,6 +77,22 @@ main {
     background-color: rgba(155, 155, 155, 0.5);
     border-radius: 20px;
   }
+
+  /* ページの底部に達したときにTOCを隠す（footerが見えている場合） */
+  body.at-page-bottom .tocWrapper.toc-at-end .toc-sidebar {
+    opacity: 0.2;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* 完全に最下部に達したときは完全に非表示 */
+  body.at-very-bottom .toc-sidebar,
+  body.at-page-bottom.at-very-bottom .tocWrapper.toc-at-end .toc-sidebar {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
 }
 
 /* article要素の終端に到達したときにTOCを記事の末尾に固定する */
@@ -84,6 +100,7 @@ main {
   position: absolute !important;
   bottom: 0 !important;
   top: auto !important;
+  max-height: none !important; /* 最大高さの制限を解除 */
 }
 
 /* 特定のブラウザでのsticky対応のためのクラス */

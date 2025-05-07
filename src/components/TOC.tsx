@@ -75,6 +75,26 @@ function useActiveHeading(entries: TocEntry[]): string | null {
       { threshold: 0.1 }
     );
 
+    // フッターが表示されたらTOCを非表示にする
+    const footerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            document.body.classList.add("at-page-bottom");
+          } else {
+            document.body.classList.remove("at-page-bottom");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    // フッターを監視
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footerObserver.observe(footer);
+    }
+
     // 記事の終端部分を監視
     const article = document.querySelector("article");
     if (article) {
@@ -98,6 +118,7 @@ function useActiveHeading(entries: TocEntry[]): string | null {
       });
 
       articleEndObserver.disconnect();
+      footerObserver.disconnect();
     };
   }, [entries]);
 
@@ -216,6 +237,30 @@ export const TOC: React.FC<TOCProps> = ({ toc }) => {
           tocWrapper.classList.add("toc-at-end");
         } else {
           tocWrapper.classList.remove("toc-at-end");
+        }
+      }
+
+      // フッター検出
+      const footer = document.querySelector("footer");
+      if (footer) {
+        const footerRect = footer.getBoundingClientRect();
+        if (footerRect.top <= viewportHeight) {
+          // フッターが画面内に見えている
+          document.body.classList.add("at-page-bottom");
+
+          // スクロール位置がページ最下部に近い場合
+          const scrollPosition = window.scrollY;
+          const maxScroll = document.body.scrollHeight - window.innerHeight;
+          if (maxScroll - scrollPosition < 100) {
+            // 100pxしきい値
+            // 完全にページ最下部に近い
+            document.body.classList.add("at-very-bottom");
+          } else {
+            document.body.classList.remove("at-very-bottom");
+          }
+        } else {
+          document.body.classList.remove("at-page-bottom");
+          document.body.classList.remove("at-very-bottom");
         }
       }
     };
