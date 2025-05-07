@@ -283,7 +283,8 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     width: 100%;
-    position: relative; /* sticky要素の親に必要 */
+    position: relative !important; /* sticky要素の親に必要、優先度を高く */
+    min-height: 100vh; /* 十分な高さを確保 */
 
     @media (min-width: 1280px) {
       grid-template-columns: minmax(0, 1fr) 300px;
@@ -308,10 +309,23 @@
     @media (min-width: 1280px) {
       display: block;
       grid-column-start: 2; /* 明示的に2列目に配置 */
+      width: 300px; /* 幅を固定 */
       height: fit-content; /* 必要な高さのみにする */
-      position: sticky; /* スクロール追従用の設定 */
-      top: var(--header-height, 80px); /* ヘッダーの高さを考慮 */
-      z-index: 10; /* 他の要素より前面に */
+      position: sticky !important; /* スクロール追従用の設定、優先度を高く */
+      top: var(--header-height, 80px) !important; /* ヘッダーの高さを考慮 */
+      z-index: 10 !important; /* 他の要素より前面に */
+      align-self: flex-start !important;
+      max-height: none !important; /* 高さ制限を解除 */
+      overflow-y: visible !important; /* スクロールを無効化 */
+      will-change: position, transform; /* パフォーマンス最適化 */
+      contain: layout; /* レイアウト計算の最適化 */
+      transform: translateZ(0); /* GPUアクセラレーション有効化 */
+
+      &.sticky-active {
+        /* スクロール追従を強制的に有効化 */
+        position: sticky !important;
+        backface-visibility: hidden; /* レンダリング問題解決 */
+      }
     }
   }
 }
@@ -327,9 +341,22 @@
       @apply my-0;
       max-height: none; /* 高さ制限を解除 */
       overflow: hidden; /* スクロールバーを非表示に */
+      contain: content; /* パフォーマンス最適化 */
 
       &:hover {
         @apply shadow-md;
+      }
+
+      &.toc-near-bottom {
+        /* 記事の末尾が近づいたときのスタイル */
+        transition: transform 0.3s ease;
+      }
+
+      &.toc-at-bottom {
+        /* 記事の末尾まで達したときのスタイル */
+        position: absolute !important;
+        bottom: 0 !important;
+        top: auto !important;
       }
     }
 

@@ -22,6 +22,39 @@ main {
   overflow-x: hidden;
 }
 
+/* TOCのスクロール追従のためのスタイル */
+.toc-sidebar {
+  position: sticky;
+  top: var(--header-height, 80px);
+  z-index: 10;
+}
+
+@media (min-width: 1280px) {
+  /* 大画面でのTOC表示設定 */
+  .toc-sidebar {
+    display: block;
+  }
+
+  /* スクロール追従の強制適用 */
+  .toc-sidebar.sticky-active {
+    position: sticky !important;
+  }
+
+  /* 記事末尾でのTOC固定 */
+  .toc-sidebar.toc-at-bottom {
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 1279px) {
+  /* 小さい画面ではTOCを非表示 */
+  .toc-sidebar {
+    display: none !important;
+  }
+}
+
 /* ハンバーガーメニューのアニメーション */
 @keyframes fadeInUp {
   0% {
