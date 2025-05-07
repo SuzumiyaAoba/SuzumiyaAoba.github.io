@@ -77,212 +77,80 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <Script id="toc-scroll">
+        <Script id="layout-helpers" strategy="afterInteractive">
           {`
-            // TOCの追従スクロール問題を根本的に解決するシンプルな実装
+            // ヘッダー高さの取得とCSS変数への適用
             document.addEventListener('DOMContentLoaded', function() {
-              console.log('DOM fully loaded - fixing TOC scroll');
-              
-              // トグル用のクラス操作関数（クラスの追加と削除を安全に行う）
-              function toggleClass(element, className, shouldAdd) {
-                if (!element) return;
-                if (shouldAdd) {
-                  if (!element.classList.contains(className)) {
-                    element.classList.add(className);
-                  }
-                } else {
-                  if (element.classList.contains(className)) {
-                    element.classList.remove(className);
-                  }
-                }
-              }
-              
-              // TOCの設定を行う関数（直接インラインスタイルで設定）
-              function setupToc() {
-                // ヘッダーの高さを取得・設定
+              function setHeaderHeight() {
                 const header = document.querySelector('header');
                 if (header) {
                   const headerHeight = header.offsetHeight + 16;
-                  document.documentElement.style.setProperty('--header-height', \`\${headerHeight}px\`);
-                  console.log('Header height set to:', headerHeight);
-                }
-                
-                // トップレベルのコンテナ要素
-                const tocWrapper = document.querySelector('.tocWrapper');
-                if (tocWrapper) {
-                  // 親要素は相対位置を確保
-                  tocWrapper.style.position = 'relative';
-                  tocWrapper.style.minHeight = '100vh';
-                }
-                
-                // TOC要素本体
-                const tocSidebar = document.querySelector('.toc-sidebar');
-                if (!tocSidebar) {
-                  console.warn('TOC sidebar element not found');
-                  return;
-                }
-                
-                // 記事要素
-                const article = document.querySelector('article');
-                if (!article) {
-                  console.warn('Article element not found');
-                  return;
-                }
-                
-                const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
-                
-                // スクロール追従のためのスタイルを強制的に設定
-                tocSidebar.style.position = 'sticky';
-                tocSidebar.style.top = \`\${headerHeight}px\`;
-                tocSidebar.style.alignSelf = 'flex-start';
-                tocSidebar.style.maxHeight = 'none'; // 高さ制限を削除
-                tocSidebar.style.overflowY = 'visible'; // スクロールを無効化
-                tocSidebar.style.zIndex = '10';
-                
-                // 強制的にスクロール追従を有効化（ブラウザキャッシュをクリア）
-                setTimeout(() => {
-                  // 一度値をクリアしてから再設定
-                  tocSidebar.style.position = '';
-                  void tocSidebar.offsetHeight; // リフロー強制
-                  tocSidebar.style.position = 'sticky';
-                }, 10);
-                
-                // ログ出力
-                console.log('TOC styles applied:', {
-                  position: tocSidebar.style.position,
-                  top: tocSidebar.style.top,
-                  maxHeight: tocSidebar.style.maxHeight
-                });
-              }
-              
-              // スクロール時のTOC位置調整（記事末尾でのbottom固定に対応）
-              function adjustTocPosition() {
-                const tocSidebar = document.querySelector('.toc-sidebar');
-                const article = document.querySelector('article');
-                if (!tocSidebar || !article) return;
-                
-                const articleRect = article.getBoundingClientRect();
-                const tocRect = tocSidebar.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                
-                // 記事が画面下に到達した場合
-                if (articleRect.bottom <= viewportHeight) {
-                  // 記事の下に合わせる
-                  tocSidebar.classList.add('toc-at-bottom');
-                } else {
-                  // 通常のsticky動作
-                  tocSidebar.classList.remove('toc-at-bottom');
+                  document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
                 }
               }
               
-              // 初期化と再初期化
-              function initialize() {
-                setupToc();
-                adjustTocPosition();
-                
-                // 強制的に再初期化するために遅延実行も行う
-                setTimeout(setupToc, 500);
-                setTimeout(adjustTocPosition, 500);
-              }
+              // 初期実行
+              setHeaderHeight();
               
-              // 各種イベントリスナー設定
-              window.addEventListener('scroll', adjustTocPosition, { passive: true });
-              window.addEventListener('resize', initialize, { passive: true });
-              window.addEventListener('load', initialize);
-              
-              // 実行
-              initialize();
-              
-              // 最終的に確実に適用するための繰り返し処理
-              const checkInterval = setInterval(() => {
-                const tocSidebar = document.querySelector('.toc-sidebar');
-                if (tocSidebar) {
-                  const compStyle = getComputedStyle(tocSidebar);
-                  console.log('TOC computed style:', {
-                    position: compStyle.position,
-                    top: compStyle.top
-                  });
-                  
-                  // position:stickyが適用されていない場合は再設定
-                  if (compStyle.position !== 'sticky') {
-                    console.warn('TOC is not sticky, reapplying styles');
-                    setupToc();
-                  } else {
-                    // 正常に適用されていれば確認を終了
-                    clearInterval(checkInterval);
-                  }
-                }
-              }, 1000);
-              
-              // 最大10秒後にチェックを終了
-              setTimeout(() => clearInterval(checkInterval), 10000);
+              // リサイズ時に再計算
+              window.addEventListener('resize', setHeaderHeight, { passive: true });
             });
           `}
         </Script>
 
-        <Script id="position-sticky-polyfill" strategy="beforeInteractive">
+        <Script id="toc-helper" strategy="afterInteractive">
           {`
-            // position: stickyポリフィル（完全最終手段）
-            (function() {
-              if (CSS && CSS.supports && CSS.supports('position', 'sticky')) {
-                // stickyがネイティブサポートされている場合は処理不要
-                console.log('position:sticky is natively supported');
-                return;
+            // TOC（目次）のスクロール追従を強化するヘルパー
+            document.addEventListener('DOMContentLoaded', function() {
+              // スティッキー位置の有効化
+              function activateTocSticky() {
+                const tocSidebar = document.querySelector('.toc-sidebar');
+                if (!tocSidebar) return;
+                
+                // スティッキー効果を強化
+                tocSidebar.classList.add('sticky-active');
+                
+                // スタイル確認とログ出力（デバッグ用）
+                const computedStyle = getComputedStyle(tocSidebar);
+                console.log('TOC styles applied - position:', computedStyle.position, 'top:', computedStyle.top);
               }
               
-              console.warn('position:sticky not supported, applying polyfill');
-              
-              // ポリフィル実装
-              window.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                  const tocSidebar = document.querySelector('.toc-sidebar');
-                  if (!tocSidebar) return;
-                  
-                  let lastScrollTop = 0;
-                  let headerHeight = 80;
-                  
-                  // ヘッダー高さの取得
-                  const header = document.querySelector('header');
-                  if (header) {
-                    headerHeight = header.offsetHeight + 16;
-                  }
-                  
-                  // 基準位置の計算
-                  const sidebarRect = tocSidebar.getBoundingClientRect();
-                  const sidebarTop = window.pageYOffset + sidebarRect.top - headerHeight;
-                  
-                  // スクロールハンドラー
-                  function handleScroll() {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    if (scrollTop > sidebarTop) {
-                      tocSidebar.style.position = 'fixed';
-                      tocSidebar.style.top = headerHeight + 'px';
-                    } else {
-                      tocSidebar.style.position = 'static';
-                      tocSidebar.style.top = 'auto';
-                    }
-                    
-                    lastScrollTop = scrollTop;
-                  }
-                  
-                  // イベントリスナー登録
-                  window.addEventListener('scroll', handleScroll, { passive: true });
-                  window.addEventListener('resize', function() {
-                    // リサイズ時に基準位置再計算
-                    const sidebarRect = tocSidebar.getBoundingClientRect();
-                    const header = document.querySelector('header');
-                    if (header) {
-                      headerHeight = header.offsetHeight + 16;
-                    }
-                    handleScroll();
-                  }, { passive: true });
-                  
-                  // 初期実行
+              // position:stickyをサポートしていない場合のポリフィル
+              function setupStickyPolyfill() {
+                if (CSS && CSS.supports && CSS.supports('position', 'sticky')) {
+                  return; // ネイティブサポートあり
+                }
+                
+                console.log('Applying position:sticky polyfill');
+                const tocSidebar = document.querySelector('.toc-sidebar');
+                if (!tocSidebar) return;
+                
+                let headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
+                const tocTop = window.pageYOffset + tocSidebar.getBoundingClientRect().top - headerHeight;
+                
+                function handleScroll() {
+                  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                  tocSidebar.style.position = scrollTop > tocTop ? 'fixed' : 'static';
+                  tocSidebar.style.top = scrollTop > tocTop ? headerHeight + 'px' : 'auto';
+                }
+                
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                window.addEventListener('resize', function() {
+                  headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
                   handleScroll();
-                }, 1000);
+                }, { passive: true });
+                
+                handleScroll();
+              }
+              
+              // 初期化と実行
+              setTimeout(activateTocSticky, 100);
+              setTimeout(setupStickyPolyfill, 100);
+              window.addEventListener('load', function() {
+                activateTocSticky();
+                setupStickyPolyfill();
               });
-            })();
+            });
           `}
         </Script>
 

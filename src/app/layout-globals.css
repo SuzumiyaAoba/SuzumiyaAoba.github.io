@@ -22,36 +22,55 @@ main {
   overflow-x: hidden;
 }
 
-/* TOCのスクロール追従のためのスタイル */
-.toc-sidebar {
-  position: sticky;
-  top: var(--header-height, 80px);
-  z-index: 10;
-}
-
+/* 
+ * TOC（目次）のスタイリング
+ * CSSモジュールで管理されている部分を補完するグローバルスタイル
+ */
 @media (min-width: 1280px) {
-  /* 大画面でのTOC表示設定 */
-  .toc-sidebar {
-    display: block;
+  /* TOCの親要素 */
+  .tocWrapper {
+    position: relative;
+    min-height: 100vh;
   }
 
-  /* スクロール追従の強制適用 */
+  /* TOCのサイドバー要素 */
+  .toc-sidebar {
+    position: sticky;
+    top: var(--header-height, 80px);
+    z-index: 10;
+    height: fit-content;
+    max-height: calc(100vh - var(--header-height, 80px));
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  /* スクロール追従を強化 */
   .toc-sidebar.sticky-active {
     position: sticky !important;
+    will-change: position;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
-  /* 記事末尾でのTOC固定 */
-  .toc-sidebar.toc-at-bottom {
-    position: absolute !important;
-    bottom: 0 !important;
-    top: auto !important;
+  /* Webkit系ブラウザのスクロールバーをカスタマイズ */
+  .toc-sidebar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .toc-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc-sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
   }
 }
 
 @media (max-width: 1279px) {
   /* 小さい画面ではTOCを非表示 */
   .toc-sidebar {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -71,7 +90,6 @@ main {
 .menu-item-appear {
   opacity: 0;
   animation: fadeInUp 0.3s ease-out forwards;
-  /* 最初は不透明度0で、アニメーションが完了すると1になる */
 }
 
 /* ハンバーガーメニューのトランジション調整 */

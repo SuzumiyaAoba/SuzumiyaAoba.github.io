@@ -277,60 +277,57 @@
 }
 
 // CSS Modules用にローカルクラスを定義
-.toc {
-  &Wrapper {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-    width: 100%;
-    position: relative !important; /* sticky要素の親に必要、優先度を高く */
-    min-height: 100vh; /* 十分な高さを確保 */
+.tocWrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  width: 100%;
+  position: relative; /* sticky要素の親に必要 */
+  min-height: 100vh; /* 十分な高さを確保 */
 
-    @media (min-width: 1280px) {
-      grid-template-columns: minmax(0, 1fr) 300px;
-    }
+  @media (min-width: 1280px) {
+    grid-template-columns: minmax(0, 1fr) 300px;
   }
+}
 
-  &Main {
-    width: 100%;
-    max-width: 100%; /* 小画面ではコンテンツ幅を最大化 */
-    margin: 0;
-    flex: 1 1 0%;
+.tocMain {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  flex: 1 1 0%;
 
-    @media (min-width: 1280px) {
-      grid-column-start: 1; /* 明示的に1列目に配置 */
-      max-width: 960px; /* 大画面では最大幅を制限 */
-    }
+  @media (min-width: 1280xl) {
+    grid-column-start: 1;
+    max-width: 960px;
   }
+}
 
-  &Side {
-    display: none;
+.tocSide {
+  display: none;
 
-    @media (min-width: 1280px) {
-      display: block;
-      grid-column-start: 2; /* 明示的に2列目に配置 */
-      width: 300px; /* 幅を固定 */
-      height: fit-content; /* 必要な高さのみにする */
-      position: sticky !important; /* スクロール追従用の設定、優先度を高く */
-      top: var(--header-height, 80px) !important; /* ヘッダーの高さを考慮 */
-      z-index: 10 !important; /* 他の要素より前面に */
-      align-self: flex-start !important;
-      max-height: none !important; /* 高さ制限を解除 */
-      overflow-y: visible !important; /* スクロールを無効化 */
-      will-change: position, transform; /* パフォーマンス最適化 */
-      contain: layout; /* レイアウト計算の最適化 */
-      transform: translateZ(0); /* GPUアクセラレーション有効化 */
+  @media (min-width: 1280px) {
+    display: block;
+    grid-column-start: 2;
+    width: 300px;
+    height: fit-content;
+    position: sticky;
+    top: var(--header-height, 80px);
+    z-index: 10;
+    align-self: flex-start;
+    max-height: calc(100vh - var(--header-height, 80px));
+    overflow-y: auto;
+    transition: transform 0.2s ease;
 
-      &.sticky-active {
-        /* スクロール追従を強制的に有効化 */
-        position: sticky !important;
-        backface-visibility: hidden; /* レンダリング問題解決 */
-      }
+    /* スティッキー効果を強化 */
+    &.sticky-active {
+      will-change: position, transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
   }
 }
 
-// TOCスタイル（サイドバー用）を定義
+/* TOCスタイル（サイドバー用）を定義 */
 .tocSideStyles {
   :global {
     .toc-container {
@@ -339,26 +336,11 @@
       @apply shadow-sm;
       @apply transition-all duration-200;
       @apply my-0;
-      max-height: none; /* 高さ制限を解除 */
-      overflow: hidden; /* スクロールバーを非表示に */
-      contain: content; /* パフォーマンス最適化 */
-      width: 100%; // 幅100%に設定
-      font-size: 0.85rem; // 全体のフォントサイズを小さく
+      width: 100%;
+      font-size: 0.85rem;
 
       &:hover {
         @apply shadow-md;
-      }
-
-      &.toc-near-bottom {
-        /* 記事の末尾が近づいたときのスタイル */
-        transition: transform 0.3s ease;
-      }
-
-      &.toc-at-bottom {
-        /* 記事の末尾まで達したときのスタイル */
-        position: absolute !important;
-        bottom: 0 !important;
-        top: auto !important;
       }
     }
 
@@ -367,112 +349,60 @@
     }
 
     .toc-summary {
-      @apply font-bold px-3 py-1.5; // 余白を小さく
-      @apply bg-white text-neutral-800;
-      @apply flex justify-between items-center;
+      @apply font-bold;
+      @apply p-3 text-sm;
       @apply border-b border-neutral-200;
-      list-style: none;
-      position: relative;
-      font-size: 0.95rem; // フォントサイズを小さく
-
-      &::-webkit-details-marker {
-        display: none;
-      }
-
-      &::before {
-        content: "";
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z' /%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-      }
-
-      &::after {
-        content: "";
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        transition: transform 0.3s ease;
-      }
-    }
-
-    .toc-details[open] .toc-summary::after {
-      transform: rotate(180deg);
+      cursor: pointer;
     }
 
     .toc-list {
-      @apply list-none p-0 m-0;
-      @apply px-3 py-2;
-      max-height: none; /* スクロールエリアの高さ制限を解除 */
-      overflow: visible; /* スクロールを無効に */
-    }
+      list-style-type: none;
+      padding: 0.5rem 0;
+      margin: 0;
 
-    .toc-list-item {
-      @apply py-0.5 pl-0; // 縦の余白を小さく
-      @apply list-none;
-      @apply border-l-2 border-transparent pl-2; // 左の余白を小さく
-      font-size: 0.85rem; // フォントサイズを小さく
-
-      &:hover {
-        @apply border-neutral-400;
-      }
-
-      &.toc-active {
-        @apply border-blue-500;
-      }
-
-      &.toc-has-active-child {
-        @apply border-blue-300;
-      }
-
-      // 深さによるスタイル調整
       &.depth-0 {
-        font-size: 0.85rem;
+        padding: 0.5rem;
       }
 
       &.depth-1 {
-        font-size: 0.8rem;
-        @apply pl-1.5;
-        line-height: 1.1;
+        padding-left: 1.25rem;
       }
 
-      &.depth-2,
-      &.depth-3 {
-        font-size: 0.75rem;
-        @apply pl-1;
-        line-height: 1.1;
+      &.depth-2 {
+        padding-left: 2.5rem;
       }
     }
 
-    // 深さに応じたリストスタイルの調整
-    .toc-list.depth-1 {
-      @apply py-0.5 px-1.5;
-    }
+    .toc-list-item {
+      margin: 0.25rem 0;
+      font-size: 0.875rem;
 
-    .toc-list.depth-2,
-    .toc-list.depth-3 {
-      @apply py-0 px-1;
+      &.depth-0 {
+        margin-top: 0.5rem;
+      }
     }
 
     .toc-link {
-      @apply text-neutral-700 no-underline font-normal;
-      @apply inline-block;
-      @apply break-words;
-      line-height: 1.2;
+      @apply block;
+      @apply text-neutral-700;
+      @apply no-underline hover:underline hover:text-blue-700;
+      @apply transition-colors duration-200;
 
-      &:hover {
-        @apply text-blue-600 underline;
-      }
+      @apply rounded px-2 py-1;
+      @apply truncate;
+      max-width: 100%;
 
       &.toc-link-active {
-        @apply text-blue-600 font-bold;
+        @apply bg-blue-100 text-blue-700 font-semibold;
       }
+    }
+
+    .toc-active > .toc-link {
+      @apply text-blue-700 font-semibold;
+    }
+
+    .toc-has-active-child > .toc-link {
+      @apply text-blue-600;
     }
   }
 }
