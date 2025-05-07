@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { DmmFx } from "./Provider/A8net/DmmFx";
-import { NinjaFooterAds } from "./Provider/Ninja/NinjaFooterAds";
-import { KiddyFirst } from "./Provider/Rakuten/ads/KiddyFirst";
+import { DmmFx } from "../providers/a8net/DmmFx";
+import { NinjaFooterAds } from "../providers/ninja/NinjaFooterAds";
+import { KiddyFirst } from "../providers/rakuten/products/KiddyFirst";
 
 export interface FooterAdsProps {
   /** 表示する広告の種類 */

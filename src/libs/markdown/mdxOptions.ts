@@ -14,7 +14,7 @@ import rehypeTocCustom from "../rehype/rehype-toc-custom";
 import { SsgImage } from "@/components/SsgImage";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
-import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/Ads/rakuten/ads/DependencyInjectionPrinciplesPracticesAndPatterns";
+import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/ads/providers/rakuten/products/DependencyInjectionPrinciplesPracticesAndPatterns";
 import { TableWrapper } from "@/components/TableWrapper";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 

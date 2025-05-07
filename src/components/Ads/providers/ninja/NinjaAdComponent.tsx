@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Script from "next/script";
-import { AdComponent, AdComponentProps } from "../../AdComponent";
+import { AdComponent, AdComponentProps } from "../../base/AdComponent";
 
 export interface NinjaAdProps extends Omit<AdComponentProps, "children"> {
   /** 忍者Adsのアカウントと広告ID */
