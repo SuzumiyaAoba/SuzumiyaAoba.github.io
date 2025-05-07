@@ -89,9 +89,9 @@ org では `*` もしくは `-` を使った箇条書きが `ul`
 
 テーブル
 
-| A | B |
-| - | - |
-| a | b |
+| A   | B   |
+| --- | --- |
+| a   | b   |
 
 後続の文章
 
@@ -153,6 +153,4 @@ $E = mc^2$。
 
 フーリ変換の公式。
 
-$$
-\mathcal{F}(\omega) = \frac{1}{\sqrt{2\pi}}\int^{\infty}_{-\infty} f(x) e^{-i\omega x} dx
-$$
+$$\mathcal{F}(\omega) = \frac{1}{\sqrt{2\pi}}\int^{\infty}_{-\infty} f(x) e^{-i\omega x} dx$$

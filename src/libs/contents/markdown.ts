@@ -3,6 +3,17 @@ import matter from "gray-matter";
 import path from "path";
 import type { FC } from "react";
 import codeHikeComponent from "../markdown/codeHikeComponent";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkMdx from "remark-mdx";
+import remarkRehype from "remark-rehype";
+import rehypeSlug from "rehype-slug";
+import rehypeStringify from "rehype-stringify";
+import { extractTocFromTree, TocEntry } from "../rehype/rehype-toc-custom";
+import {
+  defaultRemarkPlugins,
+  defaultRehypePlugins,
+} from "../markdown/mdxOptions";
 
 type Format = "md" | "mdx";
 
@@ -111,7 +122,7 @@ export const getContent = async <FRONTMATTER>({
   parser: {
     frontmatter: Parser<FRONTMATTER>;
   };
-}): Promise<Content<FRONTMATTER> | null> => {
+}): Promise<(Content<FRONTMATTER> & { toc: TocEntry[] }) | null> => {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
@@ -125,6 +136,60 @@ export const getContent = async <FRONTMATTER>({
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
+  // AST生成（TOC抽出用）- コンテンツ処理と同じプラグインを使用
+  const processor = unified().use(remarkParse).use(remarkMdx);
+
+  // 共通のremarkプラグインを追加
+  defaultRemarkPlugins.forEach((plugin) => {
+    if (Array.isArray(plugin)) {
+      processor.use(plugin[0], plugin[1]);
+    } else {
+      processor.use(plugin);
+    }
+  });
+
+  processor.use(remarkRehype);
+
+  // 共通のrehypeプラグインを追加（TOC抽出のためrehypeKatexも含める）
+  const rehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
+  rehypePlugins.forEach((plugin) => {
+    if (Array.isArray(plugin)) {
+      processor.use(plugin[0], plugin[1]);
+    } else {
+      processor.use(plugin);
+    }
+  });
+
+  const ast = processor.runSync(processor.parse(parsedContent.content));
+  const toc = extractTocFromTree(ast as any);
+
+  // HTML生成
+  const htmlProcessor = unified().use(remarkParse).use(remarkMdx);
+
+  // 共通のremarkプラグインを追加
+  defaultRemarkPlugins.forEach((plugin) => {
+    if (Array.isArray(plugin)) {
+      htmlProcessor.use(plugin[0], plugin[1]);
+    } else {
+      htmlProcessor.use(plugin);
+    }
+  });
+
+  htmlProcessor.use(remarkRehype);
+
+  // 共通のrehypeプラグインを追加
+  rehypePlugins.forEach((plugin) => {
+    if (Array.isArray(plugin)) {
+      htmlProcessor.use(plugin[0], plugin[1]);
+    } else {
+      htmlProcessor.use(plugin);
+    }
+  });
+
+  htmlProcessor.use(rehypeStringify);
+
+  const file = htmlProcessor.processSync(parsedContent.content);
+
   return {
     rawContent,
     content: parsedContent.content,
@@ -136,6 +201,7 @@ export const getContent = async <FRONTMATTER>({
       source: parsedContent.content,
       scope: parsedContent.data,
     }),
+    toc,
   };
 };
 

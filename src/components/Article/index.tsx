@@ -76,7 +76,7 @@ export function Article({
     <article
       className={cn(
         markdownStyles.markdown,
-        "max-w-4xl w-full mx-auto px-4 py-4 pb-16",
+        "max-w-6xl w-full mx-auto px-4 py-4 pb-16 relative xl:max-w-7xl",
         className
       )}
     >
@@ -87,25 +87,29 @@ export function Article({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <h1 className="mb-8 text-center">{title}</h1>
+      {/* タイトルと記事メタデータ */}
+      <div className="mb-8">
+        <h1 className="mb-8 text-center">{title}</h1>
 
-      <div className="flex mt-2 mb-2 justify-center items-center">
-        <span className="i-ic-outline-sync mr-0.5" />
-        {formattedDate}
+        <div className="flex mt-2 mb-2 justify-center items-center">
+          <span className="i-ic-outline-sync mr-0.5" />
+          {formattedDate}
+        </div>
+
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
+            {tags.map((tag) => (
+              <Tag
+                key={tag}
+                label={tag}
+                href={`/tags/${encodeURIComponent(tag)}/`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center text-sm">
-          {tags.map((tag) => (
-            <Tag
-              key={tag}
-              label={tag}
-              href={`/tags/${encodeURIComponent(tag)}/`}
-            />
-          ))}
-        </div>
-      )}
-
+      {/* 記事コンテンツと目次 */}
       <section>{children}</section>
 
       {showShareButtons && (

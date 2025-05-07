@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { GoogleAdsenseScript } from "@/components/Ads/GoogleAdsenseScript";
 import BreadcrumbNav from "@/components/Breadcrumb";
+import Script from "next/script";
 import {
   getBlogTitleMap,
   getNoteTitleMap,
@@ -68,6 +69,16 @@ export default async function RootLayout({
 
   return (
     <html lang="ja" className="overflow-x-hidden h-full">
+      <head>
+        <style>
+          {`
+            html {
+              scroll-padding-top: calc(var(--header-height, 80px) + 16px);
+              scroll-behavior: smooth;
+            }
+          `}
+        </style>
+      </head>
       <body
         className={clsx(
           zen_maru_gothic.className,
@@ -92,9 +103,9 @@ export default async function RootLayout({
             url: "https://nextjs.org",
           }}
         />
+        <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+        <GoogleAdsenseScript />
       </body>
-      <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-      <GoogleAdsenseScript />
     </html>
   );
 }
