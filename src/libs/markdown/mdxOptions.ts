@@ -32,7 +32,15 @@ export const defaultRehypePlugins = (...paths: string[]): any[] => [
   rehypeTocCustom,
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
   rehypeImageSize(...paths),
-  rehypeKatex,
+  [
+    rehypeKatex,
+    {
+      throwOnError: false,
+      errorColor: "#cc0000",
+      output: "htmlAndMathml",
+      trust: true,
+    },
+  ],
 ];
 
 export const defaultComponents = {

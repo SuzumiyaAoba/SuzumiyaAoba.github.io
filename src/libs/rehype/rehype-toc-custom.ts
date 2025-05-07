@@ -110,9 +110,15 @@ export function extractTocFromTree(tree: Root): TocEntry[] {
     if (["h2", "h3", "h4"].includes(node.tagName)) {
       const id = node.properties?.id as string;
       if (id) {
+        // KaTeXで処理された数式を含む見出しのテキストを抽出
+        let headingText = toString(node);
+
+        // KaTeXで処理された見出しの整形処理（必要に応じて）
+        // 例えば、数式が含まれる場合は特定のパターンを確認して処理する
+
         headings.push({
           depth: parseInt(node.tagName.charAt(1)),
-          text: toString(node),
+          text: headingText,
           id,
         });
       }
