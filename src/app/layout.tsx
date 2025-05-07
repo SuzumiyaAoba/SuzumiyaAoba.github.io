@@ -102,6 +102,19 @@ export default async function RootLayout({
           {`
             // TOC（目次）のスクロール追従を強化するヘルパー
             document.addEventListener('DOMContentLoaded', function() {
+              // IIFE（即時実行関数）でブラウザ判定を隔離
+              (function detectBrowser() {
+                const ua = window.navigator.userAgent.toLowerCase();
+                const isSafari = /safari/.test(ua) && !/chrome/.test(ua);
+                const isIE = /msie|trident/.test(ua);
+                const isLegacyEdge = /edge/.test(ua) && !/edg/.test(ua);
+                
+                // 特定のブラウザでは特別なクラスを適用
+                if (isSafari || isIE || isLegacyEdge) {
+                  document.documentElement.classList.add('browser-needs-attention');
+                }
+              })();
+              
               // スティッキー位置の有効化
               function activateTocSticky() {
                 const tocSidebar = document.querySelector('.toc-sidebar');
@@ -110,14 +123,38 @@ export default async function RootLayout({
                 // スティッキー効果を強化
                 tocSidebar.classList.add('sticky-active');
                 
-                // スタイル確認とログ出力（デバッグ用）
-                const computedStyle = getComputedStyle(tocSidebar);
-                console.log('TOC styles applied - position:', computedStyle.position, 'top:', computedStyle.top);
+                // 強制的に再計算を促す
+                try {
+                  const el = tocSidebar;
+                  el.style.position = '';
+                  void el.offsetHeight; // 再レイアウトを強制
+                  el.style.position = 'sticky';
+                } catch (e) { 
+                  console.warn('Failed to reset sticky position:', e);
+                }
+              }
+              
+              // 記事の末尾にTOCが到達した時の処理
+              function handleArticleEnd() {
+                const article = document.querySelector('article');
+                const tocWrapper = document.querySelector('.tocWrapper');
+                if (!article || !tocWrapper) return;
+                
+                const articleRect = article.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                
+                // 記事の末尾が見えている場合
+                if (articleRect.bottom <= viewportHeight) {
+                  tocWrapper.classList.add('toc-at-end');
+                } else {
+                  tocWrapper.classList.remove('toc-at-end');
+                }
               }
               
               // position:stickyをサポートしていない場合のポリフィル
               function setupStickyPolyfill() {
                 if (CSS && CSS.supports && CSS.supports('position', 'sticky')) {
+                  console.log('Native sticky support available');
                   return; // ネイティブサポートあり
                 }
                 
@@ -126,30 +163,68 @@ export default async function RootLayout({
                 if (!tocSidebar) return;
                 
                 let headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
-                const tocTop = window.pageYOffset + tocSidebar.getBoundingClientRect().top - headerHeight;
+                let tocOriginalTop = -1;
+                
+                function calcOriginalPosition() {
+                  const rect = tocSidebar.getBoundingClientRect();
+                  tocOriginalTop = window.pageYOffset + rect.top - headerHeight;
+                  return tocOriginalTop;
+                }
+                
+                // 初期位置を計算
+                calcOriginalPosition();
                 
                 function handleScroll() {
                   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                  tocSidebar.style.position = scrollTop > tocTop ? 'fixed' : 'static';
-                  tocSidebar.style.top = scrollTop > tocTop ? headerHeight + 'px' : 'auto';
+                  
+                  if (scrollTop > tocOriginalTop) {
+                    tocSidebar.style.position = 'fixed';
+                    tocSidebar.style.top = headerHeight + 'px';
+                  } else {
+                    tocSidebar.style.position = '';
+                    tocSidebar.style.top = '';
+                  }
+                  
+                  // 記事末尾の処理も実行
+                  handleArticleEnd();
                 }
                 
                 window.addEventListener('scroll', handleScroll, { passive: true });
                 window.addEventListener('resize', function() {
                   headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
+                  // リサイズ時に位置を再計算
+                  calcOriginalPosition();
                   handleScroll();
                 }, { passive: true });
                 
+                // 初期実行
                 handleScroll();
+              }
+              
+              // ページロード完了後に実行する関数
+              function onLoadComplete() {
+                console.log('Page fully loaded, applying final TOC fixes');
+                activateTocSticky();
+                handleArticleEnd();
+                setupStickyPolyfill();
               }
               
               // 初期化と実行
               setTimeout(activateTocSticky, 100);
-              setTimeout(setupStickyPolyfill, 100);
-              window.addEventListener('load', function() {
-                activateTocSticky();
-                setupStickyPolyfill();
-              });
+              setTimeout(handleArticleEnd, 100);
+              setTimeout(setupStickyPolyfill, 200);
+              
+              // 各種イベントリスナー
+              window.addEventListener('load', onLoadComplete);
+              window.addEventListener('scroll', function() {
+                if (CSS && CSS.supports && CSS.supports('position', 'sticky')) {
+                  // ネイティブstickyサポート時は記事末尾の処理のみ
+                  handleArticleEnd();
+                }
+              }, { passive: true });
+              
+              // 最終的にスクリプトが確実に実行されたことを確認
+              setTimeout(onLoadComplete, 1000);
             });
           `}
         </Script>

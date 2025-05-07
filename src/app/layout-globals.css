@@ -29,27 +29,39 @@ main {
 @media (min-width: 1280px) {
   /* TOCの親要素 */
   .tocWrapper {
-    position: relative;
+    position: relative !important;
     min-height: 100vh;
+    contain: layout style;
   }
 
   /* TOCのサイドバー要素 */
   .toc-sidebar {
-    position: sticky;
-    top: var(--header-height, 80px);
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: var(--header-height, 80px) !important;
     z-index: 10;
     height: fit-content;
     max-height: calc(100vh - var(--header-height, 80px));
     overflow-y: auto;
     scrollbar-width: thin;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform, position;
+    contain: layout;
   }
 
   /* スクロール追従を強化 */
   .toc-sidebar.sticky-active {
+    position: -webkit-sticky !important;
     position: sticky !important;
-    will-change: position;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+
+  /* アクティブな記事を調整 */
+  article {
+    position: relative;
+    contain: layout;
   }
 
   /* Webkit系ブラウザのスクロールバーをカスタマイズ */
@@ -65,6 +77,18 @@ main {
     background-color: rgba(155, 155, 155, 0.5);
     border-radius: 20px;
   }
+}
+
+/* article要素の終端に到達したときにTOCを記事の末尾に固定する */
+.tocWrapper.toc-at-end .toc-sidebar {
+  position: absolute !important;
+  bottom: 0 !important;
+  top: auto !important;
+}
+
+/* 特定のブラウザでのsticky対応のためのクラス */
+.legacy-browser .toc-sidebar {
+  position: relative !important;
 }
 
 @media (max-width: 1279px) {
