@@ -114,10 +114,11 @@ function useActiveHeading(entries: TocEntry[]): string | null {
 
 function renderToc(
   entries: TocEntry[],
-  activeId: string | null
+  activeId: string | null,
+  depth: number = 0 // 追加: 深さを追跡するパラメータ
 ): React.ReactNode {
   return (
-    <ul className="toc-list">
+    <ul className={`toc-list depth-${depth}`}>
       {entries.map((entry) => {
         const isActive = entry.heading.id === activeId;
         const hasActiveChild = entry.children.some(
@@ -131,9 +132,9 @@ function renderToc(
         return (
           <li
             key={entry.heading.id}
-            className={`toc-list-item ${isActive ? "toc-active" : ""} ${
-              hasActiveChild ? "toc-has-active-child" : ""
-            }`}
+            className={`toc-list-item depth-${depth} ${
+              isActive ? "toc-active" : ""
+            } ${hasActiveChild ? "toc-has-active-child" : ""}`}
           >
             <a
               href={`#${entry.heading.id}`}
@@ -151,7 +152,8 @@ function renderToc(
             >
               {entry.heading.text}
             </a>
-            {entry.children.length > 0 && renderToc(entry.children, activeId)}
+            {entry.children.length > 0 &&
+              renderToc(entry.children, activeId, depth + 1)}
           </li>
         );
       })}
@@ -238,8 +240,8 @@ export const TOC: React.FC<TOCProps> = ({ toc }) => {
   return (
     <nav ref={navRef} className="toc-container" aria-label="コンテンツ">
       <details className="toc-details" open>
-        <summary className="toc-summary">コンテンツ</summary>
-        {renderToc(toc, activeId)}
+        <summary className="toc-summary">目次</summary>
+        {renderToc(toc, activeId, 0)}
       </details>
     </nav>
   );

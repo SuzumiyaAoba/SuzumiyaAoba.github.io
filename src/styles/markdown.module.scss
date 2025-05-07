@@ -342,6 +342,8 @@
       max-height: none; /* 高さ制限を解除 */
       overflow: hidden; /* スクロールバーを非表示に */
       contain: content; /* パフォーマンス最適化 */
+      width: 100%; // 幅100%に設定
+      font-size: 0.85rem; // 全体のフォントサイズを小さく
 
       &:hover {
         @apply shadow-md;
@@ -365,12 +367,13 @@
     }
 
     .toc-summary {
-      @apply font-bold text-base px-4 py-2.5;
+      @apply font-bold px-3 py-1.5; // 余白を小さく
       @apply bg-white text-neutral-800;
       @apply flex justify-between items-center;
       @apply border-b border-neutral-200;
       list-style: none;
       position: relative;
+      font-size: 0.95rem; // フォントサイズを小さく
 
       &::-webkit-details-marker {
         display: none;
@@ -405,15 +408,16 @@
 
     .toc-list {
       @apply list-none p-0 m-0;
-      @apply px-4 py-3;
+      @apply px-3 py-2;
       max-height: none; /* スクロールエリアの高さ制限を解除 */
       overflow: visible; /* スクロールを無効に */
     }
 
     .toc-list-item {
-      @apply py-1 pl-0;
+      @apply py-0.5 pl-0; // 縦の余白を小さく
       @apply list-none;
-      @apply border-l-2 border-transparent pl-3;
+      @apply border-l-2 border-transparent pl-2; // 左の余白を小さく
+      font-size: 0.85rem; // フォントサイズを小さく
 
       &:hover {
         @apply border-neutral-400;
@@ -426,12 +430,41 @@
       &.toc-has-active-child {
         @apply border-blue-300;
       }
+
+      // 深さによるスタイル調整
+      &.depth-0 {
+        font-size: 0.85rem;
+      }
+
+      &.depth-1 {
+        font-size: 0.8rem;
+        @apply pl-1.5;
+        line-height: 1.1;
+      }
+
+      &.depth-2,
+      &.depth-3 {
+        font-size: 0.75rem;
+        @apply pl-1;
+        line-height: 1.1;
+      }
+    }
+
+    // 深さに応じたリストスタイルの調整
+    .toc-list.depth-1 {
+      @apply py-0.5 px-1.5;
+    }
+
+    .toc-list.depth-2,
+    .toc-list.depth-3 {
+      @apply py-0 px-1;
     }
 
     .toc-link {
       @apply text-neutral-700 no-underline font-normal;
       @apply inline-block;
       @apply break-words;
+      line-height: 1.2;
 
       &:hover {
         @apply text-blue-600 underline;
