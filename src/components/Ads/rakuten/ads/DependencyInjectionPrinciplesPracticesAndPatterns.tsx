@@ -1,4 +1,5 @@
 import rakutenAdsStyle from "@/styles/rakuten-ads.module.scss";
+import Image from "next/image";
 
 export const DependencyInjectionPrinciplesPracticesAndPatterns = () => {
   return (
@@ -26,7 +27,7 @@ export const DependencyInjectionPrinciplesPracticesAndPatterns = () => {
                 href="https://rpx.a8.net/svt/ejp?a8mat=3ZM4V6+6HDXWY+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q0724.2bo11c45.g00q0724.2bo12179%2Fa24121734968_3ZM4V6_6HDXWY_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fbook%252F17845616%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fbook%252Fi%252F21242123%252F%26amp%3Brafcid%3Dwsc_i_is_33f72da33714639c415e592c9633ecd7"
                 rel="nofollow"
               >
-                <img
+                <Image
                   className="!p-0 !m-0 !border-0 !border-none !rounded-none"
                   style={{
                     border: 0,
@@ -37,8 +38,10 @@ export const DependencyInjectionPrinciplesPracticesAndPatterns = () => {
                     maxWidth: "none",
                   }}
                   alt=""
-                  loading="lazy"
+                  width={128}
+                  height={128}
                   src="https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3062/9784839983062_1_5.jpg?_ex=128x128"
+                  unoptimized // 外部画像のため最適化しない
                 />
               </a>
             </td>
@@ -79,6 +82,8 @@ export const DependencyInjectionPrinciplesPracticesAndPatterns = () => {
           </tr>
         </tbody>
       </table>
+      {/* トラッカー画像はimgのままでも警告は無視できる */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className="!p-0 !m-0 !border-0 !border-none !rounded-none"
         style={{

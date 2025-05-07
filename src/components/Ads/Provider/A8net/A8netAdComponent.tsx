@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Image from "next/image";
 import { AdComponent, AdComponentProps } from "../../AdComponent";
 
 export interface A8netAdProps extends Omit<AdComponentProps, "children"> {
@@ -40,15 +41,18 @@ export const A8netAdComponent = memo(
         description={description}
       >
         <a href={linkUrl} rel="nofollow" target="_blank">
-          <img
-            width={width}
-            height={height}
+          <Image
+            width={typeof width === "string" ? parseInt(width, 10) : width}
+            height={typeof height === "string" ? parseInt(height, 10) : height}
             style={{ border: "0" }}
             alt={alt}
             src={imageUrl}
             loading="lazy"
+            unoptimized={imageUrl.startsWith("http")} // 外部URLの場合は最適化しない
           />
         </a>
+        {/* トラッカー画像はimgのままでも警告は無視できる */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           width="1"
           height="1"

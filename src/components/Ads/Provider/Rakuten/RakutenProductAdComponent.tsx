@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Image from "next/image";
 import { AdComponent, AdComponentProps } from "../../AdComponent";
 
 export interface RakutenProductAdProps
@@ -67,12 +68,13 @@ export const RakutenProductAdComponent = memo(
                   }}
                 >
                   <a href={productUrl} rel="nofollow" target="_blank">
-                    <img
+                    <Image
                       style={{ border: "0" }}
                       alt=""
                       src={imageUrl}
-                      width="64"
-                      height="64"
+                      width={64}
+                      height={64}
+                      unoptimized={imageUrl.startsWith("http")} // 外部URLの場合は最適化しない
                     />
                   </a>
                 </td>
@@ -121,6 +123,8 @@ export const RakutenProductAdComponent = memo(
               </tr>
             </tbody>
           </table>
+          {/* トラッカー画像はimgのままでも警告は無視できる */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             style={{ border: "0" }}
             width="1"

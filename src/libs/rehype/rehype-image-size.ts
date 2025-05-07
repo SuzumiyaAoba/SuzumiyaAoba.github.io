@@ -28,7 +28,9 @@ export default function rehypeImageSize(...paths: string[]) {
           try {
             const publicPath = path.resolve("public", ...paths, originalSrc);
             if (fs.existsSync(publicPath)) {
-              const dimensions = sizeOf(publicPath);
+              // v2.0.0以降のimage-sizeはファイルパスの代わりにバッファまたはファイルのバイナリデータを引数に取る
+              const fileBuffer = fs.readFileSync(publicPath);
+              const dimensions = sizeOf(fileBuffer);
               // サイズが取得できた場合のみwidth/heightを設定
               if (dimensions.width && dimensions.height) {
                 node.properties.width = dimensions.width;
