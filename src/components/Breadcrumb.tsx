@@ -110,9 +110,68 @@ function isSearchSegment(segment: PathSegment): segment is SearchPathSegment {
   return segment.type === ContentType.SEARCH;
 }
 
-// スラグからパスを解析する
-function extractPathFromSlug(path: string, startIndex: number = 1): string {
+// スラグからパスを解析する関数の引数をオブジェクト形式に変更
+interface ExtractPathFromSlugProps {
+  path: string;
+  startIndex?: number;
+}
+
+function extractPathFromSlug({
+  path,
+  startIndex = 1,
+}: ExtractPathFromSlugProps): string {
   return path.split("/").filter(Boolean).slice(startIndex).join("/");
+}
+
+// パスセグメントの生成を抽象化したヘルパー関数の引数をオブジェクト形式に変更
+interface CreateContentSegmentProps {
+  baseSegment: BasePathSegment;
+  contentType: ContentType;
+  segment: string;
+  path: string;
+  isContentSegment: boolean;
+}
+
+function createContentSegment({
+  baseSegment,
+  contentType,
+  segment,
+  path,
+  isContentSegment,
+}: CreateContentSegmentProps): PathSegment {
+  const common = { ...baseSegment, type: contentType };
+
+  switch (contentType) {
+    case ContentType.BLOG:
+      return isContentSegment
+        ? ({ ...common, slug: segment } as BlogPathSegment)
+        : (common as BlogPathSegment);
+
+    case ContentType.NOTE:
+      return isContentSegment
+        ? ({
+            ...common,
+            notePath: extractPathFromSlug({ path }),
+          } as NotePathSegment)
+        : (common as NotePathSegment);
+
+    case ContentType.KEYWORD:
+      return isContentSegment
+        ? ({
+            ...common,
+            keywordPath: extractPathFromSlug({ path }),
+          } as KeywordPathSegment)
+        : (common as KeywordPathSegment);
+
+    case ContentType.TOOL:
+      return common as ToolPathSegment;
+
+    case ContentType.SEARCH:
+      return common as SearchPathSegment;
+
+    default:
+      return { ...baseSegment, type: contentType } as OtherPathSegment;
+  }
 }
 
 // URLパスからブレッドクラムの配列を生成する関数
@@ -148,63 +207,36 @@ function getPathSegments(segments: string[]): PathSegment[] {
       type: rootSegment,
     };
 
-    // セグメントの種類に応じて特化した型を返す
-    switch (rootSegment) {
-      case ContentType.BLOG:
-        if (isContentSegment) {
-          return {
-            ...baseSegment,
-            type: ContentType.BLOG,
-            slug: segment,
-          } as BlogPathSegment;
-        }
-        return { ...baseSegment, type: ContentType.BLOG } as BlogPathSegment;
-
-      case ContentType.NOTE:
-        if (isContentSegment) {
-          return {
-            ...baseSegment,
-            type: ContentType.NOTE,
-            notePath: extractPathFromSlug(path),
-          } as NotePathSegment;
-        }
-        return { ...baseSegment, type: ContentType.NOTE } as NotePathSegment;
-
-      case ContentType.KEYWORD:
-        if (isContentSegment) {
-          return {
-            ...baseSegment,
-            type: ContentType.KEYWORD,
-            keywordPath: extractPathFromSlug(path),
-          } as KeywordPathSegment;
-        }
-        return {
-          ...baseSegment,
-          type: ContentType.KEYWORD,
-        } as KeywordPathSegment;
-
-      case ContentType.TOOL:
-        return { ...baseSegment, type: ContentType.TOOL } as ToolPathSegment;
-
-      case ContentType.SEARCH:
-        return {
-          ...baseSegment,
-          type: ContentType.SEARCH,
-        } as SearchPathSegment;
-
-      default:
-        return { ...baseSegment, type: rootSegment } as OtherPathSegment;
+    // 型安全のためContentTypeにキャストできるか確認
+    if (Object.values(ContentType).includes(rootSegment as ContentType)) {
+      return createContentSegment({
+        baseSegment,
+        contentType: rootSegment as ContentType,
+        segment,
+        path,
+        isContentSegment,
+      });
     }
+
+    // それ以外の場合は汎用セグメントを返す
+    return { ...baseSegment, type: rootSegment } as OtherPathSegment;
   });
 }
 
-// タイトルを取得する関数
-function getDisplayTitle(
-  segment: PathSegment,
-  blogTitleMap: Record<string, string>,
-  noteTitleMap: Record<string, string>,
-  keywordTitleMap: Record<string, string>
-): string {
+// タイトルを取得する関数の引数をオブジェクトに変更
+interface GetDisplayTitleProps {
+  segment: PathSegment;
+  blogTitleMap: Record<string, string>;
+  noteTitleMap: Record<string, string>;
+  keywordTitleMap: Record<string, string>;
+}
+
+function getDisplayTitle({
+  segment,
+  blogTitleMap,
+  noteTitleMap,
+  keywordTitleMap,
+}: GetDisplayTitleProps): string {
   // ブログ記事の場合
   if (isBlogSegment(segment) && segment.slug) {
     return blogTitleMap[segment.slug] || segment.name;
@@ -254,12 +286,12 @@ export default function BreadcrumbNav({
 
           {segments.map((segment) => {
             // タイトルマップから適切な表示名を取得
-            const displayName = getDisplayTitle(
+            const displayName = getDisplayTitle({
               segment,
               blogTitleMap,
               noteTitleMap,
-              keywordTitleMap
-            );
+              keywordTitleMap,
+            });
 
             return (
               <BreadcrumbItem key={segment.path}>

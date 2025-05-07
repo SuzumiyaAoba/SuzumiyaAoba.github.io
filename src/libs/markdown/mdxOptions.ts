@@ -5,6 +5,7 @@ import remarkEmoji from "remark-emoji";
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import { remarkMermaid } from "@theguild/remark-mermaid";
 import { Mermaid } from "@theguild/remark-mermaid/mermaid";
+import { Plugin } from "unified";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
 import rehypeKatex from "rehype-katex";

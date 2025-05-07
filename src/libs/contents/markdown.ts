@@ -33,13 +33,13 @@ export type Content<FRONTMATTER> = {
 
 export type ParsedContent<FRONTMATTER> = {
   format: Format;
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
   frontmatter: FRONTMATTER;
   content: string;
 };
 
 export type Parser<T> = {
-  parse: (data: { [key: string]: any }) => T;
+  parse: (data: { [key: string]: unknown }) => T;
 };
 
 export async function getRawContent(
@@ -161,7 +161,7 @@ export const getContent = async <FRONTMATTER>({
   });
 
   const ast = processor.runSync(processor.parse(parsedContent.content));
-  const toc = extractTocFromTree(ast as any);
+  const toc = extractTocFromTree({ tree: ast as any });
 
   // HTML生成
   const htmlProcessor = unified().use(remarkParse).use(remarkMdx);

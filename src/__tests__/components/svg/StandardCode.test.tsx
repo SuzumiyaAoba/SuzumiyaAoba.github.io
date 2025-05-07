@@ -5,7 +5,13 @@ import { ASCII_TABLE } from "@/components/svg/StandardCode.utils";
 
 // SVGコンポーネントをモック
 vi.mock("@/components/svg/AsciiTable", () => ({
-  AsciiTable: ({ onClick, onMouseOver }: any) => (
+  AsciiTable: ({
+    onClick,
+    onMouseOver,
+  }: {
+    onClick: (cell: [number, number]) => void;
+    onMouseOver: (cell: [number, number]) => void;
+  }) => (
     <div
       data-testid="ascii-table"
       onClick={() => onClick([1, 2])}
@@ -45,7 +51,15 @@ vi.mock("@/components/svg/TopLine", () => ({
 }));
 
 vi.mock("@/components/svg/AsciiInfo", () => ({
-  AsciiInfo: ({ char, hex, binary }: any) => (
+  AsciiInfo: ({
+    char,
+    hex,
+    binary,
+  }: {
+    char: string | undefined;
+    hex: string | undefined;
+    binary: string | undefined;
+  }) => (
     <div data-testid="ascii-info">
       <span data-testid="ascii-char">{char}</span>
       <span data-testid="ascii-hex">{hex}</span>
