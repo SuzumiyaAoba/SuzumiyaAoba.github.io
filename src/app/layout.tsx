@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import clsx from "clsx";
 import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { GoogleAdsenseScript } from "@/components/ads/GoogleAdsenseScript";
+import { GoogleAdsenseScript } from "@/components/ads/providers/google/GoogleAdsenseScript";
 import BreadcrumbNav from "@/components/Breadcrumb";
 import Script from "next/script";
 import {

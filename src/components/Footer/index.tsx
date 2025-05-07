@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Link from "next/link";
-import { FooterAds } from "../ads/FooterAds";
+import { FooterAds } from "../ads/containers/FooterAds";
 
 type PoweredBy =
   | {
