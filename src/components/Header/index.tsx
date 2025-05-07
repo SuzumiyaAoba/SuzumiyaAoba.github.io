@@ -21,6 +21,10 @@ export const HEADER_HEIGHT = {
   default: 72,
 };
 
+// スクロール関連の定数
+const SCROLL_THRESHOLD = 10; // 最上部判定のためのスクロール閾値(px)
+const MOBILE_MENU_MAX_HEIGHT = "450px"; // モバイルメニューの最大高さ
+
 type HeaderProps = {
   siteName: string;
 };
@@ -47,34 +51,60 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
     };
   }, [isMobileMenuOpen]);
 
+  // スクロール位置に基づく表示状態の更新関数
+  interface UpdateVisibilityStateProps {
+    currentScrollY: number;
+  }
+
+  const updateVisibilityState = ({
+    currentScrollY,
+  }: UpdateVisibilityStateProps) => {
+    // 最上部にいるかどうかの判定（閾値: 10px）
+    const isAtTop = currentScrollY <= SCROLL_THRESHOLD;
+    const wasAtTop = isAtTopRef.current;
+    isAtTopRef.current = isAtTop;
+
+    // トップに達したかどうかでスクロール状態を判定
+    // トップからの離脱または到達時のみ状態を変更
+    if (wasAtTop !== isAtTop) {
+      setIsScrolled(!isAtTop);
+    }
+
+    return { isAtTop, wasAtTop };
+  };
+
+  // スクロール方向に基づくヘッダー表示の更新関数
+  interface UpdateHeaderBasedOnScrollDirectionProps {
+    currentScrollY: number;
+  }
+
+  const updateHeaderBasedOnScrollDirection = ({
+    currentScrollY,
+  }: UpdateHeaderBasedOnScrollDirectionProps) => {
+    if (isManuallyHidden) return;
+
+    // スクロールが最小値以上の場合のみ方向に基づいて処理
+    if (currentScrollY > SCROLL_THRESHOLD) {
+      // 上方向のスクロール（前回より小さい値）でヘッダーを表示
+      if (currentScrollY < lastScrollYRef.current) {
+        setIsVisible(true);
+      }
+      // 下方向のスクロール（前回より大きい値）でヘッダーを非表示
+      else if (currentScrollY > lastScrollYRef.current) {
+        setIsVisible(false);
+      }
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const wasAtTop = isAtTopRef.current;
 
-      // 最上部にいるかどうかの判定
-      isAtTopRef.current = currentScrollY <= 10;
+      // 表示状態の更新
+      const { isAtTop } = updateVisibilityState({ currentScrollY });
 
-      // 手動で非表示にされていない場合のみ、自動表示/非表示を適用
-      if (!isManuallyHidden) {
-        // スクロール方向の判定
-        if (currentScrollY > 10) {
-          // 上方向のスクロール（前回より小さい値）でヘッダーを表示
-          if (currentScrollY < lastScrollYRef.current) {
-            setIsVisible(true);
-          }
-          // 下方向のスクロール（前回より大きい値）でヘッダーを非表示
-          else if (currentScrollY > lastScrollYRef.current) {
-            setIsVisible(false);
-          }
-        }
-      }
-
-      // トップに達したかどうかでスクロール状態を判定
-      // トップからの離脱または到達時のみ状態を変更
-      if (wasAtTop !== isAtTopRef.current) {
-        setIsScrolled(!isAtTopRef.current);
-      }
+      // 手動で非表示にされていない場合のみ、スクロール方向に基づいて更新
+      updateHeaderBasedOnScrollDirection({ currentScrollY });
 
       // 現在のスクロール位置を保存
       lastScrollYRef.current = currentScrollY;
@@ -134,7 +164,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
   const shouldBeVisible = isVisible || isAtTopRef.current;
 
   // モバイルメニュー最大高さ
-  const mobileMenuHeight = "450px";
+  const mobileMenuHeight = MOBILE_MENU_MAX_HEIGHT;
 
   return (
     <>

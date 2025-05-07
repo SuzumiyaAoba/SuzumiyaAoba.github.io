@@ -161,7 +161,7 @@ export const getContent = async <FRONTMATTER>({
   });
 
   const ast = processor.runSync(processor.parse(parsedContent.content));
-  const toc = extractTocFromTree(ast as any);
+  const toc = extractTocFromTree({ tree: ast as any });
 
   // HTML生成
   const htmlProcessor = unified().use(remarkParse).use(remarkMdx);

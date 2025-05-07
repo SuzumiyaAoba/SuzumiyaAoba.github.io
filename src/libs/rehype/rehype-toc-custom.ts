@@ -24,7 +24,11 @@ export const rehypeTocCustom: Plugin<[], Root> = () => {
 };
 
 // 見出しの階層構造を構築
-function buildHierarchy(headings: TocHeading[]): TocEntry[] {
+interface BuildHierarchyProps {
+  headings: TocHeading[];
+}
+
+function buildHierarchy({ headings }: BuildHierarchyProps): TocEntry[] {
   const result: TocEntry[] = [];
   const stack: TocEntry[] = [];
 
@@ -62,7 +66,11 @@ function buildHierarchy(headings: TocHeading[]): TocEntry[] {
 }
 
 // 階層構造の目次リストを作成
-function createNestedTocList(entries: TocEntry[]): Element {
+interface CreateNestedTocListProps {
+  entries: TocEntry[];
+}
+
+function createNestedTocList({ entries }: CreateNestedTocListProps): Element {
   const list: Element = {
     type: "element",
     tagName: "ul",
@@ -91,7 +99,9 @@ function createNestedTocList(entries: TocEntry[]): Element {
 
       // 子要素がある場合、再帰的にリストを追加
       if (entry.children.length > 0) {
-        listItem.children.push(createNestedTocList(entry.children));
+        listItem.children.push(
+          createNestedTocList({ entries: entry.children })
+        );
       }
 
       return listItem;
@@ -102,7 +112,13 @@ function createNestedTocList(entries: TocEntry[]): Element {
 }
 
 // ツリーからTOCデータを抽出する関数
-export function extractTocFromTree(tree: Root): TocEntry[] {
+interface ExtractTocFromTreeProps {
+  tree: Root;
+}
+
+export function extractTocFromTree({
+  tree,
+}: ExtractTocFromTreeProps): TocEntry[] {
   const headings: TocHeading[] = [];
 
   // 見出しを収集
@@ -126,7 +142,7 @@ export function extractTocFromTree(tree: Root): TocEntry[] {
   });
 
   if (headings.length === 0) return [];
-  return buildHierarchy(headings);
+  return buildHierarchy({ headings });
 }
 
 export default rehypeTocCustom;

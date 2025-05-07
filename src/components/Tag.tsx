@@ -28,42 +28,40 @@ type TagLabel = (typeof TAG_LABELS)[number];
 const toTypedTagLabel = (tag: string): TagLabel | undefined =>
   TAG_LABELS.find((it) => it === tag);
 
-const tagToIcon = (tag: string) => {
-  switch (toTypedTagLabel(tag.toLowerCase())) {
-    case "java":
-      return "i-skill-icons-java-light";
-    case "scala":
-      return "i-devicon-scala";
-    case "node":
-      return "i-fa-brands-node";
-    case "astro":
-      return "i-skill-icons-astro";
-    case "next.js":
-      return "i-devicon-nextjs";
-    case "nix":
-      return "i-skill-icons-nix-light";
-    case "tmux":
-      return "i-codicon-terminal-tmux";
-    case "emacs":
-      return "i-logos-emacs";
-    case "ollama":
-      return "i-simple-icons-ollama";
-    case "github copilot":
-      return "i-octicon-mark-github";
-    case "llm":
-    case "ローカルllm":
-    case "生成ai":
-      return "i-ri-speak-ai-line";
-    case "キーボード":
-    case "自作キーボード":
-      return "i-material-symbols-keyboard-outline";
-    case "プログラミング":
-      return "i-material-symbols-code-blocks-outline";
-    case "日記":
-      return "i-mingcute-diary-line";
-  }
+// タグとアイコンクラスのマッピング
+const TAG_ICON_MAP: Record<string, string> = {
+  java: "i-skill-icons-java-light",
+  scala: "i-devicon-scala",
+  node: "i-fa-brands-node",
+  astro: "i-skill-icons-astro",
+  "next.js": "i-devicon-nextjs",
+  nix: "i-skill-icons-nix-light",
+  tmux: "i-codicon-terminal-tmux",
+  emacs: "i-logos-emacs",
+  ollama: "i-simple-icons-ollama",
+  "github copilot": "i-octicon-mark-github",
+  llm: "i-ri-speak-ai-line",
+  ローカルllm: "i-ri-speak-ai-line",
+  生成ai: "i-ri-speak-ai-line",
+  キーボード: "i-material-symbols-keyboard-outline",
+  自作キーボード: "i-material-symbols-keyboard-outline",
+  プログラミング: "i-material-symbols-code-blocks-outline",
+  日記: "i-mingcute-diary-line",
+};
 
-  return "i-material-symbols:tag-rounded";
+const DEFAULT_ICON = "i-material-symbols:tag-rounded";
+
+interface TagToIconProps {
+  tag: string;
+}
+
+const tagToIcon = ({ tag }: TagToIconProps) => {
+  const normalizedTag = tag.toLowerCase();
+  const typedTag = toTypedTagLabel(normalizedTag);
+
+  return typedTag && TAG_ICON_MAP[typedTag]
+    ? TAG_ICON_MAP[typedTag]
+    : DEFAULT_ICON;
 };
 
 const tagVariants = cva(
@@ -103,13 +101,22 @@ export interface TagProps extends VariantProps<typeof tagVariants> {
 
 export const Tag: FC<TagProps> = memo(
   ({ label, href, size, variant, className }) => {
-    const iconClass = cn(tagToIcon(label), "mr-1.5");
-    const tagContent = (
+    const iconClass = cn(tagToIcon({ tag: label }), "mr-1.5");
+
+    // タグコンテンツの共通化
+    interface CreateTagContentProps {
+      iconClass: string;
+      label: string;
+    }
+
+    const createTagContent = ({ iconClass, label }: CreateTagContentProps) => (
       <>
         <span className={iconClass} />
         <span>{label}</span>
       </>
     );
+
+    const tagContent = createTagContent({ iconClass, label });
 
     if (href) {
       return (

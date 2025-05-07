@@ -22,6 +22,56 @@ export interface RakutenProductAdProps
   containerStyle?: React.CSSProperties;
 }
 
+// スタイルを定数として抽出
+const styles = {
+  table: {
+    border: "1px solid #ccc",
+    width: "300px",
+  },
+  tableRow: {
+    borderStyle: "none",
+  },
+  imageCell: {
+    verticalAlign: "top" as const,
+    borderStyle: "none",
+    padding: "10px",
+    width: "44px",
+  },
+  image: {
+    border: "0",
+  },
+  infoCell: {
+    fontSize: "12px",
+    verticalAlign: "middle" as const,
+    borderStyle: "none",
+    padding: "10px",
+  },
+  titleContainer: {
+    padding: "0",
+    margin: "0",
+  },
+  priceContainer: {
+    color: "#666",
+    marginTop: "5px",
+    lineHeight: "1.5",
+  },
+  priceValue: {
+    fontSize: "14px",
+    color: "#C00",
+    fontWeight: "bold",
+  },
+  dateTime: {
+    fontSize: "10px",
+    fontWeight: "normal",
+  },
+  reviewCount: {
+    fontWeight: "bold",
+  },
+  trackerImage: {
+    border: "0",
+  },
+};
+
 /**
  * 楽天商品広告コンポーネント
  */
@@ -40,6 +90,34 @@ export const RakutenProductAdComponent = memo(
     withContainer = true,
     description = "楽天商品広告",
   }: RakutenProductAdProps) => {
+    // 価格表示テキストの生成
+    interface FormatPriceProps {
+      price: string | number;
+    }
+
+    const formatPrice = ({ price }: FormatPriceProps): string => {
+      return typeof price === "number" ? `${price}円` : price;
+    };
+
+    // 商品画像コンポーネント
+    interface ProductImageProps {
+      productUrl: string;
+      imageUrl: string;
+    }
+
+    const ProductImage = ({ productUrl, imageUrl }: ProductImageProps) => (
+      <a href={productUrl} rel="nofollow" target="_blank">
+        <Image
+          style={styles.image}
+          alt=""
+          src={imageUrl}
+          width={64}
+          height={64}
+          unoptimized={imageUrl.startsWith("http")} // 外部URLの場合は最適化しない
+        />
+      </a>
+    );
+
     return (
       <AdComponent
         className={className}
@@ -51,71 +129,30 @@ export const RakutenProductAdComponent = memo(
           <table
             cellPadding="0"
             cellSpacing="0"
-            style={{
-              border: "1px solid #ccc",
-              width: "300px",
-              ...containerStyle,
-            }}
+            style={{ ...styles.table, ...containerStyle }}
           >
             <tbody>
-              <tr style={{ borderStyle: "none" }}>
-                <td
-                  style={{
-                    verticalAlign: "top",
-                    borderStyle: "none",
-                    padding: "10px",
-                    width: "44px",
-                  }}
-                >
-                  <a href={productUrl} rel="nofollow" target="_blank">
-                    <Image
-                      style={{ border: "0" }}
-                      alt=""
-                      src={imageUrl}
-                      width={64}
-                      height={64}
-                      unoptimized={imageUrl.startsWith("http")} // 外部URLの場合は最適化しない
-                    />
-                  </a>
+              <tr style={styles.tableRow}>
+                <td style={styles.imageCell}>
+                  <ProductImage productUrl={productUrl} imageUrl={imageUrl} />
                 </td>
-                <td
-                  style={{
-                    fontSize: "12px",
-                    verticalAlign: "middle",
-                    borderStyle: "none",
-                    padding: "10px",
-                  }}
-                >
-                  <p style={{ padding: "0", margin: "0" }}>
+                <td style={styles.infoCell}>
+                  <p style={styles.titleContainer}>
                     <a href={productUrl} rel="nofollow" target="_blank">
                       {productName}
                     </a>
                   </p>
-                  <p
-                    style={{
-                      color: "#666",
-                      marginTop: "5px",
-                      lineHeight: "1.5",
-                    }}
-                  >
+                  <p style={styles.priceContainer}>
                     価格:
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#C00",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {typeof price === "number" ? `${price}円` : price}
+                    <span style={styles.priceValue}>
+                      {formatPrice({ price })}
                     </span>
                     <br />
                     {priceDateTime && (
-                      <span style={{ fontSize: "10px", fontWeight: "normal" }}>
-                        ({priceDateTime})
-                      </span>
+                      <span style={styles.dateTime}>({priceDateTime})</span>
                     )}
                     <br />
-                    <span style={{ fontWeight: "bold" }}>
+                    <span style={styles.reviewCount}>
                       感想({reviewCount}件)
                     </span>
                   </p>
@@ -126,7 +163,7 @@ export const RakutenProductAdComponent = memo(
           {/* トラッカー画像はimgのままでも警告は無視できる */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            style={{ border: "0" }}
+            style={styles.trackerImage}
             width="1"
             height="1"
             src={trackerUrl}
