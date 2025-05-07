@@ -115,11 +115,13 @@ export default async function Page({ params }: Props) {
         author={frontmatter.author || config.metadata.author}
         url={url}
       >
-        <div className={styles.tocWrapper}>
+        <div className={`${styles.tocWrapper} tocWrapper`}>
           <div className={styles.tocMain}>
             <Component />
           </div>
-          <div className={`${styles.tocSide} ${styles.tocSideStyles}`}>
+          <div
+            className={`${styles.tocSide} ${styles.tocSideStyles} toc-sidebar`}
+          >
             <TOC toc={toc} />
           </div>
         </div>

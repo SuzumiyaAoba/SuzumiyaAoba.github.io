@@ -79,60 +79,97 @@ export default async function RootLayout({
       >
         <Script id="toc-scroll">
           {`
-            function handleTocSticky() {
+            // TOCの追従スクロール処理
+            function handleTocScroll() {
               const toc = document.querySelector('.toc-sidebar');
               const article = document.querySelector('article');
               if (!toc || !article) return;
-
-              // 親要素（tocWrapper）をrelativeにしておくこと
-              const wrapper = toc.closest('.tocWrapper');
-              if (wrapper) {
-                wrapper.style.position = 'relative';
-              }
-
+              
+              // 記事要素の情報
               const articleRect = article.getBoundingClientRect();
+              // TOC要素の情報
               const tocRect = toc.getBoundingClientRect();
-              const wrapperRect = wrapper ? wrapper.getBoundingClientRect() : null;
+              
+              // ヘッダーの高さを取得（CSS変数より）
               const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 80;
-              const offset = 24; // 余白
-
-              // スクロール量
-              const scrollY = window.scrollY || window.pageYOffset;
-              // 記事下端の絶対座標
-              const articleBottom = articleRect.bottom + scrollY;
-              // TOCの下端の絶対座標
-              const tocBottom = tocRect.top + scrollY + tocRect.height;
-
-              // TOCが記事下端を超えそうになったらabsoluteでbottom:0
-              if (tocBottom + offset > articleBottom) {
-                toc.style.position = 'absolute';
-                toc.style.top = 'auto';
-                toc.style.bottom = '0';
+              
+              // 記事の下端よりTOCが突き出ないようにする処理
+              // 記事の下端位置（ビューポート相対）
+              const articleBottom = articleRect.bottom;
+              // TOCの高さ
+              const tocHeight = tocRect.height;
+              // 画面下端からの余白
+              const bottomMargin = 24;
+              
+              // ビューポートの高さ
+              const viewportHeight = window.innerHeight;
+              
+              // TOCの表示が記事よりも長い場合の処理
+              if (tocHeight > articleRect.height) {
+                // 記事より高い場合はposition:stickyを使わない（overflow:auto）
+                toc.style.position = 'relative';
+                toc.style.top = '0';
+                toc.style.overflowY = 'auto';
+                toc.style.maxHeight = \`\${articleRect.height}px\`;
+                return;
+              }
+              
+              // 記事の下端に達したかどうか
+              if (articleBottom <= viewportHeight) {
+                // 記事の下端がビューポートの下端より上にある場合
+                // TOCが記事の下端を超えないように位置調整
+                const topPosition = Math.min(
+                  articleBottom - tocHeight - bottomMargin,
+                  headerHeight
+                );
+                toc.style.top = \`\${Math.max(topPosition, 0)}px\`;
               } else {
-                toc.style.position = 'sticky';
-                toc.style.top = 'var(--header-height, 80px)';
-                toc.style.bottom = 'auto';
+                // 通常のスクロール時はヘッダー分だけ下げる
+                toc.style.top = \`\${headerHeight}px\`;
               }
             }
-
-            function adjustTocPosition() {
+            
+            // ヘッダーの高さを取得してCSSカスタムプロパティに設定
+            function updateHeaderHeight() {
               const header = document.querySelector('header');
               if (!header) return;
-              const headerHeight = header.offsetHeight + 10;
-              document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
-              handleTocSticky();
+              
+              // ヘッダーの高さ + 余白
+              const headerHeight = header.offsetHeight + 16;
+              document.documentElement.style.setProperty('--header-height', \`\${headerHeight}px\`);
             }
-
-            // 即時実行
-            adjustTocPosition();
-            // DOMContentLoaded時
-            document.addEventListener('DOMContentLoaded', adjustTocPosition);
-            // resize時
-            window.addEventListener('resize', adjustTocPosition);
-            // scroll時
-            window.addEventListener('scroll', handleTocSticky);
-            // 遅延実行で確実に
-            setTimeout(adjustTocPosition, 500);
+            
+            // 初期化と各種イベントリスナー設定
+            function initializeToc() {
+              updateHeaderHeight();
+              handleTocScroll();
+              
+              // スクロール時
+              window.addEventListener('scroll', handleTocScroll, { passive: true });
+              // リサイズ時
+              window.addEventListener('resize', () => {
+                updateHeaderHeight();
+                handleTocScroll();
+              }, { passive: true });
+              // ロード完了時
+              window.addEventListener('load', () => {
+                updateHeaderHeight();
+                handleTocScroll();
+              });
+              
+              // 遅延実行（画像やフォントロード後）
+              setTimeout(() => {
+                updateHeaderHeight();
+                handleTocScroll();
+              }, 1000);
+            }
+            
+            // DOM読み込み完了時に初期化
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', initializeToc);
+            } else {
+              initializeToc();
+            }
           `}
         </Script>
 

@@ -1,8 +1,5 @@
 export type Styles = {
   'markdown': string;
-  'toc-content': string;
-  'toc-flex-wrapper': string;
-  'toc-sidebar': string;
   'tocMain': string;
   'tocSide': string;
   'tocSideStyles': string;
