@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 const BuyMeACoffee = () => {
   return (
@@ -20,17 +21,16 @@ const BuyMeACoffee = () => {
         async
       ></script>
       <a href="https://www.buymeacoffee.com/suzumiyaaoba" target="_blank">
-        <img
+        <Image
           src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
           alt="Buy Me A Coffee"
           width={217}
           height={60}
           style={{
-            height: "60px !important",
-            width: "217px !important",
             padding: "0",
             border: "none",
           }}
+          unoptimized
         />
       </a>
     </>
