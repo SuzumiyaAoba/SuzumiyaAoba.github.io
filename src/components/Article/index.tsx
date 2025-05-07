@@ -76,7 +76,7 @@ export function Article({
     <article
       className={cn(
         markdownStyles.markdown,
-        "max-w-3xl w-full mx-auto px-4 py-4 pb-16 relative xl:max-w-5xl",
+        "max-w-6xl w-full mx-auto px-4 py-4 pb-16 relative xl:max-w-7xl",
         className
       )}
     >
@@ -110,7 +110,7 @@ export function Article({
       </div>
 
       {/* 記事コンテンツと目次 */}
-      <section className={markdownStyles.tocWrapper}>{children}</section>
+      <section>{children}</section>
 
       {showShareButtons && (
         <section className="flex gap-x-2 justify-end mt-12 mb-4">

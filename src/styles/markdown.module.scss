@@ -276,85 +276,74 @@
   }
 }
 
-// Table of Contents
-.tocWrapper {
-  position: relative;
-  width: 100%;
+// CSS Modules用にローカルクラスを定義
+.toc {
+  &Wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    width: 100%;
+    position: relative; /* sticky要素の親に必要 */
 
-  @media (min-width: 1280px) {
-    /* 標準的なレイアウト */
-    display: block;
-    position: relative;
-
-    &::after {
-      content: "";
-      display: table;
-      clear: both;
+    @media (min-width: 1280px) {
+      grid-template-columns: minmax(0, 1fr) 300px;
     }
+  }
 
-    :global(.toc-sidebar) {
-      position: fixed; /* stickyではなくfixedに変更 */
-      top: var(--header-height, 80px); /* JavaScriptで設定される変数を使用 */
-      left: calc(
-        50% + 550px
-      ); /* メインコンテンツの右端からの配置（コンテンツ幅の半分 + 余白） */
-      width: 250px; /* 幅を広げる: 190px → 250px */
-      z-index: 10;
-      max-height: calc(100vh - var(--header-height, 100px) - 20px);
-      overflow-y: auto;
-      background-color: transparent; /* 背景を透明に */
+  &Main {
+    width: 100%;
+    max-width: 100%; /* 小画面ではコンテンツ幅を最大化 */
+    margin: 0;
+    flex: 1 1 0%;
+
+    @media (min-width: 1280px) {
+      grid-column-start: 1; /* 明示的に1列目に配置 */
+      max-width: 960px; /* 大画面では最大幅を制限 */
+    }
+  }
+
+  &Side {
+    display: none;
+
+    @media (min-width: 1280px) {
+      display: block;
+      grid-column-start: 2; /* 明示的に2列目に配置 */
+      height: fit-content; /* 必要な高さのみにする */
     }
   }
 }
 
-.tocWrapper :global(.toc-container) {
-  @apply my-6 max-w-2xl mx-auto;
-  @apply bg-white;
-  @apply border border-neutral-200 rounded-lg;
-  @apply shadow-sm;
-  @apply transition-all duration-200;
-  display: block !important;
+// 既存のTOCスタイル（サイドバー用）を別途定義
+.tocSideStyles {
+  :global {
+    .toc-container {
+      position: sticky;
+      top: 80px; /* 固定値で指定する */
+      z-index: 10; /* 他の要素より前面に */
+      overflow: hidden; /* スクロールバーを非表示に */
+      max-height: none; /* 高さ制限を解除 */
+      @apply bg-white;
+      @apply border border-neutral-200 rounded-lg;
+      @apply shadow-sm;
+      @apply transition-all duration-200;
+      @apply my-0;
 
-  @media (min-width: 1280px) {
-    margin: 0 !important;
-    max-width: none !important;
-    width: 250px; /* 幅を広げる: 190px → 250px */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  &:hover {
-    @apply shadow-md;
-
-    @media (min-width: 1280px) {
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    }
-  }
-
-  :global(.toc-details) {
-    @apply w-full relative;
-
-    @media (min-width: 1280px) {
-      @apply w-full;
-      height: auto !important;
-    }
-
-    &[open] {
-      :global(.toc-summary) {
-        @apply bg-neutral-50 border-b border-neutral-200;
-
-        &::after {
-          @apply transform rotate-0;
-        }
+      &:hover {
+        @apply shadow-md;
       }
     }
 
-    :global(.toc-summary) {
+    .toc-details {
+      @apply w-full relative;
+    }
+
+    .toc-summary {
       @apply font-bold text-base px-4 py-2.5;
       @apply bg-white text-neutral-800;
       @apply flex justify-between items-center;
-      @apply border-b border-transparent;
-      @apply transition-all duration-200;
+      @apply border-b border-neutral-200;
       list-style: none;
+      position: relative;
 
       &::-webkit-details-marker {
         display: none;
@@ -362,81 +351,92 @@
 
       &::before {
         content: "";
-        @apply inline-block w-4 h-4 mr-2;
-        @apply bg-no-repeat bg-center;
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z' /%3E%3C/svg%3E");
-        @apply text-neutral-600;
+        background-size: contain;
+        background-repeat: no-repeat;
       }
 
       &::after {
         content: "";
-        @apply inline-block w-4 h-4;
-        @apply bg-no-repeat bg-center;
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
-        @apply text-neutral-400 transition-transform duration-200;
-        @apply transform rotate-180;
-      }
-
-      &:hover {
-        @apply bg-neutral-50 text-neutral-900;
+        background-size: contain;
+        background-repeat: no-repeat;
+        transition: transform 0.3s ease;
       }
     }
-  }
 
-  :global(.toc-list) {
-    @apply list-none p-0 m-0;
-    @apply px-4 py-3;
+    .toc-details[open] .toc-summary::after {
+      transform: rotate(180deg);
+    }
 
-    :global(.toc-list-item) {
+    .toc-list {
+      @apply list-none p-0 m-0;
+      @apply px-4 py-3;
+      max-height: none; /* スクロールエリアの高さ制限を解除 */
+      overflow: visible; /* スクロールを無効に */
+    }
+
+    .toc-list-item {
       @apply py-1 pl-0;
       @apply list-none;
-      @apply transition-all duration-150;
       @apply border-l-2 border-transparent pl-3;
 
       &:hover {
         @apply border-neutral-400;
       }
+    }
 
-      :global(.toc-link) {
-        @apply text-neutral-700 no-underline font-normal;
-        @apply transition-all duration-150;
-        @apply inline-block;
-        @apply break-words;
+    .toc-link {
+      @apply text-neutral-700 no-underline font-normal;
+      @apply inline-block;
+      @apply break-words;
 
-        &:hover {
-          @apply text-blue-600 underline;
-          @apply decoration-blue-300 decoration-1 underline-offset-2;
-          transform: translateX(1px);
-        }
-      }
-
-      // ネストされたリスト
-      :global(.toc-list) {
-        @apply pl-2 py-0 mt-1 mb-0;
-        @apply border-l border-neutral-100;
-
-        :global(.toc-list-item) {
-          @apply text-sm py-0.5;
-
-          &::before {
-            content: "";
-            @apply inline-block w-1 h-1 mr-2 bg-neutral-400 rounded-full align-middle;
-          }
-
-          // 3階層目
-          :global(.toc-list) {
-            @apply pl-2 ml-0;
-
-            :global(.toc-list-item) {
-              @apply text-xs;
-
-              &::before {
-                @apply w-0.5 h-0.5 bg-neutral-300;
-              }
-            }
-          }
-        }
+      &:hover {
+        @apply text-blue-600 underline;
       }
     }
+  }
+}
+
+.toc-flex-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.toc-content {
+  width: 100%;
+  max-width: 720px;
+  margin: 0;
+  flex: 1 1 0%;
+
+  @media (min-width: 1280px) {
+    max-width: 720px;
+  }
+}
+
+.toc-sidebar {
+  min-width: 240px;
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 1279px) {
+    display: none;
+  }
+
+  @media (min-width: 1280px) {
+    min-width: 240px;
+    max-width: 320px;
+    margin: 0 0 0 32px;
+    display: block;
   }
 }

@@ -6,6 +6,8 @@ import { Pages } from "@/libs/contents/blog";
 import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
+import TOC from "@/components/TOC";
+import styles from "@/styles/markdown.module.scss";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -95,7 +97,7 @@ export default async function Page({ params }: Props) {
     notFound();
   }
 
-  const { frontmatter, stylesheets, Component } = content;
+  const { frontmatter, stylesheets, Component, toc } = content;
   const url = `${config.metadata.url}/blog/${slug}/`;
 
   return (
@@ -113,7 +115,14 @@ export default async function Page({ params }: Props) {
         author={frontmatter.author || config.metadata.author}
         url={url}
       >
-        <Component />
+        <div className={styles.tocWrapper}>
+          <div className={styles.tocMain}>
+            <Component />
+          </div>
+          <div className={`${styles.tocSide} ${styles.tocSideStyles}`}>
+            <TOC toc={toc} />
+          </div>
+        </div>
       </Article>
     </>
   );

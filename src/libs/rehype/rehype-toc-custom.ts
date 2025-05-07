@@ -3,110 +3,23 @@ import { toString } from "hast-util-to-string";
 import type { Plugin } from "unified";
 import type { Root, Element, RootContent, ElementContent } from "hast";
 
-interface TocHeading {
+export interface TocHeading {
   depth: number;
   text: string;
   id: string;
 }
 
-interface TocEntry {
+export interface TocEntry {
   heading: TocHeading;
   children: TocEntry[];
 }
 
 export const rehypeTocCustom: Plugin<[], Root> = () => {
   return (tree) => {
-    const headings: TocHeading[] = [];
-
-    // 見出しを収集
-    visit(tree, "element", (node) => {
-      if (["h2", "h3", "h4"].includes(node.tagName)) {
-        const id = node.properties?.id as string;
-        if (id) {
-          headings.push({
-            depth: parseInt(node.tagName.charAt(1)),
-            text: toString(node),
-            id,
-          });
-        }
-      }
-    });
-
-    // 見出しがなければ何もしない
-    if (headings.length === 0) {
-      return;
-    }
-
-    // 階層構造に変換
-    const hierarchy = buildHierarchy(headings);
-
-    // TOCの作成
-    const tocList = createNestedTocList(hierarchy);
-
-    // details要素を作成
-    const details: Element = {
-      type: "element",
-      tagName: "details",
-      properties: {
-        className: ["toc-details"],
-        open: true,
-      },
-      children: [
-        {
-          type: "element",
-          tagName: "summary",
-          properties: {
-            className: ["toc-summary"],
-          },
-          children: [
-            {
-              type: "text",
-              value: "コンテンツ",
-            },
-          ],
-        },
-        tocList,
-      ],
-    };
-
-    // TOCコンテナの作成
-    const tocContainer: Element = {
-      type: "element",
-      tagName: "nav",
-      properties: {
-        className: ["toc-container"],
-        ariaLabel: "コンテンツ",
-      },
-      children: [details],
-    };
-
-    // サイドバーコンテナの作成
-    const sidebarContainer: Element = {
-      type: "element",
-      tagName: "div",
-      properties: {
-        className: ["toc-sidebar"],
-      },
-      children: [tocContainer],
-    };
-
-    // TOCをドキュメントに追加（コンテンツは移動しない）
-    // 最初のコンテンツ要素を探す
-    let contentStartIndex = -1;
-    for (let i = 0; i < tree.children.length; i++) {
-      const child = tree.children[i];
-      if (child.type === "element" && child.tagName !== "head") {
-        contentStartIndex = i;
-        break;
-      }
-    }
-
-    if (contentStartIndex !== -1) {
-      // TOCコンテナをドキュメントに追加
-      tree.children.splice(contentStartIndex, 0, sidebarContainer);
-    } else {
-      tree.children.push(sidebarContainer);
-    }
+    // 目次データ抽出のみ行い、ツリーへのTOC挿入は行わない
+    // 既存のTOC挿入ロジック（sidebarContainer生成やunshift等）は削除
+    // 必要ならここでグローバル変数や外部にTOCデータを渡す仕組みを追加可能
+    // ただし現状はextractTocFromTreeで十分
   };
 };
 
@@ -186,6 +99,28 @@ function createNestedTocList(entries: TocEntry[]): Element {
   };
 
   return list;
+}
+
+// ツリーからTOCデータを抽出する関数
+export function extractTocFromTree(tree: Root): TocEntry[] {
+  const headings: TocHeading[] = [];
+
+  // 見出しを収集
+  visit(tree, "element", (node) => {
+    if (["h2", "h3", "h4"].includes(node.tagName)) {
+      const id = node.properties?.id as string;
+      if (id) {
+        headings.push({
+          depth: parseInt(node.tagName.charAt(1)),
+          text: toString(node),
+          id,
+        });
+      }
+    }
+  });
+
+  if (headings.length === 0) return [];
+  return buildHierarchy(headings);
 }
 
 export default rehypeTocCustom;
