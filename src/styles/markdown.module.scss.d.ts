@@ -1,6 +1,5 @@
 export type Styles = {
   'markdown': string;
-  'sticky-active': string;
   'tocMain': string;
   'tocSide': string;
   'tocSideStyles': string;

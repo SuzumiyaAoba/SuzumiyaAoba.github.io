@@ -57,57 +57,6 @@ function useActiveHeading(entries: TocEntry[]): string | null {
       }
     });
 
-    // 記事の終端を検出する監視
-    const articleEndObserver = new IntersectionObserver(
-      (entries) => {
-        const articleWrapper = document.querySelector(".tocWrapper");
-        if (!articleWrapper) return;
-
-        entries.forEach((entry) => {
-          // 記事の終端が見えているかどうかでクラスを切り替え
-          if (entry.isIntersecting) {
-            articleWrapper.classList.add("toc-at-end");
-          } else {
-            articleWrapper.classList.remove("toc-at-end");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    // フッターが表示されたらTOCを非表示にする
-    const footerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            document.body.classList.add("at-page-bottom");
-          } else {
-            document.body.classList.remove("at-page-bottom");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    // フッターを監視
-    const footer = document.querySelector("footer");
-    if (footer) {
-      footerObserver.observe(footer);
-    }
-
-    // 記事の終端部分を監視
-    const article = document.querySelector("article");
-    if (article) {
-      // 記事の最後の部分を取得
-      const lastElements = article.querySelectorAll(
-        "section:last-child, div:last-child, p:last-child, h2:last-of-type, h3:last-of-type"
-      );
-      if (lastElements.length > 0) {
-        const lastElement = lastElements[lastElements.length - 1];
-        articleEndObserver.observe(lastElement);
-      }
-    }
-
     return () => {
       // クリーンアップ
       allHeadingIds.forEach((id) => {
@@ -116,9 +65,6 @@ function useActiveHeading(entries: TocEntry[]): string | null {
           observer.unobserve(element);
         }
       });
-
-      articleEndObserver.disconnect();
-      footerObserver.disconnect();
     };
   }, [entries]);
 
@@ -177,113 +123,6 @@ function renderToc(
 export const TOC: React.FC<TOCProps> = ({ toc }) => {
   const activeId = useActiveHeading(toc);
   const navRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    // ヘッダーの高さを取得して変数にセット
-    const setHeaderHeight = () => {
-      const header = document.querySelector("header");
-      if (header) {
-        const headerHeight = header.offsetHeight + 16;
-        document.documentElement.style.setProperty(
-          "--header-height",
-          `${headerHeight}px`
-        );
-      }
-    };
-
-    // TOCの位置を調整する関数（スティッキー有効化）
-    const activateStickyToc = () => {
-      const tocSidebar = document.querySelector(".toc-sidebar");
-      if (tocSidebar) {
-        tocSidebar.classList.add("sticky-active");
-
-        // 強制的に再描画を促す (リフロー)
-        void (tocSidebar as HTMLElement).offsetHeight;
-      }
-
-      // ブラウザのposition:stickyサポート状況をチェック
-      if (!CSS || !CSS.supports || !CSS.supports("position", "sticky")) {
-        document.documentElement.classList.add("legacy-browser");
-
-        // 古いブラウザ向けの対応（JSで再計算を促す）
-        const tocWrapper = document.querySelector(".tocWrapper");
-        if (tocWrapper) {
-          tocWrapper.classList.add("legacy-browser");
-        }
-      }
-    };
-
-    // スクロール位置が変更されたときのハンドラー
-    const handleScroll = () => {
-      const tocSidebar = document.querySelector(".toc-sidebar");
-      if (!tocSidebar) return;
-
-      // 強制的にstickyの再計算を促す
-      (tocSidebar as HTMLElement).style.position = "";
-      void (tocSidebar as HTMLElement).offsetHeight;
-      (tocSidebar as HTMLElement).style.position = "sticky";
-
-      // 記事とTOCの位置関係を計算
-      const article = document.querySelector("article");
-      if (!article) return;
-
-      const articleRect = article.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-
-      // 記事が画面内に収まっている場合はTOCを記事末尾に合わせる
-      const tocWrapper = document.querySelector(".tocWrapper");
-      if (tocWrapper) {
-        if (articleRect.bottom <= viewportHeight) {
-          tocWrapper.classList.add("toc-at-end");
-        } else {
-          tocWrapper.classList.remove("toc-at-end");
-        }
-      }
-
-      // フッター検出
-      const footer = document.querySelector("footer");
-      if (footer) {
-        const footerRect = footer.getBoundingClientRect();
-        if (footerRect.top <= viewportHeight) {
-          // フッターが画面内に見えている
-          document.body.classList.add("at-page-bottom");
-
-          // スクロール位置がページ最下部に近い場合
-          const scrollPosition = window.scrollY;
-          const maxScroll = document.body.scrollHeight - window.innerHeight;
-          if (maxScroll - scrollPosition < 100) {
-            // 100pxしきい値
-            // 完全にページ最下部に近い
-            document.body.classList.add("at-very-bottom");
-          } else {
-            document.body.classList.remove("at-very-bottom");
-          }
-        } else {
-          document.body.classList.remove("at-page-bottom");
-          document.body.classList.remove("at-very-bottom");
-        }
-      }
-    };
-
-    // 初期化処理
-    setHeaderHeight();
-    activateStickyToc();
-
-    // 遅延実行で確実に適用
-    setTimeout(activateStickyToc, 100);
-    setTimeout(handleScroll, 100);
-
-    // イベントリスナー設定
-    window.addEventListener("resize", setHeaderHeight, { passive: true });
-    window.addEventListener("load", activateStickyToc);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("resize", setHeaderHeight);
-      window.removeEventListener("load", activateStickyToc);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   if (!toc || toc.length === 0) return null;
 

@@ -282,10 +282,8 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 32px;
   width: 100%;
-  position: relative; /* sticky要素の親に必要 */
-  min-height: 100vh; /* 十分な高さを確保 */
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1080px) {
     grid-template-columns: minmax(0, 1fr) 300px;
   }
 }
@@ -296,7 +294,7 @@
   margin: 0;
   flex: 1 1 0%;
 
-  @media (min-width: 1280xl) {
+  @media (min-width: 1080px) {
     grid-column-start: 1;
     max-width: 960px;
   }
@@ -305,25 +303,10 @@
 .tocSide {
   display: none;
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1080px) {
     display: block;
     grid-column-start: 2;
     width: 300px;
-    height: fit-content;
-    position: sticky;
-    top: var(--header-height, 80px);
-    z-index: 10;
-    align-self: flex-start;
-    max-height: calc(100vh - var(--header-height, 80px));
-    overflow-y: auto;
-    transition: transform 0.2s ease;
-
-    /* スティッキー効果を強化 */
-    &.sticky-active {
-      will-change: position, transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-    }
   }
 }
 
