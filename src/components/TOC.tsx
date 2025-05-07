@@ -71,6 +71,39 @@ function useActiveHeading(entries: TocEntry[]): string | null {
   return activeId;
 }
 
+// TOCのスティッキー状態を管理するカスタムフック
+function useTocSticky() {
+  // ヘッダーの高さを設定する関数
+  useEffect(() => {
+    // ヘッダーの高さを取得して変数にセット
+    const setHeaderHeight = () => {
+      const header = document.querySelector("header");
+      if (header) {
+        const headerHeight = header.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${headerHeight}px`
+        );
+      }
+    };
+
+    // 初回実行
+    setHeaderHeight();
+
+    // リサイズ時に再計算
+    window.addEventListener("resize", setHeaderHeight, { passive: true });
+
+    // scroll-padding-topを設定
+    document.documentElement.style.scrollPaddingTop =
+      "calc(var(--header-height, 80px) + 16px)";
+    document.documentElement.style.scrollBehavior = "smooth";
+
+    return () => {
+      window.removeEventListener("resize", setHeaderHeight);
+    };
+  }, []);
+}
+
 function renderToc(
   entries: TocEntry[],
   activeId: string | null,
@@ -123,6 +156,9 @@ function renderToc(
 export const TOC: React.FC<TOCProps> = ({ toc }) => {
   const activeId = useActiveHeading(toc);
   const navRef = useRef<HTMLElement>(null);
+
+  // TOCのスティッキー機能を有効化
+  useTocSticky();
 
   if (!toc || toc.length === 0) return null;
 

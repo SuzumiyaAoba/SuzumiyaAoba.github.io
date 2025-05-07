@@ -87,43 +87,6 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <Script id="layout-helpers" strategy="afterInteractive">
-          {`
-            // ヘッダー高さの取得とCSS変数への適用
-            document.addEventListener('DOMContentLoaded', function() {
-              function setHeaderHeight() {
-                const header = document.querySelector('header');
-                if (header) {
-                  const headerHeight = header.offsetHeight;
-                  document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
-                }
-              }
-              
-              // 初期実行
-              setHeaderHeight();
-              
-              // リサイズ時にヘッダー高さを再計算
-              window.addEventListener('resize', function() {
-                setHeaderHeight();
-              }, { passive: true });
-              
-              // スクロール時のscroll-padding-topの設定
-              window.addEventListener('scroll', function() {
-                document.documentElement.style.scrollPaddingTop = 'calc(var(--header-height) + 16px)';
-              }, { passive: true });
-              
-              // 完全に読み込み完了後に実行
-              window.addEventListener('load', function() {
-                setHeaderHeight();
-                
-                // scroll-padding-topの設定
-                document.documentElement.style.scrollPaddingTop = 'calc(var(--header-height) + 16px)';
-                document.documentElement.style.scrollBehavior = 'smooth';
-              }, { passive: true });
-            });
-          `}
-        </Script>
-
         <Header siteName={config.metadata.title} />
         <div className="content-container mt-header flex-grow w-full">
           <BreadcrumbNav
