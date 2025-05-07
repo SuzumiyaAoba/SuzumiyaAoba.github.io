@@ -44,11 +44,17 @@ export const NinjaAdComponent = memo(
         <Script id={scriptId} type="text/javascript">
           {`(admaxads = window.admaxads || []).push({admax_id: "${adId}", type: "${adType}"});`}
         </Script>
+        {/* 
+          重要: 忍者広告のスクリプトURLとロード戦略について
+          - URLは "https://adm.shinobi.jp/st/t.js" を使用（s/t.jsではなく）
+          - strategy="afterInteractive" を使用して広告の読み込みを最適化
+          - このスクリプトのURLや戦略を変更する場合は、広告表示への影響を十分に確認すること
+        */}
         <Script
           type="text/javascript"
           src="https://adm.shinobi.jp/st/t.js"
           async
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </AdComponent>
     );
