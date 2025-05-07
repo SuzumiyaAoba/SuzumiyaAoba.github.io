@@ -4,17 +4,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 
-// PagefindModuleの型定義（直接インポートせず型だけ定義）
-type PagefindModule = {
-  search: (query: string) => Promise<any>;
-  filters: () => Promise<any>;
-  debouncedSearch: (
-    query: string,
-    options?: any,
-    debounceTimeoutMs?: number
-  ) => Promise<any>;
-};
-
 // PagefindResultのスキーマ定義
 const pagefindResultSchema = z.object({
   url: z.string(),
@@ -25,6 +14,28 @@ const pagefindResultSchema = z.object({
 });
 
 type PagefindResult = z.infer<typeof pagefindResultSchema>;
+
+// PagefindSearchResponseの型定義
+interface PagefindSearchResponse {
+  results: {
+    id: string;
+    score: number;
+    data: () => Promise<PagefindResult>;
+  }[];
+  term?: string;
+  total?: number;
+}
+
+// PagefindModuleの型定義（直接インポートせず型だけ定義）
+type PagefindModule = {
+  search: (query: string) => Promise<PagefindSearchResponse>;
+  filters: () => Promise<Record<string, string[]>>;
+  debouncedSearch: (
+    query: string,
+    options?: Record<string, unknown>,
+    debounceTimeoutMs?: number
+  ) => Promise<PagefindSearchResponse>;
+};
 
 // グローバル型定義の追加
 declare global {
@@ -78,10 +89,12 @@ export default function SearchComponent() {
 
       // 検索結果をマップして処理
       const searchResults = await Promise.all(
-        search.results.map(async (result: any) => {
-          const data = await result.data();
-          return data;
-        })
+        search.results.map(
+          async (result: PagefindSearchResponse["results"][0]) => {
+            const data = await result.data();
+            return data;
+          }
+        )
       );
 
       // zodで型安全に結果を取得

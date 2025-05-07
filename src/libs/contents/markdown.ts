@@ -33,13 +33,13 @@ export type Content<FRONTMATTER> = {
 
 export type ParsedContent<FRONTMATTER> = {
   format: Format;
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
   frontmatter: FRONTMATTER;
   content: string;
 };
 
 export type Parser<T> = {
-  parse: (data: { [key: string]: any }) => T;
+  parse: (data: { [key: string]: unknown }) => T;
 };
 
 export async function getRawContent(

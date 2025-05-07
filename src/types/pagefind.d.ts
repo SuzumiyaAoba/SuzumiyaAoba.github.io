@@ -9,12 +9,17 @@ interface PagefindResult {
   excerpt: string;
   meta: {
     title?: string;
-    [key: string]: any;
+    [key: string]: string | string[] | undefined;
   };
   content?: string;
   word_count?: number;
   score?: number;
-  [key: string]: any;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | undefined
+    | Record<string, string | string[] | undefined>;
 }
 
 // Pagefind検索結果の型
@@ -32,7 +37,7 @@ interface PagefindSearchResponse {
 // Pagefindモジュールの型
 interface PagefindModule {
   search: (query: string) => Promise<PagefindSearchResponse>;
-  options: (opts: Record<string, any>) => Promise<void>;
+  options: (opts: Record<string, unknown>) => Promise<void>;
   // 他のAPIメソッドがあれば追加
 }
 
