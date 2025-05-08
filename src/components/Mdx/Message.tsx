@@ -42,7 +42,7 @@ export interface MessageProps
 }
 
 export const Message: FC<MessageProps> = memo(
-  ({ title, children, variant, className, showIcon = true }) => {
+  ({ title, children, variant = "info", className, showIcon = true }) => {
     return (
       <details
         className={cn(
