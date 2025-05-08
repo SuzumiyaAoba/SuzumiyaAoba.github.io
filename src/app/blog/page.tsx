@@ -25,7 +25,7 @@ const PostCard = ({ slug, frontmatter }: PostCardProps) => {
       </div>
       <Link
         href={`/blog/${slug}/`}
-        className="text-lg font-semibold block my-2 transition-colors"
+        className="text-lg block my-2 transition-colors"
         style={{
           color: "var(--foreground)",
         }}
