@@ -84,11 +84,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     setThemeState(newTheme);
   };
 
-  // マウント前はテーマを適用せずにHTMLのみをレンダリング（ハイドレーションの問題を防ぐため）
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // マウント状態に関わらずテーマコンテキストを提供しますが、
+  // サーバーサイドでは特定のテーマ関連の操作は行いません
   return (
     <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
       {children}

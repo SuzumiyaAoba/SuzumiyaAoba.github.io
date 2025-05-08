@@ -54,7 +54,9 @@ export const Comments = memo(
   }: CommentsProps) => {
     // サイトのテーマを取得
     const { resolvedTheme } = useTheme();
-    const [currentTheme, setCurrentTheme] = useState("");
+    // 初期値はresolvedThemeから直接決定する
+    const initialTheme = giscusThemeMap[resolvedTheme] || "dark_dimmed";
+    const [currentTheme, setCurrentTheme] = useState(initialTheme);
 
     // テーマが変更されたらGiscusのテーマも変更する
     useEffect(() => {
@@ -69,11 +71,6 @@ export const Comments = memo(
         },
       });
     }, [resolvedTheme]);
-
-    // マウント前はレンダリングしない
-    if (!currentTheme) {
-      return <div className={cn("my-8", className)}></div>;
-    }
 
     return (
       <div className={cn("my-8", className)}>

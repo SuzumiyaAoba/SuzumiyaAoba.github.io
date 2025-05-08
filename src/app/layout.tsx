@@ -79,6 +79,31 @@ export default async function RootLayout({
             }
           `}
         </style>
+        {/* テーマのフラッシュを防ぐために、DOMの読み込み前にテーマを設定 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // ローカルストレージからテーマを取得
+                  var savedTheme = localStorage.getItem('theme');
+                  var theme = savedTheme || 'system';
+                  
+                  if (theme === 'system') {
+                    // システムの設定を検出
+                    var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', systemTheme);
+                  } else {
+                    document.documentElement.setAttribute('data-theme', theme);
+                  }
+                } catch (e) {
+                  // エラーが発生した場合は何もしない
+                  console.error('テーマの初期化中にエラーが発生しました:', e);
+                }
+              })();
+            `,
+          }}
+        />
       </head>
       <body
         className={clsx(
