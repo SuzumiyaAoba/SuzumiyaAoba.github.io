@@ -14,6 +14,7 @@ import {
   getNoteTitleMap,
   getKeywordTitleMap,
 } from "@/libs/contents/title-map";
+import { ThemeProvider } from "next-themes";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -68,7 +69,11 @@ export default async function RootLayout({
   const keywordTitleMap = await getKeywordTitleMap();
 
   return (
-    <html lang="ja" className="overflow-x-hidden h-full">
+    <html
+      lang="ja"
+      className="overflow-x-hidden h-full"
+      suppressHydrationWarning
+    >
       <head>
         <style>
           {`
@@ -78,6 +83,7 @@ export default async function RootLayout({
             }
           `}
         </style>
+        {/* next-themesはflashを自動的に防止するため、以下のスクリプトは不要となります */}
       </head>
       <body
         className={clsx(
@@ -87,24 +93,30 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <Header siteName={config.metadata.title} />
-        <div className="content-container mt-header flex-grow w-full">
-          <BreadcrumbNav
-            blogTitleMap={blogTitleMap}
-            noteTitleMap={noteTitleMap}
-            keywordTitleMap={keywordTitleMap}
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+        >
+          <Header siteName={config.metadata.title} />
+          <div className="content-container mt-header flex-grow w-full">
+            <BreadcrumbNav
+              blogTitleMap={blogTitleMap}
+              noteTitleMap={noteTitleMap}
+              keywordTitleMap={keywordTitleMap}
+            />
+            {children}
+          </div>
+          <Footer
+            copyright="SuzumiyaAoba"
+            poweredBy={{
+              name: "Next.js",
+              url: "https://nextjs.org",
+            }}
           />
-          {children}
-        </div>
-        <Footer
-          copyright="SuzumiyaAoba"
-          poweredBy={{
-            name: "Next.js",
-            url: "https://nextjs.org",
-          }}
-        />
-        <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-        <GoogleAdsenseScript />
+          <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+          <GoogleAdsenseScript />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -15,12 +15,21 @@ type PostCardProps = {
 
 const PostCard = ({ slug, frontmatter }: PostCardProps) => {
   return (
-    <div>
-      <div className="flex gap-x-1 items-center font-thin">
+    <div className="card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]">
+      <div
+        className="flex gap-x-1 items-center font-thin text-sm"
+        style={{ color: "var(--muted)" }}
+      >
         <div className="i-mdi-calendar" />
         <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
       </div>
-      <Link href={`/blog/${slug}/`} className="hover:underline">
+      <Link
+        href={`/blog/${slug}/`}
+        className="text-lg block my-2 transition-colors"
+        style={{
+          color: "var(--foreground)",
+        }}
+      >
         {frontmatter.title}
       </Link>
       <div className="flex flex-wrap mt-2 gap-2 text-xs">
@@ -59,7 +68,11 @@ export default async function BlogPage() {
         ))}
       </div>
       <div className="mt-4">
-        <Link href="/tags/" className="text-blue-600 hover:underline">
+        <Link
+          href="/tags/"
+          className="hover:underline"
+          style={{ color: "var(--accent-primary)" }}
+        >
           すべてのタグを表示 →
         </Link>
       </div>

@@ -1,2 +1,298 @@
 @import "@unocss/reset/tailwind.css";
 @unocss all;
+
+:root {
+  /* ライトテーマの変数 */
+  --background-light: #f8fafc;
+  --background-secondary-light: #e2e8f0;
+  --foreground-light: #0f172a;
+  --muted-light: #64748b;
+  --muted-secondary-light: #94a3b8;
+  --accent-primary-light: #4f46e5;
+  --accent-secondary-light: #0ea5e9;
+  --border-light: #cbd5e1;
+  --card-bg-light: #ffffff;
+  --code-bg-light: #f1f5f9;
+  --code-highlight-light: #e2e8f0;
+  --scrollbar-thumb-light: #94a3b8;
+  --header-bg-light: rgba(248, 250, 252, 0.8);
+  --header-scrolled-bg-light: rgba(255, 255, 255, 0.92);
+  --input-bg-light: #ffffff;
+
+  /* Messageコンポーネント用のライトテーマ変数 */
+  --info-bg-light: #f0f7ff;
+  --info-border-light: #93c5fd;
+  --info-text-light: #1e40af;
+  --info-icon-light: #1e40af;
+
+  --success-bg-light: #f0fdf4;
+  --success-border-light: #86efac;
+  --success-text-light: #166534;
+  --success-icon-light: #166534;
+
+  --warning-bg-light: #fffbeb;
+  --warning-border-light: #fcd34d;
+  --warning-text-light: #92400e;
+  --warning-icon-light: #92400e;
+
+  --error-bg-light: #fef2f2;
+  --error-border-light: #fca5a5;
+  --error-text-light: #b91c1c;
+  --error-icon-light: #b91c1c;
+
+  /* ダークテーマの変数 */
+  --background-dark: #1e2638;
+  --background-secondary-dark: #293244;
+  --foreground-dark: #f8fafc;
+  --muted-dark: #a8b9d5;
+  --muted-secondary-dark: #64748b;
+  --accent-primary-dark: #6366f1;
+  --accent-secondary-dark: #22d3ee;
+  --border-dark: #475569;
+  --card-bg-dark: #2c3549;
+  --code-bg-dark: #242e42;
+  --code-highlight-dark: #3b4863;
+  --scrollbar-thumb-dark: #64748b;
+  --header-bg-dark: rgba(44, 53, 73, 0.9);
+  --header-scrolled-bg-dark: rgba(41, 50, 68, 0.92);
+  --input-bg-dark: #293244;
+
+  /* Messageコンポーネント用のダークテーマ変数 */
+  --info-bg-dark: #172554;
+  --info-border-dark: #3b82f6;
+  --info-text-dark: #bfdbfe;
+  --info-icon-dark: #bfdbfe;
+
+  --success-bg-dark: #14532d;
+  --success-border-dark: #22c55e;
+  --success-text-dark: #bbf7d0;
+  --success-icon-dark: #bbf7d0;
+
+  --warning-bg-dark: #713f12;
+  --warning-border-dark: #eab308;
+  --warning-text-dark: #fef3c7;
+  --warning-icon-dark: #fef3c7;
+
+  --error-bg-dark: #7f1d1d;
+  --error-border-dark: #ef4444;
+  --error-text-dark: #fee2e2;
+  --error-icon-dark: #fee2e2;
+
+  /* デフォルトはライトテーマ */
+  --background: var(--background-light);
+  --background-secondary: var(--background-secondary-light);
+  --foreground: var(--foreground-light);
+  --muted: var(--muted-light);
+  --muted-secondary: var(--muted-secondary-light);
+  --accent-primary: var(--accent-primary-light);
+  --accent-secondary: var(--accent-secondary-light);
+  --border: var(--border-light);
+  --card-bg: var(--card-bg-light);
+  --code-bg: var(--code-bg-light);
+  --code-highlight: var(--code-highlight-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --header-bg: var(--header-bg-light);
+  --header-scrolled-bg: var(--header-scrolled-bg-light);
+  --input-bg: var(--input-bg-light);
+
+  /* Messageコンポーネントのデフォルト変数 */
+  --info-bg: var(--info-bg-light);
+  --info-border: var(--info-border-light);
+  --info-text: var(--info-text-light);
+  --info-icon: var(--info-icon-light);
+
+  --success-bg: var(--success-bg-light);
+  --success-border: var(--success-border-light);
+  --success-text: var(--success-text-light);
+  --success-icon: var(--success-icon-light);
+
+  --warning-bg: var(--warning-bg-light);
+  --warning-border: var(--warning-border-light);
+  --warning-text: var(--warning-text-light);
+  --warning-icon: var(--warning-icon-light);
+
+  --error-bg: var(--error-bg-light);
+  --error-border: var(--error-border-light);
+  --error-text: var(--error-text-light);
+  --error-icon: var(--error-icon-light);
+
+  /* テーマ切り替えのためのトランジション設定 */
+  --transition-duration: 200ms;
+}
+
+/* メディアクエリでシステムの設定に基づいてダークモードを適用 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--background-dark);
+    --background-secondary: var(--background-secondary-dark);
+    --foreground: var(--foreground-dark);
+    --muted: var(--muted-dark);
+    --muted-secondary: var(--muted-secondary-dark);
+    --accent-primary: var(--accent-primary-dark);
+    --accent-secondary: var(--accent-secondary-dark);
+    --border: var(--border-dark);
+    --card-bg: var(--card-bg-dark);
+    --code-bg: var(--code-bg-dark);
+    --code-highlight: var(--code-highlight-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+    --header-bg: var(--header-bg-dark);
+    --header-scrolled-bg: var(--header-scrolled-bg-dark);
+    --input-bg: var(--input-bg-dark);
+
+    /* Message コンポーネント用ダークモード設定 */
+    --info-bg: var(--info-bg-dark);
+    --info-border: var(--info-border-dark);
+    --info-text: var(--info-text-dark);
+    --info-icon: var(--info-icon-dark);
+
+    --success-bg: var(--success-bg-dark);
+    --success-border: var(--success-border-dark);
+    --success-text: var(--success-text-dark);
+    --success-icon: var(--success-icon-dark);
+
+    --warning-bg: var(--warning-bg-dark);
+    --warning-border: var(--warning-border-dark);
+    --warning-text: var(--warning-text-dark);
+    --warning-icon: var(--warning-icon-dark);
+
+    --error-bg: var(--error-bg-dark);
+    --error-border: var(--error-border-dark);
+    --error-text: var(--error-text-dark);
+    --error-icon: var(--error-icon-dark);
+  }
+}
+
+/* ユーザーが明示的にダークモードを選択した場合 */
+[data-theme="dark"] {
+  --background: var(--background-dark);
+  --background-secondary: var(--background-secondary-dark);
+  --foreground: var(--foreground-dark);
+  --muted: var(--muted-dark);
+  --muted-secondary: var(--muted-secondary-dark);
+  --accent-primary: var(--accent-primary-dark);
+  --accent-secondary: var(--accent-secondary-dark);
+  --border: var(--border-dark);
+  --card-bg: var(--card-bg-dark);
+  --code-bg: var(--code-bg-dark);
+  --code-highlight: var(--code-highlight-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --header-bg: var(--header-bg-dark);
+  --header-scrolled-bg: var(--header-scrolled-bg-dark);
+  --input-bg: var(--input-bg-dark);
+
+  /* Message コンポーネント用ダークモード設定 */
+  --info-bg: var(--info-bg-dark);
+  --info-border: var(--info-border-dark);
+  --info-text: var(--info-text-dark);
+  --info-icon: var(--info-icon-dark);
+
+  --success-bg: var(--success-bg-dark);
+  --success-border: var(--success-border-dark);
+  --success-text: var(--success-text-dark);
+  --success-icon: var(--success-icon-dark);
+
+  --warning-bg: var(--warning-bg-dark);
+  --warning-border: var(--warning-border-dark);
+  --warning-text: var(--warning-text-dark);
+  --warning-icon: var(--warning-icon-dark);
+
+  --error-bg: var(--error-bg-dark);
+  --error-border: var(--error-border-dark);
+  --error-text: var(--error-text-dark);
+  --error-icon: var(--error-icon-dark);
+}
+
+/* ユーザーが明示的にライトモードを選択した場合 */
+[data-theme="light"] {
+  --background: var(--background-light);
+  --background-secondary: var(--background-secondary-light);
+  --foreground: var(--foreground-light);
+  --muted: var(--muted-light);
+  --muted-secondary: var(--muted-secondary-light);
+  --accent-primary: var(--accent-primary-light);
+  --accent-secondary: var(--accent-secondary-light);
+  --border: var(--border-light);
+  --card-bg: var(--card-bg-light);
+  --code-bg: var(--code-bg-light);
+  --code-highlight: var(--code-highlight-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --header-bg: var(--header-bg-light);
+  --header-scrolled-bg: var(--header-scrolled-bg-light);
+  --input-bg: var(--input-bg-light);
+
+  /* Message コンポーネント用ライトモード設定 */
+  --info-bg: var(--info-bg-light);
+  --info-border: var(--info-border-light);
+  --info-text: var(--info-text-light);
+  --info-icon: var(--info-icon-light);
+
+  --success-bg: var(--success-bg-light);
+  --success-border: var(--success-border-light);
+  --success-text: var(--success-text-light);
+  --success-icon: var(--success-icon-light);
+
+  --warning-bg: var(--warning-bg-light);
+  --warning-border: var(--warning-border-light);
+  --warning-text: var(--warning-text-light);
+  --warning-icon: var(--warning-icon-light);
+
+  --error-bg: var(--error-bg-light);
+  --error-border: var(--error-border-light);
+  --error-text: var(--error-text-light);
+  --error-icon: var(--error-icon-light);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color var(--transition-duration) ease-in-out,
+    color var(--transition-duration) ease-in-out;
+}
+
+/* カスタムスクロールバー */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-primary);
+}
+
+/* 選択テキストのスタイル */
+::selection {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+/* すべてのテーマ依存要素にトランジションを追加 */
+*,
+*::before,
+*::after {
+  transition-property: none;
+}
+
+/* 必要な要素のみにテーマ関連のトランジションを適用 */
+html.transitioning * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: ease-in-out;
+}
+
+body,
+button,
+a,
+.theme-transition {
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: ease-in-out;
+}

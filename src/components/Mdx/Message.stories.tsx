@@ -109,3 +109,50 @@ export const WithoutTitle: Story = {
     ),
   },
 };
+
+export const DarkTheme: Story = {
+  args: {
+    title: "ダークモードのメッセージ",
+    children: (
+      <p>
+        これはダークモードで表示されるメッセージの例です。テーマに応じて色が変わります。
+      </p>
+    ),
+  },
+  parameters: {
+    themes: { theme: "dark" },
+  },
+};
+
+export const DarkThemeSuccess: Story = {
+  args: {
+    variant: "success",
+    title: "ダークモードの成功メッセージ",
+    children: <p>ダークモードでの成功メッセージの表示例です。</p>,
+  },
+  parameters: {
+    themes: { theme: "dark" },
+  },
+};
+
+export const DarkThemeWarning: Story = {
+  args: {
+    variant: "warning",
+    title: "ダークモードの警告メッセージ",
+    children: <p>ダークモードでの警告メッセージの表示例です。</p>,
+  },
+  parameters: {
+    themes: { theme: "dark" },
+  },
+};
+
+export const DarkThemeError: Story = {
+  args: {
+    variant: "error",
+    title: "ダークモードのエラーメッセージ",
+    children: <p>ダークモードでのエラーメッセージの表示例です。</p>,
+  },
+  parameters: {
+    themes: { theme: "dark" },
+  },
+};

@@ -4,6 +4,7 @@ import { useState, useEffect, type FC, useRef } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { exo_2 } from "@/fonts";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // メニュー項目を定数として定義
 const MENUS = [
@@ -183,8 +184,8 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           className={clsx(
             "w-full transition-all duration-300",
             isScrolled
-              ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-white/95 backdrop-blur-sm py-2"
-              : "w-full bg-white py-4"
+              ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-transparent py-2 backdrop-blur-md border border-opacity-40 border-white/25"
+              : "w-full bg-transparent py-4"
           )}
           style={{
             // 表示時のアニメーション（下から上へ）- 最上部では常に適用しない
@@ -193,6 +194,12 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             })`,
             opacity: shouldBeVisible ? 1 : 0, // 表示すべき場合は不透明度1
             transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
+            backgroundColor: isScrolled
+              ? "var(--header-scrolled-bg)"
+              : "var(--header-bg)",
+            boxShadow: isScrolled
+              ? "0 10px 25px -5px rgba(15, 23, 42, 0.15)"
+              : "none",
           }}
         >
           <div
@@ -225,7 +232,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             ref={menuRef}
             role="navigation"
             className={clsx(
-              "md:hidden bg-white overflow-y-auto transition-all duration-300 absolute w-full left-0 right-0",
+              "md:hidden overflow-y-auto transition-all duration-300 absolute w-full left-0 right-0",
               isScrolled && "rounded-b-xl",
               isMobileMenuOpen
                 ? "opacity-100 shadow-inner visible"
@@ -234,6 +241,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             style={{
               maxHeight: isMobileMenuOpen ? mobileMenuHeight : "0px",
               zIndex: 40,
+              backgroundColor: "var(--background-secondary)",
             }}
           >
             <div className="py-2">
@@ -251,9 +259,14 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       <button
         onClick={toggleHeaderVisibility}
         className={clsx(
-          "fixed right-4 bottom-4 z-50 p-3 rounded-full shadow-lg bg-white/90 backdrop-blur-sm hover:bg-white transition-all",
+          "fixed right-4 bottom-4 z-50 p-3 rounded-full shadow-lg transition-all",
           "flex items-center justify-center"
         )}
+        style={{
+          backgroundColor: "var(--accent-primary)",
+          color: "white",
+          boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)",
+        }}
         aria-label={isVisible ? "ヘッダーを非表示" : "ヘッダーを表示"}
       >
         <span
@@ -306,21 +319,24 @@ const HamburgerIcon: FC<{ isOpen: boolean }> = ({ isOpen }) => {
     <>
       <span
         className={clsx(
-          "block absolute h-0.5 w-6 bg-neutral-800 transform transition-all duration-300 ease-in-out",
+          "block absolute h-0.5 w-6 transform transition-all duration-300 ease-in-out",
           isOpen ? "rotate-45 translate-y-0" : "-translate-y-2"
         )}
+        style={{ backgroundColor: "var(--foreground)" }}
       />
       <span
         className={clsx(
-          "block absolute h-0.5 w-6 bg-neutral-800 transform transition-all duration-300 ease-in-out",
+          "block absolute h-0.5 w-6 transform transition-all duration-300 ease-in-out",
           isOpen ? "opacity-0" : "opacity-100"
         )}
+        style={{ backgroundColor: "var(--foreground)" }}
       />
       <span
         className={clsx(
-          "block absolute h-0.5 w-6 bg-neutral-800 transform transition-all duration-300 ease-in-out",
+          "block absolute h-0.5 w-6 transform transition-all duration-300 ease-in-out",
           isOpen ? "-rotate-45 translate-y-0" : "translate-y-2"
         )}
+        style={{ backgroundColor: "var(--foreground)" }}
       />
     </>
   );
@@ -334,9 +350,13 @@ const SiteLogo: FC<SiteLogoProps> = ({ siteName }) => (
   <Link
     href={"/"}
     className={clsx("text-2xl font-bold relative group", exo_2.className)}
+    style={{ textDecoration: "none" }}
   >
-    <span className="text-neutral-900">{siteName}</span>
-    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neutral-800 transition-all duration-300 group-hover:w-full"></span>
+    <span style={{ color: "var(--foreground)" }}>{siteName}</span>
+    <span
+      className="absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+      style={{ backgroundColor: "var(--accent-primary)" }}
+    ></span>
   </Link>
 );
 
@@ -345,18 +365,25 @@ type NavigationProps = {
 };
 
 const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
-  <ul className="flex gap-4 sm:gap-8">
+  <ul className="flex gap-4 sm:gap-8 items-center">
     {menus.map((menu) => (
       <li key={menu.href}>
         <Link
           href={menu.href}
-          className="px-1 sm:px-2 py-1 relative text-neutral-700 hover:text-neutral-900 transition-colors duration-300 group text-sm sm:text-base"
+          className="px-1 sm:px-2 py-1 relative transition-colors duration-300 group text-sm sm:text-base nav-link"
+          style={{ color: "var(--muted)" }}
         >
           {menu.name}
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-neutral-800 transition-all duration-300 group-hover:w-full"></span>
+          <span
+            className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+            style={{ backgroundColor: "var(--accent-primary)" }}
+          ></span>
         </Link>
       </li>
     ))}
+    <li className="flex items-center">
+      <ThemeToggle className="ml-2" />
+    </li>
   </ul>
 );
 
@@ -382,7 +409,8 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
         >
           <Link
             href={menu.href}
-            className="block py-3 px-4 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 rounded-md transition-colors w-full"
+            className="block py-3 px-4 rounded-md transition-colors w-full mobile-nav-link"
+            style={{ color: "var(--muted)" }}
             onClick={(e) => {
               e.stopPropagation();
               onNavigate();
@@ -392,6 +420,13 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
           </Link>
         </li>
       ))}
+      <li
+        className="menu-item-appear flex justify-between items-center py-3 px-4"
+        style={{ animationDelay: `${menus.length * 80}ms` }}
+      >
+        <span style={{ color: "var(--muted)" }}>テーマ切替</span>
+        <ThemeToggle />
+      </li>
     </ul>
   );
 };
