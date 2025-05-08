@@ -208,6 +208,10 @@ export default function SearchComponent() {
             onChange={handleInputChange}
             placeholder="検索キーワードを入力..."
             className="flex-1 p-2 border rounded-md"
+            style={{
+              color: "var(--foreground)",
+              backgroundColor: "var(--input-bg)",
+            }}
             aria-label="検索"
             disabled={!!pagefindError || !pagefindLoaded}
           />
@@ -245,18 +249,22 @@ export default function SearchComponent() {
                     <h3 className="text-xl font-semibold mb-2">
                       <a
                         href={result.url}
-                        className="text-blue-600 hover:underline"
+                        className="hover:underline"
+                        style={{ color: "var(--accent-primary)" }}
                       >
                         {result.meta.title || "タイトルなし"}
                       </a>
                     </h3>
                     {result.excerpt && (
                       <div
-                        className="text-gray-600"
+                        style={{ color: "var(--muted)" }}
                         dangerouslySetInnerHTML={{ __html: result.excerpt }}
                       />
                     )}
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p
+                      className="text-sm mt-1"
+                      style={{ color: "var(--muted-secondary)" }}
+                    >
                       <a href={result.url} className="hover:underline">
                         {result.url}
                       </a>

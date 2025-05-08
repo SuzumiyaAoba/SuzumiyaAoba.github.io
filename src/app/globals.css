@@ -7,6 +7,7 @@
   --background-secondary-light: #e2e8f0;
   --foreground-light: #0f172a;
   --muted-light: #64748b;
+  --muted-secondary-light: #94a3b8;
   --accent-primary-light: #4f46e5;
   --accent-secondary-light: #0ea5e9;
   --border-light: #cbd5e1;
@@ -16,12 +17,14 @@
   --scrollbar-thumb-light: #94a3b8;
   --header-bg-light: rgba(248, 250, 252, 0.8);
   --header-scrolled-bg-light: rgba(255, 255, 255, 0.92);
+  --input-bg-light: #ffffff;
 
   /* ダークテーマの変数 */
   --background-dark: #1e2638;
   --background-secondary-dark: #293244;
   --foreground-dark: #f8fafc;
   --muted-dark: #a8b9d5;
+  --muted-secondary-dark: #64748b;
   --accent-primary-dark: #6366f1;
   --accent-secondary-dark: #22d3ee;
   --border-dark: #475569;
@@ -31,12 +34,14 @@
   --scrollbar-thumb-dark: #64748b;
   --header-bg-dark: rgba(44, 53, 73, 0.9);
   --header-scrolled-bg-dark: rgba(41, 50, 68, 0.92);
+  --input-bg-dark: #293244;
 
   /* デフォルトはライトテーマ */
   --background: var(--background-light);
   --background-secondary: var(--background-secondary-light);
   --foreground: var(--foreground-light);
   --muted: var(--muted-light);
+  --muted-secondary: var(--muted-secondary-light);
   --accent-primary: var(--accent-primary-light);
   --accent-secondary: var(--accent-secondary-light);
   --border: var(--border-light);
@@ -46,6 +51,7 @@
   --scrollbar-thumb: var(--scrollbar-thumb-light);
   --header-bg: var(--header-bg-light);
   --header-scrolled-bg: var(--header-scrolled-bg-light);
+  --input-bg: var(--input-bg-light);
 }
 
 /* メディアクエリでシステムの設定に基づいてダークモードを適用 */
@@ -55,6 +61,7 @@
     --background-secondary: var(--background-secondary-dark);
     --foreground: var(--foreground-dark);
     --muted: var(--muted-dark);
+    --muted-secondary: var(--muted-secondary-dark);
     --accent-primary: var(--accent-primary-dark);
     --accent-secondary: var(--accent-secondary-dark);
     --border: var(--border-dark);
@@ -64,6 +71,7 @@
     --scrollbar-thumb: var(--scrollbar-thumb-dark);
     --header-bg: var(--header-bg-dark);
     --header-scrolled-bg: var(--header-scrolled-bg-dark);
+    --input-bg: var(--input-bg-dark);
   }
 }
 
@@ -73,6 +81,7 @@
   --background-secondary: var(--background-secondary-dark);
   --foreground: var(--foreground-dark);
   --muted: var(--muted-dark);
+  --muted-secondary: var(--muted-secondary-dark);
   --accent-primary: var(--accent-primary-dark);
   --accent-secondary: var(--accent-secondary-dark);
   --border: var(--border-dark);
@@ -82,6 +91,7 @@
   --scrollbar-thumb: var(--scrollbar-thumb-dark);
   --header-bg: var(--header-bg-dark);
   --header-scrolled-bg: var(--header-scrolled-bg-dark);
+  --input-bg: var(--input-bg-dark);
 }
 
 /* ユーザーが明示的にライトモードを選択した場合 */
@@ -90,6 +100,7 @@
   --background-secondary: var(--background-secondary-light);
   --foreground: var(--foreground-light);
   --muted: var(--muted-light);
+  --muted-secondary: var(--muted-secondary-light);
   --accent-primary: var(--accent-primary-light);
   --accent-secondary: var(--accent-secondary-light);
   --border: var(--border-light);
@@ -99,6 +110,7 @@
   --scrollbar-thumb: var(--scrollbar-thumb-light);
   --header-bg: var(--header-bg-light);
   --header-scrolled-bg: var(--header-scrolled-bg-light);
+  --input-bg: var(--input-bg-light);
 }
 
 body {

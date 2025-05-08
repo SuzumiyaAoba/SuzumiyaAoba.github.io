@@ -17,7 +17,7 @@ export const ThemeToggle: FC<ThemeToggleProps> = ({ className }) => {
   return (
     <button
       onClick={toggleTheme}
-      className={`p-2 rounded-full flex items-center justify-center focus:outline-none transition-colors ${className}`}
+      className={`p-1 rounded-full flex items-center justify-center focus:outline-none transition-colors ${className}`}
       style={{
         backgroundColor: "var(--card-bg)",
         color: "var(--foreground)",

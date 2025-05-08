@@ -364,7 +364,7 @@ type NavigationProps = {
 };
 
 const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
-  <ul className="flex gap-4 sm:gap-8">
+  <ul className="flex gap-4 sm:gap-8 items-center">
     {menus.map((menu) => (
       <li key={menu.href}>
         <Link
@@ -380,7 +380,7 @@ const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
         </Link>
       </li>
     ))}
-    <li>
+    <li className="flex items-center">
       <ThemeToggle className="ml-2" />
     </li>
   </ul>
