@@ -31,7 +31,7 @@ export const Comments = memo(
     category = "Announcements",
     categoryId = "DIC_kwDOOapTPc4Cp5td",
     mapping = "pathname",
-    theme = "light",
+    theme = "dark_dimmed",
     lang = "ja",
     className,
     inputPosition = "top",

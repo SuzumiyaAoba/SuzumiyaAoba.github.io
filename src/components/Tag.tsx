@@ -64,8 +64,9 @@ const tagToIcon = ({ tag }: TagToIconProps) => {
     : DEFAULT_ICON;
 };
 
+// ダークテーマに対応したタグのスタイル
 const tagVariants = cva(
-  "flex w-fit break-keep items-center px-2 py-0.5 border border-neutral-400 rounded-md bg-neutral-100 transition-colors hover:bg-neutral-200 text-neutral-900 font-normal",
+  "flex w-fit break-keep items-center px-2 py-0.5 rounded-md transition-colors font-normal",
   {
     variants: {
       size: {
@@ -74,9 +75,9 @@ const tagVariants = cva(
         lg: "text-base",
       },
       variant: {
-        default: "bg-neutral-100 hover:bg-neutral-200",
-        primary: "bg-blue-100 border-blue-400 hover:bg-blue-200",
-        secondary: "bg-green-100 border-green-400 hover:bg-green-200",
+        default: "",
+        primary: "",
+        secondary: "",
       },
     },
     defaultVariants: {
@@ -86,11 +87,40 @@ const tagVariants = cva(
   }
 );
 
-// インラインスタイルでリンクのスタイルを上書き
-const tagLinkStyle = {
-  textDecoration: "none",
-  color: "#171717", // text-neutral-900 相当
-  fontWeight: "normal",
+// タグのスタイル（CSS変数を使用）
+const getTagStyle = (variant: string = "default") => {
+  const baseStyle = {
+    backgroundColor: "var(--card-bg)",
+    color: "var(--foreground)",
+    borderColor: "var(--border)",
+    border: "1px solid var(--border)",
+  };
+
+  switch (variant) {
+    case "primary":
+      return {
+        ...baseStyle,
+        backgroundColor: "rgba(99, 102, 241, 0.2)",
+        borderColor: "var(--accent-primary)",
+      };
+    case "secondary":
+      return {
+        ...baseStyle,
+        backgroundColor: "rgba(34, 211, 238, 0.2)",
+        borderColor: "var(--accent-secondary)",
+      };
+    default:
+      return baseStyle;
+  }
+};
+
+// タグリンクのスタイル
+const getTagLinkStyle = (variant: string = "default") => {
+  return {
+    ...getTagStyle(variant),
+    textDecoration: "none",
+    fontWeight: "normal",
+  };
 };
 
 export interface TagProps extends VariantProps<typeof tagVariants> {
@@ -117,6 +147,7 @@ export const Tag: FC<TagProps> = memo(
     );
 
     const tagContent = createTagContent({ iconClass, label });
+    const variantName = variant || "default";
 
     if (href) {
       return (
@@ -124,10 +155,10 @@ export const Tag: FC<TagProps> = memo(
           href={href}
           className={cn(
             tagVariants({ size, variant }),
-            "no-underline text-neutral-900 font-normal",
+            "no-underline font-normal hover:opacity-90",
             className
           )}
-          style={tagLinkStyle}
+          style={getTagLinkStyle(variantName)}
         >
           {tagContent}
         </Link>
@@ -135,7 +166,10 @@ export const Tag: FC<TagProps> = memo(
     }
 
     return (
-      <span className={cn(tagVariants({ size, variant }), className)}>
+      <span
+        className={cn(tagVariants({ size, variant }), className)}
+        style={getTagStyle(variantName)}
+      >
         {tagContent}
       </span>
     );

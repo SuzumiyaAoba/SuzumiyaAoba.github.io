@@ -18,7 +18,8 @@
 
     > a,
     a:hover {
-      @apply text-black font-normal;
+      color: var(--foreground);
+      @apply font-normal;
       @apply no-underline;
     }
   }
@@ -28,7 +29,7 @@
   h4:before,
   h5:before,
   h6:before {
-    @apply text-neutral-400;
+    color: var(--muted);
   }
 
   h2:hover:before,
@@ -36,7 +37,7 @@
   h4:hover:before,
   h5:hover:before,
   h6:hover:before {
-    @apply text-orange-600;
+    color: var(--accent-primary);
   }
 
   h2:before {
@@ -96,6 +97,7 @@
   p {
     @apply my-4;
     @apply leading-7;
+    color: var(--foreground);
   }
 
   blockquote {
@@ -103,26 +105,38 @@
     margin-left: 1.5rem;
     padding-left: 1rem;
     border-left: solid;
-    color: rgb(82 82 82);
-    border-color: rgb(82 82 82);
+    color: var(--muted);
+    border-color: var(--accent-primary);
+    background-color: rgba(99, 102, 241, 0.1);
+    padding: 1rem;
+    border-radius: 0 0.25rem 0.25rem 0;
   }
 
   a {
-    @apply font-bold text-blue-600;
+    @apply font-bold;
+    color: var(--accent-primary);
     /* @apply underline underline-offset-4 decoration-wavy decoration-neutral-400; */
     @apply decoration-wavy;
-    @apply hover:underline hover:decoration-blue-600;
+    @apply hover:underline;
+    &:hover {
+      color: var(--accent-secondary);
+      text-decoration-color: var(--accent-secondary);
+    }
   }
 
   img {
     @apply p-8;
     @apply my-8 mx-auto;
-    @apply border border-neutral-600;
-    border-radius: 4px;
+    @apply border;
+    border-color: var(--border);
+    border-radius: 8px;
+    background-color: rgba(44, 53, 73, 0.8);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
   }
 
   li {
     @apply my-2;
+    color: var(--foreground);
   }
 
   ul,
@@ -158,20 +172,23 @@
 
     border-collapse: collapse;
     border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   table tr {
-    border-bottom: solid 1px #eee;
+    border-bottom: solid 1px var(--border);
   }
 
   table tr:hover {
-    @apply bg-neutral-200;
+    background-color: rgba(79, 70, 229, 0.05);
   }
 
   table th {
     font-weight: 900;
-    /* @apply bg-blue-500 text-white; */
-    @apply bg-black text-white;
+    background-color: var(--background-secondary);
+    color: var(--foreground);
   }
 
   table th,
@@ -181,8 +198,11 @@
 
   kbd {
     @apply px-1;
-    @apply bg-gray-200;
-    @apply border border-rounded border-gray-400 drop-shadow;
+    background-color: var(--card-bg);
+    @apply border border-rounded;
+    border-color: var(--border);
+    color: var(--foreground);
+    @apply drop-shadow;
   }
 
   // Code block
@@ -195,12 +215,14 @@
   pre {
     font-family: var(--font-mono);
     @apply text-xs;
-    @apply bg-slate-100;
+    background-color: var(--code-bg);
+    color: var(--foreground);
     overflow-x: auto;
     padding: 1rem 0;
-    border-radius: 4px;
-    /* border: solid 0.5px; */
+    border-radius: 8px;
+    border: 1px solid var(--border);
     margin: 1.5rem 0;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
   }
 
   pre [data-line] {
@@ -208,12 +230,13 @@
   }
 
   span[data-highlighted-line] {
-    @apply bg-neutral-200;
+    background-color: rgba(59, 72, 99, 0.6);
   }
 
   mark[data-highlighted-chars] {
     @apply p-0.5;
-    @apply underline underline-offset-2 decoration-wavy decoration-green-600;
+    @apply underline underline-offset-2 decoration-wavy;
+    text-decoration-color: var(--accent-primary);
     @apply bg-transparent;
   }
 
@@ -224,14 +247,14 @@
   :not(pre) > code {
     font-family: var(--font-mono), monospace;
     @apply tracking-tighter;
-    /* color: #ec4899; */
-    @apply text-red-600 bg-red-50;
-    /* @apply drop-shadow-sm; */
-    @apply py-0 px-1;
+    color: var(--accent-secondary);
+    background-color: rgba(34, 211, 238, 0.15);
+    border-radius: 4px;
+    padding: 0.1rem 0.3rem;
   }
 
   :not(pre) > code[class*="language-math"] {
-    color: black;
+    color: var(--foreground);
   }
 
   code {
@@ -247,7 +270,7 @@
     width: 1rem;
     margin-right: 1rem;
     text-align: right;
-    color: gray;
+    color: var(--muted);
   }
 
   code[data-line-numbers-max-digits="2"] > [data-line]::before {
@@ -322,8 +345,9 @@
 .tocSideStyles {
   :global {
     .toc-container {
-      @apply bg-white;
-      @apply border border-neutral-200 rounded-lg;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      @apply rounded-lg;
       @apply shadow-sm;
       @apply transition-all duration-200;
       @apply my-0;
@@ -341,9 +365,10 @@
 
     .toc-summary {
       @apply font-bold px-3 py-1.5;
-      @apply bg-white text-neutral-800;
+      background-color: var(--background-secondary);
+      color: var(--foreground);
       @apply flex justify-between items-center;
-      @apply border-b border-neutral-200;
+      border-bottom: 1px solid var(--border);
       list-style: none;
       position: relative;
       font-size: 0.95rem;
@@ -432,17 +457,20 @@
     }
 
     .toc-link {
-      @apply text-neutral-700 no-underline font-normal;
+      color: var(--muted);
+      @apply no-underline font-normal;
       @apply inline-block;
       @apply break-words;
       line-height: 1.2;
 
       &:hover {
-        @apply text-blue-600 underline;
+        color: var(--accent-secondary);
+        @apply underline;
       }
 
       &.toc-link-active {
-        @apply text-blue-600 font-bold;
+        color: var(--accent-primary);
+        @apply font-bold;
       }
     }
   }
