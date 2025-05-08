@@ -19,6 +19,27 @@
   --header-scrolled-bg-light: rgba(255, 255, 255, 0.92);
   --input-bg-light: #ffffff;
 
+  /* Messageコンポーネント用のライトテーマ変数 */
+  --info-bg-light: #f0f7ff;
+  --info-border-light: #93c5fd;
+  --info-text-light: #1e40af;
+  --info-icon-light: #1e40af;
+
+  --success-bg-light: #f0fdf4;
+  --success-border-light: #86efac;
+  --success-text-light: #166534;
+  --success-icon-light: #166534;
+
+  --warning-bg-light: #fffbeb;
+  --warning-border-light: #fcd34d;
+  --warning-text-light: #92400e;
+  --warning-icon-light: #92400e;
+
+  --error-bg-light: #fef2f2;
+  --error-border-light: #fca5a5;
+  --error-text-light: #b91c1c;
+  --error-icon-light: #b91c1c;
+
   /* ダークテーマの変数 */
   --background-dark: #1e2638;
   --background-secondary-dark: #293244;
@@ -36,6 +57,27 @@
   --header-scrolled-bg-dark: rgba(41, 50, 68, 0.92);
   --input-bg-dark: #293244;
 
+  /* Messageコンポーネント用のダークテーマ変数 */
+  --info-bg-dark: #172554;
+  --info-border-dark: #3b82f6;
+  --info-text-dark: #bfdbfe;
+  --info-icon-dark: #bfdbfe;
+
+  --success-bg-dark: #14532d;
+  --success-border-dark: #22c55e;
+  --success-text-dark: #bbf7d0;
+  --success-icon-dark: #bbf7d0;
+
+  --warning-bg-dark: #713f12;
+  --warning-border-dark: #eab308;
+  --warning-text-dark: #fef3c7;
+  --warning-icon-dark: #fef3c7;
+
+  --error-bg-dark: #7f1d1d;
+  --error-border-dark: #ef4444;
+  --error-text-dark: #fee2e2;
+  --error-icon-dark: #fee2e2;
+
   /* デフォルトはライトテーマ */
   --background: var(--background-light);
   --background-secondary: var(--background-secondary-light);
@@ -52,6 +94,27 @@
   --header-bg: var(--header-bg-light);
   --header-scrolled-bg: var(--header-scrolled-bg-light);
   --input-bg: var(--input-bg-light);
+
+  /* Messageコンポーネントのデフォルト変数 */
+  --info-bg: var(--info-bg-light);
+  --info-border: var(--info-border-light);
+  --info-text: var(--info-text-light);
+  --info-icon: var(--info-icon-light);
+
+  --success-bg: var(--success-bg-light);
+  --success-border: var(--success-border-light);
+  --success-text: var(--success-text-light);
+  --success-icon: var(--success-icon-light);
+
+  --warning-bg: var(--warning-bg-light);
+  --warning-border: var(--warning-border-light);
+  --warning-text: var(--warning-text-light);
+  --warning-icon: var(--warning-icon-light);
+
+  --error-bg: var(--error-bg-light);
+  --error-border: var(--error-border-light);
+  --error-text: var(--error-text-light);
+  --error-icon: var(--error-icon-light);
 }
 
 /* メディアクエリでシステムの設定に基づいてダークモードを適用 */
@@ -72,6 +135,27 @@
     --header-bg: var(--header-bg-dark);
     --header-scrolled-bg: var(--header-scrolled-bg-dark);
     --input-bg: var(--input-bg-dark);
+
+    /* Message コンポーネント用ダークモード設定 */
+    --info-bg: var(--info-bg-dark);
+    --info-border: var(--info-border-dark);
+    --info-text: var(--info-text-dark);
+    --info-icon: var(--info-icon-dark);
+
+    --success-bg: var(--success-bg-dark);
+    --success-border: var(--success-border-dark);
+    --success-text: var(--success-text-dark);
+    --success-icon: var(--success-icon-dark);
+
+    --warning-bg: var(--warning-bg-dark);
+    --warning-border: var(--warning-border-dark);
+    --warning-text: var(--warning-text-dark);
+    --warning-icon: var(--warning-icon-dark);
+
+    --error-bg: var(--error-bg-dark);
+    --error-border: var(--error-border-dark);
+    --error-text: var(--error-text-dark);
+    --error-icon: var(--error-icon-dark);
   }
 }
 
@@ -92,6 +176,27 @@
   --header-bg: var(--header-bg-dark);
   --header-scrolled-bg: var(--header-scrolled-bg-dark);
   --input-bg: var(--input-bg-dark);
+
+  /* Message コンポーネント用ダークモード設定 */
+  --info-bg: var(--info-bg-dark);
+  --info-border: var(--info-border-dark);
+  --info-text: var(--info-text-dark);
+  --info-icon: var(--info-icon-dark);
+
+  --success-bg: var(--success-bg-dark);
+  --success-border: var(--success-border-dark);
+  --success-text: var(--success-text-dark);
+  --success-icon: var(--success-icon-dark);
+
+  --warning-bg: var(--warning-bg-dark);
+  --warning-border: var(--warning-border-dark);
+  --warning-text: var(--warning-text-dark);
+  --warning-icon: var(--warning-icon-dark);
+
+  --error-bg: var(--error-bg-dark);
+  --error-border: var(--error-border-dark);
+  --error-text: var(--error-text-dark);
+  --error-icon: var(--error-icon-dark);
 }
 
 /* ユーザーが明示的にライトモードを選択した場合 */
@@ -111,6 +216,27 @@
   --header-bg: var(--header-bg-light);
   --header-scrolled-bg: var(--header-scrolled-bg-light);
   --input-bg: var(--input-bg-light);
+
+  /* Message コンポーネント用ライトモード設定 */
+  --info-bg: var(--info-bg-light);
+  --info-border: var(--info-border-light);
+  --info-text: var(--info-text-light);
+  --info-icon: var(--info-icon-light);
+
+  --success-bg: var(--success-bg-light);
+  --success-border: var(--success-border-light);
+  --success-text: var(--success-text-light);
+  --success-icon: var(--success-icon-light);
+
+  --warning-bg: var(--warning-bg-light);
+  --warning-border: var(--warning-border-light);
+  --warning-text: var(--warning-text-light);
+  --warning-icon: var(--warning-icon-light);
+
+  --error-bg: var(--error-bg-light);
+  --error-border: var(--error-border-light);
+  --error-text: var(--error-text-light);
+  --error-icon: var(--error-icon-light);
 }
 
 body {
