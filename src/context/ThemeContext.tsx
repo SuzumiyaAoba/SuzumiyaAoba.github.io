@@ -29,21 +29,37 @@ export const useTheme = () => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  // サーバーサイドレンダリングとの一貫性のために、初期値を「light」に設定
   const [theme, setThemeState] = useState<Theme>("system");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
 
   // 保存されたテーマを取得し、適用する
   useEffect(() => {
+    // サーバーサイドでレンダリングされた初期テーマを取得
+    const initialTheme = document.documentElement.getAttribute("data-theme") as
+      | "light"
+      | "dark";
+
+    // ローカルストレージからテーマを取得
     const savedTheme = localStorage.getItem("theme") as Theme | null;
+
     if (savedTheme) {
       setThemeState(savedTheme);
     }
+
+    // 解決されたテーマを初期値として設定
+    if (initialTheme) {
+      setResolvedTheme(initialTheme);
+    }
+
     setMounted(true);
   }, []);
 
   // システムの設定を検出し、テーマが「system」の場合はそれに従う
   useEffect(() => {
+    if (!mounted) return;
+
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = () => {
@@ -56,7 +72,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     handleChange(); // 初期値を設定
 
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [theme, mounted]);
 
   // テーマの変更時に実際のDOM属性を更新
   useEffect(() => {

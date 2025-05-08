@@ -69,7 +69,12 @@ export default async function RootLayout({
   const keywordTitleMap = await getKeywordTitleMap();
 
   return (
-    <html lang="ja" className="overflow-x-hidden h-full">
+    <html
+      lang="ja"
+      className="overflow-x-hidden h-full"
+      data-theme="light"
+      suppressHydrationWarning
+    >
       <head>
         <style>
           {`
@@ -84,7 +89,15 @@ export default async function RootLayout({
           {`
             (function() {
               try {
-                // ローカルストレージからテーマを取得
+                // すでに設定されているテーマを確認（サーバーサイドでレンダリングされたもの）
+                var currentTheme = document.documentElement.getAttribute('data-theme');
+                
+                // サーバーサイドですでにテーマが設定されている場合は、それを尊重する
+                if (currentTheme) {
+                  return;
+                }
+                
+                // サーバーサイドで設定されていない場合のみ、クライアント側でテーマを設定
                 var savedTheme = localStorage.getItem('theme');
                 var theme = savedTheme || 'system';
                 
