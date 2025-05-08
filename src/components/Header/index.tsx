@@ -4,6 +4,7 @@ import { useState, useEffect, type FC, useRef } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { exo_2 } from "@/fonts";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // メニュー項目を定数として定義
 const MENUS = [
@@ -379,6 +380,9 @@ const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
         </Link>
       </li>
     ))}
+    <li>
+      <ThemeToggle className="ml-2" />
+    </li>
   </ul>
 );
 
@@ -415,6 +419,13 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
           </Link>
         </li>
       ))}
+      <li
+        className="menu-item-appear flex justify-between items-center py-3 px-4"
+        style={{ animationDelay: `${menus.length * 80}ms` }}
+      >
+        <span style={{ color: "var(--muted)" }}>テーマ切替</span>
+        <ThemeToggle />
+      </li>
     </ul>
   );
 };

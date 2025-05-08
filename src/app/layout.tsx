@@ -14,6 +14,7 @@ import {
   getNoteTitleMap,
   getKeywordTitleMap,
 } from "@/libs/contents/title-map";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -87,24 +88,26 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <Header siteName={config.metadata.title} />
-        <div className="content-container mt-header flex-grow w-full">
-          <BreadcrumbNav
-            blogTitleMap={blogTitleMap}
-            noteTitleMap={noteTitleMap}
-            keywordTitleMap={keywordTitleMap}
+        <ThemeProvider>
+          <Header siteName={config.metadata.title} />
+          <div className="content-container mt-header flex-grow w-full">
+            <BreadcrumbNav
+              blogTitleMap={blogTitleMap}
+              noteTitleMap={noteTitleMap}
+              keywordTitleMap={keywordTitleMap}
+            />
+            {children}
+          </div>
+          <Footer
+            copyright="SuzumiyaAoba"
+            poweredBy={{
+              name: "Next.js",
+              url: "https://nextjs.org",
+            }}
           />
-          {children}
-        </div>
-        <Footer
-          copyright="SuzumiyaAoba"
-          poweredBy={{
-            name: "Next.js",
-            url: "https://nextjs.org",
-          }}
-        />
-        <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-        <GoogleAdsenseScript />
+          <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+          <GoogleAdsenseScript />
+        </ThemeProvider>
       </body>
     </html>
   );

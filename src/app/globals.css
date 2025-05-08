@@ -2,19 +2,103 @@
 @unocss all;
 
 :root {
-  --background: #1e2638;
-  --background-secondary: #293244;
-  --foreground: #f8fafc;
-  --muted: #a8b9d5;
-  --accent-primary: #6366f1;
-  --accent-secondary: #22d3ee;
-  --border: #475569;
-  --card-bg: #2c3549;
-  --code-bg: #242e42;
-  --code-highlight: #3b4863;
-  --scrollbar-thumb: #64748b;
-  --header-bg: rgba(44, 53, 73, 0.9);
-  --header-scrolled-bg: rgba(41, 50, 68, 0.92);
+  /* ライトテーマの変数 */
+  --background-light: #f8fafc;
+  --background-secondary-light: #e2e8f0;
+  --foreground-light: #0f172a;
+  --muted-light: #64748b;
+  --accent-primary-light: #4f46e5;
+  --accent-secondary-light: #0ea5e9;
+  --border-light: #cbd5e1;
+  --card-bg-light: #ffffff;
+  --code-bg-light: #f1f5f9;
+  --code-highlight-light: #e2e8f0;
+  --scrollbar-thumb-light: #94a3b8;
+  --header-bg-light: rgba(248, 250, 252, 0.8);
+  --header-scrolled-bg-light: rgba(255, 255, 255, 0.92);
+
+  /* ダークテーマの変数 */
+  --background-dark: #1e2638;
+  --background-secondary-dark: #293244;
+  --foreground-dark: #f8fafc;
+  --muted-dark: #a8b9d5;
+  --accent-primary-dark: #6366f1;
+  --accent-secondary-dark: #22d3ee;
+  --border-dark: #475569;
+  --card-bg-dark: #2c3549;
+  --code-bg-dark: #242e42;
+  --code-highlight-dark: #3b4863;
+  --scrollbar-thumb-dark: #64748b;
+  --header-bg-dark: rgba(44, 53, 73, 0.9);
+  --header-scrolled-bg-dark: rgba(41, 50, 68, 0.92);
+
+  /* デフォルトはライトテーマ */
+  --background: var(--background-light);
+  --background-secondary: var(--background-secondary-light);
+  --foreground: var(--foreground-light);
+  --muted: var(--muted-light);
+  --accent-primary: var(--accent-primary-light);
+  --accent-secondary: var(--accent-secondary-light);
+  --border: var(--border-light);
+  --card-bg: var(--card-bg-light);
+  --code-bg: var(--code-bg-light);
+  --code-highlight: var(--code-highlight-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --header-bg: var(--header-bg-light);
+  --header-scrolled-bg: var(--header-scrolled-bg-light);
+}
+
+/* メディアクエリでシステムの設定に基づいてダークモードを適用 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--background-dark);
+    --background-secondary: var(--background-secondary-dark);
+    --foreground: var(--foreground-dark);
+    --muted: var(--muted-dark);
+    --accent-primary: var(--accent-primary-dark);
+    --accent-secondary: var(--accent-secondary-dark);
+    --border: var(--border-dark);
+    --card-bg: var(--card-bg-dark);
+    --code-bg: var(--code-bg-dark);
+    --code-highlight: var(--code-highlight-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+    --header-bg: var(--header-bg-dark);
+    --header-scrolled-bg: var(--header-scrolled-bg-dark);
+  }
+}
+
+/* ユーザーが明示的にダークモードを選択した場合 */
+[data-theme="dark"] {
+  --background: var(--background-dark);
+  --background-secondary: var(--background-secondary-dark);
+  --foreground: var(--foreground-dark);
+  --muted: var(--muted-dark);
+  --accent-primary: var(--accent-primary-dark);
+  --accent-secondary: var(--accent-secondary-dark);
+  --border: var(--border-dark);
+  --card-bg: var(--card-bg-dark);
+  --code-bg: var(--code-bg-dark);
+  --code-highlight: var(--code-highlight-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --header-bg: var(--header-bg-dark);
+  --header-scrolled-bg: var(--header-scrolled-bg-dark);
+}
+
+/* ユーザーが明示的にライトモードを選択した場合 */
+[data-theme="light"] {
+  --background: var(--background-light);
+  --background-secondary: var(--background-secondary-light);
+  --foreground: var(--foreground-light);
+  --muted: var(--muted-light);
+  --accent-primary: var(--accent-primary-light);
+  --accent-secondary: var(--accent-secondary-light);
+  --border: var(--border-light);
+  --card-bg: var(--card-bg-light);
+  --code-bg: var(--code-bg-light);
+  --code-highlight: var(--code-highlight-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --header-bg: var(--header-bg-light);
+  --header-scrolled-bg: var(--header-scrolled-bg-light);
 }
 
 body {

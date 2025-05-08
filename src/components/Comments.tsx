@@ -1,9 +1,10 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import Giscus from "@giscus/react";
 import type { GiscusProps } from "@giscus/react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
 
 // GiscusPropsの必須プロパティをオプショナルにする
 type OptionalGiscusProps = Partial<GiscusProps>;
@@ -24,6 +25,21 @@ export interface CommentsProps
   mapping?: GiscusProps["mapping"];
 }
 
+// Giscusテーマのマッピング
+const giscusThemeMap = {
+  light: "light",
+  dark: "dark_dimmed",
+};
+
+// テーマ変更時のメッセージを送信する関数
+function sendMessageToGiscus(message: { setConfig: { theme: string } }) {
+  const iframe = document.querySelector(
+    "iframe.giscus-frame"
+  ) as HTMLIFrameElement;
+  if (!iframe) return;
+  iframe.contentWindow?.postMessage({ giscus: message }, "https://giscus.app");
+}
+
 export const Comments = memo(
   ({
     repo = "SuzumiyaAoba/comments",
@@ -31,12 +47,34 @@ export const Comments = memo(
     category = "Announcements",
     categoryId = "DIC_kwDOOapTPc4Cp5td",
     mapping = "pathname",
-    theme = "dark_dimmed",
     lang = "ja",
     className,
     inputPosition = "top",
     ...restProps
   }: CommentsProps) => {
+    // サイトのテーマを取得
+    const { resolvedTheme } = useTheme();
+    const [currentTheme, setCurrentTheme] = useState("");
+
+    // テーマが変更されたらGiscusのテーマも変更する
+    useEffect(() => {
+      // resolvedThemeをGiscusのテーマに変換
+      const giscusTheme = giscusThemeMap[resolvedTheme] || "dark_dimmed";
+      setCurrentTheme(giscusTheme);
+
+      // すでにiframeが存在する場合は、メッセージを送信して動的にテーマを変更
+      sendMessageToGiscus({
+        setConfig: {
+          theme: giscusTheme,
+        },
+      });
+    }, [resolvedTheme]);
+
+    // マウント前はレンダリングしない
+    if (!currentTheme) {
+      return <div className={cn("my-8", className)}></div>;
+    }
+
     return (
       <div className={cn("my-8", className)}>
         <Giscus
@@ -50,7 +88,7 @@ export const Comments = memo(
           reactionsEnabled="1"
           emitMetadata="1"
           inputPosition={inputPosition}
-          theme={theme}
+          theme={currentTheme}
           lang={lang}
           loading="lazy"
           {...restProps}
