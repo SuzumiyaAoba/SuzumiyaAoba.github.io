@@ -74,6 +74,13 @@ a:hover {
   text-decoration: underline;
 }
 
+/* 特定のナビゲーションリンクではhover時の下線を無効化 */
+header a:hover,
+.nav-link:hover,
+.mobile-nav-link:hover {
+  text-decoration: none;
+}
+
 /* カード要素のスタイル */
 .card {
   background-color: var(--card-bg);
@@ -176,6 +183,7 @@ footer a:hover {
 
 .nav-link:hover {
   color: var(--foreground);
+  text-decoration: none;
 }
 
 .mobile-nav-link {
@@ -186,6 +194,7 @@ footer a:hover {
 .mobile-nav-link:hover {
   color: var(--foreground);
   background-color: var(--card-bg);
+  text-decoration: none;
 }
 
 /* タグのスタイル拡張 */

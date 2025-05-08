@@ -350,6 +350,7 @@ const SiteLogo: FC<SiteLogoProps> = ({ siteName }) => (
   <Link
     href={"/"}
     className={clsx("text-2xl font-bold relative group", exo_2.className)}
+    style={{ textDecoration: "none" }}
   >
     <span style={{ color: "var(--foreground)" }}>{siteName}</span>
     <span
