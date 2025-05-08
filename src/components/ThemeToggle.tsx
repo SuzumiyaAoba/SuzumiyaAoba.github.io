@@ -1,7 +1,7 @@
 "use client";
 
 import { FC } from "react";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "next-themes";
 
 type ThemeToggleProps = {
   className?: string;

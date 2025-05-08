@@ -115,6 +115,9 @@
   --error-border: var(--error-border-light);
   --error-text: var(--error-text-light);
   --error-icon: var(--error-icon-light);
+
+  /* テーマ切り替えのためのトランジション設定 */
+  --transition-duration: 200ms;
 }
 
 /* メディアクエリでシステムの設定に基づいてダークモードを適用 */
@@ -242,6 +245,8 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  transition: background-color var(--transition-duration) ease-in-out,
+    color var(--transition-duration) ease-in-out;
 }
 
 /* カスタムスクロールバー */
@@ -267,4 +272,27 @@ body {
 ::selection {
   background-color: var(--accent-primary);
   color: white;
+}
+
+/* すべてのテーマ依存要素にトランジションを追加 */
+*,
+*::before,
+*::after {
+  transition-property: none;
+}
+
+/* 必要な要素のみにテーマ関連のトランジションを適用 */
+html.transitioning * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: ease-in-out;
+}
+
+body,
+button,
+a,
+.theme-transition {
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: ease-in-out;
 }

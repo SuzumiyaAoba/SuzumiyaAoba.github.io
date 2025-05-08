@@ -14,7 +14,7 @@ import {
   getNoteTitleMap,
   getKeywordTitleMap,
 } from "@/libs/contents/title-map";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "next-themes";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -72,7 +72,6 @@ export default async function RootLayout({
     <html
       lang="ja"
       className="overflow-x-hidden h-full"
-      data-theme="light"
       suppressHydrationWarning
     >
       <head>
@@ -84,37 +83,7 @@ export default async function RootLayout({
             }
           `}
         </style>
-        {/* テーマのフラッシュを防ぐために、DOMの読み込み前にテーマを設定 */}
-        <Script id="theme-script" strategy="beforeInteractive">
-          {`
-            (function() {
-              try {
-                // すでに設定されているテーマを確認（サーバーサイドでレンダリングされたもの）
-                var currentTheme = document.documentElement.getAttribute('data-theme');
-                
-                // サーバーサイドですでにテーマが設定されている場合は、それを尊重する
-                if (currentTheme) {
-                  return;
-                }
-                
-                // サーバーサイドで設定されていない場合のみ、クライアント側でテーマを設定
-                var savedTheme = localStorage.getItem('theme');
-                var theme = savedTheme || 'system';
-                
-                if (theme === 'system') {
-                  // システムの設定を検出
-                  var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                  document.documentElement.setAttribute('data-theme', systemTheme);
-                } else {
-                  document.documentElement.setAttribute('data-theme', theme);
-                }
-              } catch (e) {
-                // エラーが発生した場合は何もしない
-                console.error('テーマの初期化中にエラーが発生しました:', e);
-              }
-            })();
-          `}
-        </Script>
+        {/* next-themesはflashを自動的に防止するため、以下のスクリプトは不要となります */}
       </head>
       <body
         className={clsx(
@@ -124,7 +93,11 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <ThemeProvider>
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+        >
           <Header siteName={config.metadata.title} />
           <div className="content-container mt-header flex-grow w-full">
             <BreadcrumbNav

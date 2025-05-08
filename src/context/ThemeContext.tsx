@@ -13,7 +13,7 @@ interface ThemeContextType {
 const defaultValue: ThemeContextType = {
   theme: "system",
   setTheme: () => null,
-  resolvedTheme: "light",
+  resolvedTheme: "dark",
 };
 
 export const ThemeContext = createContext<ThemeContextType>(defaultValue);
@@ -29,9 +29,9 @@ export const useTheme = () => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // サーバーサイドレンダリングとの一貫性のために、初期値を「light」に設定
+  // サーバーサイドレンダリングとの一貫性のために、初期値を設定
   const [theme, setThemeState] = useState<Theme>("system");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
 
   // 保存されたテーマを取得し、適用する
