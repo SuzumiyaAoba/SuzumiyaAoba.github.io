@@ -1,7 +1,11 @@
-import { ASCII_TABLE_ATTR } from "./StandardCode.utils";
+import { ASCII_TABLE_ATTR, THEME_COLORS } from "./StandardCode.utils";
+import { useTheme } from "next-themes";
 
 export const TopLine = () => {
   const { cellWidth } = ASCII_TABLE_ATTR;
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return (
     <line
@@ -9,7 +13,7 @@ export const TopLine = () => {
       y1={0}
       x2={cellWidth * 3.5}
       y2={0}
-      stroke="black"
+      stroke={themeColors.stroke}
       strokeWidth="1"
     />
   );

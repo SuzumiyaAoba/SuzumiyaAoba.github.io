@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
-import { Cell, ASCII_TABLE_ATTR } from "./StandardCode.utils";
+import { Cell, ASCII_TABLE_ATTR, THEME_COLORS } from "./StandardCode.utils";
 import { HoveredCellContext } from "./StandardCode.context";
+import { useTheme } from "next-themes";
 
 export const TopSide = () => {
   const { cellWidth, cellHeight } = ASCII_TABLE_ATTR;
@@ -11,6 +12,9 @@ export const TopSide = () => {
   const offsetX = ASCII_TABLE_ATTR.offsetX + cellWidth / 5;
   const hoveredValue = useContext(HoveredCellContext);
   const columnNum = 8;
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return range(columnNum).flatMap((px) => {
     const isHovered = hoveredValue?.[0] === px;
@@ -29,10 +33,12 @@ export const TopSide = () => {
               height={cellHeight}
               offsetX={offsetX}
               sides={["left", "right"]}
-              stroke="black"
-              fill={isHovered ? "oklch(0.723 0.219 149.579)" : "transparent"}
+              stroke={themeColors.stroke}
+              fill={isHovered ? themeColors.hover.primary : "transparent"}
               fontWeight={isHovered ? "bold" : "normal"}
-              color={isHovered ? "#ffffff" : "black"}
+              color={
+                isHovered ? themeColors.text.hover : themeColors.text.normal
+              }
             >
               {b}
             </RectText>
@@ -43,11 +49,12 @@ export const TopSide = () => {
           y={cellHeight * 3}
           width={cellWidth}
           height={cellHeight * 2}
-          fill={isHovered ? "oklch(0.872 0.01 258.338)" : "transparent"}
-          stroke="black"
+          fill={isHovered ? themeColors.hover.secondary : "transparent"}
+          stroke={themeColors.stroke}
           fontSize={fontSize}
           offsetX={offsetX - 2}
           offsetY={cellHeight * 0.75}
+          color={themeColors.text.normal}
         >
           {px}
         </RectText>

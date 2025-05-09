@@ -1,10 +1,14 @@
 import { range } from "d3";
-import { ASCII_TABLE_ATTR } from "./StandardCode.utils";
+import { ASCII_TABLE_ATTR, THEME_COLORS } from "./StandardCode.utils";
 import Arrow from "./Arrow";
+import { useTheme } from "next-themes";
 
 export const B5B7Rows = () => {
   const { x, cellHeight, offsetY } = ASCII_TABLE_ATTR;
   const cellWidth = x / 5;
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return (
     <>
@@ -18,6 +22,7 @@ export const B5B7Rows = () => {
             x={textX}
             y={textY}
             fontSize="0.8rem"
+            fill={themeColors.text.normal}
           >
             {`b${7 - py}`}
           </text>,
@@ -27,6 +32,7 @@ export const B5B7Rows = () => {
             startY={textY + offsetY / 2}
             endX={x}
             endY={textY + offsetY / 2}
+            color={themeColors.stroke}
           />,
         ];
       })}

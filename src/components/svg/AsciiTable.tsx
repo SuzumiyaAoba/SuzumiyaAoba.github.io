@@ -1,8 +1,14 @@
 import { useContext } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
-import { Cell, ASCII_TABLE_ATTR, ASCII_TABLE } from "./StandardCode.utils";
+import {
+  Cell,
+  ASCII_TABLE_ATTR,
+  ASCII_TABLE,
+  THEME_COLORS,
+} from "./StandardCode.utils";
 import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
+import { useTheme } from "next-themes";
 
 export const AsciiTable = ({
   onClick,
@@ -15,6 +21,9 @@ export const AsciiTable = ({
     ASCII_TABLE_ATTR;
   const hoveredCell = useContext(HoveredCellContext);
   const clickedCell = useContext(ClickedCellContext);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return range(rowNum).map((py) =>
     Array.from({ length: colNum }, (_, k) => k).map((px) => {
@@ -32,18 +41,19 @@ export const AsciiTable = ({
           height={cellHeight}
           fill={
             isHovered
-              ? "oklch(0.885 0.062 18.334)"
+              ? themeColors.hover.highlight
               : isClicked
-              ? "oklch(0.872 0.01 258.338)"
+              ? themeColors.hover.secondary
               : isHoveredRow
-              ? "oklch(0.901 0.058 230.902)"
+              ? themeColors.hover.rowHighlight
               : isHoveredCol
-              ? "oklch(0.925 0.084 155.995)"
+              ? themeColors.hover.colHighlight
               : "transparent"
           }
           offsetX={offsetX}
-          stroke="black"
+          stroke={themeColors.stroke}
           fontWeight={isHovered || isClicked ? "bold" : "normal"}
+          color={themeColors.text.normal}
           onClick={() => {
             onClick([px, py]);
           }}
