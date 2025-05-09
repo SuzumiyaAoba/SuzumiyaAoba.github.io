@@ -13,6 +13,7 @@ const MENUS = [
   { name: "Notes", href: "/notes/" },
   { name: "Tools", href: "/tools/" },
   { name: "Keywords", href: "/keywords/" },
+  { name: "About", href: "/about/" },
   { name: "Search", href: "/search/" },
 ] as const;
 
