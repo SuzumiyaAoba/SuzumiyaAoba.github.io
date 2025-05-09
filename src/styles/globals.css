@@ -1,0 +1,34 @@
+/* ライトモードのデフォルト変数 - UnoCSS で使用 */
+:root {
+  --color-primary: #4f46e5;
+  --color-background: #ffffff;
+  --color-text: #1e293b;
+}
+
+/* ダークモード用の変数 - UnoCSS で使用 */
+.dark {
+  --color-primary: #818cf8;
+  --color-background: #1e1e2e;
+  --color-text: #e2e8f0;
+}
+
+/* ベーススタイル */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* テーマの切り替えをスムーズにする */
+html {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* テーマの継承とフォールバック */
+html.dark * {
+  color-scheme: dark;
+}
+
+html:not(.dark) * {
+  color-scheme: light;
+}

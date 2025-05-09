@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { THEME_COLORS } from "./StandardCode.utils";
 
 type ArrowProps = {
   startX: number;
@@ -14,9 +16,22 @@ const Arrow: FC<ArrowProps> = ({
   startY,
   endX,
   endY,
-  color = "black",
+  color,
   strokeWidth = 2,
 }) => {
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  // クライアントサイドでのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイド（またはテスト環境）用のフォールバック
+  const isDark = mounted ? resolvedTheme === "dark" : false;
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+  const arrowColor = color || themeColors.stroke;
+
   const dx = endX - startX;
   const dy = endY - startY;
   const angle = Math.atan2(dy, dx);
@@ -38,12 +53,12 @@ const Arrow: FC<ArrowProps> = ({
         y1={startY}
         x2={lineEndX}
         y2={lineEndY}
-        stroke={color}
+        stroke={arrowColor}
         strokeWidth={strokeWidth}
       />
       <polygon
         points={`${endX},${endY} ${arrowX1},${arrowY1} ${arrowX2},${arrowY2}`}
-        fill={color}
+        fill={arrowColor}
       />
     </>
   );

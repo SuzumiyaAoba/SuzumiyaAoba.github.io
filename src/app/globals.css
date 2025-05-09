@@ -2,13 +2,24 @@
 @unocss all;
 
 :root {
+  /* UnoCSS との連携のための変数 */
+  --color-primary: #4f46e5;
+  --color-background: #ffffff;
+  --color-text: #1e293b;
+
+  /* ライトテーマのデフォルト値 */
+  --primary-color: var(--color-primary);
+  --secondary-color: #64748b;
+  --background-color: var(--color-background);
+  --text-color: var(--color-text);
+
   /* ライトテーマの変数 */
   --background-light: #f8fafc;
   --background-secondary-light: #e2e8f0;
   --foreground-light: #0f172a;
   --muted-light: #64748b;
   --muted-secondary-light: #94a3b8;
-  --accent-primary-light: #4f46e5;
+  --accent-primary-light: var(--color-primary);
   --accent-secondary-light: #0ea5e9;
   --border-light: #cbd5e1;
   --card-bg-light: #ffffff;
@@ -44,10 +55,10 @@
   --background-dark: #1e2638;
   --background-secondary-dark: #293244;
   --foreground-dark: #f8fafc;
-  --muted-dark: #a8b9d5;
-  --muted-secondary-dark: #64748b;
-  --accent-primary-dark: #6366f1;
-  --accent-secondary-dark: #22d3ee;
+  --muted-dark: #cbd5e1;
+  --muted-secondary-dark: #94a3b8;
+  --accent-primary-dark: #818cf8;
+  --accent-secondary-dark: #38bdf8;
   --border-dark: #475569;
   --card-bg-dark: #2c3549;
   --code-bg-dark: #242e42;
@@ -123,6 +134,10 @@
 /* メディアクエリでシステムの設定に基づいてダークモードを適用 */
 @media (prefers-color-scheme: dark) {
   :root {
+    --primary-color: #60a5fa;
+    --secondary-color: #94a3b8;
+    --background-color: #1e293b;
+    --text-color: #f8fafc;
     --background: var(--background-dark);
     --background-secondary: var(--background-secondary-dark);
     --foreground: var(--foreground-dark);
@@ -164,6 +179,10 @@
 
 /* ユーザーが明示的にダークモードを選択した場合 */
 [data-theme="dark"] {
+  --primary-color: #60a5fa;
+  --secondary-color: #94a3b8;
+  --background-color: #1e293b;
+  --text-color: #f8fafc;
   --background: var(--background-dark);
   --background-secondary: var(--background-secondary-dark);
   --foreground: var(--foreground-dark);
@@ -204,6 +223,10 @@
 
 /* ユーザーが明示的にライトモードを選択した場合 */
 [data-theme="light"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --background-color: #ffffff;
+  --text-color: #1e293b;
   --background: var(--background-light);
   --background-secondary: var(--background-secondary-light);
   --foreground: var(--foreground-light);
@@ -240,6 +263,28 @@
   --error-border: var(--error-border-light);
   --error-text: var(--error-text-light);
   --error-icon: var(--error-icon-light);
+}
+
+/* システムテーマ（デフォルトはライト） */
+[data-theme="system"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --background-color: #ffffff;
+  --text-color: #1e293b;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --primary-color: #60a5fa;
+    --secondary-color: #94a3b8;
+    --background-color: #1e293b;
+    --text-color: #f8fafc;
+  }
+}
+
+/* テーマの切り替えをスムーズにする */
+html {
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 body {
@@ -355,4 +400,71 @@ div[data-ch-line] * {
 .code-hike-no-line [data-ch-line] div,
 .code-hike-no-line [data-ch-line] * {
   border-left: none !important;
+}
+
+/* ダークモード時のリンクの視認性向上 */
+[data-theme="dark"] a,
+.dark a {
+  color: var(--accent-primary);
+  font-weight: 500;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+[data-theme="dark"] a:hover,
+.dark a:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+}
+
+/* ダークモード用の変数をクラスに基づいて適用 */
+.dark {
+  /* UnoCSS との連携のための変数 */
+  --color-primary: #818cf8;
+  --color-background: #1e1e2e;
+  --color-text: #e2e8f0;
+
+  /* ダークテーマのデフォルト値 */
+  --primary-color: var(--color-primary);
+  --secondary-color: #94a3b8;
+  --background-color: var(--color-background);
+  --text-color: var(--color-text);
+
+  --background: var(--background-dark);
+  --background-secondary: var(--background-secondary-dark);
+  --foreground: var(--foreground-dark);
+  --muted: var(--muted-dark);
+  --muted-secondary: var(--muted-secondary-dark);
+  --accent-primary: var(--accent-primary-dark);
+  --accent-secondary: var(--accent-secondary-dark);
+  --border: var(--border-dark);
+  --card-bg: var(--card-bg-dark);
+  --code-bg: var(--code-bg-dark);
+  --code-highlight: var(--code-highlight-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --header-bg: var(--header-bg-dark);
+  --header-scrolled-bg: var(--header-scrolled-bg-dark);
+  --input-bg: var(--input-bg-dark);
+
+  /* Messageコンポーネント用のダークテーマ変数 */
+  --info-bg: var(--info-bg-dark);
+  --info-border: var(--info-border-dark);
+  --info-text: var(--info-text-dark);
+  --info-icon: var(--info-icon-dark);
+
+  --success-bg: var(--success-bg-dark);
+  --success-border: var(--success-border-dark);
+  --success-text: var(--success-text-dark);
+  --success-icon: var(--success-icon-dark);
+
+  --warning-bg: var(--warning-bg-dark);
+  --warning-border: var(--warning-border-dark);
+  --warning-text: var(--warning-text-dark);
+  --warning-icon: var(--warning-icon-dark);
+
+  --error-bg: var(--error-bg-dark);
+  --error-border: var(--error-border-dark);
+  --error-text: var(--error-text-dark);
+  --error-icon: var(--error-icon-dark);
 }

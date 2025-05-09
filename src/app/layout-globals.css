@@ -67,11 +67,14 @@ main {
 a {
   color: var(--accent-primary);
   transition: all 0.2s ease;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 a:hover {
   color: var(--accent-secondary);
   text-decoration: underline;
+  text-decoration-thickness: 1.5px;
 }
 
 /* 特定のナビゲーションリンクではhover時の下線を無効化 */
@@ -79,6 +82,18 @@ header a:hover,
 .nav-link:hover,
 .mobile-nav-link:hover {
   text-decoration: none;
+}
+
+/* ダークモード時のリンク色の強調 */
+[data-theme="dark"] a,
+.dark a {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+[data-theme="dark"] a:hover,
+.dark a:hover {
+  color: var(--accent-secondary);
 }
 
 /* カード要素のスタイル */
@@ -169,6 +184,7 @@ a.text-lg:hover {
 footer a {
   color: var(--muted);
   transition: color 0.3s ease;
+  font-weight: normal;
 }
 
 footer a:hover {

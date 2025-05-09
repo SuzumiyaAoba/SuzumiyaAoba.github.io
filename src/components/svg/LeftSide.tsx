@@ -1,13 +1,30 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
-import { Cell, LEFT_SIDE_ATTR, ASCII_TABLE } from "./StandardCode.utils";
+import {
+  Cell,
+  LEFT_SIDE_ATTR,
+  ASCII_TABLE,
+  THEME_COLORS,
+} from "./StandardCode.utils";
 import { HoveredCellContext } from "./StandardCode.context";
+import { useTheme } from "next-themes";
 
 export const LeftSide = () => {
   const { y, cellWidth, cellHeight, offset, color } = LEFT_SIDE_ATTR;
   const hoveredValue = useContext(HoveredCellContext);
   const columnNum = 4;
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  // クライアントサイドでのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイド（またはテスト環境）用のフォールバック
+  const isDark = mounted ? resolvedTheme === "dark" : false;
+  const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return (
     <g>
@@ -25,12 +42,20 @@ export const LeftSide = () => {
                 y={y + cellHeight * py}
                 width={cellWidth}
                 height={cellHeight}
-                fill={isHover ? color.b1b4.hover.background : "transparent"}
-                stroke="black"
+                fill={
+                  isHover
+                    ? isDark
+                      ? themeColors.hover.b1b4
+                      : color.b1b4.hover.background
+                    : "transparent"
+                }
+                stroke={themeColors.stroke}
                 offsetX={offset.x}
                 fontSize="0.8rem"
                 fontWeight={isHover ? "bold" : "normal"}
-                color={isHover ? "white" : "black"}
+                color={
+                  isHover ? themeColors.text.hover : themeColors.text.normal
+                }
               >
                 {b}
               </RectText>
@@ -41,11 +66,18 @@ export const LeftSide = () => {
             y={y + cellHeight * py}
             width={cellWidth}
             height={cellHeight}
-            fill={isHover ? color.column.hover.background : "transparent"}
-            stroke="black"
+            fill={
+              isHover
+                ? isDark
+                  ? themeColors.hover.secondary
+                  : color.column.hover.background
+                : "transparent"
+            }
+            stroke={themeColors.stroke}
             offsetX={offset.x}
             fontSize="0.8rem"
             fontWeight={isHover ? "bold" : "normal"}
+            color={themeColors.text.normal}
           >
             {py}
           </RectText>,

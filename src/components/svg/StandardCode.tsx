@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { range } from "d3";
 import Arrow from "./Arrow";
 import { RectText } from "./RectText";
@@ -27,11 +27,26 @@ import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
 export default function StandardCode() {
   const [hoveredCell, setHoveredCell] = useState<Cell | undefined>(undefined);
   const [clickedCell, setClickedCell] = useState<Cell | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
+
+  // クライアント側でのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイドレンダリング時には特定のスタイルを適用しない
+  if (!mounted) {
+    return (
+      <div className="min-h-[700px]">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <HoveredCellContext.Provider value={hoveredCell}>
       <ClickedCellContext.Provider value={clickedCell}>
-        <div>
+        <div className="dark:text-white">
           <svg width={700} height={700}>
             <AsciiTable onClick={setClickedCell} onMouseOver={setHoveredCell} />
             <LeftSide />

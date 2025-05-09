@@ -1,6 +1,44 @@
 // 型定義
 export type Cell = [number, number];
 
+// カラーテーマ定義
+export const THEME_COLORS = {
+  light: {
+    stroke: "#1e293b",
+    border: "#475569",
+    hover: {
+      primary: "oklch(0.723 0.219 149.579)", // 緑がかった青
+      secondary: "oklch(0.872 0.01 258.338)", // ライトパープル
+      highlight: "oklch(0.885 0.062 18.334)", // オレンジ
+      rowHighlight: "oklch(0.901 0.058 230.902)", // 薄い紫
+      colHighlight: "oklch(0.925 0.084 155.995)", // 薄い緑青
+      b1b4: "oklch(0.685 0.169 237.323)", // 濃い青
+    },
+    text: {
+      normal: "#1e293b",
+      hover: "#ffffff",
+      accent: "#4f46e5",
+    },
+  },
+  dark: {
+    stroke: "#f8fafc",
+    border: "#64748b",
+    hover: {
+      primary: "oklch(0.523 0.219 149.579)", // 暗めの緑青
+      secondary: "oklch(0.672 0.1 258.338)", // 濃い紫
+      highlight: "oklch(0.685 0.162 18.334)", // 暗めのオレンジ
+      rowHighlight: "oklch(0.701 0.088 230.902)", // 暗い紫
+      colHighlight: "oklch(0.725 0.094 155.995)", // 暗い緑青
+      b1b4: "oklch(0.585 0.169 237.323)", // 濃い青
+    },
+    text: {
+      normal: "#f8fafc",
+      hover: "#ffffff",
+      accent: "#818cf8",
+    },
+  },
+};
+
 // ユーティリティ関数
 export const cellToBinary = ([x, y]: Cell) =>
   x.toString(2).padStart(3, "0") + y.toString(2).padStart(4, "0");
@@ -61,13 +99,13 @@ export const LEFT_SIDE_ATTR = {
   color: {
     b1b4: {
       hover: {
-        background: "oklch(0.685 0.169 237.323)",
-        text: "#ffffff",
+        background: THEME_COLORS.light.hover.b1b4,
+        text: THEME_COLORS.light.text.hover,
       },
     },
     column: {
       hover: {
-        background: "oklch(0.872 0.01 258.338)",
+        background: THEME_COLORS.light.hover.secondary,
       },
     },
   },

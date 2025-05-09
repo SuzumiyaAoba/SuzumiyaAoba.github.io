@@ -107,7 +107,7 @@
     "storybook": "^8.6.12",
     "typed-scss-modules": "^8.1.1",
     "typescript": "^5",
-    "unocss": "^66.1.0",
+    "unocss": "^66.1.1",
     "unocss-preset-animations": "^1.2.1",
     "unocss-preset-shadcn": "^0.5.0",
     "vitest": "^3.1.3"
