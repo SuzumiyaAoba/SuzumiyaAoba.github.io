@@ -3,7 +3,11 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export const ThemeTest = () => {
+// ビルド時に環境変数を評価
+const isDevelopment = process.env.NODE_ENV === "development";
+
+// 開発環境用のコンポーネント実装
+const DevThemeTest = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -63,3 +67,9 @@ export const ThemeTest = () => {
     </div>
   );
 };
+
+// 空のコンポーネント
+const EmptyThemeTest = () => null;
+
+// 環境によって適切なコンポーネントをエクスポート
+export const ThemeTest = isDevelopment ? DevThemeTest : EmptyThemeTest;
