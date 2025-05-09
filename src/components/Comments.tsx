@@ -43,7 +43,7 @@ function sendMessageToGiscus(message: { setConfig: { theme: string } }) {
 export const Comments = memo(
   ({
     repo = "SuzumiyaAoba/comments",
-    repoId = "R_kgDONaoFSA",
+    repoId = "R_kgDOOapTPQ",
     category = "Announcements",
     categoryId = "DIC_kwDOOapTPc4Cp5td",
     mapping = "pathname",
