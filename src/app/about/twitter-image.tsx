@@ -6,6 +6,9 @@ import {
   generateOgImage,
 } from "@/libs/og-image";
 
+// 静的生成の設定
+export const dynamic = "force-static";
+
 // メタデータ
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;
