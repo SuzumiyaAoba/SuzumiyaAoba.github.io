@@ -4,7 +4,7 @@
 
 /* ヘッダーの下のコンテンツコンテナに上部マージンを適用 */
 .mt-header {
-  margin-top: var(--header-height);
+  margin-top: calc(var(--header-height) + 1rem); /* 余白を1rem増やす */
 }
 
 /* モバイルメニューが開いているときに追加のマージンを適用 */
