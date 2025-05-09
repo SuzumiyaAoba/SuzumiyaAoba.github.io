@@ -229,6 +229,11 @@
     padding: 0 1rem;
   }
 
+  // CodeHikeの行番号のスタイリング
+  [data-ch-line] {
+    border-left: none !important;
+  }
+
   span[data-highlighted-line] {
     background-color: rgba(59, 72, 99, 0.6);
   }
@@ -279,6 +284,13 @@
 
   code[data-line-numbers-max-digits="3"] > [data-line]::before {
     width: 3rem;
+  }
+
+  // CodeHikeコンポーネントのスタイル調整
+  :global {
+    div[data-ch-line] div {
+      border-left: none !important;
+    }
   }
 
   figure[data-rehype-pretty-code-figure] {

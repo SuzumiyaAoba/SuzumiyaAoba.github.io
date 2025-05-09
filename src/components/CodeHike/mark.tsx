@@ -8,8 +8,6 @@ export const mark: AnnotationHandler = {
       <div
         className="flex w-full"
         style={{
-          borderLeft: "solid 2px transparent",
-          borderLeftColor: annotation && color,
           backgroundColor: annotation && `rgb(from ${color} r g b / 0.1)`,
         }}
       >

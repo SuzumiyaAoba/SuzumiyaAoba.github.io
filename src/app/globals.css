@@ -296,3 +296,63 @@ a,
   transition-duration: var(--transition-duration);
   transition-timing-function: ease-in-out;
 }
+
+/* Scroll to the top button */
+.scroll-to-top-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, background-color 0.3s;
+}
+
+.scroll-to-top-button.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-to-top-button:hover {
+  background-color: var(--accent-secondary);
+}
+
+/* CodeHike関連のスタイル調整 */
+div[data-ch-line] {
+  border-left: none !important;
+}
+
+div[data-ch-line] div {
+  border-left: none !important;
+}
+
+/* [data-ch-line]内のdivにborderがある場合に備えて、すべての子要素にも適用 */
+div[data-ch-line] * {
+  border-left: none !important;
+}
+
+/* .chの行番号と実際のコードの間のスペースを調整 */
+[data-ch] span[data-ch-line-number] {
+  margin-right: 1.5rem !important;
+  min-width: 2rem !important;
+  text-align: right !important;
+  color: var(--muted) !important;
+}
+
+/* カスタムCodeHikeクラス */
+.code-hike-no-line [data-ch-line],
+.code-hike-no-line [data-ch-line] div,
+.code-hike-no-line [data-ch-line] * {
+  border-left: none !important;
+}
