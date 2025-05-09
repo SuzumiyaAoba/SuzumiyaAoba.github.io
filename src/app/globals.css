@@ -2,6 +2,14 @@
 @unocss all;
 
 :root {
+  --theme-mode: light;
+
+  /* ライトテーマのデフォルト値 */
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --background-color: #ffffff;
+  --text-color: #1e293b;
+
   /* ライトテーマの変数 */
   --background-light: #f8fafc;
   --background-secondary-light: #e2e8f0;
@@ -123,6 +131,11 @@
 /* メディアクエリでシステムの設定に基づいてダークモードを適用 */
 @media (prefers-color-scheme: dark) {
   :root {
+    --theme-mode: dark;
+    --primary-color: #60a5fa;
+    --secondary-color: #94a3b8;
+    --background-color: #1e293b;
+    --text-color: #f8fafc;
     --background: var(--background-dark);
     --background-secondary: var(--background-secondary-dark);
     --foreground: var(--foreground-dark);
@@ -164,6 +177,11 @@
 
 /* ユーザーが明示的にダークモードを選択した場合 */
 [data-theme="dark"] {
+  --theme-mode: dark;
+  --primary-color: #60a5fa;
+  --secondary-color: #94a3b8;
+  --background-color: #1e293b;
+  --text-color: #f8fafc;
   --background: var(--background-dark);
   --background-secondary: var(--background-secondary-dark);
   --foreground: var(--foreground-dark);
@@ -204,6 +222,11 @@
 
 /* ユーザーが明示的にライトモードを選択した場合 */
 [data-theme="light"] {
+  --theme-mode: light;
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --background-color: #ffffff;
+  --text-color: #1e293b;
   --background: var(--background-light);
   --background-secondary: var(--background-secondary-light);
   --foreground: var(--foreground-light);
@@ -240,6 +263,30 @@
   --error-border: var(--error-border-light);
   --error-text: var(--error-text-light);
   --error-icon: var(--error-icon-light);
+}
+
+/* システムテーマ（デフォルトはライト） */
+[data-theme="system"] {
+  --theme-mode: light;
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --background-color: #ffffff;
+  --text-color: #1e293b;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --theme-mode: dark;
+    --primary-color: #60a5fa;
+    --secondary-color: #94a3b8;
+    --background-color: #1e293b;
+    --text-color: #f8fafc;
+  }
+}
+
+/* テーマの切り替えをスムーズにする */
+html {
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 body {

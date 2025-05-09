@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { ThemeTest } from "@/components/ui/ThemeTest";
 
 type CardProps = {
   title: string;
@@ -64,6 +65,9 @@ export default async function Home() {
           <Card key={props.title} {...props} />
         ))}
       </div>
+
+      {/* テーマテストコンポーネント */}
+      <ThemeTest />
     </main>
   );
 }

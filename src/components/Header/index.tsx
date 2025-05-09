@@ -364,24 +364,22 @@ type NavigationProps = {
 };
 
 const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
-  <ul className="flex gap-4 sm:gap-8 items-center">
+  <ul className="flex items-center space-x-6">
     {menus.map((menu) => (
-      <li key={menu.href}>
+      <li key={menu.name}>
         <Link
           href={menu.href}
-          className="px-1 sm:px-2 py-1 relative transition-colors duration-300 group text-sm sm:text-base nav-link"
-          style={{ color: "var(--muted)" }}
+          className={clsx(
+            "text-base hover:text-primary transition-colors",
+            exo_2.className
+          )}
         >
           {menu.name}
-          <span
-            className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
-            style={{ backgroundColor: "var(--accent-primary)" }}
-          ></span>
         </Link>
       </li>
     ))}
-    <li className="flex items-center">
-      <ThemeToggle className="ml-2" />
+    <li>
+      <ThemeToggle />
     </li>
   </ul>
 );
@@ -396,34 +394,35 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
   onNavigate,
   isVisible,
 }) => {
-  if (!isVisible) return null;
+  // メニューが見えるときのみフォーカストラップを有効化
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      // TODO: フォーカス可能要素の取得と制御
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
+  }, [isVisible]);
 
   return (
-    <ul className="py-4 px-4 space-y-2">
-      {menus.map((menu, index) => (
-        <li
-          key={menu.href}
-          className="menu-item-appear"
-          style={{ animationDelay: `${index * 80}ms` }}
-        >
+    <ul className="flex flex-col gap-4 px-6 py-4">
+      {menus.map((menu) => (
+        <li key={menu.name} className="border-b border-gray-100/10 pb-2">
           <Link
             href={menu.href}
-            className="block py-3 px-4 rounded-md transition-colors w-full mobile-nav-link"
-            style={{ color: "var(--muted)" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigate();
-            }}
+            className="block py-1 text-lg transition-colors hover:text-primary"
+            onClick={onNavigate}
           >
             {menu.name}
           </Link>
         </li>
       ))}
-      <li
-        className="menu-item-appear flex justify-between items-center py-3 px-4"
-        style={{ animationDelay: `${menus.length * 80}ms` }}
-      >
-        <span style={{ color: "var(--muted)" }}>テーマ切替</span>
+      {/* テーマ切り替えボタン */}
+      <li className="flex justify-center pt-2">
         <ThemeToggle />
       </li>
     </ul>

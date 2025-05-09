@@ -91,6 +91,7 @@
     "@unocss/postcss": "^66.1.0",
     "@unocss/preset-icons": "^66.1.0",
     "@unocss/preset-wind": "^66.1.0",
+    "@unocss/webpack": "^66.1.1",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
     "cpy-cli": "^5.0.0",
@@ -107,7 +108,7 @@
     "storybook": "^8.6.12",
     "typed-scss-modules": "^8.1.1",
     "typescript": "^5",
-    "unocss": "^66.1.0",
+    "unocss": "^66.1.1",
     "unocss-preset-animations": "^1.2.1",
     "unocss-preset-shadcn": "^0.5.0",
     "vitest": "^3.1.3"
