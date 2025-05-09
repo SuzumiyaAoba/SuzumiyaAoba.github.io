@@ -2,12 +2,11 @@ import {
   defineConfig,
   presetAttributify,
   presetIcons,
-  presetUno,
   presetWebFonts,
-  presetWind,
   presetTypography,
   transformerDirectives,
   transformerVariantGroup,
+  presetWind4,
 } from "unocss";
 import presetAnimations from "unocss-preset-animations";
 import { presetShadcn } from "unocss-preset-shadcn";
@@ -17,11 +16,10 @@ export default defineConfig({
     filesystem: ["**/*.{html,js,ts,jsx,tsx,md,mdx}"],
   },
   presets: [
-    presetUno(),
+    presetWind4(),
     presetAttributify(),
     presetIcons(),
     presetWebFonts(),
-    presetWind(),
     presetAnimations(),
     presetShadcn(),
     presetTypography(),

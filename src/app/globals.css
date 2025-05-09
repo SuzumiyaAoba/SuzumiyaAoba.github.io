@@ -55,10 +55,10 @@
   --background-dark: #1e2638;
   --background-secondary-dark: #293244;
   --foreground-dark: #f8fafc;
-  --muted-dark: #a8b9d5;
-  --muted-secondary-dark: #64748b;
-  --accent-primary-dark: #6366f1;
-  --accent-secondary-dark: #22d3ee;
+  --muted-dark: #cbd5e1;
+  --muted-secondary-dark: #94a3b8;
+  --accent-primary-dark: #818cf8;
+  --accent-secondary-dark: #38bdf8;
   --border-dark: #475569;
   --card-bg-dark: #2c3549;
   --code-bg-dark: #242e42;
@@ -400,6 +400,22 @@ div[data-ch-line] * {
 .code-hike-no-line [data-ch-line] div,
 .code-hike-no-line [data-ch-line] * {
   border-left: none !important;
+}
+
+/* ダークモード時のリンクの視認性向上 */
+[data-theme="dark"] a,
+.dark a {
+  color: var(--accent-primary);
+  font-weight: 500;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+[data-theme="dark"] a:hover,
+.dark a:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
 }
 
 /* ダークモード用の変数をクラスに基づいて適用 */

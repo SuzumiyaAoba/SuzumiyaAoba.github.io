@@ -91,7 +91,6 @@
     "@unocss/postcss": "^66.1.0",
     "@unocss/preset-icons": "^66.1.0",
     "@unocss/preset-wind": "^66.1.0",
-    "@unocss/webpack": "^66.1.1",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
     "cpy-cli": "^5.0.0",

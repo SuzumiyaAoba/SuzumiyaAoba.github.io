@@ -50,18 +50,22 @@ const isDevelopment = process.env.NODE_ENV === "development";
 export default function Home() {
   return (
     <main className="px-4 py-6 max-w-4xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-16">
         {cards.map((props) => (
           <Card key={props.title} {...props} />
         ))}
       </div>
 
       {/* 開発環境のみ表示するコンポーネント - ビルド時に評価 */}
-      {isDevelopment && <ThemeTest />}
+      {isDevelopment && (
+        <div className="mt-16 mb-16">
+          <ThemeTest />
+        </div>
+      )}
 
       {/* 開発環境のみ表示するセクション - ビルド時に評価 */}
       {isDevelopment && (
-        <section className="mt-8 card p-6">
+        <section className="mt-16 card p-6">
           <h2 className="text-2xl font-bold text-primary mb-4">
             UnoCSS + テーマ切り替えのテスト
           </h2>

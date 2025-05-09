@@ -46,12 +46,12 @@ const BreadcrumbItem = React.forwardRef<
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
 const breadcrumbItemLinkVariants = cva(
-  "transition-colors hover:text-foreground",
+  "transition-colors hover:text-foreground font-medium underline-offset-2",
   {
     variants: {
       variant: {
-        default: "text-muted-foreground",
-        active: "font-medium text-foreground",
+        default: "text-muted hover:text-accent-primary hover:underline",
+        active: "font-medium text-accent-primary",
       },
     },
     defaultVariants: {
@@ -85,7 +85,11 @@ const BreadcrumbSeparator = React.forwardRef<
   HTMLSpanElement,
   React.HTMLAttributes<HTMLSpanElement>
 >(({ className, ...props }, ref) => (
-  <span ref={ref} className={cn("flex items-center", className)} {...props}>
+  <span
+    ref={ref}
+    className={cn("flex items-center text-muted-secondary", className)}
+    {...props}
+  >
     <ChevronRight className="h-3.5 w-3.5" />
   </span>
 ));
