@@ -1,5 +1,18 @@
+"use client";
+
 import { FC } from "react";
-import { ThemeTest } from "@/components/ui/ThemeTest";
+import dynamic from "next/dynamic";
+
+// 開発環境でのみThemeTestコンポーネントを動的にインポート
+const ThemeTest =
+  process.env.NODE_ENV === "development"
+    ? dynamic(
+        () => import("@/components/ui/ThemeTest").then((mod) => mod.ThemeTest),
+        {
+          ssr: false,
+        }
+      )
+    : () => null;
 
 type CardProps = {
   title: string;
@@ -56,7 +69,7 @@ export default function Home() {
         ))}
       </div>
 
-      {/* 開発環境のみ表示するコンポーネント - ビルド時に評価 */}
+      {/* 開発環境でのみThemeTestコンポーネントをレンダリング */}
       {isDevelopment && (
         <div className="mt-16 mb-16">
           <ThemeTest />
