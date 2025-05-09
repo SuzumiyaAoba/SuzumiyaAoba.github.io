@@ -44,12 +44,22 @@ const cards: CardProps[] = [
     href: "/notes/",
     description: "まとまった文章を。",
   },
+  {
+    title: "🔧 Tools",
+    href: "/tools/",
+    description: "便利なツール集。",
+  },
+  {
+    title: "🔍 Keywords",
+    href: "/keywords/",
+    description: "プログラミング用語の解説。",
+  },
 ];
 
 export default async function Home() {
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16 mt-16">
-      <div className="grid sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {cards.map((props) => (
           <Card key={props.title} {...props} />
         ))}
