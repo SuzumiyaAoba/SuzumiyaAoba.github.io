@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import markdownStyles from "@/styles/markdown.module.scss";
 import { Tag } from "@/components/Tag";
 import { HatenaButton } from "@/components/share/HatenaButton";
@@ -9,6 +9,7 @@ import BuyMeACoffee from "@/components/BuyMeACoffee";
 import { Comments } from "@/components/Comments";
 import Script from "next/script";
 import config from "@/config";
+import { createBlogPostingJsonLd } from "@/libs/jsonld";
 
 export type ArticleProps = {
   title: string;
@@ -40,37 +41,15 @@ export function Article({
   const formattedDate =
     typeof date === "string" ? date : format(date, "yyyy/MM/dd");
 
-  const isoDate =
-    typeof date === "string"
-      ? new Date(date).toISOString()
-      : date.toISOString();
-
   // JSON-LDデータの構築
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: title,
-    datePublished: isoDate,
-    dateModified: isoDate,
-    author: {
-      "@type": "Person",
-      name: author,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: config.metadata.title,
-      logo: {
-        "@type": "ImageObject",
-        url: `${config.metadata.url}/favicon.ico`,
-      },
-    },
-    description: description || title,
-    keywords: tags.join(","),
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": url || `${config.metadata.url}`,
-    },
-  };
+  const jsonLd = createBlogPostingJsonLd({
+    title,
+    date,
+    tags,
+    description,
+    author,
+    url,
+  });
 
   return (
     <article

@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, memo } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 export interface TableWrapperProps extends PropsWithChildren {
   /** 追加のクラス名 */
