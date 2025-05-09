@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, memo } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const messageVariants = cva("my-8 px-4 rounded-md border", {

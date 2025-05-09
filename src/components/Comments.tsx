@@ -3,7 +3,7 @@
 import { memo, useEffect, useState } from "react";
 import Giscus from "@giscus/react";
 import type { GiscusProps } from "@giscus/react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import { useTheme } from "next-themes";
 
 // GiscusPropsの必須プロパティをオプショナルにする
