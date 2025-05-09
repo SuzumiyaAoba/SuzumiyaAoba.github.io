@@ -100,10 +100,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     setThemeState(newTheme);
   };
 
-  // マウント状態に関わらずテーマコンテキストを提供しますが、
-  // サーバーサイドでは特定のテーマ関連の操作は行いません
+  // テーマ値をメモ化して再レンダリングを最適化
+  const themeContextValue = React.useMemo(
+    () => ({
+      theme,
+      setTheme,
+      resolvedTheme,
+    }),
+    [theme, resolvedTheme]
+  );
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+    <ThemeContext.Provider value={themeContextValue}>
       {children}
     </ThemeContext.Provider>
   );

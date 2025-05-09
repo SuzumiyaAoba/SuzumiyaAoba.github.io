@@ -19,7 +19,7 @@ export function CustomCodeBlock({
     <>
       <CopyButton text={code.code} />
       <Pre
-        className={clsx("!px-4", "!my-0", className)}
+        className={clsx("!px-4", "!my-0", "code-hike-no-line", className)}
         code={code}
         handlers={[
           lineNumbers,
