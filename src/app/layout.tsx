@@ -14,7 +14,7 @@ import {
   getNoteTitleMap,
   getKeywordTitleMap,
 } from "@/libs/contents/title-map";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/ThemeToggle/Provider";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -83,7 +83,6 @@ export default async function RootLayout({
             }
           `}
         </style>
-        {/* next-themesはflashを自動的に防止するため、以下のスクリプトは不要となります */}
       </head>
       <body
         className={clsx(
@@ -93,11 +92,7 @@ export default async function RootLayout({
           "flex flex-col w-full min-h-screen overflow-x-hidden"
         )}
       >
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="system"
-          enableSystem
-        >
+        <ThemeProvider>
           <Header siteName={config.metadata.title} />
           <div className="content-container mt-header flex-grow w-full">
             <BreadcrumbNav

@@ -1,4 +1,4 @@
-import UnoCSS from "unocss/webpack";
+// @ts-check
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -29,12 +29,6 @@ const nextConfig = {
   // SEO対策
   compress: true, // gzip圧縮を有効化
   poweredByHeader: false, // X-Powered-By ヘッダーを無効化
-
-  // UnoCSS の Webpack プラグインを追加
-  webpack: (config) => {
-    config.plugins.push(UnoCSS());
-    return config;
-  },
 };
 
 export default nextConfig;

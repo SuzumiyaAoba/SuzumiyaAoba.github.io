@@ -16,15 +16,15 @@ export const ThemeTest = () => {
 
   return (
     <div className="card p-6 rounded-lg max-w-lg mx-auto my-8">
-      <h2 className="text-theme-text text-2xl font-bold mb-4">テーマテスト</h2>
-      <p className="text-theme-text mb-4">
+      <h2 className="text-text text-2xl font-bold mb-4">テーマテスト</h2>
+      <p className="text-text mb-4">
         現在のテーマ: <span className="font-bold">{theme}</span>
       </p>
       <div className="flex flex-wrap gap-4 mb-6">
         <button
           onClick={() => setTheme("light")}
           className={`btn btn-primary ${
-            theme === "light" ? "bg-opacity-50" : "bg-opacity-100"
+            theme === "light" ? "opacity-50" : "opacity-100"
           }`}
         >
           ライトモード
@@ -32,7 +32,7 @@ export const ThemeTest = () => {
         <button
           onClick={() => setTheme("dark")}
           className={`btn btn-primary ${
-            theme === "dark" ? "bg-opacity-50" : "bg-opacity-100"
+            theme === "dark" ? "opacity-50" : "opacity-100"
           }`}
         >
           ダークモード
@@ -40,24 +40,24 @@ export const ThemeTest = () => {
         <button
           onClick={() => setTheme("system")}
           className={`btn btn-primary ${
-            theme === "system" ? "bg-opacity-50" : "bg-opacity-100"
+            theme === "system" ? "opacity-50" : "opacity-100"
           }`}
         >
           システム設定
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-theme-primary text-white p-4 rounded">
+        <div className="bg-primary text-white p-4 rounded">
           プライマリーカラー
         </div>
-        <div className="bg-theme-secondary text-white p-4 rounded">
-          セカンダリーカラー
-        </div>
-        <div className="bg-theme-background border border-gray-200 dark:border-gray-700 text-theme-text p-4 rounded">
+        <div className="bg-background border border-text/20 text-text p-4 rounded">
           バックグラウンドカラー
         </div>
-        <div className="bg-white dark:bg-gray-800 text-theme-text p-4 rounded">
-          テキストカラー
+        <div className="bg-white dark:bg-gray-800 text-text p-4 rounded">
+          自動切替カラー
+        </div>
+        <div className="bg-gray-100 dark:bg-gray-700 text-text dark:text-white p-4 rounded">
+          ダークモード対応カラー
         </div>
       </div>
     </div>

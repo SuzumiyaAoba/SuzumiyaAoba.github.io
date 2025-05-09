@@ -6,6 +6,8 @@ import {
   presetWebFonts,
   presetWind,
   presetTypography,
+  transformerDirectives,
+  transformerVariantGroup,
 } from "unocss";
 import presetAnimations from "unocss-preset-animations";
 import { presetShadcn } from "unocss-preset-shadcn";
@@ -26,44 +28,30 @@ export default defineConfig({
   ],
   theme: {
     colors: {
-      // ライトテーマのカラー
-      light: {
-        primary: "#3b82f6", // blue-500
-        secondary: "#64748b", // slate-500
-        background: "#ffffff",
-        text: "#1e293b", // slate-800
+      // カスタムカラーパレット
+      primary: {
+        DEFAULT: "var(--color-primary)",
+        light: "#4f46e5", // インディゴ
+        dark: "#818cf8", // 明るいインディゴ
       },
-      // ダークテーマのカラー
-      dark: {
-        primary: "#60a5fa", // blue-400
-        secondary: "#94a3b8", // slate-400
-        background: "#1e293b", // slate-800
-        text: "#f8fafc", // slate-50
+      background: {
+        DEFAULT: "var(--color-background)",
+        light: "#ffffff",
+        dark: "#1e1e2e",
+      },
+      text: {
+        DEFAULT: "var(--color-text)",
+        light: "#1e293b",
+        dark: "#e2e8f0",
       },
     },
   },
   shortcuts: {
-    // テーマに基づいたショートカット
-    btn: "px-6 py-2 rounded transition-colors",
-    "btn-primary": "bg-theme-primary text-white hover:bg-opacity-90",
-    card: "bg-theme-background text-theme-text rounded-lg shadow-md p-4",
+    // よく使うパターンのショートカット
+    btn: "px-4 py-2 rounded-lg transition-colors duration-200",
+    "btn-primary": "btn bg-primary text-white hover:opacity-90",
+    card: "bg-background rounded-xl p-4 shadow-md border border-text/10",
   },
-  rules: [
-    // カスタムルールを追加して、テーマカラーにアクセスする
-    [
-      /^bg-theme-(.*)$/,
-      ([, name], { theme }) => {
-        const themeMode = "var(--theme-mode, light)";
-        const color = `var(--${name}-color)`;
-        return { "background-color": color };
-      },
-    ],
-    [
-      /^text-theme-(.*)$/,
-      ([, name], { theme }) => {
-        const color = `var(--${name}-color)`;
-        return { color: color };
-      },
-    ],
-  ],
+  transformers: [transformerDirectives(), transformerVariantGroup()],
+  safelist: ["dark", "light"],
 });
