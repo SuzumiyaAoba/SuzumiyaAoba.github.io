@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
 import {
@@ -21,8 +21,16 @@ export const AsciiTable = ({
     ASCII_TABLE_ATTR;
   const hoveredCell = useContext(HoveredCellContext);
   const clickedCell = useContext(ClickedCellContext);
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+
+  // クライアントサイドでのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイド（またはテスト環境）用のフォールバック
+  const isDark = mounted ? resolvedTheme === "dark" : false;
   const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return range(rowNum).map((py) =>

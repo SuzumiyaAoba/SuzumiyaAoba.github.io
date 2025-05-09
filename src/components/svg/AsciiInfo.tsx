@@ -1,5 +1,6 @@
 import { THEME_COLORS } from "./StandardCode.utils";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 type AsciiInfoProps = {
   char?: string;
@@ -8,8 +9,16 @@ type AsciiInfoProps = {
 };
 
 export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+
+  // クライアントサイドでのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイド（またはテスト環境）用のフォールバック
+  const isDark = mounted ? resolvedTheme === "dark" : false;
   const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
   return (

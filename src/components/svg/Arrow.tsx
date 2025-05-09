@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { THEME_COLORS } from "./StandardCode.utils";
 
@@ -19,8 +19,16 @@ const Arrow: FC<ArrowProps> = ({
   color,
   strokeWidth = 2,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+
+  // クライアントサイドでのみ実行されるようにする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // サーバーサイド（またはテスト環境）用のフォールバック
+  const isDark = mounted ? resolvedTheme === "dark" : false;
   const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
   const arrowColor = color || themeColors.stroke;
 
