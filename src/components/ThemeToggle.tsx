@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 type ThemeToggleProps = {
@@ -9,10 +9,33 @@ type ThemeToggleProps = {
 
 export const ThemeToggle: FC<ThemeToggleProps> = ({ className }) => {
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // マウント後にのみレンダリングする
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
+
+  // サーバーサイドレンダリング時は空のボタンを返す
+  if (!mounted) {
+    return (
+      <button
+        className={`p-1 rounded-full flex items-center justify-center focus:outline-none transition-colors ${className}`}
+        style={{
+          backgroundColor: "var(--card-bg)",
+          color: "var(--foreground)",
+          border: "1px solid var(--border)",
+        }}
+        suppressHydrationWarning
+      >
+        <span className="w-5 h-5"></span>
+      </button>
+    );
+  }
 
   return (
     <button

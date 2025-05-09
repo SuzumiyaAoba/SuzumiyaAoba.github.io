@@ -26,7 +26,7 @@ export interface CommentsProps
 }
 
 // Giscusテーマのマッピング
-const giscusThemeMap = {
+const giscusThemeMap: Record<string, string> = {
   light: "light",
   dark: "dark_dimmed",
 };
@@ -54,13 +54,19 @@ export const Comments = ({
   // サイトのテーマを取得
   const { resolvedTheme } = useTheme();
   // 初期値はresolvedThemeから直接決定する
-  const initialTheme = giscusThemeMap[resolvedTheme] || "dark_dimmed";
+  const initialTheme =
+    resolvedTheme && resolvedTheme in giscusThemeMap
+      ? giscusThemeMap[resolvedTheme]
+      : "dark_dimmed";
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
 
   // テーマが変更されたらGiscusのテーマも変更する
   useEffect(() => {
     // resolvedThemeをGiscusのテーマに変換
-    const giscusTheme = giscusThemeMap[resolvedTheme] || "dark_dimmed";
+    const giscusTheme =
+      resolvedTheme && resolvedTheme in giscusThemeMap
+        ? giscusThemeMap[resolvedTheme]
+        : "dark_dimmed";
     setCurrentTheme(giscusTheme);
 
     // すでにiframeが存在する場合は、メッセージを送信して動的にテーマを変更
