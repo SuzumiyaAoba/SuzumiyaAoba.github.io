@@ -12,6 +12,9 @@ import {
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
+// 静的生成の設定
+export const dynamic = "force-static";
+
 // 静的生成のパラメータを提供
 export async function generateStaticParams() {
   const ids = await getPaths("blog");
