@@ -18,6 +18,7 @@ export const FooterAds = memo(
   ({ adTypes = ["ninja"], shouldShowAd = () => true }: FooterAdsProps) => {
     return (
       <div className="flex flex-col items-center gap-8 mx-auto mb-12">
+        {/*
         {adTypes.includes("a8net") && shouldShowAd("a8net") && <DmmFx />}
 
         {adTypes.includes("rakuten") && shouldShowAd("rakuten") && (
@@ -27,6 +28,7 @@ export const FooterAds = memo(
         {adTypes.includes("ninja") && shouldShowAd("ninja") && (
           <NinjaFooterAds />
         )}
+          */}
       </div>
     );
   }
