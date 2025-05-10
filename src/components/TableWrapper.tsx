@@ -15,7 +15,7 @@ export interface TableWrapperProps extends PropsWithChildren {
 export const TableWrapper: FC<TableWrapperProps> = memo(
   ({ children, className, tableClassName, caption, summary }) => {
     return (
-      <div className={cn("overflow-x-auto my-4 border rounded", className)}>
+      <div className={cn("overflow-x-auto my-4 border-0 rounded", className)}>
         <table className={cn("w-full", tableClassName)} summary={summary}>
           {caption && (
             <caption className="p-2 text-sm text-center">{caption}</caption>

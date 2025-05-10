@@ -36,3 +36,6 @@ export const Pages = {
 
 type Pages = typeof Pages;
 export type PageKey = keyof Pages;
+
+// 1ページあたりの記事数
+export const POSTS_PER_PAGE = 10;
