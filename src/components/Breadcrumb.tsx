@@ -90,6 +90,8 @@ const segmentMappings: Record<string, string> = {
   cats: "Cats",
   post: "記事",
   page: "ページ",
+  "privacy-policy": "プライバシーポリシー",
+  contact: "お問い合わせ",
 };
 
 // 型ガード関数 - ブログセグメントの判定
