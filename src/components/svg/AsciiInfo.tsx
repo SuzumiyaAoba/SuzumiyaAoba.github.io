@@ -21,6 +21,10 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
   const isDark = mounted ? resolvedTheme === "dark" : false;
   const themeColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
+  const getMutedColor = () => (isDark ? "#cbd5e1" : "#94a3b8");
+  const getGreenColor = () => (isDark ? "#4ade80" : "#16a34a");
+  const getSkyColor = () => (isDark ? "#38bdf8" : "#0284c7");
+
   return (
     <div className="grid grid-cols-3 gap-4 mb-4">
       <div>
@@ -32,13 +36,11 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
         <div className="font-mono text-lg">
           {binary ? (
             <>
-              <span className="text-gray-400 dark:text-gray-300">0b</span>
-              <span className="text-green-600 dark:text-green-400">
+              <span style={{ color: getMutedColor() }}>0b</span>
+              <span style={{ color: getGreenColor() }}>
                 {binary.slice(0, 3)}
               </span>
-              <span className="text-sky-600 dark:text-sky-400">
-                {binary.slice(3, 7)}
-              </span>
+              <span style={{ color: getSkyColor() }}>{binary.slice(3, 7)}</span>
             </>
           ) : (
             "--"
@@ -50,11 +52,11 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
         <div className="font-mono text-lg">
           {hex ? (
             <>
-              <span className="text-gray-400 dark:text-gray-300">0x</span>
-              <span className="text-green-600 dark:text-green-400">
+              <span style={{ color: getMutedColor() }}>0x</span>
+              <span style={{ color: getGreenColor() }}>
                 {hex.slice(0, 1).toUpperCase()}
               </span>
-              <span className="text-sky-600 dark:text-sky-400">
+              <span style={{ color: getSkyColor() }}>
                 {hex.slice(1, 2).toUpperCase()}
               </span>
             </>

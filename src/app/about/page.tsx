@@ -62,8 +62,14 @@ export default async function About() {
       <div className="flex flex-col md:flex-row gap-8 mb-12">
         <div className="w-full md:w-1/3 flex justify-center">
           {/* プロフィール画像をここに配置 */}
-          <div className="w-48 h-48 relative rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700">
-            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+          <div
+            className="w-48 h-48 relative rounded-full overflow-hidden border-4"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <div
+              className="absolute inset-0 flex items-center justify-center text-gray-400"
+              style={{ backgroundColor: "var(--background-secondary)" }}
+            >
               <Image
                 src="/assets/profile.jpg"
                 alt="Profile"
@@ -86,7 +92,8 @@ export default async function About() {
               <li>
                 <Link
                   href="https://x.com/SuzumiyaAoba/"
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center justify-center w-12 h-12 rounded-full transition-colors"
+                  style={{ backgroundColor: "var(--background-secondary)" }}
                   aria-label="X (Twitter)"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -97,7 +104,8 @@ export default async function About() {
               <li>
                 <Link
                   href="https://github.com/SuzumiyaAoba/"
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center justify-center w-12 h-12 rounded-full transition-colors"
+                  style={{ backgroundColor: "var(--background-secondary)" }}
                   aria-label="GitHub"
                   target="_blank"
                   rel="noopener noreferrer"

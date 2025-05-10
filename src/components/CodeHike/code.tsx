@@ -34,7 +34,13 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
   return (
     <div className="relative my-4">
       {highlighted.meta ? (
-        <div className="flex rounded-t bg-slate-100 dark:bg-slate-800 text-center text-slate-500 dark:text-slate-400 border-b py-1">
+        <div
+          className="flex rounded-t text-center border-b py-1"
+          style={{
+            backgroundColor: "var(--code-bg)",
+            color: "var(--muted)",
+          }}
+        >
           <div className="flex items-center pl-2 mx-auto">
             <LanguageIcon lang={highlighted.lang} className="mr-1" />
             {highlighted.meta}
