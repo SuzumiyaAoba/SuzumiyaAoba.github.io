@@ -16,7 +16,10 @@ export default defineConfig({
     filesystem: ["**/*.{html,js,ts,jsx,tsx,md,mdx}"],
   },
   presets: [
-    presetWind4(),
+    presetWind4({
+      dark: "class",
+      darkSelector: '[data-theme="dark"]',
+    }),
     presetAttributify(),
     presetIcons(),
     presetWebFonts(),
@@ -51,5 +54,9 @@ export default defineConfig({
     card: "bg-background rounded-xl p-4 shadow-md border border-text/10",
   },
   transformers: [transformerDirectives(), transformerVariantGroup()],
-  safelist: ["dark", "light"],
+  safelist: [
+    "[data-theme='dark']",
+    "[data-theme='light']",
+    "[data-theme='system']",
+  ],
 });

@@ -85,14 +85,12 @@ header a:hover,
 }
 
 /* ダークモード時のリンク色の強調 */
-[data-theme="dark"] a,
-.dark a {
+[data-theme="dark"] a {
   color: var(--accent-primary);
   font-weight: 500;
 }
 
-[data-theme="dark"] a:hover,
-.dark a:hover {
+[data-theme="dark"] a:hover {
   color: var(--accent-secondary);
 }
 

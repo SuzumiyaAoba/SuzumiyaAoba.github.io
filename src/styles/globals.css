@@ -6,7 +6,7 @@
 }
 
 /* ダークモード用の変数 - UnoCSS で使用 */
-.dark {
+[data-theme="dark"] {
   --color-primary: #818cf8;
   --color-background: #1e1e2e;
   --color-text: #e2e8f0;
@@ -25,10 +25,10 @@ html {
 }
 
 /* テーマの継承とフォールバック */
-html.dark * {
+html[data-theme="dark"] * {
   color-scheme: dark;
 }
 
-html:not(.dark) * {
+html:not([data-theme="dark"]) * {
   color-scheme: light;
 }
