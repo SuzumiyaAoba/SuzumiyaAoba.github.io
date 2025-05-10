@@ -1,8 +1,11 @@
 import { Tag } from "@/components/Tag";
-import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
+import { Pages } from "@/libs/contents/blog";
 import { getFrontmatters } from "@/libs/contents/markdown";
 import { compareDesc, format } from "date-fns";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+
+const POSTS_PER_PAGE = 10;
 
 type PostCardProps = {
   slug: string;
@@ -26,9 +29,7 @@ const PostCard = ({ slug, frontmatter }: PostCardProps) => {
       <Link
         href={`/blog/${slug}/`}
         className="text-lg block my-2 transition-colors"
-        style={{
-          color: "var(--foreground)",
-        }}
+        style={{ color: "var(--foreground)" }}
       >
         {frontmatter.title}
       </Link>
@@ -45,7 +46,16 @@ const PostCard = ({ slug, frontmatter }: PostCardProps) => {
   );
 };
 
-export default async function BlogPage() {
+export default async function BlogPage({
+  params,
+}: {
+  params: { page: string };
+}) {
+  const pageNumber = parseInt(params.page, 10);
+  if (isNaN(pageNumber) || pageNumber < 2) {
+    notFound();
+  }
+
   const posts = await getFrontmatters({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
@@ -55,8 +65,14 @@ export default async function BlogPage() {
     compareDesc(a.frontmatter.date, b.frontmatter.date)
   );
 
-  const pagePosts = sortedPosts.slice(0, POSTS_PER_PAGE);
   const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
+  if (pageNumber > totalPages) {
+    notFound();
+  }
+
+  const start = (pageNumber - 1) * POSTS_PER_PAGE;
+  const end = start + POSTS_PER_PAGE;
+  const pagePosts = sortedPosts.slice(start, end);
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
@@ -71,19 +87,44 @@ export default async function BlogPage() {
         ))}
       </div>
       {/* ページネーション */}
-      {totalPages > 1 && (
-        <div className="flex gap-2 justify-center my-8">
-          <span className="px-3 py-1 rounded bg-gray-200 text-gray-500 cursor-not-allowed">
-            1
-          </span>
+      <div className="flex gap-2 justify-center my-8">
+        {pageNumber > 2 && (
           <Link
-            href="/blog/page/2/"
+            href={`/blog/${pageNumber - 1}/`}
+            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+          >
+            前へ
+          </Link>
+        )}
+        <Link
+          href="/blog/"
+          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          1
+        </Link>
+        {Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((num) => (
+          <Link
+            key={num}
+            href={`/blog/${num}/`}
+            className={`px-3 py-1 rounded ${
+              num === pageNumber
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+            aria-current={num === pageNumber ? "page" : undefined}
+          >
+            {num}
+          </Link>
+        ))}
+        {pageNumber < totalPages && (
+          <Link
+            href={`/blog/${pageNumber + 1}/`}
             className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
           >
             次へ
           </Link>
-        </div>
-      )}
+        )}
+      </div>
       <div className="mt-4">
         <Link
           href="/tags/"
@@ -95,4 +136,16 @@ export default async function BlogPage() {
       </div>
     </main>
   );
+}
+
+export async function generateStaticParams() {
+  const posts = await getFrontmatters({
+    paths: ["blog"],
+    parser: { frontmatter: Pages["blog"].frontmatter },
+  });
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  // 2ページ目以降のみ
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    page: String(i + 2),
+  }));
 }
