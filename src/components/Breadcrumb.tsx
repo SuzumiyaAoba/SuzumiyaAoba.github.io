@@ -88,6 +88,8 @@ const segmentMappings: Record<string, string> = {
   programming: "プログラミング",
   scala: "Scala",
   cats: "Cats",
+  post: "記事",
+  page: "ページ",
 };
 
 // 型ガード関数 - ブログセグメントの判定
@@ -181,22 +183,50 @@ function getPathSegments(segments: string[]): PathSegment[] {
     return [];
   }
 
-  return segments.map((segment, index) => {
+  // ブログ記事の特別な処理: post セグメントをスキップする
+  // 例: ["blog", "post", "[slug]"] -> ["blog", "[slug]"] として処理
+  let processedSegments = [...segments];
+  const rootSegment = segments[0];
+  if (
+    rootSegment === ContentType.BLOG &&
+    segments.length > 2 &&
+    segments[1] === "post"
+  ) {
+    // "post" セグメントを省略（スキップ）する
+    processedSegments = [segments[0], ...segments.slice(2)];
+  }
+
+  return processedSegments.map((segment, index) => {
     // パスをセグメントの位置まで構築
-    const path = `/${segments.slice(0, index + 1).join("/")}`;
+    // 注: 元のセグメントパスを保持する必要があるため、ここでは processedSegments ではなく segments を使用
+    let path = "";
+    if (
+      rootSegment === ContentType.BLOG &&
+      index > 0 &&
+      segments[1] === "post"
+    ) {
+      if (index === 1) {
+        // "blog" の場合
+        path = `/${segments[0]}`;
+      } else {
+        // 最後のセグメント（記事スラグ）の場合
+        path = `/${segments[0]}/${segments[1]}/${segments[index + 1]}`;
+      }
+    } else {
+      path = `/${processedSegments.slice(0, index + 1).join("/")}`;
+    }
 
     // URLエンコードされたセグメントをデコードする
     const decodedSegment = decodeURIComponent(segment);
 
     // 基本セグメント情報
-    const isLast = index === segments.length - 1;
+    const isLast = index === processedSegments.length - 1;
     const name = segmentMappings[decodedSegment] || decodedSegment;
 
     // 動的ルートやスペシャルケースの処理
     const isDynamicRoute = segment.startsWith("[") && segment.endsWith("]");
 
     // コンテンツの種類を判定
-    const rootSegment = segments[0];
     const isContentSegment = index > 0 && isLast && !isDynamicRoute;
 
     // 共通のベースオブジェクト
@@ -284,7 +314,7 @@ export default function BreadcrumbNav({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
 
-          {segments.map((segment) => {
+          {segments.map((segment, index) => {
             // タイトルマップから適切な表示名を取得
             const displayName = getDisplayTitle({
               segment,
@@ -294,7 +324,7 @@ export default function BreadcrumbNav({
             });
 
             return (
-              <BreadcrumbItem key={segment.path}>
+              <BreadcrumbItem key={`${segment.path}-${index}`}>
                 <BreadcrumbItemLink
                   asChild
                   variant={segment.isLast ? "active" : "default"}
