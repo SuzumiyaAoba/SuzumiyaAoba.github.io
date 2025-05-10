@@ -22,6 +22,7 @@
   --accent-primary-light: var(--color-primary);
   --accent-secondary-light: #0ea5e9;
   --border-light: #cbd5e1;
+  --border-rgb-light: 203, 213, 225; /* border-lightのRGB値 */
   --card-bg-light: #ffffff;
   --code-bg-light: #f1f5f9;
   --code-highlight-light: #e2e8f0;
@@ -60,6 +61,7 @@
   --accent-primary-dark: #818cf8;
   --accent-secondary-dark: #38bdf8;
   --border-dark: #475569;
+  --border-rgb-dark: 71, 85, 105; /* border-darkのRGB値 */
   --card-bg-dark: #2c3549;
   --code-bg-dark: #242e42;
   --code-highlight-dark: #3b4863;
@@ -98,6 +100,7 @@
   --accent-primary: var(--accent-primary-light);
   --accent-secondary: var(--accent-secondary-light);
   --border: var(--border-light);
+  --border-rgb: var(--border-rgb-light);
   --card-bg: var(--card-bg-light);
   --code-bg: var(--code-bg-light);
   --code-highlight: var(--code-highlight-light);
@@ -146,6 +149,7 @@
     --accent-primary: var(--accent-primary-dark);
     --accent-secondary: var(--accent-secondary-dark);
     --border: var(--border-dark);
+    --border-rgb: var(--border-rgb-dark);
     --card-bg: var(--card-bg-dark);
     --code-bg: var(--code-bg-dark);
     --code-highlight: var(--code-highlight-dark);
@@ -191,6 +195,7 @@
   --accent-primary: var(--accent-primary-dark);
   --accent-secondary: var(--accent-secondary-dark);
   --border: var(--border-dark);
+  --border-rgb: var(--border-rgb-dark);
   --card-bg: var(--card-bg-dark);
   --code-bg: var(--code-bg-dark);
   --code-highlight: var(--code-highlight-dark);
@@ -235,6 +240,7 @@
   --accent-primary: var(--accent-primary-light);
   --accent-secondary: var(--accent-secondary-light);
   --border: var(--border-light);
+  --border-rgb: var(--border-rgb-light);
   --card-bg: var(--card-bg-light);
   --code-bg: var(--code-bg-light);
   --code-highlight: var(--code-highlight-light);
@@ -279,6 +285,7 @@
   --accent-primary: var(--accent-primary-light);
   --accent-secondary: var(--accent-secondary-light);
   --border: var(--border-light);
+  --border-rgb: var(--border-rgb-light);
   --card-bg: var(--card-bg-light);
   --code-bg: var(--code-bg-light);
   --code-highlight: var(--code-highlight-light);
@@ -323,6 +330,7 @@
     --accent-primary: var(--accent-primary-dark);
     --accent-secondary: var(--accent-secondary-dark);
     --border: var(--border-dark);
+    --border-rgb: var(--border-rgb-dark);
     --card-bg: var(--card-bg-dark);
     --code-bg: var(--code-bg-dark);
     --code-highlight: var(--code-highlight-dark);
@@ -511,6 +519,7 @@ div[data-ch-line] * {
   --accent-primary: var(--accent-primary-dark);
   --accent-secondary: var(--accent-secondary-dark);
   --border: var(--border-dark);
+  --border-rgb: var(--border-rgb-dark);
   --card-bg: var(--card-bg-dark);
   --code-bg: var(--code-bg-dark);
   --code-highlight: var(--code-highlight-dark);

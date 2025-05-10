@@ -118,7 +118,7 @@ table {
   background-color: var(--card-bg);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  box-shadow: none; /* ボックスシャドウを削除 */
 }
 
 table th {
@@ -127,12 +127,12 @@ table th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(var(--border-rgb), 0.3); /* ボーダーを薄く設定 */
 }
 
 table td {
   padding: 0.75rem 1rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(var(--border-rgb), 0.3); /* ボーダーを薄く設定 */
 }
 
 table tr:hover td {
