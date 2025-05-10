@@ -24,10 +24,19 @@ export function LanguageSwitcher({
   const { resolvedTheme } = useTheme();
 
   return (
-    <div className="relative rounded bg-slate-100 dark:bg-slate-800">
-      <div className="flex items-center border-b dark:border-slate-700">
+    <div style={{ backgroundColor: "var(--code-bg)", borderRadius: "0.25rem" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
         <Select value={selectedLang} onValueChange={setSelectedLang}>
-          <SelectTrigger className="w-[150px] pl-4 border-none bg-slate-100 dark:bg-slate-800 focus:ring-none z-1">
+          <SelectTrigger
+            className="w-[150px] pl-4 border-none focus:ring-none z-1"
+            style={{ backgroundColor: "var(--code-bg)" }}
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent position="item-aligned">
@@ -43,7 +52,13 @@ export function LanguageSwitcher({
         </Select>
 
         {selectedCode.meta ? (
-          <div className="ml-8 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+          <div
+            className="ml-8"
+            style={{
+              backgroundColor: "var(--code-bg)",
+              color: "var(--muted)",
+            }}
+          >
             {selectedCode.meta}
           </div>
         ) : (
