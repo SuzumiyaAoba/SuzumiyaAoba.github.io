@@ -3,11 +3,17 @@ import { Metadata } from "next";
 import "katex/dist/katex.min.css";
 import config from "@/config";
 import { Pages } from "@/libs/contents/blog";
-import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
+import {
+  getContent,
+  getFrontmatter,
+  getFrontmatters,
+  getPaths,
+} from "@/libs/contents/markdown";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 import TOC from "@/components/TOC";
 import styles from "@/styles/markdown.module.scss";
+import { compareDesc } from "date-fns";
 
 type Props = {
   params: Promise<{ slug: string }>;

@@ -1,11 +1,9 @@
 import { Tag } from "@/components/Tag";
-import { Pages } from "@/libs/contents/blog";
+import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
 import { getFrontmatters } from "@/libs/contents/markdown";
 import { compareDesc, format } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const POSTS_PER_PAGE = 10;
 
 type PostCardProps = {
   slug: string;
@@ -49,9 +47,10 @@ const PostCard = ({ slug, frontmatter }: PostCardProps) => {
 export default async function BlogPage({
   params,
 }: {
-  params: { page: string };
+  params: Promise<{ page: string }>;
 }) {
-  const pageNumber = parseInt(params.page, 10);
+  const { page } = await params;
+  const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber) || pageNumber < 2) {
     notFound();
   }
