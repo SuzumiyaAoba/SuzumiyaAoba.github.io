@@ -28,11 +28,11 @@ const TimelineItem = ({
       {/* 左側の日付部分 */}
       <div className="w-24 flex-shrink-0 text-right pr-8 relative">
         <div className="font-bold text-lg">{day}</div>
-        <div className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="text-xs text-gray-500 dark:text-gray-300">
           {dayOfWeek}
         </div>
         {/* 縦線 */}
-        <div className="absolute top-0 right-0 h-full w-px bg-gray-400 dark:bg-gray-700">
+        <div className="absolute top-0 right-0 h-full w-px bg-gray-400 dark:bg-gray-600">
           <div className="absolute top-2 right-0 w-3 h-3 rounded-full bg-primary transform -translate-x-1/2 transition-all duration-300 group-hover:scale-125"></div>
         </div>
       </div>
@@ -40,7 +40,7 @@ const TimelineItem = ({
       {/* 右側の記事部分 */}
       <div className="pb-8 pt-1 ml-6 w-full">
         {showMonth && (
-          <div className="text-sm font-semibold text-primary mb-3 -mt-1 border-b border-primary pb-1 inline-block">
+          <div className="text-sm font-semibold text-primary dark:text-primary/90 mb-3 -mt-1 border-b border-primary dark:border-primary/80 pb-1 inline-block">
             {`${month}月`}
           </div>
         )}
