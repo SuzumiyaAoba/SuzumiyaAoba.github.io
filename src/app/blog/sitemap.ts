@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return blogEntries
     .filter((entry) => !entry.frontmatter.draft)
     .map((entry) => ({
-      url: `https://suzumiyaaoba.com/blog/${entry.path}/`,
+      url: `https://suzumiyaaoba.com/blog/post/${entry.path}/`,
       lastModified: entry.frontmatter.date,
       priority: 0.8,
       changeFrequency: "monthly" as const,
