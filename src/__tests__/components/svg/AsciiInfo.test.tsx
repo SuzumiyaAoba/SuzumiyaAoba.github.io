@@ -54,9 +54,14 @@ describe("AsciiInfo", () => {
     expect(zeros.length).toBe(2);
 
     // グリーンの0とスカイブルーの0があることを確認
-    const greenZero = screen.getByText("0", { selector: ".text-green-600" });
-    const skyZero = screen.getByText("0", { selector: ".text-sky-600" });
-    expect(greenZero).toBeInTheDocument();
-    expect(skyZero).toBeInTheDocument();
+    // それぞれのspanのstyle.colorで判定する
+    const greenZero = zeros.find(
+      (z) => z instanceof HTMLElement && z.style.color === "rgb(22, 163, 74)"
+    );
+    const skyZero = zeros.find(
+      (z) => z instanceof HTMLElement && z.style.color === "rgb(2, 132, 199)"
+    );
+    expect(greenZero).toBeDefined();
+    expect(skyZero).toBeDefined();
   });
 });
