@@ -1,48 +1,9 @@
-import { Tag } from "@/components/Tag";
+import { Timeline } from "@/components/Article/Timeline";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
 import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc, format } from "date-fns";
+import { compareDesc } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-type PostCardProps = {
-  slug: string;
-  frontmatter: {
-    title: string;
-    date: Date;
-    tags: string[];
-  };
-};
-
-const PostCard = ({ slug, frontmatter }: PostCardProps) => {
-  return (
-    <div className="card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]">
-      <div
-        className="flex gap-x-1 items-center font-thin text-sm"
-        style={{ color: "var(--muted)" }}
-      >
-        <div className="i-mdi-calendar" />
-        <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
-      </div>
-      <Link
-        href={`/blog/${slug}/`}
-        className="text-lg block my-2 transition-colors"
-        style={{ color: "var(--foreground)" }}
-      >
-        {frontmatter.title}
-      </Link>
-      <div className="flex flex-wrap mt-2 gap-2 text-xs">
-        {frontmatter.tags.map((tag) => (
-          <Tag
-            key={tag}
-            label={tag}
-            href={`/tags/${encodeURIComponent(tag)}/`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export default async function BlogPage({
   params,
@@ -76,15 +37,9 @@ export default async function BlogPage({
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="mb-8 text-3xl">Blog</h1>
-      <div className="flex flex-col gap-6 mb-8">
-        {pagePosts.map((post) => (
-          <PostCard
-            key={post.path}
-            slug={post.path}
-            frontmatter={post.frontmatter}
-          />
-        ))}
-      </div>
+
+      <Timeline posts={pagePosts} />
+
       {/* ページネーション */}
       <div className="flex gap-2 justify-center my-8">
         {pageNumber > 2 && (
