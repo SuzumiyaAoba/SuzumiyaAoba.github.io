@@ -23,13 +23,14 @@ type CardProps = {
 const Card: FC<CardProps> = ({ title, href, description }) => {
   return (
     <a
-      className="card p-6 transition-all duration-300 hover:transform hover:scale-[1.03]"
+      className="p-6 rounded-xl shadow-md border border-text/10 transition-all duration-300 hover:transform hover:scale-[1.03]"
+      style={{ backgroundColor: "var(--card-bg)" }}
       href={href}
     >
       <h2 className="mt-2 mb-6 text-xl font-bold text-center text-primary">
         {title}
       </h2>
-      <div className="mx-4 my-6 text-sm text-text/80">{description}</div>
+      <div className="mx-4 my-6 text-sm text-foreground/80">{description}</div>
     </a>
   );
 };
@@ -78,7 +79,10 @@ export default function Home() {
 
       {/* 開発環境のみ表示するセクション - ビルド時に評価 */}
       {isDevelopment && (
-        <section className="mt-16 card p-6">
+        <section
+          className="mt-16 p-6 rounded-xl shadow-md border border-text/10 transition-all duration-300"
+          style={{ backgroundColor: "var(--card-bg)" }}
+        >
           <h2 className="text-2xl font-bold text-primary mb-4">
             UnoCSS + テーマ切り替えのテスト
           </h2>

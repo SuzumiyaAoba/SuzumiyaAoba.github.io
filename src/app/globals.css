@@ -271,6 +271,42 @@
   --secondary-color: #64748b;
   --background-color: #ffffff;
   --text-color: #1e293b;
+  --background: var(--background-light);
+  --background-secondary: var(--background-secondary-light);
+  --foreground: var(--foreground-light);
+  --muted: var(--muted-light);
+  --muted-secondary: var(--muted-secondary-light);
+  --accent-primary: var(--accent-primary-light);
+  --accent-secondary: var(--accent-secondary-light);
+  --border: var(--border-light);
+  --card-bg: var(--card-bg-light);
+  --code-bg: var(--code-bg-light);
+  --code-highlight: var(--code-highlight-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --header-bg: var(--header-bg-light);
+  --header-scrolled-bg: var(--header-scrolled-bg-light);
+  --input-bg: var(--input-bg-light);
+
+  /* Message コンポーネント用ライトモード設定 */
+  --info-bg: var(--info-bg-light);
+  --info-border: var(--info-border-light);
+  --info-text: var(--info-text-light);
+  --info-icon: var(--info-icon-light);
+
+  --success-bg: var(--success-bg-light);
+  --success-border: var(--success-border-light);
+  --success-text: var(--success-text-light);
+  --success-icon: var(--success-icon-light);
+
+  --warning-bg: var(--warning-bg-light);
+  --warning-border: var(--warning-border-light);
+  --warning-text: var(--warning-text-light);
+  --warning-icon: var(--warning-icon-light);
+
+  --error-bg: var(--error-bg-light);
+  --error-border: var(--error-border-light);
+  --error-text: var(--error-text-light);
+  --error-icon: var(--error-icon-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -279,6 +315,42 @@
     --secondary-color: #94a3b8;
     --background-color: #1e293b;
     --text-color: #f8fafc;
+    --background: var(--background-dark);
+    --background-secondary: var(--background-secondary-dark);
+    --foreground: var(--foreground-dark);
+    --muted: var(--muted-dark);
+    --muted-secondary: var(--muted-secondary-dark);
+    --accent-primary: var(--accent-primary-dark);
+    --accent-secondary: var(--accent-secondary-dark);
+    --border: var(--border-dark);
+    --card-bg: var(--card-bg-dark);
+    --code-bg: var(--code-bg-dark);
+    --code-highlight: var(--code-highlight-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+    --header-bg: var(--header-bg-dark);
+    --header-scrolled-bg: var(--header-scrolled-bg-dark);
+    --input-bg: var(--input-bg-dark);
+
+    /* Message コンポーネント用ダークモード設定 */
+    --info-bg: var(--info-bg-dark);
+    --info-border: var(--info-border-dark);
+    --info-text: var(--info-text-dark);
+    --info-icon: var(--info-icon-dark);
+
+    --success-bg: var(--success-bg-dark);
+    --success-border: var(--success-border-dark);
+    --success-text: var(--success-text-dark);
+    --success-icon: var(--success-icon-dark);
+
+    --warning-bg: var(--warning-bg-dark);
+    --warning-border: var(--warning-border-dark);
+    --warning-text: var(--warning-text-dark);
+    --warning-icon: var(--warning-icon-dark);
+
+    --error-bg: var(--error-bg-dark);
+    --error-border: var(--error-border-dark);
+    --error-text: var(--error-text-dark);
+    --error-icon: var(--error-icon-dark);
   }
 }
 
