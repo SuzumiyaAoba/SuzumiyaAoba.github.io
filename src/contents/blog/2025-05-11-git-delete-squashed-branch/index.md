@@ -13,7 +13,7 @@ GitHub を使ってブランチをマージするときには 3 つの選択肢�
 - Rebase and merge
 - Squash and merge
 
-仕事では Create a merge commit を使うことが多いが、個人開発では Squash and merge を使った場合の面倒事が発生することが少ないため、master ブランチにちょっとした修正のコミット履歴を残さないように Sqaush and merge を使うことがある。
+仕事では Create a merge commit を使うことが多いが、個人開発では Squash and merge を使った場合の面倒事が発生することが少ないため、master ブランチにちょっとした修正のコミット履歴を残さないように Squash and merge を使うことがある。
 
 Squash and merge を使ったときの面倒事についてはググると記事が見つかるのでそちらを参照して欲しい。
 
@@ -22,15 +22,15 @@ Squash and merge を使ったときの面倒事についてはググると記事
 
 Squash and merge した後にコンフリクトが発生する問題については、rebase するときのオプションで解決できるらしい。
 
-- [Git で squash merge後にmergeされたコミットを含むbranchがコンフリクトするのを解決する #onto - Qiita](https://qiita.com/nakamasato/items/680f3908437b72eb7186)
-- [squash mergeの環境でCascading PRsでコンフリクトした時 - oinume journal](https://journal.lampetty.net/entry/resolve-squash-merge-conflict)
+- [Git で squash merge 後に merge されたコミットを含む branch がコンフリクトするのを解決する #onto - Qiita](https://qiita.com/nakamasato/items/680f3908437b72eb7186)
+- [squash merge の環境で Cascading PRs でコンフリクトした時 - oinume journal](https://journal.lampetty.net/entry/resolve-squash-merge-conflict)
 
 しかし、マージ済みブランチを削除するとき `-d` ではなく `-D` で消さなければいけない。
 定期的に `git pull --prune` してローカルのマージ済みブランチも掃除しているのでコマンド一発でマージ済みブランチを消せないのは不便に感じる。
 
 ## `--no-ff` の場合
 
-Create a merge commit でマージしたときは次の alias を `~/.config/git/config` に設定しているので `git delete-merge-branch` コマンドでマージ済みブランチを削除している。
+Create a merge commit でマージしたときは次の alias を `~/.config/git/config` に設定しているので `git delete-merged-branch` コマンドでマージ済みブランチを削除している。
 
 ```
 [alias]
@@ -39,14 +39,14 @@ Create a merge commit でマージしたときは次の alias を `~/.config/git
 
 このエイリアスは以下の記事を参考に `develop`、`main`、`master` ブランチを保護するようにしたものだ。
 
-- [Gitでマージ済みブランチを一括削除 #Git - Qiita](https://qiita.com/hajimeni/items/73d2155fc59e152630c4)
+- [Git でマージ済みブランチを一括削除 #Git - Qiita](https://qiita.com/hajimeni/items/73d2155fc59e152630c4)
 - [Git マージ済みのブランチを一括削除する #Bash - Qiita](https://qiita.com/ucan-lab/items/97c53a1a929d2858275b)
 
 しかし、これだと Squash and merge でマージしたブランチが消えない問題がある。
 
 ## Squash and merge に対応したい
 
-ググってみると方法は 3 つ見つかった。
+ググってみると方法は 4 つ見つかった。
 
 - [seachicken/gh-poi: ✨ Safely clean up your local branches](https://github.com/seachicken/gh-poi)
 - [not-an-aardvark/git-delete-squashed: Delete branches that have been squashed and merged into main](https://github.com/not-an-aardvark/git-delete-squashed)
@@ -82,14 +82,14 @@ Press Enter to open https://github.com/login/device in your browser...
 
 gh コマンドを使ったことがない方は [Installation](https://github.com/cli/cli#installation) を参考にインストールしてください。
 
-ログインできたら gh-poi をインスールする。
+ログインできたら gh-poi をインストールする。
 
 ```shell
 $ gh extension install seachicken/gh-poi
 ✓ Installed extension seachicken/gh-poi
 ```
 
-Squash マージ済みのブラントを消すためのコマンド `gh poi` を実行すると次のようになった。
+Squash マージ済みのブランチを消すためのコマンド `gh poi` を実行すると次のようになった。
 
 ```shell
 $ gh poi
