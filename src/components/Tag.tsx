@@ -3,31 +3,6 @@ import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/libs/utils";
 
-export const TAG_LABELS = [
-  "java",
-  "scala",
-  "node",
-  "astro",
-  "next.js",
-  "nix",
-  "tmux",
-  "emacs",
-  "ollama",
-  "github copilot",
-  "llm",
-  "ローカルllm",
-  "生成ai",
-  "キーボード",
-  "自作キーボード",
-  "プログラミング",
-  "日記",
-] as const;
-
-type TagLabel = (typeof TAG_LABELS)[number];
-
-const toTypedTagLabel = (tag: string): TagLabel | undefined =>
-  TAG_LABELS.find((it) => it === tag);
-
 // タグとアイコンクラスのマッピング
 const TAG_ICON_MAP: Record<string, string> = {
   java: "i-skill-icons-java-light",
@@ -47,7 +22,13 @@ const TAG_ICON_MAP: Record<string, string> = {
   自作キーボード: "i-material-symbols-keyboard-outline",
   プログラミング: "i-material-symbols-code-blocks-outline",
   日記: "i-mingcute-diary-line",
+  git: "i-devicon-git",
 };
+
+type TagLabel = (typeof TAG_ICON_MAP)[keyof typeof TAG_ICON_MAP];
+
+const toTypedTagLabel = (tag: string): TagLabel | undefined =>
+  Object.keys(TAG_ICON_MAP).find((it) => it === tag);
 
 const DEFAULT_ICON = "i-material-symbols:tag-rounded";
 

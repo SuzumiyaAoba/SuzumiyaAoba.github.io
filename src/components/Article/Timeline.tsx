@@ -10,12 +10,14 @@ type TimelineItemProps = {
     tags: string[];
   };
   showMonth?: boolean;
+  isLastInMonth?: boolean; // 月の最後の記事かどうか
 };
 
 const TimelineItem = ({
   slug,
   frontmatter,
   showMonth = false,
+  isLastInMonth = false, // デフォルトはfalse
 }: TimelineItemProps) => {
   const date = frontmatter.date;
   const year = format(date, "yyyy");
@@ -23,22 +25,45 @@ const TimelineItem = ({
   const day = format(date, "d"); // 0埋めなしの日
   const dayOfWeek = format(date, "EEE"); // 曜日の英語略語表記 (Mon, Tue, Wed, ...)
 
+  // 円と線の位置を正確に定義
+  const CIRCLE_SIZE = 16; // 16px = 4 * 4 (w-4 h-4)
+  const CIRCLE_CENTER_Y = 16; // 円の中心のY座標
+
   return (
-    <div className="flex group">
+    <div className={`flex group relative ${isLastInMonth ? "mb-16" : "mb-2"}`}>
       {/* 左側の日付部分 */}
-      <div className="w-24 flex-shrink-0 text-right pr-8 relative">
+      <div className="w-12 flex-shrink-0 text-right pr-8 relative">
         <div className="font-bold text-lg">{day}</div>
         <div className="text-xs text-gray-500 dark:text-gray-300">
           {dayOfWeek}
         </div>
-        {/* 縦線 */}
-        <div className="absolute top-0 right-0 h-full w-px bg-gray-400 dark:bg-gray-600">
-          <div className="absolute top-2 right-0 w-3 h-3 rounded-full bg-primary transform -translate-x-1/2 transition-all duration-300 group-hover:scale-125"></div>
+
+        {/* タイムラインのコネクタコンテナ */}
+        <div className="absolute top-0 right-0 h-full flex items-center flex-col">
+          {/* 円のマーカー */}
+          <div
+            className="absolute right-0 w-4 h-4 rounded-full bg-primary dark:bg-primary transform -translate-x-1/2 transition-all duration-300 group-hover:scale-125 z-10"
+            style={{
+              top: `${CIRCLE_CENTER_Y - CIRCLE_SIZE / 2}px`,
+              boxShadow: `0 0 0 2px var(--background), 0 0 0 4px rgba(var(--primary-rgb), 0.3)`,
+            }}
+          ></div>
+
+          {/* 円の中心から下に伸びる縦線 - 最後のアイテムでない場合のみ表示 */}
+          {!isLastInMonth && (
+            <div
+              className="absolute right-3.5 w-[2px] bg-primary/40 dark:bg-primary/40 -translate-x-1/2"
+              style={{
+                top: `${CIRCLE_CENTER_Y}px`,
+                height: `calc(100% - ${CIRCLE_CENTER_Y}px + 1.5rem)`,
+              }}
+            ></div>
+          )}
         </div>
       </div>
 
       {/* 右側の記事部分 */}
-      <div className="pb-8 pt-1 ml-6 w-full">
+      <div className="pt-1 ml-6 w-full pb-5">
         {showMonth && (
           <div className="text-sm font-semibold text-primary dark:text-primary/90 mb-3 -mt-1 border-b border-primary dark:border-primary/80 pb-1 inline-block">
             {`${month}月`}
@@ -126,6 +151,7 @@ export function Timeline({ posts }: TimelineProps) {
                     slug={post.path}
                     frontmatter={post.frontmatter}
                     showMonth={index === 0} // 月の最初の記事のみ月表示
+                    isLastInMonth={index === monthPosts.length - 1} // 月の最後の記事かどうか
                   />
                 ));
               })}
