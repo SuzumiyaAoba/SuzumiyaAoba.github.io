@@ -13,6 +13,9 @@
   --background-color: var(--color-background);
   --text-color: var(--color-text);
 
+  /* SVGフィルター用変数 */
+  --svg-filter: none;
+
   /* ライトテーマの変数 */
   --background-light: #f8fafc;
   --background-secondary-light: #e2e8f0;
@@ -158,6 +161,9 @@
     --header-scrolled-bg: var(--header-scrolled-bg-dark);
     --input-bg: var(--input-bg-dark);
 
+    /* SVGフィルター用変数 */
+    --svg-filter: invert(1);
+
     /* Message コンポーネント用ダークモード設定 */
     --info-bg: var(--info-bg-dark);
     --info-border: var(--info-border-dark);
@@ -203,6 +209,9 @@
   --header-bg: var(--header-bg-dark);
   --header-scrolled-bg: var(--header-scrolled-bg-dark);
   --input-bg: var(--input-bg-dark);
+
+  /* SVGフィルター用変数 */
+  --svg-filter: invert(1);
 
   /* Message コンポーネント用ダークモード設定 */
   --info-bg: var(--info-bg-dark);
