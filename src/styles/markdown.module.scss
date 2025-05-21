@@ -310,6 +310,12 @@
       border: solid 0.5px;
     }
   }
+
+  [data-radix-popper-content-wrapper] {
+    p {
+      @apply leading-none;
+    }
+  }
 }
 
 // CSS Modules用にローカルクラスを定義
