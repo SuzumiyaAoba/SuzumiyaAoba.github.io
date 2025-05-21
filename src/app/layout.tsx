@@ -13,6 +13,7 @@ import {
   getBlogTitleMap,
   getNoteTitleMap,
   getKeywordTitleMap,
+  getBookTitleMap,
 } from "@/libs/contents/title-map";
 import { ThemeProvider } from "@/components/ThemeToggle/Provider";
 
@@ -67,6 +68,7 @@ export default async function RootLayout({
   const blogTitleMap = await getBlogTitleMap();
   const noteTitleMap = await getNoteTitleMap();
   const keywordTitleMap = await getKeywordTitleMap();
+  const bookTitleMap = await getBookTitleMap();
 
   return (
     <html
@@ -99,6 +101,7 @@ export default async function RootLayout({
               blogTitleMap={blogTitleMap}
               noteTitleMap={noteTitleMap}
               keywordTitleMap={keywordTitleMap}
+              bookTitleMap={bookTitleMap}
             />
             {children}
           </div>

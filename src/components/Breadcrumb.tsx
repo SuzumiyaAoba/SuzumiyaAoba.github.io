@@ -19,6 +19,7 @@ enum ContentType {
   KEYWORD = "keywords",
   TOOL = "tools",
   SEARCH = "search",
+  BOOKS = "books",
 }
 
 // 基本のパスセグメント型
@@ -47,6 +48,12 @@ interface KeywordPathSegment extends BasePathSegment {
   keywordPath?: string;
 }
 
+// 書籍のパスセグメント
+interface BookPathSegment extends BasePathSegment {
+  type: ContentType.BOOKS;
+  bookPath?: string;
+}
+
 // ツールのパスセグメント
 interface ToolPathSegment extends BasePathSegment {
   type: ContentType.TOOL;
@@ -67,6 +74,7 @@ type PathSegment =
   | BlogPathSegment
   | NotePathSegment
   | KeywordPathSegment
+  | BookPathSegment
   | ToolPathSegment
   | SearchPathSegment
   | OtherPathSegment;
@@ -76,6 +84,7 @@ interface BreadcrumbNavProps {
   blogTitleMap: Record<string, string>;
   noteTitleMap: Record<string, string>;
   keywordTitleMap: Record<string, string>;
+  bookTitleMap: Record<string, string>;
 }
 
 // パスセグメントの表示名をマッピングするオブジェクト
@@ -85,6 +94,7 @@ const segmentMappings: Record<string, string> = {
   [ContentType.KEYWORD]: "キーワード",
   [ContentType.TOOL]: "ツール",
   [ContentType.SEARCH]: "Search",
+  [ContentType.BOOKS]: "書籍",
   programming: "プログラミング",
   scala: "Scala",
   cats: "Cats",
@@ -107,6 +117,11 @@ function isNoteSegment(segment: PathSegment): segment is NotePathSegment {
 // 型ガード関数 - キーワードセグメントの判定
 function isKeywordSegment(segment: PathSegment): segment is KeywordPathSegment {
   return segment.type === ContentType.KEYWORD;
+}
+
+// 型ガード関数 - 書籍セグメントの判定
+function isBookPathSegment(segment: PathSegment): segment is BookPathSegment {
+  return segment.type === ContentType.BOOKS;
 }
 
 // 型ガード関数 - 検索セグメントの判定
@@ -172,6 +187,14 @@ function createContentSegment({
 
     case ContentType.SEARCH:
       return common as SearchPathSegment;
+
+    case ContentType.BOOKS:
+      return isContentSegment
+        ? ({
+            ...common,
+            bookPath: extractPathFromSlug({ path }),
+          } as BookPathSegment)
+        : (common as BookPathSegment);
 
     default:
       return { ...baseSegment, type: contentType } as OtherPathSegment;
@@ -261,6 +284,7 @@ interface GetDisplayTitleProps {
   blogTitleMap: Record<string, string>;
   noteTitleMap: Record<string, string>;
   keywordTitleMap: Record<string, string>;
+  bookTitleMap: Record<string, string>;
 }
 
 function getDisplayTitle({
@@ -268,6 +292,7 @@ function getDisplayTitle({
   blogTitleMap,
   noteTitleMap,
   keywordTitleMap,
+  bookTitleMap,
 }: GetDisplayTitleProps): string {
   // ブログ記事の場合
   if (isBlogSegment(segment) && segment.slug) {
@@ -284,6 +309,11 @@ function getDisplayTitle({
     return keywordTitleMap[segment.keywordPath] || segment.name;
   }
 
+  // 書籍の場合
+  if (isBookPathSegment(segment) && segment.bookPath) {
+    return bookTitleMap[segment.bookPath] || segment.name;
+  }
+
   // それ以外の場合はデフォルト名を返す
   return segment.name;
 }
@@ -292,6 +322,7 @@ export default function BreadcrumbNav({
   blogTitleMap,
   noteTitleMap,
   keywordTitleMap,
+  bookTitleMap,
 }: BreadcrumbNavProps) {
   // レイアウトセグメントを使ってページパスを取得
   const layoutSegments = useSelectedLayoutSegments();
@@ -323,6 +354,7 @@ export default function BreadcrumbNav({
               blogTitleMap,
               noteTitleMap,
               keywordTitleMap,
+              bookTitleMap,
             });
 
             return (
