@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { Number } from "./footnote";
 import { tooltip } from "./tooltip";
 
-export function Code({ codeblock }: { codeblock: RawCode }) {
+export function CodeWithTooltips({ code, tooltips = [] }: { code: RawCode, tooltips?: Zod.infer<typeof Block>[] }) {
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "dark" ? "github-dark" : "github-light";
   const [highlighted, setHighlighted] = useState<HighlightedCode | null>(null);
@@ -18,7 +18,7 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
   useEffect(() => {
     const loadHighlighted = async () => {
       try {
-        const result = await highlight(codeblock, theme);
+        const result = await highlight(code, theme);
         setHighlighted(result);
       } catch (error) {
         console.error("Error highlighting code:", error);
@@ -28,7 +28,7 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
     };
 
     loadHighlighted();
-  }, [codeblock, theme]);
+  }, [code, theme]);
 
   if (loading || !highlighted) {
     return <div className="p-4">Loading code...</div>;
@@ -41,6 +41,15 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
 
   noteAnnotations.forEach((a, index) => {
     a.data = { n: index + 1 }
+  });
+
+  highlighted.annotations = highlighted.annotations.map((a) => {
+    const tooltip = tooltips.find((t) => t.title === a.query)
+    if (!tooltip) return a
+    return {
+      ...a,
+      data: { ...a.data, children: tooltip.children },
+    }
   });
 
   return (
@@ -64,6 +73,7 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
       <CustomCodeBlock
         code={highlighted}
         className={highlighted.meta ? "!rounded-none !rounded-b" : ""}
+        handlers={[tooltip]}
       />
       <ul className="mt-4 !list-none">
         {notes.map((ref, index) => (

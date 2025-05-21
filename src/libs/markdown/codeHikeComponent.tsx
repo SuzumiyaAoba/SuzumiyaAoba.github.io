@@ -4,6 +4,7 @@ import { CodeWithTabs } from "@/components/CodeHike/code-tabs";
 import { Code } from "@/components/CodeHike/code";
 import { InlineCode } from "@/components/CodeHike/inline-code";
 import { CodeSwitcher } from "@/components/CodeHike/code-switcher";
+import { CodeWithTooltips } from "@/components/CodeHike/code-with-tooltips";
 import { HoverContainer, Link } from "@/components/CodeHike/code-mentions";
 
 import type { CodeHikeConfig } from "codehike/mdx";
@@ -59,6 +60,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
           InlineCode,
           CodeWithTabs,
           CodeSwitcher,
+          CodeWithTooltips,
           HoverContainer,
         }}
       />
