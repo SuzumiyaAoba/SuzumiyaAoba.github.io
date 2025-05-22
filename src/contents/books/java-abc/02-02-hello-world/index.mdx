@@ -1,0 +1,62 @@
+---
+title: はじめての Java プログラム
+date: 2025-05-21
+---
+
+## Hello, World!
+
+プログラミング言語を学ぶとき、多くのチュートリアルでは画面に「Hello, World!」という文字列を表示するプログラムを作成する。
+本サイトでも古き良き伝統に習って [Hello World](https://ja.wikipedia.org/wiki/Hello_world) を作ってみよう。
+
+まずは、動くプログラムを書いてみるところから始める。
+
+```java HelloWorld.java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+```
+
+右上のアイコンをクリックしてコピーすることもできるが、ここでは学習が目的のため**自力で入力すること (写経)** を推奨する。
+プログラミングの学習では、仏教の修行と同じように手本となるコードを自身の手で入力していくことを[写経](https://www.google.com/search?q=%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0+%E5%86%99%E7%B5%8C)と呼んでいる。
+
+コードが書けたらファイルを保存しよう。
+
+最初は由緒正しい Java で書かれたソースコードのコンパイル方法を試してみよう。
+
+<CodeWithTooltips>
+
+```java !code HelloWorld.java
+// !ref HelloWorld クラス定義 (ファイル名と同じ名前にすること)
+public class HelloWorld {
+    // !tooltip[/main/] main
+    // !tooltip[/args/] args
+    // !ref メインメソッド定義
+    public static void main(String[] args) {
+        // !tooltip[/System.out.println/] System.out.println
+        // !ref 標準出力に文字列を出力
+        System.out.println("Hello, World!");
+    }
+}
+```
+
+## !!tooltips main
+
+Java ではプログラムの入口にあたるメソッドは  
+`main` という名前をつける決まりになっている。
+
+## !!tooltips args
+
+コマンドライン引数と呼ばれる特殊な引数。  
+`String[]` 型で渡される。
+
+## !!tooltips System.out.println
+
+静的メソッドの呼び出し。
+
+</CodeWithTooltips>
+
+ここでは正確ではない説明が含まれているがそれらについては追って説明する。
+
+今はそういうものだから、という理由で片付けてしまって問題ない。
