@@ -1,6 +1,7 @@
 import clsx from "clsx";
 
 const languageToIcon = (lang: string) => {
+  console.log(lang);
   switch (lang.toLocaleLowerCase()) {
     case "javascript":
       return "i-skill-icons-javascript";
@@ -26,6 +27,8 @@ const languageToIcon = (lang: string) => {
       return "i-skill-icons-dotnet";
     case "matlab":
       return "i-skill-icons-matlab-light";
+    case "shellscript":
+      return "i-skill-icons-powershell-light";
   }
 };
 

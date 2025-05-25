@@ -8,18 +8,12 @@ import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 import path from "path";
 import { glob } from "fast-glob";
+import { Books, frontmatterSchema } from "@/libs/contents/books";
 
 const CONTENT_BASE_PATH = "books";
 
 // book frontmatter schema
-const frontmatterSchema = z.object({
-  title: z.string(),
-  date: z.coerce.date(),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  draft: z.boolean().optional(),
-});
-
+// frontmatterSchemaはbooksモジュールからインポートするため削除
 type PageParams = {
   name: string;
   chapter: string;
@@ -32,19 +26,26 @@ type PageProps = {
 export async function generateStaticParams(): Promise<PageParams[]> {
   // src/contents/books 配下の .md/.mdx ファイルをすべて取得
   const basePath = ["src", "contents", CONTENT_BASE_PATH];
-  const files = await glob([`${basePath.join("/")}/**/*.{md,mdx}`]);
+  const files = await glob([`${basePath.join("/")}/**/index.{md,mdx}`]);
 
-  // index.mdx 以外はファイル名を slug に含める
+  // パスからnameとchapterを抽出
   const params: PageParams[] = files
-    .filter((file) => !file.endsWith("index.mdx"))
     .map((file) => {
       const rel = path.relative(basePath.join("/"), file);
       const parts = rel.split(path.sep);
-      // それ以外 → ファイル名を slug に含める
-      const name = parts[parts.length - 1].replace(/\.(md|mdx)$/, "");
-      const chapter = parts[parts.length - 2];
-      return { name, chapter };
-    });
+
+      // ディレクトリ構造から適切なパラメータを抽出
+      // 例: java-abc/02-01-environment/index.mdx -> { name: "java-abc", chapter: "02-01-environment" }
+      if (parts.length >= 2 && parts[parts.length - 1].startsWith("index.")) {
+        const name = parts[0]; // 最初の部分がname (java-abc)
+        const chapter = parts[parts.length - 2]; // index.mdxの1つ上の階層がchapter (02-01-environment)
+        return { name, chapter };
+      }
+
+      return { name: "", chapter: "" }; // フォールバック
+    })
+    .filter((params) => params.name && params.chapter); // 空のパラメータを除外
+
   return params;
 }
 
@@ -52,9 +53,10 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { name, chapter } = await params;
+
   const frontmatter = await getFrontmatter({
     paths: [CONTENT_BASE_PATH, name, chapter],
-    parser: frontmatterSchema,
+    parser: Books.frontmatter,
   });
 
   if (!frontmatter) {
@@ -65,17 +67,21 @@ export async function generateMetadata({
 
   return {
     title: `${frontmatter.title} | ${config.metadata.title}`,
-    description: frontmatter.title,
+    description: `${frontmatter.title}に関するドキュメントです。${config.metadata.description}`,
+    keywords: [
+      ...(frontmatter.tags || []),
+      ...(config.metadata.keywords || []),
+    ],
   };
 }
 
-export default async function BookPage({ params }: PageProps) {
+export default async function BookChapterPage({ params }: PageProps) {
   const { name, chapter } = await params;
 
-  const content = await getContent<typeof frontmatterSchema._type>({
+  const content = await getContent({
     paths: [CONTENT_BASE_PATH, name, chapter],
     parser: {
-      frontmatter: frontmatterSchema,
+      frontmatter: Books.frontmatter,
     },
   });
 
@@ -90,7 +96,7 @@ export default async function BookPage({ params }: PageProps) {
       <StylesheetLoader
         stylesheets={stylesheets}
         basePath={CONTENT_BASE_PATH}
-        slug={[name, chapter]}
+        slug={`${name}/${chapter}`}
       />
       <Article
         title={frontmatter.title}

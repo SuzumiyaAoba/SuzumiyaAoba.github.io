@@ -313,6 +313,7 @@
 
   [data-radix-popper-content-wrapper] {
     p {
+      @apply my-2;
       line-height: 1;
     }
   }
