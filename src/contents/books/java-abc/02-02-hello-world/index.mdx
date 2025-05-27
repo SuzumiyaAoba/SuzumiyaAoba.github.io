@@ -3,12 +3,30 @@ title: はじめての Java プログラム
 date: 2025-05-21
 ---
 
+> ﾊﾟﾌﾞﾘｯｸｽﾀﾃｨｯｸｳﾞｫｲﾄﾞﾒｲﾝ
+
+はじめての Java プログラムを作成してみましょう。
+
+本章では、最初に Hello World と呼ばれるプログラムを作成します。
+これは多くのプログラミング言語の入門書で最初に書かされるプログラムです。
+実行すると画面に「Hello, World!」といった文字列を表示します。
+Hello World を書くことでそのプログラミング言語を扱う上で最低限必要な環境を正しく用意できているか確認する目的があります。
+また、最小のプログラムは何もしないプログラムですが、それでは何も確認できないので文字列を表示することで実行を視覚的に確認できます。
+
+最初に一般的な Java による Hello World のコードを確認し、その実行までを行います。
+次に Java の最新 LTS バージョン[^LTS] でプレビューとして提供されている機能を使い、より簡略化された Hello World のコードを見ます。
+その後、Hello World のそれぞれの行について詳しく見ていきます。
+
+[^LTS]: Long Term Support (長期サーポート) と略語です。公式によって長期間のサポートが保証されているバージョンのことを指します。Java の場合は 8, 11, 17, 21 が LTS バージョンになります (参考: [Oracle Java SE Support ロードマップ | Oracle 日本](https://www.oracle.com/jp/java/technologies/java-se-support-roadmap.html))。
+
+ここでは
+
 ## Hello, World!
 
-プログラミング言語を学ぶとき、多くのチュートリアルでは画面に「Hello, World!」という文字列を表示するプログラムを作成する。
-本サイトでも古き良き伝統に習って [Hello World](https://ja.wikipedia.org/wiki/Hello_world) を作ってみよう。
+プログラミング言語を学ぶとき、多くのチュートリアルでは画面に「Hello, World!」という文字列を表示するプログラムを作成します。
+本サイトでも古き良き伝統に習って [Hello World](https://ja.wikipedia.org/wiki/Hello_world) を作ってみましょう。
 
-まずは、動くプログラムを書いてみるところから始める。
+まずは、動くプログラムを書いてみるところから始めます。
 
 ```java HelloWorld.java
 public class HelloWorld {
@@ -18,24 +36,113 @@ public class HelloWorld {
 }
 ```
 
-右上のアイコンをクリックしてコピーすることもできるが、ここでは学習が目的のため**自力で入力すること (写経)** を推奨する。
-プログラミングの学習では、仏教の修行と同じように手本となるコードを自身の手で入力していくことを[写経](https://www.google.com/search?q=%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0+%E5%86%99%E7%B5%8C)と呼んでいる。
+右上のアイコンをクリックしてコピーすることもできるが、ここでは学習が目的のため**自力で入力すること (写経)** を推奨します。
+プログラミングの学習では、仏教の修行と同じように手本となるコードを自身の手で入力していくことを[写経](https://www.google.com/search?q=%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0+%E5%86%99%E7%B5%8C)と呼んでいます。
 
-コードが書けたらファイルを保存しよう。
+Hello World のコードが書けたらファイルを保存しましょう。
+VS Code を使っているのであれば <kbd>Ctrl-s</kbd> (<kbd>Ctrl</kbd> キーを押しながら <kbd>s</kbd> を押す)、もしくは左上の「File」メニューを選択してから「Save」をクリックします。
+ファイルの保存は頻繁に行う操作となるのでショートカットキーを覚えた方がよいでしょう。
 
-最初は由緒正しい Java で書かれたソースコードのコンパイル方法を試してみよう。
+最初は、Java で書かれたソースコードを由緒正しい方法でコンパイル (プログラムを実行可能な形式に変換すること) してましょう。
 
-<CodeWithTooltips>
+```shell Shell
+$ ls
+HelloWorld.java
 
-```java !code HelloWorld.java
-// !ref HelloWorld クラス定義 (ファイル名と同じ名前にすること)
+$ java -version
+openjdk 21.0.5 2024-10-15 LTS
+OpenJDK Runtime Environment Zulu21.38+21-CA (build 21.0.5+11-LTS)
+OpenJDK 64-Bit Server VM Zulu21.38+21-CA (build 21.0.5+11-LTS, mixed mode, sharing)
+
+$ javac HelloWorld.java
+
+$ ls
+HelloWorld.class  HelloWorld.java
+
+$ java HelloWorld
+Hello, World!
+```
+
+## Java 21 からの Hello, World!
+
+Hello World が書けたということはあなたも Java プログラマの仲間入りです。
+先ほど書いたコードは古い良き時代のバージョンの Java (残念なことに現代においても現役) を使っている場合の実装です。
+詳しい話は後の章で触れますが、もしあなたが自由に利用する Java のバージョンを決められるのであれば 2025/05/01 現在において推奨されるバージョンは 21 です。
+しかし、多くの現場では Java 17、もしくは Java 11 を利用しています。場合によっては Java 8 かもしれません。
+そして Java 8 より昔のバージョンを使っているところは何かしらの事情を抱えている可能性が高いでしょう。
+
+このサイトを読もうとしている読者の方はそのような制限はないでしょう。
+
+Java 21 では素晴しいことに (?) Hello World のようなプログラムを次のように簡潔に実装することができるようになりました。
+
+```java HelloWorld.java
+void main(String[] args) {
+    System.out.println("Hello, World!");
+}
+```
+
+メインメソッドのみ特別にクラスの中に書かなくてもよくなりました。
+また、`public static` というおまじない[^おまじない] も必要ありません。
+
+[^おまじない]: プログラミングではたびたび「おまじない」と呼ばれるコードが存在します。そのコードに意味はあるのですが、学習順序の問題で何を意味しているのかその時点では説明するのが難しいため一度説明を諦め、読者を前へ進ませるための方便です。
+
+さて、この新しい Hello World をコンパイルしたいところですが、Java 21 の段階ではプレビュー機能となっており、正式に採用されていないためコンパイル時にオプションを指定しなければなりません。
+コンパイルするときは `javac` の後に `--enable-preview -source 21` を追加します。
+
+```shell Shell
+$ javac --enable-preview -source 21 HelloWorld.java
+ノート: HelloWorld.javaはJava SE 21のプレビュー機能を使用します。
+ノート: 詳細は、-Xlint:previewオプションを指定して再コンパイルしてください。
+```
+
+上記のような文言が表示されるだけであればコンパイルは成功しています。
+
+次に実行時は `java` の後に `--enable-preview` を追加します。
+
+```shell Shell
+$ java --enable-preview HelloWorld
+Hello, World!
+```
+
+上手くいけば画面に「Hello, World!」が表示されるはずです！
+
+## Hello World を振り返る
+
+さて、はじめての Java プログラムとして Hello World を作成しました。
+しかし、プログラミング自体が初めての方にとっては「よくわからずコードを書き写し、コマンドを実行したら黒い画面に文字列が出た」という感想ではないでしょうか。
+ほとんど何もわからなかった、と思うかもしれませんが正常な感想です。
+そこで改めて Hello World のコードを振り返ってみましょう。
+
+一行ずつ説明していきますがそれでも何もわからないかもしれませんが安心してください。
+プログラミングが初めてであればこれから行う説明が一回で理解できていなくても問題ありません。
+本サイトを一通り学習した後、読み直してみると理解できるようになっているはずです。
+
+それでは Hello World を構成する要素を一つずつ見ていきましょう。
+
+```java HelloWorld.java
+// !focus(1:1)
 public class HelloWorld {
-    // !tooltip[/main/] main
-    // !tooltip[/args/] args
-    // !ref メインメソッド定義
     public static void main(String[] args) {
-        // !tooltip[/System.out.println/] System.out.println
-        // !ref 標準出力に文字列を出力
+        System.out.println("Hello, World!");
+    }
+// !focus(1:1)
+}
+```
+
+```java HelloWorld.java
+public class HelloWorld {
+    // !focus(1:1)
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    // !focus(1:1)
+    }
+}
+```
+
+```java HelloWorld.java
+public class HelloWorld {
+    public static void main(String[] args) {
+        // !focus(1:1)
         System.out.println("Hello, World!");
     }
 }
@@ -44,19 +151,17 @@ public class HelloWorld {
 ## !!tooltips main
 
 Java ではプログラムの入口にあたるメソッドは  
-`main` という名前をつける決まりになっている。
+`main` という名前をつける決まりになってます。
 
 ## !!tooltips args
 
-コマンドライン引数と呼ばれる特殊な引数。  
-`String[]` 型で渡される。
+コマンドライン引数と呼ばれる特殊な引数です。  
+`String[]` 型で渡されます。
 
 ## !!tooltips System.out.println
 
-静的メソッドの呼び出し。
+[PrintStream クラス](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/io/PrintStream.html)の [println メソッド](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/io/PrintStream.html#println(java.lang.String)>)の呼び出し
 
-</CodeWithTooltips>
+ここでは正確ではない説明が含まれていますが、それらについては追って説明します。
 
-ここでは正確ではない説明が含まれているがそれらについては追って説明する。
-
-今はそういうものだから、という理由で片付けてしまって問題ない。
+今はそういうものだから、という理由で片付けてしまって問題ありません。
