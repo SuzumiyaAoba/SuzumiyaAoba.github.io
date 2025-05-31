@@ -9,6 +9,7 @@ import { diff } from "./diff";
 import { collapse, collapseContent, collapseTrigger } from "./collapse";
 import { callout } from "./callout";
 import { footnotes } from "./footnote";
+import { focus } from "./focus";
 
 export function CustomCodeBlock({
   code,
@@ -37,6 +38,7 @@ export function CustomCodeBlock({
           collapseTrigger,
           collapseContent,
           footnotes,
+          focus,
         ]}
       />
     </>

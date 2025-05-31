@@ -40,7 +40,7 @@ export interface MessageProps
   /** アイコンを表示するかどうか */
   showIcon?: boolean;
   /** デフォルトで開いた状態にするかどうか */
-  defaultOpen?: boolean;
+  open?: boolean;
 }
 
 export const Message: FC<MessageProps> = memo(
@@ -50,7 +50,7 @@ export const Message: FC<MessageProps> = memo(
     variant = "info",
     className,
     showIcon = true,
-    defaultOpen = false,
+    open = false,
   }) => {
     return (
       <details
@@ -64,7 +64,7 @@ export const Message: FC<MessageProps> = memo(
           borderColor: `var(--${variant}-border)`,
           backgroundColor: `var(--${variant}-bg)`,
         }}
-        open={defaultOpen}
+        open={open}
       >
         <summary className="flex items-center cursor-pointer">
           {showIcon && (

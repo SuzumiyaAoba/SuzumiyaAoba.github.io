@@ -313,7 +313,8 @@
 
   [data-radix-popper-content-wrapper] {
     p {
-      @apply leading-none;
+      @apply my-2;
+      line-height: 1;
     }
   }
 }
@@ -502,4 +503,3 @@
     filter: var(--svg-filter);
   }
 }
-
