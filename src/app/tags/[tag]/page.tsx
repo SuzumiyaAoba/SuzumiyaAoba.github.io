@@ -1,50 +1,10 @@
+import { Timeline } from "@/components/Article/Timeline";
 import { Tag } from "@/components/Tag";
 import { Pages } from "@/libs/contents/blog";
 import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc, format } from "date-fns";
+import { compareDesc } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-type PostCardProps = {
-  slug: string;
-  frontmatter: {
-    title: string;
-    date: Date;
-    tags: string[];
-  };
-};
-
-const PostCard = ({ slug, frontmatter }: PostCardProps) => {
-  return (
-    <div className="card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]">
-      <div
-        className="flex gap-x-1 items-center font-thin text-sm"
-        style={{ color: "var(--muted)" }}
-      >
-        <div className="i-mdi-calendar" />
-        <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
-      </div>
-      <Link
-        href={`/blog/${slug}/`}
-        className="text-lg font-semibold block my-2 transition-colors"
-        style={{
-          color: "var(--foreground)",
-        }}
-      >
-        {frontmatter.title}
-      </Link>
-      <div className="flex flex-wrap mt-2 gap-2 text-xs">
-        {frontmatter.tags.map((tag) => (
-          <Tag
-            key={tag}
-            label={tag}
-            href={`/tags/${encodeURIComponent(tag)}/`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export async function generateStaticParams() {
   const posts = await getFrontmatters({
@@ -93,28 +53,22 @@ export default async function TagPage({ params }: Props) {
   );
 
   return (
-    <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
-      <h1 className="mb-4 text-3xl flex items-center flex-wrap gap-2">
+    <main className="flex flex-col w-full max-w-4xl mx-auto px-6 py-10 pb-20">
+      <h1 className="mb-10 text-3xl font-bold flex items-center flex-wrap gap-2">
         <span>タグ:</span> <Tag label={decodedTag} size="lg" />
       </h1>
+
       <div className="mb-6">
         <Link
           href="/tags/"
-          className="hover:underline"
+          className="hover:underline text-base"
           style={{ color: "var(--accent-primary)" }}
         >
           ← タグ一覧に戻る
         </Link>
       </div>
-      <div className="flex flex-col gap-6 mb-8">
-        {sortedPosts.map((post) => (
-          <PostCard
-            key={post.path}
-            slug={post.path}
-            frontmatter={post.frontmatter}
-          />
-        ))}
-      </div>
+
+      <Timeline posts={sortedPosts} />
     </main>
   );
 }
