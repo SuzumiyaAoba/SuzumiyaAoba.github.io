@@ -3,9 +3,9 @@
 import React from "react";
 import Image from "next/image";
 
-const BuyMeACoffee = () => {
+const BuyMeACoffee = ({ className }: { className?: string }) => {
   return (
-    <>
+    <div className={className}>
       <script
         type="text/javascript"
         src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
@@ -30,10 +30,11 @@ const BuyMeACoffee = () => {
             padding: "0",
             border: "none",
           }}
+          className="mx-auto"
           unoptimized
         />
       </a>
-    </>
+    </div>
   );
 };
 
