@@ -72,9 +72,17 @@ export async function generateBookNameParams(contentBasePath: string) {
 // ブックのチャプター（index.mdx以外のファイル）のみを取得
 export async function generateBookChapterParams(contentBasePath: string) {
   const allParams = await generateBookParams(contentBasePath);
-  return allParams
+  const chapterParams = allParams
     .filter(
       (param): param is { name: string; chapter: string } => !!param.chapter
     )
     .map((param) => ({ name: param.name, chapter: param.chapter }));
+
+  // チャプターファイルが存在しない場合は、空のパラメータを返すのではなく
+  // ダミーパラメータを返してNext.jsのエラーを回避
+  if (chapterParams.length === 0) {
+    return [{ name: "placeholder", chapter: "placeholder" }];
+  }
+
+  return chapterParams;
 }
