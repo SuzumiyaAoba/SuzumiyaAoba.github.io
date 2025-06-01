@@ -58,7 +58,7 @@ export const Message: FC<MessageProps> = memo(
           messageVariants({ variant }),
           className,
           "open:ring",
-          "group"
+          "message-details"
         )}
         style={{
           borderColor: `var(--${variant}-border)`,
@@ -76,7 +76,14 @@ export const Message: FC<MessageProps> = memo(
           <p className="font-bold" style={{ color: `var(--${variant}-text)` }}>
             {title}
           </p>
-          <span className="ml-auto transform transition-transform rotate-90 group-open:rotate-0 mr-2">
+          <span
+            className="ml-auto mr-2 message-arrow"
+            style={{
+              transform: "rotate(90deg)",
+              transition: "transform 0.3s ease",
+              display: "inline-block",
+            }}
+          >
             ▼
           </span>
         </summary>

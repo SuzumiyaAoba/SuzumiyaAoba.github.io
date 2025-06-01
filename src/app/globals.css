@@ -558,3 +558,14 @@ div[data-ch-line] * {
   --error-text: var(--error-text-dark);
   --error-icon: var(--error-icon-dark);
 }
+
+/* Message コンポーネントの arrow 回転アニメーション */
+.message-details[open] .message-arrow {
+  transform: rotate(0deg) !important;
+}
+
+.message-arrow {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
