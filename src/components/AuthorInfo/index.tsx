@@ -1,7 +1,8 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import config from "@/config";
 import { cn } from "@/libs/utils";
 
@@ -16,6 +17,15 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
   author = config.metadata.author,
   className,
 }) => {
+  const [isHeartHovered, setIsHeartHovered] = useState(false);
+  const [isShareHovered, setIsShareHovered] = useState(false);
+  const [isTwitterHovered, setIsTwitterHovered] = useState(false);
+  const [isGitHubHovered, setIsGitHubHovered] = useState(false);
+
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const techBadgeTextColor = isDark ? "#ffffff" : "#000000";
+
   return (
     <div
       className={cn(
@@ -91,13 +101,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
                 style={{
                   backgroundColor: "rgba(239, 68, 68, 0.15)",
-                  color: "#ffffff",
+                  color: techBadgeTextColor,
                   border: "1px solid rgba(239, 68, 68, 0.3)",
                 }}
               >
                 <span
                   className="i-logos-scala text-base"
-                  style={{ color: "#ffffff" }}
+                  style={{ color: techBadgeTextColor }}
                 />
                 <span className="font-semibold">Scala</span>
               </span>
@@ -105,13 +115,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
                 style={{
                   backgroundColor: "rgba(249, 115, 22, 0.15)",
-                  color: "#ffffff",
+                  color: techBadgeTextColor,
                   border: "1px solid rgba(249, 115, 22, 0.3)",
                 }}
               >
                 <span
                   className="i-logos-java text-base"
-                  style={{ color: "#ffffff" }}
+                  style={{ color: techBadgeTextColor }}
                 />
                 <span className="font-semibold">Java</span>
               </span>
@@ -119,13 +129,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
                 style={{
                   backgroundColor: "rgba(59, 130, 246, 0.15)",
-                  color: "#ffffff",
+                  color: techBadgeTextColor,
                   border: "1px solid rgba(59, 130, 246, 0.3)",
                 }}
               >
                 <span
                   className="i-logos-typescript-icon text-base"
-                  style={{ color: "#ffffff" }}
+                  style={{ color: techBadgeTextColor }}
                 />
                 <span className="font-semibold">TypeScript</span>
               </span>
@@ -133,13 +143,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
                 style={{
                   backgroundColor: "rgba(20, 184, 166, 0.15)",
-                  color: "#ffffff",
+                  color: techBadgeTextColor,
                   border: "1px solid rgba(20, 184, 166, 0.3)",
                 }}
               >
                 <span
                   className="i-logos-react text-base"
-                  style={{ color: "#ffffff" }}
+                  style={{ color: techBadgeTextColor }}
                 />
                 <span className="font-semibold">React</span>
               </span>
@@ -158,14 +168,10 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
                 style={{
-                  backgroundColor: "#1d9bf0",
+                  backgroundColor: isTwitterHovered ? "#1a8cd8" : "#1d9bf0",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#1a8cd8";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#1d9bf0";
-                }}
+                onMouseEnter={() => setIsTwitterHovered(true)}
+                onMouseLeave={() => setIsTwitterHovered(false)}
                 aria-label="Twitterプロフィール"
               >
                 <span
@@ -181,14 +187,10 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
                 style={{
-                  backgroundColor: "#24292f",
+                  backgroundColor: isGitHubHovered ? "#32383f" : "#24292f",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#32383f";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#24292f";
-                }}
+                onMouseEnter={() => setIsGitHubHovered(true)}
+                onMouseLeave={() => setIsGitHubHovered(false)}
                 aria-label="GitHubプロフィール"
               >
                 <span
@@ -205,19 +207,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="p-2.5 transition-all duration-200 rounded-lg"
                 style={{
                   color: "#ffffff",
-                  backgroundColor: "transparent",
+                  backgroundColor: isHeartHovered
+                    ? "rgba(236, 72, 153, 0.15)"
+                    : "transparent",
+                  transform: isHeartHovered ? "scale(1.1)" : "scale(1)",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#ffffff";
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(236, 72, 153, 0.15)";
-                  e.currentTarget.style.transform = "scale(1.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "#ffffff";
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
+                onMouseEnter={() => setIsHeartHovered(true)}
+                onMouseLeave={() => setIsHeartHovered(false)}
                 aria-label="お気に入りに追加"
               >
                 <span
@@ -229,19 +225,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="p-2.5 transition-all duration-200 rounded-lg"
                 style={{
                   color: "#ffffff",
-                  backgroundColor: "transparent",
+                  backgroundColor: isShareHovered
+                    ? "rgba(59, 130, 246, 0.15)"
+                    : "transparent",
+                  transform: isShareHovered ? "scale(1.1)" : "scale(1)",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#ffffff";
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(59, 130, 246, 0.15)";
-                  e.currentTarget.style.transform = "scale(1.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "#ffffff";
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
+                onMouseEnter={() => setIsShareHovered(true)}
+                onMouseLeave={() => setIsShareHovered(false)}
                 aria-label="シェア"
               >
                 <span
