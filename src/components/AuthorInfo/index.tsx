@@ -28,10 +28,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative rounded-xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300",
-        className
-      )}
+      className={cn("relative rounded-xl p-8", className)}
       style={{
         backgroundColor: "var(--card-bg)",
         borderColor: "var(--border)",
