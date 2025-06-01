@@ -37,7 +37,13 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
         <div className="flex-shrink-0">
           <div className="relative">
             {/* メインアバター - 実際のプロフィール画像を使用 */}
-            <div className="w-20 h-20 rounded-full overflow-hidden shadow-xl ring-4 ring-white/20 dark:ring-gray-700/20">
+            <div
+              className="w-20 h-20 rounded-full overflow-hidden shadow-xl"
+              style={{
+                boxShadow:
+                  "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 4px rgba(var(--border-rgb), 0.2)",
+              }}
+            >
               <Image
                 src="/assets/profile.jpg"
                 alt={`${author}のプロフィール画像`}
@@ -46,13 +52,6 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 className="object-cover w-full h-full"
                 priority
               />
-            </div>
-            {/* オンラインステータス風装飾 */}
-            <div
-              className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 flex items-center justify-center"
-              style={{ borderColor: "var(--background)" }}
-            >
-              <span className="i-mdi-check text-white text-xs" />
             </div>
           </div>
         </div>
@@ -66,7 +65,10 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
               style={{ color: "var(--foreground)" }}
             >
               {author}
-              <span className="i-mdi-verified text-blue-500 text-lg" />
+              <span
+                className="i-mdi-verified text-xl"
+                style={{ color: "#1d9bf0" }}
+              />
             </h3>
           </div>
 
@@ -85,21 +87,61 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
           {/* 技術スタック */}
           <div className="mb-4">
             <div className="flex flex-wrap gap-2">
-              <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 rounded-full flex items-center gap-1">
-                <span className="i-logos-scala text-sm" />
-                Scala
+              <span
+                className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
+                style={{
+                  backgroundColor: "rgba(239, 68, 68, 0.15)",
+                  color: "#ffffff",
+                  border: "1px solid rgba(239, 68, 68, 0.3)",
+                }}
+              >
+                <span
+                  className="i-logos-scala text-base"
+                  style={{ color: "#ffffff" }}
+                />
+                <span className="font-semibold">Scala</span>
               </span>
-              <span className="px-2 py-1 text-xs font-medium bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 rounded-full flex items-center gap-1">
-                <span className="i-logos-java text-sm" />
-                Java
+              <span
+                className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
+                style={{
+                  backgroundColor: "rgba(249, 115, 22, 0.15)",
+                  color: "#ffffff",
+                  border: "1px solid rgba(249, 115, 22, 0.3)",
+                }}
+              >
+                <span
+                  className="i-logos-java text-base"
+                  style={{ color: "#ffffff" }}
+                />
+                <span className="font-semibold">Java</span>
               </span>
-              <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 rounded-full flex items-center gap-1">
-                <span className="i-logos-typescript-icon text-sm" />
-                TypeScript
+              <span
+                className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
+                style={{
+                  backgroundColor: "rgba(59, 130, 246, 0.15)",
+                  color: "#ffffff",
+                  border: "1px solid rgba(59, 130, 246, 0.3)",
+                }}
+              >
+                <span
+                  className="i-logos-typescript-icon text-base"
+                  style={{ color: "#ffffff" }}
+                />
+                <span className="font-semibold">TypeScript</span>
               </span>
-              <span className="px-2 py-1 text-xs font-medium bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 rounded-full flex items-center gap-1">
-                <span className="i-logos-react text-sm" />
-                React
+              <span
+                className="px-3 py-1.5 text-xs font-medium rounded-full flex items-center gap-2"
+                style={{
+                  backgroundColor: "rgba(20, 184, 166, 0.15)",
+                  color: "#ffffff",
+                  border: "1px solid rgba(20, 184, 166, 0.3)",
+                }}
+              >
+                <span
+                  className="i-logos-react text-base"
+                  style={{ color: "#ffffff" }}
+                />
+                <span className="font-semibold">React</span>
               </span>
             </div>
           </div>
@@ -114,52 +156,98 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all duration-200 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:scale-105 hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
+                style={{
+                  backgroundColor: "#1d9bf0",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1a8cd8";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1d9bf0";
+                }}
                 aria-label="Twitterプロフィール"
               >
-                <span className="i-mdi-twitter text-base" />
-                <span>Follow</span>
+                <span
+                  className="i-mdi-twitter text-lg"
+                  style={{ color: "#ffffff" }}
+                />
+                <span style={{ color: "#ffffff" }}>Follow</span>
               </a>
 
               <a
                 href="https://github.com/SuzumiyaAoba"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all duration-200 bg-gray-800 text-white rounded-lg hover:bg-gray-900 hover:scale-105 hover:shadow-lg dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-white"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
+                style={{
+                  backgroundColor: "#24292f",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#32383f";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#24292f";
+                }}
                 aria-label="GitHubプロフィール"
               >
-                <span className="i-mdi-github text-base" />
-                <span>GitHub</span>
+                <span
+                  className="i-mdi-github text-lg"
+                  style={{ color: "#ffffff" }}
+                />
+                <span style={{ color: "#ffffff" }}>GitHub</span>
               </a>
             </div>
 
             {/* 追加のアクション */}
             <div className="flex items-center gap-2">
               <button
-                className="p-2 transition-colors rounded-lg hover:bg-pink-50 dark:hover:bg-pink-900/20"
-                style={{ color: "var(--muted)" }}
+                className="p-2.5 transition-all duration-200 rounded-lg"
+                style={{
+                  color: "#ffffff",
+                  backgroundColor: "transparent",
+                }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#ec4899";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(236, 72, 153, 0.15)";
+                  e.currentTarget.style.transform = "scale(1.1)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--muted)";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
                 aria-label="お気に入りに追加"
               >
-                <span className="i-mdi-heart-outline text-lg" />
+                <span
+                  className="i-mdi-heart-outline text-xl"
+                  style={{ color: "#ffffff" }}
+                />
               </button>
               <button
-                className="p-2 transition-colors rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                style={{ color: "var(--muted)" }}
+                className="p-2.5 transition-all duration-200 rounded-lg"
+                style={{
+                  color: "#ffffff",
+                  backgroundColor: "transparent",
+                }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#3b82f6";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(59, 130, 246, 0.15)";
+                  e.currentTarget.style.transform = "scale(1.1)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--muted)";
+                  e.currentTarget.style.color = "#ffffff";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
                 aria-label="シェア"
               >
-                <span className="i-mdi-share-variant text-lg" />
+                <span
+                  className="i-mdi-share-variant text-xl"
+                  style={{ color: "#ffffff" }}
+                />
               </button>
             </div>
           </div>
