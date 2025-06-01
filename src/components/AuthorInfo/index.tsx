@@ -72,10 +72,6 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
               style={{ color: "var(--foreground)" }}
             >
               {author}
-              <span
-                className="i-mdi-verified text-xl"
-                style={{ color: "#1d9bf0" }}
-              />
             </h3>
           </div>
 
