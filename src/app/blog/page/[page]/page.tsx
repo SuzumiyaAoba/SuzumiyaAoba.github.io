@@ -3,6 +3,7 @@ import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default async function BlogPage({
   params,
@@ -36,48 +37,11 @@ export default async function BlogPage({
 
       <Timeline posts={paginatedPosts} />
 
-      {/* ページネーション */}
-      <div className="flex gap-3 justify-center my-12">
-        {pageNumber > 2 && (
-          <Link
-            href="/blog/page/1/"
-            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            1
-          </Link>
-        )}
-
-        {pageNumber > 1 && (
-          <Link
-            href={pageNumber === 2 ? "/blog/" : `/blog/page/${pageNumber - 1}/`}
-            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            前へ
-          </Link>
-        )}
-
-        <span className="px-4 py-2 rounded bg-gray-200 text-gray-500 cursor-not-allowed">
-          {pageNumber}
-        </span>
-
-        {pageNumber < totalPages && (
-          <Link
-            href={`/blog/page/${pageNumber + 1}/`}
-            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            次へ
-          </Link>
-        )}
-
-        {pageNumber < totalPages - 1 && (
-          <Link
-            href={`/blog/page/${totalPages}/`}
-            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            {totalPages}
-          </Link>
-        )}
-      </div>
+      <Pagination
+        currentPage={pageNumber}
+        totalPages={totalPages}
+        basePath="blog"
+      />
 
       <div className="mt-8">
         <Link

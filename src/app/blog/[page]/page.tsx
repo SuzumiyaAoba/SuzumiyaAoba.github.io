@@ -1,48 +1,9 @@
-import { Tag } from "@/components/Tag";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
-import { format } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
-
-type PostCardProps = {
-  slug: string;
-  frontmatter: {
-    title: string;
-    date: Date;
-    tags: string[];
-  };
-};
-
-const PostCard = ({ slug, frontmatter }: PostCardProps) => {
-  return (
-    <div className="card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]">
-      <div
-        className="flex gap-x-1 items-center font-thin text-sm"
-        style={{ color: "var(--muted)" }}
-      >
-        <div className="i-mdi-calendar" />
-        <div>{format(frontmatter.date, "yyyy/MM/dd")}</div>
-      </div>
-      <Link
-        href={`/blog/${slug}/`}
-        className="text-lg block my-2 transition-colors"
-        style={{ color: "var(--foreground)" }}
-      >
-        {frontmatter.title}
-      </Link>
-      <div className="flex flex-wrap mt-2 gap-2 text-xs">
-        {frontmatter.tags.map((tag) => (
-          <Tag
-            key={tag}
-            label={tag}
-            href={`/tags/${encodeURIComponent(tag)}/`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+import { PostCard } from "@/components/ui/PostCard";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default async function BlogPage({
   params,
@@ -79,49 +40,17 @@ export default async function BlogPage({
             key={post.path}
             slug={post.path}
             frontmatter={post.frontmatter}
+            basePath="blog"
           />
         ))}
       </div>
 
-      {/* ページネーション */}
-      <div className="flex gap-2 justify-center my-8">
-        {pageNumber > 2 && (
-          <Link
-            href={`/blog/page/${pageNumber - 1}/`}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-          >
-            前へ
-          </Link>
-        )}
-        <Link
-          href="/blog/"
-          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-        >
-          1
-        </Link>
-        {Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((num) => (
-          <Link
-            key={num}
-            href={`/blog/page/${num}/`}
-            className={`px-3 py-1 rounded ${
-              num === pageNumber
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-gray-100 hover:bg-gray-200"
-            }`}
-            aria-current={num === pageNumber ? "page" : undefined}
-          >
-            {num}
-          </Link>
-        ))}
-        {pageNumber < totalPages && (
-          <Link
-            href={`/blog/page/${pageNumber + 1}/`}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-          >
-            次へ
-          </Link>
-        )}
-      </div>
+      <Pagination
+        currentPage={pageNumber}
+        totalPages={totalPages}
+        basePath="blog"
+      />
+
       <div className="mt-4">
         <Link
           href="/tags/"

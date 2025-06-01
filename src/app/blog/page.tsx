@@ -2,6 +2,7 @@ import { Timeline } from "@/components/Article/Timeline";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
 import Link from "next/link";
 import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default async function BlogPage() {
   const posts = await getSortedPosts({
@@ -21,20 +22,8 @@ export default async function BlogPage() {
 
       <Timeline posts={paginatedPosts} />
 
-      {/* ページネーション */}
-      {totalPages > 1 && (
-        <div className="flex gap-3 justify-center my-12">
-          <span className="px-4 py-2 rounded bg-gray-200 text-gray-500 cursor-not-allowed">
-            1
-          </span>
-          <Link
-            href="/blog/page/2/"
-            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            次へ
-          </Link>
-        </div>
-      )}
+      <Pagination currentPage={1} totalPages={totalPages} basePath="blog" />
+
       <div className="mt-8">
         <Link
           href="/tags/"
