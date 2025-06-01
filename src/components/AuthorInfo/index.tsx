@@ -29,7 +29,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
   return (
     <div
       className={cn(
-        "relative rounded-xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:scale-102",
+        "relative rounded-xl p-8 shadow-lg backdrop-blur-sm transition-all duration-300",
         className
       )}
       style={{
