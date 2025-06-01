@@ -2,24 +2,13 @@ import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
 import { Metadata } from "next";
 import config from "@/config";
-import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { z } from "zod";
+import { getContent, getFrontmatter } from "@/libs/contents/markdown";
+import { bookFrontmatterSchema } from "@/libs/contents/schema";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
-import path from "path";
-import { glob } from "fast-glob";
+import { generateBookNameParams } from "@/libs/contents/params";
 
 const CONTENT_BASE_PATH = "books";
-
-// book frontmatter schema
-const frontmatterSchema = z.object({
-  title: z.string(),
-  date: z.coerce.date(),
-  // category, tags などは省略可能
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  draft: z.boolean().optional(),
-});
 
 type PageParams = {
   name: string;
@@ -30,24 +19,7 @@ type PageProps = {
 };
 
 export async function generateStaticParams(): Promise<PageParams[]> {
-  // src/contents/books 配下の .md/.mdx ファイルをすべて取得
-  const basePath = ["src", "contents", CONTENT_BASE_PATH];
-  const files = await glob([`${basePath.join("/")}/**/*.{md,mdx}`]);
-
-  // index.mdx 以外はファイル名を slug に含める
-  const params: PageParams[] = files.map((file) => {
-    const rel = path.relative(basePath.join("/"), file);
-    const parts = rel.split(path.sep);
-    if (parts[parts.length - 1].startsWith("index.")) {
-      // index.mdx → ディレクトリのトップページ
-      return { name: parts.slice(0, -1).join("/") };
-    } else {
-      // それ以外 → ファイル名を slug に含める
-      const name = parts[parts.length - 1].replace(/\.(md|mdx)$/, "");
-      return { name: [...parts.slice(0, -1), name].join("/") };
-    }
-  });
-  return params;
+  return generateBookNameParams(CONTENT_BASE_PATH);
 }
 
 export async function generateMetadata({
@@ -56,7 +28,7 @@ export async function generateMetadata({
   const { name } = await params;
   const frontmatter = await getFrontmatter({
     paths: [CONTENT_BASE_PATH, name],
-    parser: frontmatterSchema,
+    parser: bookFrontmatterSchema,
   });
 
   if (!frontmatter) {
@@ -74,10 +46,10 @@ export async function generateMetadata({
 export default async function BookPage({ params }: PageProps) {
   const { name } = await params;
 
-  const content = await getContent<typeof frontmatterSchema._type>({
+  const content = await getContent<typeof bookFrontmatterSchema._type>({
     paths: [CONTENT_BASE_PATH, name],
     parser: {
-      frontmatter: frontmatterSchema,
+      frontmatter: bookFrontmatterSchema,
     },
   });
 
@@ -86,14 +58,13 @@ export default async function BookPage({ params }: PageProps) {
   }
 
   const { frontmatter, stylesheets, Component } = content;
-  // slug.join("/") は必要なら notePath のように使える
 
   return (
     <>
       <StylesheetLoader
         stylesheets={stylesheets}
         basePath={CONTENT_BASE_PATH}
-        slug={name}
+        slug={[name]}
       />
       <Article
         title={frontmatter.title}

@@ -14,17 +14,14 @@ import { StylesheetLoader } from "@/components/StylesheetLoader";
 import TOC from "@/components/TOC";
 import styles from "@/styles/markdown.module.scss";
 import { compareDesc } from "date-fns";
+import { generateSlugParams } from "@/libs/contents/params";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  const ids = await getPaths("blog");
-
-  return ids.map((id) => ({
-    slug: id,
-  }));
+  return generateSlugParams("blog");
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

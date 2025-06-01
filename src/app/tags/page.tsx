@@ -1,21 +1,16 @@
 import { Pages } from "@/libs/contents/blog";
-import { getFrontmatters } from "@/libs/contents/markdown";
 import { Tag } from "@/components/Tag";
 import Link from "next/link";
+import { getSortedPosts, countTagOccurrences } from "@/libs/contents/utils";
 
 export default async function TagsPage() {
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });
 
   // すべてのタグを抽出し、出現回数でカウント
-  const tagCounts = posts.reduce<Record<string, number>>((acc, post) => {
-    post.frontmatter.tags.forEach((tag) => {
-      acc[tag] = (acc[tag] || 0) + 1;
-    });
-    return acc;
-  }, {});
+  const tagCounts = countTagOccurrences(posts);
 
   // タグを出現回数でソート
   const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);

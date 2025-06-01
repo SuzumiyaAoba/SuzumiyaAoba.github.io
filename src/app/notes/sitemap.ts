@@ -1,11 +1,11 @@
-import { getFrontmatters } from "@/libs/contents/markdown";
 import { MetadataRoute } from "next";
 import { frontmatterSchema } from "@/libs/contents/notes";
+import { getSortedPosts } from "@/libs/contents/utils";
 
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const noteEntries = await getFrontmatters({
+  const noteEntries = await getSortedPosts({
     paths: ["notes"],
     parser: {
       frontmatter: frontmatterSchema,

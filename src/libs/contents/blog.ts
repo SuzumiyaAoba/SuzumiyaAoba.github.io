@@ -1,31 +1,14 @@
 import { z } from "zod";
-
 import type { Content } from "./markdown";
+import { blogFrontmatterSchema } from "./schema";
 
 export const layoutSchema = z.enum(["default", "CodeHike"]).default("default");
-
-export type Layout = z.infer<typeof layoutSchema>;
-
-export type BlogContent<T extends PageKey> = Content<
-  z.infer<Pages[T]["frontmatter"]>
->;
-
-const frontmatterSchema = z.object({
-  title: z.string(),
-  date: z.date(),
-  category: z.string(),
-  tags: z.array(z.string()),
-  draft: z.boolean().optional(),
-  description: z.string().optional(),
-  author: z.string().optional(),
-  ogImage: z.string().optional(),
-});
 
 export const Pages = {
   blog: {
     root: "blog",
     assets: "/assets/blog/",
-    frontmatter: frontmatterSchema,
+    frontmatter: blogFrontmatterSchema,
   },
   profile: {
     root: "profile",
@@ -34,8 +17,10 @@ export const Pages = {
   },
 } as const;
 
-type Pages = typeof Pages;
-export type PageKey = keyof Pages;
+export type PageKey = keyof typeof Pages;
 
-// 1ページあたりの記事数
+export type BlogContent<T extends PageKey> = Content<
+  z.infer<(typeof Pages)[T]["frontmatter"]>
+>;
+
 export const POSTS_PER_PAGE = 10;

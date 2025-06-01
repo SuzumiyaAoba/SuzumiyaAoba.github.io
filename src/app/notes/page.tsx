@@ -2,10 +2,11 @@ import { Metadata } from "next";
 import config from "@/config";
 import { Tag } from "@/components/Tag";
 import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc, format } from "date-fns";
+import { format } from "date-fns";
 import { frontmatterSchema } from "@/libs/contents/notes";
 import { FC } from "react";
 import { z } from "zod";
+import { sortPostsByDate } from "@/libs/contents/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -34,7 +35,7 @@ const Notes: FC<NotesProps> = async ({
       <div className="flex flex-col gap-6">
         {notes
           .filter((note) => note.frontmatter.parent)
-          .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
+          .sort((a, b) => (sortPostsByDate([a, b])[0] === a ? -1 : 1))
           .map((note) => {
             if (!note) return null;
 
@@ -71,34 +72,22 @@ const getNotes = (path: string[]) =>
     parser: { frontmatter: frontmatterSchema },
   });
 
-export default async function Page() {
-  const noteCategories = [
-    {
-      title: "Scala",
-      basePath: "programming/scala",
-      notes: getNotes(["notes", "programming", "scala"]),
-    },
-    {
-      title: "本",
-      basePath: "programming/books",
-      notes: getNotes(["notes", "programming", "books"]),
-    },
-  ];
-
+export default async function NotesPage() {
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="mb-8 text-3xl">Notes</h1>
-      <h2 className="mb-4 text-2xl border-b-1 border-neutral-500">
-        プログラミング
-      </h2>
-      {noteCategories.map((category) => (
-        <Notes
-          key={category.basePath}
-          title={category.title}
-          basePath={category.basePath}
-          notes={category.notes}
-        />
-      ))}
+
+      <Notes
+        title="Scala"
+        basePath="programming/scala"
+        notes={getNotes(["notes", "programming", "scala"])}
+      />
+
+      <Notes
+        title="Books"
+        basePath="programming/books"
+        notes={getNotes(["notes", "programming", "books"])}
+      />
     </main>
   );
 }

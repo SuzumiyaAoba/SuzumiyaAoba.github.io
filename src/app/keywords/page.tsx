@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 import config from "@/config";
 import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc } from "date-fns";
 import { FC } from "react";
 import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
+import { sortPostsByDate } from "@/libs/contents/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -36,40 +36,41 @@ const KeywordList: FC<{
         </h3>
       )}
       <ul className="mb-8 pl-8 list-disc">
-        {keywords
-          .filter((keyword) => keyword.frontmatter.parent)
-          .sort((a, b) => compareDesc(a.frontmatter.date, b.frontmatter.date))
-          .map((keyword) => (
-            <li key={keyword.path}>
-              <a
-                href={`/${basePath}/${keyword.path}/`}
-                className="hover:underline"
-              >
-                {keyword.frontmatter.title}
-              </a>
-            </li>
-          ))}
+        {sortPostsByDate(
+          keywords.filter((keyword) => keyword.frontmatter.parent)
+        ).map((keyword) => (
+          <li key={keyword.path}>
+            <a
+              href={`/${basePath}/${keyword.path}/`}
+              className="hover:underline"
+            >
+              {keyword.frontmatter.title}
+            </a>
+          </li>
+        ))}
       </ul>
     </>
   );
 };
 
-export default async function KeywordsPage() {
-  const programmingKeywords = getFrontmatters({
-    paths: ["keywords", "programming"],
+const getKeywords = (path: string[]) =>
+  getFrontmatters({
+    paths: path,
     parser: { frontmatter: keywordFrontmatterSchema },
   });
 
+export default async function Page() {
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="mb-8 text-3xl">キーワード</h1>
       <h2 className="mb-4 text-2xl border-b-1 border-neutral-500">
         プログラミング
       </h2>
+
       <KeywordList
         title=""
-        basePath="keywords/programming"
-        keywords={programmingKeywords}
+        basePath="keywords"
+        keywords={getKeywords(["keywords", "programming"])}
       />
     </main>
   );

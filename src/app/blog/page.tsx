@@ -1,27 +1,25 @@
 import { Timeline } from "@/components/Article/Timeline";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
-import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc } from "date-fns";
 import Link from "next/link";
+import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
 
 export default async function BlogPage() {
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });
 
-  const sortedPosts = posts.sort((a, b) =>
-    compareDesc(a.frontmatter.date, b.frontmatter.date)
+  const { paginatedPosts, totalPages } = paginatePosts(
+    posts,
+    1,
+    POSTS_PER_PAGE
   );
-
-  const pagePosts = sortedPosts.slice(0, POSTS_PER_PAGE);
-  const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-6 py-10 pb-20">
       <h1 className="mb-10 text-3xl font-bold">Blog</h1>
 
-      <Timeline posts={pagePosts} />
+      <Timeline posts={paginatedPosts} />
 
       {/* ページネーション */}
       {totalPages > 1 && (

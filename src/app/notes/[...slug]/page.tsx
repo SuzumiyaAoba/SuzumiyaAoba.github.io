@@ -2,10 +2,11 @@ import { notFound } from "next/navigation";
 import "katex/dist/katex.min.css";
 import { Metadata } from "next";
 import config from "@/config";
-import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { frontmatterSchema, type NoteContent } from "@/libs/contents/notes";
+import { getContent, getFrontmatter } from "@/libs/contents/markdown";
+import { frontmatterSchema } from "@/libs/contents/notes";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
+import { generateNestedSlugParams } from "@/libs/contents/params";
 
 const CONTENT_BASE_PATH = "notes";
 
@@ -18,11 +19,7 @@ type PageProps = {
 };
 
 export async function generateStaticParams(): Promise<PageParams[]> {
-  const paths = await getPaths(CONTENT_BASE_PATH);
-
-  return paths.map((path) => ({
-    slug: path.split("/"),
-  }));
+  return generateNestedSlugParams(CONTENT_BASE_PATH);
 }
 
 export async function generateMetadata({

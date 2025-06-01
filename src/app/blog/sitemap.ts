@@ -1,11 +1,11 @@
-import { getFrontmatters } from "@/libs/contents/markdown";
 import { MetadataRoute } from "next";
 import { Pages } from "@/libs/contents/blog";
+import { getSortedPosts } from "@/libs/contents/utils";
 
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const blogEntries = await getFrontmatters({
+  const blogEntries = await getSortedPosts({
     paths: [Pages.blog.root],
     parser: {
       frontmatter: Pages.blog.frontmatter,

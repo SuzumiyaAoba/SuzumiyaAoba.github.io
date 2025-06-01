@@ -1,13 +1,7 @@
 import { z } from "zod";
 import type { Content } from "./markdown";
+import { noteFrontmatterSchema } from "./schema";
 
-export const frontmatterSchema = z.object({
-  title: z.string(),
-  date: z.date(),
-  category: z.string(),
-  tags: z.array(z.string()),
-  parent: z.boolean().default(true),
-  draft: z.boolean().default(false),
-});
+export { noteFrontmatterSchema as frontmatterSchema };
 
-export type NoteContent = Content<z.infer<typeof frontmatterSchema>>;
+export type NoteContent = Content<z.infer<typeof noteFrontmatterSchema>>;

@@ -1,9 +1,8 @@
 import { Timeline } from "@/components/Article/Timeline";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
-import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
 
 export default async function BlogPage({
   params,
@@ -16,73 +15,74 @@ export default async function BlogPage({
     notFound();
   }
 
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });
 
-  const sortedPosts = posts.sort((a, b) =>
-    compareDesc(a.frontmatter.date, b.frontmatter.date)
+  const { paginatedPosts, totalPages } = paginatePosts(
+    posts,
+    pageNumber,
+    POSTS_PER_PAGE
   );
 
-  const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
   if (pageNumber > totalPages) {
     notFound();
   }
 
-  const start = (pageNumber - 1) * POSTS_PER_PAGE;
-  const end = start + POSTS_PER_PAGE;
-  const pagePosts = sortedPosts.slice(start, end);
-
   return (
-    <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
-      <h1 className="mb-8 text-3xl">Blog</h1>
+    <main className="flex flex-col w-full max-w-4xl mx-auto px-6 py-10 pb-20">
+      <h1 className="mb-10 text-3xl font-bold">Blog</h1>
 
-      <Timeline posts={pagePosts} />
+      <Timeline posts={paginatedPosts} />
 
       {/* ページネーション */}
-      <div className="flex gap-2 justify-center my-8">
+      <div className="flex gap-3 justify-center my-12">
         {pageNumber > 2 && (
           <Link
-            href={`/blog/page/${pageNumber - 1}/`}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+            href="/blog/page/1/"
+            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
+          >
+            1
+          </Link>
+        )}
+
+        {pageNumber > 1 && (
+          <Link
+            href={pageNumber === 2 ? "/blog/" : `/blog/page/${pageNumber - 1}/`}
+            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
           >
             前へ
           </Link>
         )}
-        <Link
-          href="/blog/"
-          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-        >
-          1
-        </Link>
-        {Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((num) => (
-          <Link
-            key={num}
-            href={`/blog/page/${num}/`}
-            className={`px-3 py-1 rounded ${
-              num === pageNumber
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-gray-100 hover:bg-gray-200"
-            }`}
-            aria-current={num === pageNumber ? "page" : undefined}
-          >
-            {num}
-          </Link>
-        ))}
+
+        <span className="px-4 py-2 rounded bg-gray-200 text-gray-500 cursor-not-allowed">
+          {pageNumber}
+        </span>
+
         {pageNumber < totalPages && (
           <Link
             href={`/blog/page/${pageNumber + 1}/`}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
           >
             次へ
           </Link>
         )}
+
+        {pageNumber < totalPages - 1 && (
+          <Link
+            href={`/blog/page/${totalPages}/`}
+            className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 transition-colors"
+          >
+            {totalPages}
+          </Link>
+        )}
       </div>
-      <div className="mt-4">
+
+      <div className="mt-8">
         <Link
           href="/tags/"
-          className="hover:underline"
+          className="hover:underline text-base"
           style={{ color: "var(--accent-primary)" }}
         >
           すべてのタグを表示 →
@@ -93,7 +93,7 @@ export default async function BlogPage({
 }
 
 export async function generateStaticParams() {
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });

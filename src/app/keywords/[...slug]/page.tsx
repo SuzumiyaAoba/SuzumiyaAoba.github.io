@@ -1,22 +1,21 @@
+import { notFound } from "next/navigation";
+import "katex/dist/katex.min.css";
+import { Metadata } from "next";
+import config from "@/config";
+import { getContent, getFrontmatter } from "@/libs/contents/markdown";
+import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
-import config from "@/config";
-import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
-import { getContent, getFrontmatter, getPaths } from "@/libs/contents/markdown";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { generateNestedSlugParams } from "@/libs/contents/params";
 
 type Props = {
-  params: Promise<{
-    slug: string[];
-  }>;
+  params: Promise<{ slug: string[] }>;
 };
 
 const contentBasePath = "keywords";
 
 export async function generateStaticParams() {
-  const paths = await getPaths(contentBasePath);
-  return paths.map((path) => ({ slug: path.split("/") }));
+  return generateNestedSlugParams(contentBasePath);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -26,8 +25,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     parser: keywordFrontmatterSchema,
   });
 
+  if (!frontmatter) {
+    return {
+      title: config.metadata.title,
+    };
+  }
+
   return {
-    title: `${frontmatter?.title} | ${config.metadata.title}`,
+    title: `${frontmatter.title} | ${config.metadata.title}`,
+    description: frontmatter.title,
   };
 }
 

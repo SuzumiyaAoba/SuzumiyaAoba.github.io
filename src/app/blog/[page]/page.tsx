@@ -1,9 +1,9 @@
 import { Tag } from "@/components/Tag";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
-import { getFrontmatters } from "@/libs/contents/markdown";
-import { compareDesc, format } from "date-fns";
+import { format } from "date-fns";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
 
 type PostCardProps = {
   slug: string;
@@ -55,29 +55,26 @@ export default async function BlogPage({
     notFound();
   }
 
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });
 
-  const sortedPosts = posts.sort((a, b) =>
-    compareDesc(a.frontmatter.date, b.frontmatter.date)
+  const { paginatedPosts, totalPages } = paginatePosts(
+    posts,
+    pageNumber,
+    POSTS_PER_PAGE
   );
 
-  const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
   if (pageNumber > totalPages) {
     notFound();
   }
-
-  const start = (pageNumber - 1) * POSTS_PER_PAGE;
-  const end = start + POSTS_PER_PAGE;
-  const pagePosts = sortedPosts.slice(start, end);
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <h1 className="mb-8 text-3xl">Blog</h1>
       <div className="flex flex-col gap-6 mb-8">
-        {pagePosts.map((post) => (
+        {paginatedPosts.map((post) => (
           <PostCard
             key={post.path}
             slug={post.path}
@@ -85,11 +82,12 @@ export default async function BlogPage({
           />
         ))}
       </div>
+
       {/* ページネーション */}
       <div className="flex gap-2 justify-center my-8">
         {pageNumber > 2 && (
           <Link
-            href={`/blog/${pageNumber - 1}/`}
+            href={`/blog/page/${pageNumber - 1}/`}
             className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
           >
             前へ
@@ -104,7 +102,7 @@ export default async function BlogPage({
         {Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((num) => (
           <Link
             key={num}
-            href={`/blog/${num}/`}
+            href={`/blog/page/${num}/`}
             className={`px-3 py-1 rounded ${
               num === pageNumber
                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -117,7 +115,7 @@ export default async function BlogPage({
         ))}
         {pageNumber < totalPages && (
           <Link
-            href={`/blog/${pageNumber + 1}/`}
+            href={`/blog/page/${pageNumber + 1}/`}
             className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
           >
             次へ
@@ -138,7 +136,7 @@ export default async function BlogPage({
 }
 
 export async function generateStaticParams() {
-  const posts = await getFrontmatters({
+  const posts = await getSortedPosts({
     paths: ["blog"],
     parser: { frontmatter: Pages["blog"].frontmatter },
   });

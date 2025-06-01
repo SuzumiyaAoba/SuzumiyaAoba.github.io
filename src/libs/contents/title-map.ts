@@ -2,17 +2,8 @@ import path from "path";
 import { getFrontmatters } from "./markdown";
 import { Pages } from "./blog";
 import { frontmatterSchema } from "./notes";
-import { keywordFrontmatterSchema } from "./keyword";
+import { keywordFrontmatterSchema, bookFrontmatterSchema } from "./schema";
 import { z } from "zod";
-
-// 書籍のフロントマタースキーマ
-export const bookFrontmatterSchema = z.object({
-  title: z.string(),
-  date: z.coerce.date(),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  draft: z.boolean().optional(),
-});
 
 // ブログ記事のタイトルマップを取得
 export async function getBlogTitleMap(): Promise<Record<string, string>> {
@@ -32,7 +23,7 @@ export async function getBlogTitleMap(): Promise<Record<string, string>> {
   return titleMap;
 }
 
-// ノートのタイトルマップを取得
+// ノート記事のタイトルマップを取得
 export async function getNoteTitleMap(): Promise<Record<string, string>> {
   const noteEntries = await getFrontmatters({
     paths: ["notes"],
@@ -50,7 +41,7 @@ export async function getNoteTitleMap(): Promise<Record<string, string>> {
   return titleMap;
 }
 
-// キーワードのタイトルマップを取得
+// キーワード記事のタイトルマップを取得
 export async function getKeywordTitleMap(): Promise<Record<string, string>> {
   const keywordEntries = await getFrontmatters({
     paths: ["keywords"],
