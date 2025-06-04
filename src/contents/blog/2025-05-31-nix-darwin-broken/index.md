@@ -138,10 +138,20 @@ arm64
 
 ## 解決方法
 
+<s>
 調査中。現時点では nixpkgs の対応を待つしかない気がする。
 
 全てのパッケージが使えない状態ということはないはずなので原因となっているパッケージを特定するしかないかもしれない。
+</s>
+
+原因判明。何と copilot-language-server をインストールしていたのが原因。
+以下の PR と原因としては同じ。
+
+- [copilot-language-server-fhs: Can't build on darwin · Issue #408666 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/408666)
+
+Emacs のパッケージも Nix で管理するようにしていたので [copilot.el](https://github.com/copilot-emacs/copilot.el) と一緒に入ってきていた copilot-language-server が原因だったという落ち。
+一時的に copilot.el をインストールしないようにしたら解決した。
 
 ## おわりに
 
-早く解決してくれー。
+<s>早く解決してくれー。</s>
