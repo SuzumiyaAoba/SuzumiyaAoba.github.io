@@ -58,7 +58,7 @@ error:
 
        (stack trace truncated; use '--show-trace' to show the full, detailed trace)
 
-       error: Package ‘glibc-nolibgcc-2.40-66’ in /nix/store/s7ga48spdagfm0j1rd740q52ih159g51-source/pkgs/development/libraries/glibc/default.nix:217 is not available on the requested hostPlatform:
+       error: Package 'glibc-nolibgcc-2.40-66' in /nix/store/s7ga48spdagfm0j1rd740q52ih159g51-source/pkgs/development/libraries/glibc/default.nix:217 is not available on the requested hostPlatform:
          hostPlatform.config = "arm64-apple-darwin"
          package.meta.platforms = [
            "aarch64-linux"
@@ -138,9 +138,9 @@ arm64
 
 ## 解決方法
 
-<s>調査中。現時点では nixpkgs の対応を待つしかない気がする。
+<s>調査中。現時点では nixpkgs の対応を待つしかない気がする。</s>
 
-全てのパッケージが使えない状態ということはないはずなので原因となっているパッケージを特定するしかないかもしれない。</s>
+<s>全てのパッケージが使えない状態ということはないはずなので原因となっているパッケージを特定するしかないかもしれない。</s>
 
 原因判明。何と copilot-language-server をインストールしていたのが原因。
 以下の PR と原因としては同じ。

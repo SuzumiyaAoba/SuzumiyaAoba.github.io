@@ -1,11 +1,10 @@
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkEmoji from "remark-emoji";
-// @ts-ignore
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import { remarkMermaid } from "@theguild/remark-mermaid";
 import { Mermaid } from "@theguild/remark-mermaid/mermaid";
-import { Plugin } from "unified";
+import type { Plugin } from "unified";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
 import rehypeKatex from "rehype-katex";
@@ -19,7 +18,10 @@ import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/
 import { TableWrapper } from "@/components/TableWrapper";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
-export const defaultRemarkPlugins: any[] = [
+type Pluggable = Plugin<any[], any> | [Plugin<any[], any>, unknown?];
+type PluggableList = Pluggable[];
+
+export const defaultRemarkPlugins: PluggableList = [
   remarkGfm,
   remarkEmoji,
   remarkJoinCjkLines,
@@ -27,7 +29,7 @@ export const defaultRemarkPlugins: any[] = [
   remarkMermaid,
 ];
 
-export const defaultRehypePlugins = (...paths: string[]): any[] => [
+export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
   rehypeTocCustom,
