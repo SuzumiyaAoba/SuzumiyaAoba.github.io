@@ -22,13 +22,15 @@ function buildHierarchy(headings: TocHeading[]): TocEntry[] {
 
   for (const heading of headings) {
     const entry: TocEntry = { heading, children: [] };
-    let parent = stack[stack.length - 1];
 
-    while (parent.heading.depth >= heading.depth) {
+    while (
+      stack.length > 1 &&
+      stack[stack.length - 1].heading.depth >= heading.depth
+    ) {
       stack.pop();
-      parent = stack[stack.length - 1];
     }
 
+    const parent = stack[stack.length - 1];
     parent.children.push(entry);
     stack.push(entry);
   }

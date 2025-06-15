@@ -9,7 +9,7 @@ import remarkMdx from "remark-mdx";
 import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
-import { extractTocFromTree, TocEntry } from "../rehype/rehype-toc-custom";
+import { extractTocFromTree, type TocEntry } from "../rehype/toc";
 import {
   defaultRemarkPlugins,
   defaultRehypePlugins,
@@ -160,7 +160,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
   });
 
   const ast = processor.runSync(processor.parse(parsedContent.content));
-  const toc = extractTocFromTree({ tree: ast as any });
+  const toc = extractTocFromTree(ast as any);
 
   // HTML生成
   const htmlProcessor = unified().use(remarkParse).use(remarkMdx);

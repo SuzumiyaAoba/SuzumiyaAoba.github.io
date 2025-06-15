@@ -9,15 +9,13 @@ import { z } from "zod";
 export async function getBlogTitleMap(): Promise<Record<string, string>> {
   const blogEntries = await getFrontmatters({
     paths: [Pages.blog.root],
-    parser: {
-      frontmatter: Pages.blog.frontmatter,
-    },
+    schema: Pages.blog.frontmatter,
   });
 
   const titleMap: Record<string, string> = {};
 
   for (const entry of blogEntries) {
-    titleMap[entry.path] = entry.frontmatter.title;
+    titleMap[entry._path] = entry.title;
   }
 
   return titleMap;
@@ -27,15 +25,13 @@ export async function getBlogTitleMap(): Promise<Record<string, string>> {
 export async function getNoteTitleMap(): Promise<Record<string, string>> {
   const noteEntries = await getFrontmatters({
     paths: ["notes"],
-    parser: {
-      frontmatter: frontmatterSchema,
-    },
+    schema: frontmatterSchema,
   });
 
   const titleMap: Record<string, string> = {};
 
   for (const entry of noteEntries) {
-    titleMap[entry.path] = entry.frontmatter.title;
+    titleMap[entry._path] = entry.title;
   }
 
   return titleMap;
@@ -45,15 +41,13 @@ export async function getNoteTitleMap(): Promise<Record<string, string>> {
 export async function getKeywordTitleMap(): Promise<Record<string, string>> {
   const keywordEntries = await getFrontmatters({
     paths: ["keywords"],
-    parser: {
-      frontmatter: keywordFrontmatterSchema,
-    },
+    schema: keywordFrontmatterSchema,
   });
 
   const titleMap: Record<string, string> = {};
 
   for (const entry of keywordEntries) {
-    titleMap[entry.path] = entry.frontmatter.title;
+    titleMap[entry._path] = entry.title;
   }
 
   return titleMap;
@@ -63,15 +57,13 @@ export async function getKeywordTitleMap(): Promise<Record<string, string>> {
 export async function getBookTitleMap(): Promise<Record<string, string>> {
   const bookEntries = await getFrontmatters({
     paths: ["books"],
-    parser: {
-      frontmatter: bookFrontmatterSchema,
-    },
+    schema: bookFrontmatterSchema,
   });
 
   const titleMap: Record<string, string> = {};
 
   for (const entry of bookEntries) {
-    titleMap[entry.path] = entry.frontmatter.title;
+    titleMap[entry._path] = entry.title;
   }
 
   return titleMap;

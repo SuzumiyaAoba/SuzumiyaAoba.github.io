@@ -32,13 +32,12 @@ export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-  rehypeImageSize(...paths) as any,
   [
     rehypeKatex,
     {
+      output: "mathml",
       throwOnError: false,
       errorColor: "#cc0000",
-      output: "htmlAndMathml",
       trust: true,
     },
   ],

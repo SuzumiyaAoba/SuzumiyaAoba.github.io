@@ -18,7 +18,7 @@ export default async function BlogPage({
 
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   const { paginatedPosts, totalPages } = paginatePosts(
@@ -36,12 +36,7 @@ export default async function BlogPage({
       <h1 className="mb-8 text-3xl">Blog</h1>
       <div className="flex flex-col gap-6 mb-8">
         {paginatedPosts.map((post) => (
-          <PostCard
-            key={post.path}
-            slug={post.path}
-            frontmatter={post.frontmatter}
-            basePath="blog"
-          />
+          <PostCard key={post._path} post={post} basePath="blog" />
         ))}
       </div>
 
@@ -67,7 +62,7 @@ export default async function BlogPage({
 export async function generateStaticParams() {
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   // 2ページ目以降のみ

@@ -9,7 +9,7 @@ import { generateBlogTagParams } from "@/libs/contents/params";
 export async function generateStaticParams() {
   return generateBlogTagParams({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 }
 
@@ -23,7 +23,7 @@ export default async function TagPage({ params }: Props) {
 
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   // 指定されたタグを持つ記事をフィルタリング

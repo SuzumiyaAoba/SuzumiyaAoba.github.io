@@ -29,7 +29,7 @@ export async function generateMetadata({
   const { name, chapter } = await params;
   const frontmatter = await getFrontmatter({
     paths: [CONTENT_BASE_PATH, name, chapter],
-    parser: bookFrontmatterSchema,
+    schema: bookFrontmatterSchema,
   });
 
   if (!frontmatter) {
@@ -47,11 +47,9 @@ export async function generateMetadata({
 export default async function BookChapterPage({ params }: PageProps) {
   const { name, chapter } = await params;
 
-  const content = await getContent<typeof bookFrontmatterSchema._type>({
+  const content = await getContent({
     paths: [CONTENT_BASE_PATH, name, chapter],
-    parser: {
-      frontmatter: bookFrontmatterSchema,
-    },
+    schema: bookFrontmatterSchema,
   });
 
   if (!content) {

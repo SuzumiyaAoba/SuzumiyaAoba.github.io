@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const frontmatter = await getFrontmatter({
     paths: ["blog", slug],
-    parser: Pages["blog"].frontmatter,
+    schema: Pages["blog"].frontmatter,
   });
 
   if (!frontmatter) {
@@ -92,9 +92,7 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const content = await getContent({
     paths: ["blog", slug],
-    parser: {
-      frontmatter: Pages["blog"].frontmatter,
-    },
+    schema: Pages["blog"].frontmatter,
   });
 
   if (!content) {
