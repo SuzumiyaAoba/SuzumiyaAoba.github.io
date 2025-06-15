@@ -65,10 +65,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // タイトルマップを取得
-  const blogTitleMap = await getBlogTitleMap();
-  const noteTitleMap = await getNoteTitleMap();
-  const keywordTitleMap = await getKeywordTitleMap();
-  const bookTitleMap = await getBookTitleMap();
+  const [blogTitleMap, noteTitleMap, keywordTitleMap, bookTitleMap] =
+    await Promise.all([
+      getBlogTitleMap(),
+      getNoteTitleMap(),
+      getKeywordTitleMap(),
+      getBookTitleMap(),
+    ]);
 
   return (
     <html
