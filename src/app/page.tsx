@@ -3,7 +3,8 @@
 import { FC } from "react";
 import dynamic from "next/dynamic";
 
-// 開発環境でのみThemeTestコンポーネントを動的にインポート
+// ThemeTestコンポーネントを動的にインポート
+// isDevelopmentフラグでレンダリングが制御される
 const ThemeTest = dynamic(
   () => import("@/components/ui/ThemeTest").then((mod) => mod.ThemeTest),
   {

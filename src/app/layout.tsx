@@ -65,13 +65,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // タイトルマップを取得
-  const [blogTitleMap, noteTitleMap, keywordTitleMap, bookTitleMap] =
-    await Promise.all([
-      getBlogTitleMap(),
-      getNoteTitleMap(),
-      getKeywordTitleMap(),
-      getBookTitleMap(),
-    ]);
+  let blogTitleMap = {};
+  let noteTitleMap = {};
+  let keywordTitleMap = {};
+  let bookTitleMap = {};
+  try {
+    [blogTitleMap, noteTitleMap, keywordTitleMap, bookTitleMap] =
+      await Promise.all([
+        getBlogTitleMap(),
+        getNoteTitleMap(),
+        getKeywordTitleMap(),
+        getBookTitleMap(),
+      ]);
+  } catch (e) {
+    console.error("Failed to build one or more title maps", e);
+  }
 
   return (
     <html

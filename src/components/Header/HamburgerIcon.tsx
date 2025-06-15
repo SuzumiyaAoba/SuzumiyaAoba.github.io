@@ -18,18 +18,21 @@ export const HamburgerIcon: FC<{ isOpen: boolean }> = ({ isOpen }) => {
   return (
     <>
       <span
+        aria-hidden="true"
         className={clsx(
           lineClass,
           isOpen ? "rotate-45" : "-translate-y-2"
         )}
       />
       <span
+        aria-hidden="true"
         className={clsx(
           lineClass,
           isOpen ? "opacity-0" : ""
         )}
       />
       <span
+        aria-hidden="true"
         className={clsx(
           lineClass,
           isOpen ? "-rotate-45" : "translate-y-2"

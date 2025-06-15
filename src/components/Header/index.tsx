@@ -18,8 +18,6 @@ export const HEADER_HEIGHT = {
   default: 72,
 };
 
-// スクロール関連の定数
-const SCROLL_THRESHOLD = 10; // 最上部判定のためのスクロール閾値(px)
 const MOBILE_MENU_MAX_HEIGHT = "450px"; // モバイルメニューの最大高さ
 
 type HeaderProps = {
@@ -119,7 +117,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             <SiteLogo siteName={siteName} />
 
             <nav className="hidden md:block">
-              <DesktopNavigation menus={MENUS} />
+              <DesktopNavigation />
             </nav>
 
             <button
@@ -151,7 +149,6 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           >
             <div className="py-2">
               <MobileNavigation
-                menus={MENUS}
                 onNavigate={() => setIsMobileMenuOpen(false)}
                 isVisible={isMobileMenuOpen}
               />

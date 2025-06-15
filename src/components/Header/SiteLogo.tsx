@@ -18,14 +18,14 @@ type SiteLogoProps = {
 export const SiteLogo: FC<SiteLogoProps> = ({ siteName }) => (
   <Link href="/">
     <div className="flex items-center space-x-2">
-      <span
+      <h1
         className={clsx(
           "font-bold text-lg md:text-xl",
           exo_2.className
         )}
       >
         {siteName}
-      </span>
+      </h1>
     </div>
   </Link>
 ); 

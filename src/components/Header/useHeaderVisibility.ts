@@ -44,8 +44,9 @@ export const useHeaderVisibility = () => {
       lastScrollYRef.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const opts = { passive: true };
+    window.addEventListener("scroll", handleScroll, opts);
+    return () => window.removeEventListener("scroll", handleScroll, opts);
   }, []);
 
   const shouldBeVisible = isVisible || isAtTopRef.current;

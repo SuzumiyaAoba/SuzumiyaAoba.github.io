@@ -4,19 +4,15 @@ import { type FC } from "react";
 import Link from "next/link";
 import { MENUS } from "./menu";
 
-type NavigationProps = {
-  menus: typeof MENUS;
-};
-
 /**
  * デスクトップ表示用のナビゲーションメニュー
  *
  * @param {NavigationProps} props - コンポーネントのプロパティ
  * @param {typeof MENUS} props.menus - 表示するメニュー項目の配列
  */
-export const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
+export const DesktopNavigation: FC = () => (
   <ul className="flex items-center space-x-6">
-    {menus.map((menu) => (
+    {MENUS.map((menu) => (
       <li key={menu.name}>
         <Link
           href={menu.href}

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { MENUS } from "./menu";
 
 type MobileNavigationProps = {
-  menus: typeof MENUS;
   onNavigate: () => void;
   isVisible: boolean;
 };
@@ -14,12 +13,10 @@ type MobileNavigationProps = {
  * モバイル表示用のナビゲーションメニュー（折りたたみ式）
  *
  * @param {MobileNavigationProps} props - コンポーネントのプロパティ
- * @param {typeof MENUS} props.menus - 表示するメニュー項目の配列
  * @param {() => void} props.onNavigate - ナビゲーション実行時に呼び出されるコールバック
  * @param {boolean} props.isVisible - メニューが表示されているかどうか
  */
 export const MobileNavigation: FC<MobileNavigationProps> = ({
-  menus,
   onNavigate,
   isVisible,
 }) => {
@@ -52,7 +49,7 @@ export const MobileNavigation: FC<MobileNavigationProps> = ({
 
   return (
     <ul className="flex flex-col items-center space-y-4">
-      {menus.map((menu) => (
+      {MENUS.map((menu) => (
         <li key={menu.name}>
           <Link
             href={menu.href}
