@@ -10,6 +10,7 @@ import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import { extractTocFromTree, type TocEntry } from "../rehype/toc";
+import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls";
 import {
   defaultRemarkPlugins,
   defaultRehypePlugins,
@@ -136,36 +137,31 @@ export const getContent = async <T extends z.ZodTypeAny>({
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
   // AST生成（TOC抽出用）- コンテンツ処理と同じプラグインを使用
-  const processor = unified().use(remarkParse).use(remarkMdx);
-
-  // 共通のremarkプラグインを追加
+  const tocProcessor = unified().use(remarkParse).use(remarkMdx);
   defaultRemarkPlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
-      processor.use(plugin[0], plugin[1]);
+      tocProcessor.use(plugin[0], plugin[1]);
     } else {
-      processor.use(plugin);
+      tocProcessor.use(plugin);
     }
   });
-
-  processor.use(remarkRehype);
-
-  // 共通のrehypeプラグインを追加（TOC抽出のためrehypeKatexも含める）
-  const rehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
-  rehypePlugins.forEach((plugin) => {
+  tocProcessor.use(remarkRehype);
+  const tocRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
+  tocRehypePlugins.unshift([rehypeResolveImageUrls, rawContent.path]);
+  tocRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
-      processor.use(plugin[0], plugin[1]);
+      tocProcessor.use(plugin[0], plugin[1]);
     } else {
-      processor.use(plugin);
+      tocProcessor.use(plugin);
     }
   });
-
-  const ast = processor.runSync(processor.parse(parsedContent.content));
+  const ast = tocProcessor.runSync(
+    tocProcessor.parse(parsedContent.content),
+  );
   const toc = extractTocFromTree(ast as any);
 
   // HTML生成
   const htmlProcessor = unified().use(remarkParse).use(remarkMdx);
-
-  // 共通のremarkプラグインを追加
   defaultRemarkPlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       htmlProcessor.use(plugin[0], plugin[1]);
@@ -173,18 +169,16 @@ export const getContent = async <T extends z.ZodTypeAny>({
       htmlProcessor.use(plugin);
     }
   });
-
   htmlProcessor.use(remarkRehype);
-
-  // 共通のrehypeプラグインを追加
-  rehypePlugins.forEach((plugin) => {
+  const htmlRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
+  htmlRehypePlugins.unshift([rehypeResolveImageUrls, rawContent.path]);
+  htmlRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       htmlProcessor.use(plugin[0], plugin[1]);
     } else {
       htmlProcessor.use(plugin);
     }
   });
-
   htmlProcessor.use(rehypeStringify);
 
   const file = htmlProcessor.processSync(parsedContent.content);

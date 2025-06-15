@@ -187,36 +187,30 @@ function getPathSegments(segments: string[]): PathSegment[] {
     return [];
   }
 
-  let processedSegments = [...segments];
-  const rootSegment = segments[0];
-  if (
-    rootSegment === ContentType.BLOG &&
-    segments.length > 2 &&
-    segments[1] === "post"
-  ) {
-    processedSegments = [segments[0], ...segments.slice(2)];
-  }
+  const isBlogPost =
+    segments[0] === ContentType.BLOG && segments[1] === "post";
+
+  // "post" を除外した表示用のセグメント配列を作る
+  const processedSegments = isBlogPost
+    ? [segments[0], ...segments.slice(2)]
+    : [...segments];
 
   return processedSegments.map((segment, index) => {
-    let path = "";
-    if (
-      rootSegment === ContentType.BLOG &&
-      index > 0 &&
-      segments[1] === "post"
-    ) {
-      if (index === 1) {
-        path = `/${segments[0]}`;
-      } else {
-        path = `/${segments[0]}/${segments[1]}/${segments[index + 1]}`;
-      }
-    } else {
-      path = `/${processedSegments.slice(0, index + 1).join("/")}`;
+    const isLast = index === processedSegments.length - 1;
+    const decodedSegment = decodeURIComponent(segment);
+    const name = segmentMappings[decodedSegment] || decodedSegment;
+
+    // パンくずの階層としてのパス (`/blog`, `/notes/programming` など)
+    const breadcrumbPath = `/${processedSegments.slice(0, index + 1).join("/")}`;
+
+    // リンク先となる実際のパス
+    let linkPath = breadcrumbPath;
+    // 表示用セグメントが記事タイトルで、かつ最後のエレメントなら、リンク先はフルの記事パス
+    if (isBlogPost && isLast) {
+      linkPath = `/${segments.join("/")}`;
     }
 
-    const decodedSegment = decodeURIComponent(segment);
-    const isLast = index === processedSegments.length - 1;
-    const name = segmentMappings[decodedSegment] || decodedSegment;
-    const baseSegment: BasePathSegment = { name, path, isLast, type: "" };
+    const baseSegment: BasePathSegment = { name, path: linkPath, isLast, type: "" };
     const contentType = (processedSegments[0] as ContentType) || "other";
     const isContentSegment = index > 0;
 
@@ -224,7 +218,7 @@ function getPathSegments(segments: string[]): PathSegment[] {
       baseSegment,
       contentType,
       segment,
-      path,
+      path: linkPath,
       isContentSegment,
     });
   });
