@@ -14,12 +14,12 @@
 ✅ 開発環境用Pagefindスタブファイルが正常に作成されました
 📁 ファイル場所: /Users/suzumiyaaoba/ghq/github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/public/pagefind
 
-> suzumiyaaoba-github-io@0.1.0 next:dev
-> next dev
-
-
 > suzumiyaaoba-github-io@0.1.0 tsm
 > typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/
+
+
+> suzumiyaaoba-github-io@0.1.0 next:dev
+> next dev
 
 Watching files...
 [ADDED] /Users/suzumiyaaoba/ghq/github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/src/styles/markdown.module.scss
@@ -40,10 +40,10 @@ DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be
 More info: https://sass-lang.com/d/legacy-js-api
 
 [NO GENERATED TYPES] /Users/suzumiyaaoba/ghq/github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/src/components/Search/SearchComponent.module.scss
- ⚠ Port 3000 is in use, using available port 3006 instead.
+ ⚠ Port 3000 is in use, using available port 3007 instead.
    ▲ Next.js 15.3.2
-   - Local:        http://localhost:3006
-   - Network:      http://192.168.3.20:3006
+   - Local:        http://localhost:3007
+   - Network:      http://192.168.3.20:3007
 
  ✓ Starting...
- ✓ Ready in 1273ms
+ ✓ Ready in 1268ms

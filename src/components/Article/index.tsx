@@ -53,7 +53,7 @@ export function Article({
   });
 
   return (
-    <div className="max-w-6xl w-full mx-auto px-4 py-4 pb-16 relative xl:max-w-7xl">
+    <div className="max-w-6xl w-full mx-auto px-4 pb-16 relative xl:max-w-7xl">
       <article className={cn(markdownStyles.markdown, className)}>
         {/* JSON-LD 構造化データ */}
         <Script
