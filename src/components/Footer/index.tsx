@@ -14,6 +14,15 @@ type FooterProps = {
   poweredBy: PoweredBy;
 };
 
+/**
+ * サイト全体のフッターコンポーネント
+ *
+ * コピーライト情報、プライバシーポリシーやお問い合わせへのリンクを表示します。
+ *
+ * @param {FooterProps} props - コンポーネントのプロパティ
+ * @param {string} props.copyright - コピーライトの所有者名
+ * @param {PoweredBy} props.poweredBy - "Powered by" の情報（文字列またはリンクオブジェクト）
+ */
 export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
   const currentYear = new Date().getFullYear();
   const linkStyles = "transition-colors duration-200 hover:text-foreground";

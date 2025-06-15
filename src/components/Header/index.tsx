@@ -26,6 +26,15 @@ type HeaderProps = {
   siteName: string;
 };
 
+/**
+ * サイト全体のヘッダーコンポーネント
+ *
+ * スクロールに応じた表示/非表示の切り替え、モバイルメニューの制御、
+ * およびナビゲーションリンクの表示を担当します。
+ *
+ * @param {HeaderProps} props - コンポーネントのプロパティ
+ * @param {string} props.siteName - ヘッダーに表示するサイト名
+ */
 export const Header: FC<HeaderProps> = ({ siteName }) => {
   const { isScrolled, isVisible } = useHeaderVisibility();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

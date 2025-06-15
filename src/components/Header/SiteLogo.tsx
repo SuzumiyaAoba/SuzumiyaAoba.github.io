@@ -9,6 +9,12 @@ type SiteLogoProps = {
   siteName: string;
 };
 
+/**
+ * サイトのロゴを表示するコンポーネント
+ *
+ * @param {SiteLogoProps} props - コンポーネントのプロパティ
+ * @param {string} props.siteName - 表示するサイト名
+ */
 export const SiteLogo: FC<SiteLogoProps> = ({ siteName }) => (
   <Link href="/">
     <div className="flex items-center space-x-2">

@@ -8,6 +8,12 @@ type NavigationProps = {
   menus: typeof MENUS;
 };
 
+/**
+ * デスクトップ表示用のナビゲーションメニュー
+ *
+ * @param {NavigationProps} props - コンポーネントのプロパティ
+ * @param {typeof MENUS} props.menus - 表示するメニュー項目の配列
+ */
 export const DesktopNavigation: FC<NavigationProps> = ({ menus }) => (
   <ul className="flex items-center space-x-6">
     {menus.map((menu) => (

@@ -2,6 +2,17 @@ import { useState, useEffect, useRef } from "react";
 
 const SCROLL_THRESHOLD = 10;
 
+/**
+ * ヘッダーの表示状態を管理するためのカスタムフック
+ *
+ * スクロール位置に応じて、ヘッダーが表示されるべきか、
+ * また、スクロールされて背景が変化するべきかを判定します。
+ *
+ * @returns {{
+ *   isScrolled: boolean; // ページがスクロールされているか
+ *   isVisible: boolean;  // ヘッダーが表示されるべきか
+ * }}
+ */
 export const useHeaderVisibility = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
