@@ -21,6 +21,8 @@
 # misc
 .DS_Store
 *.pem
+*.tsbuildinfo
+src/styles/markdown.module.scss.d.ts
 
 # debug
 npm-debug.log*
