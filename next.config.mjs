@@ -1,8 +1,5 @@
 // @ts-check
 
-import createMDX from "@next/mdx";
-import rehypeResolveImageUrls from "./src/libs/rehype/rehype-resolve-image-urls.mjs";
-
 const isProd = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
@@ -45,12 +42,4 @@ const nextConfig = {
   },
 };
 
-const withMDX = createMDX({
-  extension: /\.mdx?$/,
-  options: {
-    remarkPlugins: [], // 必要に応じてremarkプラグインを追加
-    rehypePlugins: [rehypeResolveImageUrls], // rehypeプラグインを追加
-  },
-});
-
-export default withMDX(nextConfig);
+export default nextConfig;

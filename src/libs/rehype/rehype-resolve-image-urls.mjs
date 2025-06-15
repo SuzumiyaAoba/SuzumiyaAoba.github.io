@@ -3,6 +3,10 @@ import { visit } from "unist-util-visit";
 
 const rehypeResolveImageUrls = () => {
   return (tree, file) => {
+    if (!file || !file.path) {
+      return;
+    }
+
     const markdownPath = file.path;
 
     visit(tree, "element", (node) => {

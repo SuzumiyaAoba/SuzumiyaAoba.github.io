@@ -7,6 +7,7 @@ import { Mermaid } from "@theguild/remark-mermaid/mermaid";
 import type { Plugin } from "unified";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
+import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls.mjs";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import rehypeExternalLinks from "rehype-external-links";
@@ -29,6 +30,7 @@ export const defaultRemarkPlugins: PluggableList = [
 ];
 
 export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
+  rehypeResolveImageUrls,
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],

@@ -116,11 +116,11 @@ export async function getStylesheets(...paths: string[]): Promise<string[]> {
 }
 
 export const getContent = async <T extends z.ZodTypeAny>({
-  paths,
   schema,
+  paths,
 }: {
-  paths: string[];
   schema: T;
+  paths: string[];
 }): Promise<(Content<z.infer<T>> & { toc: TocEntry[] }) | null> => {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
@@ -131,7 +131,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
   if (!parsedContent) {
     return null;
   }
-  const { frontmatter } = parsedContent;
+  const { frontmatter, content, data, format } = parsedContent;
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
@@ -182,14 +182,17 @@ export const getContent = async <T extends z.ZodTypeAny>({
 
   return {
     rawContent,
-    content: parsedContent.content,
+    content,
     frontmatter,
     stylesheets,
     Component: codeHikeComponent({
-      ...parsedContent,
-      paths,
-      source: parsedContent.content,
-      scope: parsedContent.data,
+      source: content,
+      scope: data,
+      format,
+      paths: rawContent.path
+        .replace(/^src\/contents\//, "")
+        .split("/")
+        .slice(0, -1),
     }),
     toc,
   };
