@@ -22,14 +22,17 @@ export const noteFrontmatterSchema = baseFrontmatterSchema.extend({
   draft: z.boolean().default(false),
 });
 
-// キーワード用のフロントマタースキーマ（ノートと同じ）
-export const keywordFrontmatterSchema = noteFrontmatterSchema;
+// キーワード用のフロントマタースキーマ（ノートと同じだが、独立したスキーマとして定義）
+export const keywordFrontmatterSchema = noteFrontmatterSchema.extend({});
 
-// 書籍用のフロントマタースキーマ（基本 + オプショナル）
-export const bookFrontmatterSchema = z.object({
-  title: z.string(),
-  date: z.coerce.date(),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  draft: z.boolean().optional(),
-});
+// 書籍用のフロントマタースキーマ（基本から一部フィールドをオプショナルに変更）
+export const bookFrontmatterSchema = baseFrontmatterSchema
+  .pick({
+    title: true,
+    date: true,
+    draft: true,
+  })
+  .extend({
+    category: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  });

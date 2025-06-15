@@ -14,6 +14,7 @@ import {
   defaultRemarkPlugins,
   defaultRehypePlugins,
 } from "../markdown/mdxOptions";
+import { z } from "zod";
 
 type Format = "md" | "mdx";
 
@@ -36,10 +37,6 @@ export type ParsedContent<FRONTMATTER> = {
   data: { [key: string]: unknown };
   frontmatter: FRONTMATTER;
   content: string;
-};
-
-export type Parser<T> = {
-  parse: (data: { [key: string]: unknown }) => T;
 };
 
 export async function getRawContent(
@@ -70,38 +67,42 @@ export async function getRawContent(
   }
 }
 
-export const parseRawContent = <FRONTMATTER>(
-  frontmatterParser: Parser<FRONTMATTER>,
-  { raw, format }: RawContent
-): ParsedContent<NonNullable<FRONTMATTER>> | null => {
-  const { content, data } = matter(raw);
-  const frontmatter = frontmatterParser.parse(data);
+export const parseRawContent = <T extends z.ZodTypeAny>(
+  schema: T,
+  rawContent: RawContent,
+): ParsedContent<z.infer<T>> | null => {
+  const { content, data } = matter(rawContent.raw);
+  const result = schema.safeParse(data);
 
-  if (!frontmatter) {
+  if (!result.success) {
+    console.error(
+      `Frontmatter parsing failed for ${rawContent.path}:`,
+      result.error.flatten().fieldErrors,
+    );
     return null;
   }
 
   return {
-    format,
+    format: rawContent.format,
     data,
-    frontmatter,
+    frontmatter: result.data,
     content,
   };
 };
 
-export async function getFrontmatter<FRONTMATTER>({
+export async function getFrontmatter<T extends z.ZodTypeAny>({
   paths,
-  parser,
+  schema,
 }: {
   paths: string[];
-  parser: Parser<FRONTMATTER>;
+  schema: T;
 }) {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
 
-  const parsedContent = parseRawContent(parser, rawContent);
+  const parsedContent = parseRawContent(schema, rawContent);
   if (!parsedContent) {
     return null;
   }
@@ -114,25 +115,23 @@ export async function getStylesheets(...paths: string[]): Promise<string[]> {
   return css.map((absolutePath) => path.basename(absolutePath));
 }
 
-export const getContent = async <FRONTMATTER>({
+export const getContent = async <T extends z.ZodTypeAny>({
   paths,
-  parser: { frontmatter: frontmatterParser },
+  schema,
 }: {
   paths: string[];
-  parser: {
-    frontmatter: Parser<FRONTMATTER>;
-  };
-}): Promise<(Content<FRONTMATTER> & { toc: TocEntry[] }) | null> => {
+  schema: T;
+}): Promise<(Content<z.infer<T>> & { toc: TocEntry[] }) | null> => {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
 
-  const parsedContent = parseRawContent(frontmatterParser, rawContent);
-  const frontmatter = parsedContent?.frontmatter;
-  if (!parsedContent || !frontmatter) {
+  const parsedContent = parseRawContent(schema, rawContent);
+  if (!parsedContent) {
     return null;
   }
+  const { frontmatter } = parsedContent;
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
@@ -193,7 +192,7 @@ export const getContent = async <FRONTMATTER>({
   return {
     rawContent,
     content: parsedContent.content,
-    frontmatter: parsedContent.frontmatter,
+    frontmatter,
     stylesheets,
     Component: codeHikeComponent({
       ...parsedContent,
@@ -225,37 +224,34 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
   return dirs;
 };
 
-export const getFrontmatters = async <FRONTMATTER extends { draft?: boolean }>({
+export const getFrontmatters = async <T extends z.ZodTypeAny>({
   paths,
-  parser: { frontmatter },
+  schema,
 }: {
   paths: string[];
-  parser: {
-    frontmatter: Parser<FRONTMATTER>;
-  };
+  schema: T;
 }) => {
   const contentPaths = await getPaths(...paths);
 
-  return (
-    await Promise.all(
-      contentPaths.map(async (contentPath) => {
-        const rawContent = await getRawContent(...paths, contentPath);
-        if (!rawContent) {
-          throw new Error(`Cannot get content: ${contentPath}`);
-        }
+  const frontmatters = await Promise.all(
+    contentPaths.map(async (contentPath) => {
+      const rawContent = await getRawContent(...paths, contentPath);
+      if (!rawContent) {
+        throw new Error(`Cannot get content: ${contentPath}`);
+      }
 
-        const content = parseRawContent(frontmatter, rawContent);
-        if (!content?.frontmatter) {
-          throw new Error(`Frontmatter does not exist: ${contentPath}`);
-        }
+      const content = parseRawContent(schema, rawContent);
+      if (!content) {
+        // エラーはparseRawContent内でログされるのでここではnullを返す
+        return null;
+      }
+      return { ...content.frontmatter, _path: contentPath };
+    }),
+  );
 
-        return {
-          path: contentPath,
-          frontmatter: content.frontmatter,
-        };
-      })
-    )
-  ).filter(
-    ({ frontmatter }) => frontmatter.draft === undefined || !frontmatter.draft
+  // Zodの型からdraftプロパティの存在を推論することは難しいため、anyにキャストしてフィルタリング
+  return frontmatters.filter(
+    (fm): fm is z.infer<T> & { _path: string } =>
+      fm !== null && !(fm as any).draft,
   );
 };
