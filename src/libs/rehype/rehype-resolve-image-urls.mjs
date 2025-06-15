@@ -35,6 +35,7 @@ const rehypeResolveImageUrls = () => {
 
             // 新しい絶対パスを生成 (URLなので必ず / 区切りを使う)
             const newSrc = path.posix.join("/assets", resolvedSrc);
+            
             node.properties.src = newSrc;
           }
         }
