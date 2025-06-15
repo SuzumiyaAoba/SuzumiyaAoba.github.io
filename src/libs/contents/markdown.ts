@@ -10,7 +10,6 @@ import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import { extractTocFromTree, type TocEntry } from "../rehype/toc";
-import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls";
 import {
   defaultRemarkPlugins,
   defaultRehypePlugins,
@@ -147,7 +146,6 @@ export const getContent = async <T extends z.ZodTypeAny>({
   });
   tocProcessor.use(remarkRehype);
   const tocRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
-  tocRehypePlugins.unshift([rehypeResolveImageUrls, rawContent.path]);
   tocRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       tocProcessor.use(plugin[0], plugin[1]);
@@ -171,7 +169,6 @@ export const getContent = async <T extends z.ZodTypeAny>({
   });
   htmlProcessor.use(remarkRehype);
   const htmlRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
-  htmlRehypePlugins.unshift([rehypeResolveImageUrls, rawContent.path]);
   htmlRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       htmlProcessor.use(plugin[0], plugin[1]);
