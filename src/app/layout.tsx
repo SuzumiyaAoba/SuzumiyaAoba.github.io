@@ -73,7 +73,7 @@ export default async function RootLayout({
   return (
     <html
       lang="ja"
-      className="overflow-x-hidden h-full"
+      className="h-full"
       suppressHydrationWarning
     >
       <head>
@@ -91,7 +91,7 @@ export default async function RootLayout({
           zen_maru_gothic.className,
           exo_2.variable,
           monoFont.variable,
-          "flex flex-col w-full min-h-screen overflow-x-hidden"
+          "flex flex-col w-full min-h-screen"
         )}
       >
         <ThemeProvider>

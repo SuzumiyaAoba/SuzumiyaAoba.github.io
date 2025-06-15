@@ -59,7 +59,6 @@ main {
 .content-container {
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden;
   background-color: var(--background);
 }
 
