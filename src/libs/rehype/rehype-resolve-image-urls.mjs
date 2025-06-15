@@ -13,16 +13,30 @@ const rehypeResolveImageUrls = () => {
       if (node.tagName === "img" && node.properties?.src) {
         const src = node.properties.src;
 
-        if (src.startsWith("./") || src.startsWith("../")) {
-          const contentDir = markdownPath
-            .replace(/^src\/contents\//, "")
-            .split("/")
-            .slice(0, -1)
-            .join("/");
+        if (String(src).startsWith("./") || String(src).startsWith("../")) {
+          // 'src/contents/' を含むパスの部分を探す
+          const contentRoot = "src/contents/";
+          const contentRootIndex = markdownPath.indexOf(contentRoot);
 
-          const newSrc = path.join("/assets", contentDir, src);
+          if (contentRootIndex !== -1) {
+            // 'src/contents/' 以降のパスを取得
+            const relativeToContentRoot = markdownPath.substring(
+              contentRootIndex + contentRoot.length,
+            );
 
-          node.properties.src = newSrc;
+            // ファイル名を除いたディレクトリ部分を取得
+            const contentDir = path.dirname(relativeToContentRoot);
+
+            // 相対パスを絶対パスに解決
+            const resolvedSrc = path.posix.resolve(
+              "/" + contentDir,
+              String(src).replace(/^\.\//, "")
+            );
+
+            // 新しい絶対パスを生成 (URLなので必ず / 区切りを使う)
+            const newSrc = path.posix.join("/assets", resolvedSrc);
+            node.properties.src = newSrc;
+          }
         }
       }
     });

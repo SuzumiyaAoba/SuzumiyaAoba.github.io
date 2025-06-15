@@ -15,6 +15,7 @@ import {
   defaultRehypePlugins,
 } from "../markdown/mdxOptions";
 import { z } from "zod";
+import { VFile } from "vfile";
 
 type Format = "md" | "mdx";
 
@@ -135,6 +136,11 @@ export const getContent = async <T extends z.ZodTypeAny>({
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
+  const vfile = new VFile({
+    path: rawContent.path,
+    value: parsedContent.content,
+  });
+
   // AST生成（TOC抽出用）- コンテンツ処理と同じプラグインを使用
   const tocProcessor = unified().use(remarkParse).use(remarkMdx);
   defaultRemarkPlugins.forEach((plugin) => {
@@ -153,9 +159,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
       tocProcessor.use(plugin);
     }
   });
-  const ast = tocProcessor.runSync(
-    tocProcessor.parse(parsedContent.content),
-  );
+  const ast = tocProcessor.runSync(tocProcessor.parse(vfile), vfile);
   const toc = extractTocFromTree(ast as any);
 
   // HTML生成
@@ -178,7 +182,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
   });
   htmlProcessor.use(rehypeStringify);
 
-  const file = htmlProcessor.processSync(parsedContent.content);
+  const file = htmlProcessor.processSync(vfile);
 
   return {
     rawContent,
