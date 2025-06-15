@@ -132,27 +132,27 @@ export default function SearchComponent() {
     // 初期化イベントのリスナーを設定
     window.addEventListener("pagefind:initialized", handlePagefindInitialized);
 
-    // pagefind-adapter.jsをロード（まだロードされていない場合）
-    if (!document.querySelector('script[src="/pagefind-adapter.js"]')) {
-      try {
-        console.log("Loading pagefind adapter...");
-        const script = document.createElement("script");
-        script.src = "/pagefind-adapter.js";
-        script.async = true;
-        script.onerror = (e) => {
-          console.error("Failed to load pagefind adapter script", e);
-          setPagefindError(
-            "検索インデックスの読み込みに失敗しました。ページを更新してください。"
-          );
-        };
-        document.head.appendChild(script);
-      } catch (error) {
-        console.error("Failed to load pagefind adapter", error);
-        setPagefindError(
-          "検索インデックスの読み込みに失敗しました。ページを更新してください。"
-        );
-      }
-    }
+    // スクリプトはページレベルで <Script> を使って注入されるため、ここでのフォールバックは不要
+    // if (!document.querySelector('script[src="/pagefind-adapter.js"]')) {
+    //   try {
+    //     console.log("Loading pagefind adapter...");
+    //     const script = document.createElement("script");
+    //     script.src = "/pagefind-adapter.js";
+    //     script.async = true;
+    //     script.onerror = (e) => {
+    //       console.error("Failed to load pagefind adapter script", e);
+    //       setPagefindError(
+    //         "検索インデックスの読み込みに失敗しました。ページを更新してください。"
+    //       );
+    //     };
+    //     document.head.appendChild(script);
+    //   } catch (error) {
+    //     console.error("Failed to load pagefind adapter", error);
+    //     setPagefindError(
+    //       "検索インデックスの読み込みに失敗しました。ページを更新してください。"
+    //     );
+    //   }
+    // }
 
     // クリーンアップ関数
     return () => {
