@@ -15,6 +15,7 @@ import TOC from "@/components/TOC";
 import styles from "@/styles/markdown.module.scss";
 import { compareDesc } from "date-fns";
 import { generateSlugParams } from "@/libs/contents/params";
+import ArticleLayout from "@/components/Article/ArticleLayout";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -118,16 +119,12 @@ export default async function Page({ params }: Props) {
         author={frontmatter.author || config.metadata.author}
         url={url}
       >
-        <div className={`${styles.tocWrapper} tocWrapper`}>
-          <div className={styles.tocMain}>
-            <Component />
-          </div>
-          <div
-            className={`${styles.tocSide} ${styles.tocSideStyles} toc-sidebar`}
-          >
-            <TOC toc={toc} />
-          </div>
-        </div>
+        <ArticleLayout
+          tocSideClassName={styles.tocSideStyles}
+          toc={<TOC toc={toc} />}
+        >
+          <Component />
+        </ArticleLayout>
       </Article>
     </>
   );

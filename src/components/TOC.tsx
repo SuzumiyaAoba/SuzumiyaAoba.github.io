@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import type { TocEntry } from "@/libs/rehype/rehype-toc-custom";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 export type TOCProps = {
   toc: TocEntry[];
+  toggleVisibility?: () => void;
 };
 
 // アクティブな見出しIDを追跡する関数
@@ -153,7 +155,7 @@ function renderToc(
   );
 }
 
-export const TOC: React.FC<TOCProps> = ({ toc }) => {
+export const TOC: React.FC<TOCProps> = ({ toc, toggleVisibility }) => {
   const activeId = useActiveHeading(toc);
   const navRef = useRef<HTMLElement>(null);
 
@@ -164,10 +166,17 @@ export const TOC: React.FC<TOCProps> = ({ toc }) => {
 
   return (
     <nav ref={navRef} className="toc-container" aria-label="コンテンツ">
-      <details className="toc-details" open>
-        <summary className="toc-summary">目次</summary>
-        {renderToc(toc, activeId, 0)}
-      </details>
+      <div className="toc-summary">
+        目次
+        <button
+          onClick={() => toggleVisibility?.()}
+          className="toc-toggle-button"
+          aria-label="目次を隠す"
+        >
+          <X size={20} />
+        </button>
+      </div>
+      {renderToc(toc, activeId, 0)}
     </nav>
   );
 };
