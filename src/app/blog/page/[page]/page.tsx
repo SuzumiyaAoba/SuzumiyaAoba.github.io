@@ -18,7 +18,7 @@ export default async function BlogPage({
 
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   const { paginatedPosts, totalPages } = paginatePosts(
@@ -59,7 +59,7 @@ export default async function BlogPage({
 export async function generateStaticParams() {
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   // 2ページ目以降のみ

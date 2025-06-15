@@ -28,7 +28,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const frontmatter = await getFrontmatter({
     paths: [CONTENT_BASE_PATH, ...slug],
-    parser: frontmatterSchema,
+    schema: frontmatterSchema,
   });
 
   if (!frontmatter) {
@@ -46,11 +46,9 @@ export async function generateMetadata({
 export default async function NotePage({ params }: PageProps) {
   const { slug } = await params;
 
-  const content = await getContent<typeof frontmatterSchema._type>({
+  const content = await getContent({
     paths: [CONTENT_BASE_PATH, ...slug],
-    parser: {
-      frontmatter: frontmatterSchema,
-    },
+    schema: frontmatterSchema,
   });
 
   if (!content) {

@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const getNotes = (path: string[]) =>
   getFrontmatters({
     paths: path,
-    parser: { frontmatter: frontmatterSchema },
+    schema: frontmatterSchema,
   });
 
 export default async function NotesPage() {

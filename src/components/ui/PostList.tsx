@@ -2,16 +2,19 @@ import { Tag } from "@/components/Tag";
 import { FC } from "react";
 import { cn } from "@/libs/utils";
 import { DateDisplay } from "./DateDisplay";
+import { z } from "zod";
+import {
+  noteFrontmatterSchema,
+  bookFrontmatterSchema,
+  blogFrontmatterSchema,
+} from "@/libs/contents/schema";
 
-type PostItem = {
-  path: string;
-  frontmatter: {
-    title: string;
-    date: Date;
-    tags: string[];
-    parent?: boolean;
-  };
-};
+// A general post type that can be any of the frontmatter schemas
+type PostItem = (
+  | z.infer<typeof noteFrontmatterSchema>
+  | z.infer<typeof bookFrontmatterSchema>
+  | z.infer<typeof blogFrontmatterSchema>
+) & { _path: string };
 
 export type PostListProps = {
   posts: PostItem[];
@@ -32,18 +35,18 @@ export const PostList: FC<PostListProps> = ({
   showTags = true,
   showDate = true,
 }) => {
-  const filteredPosts = posts.filter((post) => post.frontmatter.parent);
+  const filteredPosts = posts.filter((post) => "parent" in post && post.parent);
 
   if (filteredPosts.length === 0) return null;
 
   const renderPost = (post: PostItem) => {
-    const { path: slug, frontmatter } = post;
+    const { _path, title, date, tags } = post;
 
     if (variant === "simple") {
       return (
-        <li key={slug}>
-          <a href={`/${basePath}/${slug}/`} className="hover:underline">
-            {frontmatter.title}
+        <li key={_path}>
+          <a href={`/${basePath}/${_path}/`} className="hover:underline">
+            {title}
           </a>
         </li>
       );
@@ -51,18 +54,16 @@ export const PostList: FC<PostListProps> = ({
 
     return (
       <div
-        key={slug}
+        key={_path}
         className={cn(
           variant === "card"
             ? "card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]"
             : ""
         )}
       >
-        {showDate && (
-          <DateDisplay date={frontmatter.date} className="text-sm mb-2" />
-        )}
+        {showDate && <DateDisplay date={date} className="text-sm mb-2" />}
         <a
-          href={`/${basePath}/${slug}/`}
+          href={`/${basePath}/${_path}/`}
           className={cn(
             "hover:underline",
             variant === "card"
@@ -71,11 +72,11 @@ export const PostList: FC<PostListProps> = ({
           )}
           style={{ color: "var(--foreground)" }}
         >
-          {frontmatter.title}
+          {title}
         </a>
-        {showTags && frontmatter.tags.length > 0 && (
+        {showTags && tags && tags.length > 0 && (
           <div className="flex flex-wrap mt-2 gap-2 text-xs">
-            {frontmatter.tags.map((tag) => (
+            {tags.map((tag) => (
               <Tag key={tag} label={tag} />
             ))}
           </div>

@@ -7,16 +7,14 @@ export const dynamic = "force-static";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const keywordEntries = await getSortedPosts({
     paths: ["keywords"],
-    parser: {
-      frontmatter: keywordFrontmatterSchema,
-    },
+    schema: keywordFrontmatterSchema,
   });
 
   return keywordEntries
-    .filter((entry) => !entry.frontmatter.draft)
+    .filter((entry) => !entry.draft)
     .map((entry) => ({
-      url: `https://suzumiyaaoba.com/keywords/${entry.path}/`,
-      lastModified: entry.frontmatter.date,
+      url: `https://suzumiyaaoba.com/keywords/${entry._path}/`,
+      lastModified: entry.date,
       priority: 0.6,
       changeFrequency: "monthly" as const,
     }));

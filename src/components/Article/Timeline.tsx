@@ -1,25 +1,23 @@
 import { format } from "date-fns";
 import Link from "next/link";
 import { Tag } from "@/components/Tag";
+import { type blogFrontmatterSchema } from "@/libs/contents/schema";
+import { z } from "zod";
+
+type Post = z.infer<typeof blogFrontmatterSchema> & { _path: string };
 
 type TimelineItemProps = {
-  slug: string;
-  frontmatter: {
-    title: string;
-    date: Date;
-    tags: string[];
-  };
+  post: Post;
   showMonth?: boolean;
   isLastInMonth?: boolean; // 月の最後の記事かどうか
 };
 
 const TimelineItem = ({
-  slug,
-  frontmatter,
+  post,
   showMonth = false,
   isLastInMonth = false, // デフォルトはfalse
 }: TimelineItemProps) => {
-  const date = frontmatter.date;
+  const { _path, title, date, tags } = post;
   const year = format(date, "yyyy");
   const month = format(date, "M"); // 0埋めなしの月
   const day = format(date, "d"); // 0埋めなしの日
@@ -70,14 +68,14 @@ const TimelineItem = ({
           </div>
         )}
         <Link
-          href={`/blog/post/${slug}/`}
+          href={`/blog/post/${_path}/`}
           className="text-lg font-medium block mb-2 transition-colors hover:text-primary"
           style={{ color: "var(--foreground)" }}
         >
-          {frontmatter.title}
+          {title}
         </Link>
         <div className="flex flex-wrap mt-2 gap-2 text-xs">
-          {frontmatter.tags.map((tag) => (
+          {tags.map((tag) => (
             <Tag
               key={tag}
               label={tag}
@@ -91,21 +89,14 @@ const TimelineItem = ({
 };
 
 type TimelineProps = {
-  posts: Array<{
-    path: string;
-    frontmatter: {
-      title: string;
-      date: Date;
-      tags: string[];
-    };
-  }>;
+  posts: Post[];
 };
 
 export function Timeline({ posts }: TimelineProps) {
   // 投稿を年ごとにグループ化
   const postsByYear = posts.reduce<Record<string, typeof posts>>(
     (grouped, post) => {
-      const year = format(post.frontmatter.date, "yyyy");
+      const year = format(post.date, "yyyy");
       if (!grouped[year]) {
         grouped[year] = [];
       }
@@ -127,7 +118,7 @@ export function Timeline({ posts }: TimelineProps) {
         const postsByMonth: Record<string, typeof posts> = {};
 
         postsByYear[year].forEach((post) => {
-          const month = format(post.frontmatter.date, "M");
+          const month = format(post.date, "M");
           if (!postsByMonth[month]) {
             postsByMonth[month] = [];
           }
@@ -147,9 +138,8 @@ export function Timeline({ posts }: TimelineProps) {
                 const monthPosts = postsByMonth[month];
                 return monthPosts.map((post, index) => (
                   <TimelineItem
-                    key={post.path}
-                    slug={post.path}
-                    frontmatter={post.frontmatter}
+                    key={post._path}
+                    post={post}
                     showMonth={index === 0} // 月の最初の記事のみ月表示
                     isLastInMonth={index === monthPosts.length - 1} // 月の最後の記事かどうか
                   />
