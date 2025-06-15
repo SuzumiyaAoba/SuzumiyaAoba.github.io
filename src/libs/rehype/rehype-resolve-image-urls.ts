@@ -1,15 +1,18 @@
 import path from "path";
 import { visit } from "unist-util-visit";
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+import type { VFile } from "vfile";
 
-const rehypeResolveImageUrls = () => {
-  return (tree, file) => {
+const rehypeResolveImageUrls: Plugin<[], Root> = () => {
+  return (tree: Root, file: VFile) => {
     if (!file || !file.path) {
       return;
     }
 
     const markdownPath = file.path;
 
-    visit(tree, "element", (node) => {
+    visit(tree, "element", (node: Element) => {
       if (node.tagName === "img" && node.properties?.src) {
         const src = node.properties.src;
 

@@ -40,10 +40,10 @@ DEPRECATION WARNING [legacy-js-api]: The legacy JS API is deprecated and will be
 More info: https://sass-lang.com/d/legacy-js-api
 
 [NO GENERATED TYPES] /Users/suzumiyaaoba/ghq/github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/src/components/Search/SearchComponent.module.scss
- ⚠ Port 3000 is in use, using available port 3004 instead.
+ ⚠ Port 3000 is in use, using available port 3006 instead.
    ▲ Next.js 15.3.2
-   - Local:        http://localhost:3004
-   - Network:      http://192.168.3.20:3004
+   - Local:        http://localhost:3006
+   - Network:      http://192.168.3.20:3006
 
  ✓ Starting...
- ✓ Ready in 1270ms
+ ✓ Ready in 1273ms
