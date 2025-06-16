@@ -1,18 +1,5 @@
-"use client";
-
 import { FC } from "react";
-import dynamic from "next/dynamic";
-
-// 開発環境でのみThemeTestコンポーネントを動的にインポート
-const ThemeTest =
-  process.env.NODE_ENV === "development"
-    ? dynamic(
-        () => import("@/components/ui/ThemeTest").then((mod) => mod.ThemeTest),
-        {
-          ssr: false,
-        }
-      )
-    : () => null;
+import { DevelopmentOnly } from "@/components/DevelopmentOnly";
 
 type CardProps = {
   title: string;
@@ -58,9 +45,6 @@ const cards: CardProps[] = [
   },
 ];
 
-// ビルド時に評価される環境変数
-const isDevelopment = process.env.NODE_ENV === "development";
-
 export default function Home() {
   return (
     <main className="px-4 py-6 max-w-4xl mx-auto">
@@ -70,35 +54,8 @@ export default function Home() {
         ))}
       </div>
 
-      {/* 開発環境でのみThemeTestコンポーネントをレンダリング */}
-      {isDevelopment && (
-        <div className="mt-16 mb-16">
-          <ThemeTest />
-        </div>
-      )}
-
-      {/* 開発環境のみ表示するセクション - ビルド時に評価 */}
-      {isDevelopment && (
-        <section
-          className="mt-16 p-6 rounded-xl shadow-md border border-text/10 transition-all duration-300"
-          style={{ backgroundColor: "var(--card-bg)" }}
-        >
-          <h2 className="text-2xl font-bold text-primary mb-4">
-            UnoCSS + テーマ切り替えのテスト
-          </h2>
-          <p className="mb-4">
-            このセクションは UnoCSS と next-themes
-            を使用したテーマ切り替えの動作確認用です。
-            ヘッダーのテーマトグルボタンをクリックして、ライト/ダークモードを切り替えてみてください。
-          </p>
-          <div className="flex flex-wrap gap-4 mt-6">
-            <button className="btn-primary">プライマリボタン</button>
-            <button className="btn bg-background border border-text/20">
-              デフォルトボタン
-            </button>
-          </div>
-        </section>
-      )}
+      {/* 開発環境でのみ表示されるコンポーネント */}
+      <DevelopmentOnly />
     </main>
   );
 }

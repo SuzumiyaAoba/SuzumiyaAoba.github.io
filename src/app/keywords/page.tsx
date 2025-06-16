@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const getKeywords = (path: string[]) =>
   getFrontmatters({
     paths: path,
-    parser: { frontmatter: keywordFrontmatterSchema },
+    schema: keywordFrontmatterSchema,
   });
 
 export default async function Page() {

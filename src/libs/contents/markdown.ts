@@ -9,11 +9,13 @@ import remarkMdx from "remark-mdx";
 import remarkRehype from "remark-rehype";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
-import { extractTocFromTree, TocEntry } from "../rehype/rehype-toc-custom";
+import { extractTocFromTree, type TocEntry } from "../rehype/toc";
 import {
   defaultRemarkPlugins,
   defaultRehypePlugins,
 } from "../markdown/mdxOptions";
+import { z } from "zod";
+import { VFile } from "vfile";
 
 type Format = "md" | "mdx";
 
@@ -36,10 +38,6 @@ export type ParsedContent<FRONTMATTER> = {
   data: { [key: string]: unknown };
   frontmatter: FRONTMATTER;
   content: string;
-};
-
-export type Parser<T> = {
-  parse: (data: { [key: string]: unknown }) => T;
 };
 
 export async function getRawContent(
@@ -70,38 +68,42 @@ export async function getRawContent(
   }
 }
 
-export const parseRawContent = <FRONTMATTER>(
-  frontmatterParser: Parser<FRONTMATTER>,
-  { raw, format }: RawContent
-): ParsedContent<NonNullable<FRONTMATTER>> | null => {
-  const { content, data } = matter(raw);
-  const frontmatter = frontmatterParser.parse(data);
+export const parseRawContent = <T extends z.ZodTypeAny>(
+  schema: T,
+  rawContent: RawContent,
+): ParsedContent<z.infer<T>> | null => {
+  const { content, data } = matter(rawContent.raw);
+  const result = schema.safeParse(data);
 
-  if (!frontmatter) {
+  if (!result.success) {
+    console.error(
+      `Frontmatter parsing failed for ${rawContent.path}:`,
+      result.error.flatten().fieldErrors,
+    );
     return null;
   }
 
   return {
-    format,
+    format: rawContent.format,
     data,
-    frontmatter,
+    frontmatter: result.data,
     content,
   };
 };
 
-export async function getFrontmatter<FRONTMATTER>({
+export async function getFrontmatter<T extends z.ZodTypeAny>({
   paths,
-  parser,
+  schema,
 }: {
   paths: string[];
-  parser: Parser<FRONTMATTER>;
+  schema: T;
 }) {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
 
-  const parsedContent = parseRawContent(parser, rawContent);
+  const parsedContent = parseRawContent(schema, rawContent);
   if (!parsedContent) {
     return null;
   }
@@ -114,59 +116,54 @@ export async function getStylesheets(...paths: string[]): Promise<string[]> {
   return css.map((absolutePath) => path.basename(absolutePath));
 }
 
-export const getContent = async <FRONTMATTER>({
+export const getContent = async <T extends z.ZodTypeAny>({
+  schema,
   paths,
-  parser: { frontmatter: frontmatterParser },
 }: {
+  schema: T;
   paths: string[];
-  parser: {
-    frontmatter: Parser<FRONTMATTER>;
-  };
-}): Promise<(Content<FRONTMATTER> & { toc: TocEntry[] }) | null> => {
+}): Promise<(Content<z.infer<T>> & { toc: TocEntry[] }) | null> => {
   const rawContent = await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
 
-  const parsedContent = parseRawContent(frontmatterParser, rawContent);
-  const frontmatter = parsedContent?.frontmatter;
-  if (!parsedContent || !frontmatter) {
+  const parsedContent = parseRawContent(schema, rawContent);
+  if (!parsedContent) {
     return null;
   }
+  const { frontmatter, content, data, format } = parsedContent;
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
-  // AST生成（TOC抽出用）- コンテンツ処理と同じプラグインを使用
-  const processor = unified().use(remarkParse).use(remarkMdx);
+  const vfile = new VFile({
+    path: rawContent.path,
+    value: parsedContent.content,
+  });
 
-  // 共通のremarkプラグインを追加
+  // AST生成（TOC抽出用）- コンテンツ処理と同じプラグインを使用
+  const tocProcessor = unified().use(remarkParse).use(remarkMdx);
   defaultRemarkPlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
-      processor.use(plugin[0], plugin[1]);
+      tocProcessor.use(plugin[0], plugin[1]);
     } else {
-      processor.use(plugin);
+      tocProcessor.use(plugin);
     }
   });
-
-  processor.use(remarkRehype);
-
-  // 共通のrehypeプラグインを追加（TOC抽出のためrehypeKatexも含める）
-  const rehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
-  rehypePlugins.forEach((plugin) => {
+  tocProcessor.use(remarkRehype);
+  const tocRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
+  tocRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
-      processor.use(plugin[0], plugin[1]);
+      tocProcessor.use(plugin[0], plugin[1]);
     } else {
-      processor.use(plugin);
+      tocProcessor.use(plugin);
     }
   });
-
-  const ast = processor.runSync(processor.parse(parsedContent.content));
-  const toc = extractTocFromTree({ tree: ast as any });
+  const ast = tocProcessor.runSync(tocProcessor.parse(vfile), vfile);
+  const toc = extractTocFromTree(ast as any);
 
   // HTML生成
   const htmlProcessor = unified().use(remarkParse).use(remarkMdx);
-
-  // 共通のremarkプラグインを追加
   defaultRemarkPlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       htmlProcessor.use(plugin[0], plugin[1]);
@@ -174,32 +171,32 @@ export const getContent = async <FRONTMATTER>({
       htmlProcessor.use(plugin);
     }
   });
-
   htmlProcessor.use(remarkRehype);
-
-  // 共通のrehypeプラグインを追加
-  rehypePlugins.forEach((plugin) => {
+  const htmlRehypePlugins = defaultRehypePlugins(path.dirname(rawContent.path));
+  htmlRehypePlugins.forEach((plugin) => {
     if (Array.isArray(plugin)) {
       htmlProcessor.use(plugin[0], plugin[1]);
     } else {
       htmlProcessor.use(plugin);
     }
   });
-
   htmlProcessor.use(rehypeStringify);
 
-  const file = htmlProcessor.processSync(parsedContent.content);
+  const file = htmlProcessor.processSync(vfile);
 
   return {
     rawContent,
-    content: parsedContent.content,
-    frontmatter: parsedContent.frontmatter,
+    content,
+    frontmatter,
     stylesheets,
     Component: codeHikeComponent({
-      ...parsedContent,
-      paths,
-      source: parsedContent.content,
-      scope: parsedContent.data,
+      source: content,
+      scope: data,
+      format,
+      paths: rawContent.path
+        .replace(/^src\/contents\//, "")
+        .split("/")
+        .slice(0, -1),
     }),
     toc,
   };
@@ -225,37 +222,34 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
   return dirs;
 };
 
-export const getFrontmatters = async <FRONTMATTER extends { draft?: boolean }>({
+export const getFrontmatters = async <T extends z.ZodTypeAny>({
   paths,
-  parser: { frontmatter },
+  schema,
 }: {
   paths: string[];
-  parser: {
-    frontmatter: Parser<FRONTMATTER>;
-  };
+  schema: T;
 }) => {
   const contentPaths = await getPaths(...paths);
 
-  return (
-    await Promise.all(
-      contentPaths.map(async (contentPath) => {
-        const rawContent = await getRawContent(...paths, contentPath);
-        if (!rawContent) {
-          throw new Error(`Cannot get content: ${contentPath}`);
-        }
+  const frontmatters = await Promise.all(
+    contentPaths.map(async (contentPath) => {
+      const rawContent = await getRawContent(...paths, contentPath);
+      if (!rawContent) {
+        throw new Error(`Cannot get content: ${contentPath}`);
+      }
 
-        const content = parseRawContent(frontmatter, rawContent);
-        if (!content?.frontmatter) {
-          throw new Error(`Frontmatter does not exist: ${contentPath}`);
-        }
+      const content = parseRawContent(schema, rawContent);
+      if (!content) {
+        // エラーはparseRawContent内でログされるのでここではnullを返す
+        return null;
+      }
+      return { ...content.frontmatter, _path: contentPath };
+    }),
+  );
 
-        return {
-          path: contentPath,
-          frontmatter: content.frontmatter,
-        };
-      })
-    )
-  ).filter(
-    ({ frontmatter }) => frontmatter.draft === undefined || !frontmatter.draft
+  // Zodの型からdraftプロパティの存在を推論することは難しいため、anyにキャストしてフィルタリング
+  return frontmatters.filter(
+    (fm): fm is z.infer<T> & { _path: string } =>
+      fm !== null && !(fm as any).draft,
   );
 };

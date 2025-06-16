@@ -6,7 +6,7 @@ import { getSortedPosts, countTagOccurrences } from "@/libs/contents/utils";
 export default async function TagsPage() {
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   // すべてのタグを抽出し、出現回数でカウント

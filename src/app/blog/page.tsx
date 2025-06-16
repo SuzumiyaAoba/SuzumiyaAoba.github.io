@@ -7,7 +7,7 @@ import { Pagination } from "@/components/ui/Pagination";
 export default async function BlogPage() {
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   const { paginatedPosts, totalPages } = paginatePosts(

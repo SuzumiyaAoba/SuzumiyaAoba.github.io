@@ -1,8 +1,8 @@
+import { Timeline } from "@/components/Article/Timeline";
 import { Pages, POSTS_PER_PAGE } from "@/libs/contents/blog";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSortedPosts, paginatePosts } from "@/libs/contents/utils";
-import { PostCard } from "@/components/ui/PostCard";
 import { Pagination } from "@/components/ui/Pagination";
 
 export default async function BlogPage({
@@ -18,7 +18,7 @@ export default async function BlogPage({
 
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
 
   const { paginatedPosts, totalPages } = paginatePosts(
@@ -32,18 +32,10 @@ export default async function BlogPage({
   }
 
   return (
-    <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
-      <h1 className="mb-8 text-3xl">Blog</h1>
-      <div className="flex flex-col gap-6 mb-8">
-        {paginatedPosts.map((post) => (
-          <PostCard
-            key={post.path}
-            slug={post.path}
-            frontmatter={post.frontmatter}
-            basePath="blog"
-          />
-        ))}
-      </div>
+    <main className="flex flex-col w-full max-w-4xl mx-auto px-6 py-10 pb-20">
+      <h1 className="mb-10 text-3xl font-bold">Blog</h1>
+
+      <Timeline posts={paginatedPosts} />
 
       <Pagination
         currentPage={pageNumber}
@@ -51,10 +43,10 @@ export default async function BlogPage({
         basePath="blog"
       />
 
-      <div className="mt-4">
+      <div className="mt-8">
         <Link
           href="/tags/"
-          className="hover:underline"
+          className="hover:underline text-base"
           style={{ color: "var(--accent-primary)" }}
         >
           すべてのタグを表示 →
@@ -67,7 +59,7 @@ export default async function BlogPage({
 export async function generateStaticParams() {
   const posts = await getSortedPosts({
     paths: ["blog"],
-    parser: { frontmatter: Pages["blog"].frontmatter },
+    schema: Pages["blog"].frontmatter,
   });
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   // 2ページ目以降のみ

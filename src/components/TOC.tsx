@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import type { TocEntry } from "@/libs/rehype/rehype-toc-custom";
+import type { TocEntry } from "@/libs/rehype/toc";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 export type TOCProps = {

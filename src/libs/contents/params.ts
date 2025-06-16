@@ -2,19 +2,17 @@ import { glob } from "fast-glob";
 import path from "path";
 import { getPaths } from "./markdown";
 import { extractUniqueTags, getSortedPosts } from "./utils";
-import { Parser } from "./markdown";
+import { z } from "zod";
 
 // ブログタグのためのパラメータ生成
-export async function generateBlogTagParams<
-  FRONTMATTER extends { draft?: boolean; date: Date; tags: string[] }
->({
+export async function generateBlogTagParams<T extends z.ZodTypeAny>({
   paths,
-  parser,
+  schema,
 }: {
   paths: string[];
-  parser: { frontmatter: Parser<FRONTMATTER> };
+  schema: T;
 }) {
-  const posts = await getSortedPosts({ paths, parser });
+  const posts = await getSortedPosts({ paths, schema });
   const allTags = extractUniqueTags(posts);
 
   return allTags.map((tag) => ({

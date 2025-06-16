@@ -6,6 +6,7 @@ import { InlineCode } from "@/components/CodeHike/inline-code";
 import { CodeSwitcher } from "@/components/CodeHike/code-switcher";
 import { CodeWithTooltips } from "@/components/CodeHike/code-with-tooltips";
 import { HoverContainer, Link } from "@/components/CodeHike/code-mentions";
+import { SsgImage } from "@/components/SsgImage";
 
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -37,6 +38,18 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
     // このパスがpublicディレクトリの中での画像ファイルの場所を指定する
     // 例: ["assets", "blog", "2023-09-30-astro"]
     const rehypePaths = ["assets", ...paths];
+    
+    // SsgImageで使用するbasePath
+    // 例: "/assets/blog/2023-09-30-astro"
+    const basePath = `/${rehypePaths.join('/')}`;
+
+    // pathsに基づいてSsgImageをラップ
+    const ImageWithBasePath = (props: any) => (
+      <SsgImage
+        {...props}
+        basePath={basePath}
+      />
+    );
 
     return (
       <MDXRemote
@@ -55,6 +68,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
         }}
         components={{
           ...defaultComponents,
+          img: ImageWithBasePath, // basePathが設定されたSsgImageを使用
           a: Link,
           Code,
           InlineCode,

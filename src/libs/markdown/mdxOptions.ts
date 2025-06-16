@@ -7,10 +7,10 @@ import { Mermaid } from "@theguild/remark-mermaid/mermaid";
 import type { Plugin } from "unified";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
+import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import rehypeExternalLinks from "rehype-external-links";
-import rehypeTocCustom from "../rehype/rehype-toc-custom";
 import { SsgImage } from "@/components/SsgImage";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
@@ -30,17 +30,16 @@ export const defaultRemarkPlugins: PluggableList = [
 ];
 
 export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
+  rehypeResolveImageUrls,
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
-  rehypeTocCustom,
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-  rehypeImageSize(...paths),
   [
     rehypeKatex,
     {
+      output: "mathml",
       throwOnError: false,
       errorColor: "#cc0000",
-      output: "htmlAndMathml",
       trust: true,
     },
   ],

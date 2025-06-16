@@ -14,24 +14,18 @@ type FooterProps = {
   poweredBy: PoweredBy;
 };
 
+/**
+ * サイト全体のフッターコンポーネント
+ *
+ * コピーライト情報、プライバシーポリシーやお問い合わせへのリンクを表示します。
+ *
+ * @param {FooterProps} props - コンポーネントのプロパティ
+ * @param {string} props.copyright - コピーライトの所有者名
+ * @param {PoweredBy} props.poweredBy - "Powered by" の情報（文字列またはリンクオブジェクト）
+ */
 export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
-  const date = new Date();
-  const currentYear = date.getFullYear();
-
-  const renderPoweredBy = () => {
-    if (typeof poweredBy === "string") {
-      return poweredBy;
-    }
-
-    return (
-      <Link
-        href={poweredBy.url}
-        className="hover:underline text-blue-400 transition-colors hover:text-blue-300"
-      >
-        {poweredBy.name}
-      </Link>
-    );
-  };
+  const currentYear = new Date().getFullYear();
+  const linkStyles = "transition-colors duration-200 hover:text-foreground";
 
   return (
     <>
@@ -46,26 +40,38 @@ export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
         }}
       >
         <div className="flex gap-x-6 mb-4">
-          <a
-            className="transition-colors duration-200 hover:text-foreground"
+          <Link
+            className={linkStyles}
             style={{ color: "var(--muted)" }}
             href="/privacy-policy/"
           >
             プライバシーポリシー
-          </a>
-          <a
-            className="transition-colors duration-200 hover:text-foreground"
+          </Link>
+          <Link
+            className={linkStyles}
             style={{ color: "var(--muted)" }}
             href="/contact"
           >
             お問い合わせ
-          </a>
+          </Link>
         </div>
-        <div className="text-sm">
+        <div className="text-sm text-center">
           <div>
             &copy; {currentYear} {copyright}
           </div>
-          <div>Powered by {renderPoweredBy()}</div>
+          <div>
+            Powered by{" "}
+            {typeof poweredBy === "string" ? (
+              poweredBy
+            ) : (
+              <Link
+                href={poweredBy.url}
+                className="hover:underline text-blue-400 transition-colors hover:text-blue-300"
+              >
+                {poweredBy.name}
+              </Link>
+            )}
+          </div>
         </div>
       </footer>
     </>
