@@ -108,13 +108,15 @@ export default async function RootLayout({
         <ThemeProvider>
           <Header siteName={config.metadata.title} />
           <div className="content-container mt-header flex-grow w-full">
-            <div className="max-w-6xl w-full mx-auto px-4 pt-4 xl:max-w-7xl">
-              <BreadcrumbNav
-                blogTitleMap={blogTitleMap}
-                noteTitleMap={noteTitleMap}
-                keywordTitleMap={keywordTitleMap}
-                bookTitleMap={bookTitleMap}
-              />
+            <div className="max-w-6xl w-full mx-auto px-4 xl:max-w-7xl">
+              <div className="md:pl-20 mb-6">
+                <BreadcrumbNav
+                  blogTitleMap={blogTitleMap}
+                  noteTitleMap={noteTitleMap}
+                  keywordTitleMap={keywordTitleMap}
+                  bookTitleMap={bookTitleMap}
+                />
+              </div>
             </div>
             {children}
           </div>
