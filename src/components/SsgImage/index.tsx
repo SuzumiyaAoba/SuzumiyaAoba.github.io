@@ -21,14 +21,23 @@ export const SsgImage: FC<SsgImageProps> = (props) => {
 
   // 相対パスの場合、現在のページパスに基づいて絶対パスに変換する
   let resolvedSrc = src;
-  if (typeof src === 'string' && (src.startsWith('./') || src.startsWith('../'))) {
-    // パスの形が /blog/post/2025-05-01-github-copilot-agent/ の場合
-    // 最後の部分（2025-05-01-github-copilot-agent）をアセットパスに使用
+  if (typeof src === 'string' && (src.startsWith('./') || src.startsWith('../')) && pathname) {
     const pathParts = pathname.split('/').filter(Boolean);
     
     if (pathParts.length >= 3 && pathParts[0] === 'blog' && pathParts[1] === 'post') {
+      // ブログ投稿の場合: /blog/post/slug/ → /assets/blog/slug/
       const postSlug = pathParts[2];
       const assetBase = `/assets/blog/${postSlug}`;
+      
+      if (src.startsWith('./')) {
+        resolvedSrc = src.replace('./', `${assetBase}/`);
+      } else if (src.startsWith('../')) {
+        resolvedSrc = src.replace('../', `${assetBase}/`);
+      }
+    } else if (pathParts[0] === 'notes') {
+      // notesの場合: /notes/programming/scala/cats/ → /assets/notes/programming/scala/cats/
+      const notePath = pathParts.slice(1).join('/'); // "notes"を除いた残りの部分
+      const assetBase = `/assets/notes/${notePath}`;
       
       if (src.startsWith('./')) {
         resolvedSrc = src.replace('./', `${assetBase}/`);
