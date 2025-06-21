@@ -16,6 +16,7 @@ import styles from "@/styles/markdown.module.scss";
 import { compareDesc } from "date-fns";
 import { generateSlugParams } from "@/libs/contents/params";
 import ArticleLayout from "@/components/Article/ArticleLayout";
+import { ArticleHistory } from "@/components/ArticleHistory";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -99,7 +100,7 @@ export default async function Page({ params }: Props) {
     notFound();
   }
 
-  const { frontmatter, stylesheets, Component, toc } = content;
+  const { frontmatter, stylesheets, Component, toc, gitHistory } = content;
   const url = `${config.metadata.url}/blog/post/${slug}/`;
 
   return (
@@ -122,6 +123,17 @@ export default async function Page({ params }: Props) {
           toc={<TOC toc={toc} />}
         >
           <Component />
+          
+          {/* 記事の更新履歴を表示 */}
+          {gitHistory && (
+            <ArticleHistory
+              history={gitHistory.commits}
+              createdDate={gitHistory.createdDate ?? undefined}
+              lastModified={gitHistory.lastModified ?? undefined}
+              repoUrl={gitHistory.repoUrl ?? undefined}
+              className="mt-12"
+            />
+          )}
         </ArticleLayout>
       </Article>
     </>

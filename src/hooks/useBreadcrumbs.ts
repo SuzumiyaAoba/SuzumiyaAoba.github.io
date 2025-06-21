@@ -269,7 +269,7 @@ export function getDisplayTitle({
 // カスタムフック
 export function useBreadcrumbs(data: BreadcrumbData) {
   const segments = useSelectedLayoutSegments();
-  const pathSegments = getPathSegments(segments);
+  const pathSegments = getPathSegments(segments || []);
 
   return { pathSegments, data };
 } 

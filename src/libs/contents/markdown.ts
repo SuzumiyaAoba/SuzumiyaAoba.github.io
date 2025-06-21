@@ -16,6 +16,7 @@ import {
 } from "../markdown/mdxOptions";
 import { z } from "zod";
 import { VFile } from "vfile";
+import { getFileGitHistory, getFileCreationDate, getFileLastModified, getGitHubRepoUrl, type GitCommit } from "../git-history";
 
 type Format = "md" | "mdx";
 
@@ -31,6 +32,12 @@ export type Content<FRONTMATTER> = {
   content: string;
   stylesheets: string[];
   Component: FC<unknown>;
+  gitHistory?: {
+    commits: GitCommit[];
+    createdDate: string | null;
+    lastModified: string | null;
+    repoUrl: string | null;
+  };
 };
 
 export type ParsedContent<FRONTMATTER> = {
@@ -136,6 +143,15 @@ export const getContent = async <T extends z.ZodTypeAny>({
 
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
+  // Git履歴を取得
+  const absolutePath = path.join(process.cwd(), rawContent.path);
+  const gitHistory = {
+    commits: getFileGitHistory(absolutePath),
+    createdDate: getFileCreationDate(absolutePath),
+    lastModified: getFileLastModified(absolutePath),
+    repoUrl: getGitHubRepoUrl(),
+  };
+
   const vfile = new VFile({
     path: rawContent.path,
     value: parsedContent.content,
@@ -199,6 +215,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
         .slice(0, -1),
     }),
     toc,
+    gitHistory,
   };
 };
 
