@@ -49,7 +49,7 @@ declare global {
 export default function SearchComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get("q") || "";
+  const initialQuery = searchParams?.get("q") || "";
 
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState<PagefindResult[]>([]);
@@ -176,7 +176,7 @@ export default function SearchComponent() {
     // 300ms後に検索を実行
     timerRef.current = setTimeout(() => {
       // URLパラメータを更新
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() || "");
       if (newQuery) {
         params.set("q", newQuery);
       } else {
