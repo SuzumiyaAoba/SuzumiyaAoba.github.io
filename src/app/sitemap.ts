@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: "https://suzumiyaaoba.com/notes/",
+      url: "https://suzumiyaaoba.com/series/",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,

@@ -1,9 +1,11 @@
 ---
-title: Order (Cats)
-date: 2024-12-27
+title: "Order 型クラス"
+date: 2024-12-21
 category: "プログラミング"
-tags: ["Scala", "Cats", "関数型プログラミング"]
-parent: false
+tags: ["Scala", "Cats", "関数型プログラミング", "型クラス", "Order"]
+description: "Scala CatsのOrder型クラスについて学ぶ。全順序の型安全な比較を提供するOrder型クラスの使い方と、比較演算子による安全な順序比較について詳しく解説。"
+series: "Scala Cats 型クラス"
+seriesOrder: 3
 ---
 
 ## `Order`
@@ -99,4 +101,4 @@ case class Celsius(value: Double) derives Order
 | `ParitalCompare` | `<`                 | 左辺より右辺が大きいときは `true` を返す。                                                                |
 | `ParitalCompare` | `<=`                | 左辺が右辺以下のときは `true` を返す。                                                                    |
 | `ParitalCompare` | `partialCompare`    | `compare` と同じ。                                                                                        |
-| `ParitalCompare` | `partialComparison` | `Comparison` と同じ。                                                                                     |
+| `ParitalCompare` | `partialComparison` | `Comparison` と同じ。                                                                                     | 

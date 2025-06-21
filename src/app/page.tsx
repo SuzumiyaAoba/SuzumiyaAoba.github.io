@@ -29,9 +29,9 @@ const cards: CardProps[] = [
     description: "プログラミングを中心に散文を。",
   },
   {
-    title: "📓 Notes",
-    href: "/notes/",
-    description: "まとまった文章を。",
+    title: "📓 Series",
+    href: "/series/",
+    description: "連載記事のシリーズ。",
   },
   {
     title: "🔧 Tools",

@@ -4,14 +4,12 @@ import { cn } from "@/libs/utils";
 import { DateDisplay } from "./DateDisplay";
 import { z } from "zod";
 import {
-  noteFrontmatterSchema,
   bookFrontmatterSchema,
   blogFrontmatterSchema,
 } from "@/libs/contents/schema";
 
 // A general post type that can be any of the frontmatter schemas
 type PostItem = (
-  | z.infer<typeof noteFrontmatterSchema>
   | z.infer<typeof bookFrontmatterSchema>
   | z.infer<typeof blogFrontmatterSchema>
 ) & { _path: string };
@@ -76,7 +74,7 @@ export const PostList: FC<PostListProps> = ({
         </a>
         {showTags && tags && tags.length > 0 && (
           <div className="flex flex-wrap mt-2 gap-2 text-xs">
-            {tags.map((tag) => (
+            {tags.map((tag: string) => (
               <Tag key={tag} label={tag} />
             ))}
           </div>

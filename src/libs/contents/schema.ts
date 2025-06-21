@@ -14,16 +14,16 @@ export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
   description: z.string().optional(),
   author: z.string().optional(),
   ogImage: z.string().optional(),
+  // シリーズ機能
+  series: z.string().optional(), // シリーズ名
+  seriesOrder: z.number().optional(), // シリーズ内での順序
 });
 
-// ノート用のフロントマタースキーマ（基本 + parent）
-export const noteFrontmatterSchema = baseFrontmatterSchema.extend({
+// キーワード用のフロントマタースキーマ
+export const keywordFrontmatterSchema = baseFrontmatterSchema.extend({
   parent: z.boolean().default(true),
   draft: z.boolean().default(false),
 });
-
-// キーワード用のフロントマタースキーマ（ノートと同じだが、独立したスキーマとして定義）
-export const keywordFrontmatterSchema = noteFrontmatterSchema.extend({});
 
 // 書籍用のフロントマタースキーマ（基本から一部フィールドをオプショナルに変更）
 export const bookFrontmatterSchema = baseFrontmatterSchema

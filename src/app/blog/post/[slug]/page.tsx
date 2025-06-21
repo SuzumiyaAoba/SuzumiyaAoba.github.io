@@ -17,6 +17,8 @@ import { compareDesc } from "date-fns";
 import { generateSlugParams } from "@/libs/contents/params";
 import ArticleLayout from "@/components/Article/ArticleLayout";
 import { ArticleHistory } from "@/components/ArticleHistory";
+import { SeriesNavigation } from "@/components/SeriesNavigation";
+import { getSeriesNavigation } from "@/libs/contents/series";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -103,6 +105,11 @@ export default async function Page({ params }: Props) {
   const { frontmatter, stylesheets, Component, toc, gitHistory } = content;
   const url = `${config.metadata.url}/blog/post/${slug}/`;
 
+  // シリーズナビゲーション情報を取得
+  const seriesNavigation = frontmatter.series 
+    ? await getSeriesNavigation(slug, frontmatter.series)
+    : null;
+
   return (
     <>
       <StylesheetLoader
@@ -123,6 +130,18 @@ export default async function Page({ params }: Props) {
           toc={<TOC toc={toc} />}
         >
           <Component />
+
+          {/* シリーズナビゲーションを表示 */}
+          {seriesNavigation && frontmatter.series && seriesNavigation.currentIndex !== -1 && (
+            <SeriesNavigation
+              seriesName={frontmatter.series}
+              currentIndex={seriesNavigation.currentIndex}
+              totalPosts={seriesNavigation.totalPosts}
+              previous={seriesNavigation.previous}
+              next={seriesNavigation.next}
+              className="mt-12"
+            />
+          )}
           
           {/* 記事の更新履歴を表示 */}
           {gitHistory && (

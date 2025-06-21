@@ -11,7 +11,6 @@ import BreadcrumbNav from "@/components/Breadcrumb";
 import Script from "next/script";
 import {
   getBlogTitleMap,
-  getNoteTitleMap,
   getKeywordTitleMap,
   getBookTitleMap,
 } from "@/libs/contents/title-map";
@@ -66,14 +65,12 @@ export default async function RootLayout({
 }>) {
   // タイトルマップを取得
   let blogTitleMap = {};
-  let noteTitleMap = {};
   let keywordTitleMap = {};
   let bookTitleMap = {};
   try {
-    [blogTitleMap, noteTitleMap, keywordTitleMap, bookTitleMap] =
+    [blogTitleMap, keywordTitleMap, bookTitleMap] =
       await Promise.all([
         getBlogTitleMap(),
-        getNoteTitleMap(),
         getKeywordTitleMap(),
         getBookTitleMap(),
       ]);
@@ -112,7 +109,6 @@ export default async function RootLayout({
               <div className="md:pl-20 mb-6">
                 <BreadcrumbNav
                   blogTitleMap={blogTitleMap}
-                  noteTitleMap={noteTitleMap}
                   keywordTitleMap={keywordTitleMap}
                   bookTitleMap={bookTitleMap}
                 />

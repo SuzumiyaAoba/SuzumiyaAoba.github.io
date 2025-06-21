@@ -17,9 +17,8 @@ import {
 } from "@/components/ui/breadcrumb";
 
 // 静的データをサーバーから取得するためのプロップスタイプ
-interface BreadcrumbNavProps {
+export interface BreadcrumbNavProps {
   blogTitleMap: Record<string, string>;
-  noteTitleMap: Record<string, string>;
   keywordTitleMap: Record<string, string>;
   bookTitleMap: Record<string, string>;
 }

@@ -1,9 +1,11 @@
 ---
-title: Eq (Cats)
-date: 2024-12-27
+title: "Eq 型クラス"
+date: 2024-12-20
 category: "プログラミング"
-tags: ["Scala", "Cats", "関数型プログラミング"]
-parent: false
+tags: ["Scala", "Cats", "関数型プログラミング", "型クラス", "Eq"]
+description: "Scala CatsのEq型クラスについて学ぶ。等値性の型安全な比較を提供するEq型クラスの使い方と、===演算子による安全な等値比較について詳しく解説。"
+series: "Scala Cats 型クラス"
+seriesOrder: 2
 ---
 
 ## `Eq`
@@ -77,4 +79,4 @@ https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/e
 | `Eq`     | `===` (`eqv`)  | 左辺と右辺が等値のとき `true` を返す。       |
 | `Eq`     | `=!=` (`eqnv`) | 左辺と右辺が等値ではないとき `true` を返す。 |
 
-[^CatsSyntax]: 型クラスのインスタンスに対して使えるようになるメソッド、演算子は [`cats.syntax` パッケージ](https://github.com/typelevel/cats/tree/v2.12.0/core/src/main/scala/cats/syntax)に定義されている。
+[^CatsSyntax]: 型クラスのインスタンスに対して使えるようになるメソッド、演算子は [`cats.syntax` パッケージ](https://github.com/typelevel/cats/tree/v2.12.0/core/src/main/scala/cats/syntax)に定義されている。 

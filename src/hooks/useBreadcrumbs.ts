@@ -3,7 +3,7 @@ import { useSelectedLayoutSegments } from "next/navigation";
 // コンテンツの種類を列挙型で定義
 export enum ContentType {
   BLOG = "blog",
-  NOTE = "notes",
+  SERIES = "series",
   KEYWORD = "keywords",
   TOOL = "tools",
   SEARCH = "search",
@@ -24,10 +24,10 @@ interface BlogPathSegment extends BasePathSegment {
   slug?: string;
 }
 
-// ノートのパスセグメント
-interface NotePathSegment extends BasePathSegment {
-  type: ContentType.NOTE;
-  notePath?: string;
+// シリーズのパスセグメント
+interface SeriesPathSegment extends BasePathSegment {
+  type: ContentType.SERIES;
+  seriesPath?: string;
 }
 
 // キーワードのパスセグメント
@@ -60,7 +60,7 @@ interface OtherPathSegment extends BasePathSegment {
 // すべてのパスセグメントの型ユニオン
 export type PathSegment =
   | BlogPathSegment
-  | NotePathSegment
+  | SeriesPathSegment
   | KeywordPathSegment
   | BookPathSegment
   | ToolPathSegment
@@ -70,7 +70,6 @@ export type PathSegment =
 // 静的データをサーバーから取得するためのプロップスタイプ
 interface BreadcrumbData {
   blogTitleMap: Record<string, string>;
-  noteTitleMap: Record<string, string>;
   keywordTitleMap: Record<string, string>;
   bookTitleMap: Record<string, string>;
 }
@@ -78,7 +77,7 @@ interface BreadcrumbData {
 // パスセグメントの表示名をマッピングするオブジェクト
 const segmentMappings: Record<string, string> = {
   [ContentType.BLOG]: "ブログ",
-  [ContentType.NOTE]: "ノート",
+  [ContentType.SERIES]: "シリーズ",
   [ContentType.KEYWORD]: "キーワード",
   [ContentType.TOOL]: "ツール",
   [ContentType.SEARCH]: "Search",
@@ -97,8 +96,8 @@ function isBlogSegment(segment: PathSegment): segment is BlogPathSegment {
   return segment.type === ContentType.BLOG;
 }
 
-function isNoteSegment(segment: PathSegment): segment is NotePathSegment {
-  return segment.type === ContentType.NOTE;
+function isSeriesSegment(segment: PathSegment): segment is SeriesPathSegment {
+  return segment.type === ContentType.SERIES;
 }
 
 function isKeywordSegment(
@@ -151,13 +150,13 @@ function createContentSegment({
       return isContentSegment
         ? ({ ...common, slug: segment } as BlogPathSegment)
         : (common as BlogPathSegment);
-    case ContentType.NOTE:
+    case ContentType.SERIES:
       return isContentSegment
         ? ({
             ...common,
-            notePath: extractPathFromSlug({ path }),
-          } as NotePathSegment)
-        : (common as NotePathSegment);
+            seriesPath: extractPathFromSlug({ path }),
+          } as SeriesPathSegment)
+        : (common as SeriesPathSegment);
     case ContentType.KEYWORD:
       return isContentSegment
         ? ({
@@ -198,33 +197,36 @@ function getPathSegments(segments: string[]): PathSegment[] {
   return processedSegments.map((segment, index) => {
     const isLast = index === processedSegments.length - 1;
     const decodedSegment = decodeURIComponent(segment);
-    const name = segmentMappings[decodedSegment] || decodedSegment;
 
-    // パンくずの階層としてのパス (`/blog`, `/notes/programming` など)
-    const breadcrumbPath = `/${processedSegments.slice(0, index + 1).join("/")}`;
+    // パスを再構築
+    const fullPath = "/" + processedSegments.slice(0, index + 1).join("/");
 
-    // リンク先となる実際のパス
-    let linkPath = breadcrumbPath;
-    // 表示用セグメントが記事タイトルで、かつ最後のエレメントなら、リンク先はフルの記事パス
-    if (isBlogPost && isLast) {
-      linkPath = `/${segments.join("/")}`;
+    const baseSegment: BasePathSegment = {
+      name: decodedSegment,
+      path: fullPath,
+      isLast,
+      type: decodedSegment,
+    };
+
+    // 最初のセグメントによってコンテンツタイプを判定
+    const contentType = processedSegments[0] as ContentType;
+    const isContentSegment = index > 0; // 最初以外はコンテンツセグメント
+
+    if (Object.values(ContentType).includes(contentType)) {
+      return createContentSegment({
+        baseSegment,
+        contentType,
+        segment: decodedSegment,
+        path: fullPath,
+        isContentSegment,
+      });
     }
 
-    const baseSegment: BasePathSegment = { name, path: linkPath, isLast, type: "" };
-    const contentType = (processedSegments[0] as ContentType) || "other";
-    const isContentSegment = index > 0;
-
-    return createContentSegment({
-      baseSegment,
-      contentType,
-      segment,
-      path: linkPath,
-      isContentSegment,
-    });
+    return baseSegment as OtherPathSegment;
   });
 }
 
-// 表示用タイトルを取得
+// 表示タイトルを取得する関数
 interface GetDisplayTitleProps {
   segment: PathSegment;
   data: BreadcrumbData;
@@ -234,42 +236,37 @@ export function getDisplayTitle({
   segment,
   data,
 }: GetDisplayTitleProps): string {
-  const { blogTitleMap, noteTitleMap, keywordTitleMap, bookTitleMap } = data;
+  // 基本的なマッピングから取得
+  if (segment.name in segmentMappings) {
+    return segmentMappings[segment.name];
+  }
 
-  if (isBlogSegment(segment) && segment.slug && blogTitleMap[segment.slug]) {
-    return blogTitleMap[segment.slug];
+  // ブログのスラグからタイトルを取得
+  if (isBlogSegment(segment) && segment.slug) {
+    const title = data.blogTitleMap[segment.slug];
+    if (title) return title;
   }
-  if (
-    isNoteSegment(segment) &&
-    segment.notePath &&
-    noteTitleMap[segment.notePath]
-  ) {
-    return noteTitleMap[segment.notePath];
+
+  // キーワードのパスからタイトルを取得
+  if (isKeywordSegment(segment) && segment.keywordPath) {
+    const title = data.keywordTitleMap[segment.keywordPath];
+    if (title) return title;
   }
-  if (
-    isKeywordSegment(segment) &&
-    segment.keywordPath &&
-    keywordTitleMap[segment.keywordPath]
-  ) {
-    return keywordTitleMap[segment.keywordPath];
+
+  // 書籍のパスからタイトルを取得
+  if (isBookPathSegment(segment) && segment.bookPath) {
+    const title = data.bookTitleMap[segment.bookPath];
+    if (title) return title;
   }
-  if (
-    isBookPathSegment(segment) &&
-    segment.bookPath &&
-    bookTitleMap[segment.bookPath]
-  ) {
-    return bookTitleMap[segment.bookPath];
-  }
-  if (isSearchSegment(segment)) {
-    return `「${segment.name}」の検索結果`;
-  }
+
+  // デコードされたセグメント名をフォールバックとして使用
   return segment.name;
 }
 
-// カスタムフック
+// メインのuseBreads関数
 export function useBreadcrumbs(data: BreadcrumbData) {
   const segments = useSelectedLayoutSegments();
-  const pathSegments = getPathSegments(segments || []);
+  const pathSegments = getPathSegments(segments ?? []);
 
   return { pathSegments, data };
 } 
