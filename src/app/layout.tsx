@@ -85,6 +85,12 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${config.metadata.title} RSS Feed`}
+          href="/rss.xml"
+        />
         <style>
           {`
             html {

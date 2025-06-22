@@ -54,6 +54,13 @@ export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
           >
             お問い合わせ
           </Link>
+          <Link
+            className={linkStyles}
+            style={{ color: "var(--muted)" }}
+            href="/rss.xml"
+          >
+            RSS
+          </Link>
         </div>
         <div className="text-sm text-center">
           <div>
