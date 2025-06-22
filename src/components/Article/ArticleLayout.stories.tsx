@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ArticleLayout } from "./ArticleLayout";
+import ArticleLayout from "./ArticleLayout";
 
 export default {
   title: "Components/Article/ArticleLayout",
