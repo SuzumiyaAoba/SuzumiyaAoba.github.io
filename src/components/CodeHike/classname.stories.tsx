@@ -1,0 +1,16 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { classname } from "./classname";
+
+export default {
+  title: "Components/classname",
+  component: classname,
+  parameters: {
+    layout: "centered",
+  },
+} satisfies Meta<typeof classname>;
+
+type Story = StoryObj<typeof classname>;
+
+export const Default: Story = {
+  args: {},
+};

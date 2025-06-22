@@ -1,0 +1,16 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { StylesheetLoader } from "./StylesheetLoader";
+
+export default {
+  title: "Components/StylesheetLoader",
+  component: StylesheetLoader,
+  parameters: {
+    layout: "centered",
+  },
+} satisfies Meta<typeof StylesheetLoader>;
+
+type Story = StoryObj<typeof StylesheetLoader>;
+
+export const Default: Story = {
+  args: {},
+};
