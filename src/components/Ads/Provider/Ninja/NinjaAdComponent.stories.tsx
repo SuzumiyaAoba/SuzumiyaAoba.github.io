@@ -9,5 +9,11 @@ export default {
 type Story = StoryObj<typeof NinjaAdComponent>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    adId: "1234567890",
+    adType: "banner",
+    width: 320,
+    height: 50,
+    description: "Sample Ninja Ad",
+  },
 };
