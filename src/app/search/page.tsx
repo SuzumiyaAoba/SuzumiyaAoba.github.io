@@ -20,7 +20,7 @@ function SearchLoading() {
 export default function SearchPage() {
   return (
     <>
-      <Script src="/pagefind-adapter.js" strategy="beforeInteractive" />
+      <Script src="/pagefind-adapter.js" strategy="afterInteractive" />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Search</h1>
         <Suspense fallback={<SearchLoading />}>
