@@ -4,9 +4,6 @@ import { Breadcrumb } from "./Breadcrumb";
 export default {
   title: "Components/Breadcrumb",
   component: Breadcrumb,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Breadcrumb>;
 
 type Story = StoryObj<typeof Breadcrumb>;

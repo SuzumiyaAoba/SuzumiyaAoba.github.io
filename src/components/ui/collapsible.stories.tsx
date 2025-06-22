@@ -4,9 +4,6 @@ import { collapsible } from "./collapsible";
 export default {
   title: "Components/collapsible",
   component: collapsible,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof collapsible>;
 
 type Story = StoryObj<typeof collapsible>;

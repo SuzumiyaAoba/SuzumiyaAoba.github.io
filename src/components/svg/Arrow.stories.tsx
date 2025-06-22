@@ -4,9 +4,6 @@ import { Arrow } from "./Arrow";
 export default {
   title: "Components/Arrow",
   component: Arrow,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Arrow>;
 
 type Story = StoryObj<typeof Arrow>;

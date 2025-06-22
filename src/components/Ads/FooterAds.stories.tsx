@@ -4,9 +4,6 @@ import { FooterAds } from "./FooterAds";
 export default {
   title: "Components/FooterAds",
   component: FooterAds,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof FooterAds>;
 
 type Story = StoryObj<typeof FooterAds>;

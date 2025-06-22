@@ -4,9 +4,6 @@ import { B1b4Row } from "./B1b4Row";
 export default {
   title: "Components/B1b4Row",
   component: B1b4Row,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof B1b4Row>;
 
 type Story = StoryObj<typeof B1b4Row>;

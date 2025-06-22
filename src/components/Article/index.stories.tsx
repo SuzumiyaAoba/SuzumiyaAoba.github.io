@@ -40,9 +40,6 @@ export default {
       control: { type: "boolean" },
     },
   },
-  parameters: {
-    layout: "fullscreen",
-  },
 } satisfies Meta<typeof Article>;
 
 type Story = StoryObj<typeof Article>;

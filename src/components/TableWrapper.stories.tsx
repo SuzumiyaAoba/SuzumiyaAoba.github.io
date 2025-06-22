@@ -5,9 +5,6 @@ import { TableWrapper } from "./TableWrapper";
 export default {
   title: "Components/TableWrapper",
   component: TableWrapper,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof TableWrapper>;
 
 type Story = StoryObj<typeof TableWrapper>;

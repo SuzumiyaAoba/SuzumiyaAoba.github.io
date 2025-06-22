@@ -4,9 +4,6 @@ import { code } from "./code";
 export default {
   title: "Components/code",
   component: code,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof code>;
 
 type Story = StoryObj<typeof code>;

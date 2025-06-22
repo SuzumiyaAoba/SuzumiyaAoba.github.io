@@ -5,9 +5,6 @@ import { Message } from "./Message";
 export default {
   title: "Components/Mdx/Message",
   component: Message,
-  parameters: {
-    layout: "centered",
-  },
   argTypes: {
     variant: {
       control: { type: "select" },
@@ -119,9 +116,6 @@ export const DarkTheme: Story = {
       </p>
     ),
   },
-  parameters: {
-    themes: { theme: "dark" },
-  },
 };
 
 export const DarkThemeSuccess: Story = {
@@ -129,9 +123,6 @@ export const DarkThemeSuccess: Story = {
     variant: "success",
     title: "ダークモードの成功メッセージ",
     children: <p>ダークモードでの成功メッセージの表示例です。</p>,
-  },
-  parameters: {
-    themes: { theme: "dark" },
   },
 };
 
@@ -141,9 +132,6 @@ export const DarkThemeWarning: Story = {
     title: "ダークモードの警告メッセージ",
     children: <p>ダークモードでの警告メッセージの表示例です。</p>,
   },
-  parameters: {
-    themes: { theme: "dark" },
-  },
 };
 
 export const DarkThemeError: Story = {
@@ -151,8 +139,5 @@ export const DarkThemeError: Story = {
     variant: "error",
     title: "ダークモードのエラーメッセージ",
     children: <p>ダークモードでのエラーメッセージの表示例です。</p>,
-  },
-  parameters: {
-    themes: { theme: "dark" },
   },
 };

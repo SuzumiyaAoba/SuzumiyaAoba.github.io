@@ -52,9 +52,6 @@ import { ${componentName} } from "${importPath}";
 export default {
   title: "Components/${componentName}",
   component: ${componentName},
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof ${componentName}>;
 
 type Story = StoryObj<typeof ${componentName}>;

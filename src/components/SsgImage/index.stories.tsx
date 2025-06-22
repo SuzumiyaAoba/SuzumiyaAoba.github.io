@@ -4,9 +4,6 @@ import { SsgImage } from "./index";
 export default {
   title: "Components/SsgImage",
   component: SsgImage,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof SsgImage>;
 
 type Story = StoryObj<typeof SsgImage>;

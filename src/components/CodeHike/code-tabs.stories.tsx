@@ -4,9 +4,6 @@ import { code-tabs } from "./code-tabs";
 export default {
   title: "Components/code-tabs",
   component: code-tabs,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof code-tabs>;
 
 type Story = StoryObj<typeof code-tabs>;

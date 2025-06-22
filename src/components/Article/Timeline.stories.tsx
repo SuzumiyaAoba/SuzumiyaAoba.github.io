@@ -4,9 +4,6 @@ import { Timeline } from "./Timeline";
 export default {
   title: "Components/Timeline",
   component: Timeline,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Timeline>;
 
 type Story = StoryObj<typeof Timeline>;

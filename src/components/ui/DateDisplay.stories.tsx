@@ -4,9 +4,6 @@ import { DateDisplay } from "./DateDisplay";
 export default {
   title: "Components/DateDisplay",
   component: DateDisplay,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof DateDisplay>;
 
 type Story = StoryObj<typeof DateDisplay>;

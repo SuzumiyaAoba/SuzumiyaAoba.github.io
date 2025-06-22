@@ -4,9 +4,6 @@ import { AdComponent } from "./AdComponent";
 export default {
   title: "Components/AdComponent",
   component: AdComponent,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof AdComponent>;
 
 type Story = StoryObj<typeof AdComponent>;

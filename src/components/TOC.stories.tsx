@@ -4,9 +4,6 @@ import { TOC } from "./TOC";
 export default {
   title: "Components/TOC",
   component: TOC,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof TOC>;
 
 type Story = StoryObj<typeof TOC>;

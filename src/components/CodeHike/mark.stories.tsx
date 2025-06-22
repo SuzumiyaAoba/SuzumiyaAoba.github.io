@@ -4,9 +4,6 @@ import { mark } from "./mark";
 export default {
   title: "Components/mark",
   component: mark,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof mark>;
 
 type Story = StoryObj<typeof mark>;

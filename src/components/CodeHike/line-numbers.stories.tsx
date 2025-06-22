@@ -4,9 +4,6 @@ import { line-numbers } from "./line-numbers";
 export default {
   title: "Components/line-numbers",
   component: line-numbers,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof line-numbers>;
 
 type Story = StoryObj<typeof line-numbers>;

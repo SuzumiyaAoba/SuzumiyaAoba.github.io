@@ -29,9 +29,6 @@ export default {
       options: ["top", "bottom"],
     },
   },
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Comments>;
 
 type Story = StoryObj<typeof Comments>;

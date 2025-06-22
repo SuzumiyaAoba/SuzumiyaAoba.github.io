@@ -4,9 +4,6 @@ import { language-icon } from "./language-icon";
 export default {
   title: "Components/language-icon",
   component: language-icon,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof language-icon>;
 
 type Story = StoryObj<typeof language-icon>;

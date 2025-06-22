@@ -4,9 +4,6 @@ import { SiteLogo } from "./SiteLogo";
 export default {
   title: "Components/SiteLogo",
   component: SiteLogo,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof SiteLogo>;
 
 type Story = StoryObj<typeof SiteLogo>;

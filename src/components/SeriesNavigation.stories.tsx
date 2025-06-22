@@ -4,9 +4,6 @@ import { SeriesNavigation } from "./SeriesNavigation";
 export default {
   title: "Components/SeriesNavigation",
   component: SeriesNavigation,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof SeriesNavigation>;
 
 type Story = StoryObj<typeof SeriesNavigation>;
