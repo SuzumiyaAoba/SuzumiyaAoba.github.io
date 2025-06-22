@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { callout } from "./callout";
 
 export default {
   title: "Components/CodeHike/callout",
-  component: callout,
-} satisfies Meta<typeof callout>;
+} satisfies Meta;
 
-type Story = StoryObj<typeof callout>;
+type Story = StoryObj;
 
 export const Default: Story = {
   args: {},

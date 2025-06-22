@@ -10,7 +10,7 @@ const sampleCodeblock = {
 
 const CodeDemo = () => (
   <pre className="p-4 bg-gray-100 rounded">
-    <code>console.log('Hello, Storybook!');</code>
+    <code>{`console.log('Hello, Storybook!');`}</code>
   </pre>
 );
 

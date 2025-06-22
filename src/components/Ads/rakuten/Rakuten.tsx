@@ -1,5 +1,5 @@
 import { KiddyFirst } from "./ads/KiddyFirst";
 
-export const Rankuten = () => {
+export const Rakuten = () => {
   return <KiddyFirst />;
 };

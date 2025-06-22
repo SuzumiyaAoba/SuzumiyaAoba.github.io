@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mark } from "./mark";
+// import { mark } from "./mark";
 
 export default {
   title: "Components/CodeHike/mark",
-  component: mark,
-} satisfies Meta<typeof mark>;
+} satisfies Meta;
 
-type Story = StoryObj<typeof mark>;
+type Story = StoryObj;
 
 export const Default: Story = {
   args: {},
