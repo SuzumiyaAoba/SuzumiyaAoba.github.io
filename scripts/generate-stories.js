@@ -20,7 +20,8 @@ function getComponentFiles(dir) {
       entry.isFile() &&
       entry.name.endsWith(".tsx") &&
       !entry.name.endsWith(".stories.tsx") &&
-      !entry.name.endsWith(".test.tsx")
+      !entry.name.endsWith(".test.tsx") &&
+      !entry.name.includes("-") // skip files with hyphen in name to avoid invalid identifiers or non-React exports
     ) {
       return [fullPath];
     }
