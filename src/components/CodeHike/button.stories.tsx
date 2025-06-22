@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { button } from "./button";
+import { CopyButton } from "./button";
 
 export default {
-  title: "Components/button",
-  component: button,
-} satisfies Meta<typeof button>;
+  title: "Components/CodeHike/CopyButton",
+  component: CopyButton,
+} satisfies Meta<typeof CopyButton>;
 
-type Story = StoryObj<typeof button>;
+type Story = StoryObj<typeof CopyButton>;
 
 export const Default: Story = {
   args: {},

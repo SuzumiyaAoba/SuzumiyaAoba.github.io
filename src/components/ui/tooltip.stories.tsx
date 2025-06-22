@@ -1,13 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { tooltip } from "./tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
 
 export default {
-  title: "Components/tooltip",
-  component: tooltip,
-} satisfies Meta<typeof tooltip>;
+  title: "Components/ui/Tooltip",
+  component: Tooltip,
+  render: () => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
+          Hover me
+        </TooltipTrigger>
+        <TooltipContent>Tooltip content</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ),
+} satisfies Meta<typeof Tooltip>;
 
-type Story = StoryObj<typeof tooltip>;
+type Story = StoryObj;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default: Story = {};

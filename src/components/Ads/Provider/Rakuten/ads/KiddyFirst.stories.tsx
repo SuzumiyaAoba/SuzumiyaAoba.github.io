@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { KiddyFirst } from "./KiddyFirst";
 
 export default {
-  title: "Components/KiddyFirst",
+  title: "Components/Ads/Provider/Rakuten/ads/KiddyFirst",
   component: KiddyFirst,
 } satisfies Meta<typeof KiddyFirst>;
 
