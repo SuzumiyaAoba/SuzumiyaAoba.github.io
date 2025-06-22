@@ -2,12 +2,14 @@ import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 import type { Meta, StoryObj } from "@storybook/react";
 
+const TabsComponent = (props: React.ComponentProps<typeof Tabs>) => <Tabs {...props} />;
+
 export default {
   title: "Components/Ui/Tabs",
-  component: Tabs,
-} satisfies Meta<typeof Tabs>;
+  component: TabsComponent,
+} satisfies Meta<typeof TabsComponent>;
 
-type Story = StoryObj<typeof Tabs>;
+type Story = StoryObj<typeof TabsComponent>;
 
 export const Default: Story = {
   render: () => (
