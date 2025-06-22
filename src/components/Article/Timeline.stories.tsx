@@ -19,13 +19,13 @@ const samplePosts = [
   {
     _path: "sample-post-2",
     title: "技術記事を書く",
-    date: parseISO("2025-05-15"),
+    date: parseISO("2025-06-15"),
     tags: ["TypeScript"],
   },
   {
     _path: "sample-post-3",
     title: "Scala 再入門",
-    date: parseISO("2024-12-19"),
+    date: parseISO("2025-06-20"),
     tags: ["Scala", "Cats"],
   },
 ] as any; // casting for storybook mock
