@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { collapsible } from "./collapsible";
 
 export default {
-  title: "Components/collapsible",
+  title: "Components/Ui/collapsible",
   component: collapsible,
 } satisfies Meta<typeof collapsible>;
 

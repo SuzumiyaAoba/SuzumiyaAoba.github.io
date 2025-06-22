@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { HamburgerIcon } from "./HamburgerIcon";
 
 export default {
-  title: "Components/HamburgerIcon",
+  title: "Components/Header/HamburgerIcon",
   component: HamburgerIcon,
 } satisfies Meta<typeof HamburgerIcon>;
 

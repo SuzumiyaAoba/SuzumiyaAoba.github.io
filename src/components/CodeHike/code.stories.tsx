@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { code } from "./code";
 
 export default {
-  title: "Components/code",
+  title: "Components/CodeHike/code",
   component: code,
 } satisfies Meta<typeof code>;
 

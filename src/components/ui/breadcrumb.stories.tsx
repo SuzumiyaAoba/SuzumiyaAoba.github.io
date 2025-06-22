@@ -2,7 +2,7 @@ import { Breadcrumb } from "./breadcrumb";
 import type { Meta, StoryObj } from "@storybook/react";
 
 export default {
-  title: "Components/ui/Breadcrumb",
+  title: "Components/Ui/breadcrumb",
   component: Breadcrumb,
 } satisfies Meta<typeof Breadcrumb>;
 

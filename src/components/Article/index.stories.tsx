@@ -27,7 +27,7 @@ const sampleContent = (
 );
 
 export default {
-  title: "Components/Article",
+  title: "Components/Article/Article",
   component: Article,
   argTypes: {
     showComments: {

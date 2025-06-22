@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ThemeToggle } from "./index";
 
 export default {
-  title: "Components/ThemeToggle",
+  title: "Components/ThemeToggle/ThemeToggle",
   component: ThemeToggle,
 } satisfies Meta<typeof ThemeToggle>;
 

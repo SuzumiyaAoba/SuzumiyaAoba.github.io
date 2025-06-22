@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SearchComponent } from "./SearchComponent";
 
 export default {
-  title: "Components/SearchComponent",
+  title: "Components/Search/SearchComponent",
   component: SearchComponent,
 } satisfies Meta<typeof SearchComponent>;
 

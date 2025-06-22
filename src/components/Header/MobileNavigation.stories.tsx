@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { MobileNavigation } from "./MobileNavigation";
 
 export default {
-  title: "Components/MobileNavigation",
+  title: "Components/Header/MobileNavigation",
   component: MobileNavigation,
 } satisfies Meta<typeof MobileNavigation>;
 

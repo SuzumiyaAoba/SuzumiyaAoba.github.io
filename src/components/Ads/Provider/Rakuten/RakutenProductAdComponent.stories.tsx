@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { RakutenProductAdComponent } from "./RakutenProductAdComponent";
 
 export default {
-  title: "Components/RakutenProductAdComponent",
+  title: "Components/Ads/Provider/Rakuten/RakutenProductAdComponent",
   component: RakutenProductAdComponent,
 } satisfies Meta<typeof RakutenProductAdComponent>;
 

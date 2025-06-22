@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Provider } from "./Provider";
 
 export default {
-  title: "Components/Provider",
+  title: "Components/ThemeToggle/Provider",
   component: Provider,
 } satisfies Meta<typeof Provider>;
 

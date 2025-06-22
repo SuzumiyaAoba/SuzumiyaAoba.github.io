@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AsciiInfo } from "./AsciiInfo";
 
 export default {
-  title: "Components/AsciiInfo",
+  title: "Components/Svg/AsciiInfo",
   component: AsciiInfo,
 } satisfies Meta<typeof AsciiInfo>;
 

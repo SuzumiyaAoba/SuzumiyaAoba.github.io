@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SeoImage } from "./index";
 
 export default {
-  title: "Components/SeoImage",
+  title: "Components/SeoImage/SeoImage",
   component: SeoImage,
 } satisfies Meta<typeof SeoImage>;
 

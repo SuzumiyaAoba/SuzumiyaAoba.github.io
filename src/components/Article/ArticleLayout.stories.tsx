@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ArticleLayout } from "./ArticleLayout";
 
 export default {
-  title: "Components/ArticleLayout",
+  title: "Components/Article/ArticleLayout",
   component: ArticleLayout,
 } satisfies Meta<typeof ArticleLayout>;
 

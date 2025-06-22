@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TwitterShareButton } from "./TwitterShareButton";
 
 export default {
-  title: "Components/TwitterShareButton",
+  title: "Components/Share/TwitterShareButton",
   component: TwitterShareButton,
 } satisfies Meta<typeof TwitterShareButton>;
 

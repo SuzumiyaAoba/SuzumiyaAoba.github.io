@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AuthorInfo } from "./index";
 
 export default {
-  title: "Components/AuthorInfo",
+  title: "Components/AuthorInfo/AuthorInfo",
   component: AuthorInfo,
 } satisfies Meta<typeof AuthorInfo>;
 

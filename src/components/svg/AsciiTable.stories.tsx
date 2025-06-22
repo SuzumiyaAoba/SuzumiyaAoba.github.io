@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AsciiTable } from "./AsciiTable";
 
 export default {
-  title: "Components/AsciiTable",
+  title: "Components/Svg/AsciiTable",
   component: AsciiTable,
 } satisfies Meta<typeof AsciiTable>;
 

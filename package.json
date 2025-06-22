@@ -23,7 +23,8 @@
     "updates": "npx npm-check-updates",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:stories": "node scripts/generate-stories.js"
+    "generate:stories": "node scripts/generate-stories.js",
+    "stories:retitle": "node scripts/retitle-stories.js"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.5",

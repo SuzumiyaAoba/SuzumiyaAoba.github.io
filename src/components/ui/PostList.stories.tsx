@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PostList } from "./PostList";
 
 export default {
-  title: "Components/PostList",
+  title: "Components/Ui/PostList",
   component: PostList,
 } satisfies Meta<typeof PostList>;
 

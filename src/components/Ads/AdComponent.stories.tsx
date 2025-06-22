@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { AdComponent } from "./AdComponent";
 
 export default {
-  title: "Components/AdComponent",
+  title: "Components/Ads/AdComponent",
   component: AdComponent,
 } satisfies Meta<typeof AdComponent>;
 

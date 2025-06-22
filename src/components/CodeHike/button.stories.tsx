@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { CopyButton } from "./button";
 
 export default {
-  title: "Components/CodeHike/CopyButton",
+  title: "Components/CodeHike/button",
   component: CopyButton,
 } satisfies Meta<typeof CopyButton>;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { diff } from "./diff";
 
 export default {
-  title: "Components/diff",
+  title: "Components/CodeHike/diff",
   component: diff,
 } satisfies Meta<typeof diff>;
 

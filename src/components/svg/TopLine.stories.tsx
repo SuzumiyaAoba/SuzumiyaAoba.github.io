@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TopLine } from "./TopLine";
 
 export default {
-  title: "Components/TopLine",
+  title: "Components/Svg/TopLine",
   component: TopLine,
 } satisfies Meta<typeof TopLine>;
 

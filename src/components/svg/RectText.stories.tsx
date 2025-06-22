@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { RectText } from "./RectText";
 
 export default {
-  title: "Components/RectText",
+  title: "Components/Svg/RectText",
   component: RectText,
 } satisfies Meta<typeof RectText>;
 

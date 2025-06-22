@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { GitHubCodeLink } from "./GitHubCodeLink";
 
 export default {
-  title: "Components/GitHubCodeLink",
+  title: "Components/Mdx/GitHubCodeLink",
   component: GitHubCodeLink,
 } satisfies Meta<typeof GitHubCodeLink>;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
 
 export default {
-  title: "Components/ui/Tooltip",
+  title: "Components/Ui/tooltip",
   component: Tooltip,
   render: () => (
     <TooltipProvider>

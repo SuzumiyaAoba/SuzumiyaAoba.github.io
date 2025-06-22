@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ThemeTest } from "./ThemeTest";
 
 export default {
-  title: "Components/ThemeTest",
+  title: "Components/Ui/ThemeTest",
   component: ThemeTest,
 } satisfies Meta<typeof ThemeTest>;
 

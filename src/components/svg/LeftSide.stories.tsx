@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LeftSide } from "./LeftSide";
 
 export default {
-  title: "Components/LeftSide",
+  title: "Components/Svg/LeftSide",
   component: LeftSide,
 } satisfies Meta<typeof LeftSide>;
 

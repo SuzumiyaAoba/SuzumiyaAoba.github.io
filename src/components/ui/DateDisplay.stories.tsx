@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { DateDisplay } from "./DateDisplay";
 
 export default {
-  title: "Components/DateDisplay",
+  title: "Components/Ui/DateDisplay",
   component: DateDisplay,
 } satisfies Meta<typeof DateDisplay>;
 

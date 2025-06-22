@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FooterAds } from "./FooterAds";
 
 export default {
-  title: "Components/FooterAds",
+  title: "Components/Ads/FooterAds",
   component: FooterAds,
 } satisfies Meta<typeof FooterAds>;
 

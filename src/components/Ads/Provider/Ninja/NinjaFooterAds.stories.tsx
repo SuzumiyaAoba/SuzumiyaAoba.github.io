@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { NinjaFooterAds } from "./NinjaFooterAds";
 
 export default {
-  title: "Components/NinjaFooterAds",
+  title: "Components/Ads/Provider/Ninja/NinjaFooterAds",
   component: NinjaFooterAds,
 } satisfies Meta<typeof NinjaFooterAds>;
 

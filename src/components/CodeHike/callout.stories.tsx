@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { callout } from "./callout";
 
 export default {
-  title: "Components/callout",
+  title: "Components/CodeHike/callout",
   component: callout,
 } satisfies Meta<typeof callout>;
 

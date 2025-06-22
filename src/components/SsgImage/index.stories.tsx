@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SsgImage } from "./index";
 
 export default {
-  title: "Components/SsgImage",
+  title: "Components/SsgImage/SsgImage",
   component: SsgImage,
 } satisfies Meta<typeof SsgImage>;
 

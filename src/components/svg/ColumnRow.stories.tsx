@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ColumnRow } from "./ColumnRow";
 
 export default {
-  title: "Components/ColumnRow",
+  title: "Components/Svg/ColumnRow",
   component: ColumnRow,
 } satisfies Meta<typeof ColumnRow>;
 

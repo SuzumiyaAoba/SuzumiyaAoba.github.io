@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SiteLogo } from "./SiteLogo";
 
 export default {
-  title: "Components/SiteLogo",
+  title: "Components/Header/SiteLogo",
   component: SiteLogo,
 } satisfies Meta<typeof SiteLogo>;
 

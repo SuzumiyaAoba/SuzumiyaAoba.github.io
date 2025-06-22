@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { footnote } from "./footnote";
 
 export default {
-  title: "Components/footnote",
+  title: "Components/CodeHike/footnote",
   component: footnote,
 } satisfies Meta<typeof footnote>;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { HatenaButton } from "./HatenaButton";
 
 export default {
-  title: "Components/HatenaButton",
+  title: "Components/Share/HatenaButton",
   component: HatenaButton,
 } satisfies Meta<typeof HatenaButton>;
 

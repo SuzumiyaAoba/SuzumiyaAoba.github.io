@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { DesktopNavigation } from "./DesktopNavigation";
 
 export default {
-  title: "Components/DesktopNavigation",
+  title: "Components/Header/DesktopNavigation",
   component: DesktopNavigation,
 } satisfies Meta<typeof DesktopNavigation>;
 
