@@ -1,13 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Provider } from "./Provider";
+import { ThemeProvider } from "./Provider";
+
+const SampleContent = () => (
+  <div style={{ padding: "1rem" }}>
+    <p>テーマを切り替えてみてください。</p>
+  </div>
+);
 
 export default {
   title: "Components/ThemeToggle/Provider",
-  component: Provider,
-} satisfies Meta<typeof Provider>;
+  component: ThemeProvider,
+} satisfies Meta<typeof ThemeProvider>;
 
-type Story = StoryObj<typeof Provider>;
+type Story = StoryObj<typeof ThemeProvider>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    children: <SampleContent />,
+  },
 };
