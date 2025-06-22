@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SearchComponent } from "./SearchComponent";
+import SearchComponent from "./SearchComponent";
 
 export default {
   title: "Components/Search/SearchComponent",
