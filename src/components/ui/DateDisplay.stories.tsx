@@ -9,5 +9,7 @@ export default {
 type Story = StoryObj<typeof DateDisplay>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    date: new Date(),
+  },
 };
