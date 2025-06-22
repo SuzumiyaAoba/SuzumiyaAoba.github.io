@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "npm run clean && npm run pagefind:dev && run-p next:dev tsm",
     "next:dev": "next dev",
-    "build": "run-s clean copy:assets build:next build:pagefind",
+    "build": "run-s clean copy:assets build:next build:pagefind fix:pagefind",
     "build:next": "NODE_ENV=production next build",
     "build:pagefind": "pagefind --site out --output-path out/pagefind",
+    "fix:pagefind": "node scripts/fix-pagefind-path.js",
     "pagefind:dev": "node scripts/pagefind-dev.js",
     "clean": "rimraf .next out",
     "copy:assets": "run-p copy:blog:images copy:blog:css copy:notes:images",

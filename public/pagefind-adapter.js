@@ -15,20 +15,40 @@ async function loadPagefind() {
 
   try {
     console.log("Loading pagefind...");
+    console.log("Environment:", {
+      prod: process.env.NODE_ENV === "production",
+      location: window.location.origin,
+    });
 
     // webpackIgnoreを使ってパスをそのままにする
     window.pagefind = await import(
       /* webpackIgnore: true */ "/pagefind/pagefind.js"
     );
 
-    console.log("Pagefind loaded successfully");
+    console.log("Pagefind loaded successfully", window.pagefind);
     window.__pagefind_loaded = true;
 
     // 初期化完了イベントを発火
     window.dispatchEvent(new CustomEvent("pagefind:initialized"));
   } catch (error) {
     console.error("Failed to load pagefind:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+    
+    // 本番環境での詳細なエラー情報
+    if (typeof error === 'object' && error !== null) {
+      console.error("Error object:", JSON.stringify(error, null, 2));
+    }
+    
     window.__pagefind_loading = false;
+    
+    // エラーイベントも発火
+    window.dispatchEvent(new CustomEvent("pagefind:error", {
+      detail: { error: error.message || "Unknown error" }
+    }));
   }
 }
 

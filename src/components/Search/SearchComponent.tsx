@@ -115,14 +115,25 @@ export default function SearchComponent() {
     function handlePagefindInitialized() {
       console.log("Pagefind initialized event received");
       setPagefindLoaded(true);
+      setPagefindError(null);
       if (initialQuery) {
         performSearch(initialQuery);
       }
     }
 
+    // pagefind:errorイベントのハンドラを登録
+    function handlePagefindError(event: CustomEvent) {
+      console.error("Pagefind error event received:", event.detail);
+      setPagefindError(
+        `検索エンジンの読み込みに失敗しました: ${event.detail?.error || "不明なエラー"}`
+      );
+    }
+
     // 既に初期化済みの場合
     if (window.__pagefind_loaded) {
+      console.log("Pagefind already loaded");
       setPagefindLoaded(true);
+      setPagefindError(null);
       if (initialQuery) {
         performSearch(initialQuery);
       }
@@ -131,28 +142,17 @@ export default function SearchComponent() {
 
     // 初期化イベントのリスナーを設定
     window.addEventListener("pagefind:initialized", handlePagefindInitialized);
+    window.addEventListener("pagefind:error", handlePagefindError as EventListener);
 
-    // スクリプトはページレベルで <Script> を使って注入されるため、ここでのフォールバックは不要
-    // if (!document.querySelector('script[src="/pagefind-adapter.js"]')) {
-    //   try {
-    //     console.log("Loading pagefind adapter...");
-    //     const script = document.createElement("script");
-    //     script.src = "/pagefind-adapter.js";
-    //     script.async = true;
-    //     script.onerror = (e) => {
-    //       console.error("Failed to load pagefind adapter script", e);
-    //       setPagefindError(
-    //         "検索インデックスの読み込みに失敗しました。ページを更新してください。"
-    //       );
-    //     };
-    //     document.head.appendChild(script);
-    //   } catch (error) {
-    //     console.error("Failed to load pagefind adapter", error);
-    //     setPagefindError(
-    //       "検索インデックスの読み込みに失敗しました。ページを更新してください。"
-    //     );
-    //   }
-    // }
+    // 一定時間後にタイムアウト処理
+    const timeoutId = setTimeout(() => {
+      if (!window.__pagefind_loaded && !window.__pagefind_loading) {
+        console.error("Pagefind loading timeout");
+        setPagefindError(
+          "検索エンジンの読み込みがタイムアウトしました。ページを更新してください。"
+        );
+      }
+    }, 10000); // 10秒でタイムアウト
 
     // クリーンアップ関数
     return () => {
@@ -160,6 +160,8 @@ export default function SearchComponent() {
         "pagefind:initialized",
         handlePagefindInitialized
       );
+      window.removeEventListener("pagefind:error", handlePagefindError as EventListener);
+      clearTimeout(timeoutId);
     };
   }, [initialQuery, performSearch]);
 
