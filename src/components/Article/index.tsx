@@ -54,7 +54,10 @@ export function Article({
 
   return (
     <div className="max-w-6xl w-full mx-auto px-4 pb-16 relative xl:max-w-7xl">
-      <article className={cn(markdownStyles.markdown, className)}>
+      <article
+        className={cn(markdownStyles.markdown, className)}
+        data-pagefind-body
+      >
         {/* JSON-LD 構造化データ */}
         <Script
           id="json-ld"
@@ -64,7 +67,9 @@ export function Article({
 
         {/* タイトルと記事メタデータ */}
         <div className="mb-8">
-          <h1 className="mb-8 text-center">{title}</h1>
+          <h1 className="mb-8 text-center" data-pagefind-meta="title">
+            {title}
+          </h1>
 
           <div className="flex mt-2 mb-2 justify-center items-center">
             <span className="i-ic-outline-sync mr-0.5" />
