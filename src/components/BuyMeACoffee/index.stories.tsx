@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BuyMeACoffee } from "./index";
+import BuyMeACoffee from "./index";
 
 export default {
-  title: "Components/BuyMeACoffee/BuyMeACoffee",
+  title: "Components/BuyMeACoffee",
   component: BuyMeACoffee,
 } satisfies Meta<typeof BuyMeACoffee>;
 
