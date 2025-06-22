@@ -8,6 +8,12 @@ export default {
 
 type Story = StoryObj<typeof StylesheetLoader>;
 
+const dummyArgs = {
+  stylesheets: [], // Storybook では実際にロードしない
+  basePath: "blog",
+  slug: "sample-post",
+};
+
 export const Default: Story = {
-  args: {},
+  args: dummyArgs,
 };
