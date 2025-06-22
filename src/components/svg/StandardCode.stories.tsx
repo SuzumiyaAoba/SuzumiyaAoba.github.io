@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { StandardCode } from "./StandardCode";
+import StandardCode from "./StandardCode";
 
 export default {
   title: "Components/Svg/StandardCode",
