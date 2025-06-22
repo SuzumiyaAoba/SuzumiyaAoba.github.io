@@ -15,8 +15,13 @@ async function loadPagefind() {
 
   try {
     console.log("Loading pagefind...");
+    // Node.js 環境変数 `process.env.NODE_ENV` はブラウザでは存在しないため、
+    // ガードを挟んで参照する
+    const isProd = typeof process !== "undefined" &&
+      process?.env?.NODE_ENV === "production";
+
     console.log("Environment:", {
-      prod: process.env.NODE_ENV === "production",
+      prod: isProd,
       location: window.location.origin,
     });
 
