@@ -4,9 +4,41 @@ import { notFound } from "next/navigation";
 import config from "@/config";
 import { getAllSeries, getSeriesPosts } from "@/libs/contents/series";
 import { Tag } from "@/components/Tag";
-import { Book, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
+
+// カスタムSVGアイコン
+const BookIcon = ({ size = 24, ...props }: { size?: number; [key: string]: any }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2"
+    {...props}
+  >
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+  </svg>
+);
+
+const CalendarIcon = ({ size = 14, ...props }: { size?: number; [key: string]: any }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2"
+    {...props}
+  >
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
 
 type Props = {
   params: Promise<{ series: string }>;
@@ -42,20 +74,41 @@ export default async function SeriesDetailPage({ params }: Props) {
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <Book size={24} className="text-blue-600 dark:text-blue-400" />
-          <h1 className="text-3xl font-bold">{seriesName}</h1>
+          <BookIcon 
+            size={24} 
+            style={{ color: "var(--accent-primary)" }} 
+          />
+          <h1 
+            className="text-3xl font-bold"
+            style={{ color: "var(--foreground)" }}
+          >
+            {seriesName}
+          </h1>
         </div>
         
-        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+        <div 
+          className="flex items-center gap-2"
+          style={{ color: "var(--muted)" }}
+        >
           <span>{seriesPosts.length} 記事</span>
         </div>
       </div>
 
       <div className="space-y-6">
         {seriesPosts.map((post, index) => (
-          <article key={post.slug} className="border rounded-lg p-6 bg-white dark:bg-gray-800">
+          <article 
+            key={post.slug} 
+            className="border rounded-lg p-6"
+            style={{
+              backgroundColor: "var(--background)",
+              borderColor: "var(--border)",
+            }}
+          >
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 dark:bg-blue-400 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+              <div 
+                className="flex-shrink-0 w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{ backgroundColor: "var(--accent-primary)" }}
+              >
                 {index + 1}
               </div>
               
@@ -63,15 +116,22 @@ export default async function SeriesDetailPage({ params }: Props) {
                 <h2 className="text-xl font-semibold mb-2">
                   <Link
                     href={`/blog/post/${post.slug}`}
-                    className="hover:text-blue-600 dark:hover:text-blue-400 hover:underline"
+                    className="hover:underline transition-colors duration-200"
+                    style={{ 
+                      color: "var(--foreground)",
+                      textDecorationColor: "var(--accent-primary)"
+                    }}
                   >
                     {post.frontmatter.title}
                   </Link>
                 </h2>
 
-                <div className="flex items-center gap-4 mb-3 text-sm text-gray-600 dark:text-gray-400">
+                <div 
+                  className="flex items-center gap-4 mb-3 text-sm"
+                  style={{ color: "var(--muted)" }}
+                >
                   <div className="flex items-center gap-1">
-                    <Calendar size={14} />
+                    <CalendarIcon size={14} style={{ color: "currentColor" }} />
                     <span>
                       {format(new Date(post.frontmatter.date), "yyyy年M月d日", { locale: ja })}
                     </span>
@@ -91,14 +151,18 @@ export default async function SeriesDetailPage({ params }: Props) {
                 )}
 
                 {post.frontmatter.description && (
-                  <p className="text-gray-700 dark:text-gray-300 mb-3">
+                  <p 
+                    className="mb-3"
+                    style={{ color: "var(--muted)" }}
+                  >
                     {post.frontmatter.description}
                   </p>
                 )}
 
                 <Link
                   href={`/blog/post/${post.slug}`}
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline text-sm"
+                  className="inline-flex items-center hover:underline text-sm transition-colors duration-200"
+                  style={{ color: "var(--accent-primary)" }}
                 >
                   記事を読む →
                 </Link>
@@ -111,7 +175,8 @@ export default async function SeriesDetailPage({ params }: Props) {
       <div className="mt-8">
         <Link
           href="/series"
-          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+          className="hover:underline transition-colors duration-200"
+          style={{ color: "var(--accent-primary)" }}
         >
           ← すべてのシリーズを見る
         </Link>
