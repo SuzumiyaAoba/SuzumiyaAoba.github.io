@@ -569,3 +569,64 @@ div[data-ch-line] * {
   transition: transform 0.3s ease;
   display: inline-block;
 }
+
+/* 脚注のスタイル - sr-onlyクラスを無効化してFootnotesの見出しを表示 */
+.footnotes .sr-only,
+.footnotes #footnote-label,
+.footnotes h2.sr-only {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 0 1rem 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  white-space: normal !important;
+  border: 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  cursor: pointer !important;
+}
+
+/* 脚注見出しのマークダウンスタイル */
+.footnotes .sr-only:before,
+.footnotes #footnote-label:before,
+.footnotes h2.sr-only:before {
+  content: "## ";
+  color: var(--muted);
+}
+
+.footnotes .sr-only:hover:before,
+.footnotes #footnote-label:hover:before,
+.footnotes h2.sr-only:hover:before {
+  color: var(--accent-primary);
+}
+
+@media (width >= 768px) {
+  .footnotes .sr-only:before,
+  .footnotes #footnote-label:before,
+  .footnotes h2.sr-only:before {
+    content: "##";
+    margin-left: -1.75rem;
+    margin-right: 0.5rem;
+  }
+}
+
+/* 脚注セクション全体のスタイル */
+.footnotes {
+  margin-top: 3rem;
+}
+
+.footnotes ol {
+  list-style: decimal;
+  padding-left: 2.5rem;
+}
+
+.footnotes ol li {
+  margin: 0.5rem 0;
+  color: var(--foreground);
+}

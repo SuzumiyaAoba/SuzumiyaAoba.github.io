@@ -320,6 +320,55 @@
       @apply leading-none;
     }
   }
+
+  // 脚注のスタイル
+  .footnotes {
+    margin-top: 3rem;
+    
+    #footnote-label {
+      // sr-onlyクラスを無効化して見出しを表示
+      position: static !important;
+      width: auto !important;
+      height: auto !important;
+      padding: 0 !important;
+      margin: 0 0 1rem 0 !important;
+      overflow: visible !important;
+      clip: auto !important;
+      white-space: normal !important;
+      
+      // 見出し2のスタイルを適用
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--foreground);
+      
+      &:before {
+        content: "## ";
+        color: var(--muted);
+      }
+      
+      &:hover:before {
+        color: var(--accent-primary);
+      }
+      
+      @media (width >= 768px) {
+        &:before {
+          content: "##";
+          margin-left: -1.75rem;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+    
+    ol {
+      @apply list-decimal;
+      padding-left: 2.5rem;
+      
+      li {
+        @apply my-2;
+        color: var(--foreground);
+      }
+    }
+  }
 }
 
 .tocWrapper {
@@ -549,4 +598,6 @@
     transform: translateX(0);
   }
 }
+
+
 
