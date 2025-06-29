@@ -1,44 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Icon } from "@iconify/react";
 import config from "@/config";
 import { getAllSeries, getSeriesPosts } from "@/libs/contents/series";
 import { Tag } from "@/components/Tag";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-
-// カスタムSVGアイコン
-const BookIcon = ({ size = 24, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
-);
-
-const CalendarIcon = ({ size = 14, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
 
 type Props = {
   params: Promise<{ series: string }>;
@@ -74,8 +42,10 @@ export default async function SeriesDetailPage({ params }: Props) {
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <BookIcon 
-            size={24} 
+          <Icon 
+            icon="lucide:book-open"
+            width={24}
+            height={24}
             style={{ color: "var(--accent-primary)" }} 
           />
           <h1 
@@ -131,7 +101,7 @@ export default async function SeriesDetailPage({ params }: Props) {
                   style={{ color: "var(--muted)" }}
                 >
                   <div className="flex items-center gap-1">
-                    <CalendarIcon size={14} style={{ color: "currentColor" }} />
+                    <Icon icon="lucide:calendar" width={14} height={14} style={{ color: "currentColor" }} />
                     <span>
                       {format(new Date(post.frontmatter.date), "yyyy年M月d日", { locale: ja })}
                     </span>

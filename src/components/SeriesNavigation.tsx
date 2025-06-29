@@ -1,49 +1,6 @@
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 import type { SeriesPost } from "@/libs/contents/series";
-
-// カスタムSVGアイコン
-const BookIcon = ({ size = 20, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
-);
-
-const ChevronLeftIcon = ({ size = 16, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <polyline points="15,18 9,12 15,6" />
-  </svg>
-);
-
-const ChevronRightIcon = ({ size = 16, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <polyline points="9,18 15,12 9,6" />
-  </svg>
-);
 
 interface SeriesNavigationProps {
   seriesName: string;
@@ -71,7 +28,7 @@ export function SeriesNavigation({
       }}
     >
       <div className="flex items-center gap-2 mb-4">
-        <BookIcon size={20} style={{ color: "currentColor" }} />
+        <Icon icon="lucide:book-open" width={20} height={20} style={{ color: "currentColor" }} />
         <div 
           className="text-lg font-semibold"
           style={{ color: "var(--foreground)" }}
@@ -94,7 +51,7 @@ export function SeriesNavigation({
             className="flex items-center gap-2 text-sm hover:underline transition-colors duration-200"
             style={{ color: "var(--accent-primary)" }}
           >
-            <ChevronLeftIcon size={16} style={{ color: "currentColor" }} />
+            <Icon icon="lucide:chevron-left" width={16} height={16} style={{ color: "currentColor" }} />
             <span>前の記事: {previous.frontmatter.title}</span>
           </Link>
         ) : (
@@ -113,7 +70,7 @@ export function SeriesNavigation({
             style={{ color: "var(--accent-primary)" }}
           >
             <span>次の記事: {next.frontmatter.title}</span>
-            <ChevronRightIcon size={16} style={{ color: "currentColor" }} />
+            <Icon icon="lucide:chevron-right" width={16} height={16} style={{ color: "currentColor" }} />
           </Link>
         ) : (
           <div 
