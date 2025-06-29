@@ -1,55 +1,7 @@
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
+import { Icon } from "@iconify/react";
 import { GitCommit } from "@/libs/git-history";
-
-// プロパティを受け取るSVGアイコン
-const CalendarIcon = ({ size = 20, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
-
-const GitIcon = ({ size = 16, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <circle cx="12" cy="12" r="4" />
-    <line x1="1.05" y1="12" x2="7" y2="12" />
-    <line x1="17.01" y1="12" x2="22.96" y2="12" />
-  </svg>
-);
-
-const UserIcon = ({ size = 12, ...props }: { size?: number; [key: string]: any }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2"
-    {...props}
-  >
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
-  </svg>
-);
 
 interface ArticleHistoryProps {
   history: GitCommit[];
@@ -82,7 +34,7 @@ export function ArticleHistory({
         className="flex items-center gap-2 text-lg font-semibold p-4 cursor-pointer rounded-t-lg transition-colors duration-200 hover:opacity-80"
         style={{ color: "var(--foreground)" }}
       >
-        <CalendarIcon size={20} style={{ color: "currentColor" }} />
+        <Icon icon="lucide:calendar" width={20} height={20} style={{ color: "currentColor" }} />
         記事履歴
       </summary>
       <div className="p-4 pt-0">
@@ -129,8 +81,10 @@ export function ArticleHistory({
                     borderColor: "var(--border)",
                   }}
                 >
-                  <GitIcon 
-                    size={16} 
+                  <Icon 
+                    icon="octicon:git-commit-16" 
+                    width={16} 
+                    height={16}
                     className="mt-0.5" 
                     style={{ color: "var(--muted)" }}
                   />
@@ -146,7 +100,7 @@ export function ArticleHistory({
                       style={{ color: "var(--muted)" }}
                     >
                       <span className="flex items-center gap-1">
-                        <UserIcon size={12} style={{ color: "currentColor" }} />
+                        <Icon icon="lucide:user" width={12} height={12} style={{ color: "currentColor" }} />
                         {commit.author}
                       </span>
                       <span>
