@@ -381,6 +381,8 @@ body {
   color: var(--foreground);
   transition: background-color var(--transition-duration) ease-in-out,
     color var(--transition-duration) ease-in-out;
+  /* スクロールバーのレイアウトシフトを防ぐ */
+  scrollbar-gutter: stable;
 }
 
 /* カスタムスクロールバー */
