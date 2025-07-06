@@ -180,11 +180,9 @@ export const D3Graph: React.FC<D3GraphProps> = ({
   // コンポーネントのマウント状態を管理
   useEffect(() => {
     isMountedRef.current = true;
-    console.log('D3Graph - コンポーネントマウント');
     
     return () => {
       isMountedRef.current = false;
-      console.log('D3Graph - コンポーネントアンマウント');
     };
   }, []);
 
@@ -194,8 +192,6 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       if (!data) {
         throw new Error('データが提供されていません');
       }
-
-      console.log('D3Graph - データ受信:', data);
 
       const nodes: DotNode[] = data.nodes.map(node => ({
         id: node.id,
@@ -218,10 +214,8 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       }));
 
       const result = { nodes, edges };
-      console.log('D3Graph - データ変換結果:', result);
       return result;
     } catch (err) {
-      console.error('D3Graph - エラー:', err);
       setError(err instanceof Error ? err.message : String(err));
       return { nodes: [], edges: [] };
     }
@@ -229,52 +223,28 @@ export const D3Graph: React.FC<D3GraphProps> = ({
 
   // 木構造かどうかを判定
   const isTree = useMemo(() => {
-    const result = isTreeStructure(parsedData.nodes, parsedData.edges);
-    console.log('D3Graph - 木構造判定:', result, {
-      nodesCount: parsedData.nodes.length,
-      edgesCount: parsedData.edges.length
-    });
-    return result;
+    return isTreeStructure(parsedData.nodes, parsedData.edges);
   }, [parsedData]);
 
   // 階層データを作成
   const hierarchy = useMemo(() => {
     if (!isTree) {
-      console.log('D3Graph - 木構造ではないため階層データを作成しません');
       return null;
     }
-    const result = createHierarchy(parsedData.nodes, parsedData.edges);
-    console.log('D3Graph - 階層データ作成:', result);
-    return result;
+    return createHierarchy(parsedData.nodes, parsedData.edges);
   }, [parsedData, isTree]);
 
   // グラフの描画
   const renderGraph = useCallback(() => {
-    console.log('D3Graph - 描画条件チェック:', {
-      hasContainer: !!containerRef.current,
-      isClient,
-      isMounted: isMountedRef.current,
-      containerRef: containerRef.current,
-      data: parsedData
-    });
-    
     if (!containerRef.current || !isClient || !isMountedRef.current) {
-      console.log('D3Graph - 描画スキップ:', {
-        hasContainer: !!containerRef.current,
-        isClient,
-        isMounted: isMountedRef.current
-      });
       return;
     }
 
     try {
-      console.log('D3Graph - グラフ描画開始');
-      
       // 既存のSVGをクリア
       d3.select(containerRef.current).selectAll('*').remove();
 
       if (parsedData.nodes.length === 0) {
-        console.log('D3Graph - ノードが空のため描画をスキップ');
         return;
       }
 
@@ -283,8 +253,6 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       const graphWidth = containerRect.width;
       const graphHeight = containerRect.height;
 
-      console.log('D3Graph - コンテナサイズ:', { graphWidth, graphHeight });
-
       // SVGを作成
       const svg = d3.select(container)
         .append('svg')
@@ -292,11 +260,9 @@ export const D3Graph: React.FC<D3GraphProps> = ({
         .attr('height', graphHeight);
 
       if (isTree && hierarchy) {
-        console.log('D3Graph - 木構造レイアウトで描画');
         // 木構造の場合は階層レイアウトを使用
         renderTreeLayout(svg, hierarchy, graphWidth, graphHeight);
       } else {
-        console.log('D3Graph - フォースレイアウトで描画');
         // 一般グラフの場合はフォースレイアウトを使用
         renderForceLayout(svg, parsedData, graphWidth, graphHeight);
       }
@@ -304,7 +270,6 @@ export const D3Graph: React.FC<D3GraphProps> = ({
     } catch (err) {
       if (isMountedRef.current) {
         const errorMessage = err instanceof Error ? err.message : String(err);
-        console.error('D3Graph - 描画エラー:', errorMessage);
         setError(`グラフ描画エラー: ${errorMessage}`);
       }
     }
@@ -499,19 +464,11 @@ export const D3Graph: React.FC<D3GraphProps> = ({
 
   // クライアントサイドでの初期化
   useEffect(() => {
-    console.log('D3Graph - クライアント初期化');
     setIsClient(true);
   }, []);
 
   // グラフの描画
   useEffect(() => {
-    console.log('D3Graph - 描画useEffect実行:', {
-      isClient,
-      isMounted: isMountedRef.current,
-      parsedDataNodes: parsedData.nodes.length,
-      parsedDataEdges: parsedData.edges.length
-    });
-    
     if (isClient && isMountedRef.current) {
       // 少し遅延させてマウント完了後に描画
       const timer = setTimeout(() => {
@@ -521,18 +478,12 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       }, 100);
       
       return () => clearTimeout(timer);
-    } else {
-      console.log('D3Graph - 描画条件不満足:', {
-        isClient,
-        isMounted: isMountedRef.current
-      });
     }
   }, [renderGraph, isClient]);
 
   // クリーンアップ
   useEffect(() => {
     return () => {
-      console.log('D3Graph - クリーンアップ実行');
       isMountedRef.current = false;
       
       // シミュレーションを停止

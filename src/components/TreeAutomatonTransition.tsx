@@ -71,18 +71,9 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
         throw new Error(`ステップ${currentStep + 1}のデータが無効です`);
       }
       
-      // デバッグ用ログ
-      console.log('TreeAutomatonTransition - データ検証成功:', {
-        stepsLength: steps.length,
-        currentStep,
-        nodesCount: currentStepData.nodes.length,
-        edgesCount: currentStepData.edges.length
-      });
-      
       setError(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      console.error('TreeAutomatonTransition - エラー:', errorMessage);
       setError(errorMessage);
     }
   }, [steps, currentStep]);
@@ -152,8 +143,6 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
       nodes,
       edges,
     };
-    
-    console.log('TreeAutomatonTransition - VisDotGraphデータ:', result);
     
     return result;
   }, [currentStepData]);
