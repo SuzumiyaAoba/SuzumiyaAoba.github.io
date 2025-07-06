@@ -7,6 +7,8 @@ import { CodeSwitcher } from "@/components/CodeHike/code-switcher";
 import { CodeWithTooltips } from "@/components/CodeHike/code-with-tooltips";
 import { HoverContainer, Link } from "@/components/CodeHike/code-mentions";
 import { SsgImage } from "@/components/SsgImage";
+import { VisDotGraph } from "@/components/VisDotGraph";
+import TreeAutomatonTransition from "@/components/TreeAutomatonTransition";
 
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -76,6 +78,8 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
           CodeSwitcher,
           CodeWithTooltips,
           HoverContainer,
+          VisDotGraph,
+          TreeAutomatonTransition,
         }}
       />
     );

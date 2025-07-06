@@ -43,6 +43,7 @@
     "codehike": "^1.0.6",
     "d3": "^7.9.0",
     "date-fns": "^4.1.0",
+    "dot": "^1.1.3",
     "fast-glob": "^3.3.3",
     "hast-util-to-string": "^3.0.1",
     "image-size": "^2.0.2",

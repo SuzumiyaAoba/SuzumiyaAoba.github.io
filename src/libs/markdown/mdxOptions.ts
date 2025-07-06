@@ -16,6 +16,7 @@ import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
 import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/Ads/rakuten/ads/DependencyInjectionPrinciplesPracticesAndPatterns";
 import { TableWrapper } from "@/components/TableWrapper";
+import { VisDotGraph } from "@/components/VisDotGraph";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 type Pluggable = Plugin<any[], any> | [Plugin<any[], any>, unknown?];
@@ -52,4 +53,5 @@ export const defaultComponents = {
   Mermaid,
   DependencyInjectionPrinciplesPracticesAndPatterns,
   table: TableWrapper,
+  VisDotGraph,
 };
