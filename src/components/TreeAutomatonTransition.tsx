@@ -11,8 +11,10 @@ export interface TreeNode {
 }
 
 export interface TreeEdge {
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
+  source?: string;
+  target?: string;
   label?: string;
   color?: string;
 }
@@ -69,9 +71,18 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
         throw new Error(`ステップ${currentStep + 1}のデータが無効です`);
       }
       
+      // デバッグ用ログ
+      console.log('TreeAutomatonTransition - データ検証成功:', {
+        stepsLength: steps.length,
+        currentStep,
+        nodesCount: currentStepData.nodes.length,
+        edgesCount: currentStepData.edges.length
+      });
+      
       setError(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error('TreeAutomatonTransition - エラー:', errorMessage);
       setError(errorMessage);
     }
   }, [steps, currentStep]);
@@ -129,16 +140,22 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
     }));
 
     const edges = currentStepData.edges.map(edge => ({
-      from: edge.from,
-      to: edge.to,
+      source: edge.from || edge.source,
+      target: edge.to || edge.target,
+      from: edge.from || edge.source,
+      to: edge.to || edge.target,
       label: edge.label,
       color: edge.color,
     }));
 
-    return {
+    const result = {
       nodes,
       edges,
     };
+    
+    console.log('TreeAutomatonTransition - VisDotGraphデータ:', result);
+    
+    return result;
   }, [currentStepData]);
 
   // プログレス計算

@@ -10,8 +10,10 @@ interface D3GraphProps {
   data: {
     nodes: TreeNode[];
     edges: Array<{
-      from: string;
-      to: string;
+      from?: string;
+      to?: string;
+      source?: string;
+      target?: string;
       label?: string;
       color?: string;
       style?: string;
@@ -53,8 +55,13 @@ function isTreeStructure(nodes: DotNode[], edges: DotEdge[]): boolean {
   nodes.forEach(node => inDegree.set(node.id, 0));
   
   edges.forEach(edge => {
-    const target = typeof edge.target === 'string' ? edge.target : (edge.target as any).id;
-    inDegree.set(target, (inDegree.get(target) || 0) + 1);
+    // from/to または source/target の両方に対応
+    const target = typeof edge.target === 'string' ? edge.target : 
+                  typeof edge.to === 'string' ? edge.to : 
+                  (edge.target as any)?.id || (edge.to as any)?.id;
+    if (target) {
+      inDegree.set(target, (inDegree.get(target) || 0) + 1);
+    }
   });
   
   // ルートノード（入次数0）が1つだけ存在するかチェック
@@ -71,9 +78,13 @@ function isTreeStructure(nodes: DotNode[], edges: DotEdge[]): boolean {
     visited.add(current);
     
     edges.forEach(edge => {
-      const source = typeof edge.source === 'string' ? edge.source : (edge.source as any).id;
-      const target = typeof edge.target === 'string' ? edge.target : (edge.target as any).id;
-      if (source === current && !visited.has(target)) {
+      const source = typeof edge.source === 'string' ? edge.source : 
+                    typeof edge.from === 'string' ? edge.from : 
+                    (edge.source as any)?.id || (edge.from as any)?.id;
+      const target = typeof edge.target === 'string' ? edge.target : 
+                    typeof edge.to === 'string' ? edge.to : 
+                    (edge.target as any)?.id || (edge.to as any)?.id;
+      if (source === current && target && !visited.has(target)) {
         queue.push(target);
       }
     });
@@ -91,8 +102,13 @@ function createHierarchy(nodes: DotNode[], edges: DotEdge[]): d3.HierarchyNode<a
   nodes.forEach(node => inDegree.set(node.id, 0));
   
   edges.forEach(edge => {
-    const target = typeof edge.target === 'string' ? edge.target : (edge.target as any).id;
-    inDegree.set(target, (inDegree.get(target) || 0) + 1);
+    // from/to または source/target の両方に対応
+    const target = typeof edge.target === 'string' ? edge.target : 
+                  typeof edge.to === 'string' ? edge.to : 
+                  (edge.target as any)?.id || (edge.to as any)?.id;
+    if (target) {
+      inDegree.set(target, (inDegree.get(target) || 0) + 1);
+    }
   });
   
   const rootId = Array.from(inDegree.entries()).find(([_, degree]) => degree === 0)?.[0];
@@ -109,14 +125,20 @@ function createHierarchy(nodes: DotNode[], edges: DotEdge[]): d3.HierarchyNode<a
   
   // エッジから親子関係を構築
   edges.forEach(edge => {
-    const source = typeof edge.source === 'string' ? edge.source : (edge.source as any).id;
-    const target = typeof edge.target === 'string' ? edge.target : (edge.target as any).id;
+    const source = typeof edge.source === 'string' ? edge.source : 
+                  typeof edge.from === 'string' ? edge.from : 
+                  (edge.source as any)?.id || (edge.from as any)?.id;
+    const target = typeof edge.target === 'string' ? edge.target : 
+                  typeof edge.to === 'string' ? edge.to : 
+                  (edge.target as any)?.id || (edge.to as any)?.id;
     
-    const parent = nodeMap.get(source);
-    const child = nodeMap.get(target);
-    
-    if (parent && child) {
-      parent.children.push(child);
+    if (source && target) {
+      const parent = nodeMap.get(source);
+      const child = nodeMap.get(target);
+      
+      if (parent && child) {
+        parent.children.push(child);
+      }
     }
   });
   
@@ -155,12 +177,25 @@ export const D3Graph: React.FC<D3GraphProps> = ({
   const [error, setError] = useState<string | null>(null);
   const isMountedRef = useRef(true);
 
+  // コンポーネントのマウント状態を管理
+  useEffect(() => {
+    isMountedRef.current = true;
+    console.log('D3Graph - コンポーネントマウント');
+    
+    return () => {
+      isMountedRef.current = false;
+      console.log('D3Graph - コンポーネントアンマウント');
+    };
+  }, []);
+
   // データの変換
   const parsedData = useMemo(() => {
     try {
       if (!data) {
         throw new Error('データが提供されていません');
       }
+
+      console.log('D3Graph - データ受信:', data);
 
       const nodes: DotNode[] = data.nodes.map(node => ({
         id: node.id,
@@ -172,10 +207,10 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       }));
 
       const edges: DotEdge[] = data.edges.map(edge => ({
-        source: edge.from,
-        target: edge.to,
-        from: edge.from,
-        to: edge.to,
+        source: edge.from || edge.source || '',
+        target: edge.to || edge.target || '',
+        from: edge.from || edge.source || '',
+        to: edge.to || edge.target || '',
         label: edge.label || '',
         color: edge.color || '#2B7CE9',
         style: edge.style || 'solid',
@@ -183,8 +218,10 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       }));
 
       const result = { nodes, edges };
+      console.log('D3Graph - データ変換結果:', result);
       return result;
     } catch (err) {
+      console.error('D3Graph - エラー:', err);
       setError(err instanceof Error ? err.message : String(err));
       return { nodes: [], edges: [] };
     }
@@ -192,28 +229,52 @@ export const D3Graph: React.FC<D3GraphProps> = ({
 
   // 木構造かどうかを判定
   const isTree = useMemo(() => {
-    return isTreeStructure(parsedData.nodes, parsedData.edges);
+    const result = isTreeStructure(parsedData.nodes, parsedData.edges);
+    console.log('D3Graph - 木構造判定:', result, {
+      nodesCount: parsedData.nodes.length,
+      edgesCount: parsedData.edges.length
+    });
+    return result;
   }, [parsedData]);
 
   // 階層データを作成
   const hierarchy = useMemo(() => {
     if (!isTree) {
+      console.log('D3Graph - 木構造ではないため階層データを作成しません');
       return null;
     }
-    return createHierarchy(parsedData.nodes, parsedData.edges);
+    const result = createHierarchy(parsedData.nodes, parsedData.edges);
+    console.log('D3Graph - 階層データ作成:', result);
+    return result;
   }, [parsedData, isTree]);
 
   // グラフの描画
   const renderGraph = useCallback(() => {
+    console.log('D3Graph - 描画条件チェック:', {
+      hasContainer: !!containerRef.current,
+      isClient,
+      isMounted: isMountedRef.current,
+      containerRef: containerRef.current,
+      data: parsedData
+    });
+    
     if (!containerRef.current || !isClient || !isMountedRef.current) {
+      console.log('D3Graph - 描画スキップ:', {
+        hasContainer: !!containerRef.current,
+        isClient,
+        isMounted: isMountedRef.current
+      });
       return;
     }
 
     try {
+      console.log('D3Graph - グラフ描画開始');
+      
       // 既存のSVGをクリア
       d3.select(containerRef.current).selectAll('*').remove();
 
       if (parsedData.nodes.length === 0) {
+        console.log('D3Graph - ノードが空のため描画をスキップ');
         return;
       }
 
@@ -222,6 +283,8 @@ export const D3Graph: React.FC<D3GraphProps> = ({
       const graphWidth = containerRect.width;
       const graphHeight = containerRect.height;
 
+      console.log('D3Graph - コンテナサイズ:', { graphWidth, graphHeight });
+
       // SVGを作成
       const svg = d3.select(container)
         .append('svg')
@@ -229,9 +292,11 @@ export const D3Graph: React.FC<D3GraphProps> = ({
         .attr('height', graphHeight);
 
       if (isTree && hierarchy) {
+        console.log('D3Graph - 木構造レイアウトで描画');
         // 木構造の場合は階層レイアウトを使用
         renderTreeLayout(svg, hierarchy, graphWidth, graphHeight);
       } else {
+        console.log('D3Graph - フォースレイアウトで描画');
         // 一般グラフの場合はフォースレイアウトを使用
         renderForceLayout(svg, parsedData, graphWidth, graphHeight);
       }
@@ -239,6 +304,7 @@ export const D3Graph: React.FC<D3GraphProps> = ({
     } catch (err) {
       if (isMountedRef.current) {
         const errorMessage = err instanceof Error ? err.message : String(err);
+        console.error('D3Graph - 描画エラー:', errorMessage);
         setError(`グラフ描画エラー: ${errorMessage}`);
       }
     }
@@ -433,19 +499,40 @@ export const D3Graph: React.FC<D3GraphProps> = ({
 
   // クライアントサイドでの初期化
   useEffect(() => {
+    console.log('D3Graph - クライアント初期化');
     setIsClient(true);
   }, []);
 
   // グラフの描画
   useEffect(() => {
-    if (isClient) {
-      renderGraph();
+    console.log('D3Graph - 描画useEffect実行:', {
+      isClient,
+      isMounted: isMountedRef.current,
+      parsedDataNodes: parsedData.nodes.length,
+      parsedDataEdges: parsedData.edges.length
+    });
+    
+    if (isClient && isMountedRef.current) {
+      // 少し遅延させてマウント完了後に描画
+      const timer = setTimeout(() => {
+        if (isMountedRef.current) {
+          renderGraph();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else {
+      console.log('D3Graph - 描画条件不満足:', {
+        isClient,
+        isMounted: isMountedRef.current
+      });
     }
   }, [renderGraph, isClient]);
 
   // クリーンアップ
   useEffect(() => {
     return () => {
+      console.log('D3Graph - クリーンアップ実行');
       isMountedRef.current = false;
       
       // シミュレーションを停止

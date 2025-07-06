@@ -273,4 +273,27 @@ export const SlowAutoPlay: Story = {
     autoPlay: true,
     autoPlayInterval: 3000,
   },
+};
+
+export const SimpleTest: Story = {
+  args: {
+    steps: [
+      {
+        stepNumber: 1,
+        description: "テスト：単純な木構造",
+        nodes: [
+          { id: "root", label: "root", state: "q_init" },
+          { id: "child1", label: "child1", state: "q_bool" },
+          { id: "child2", label: "child2", state: "q_int" },
+        ],
+        edges: [
+          { from: "root", to: "child1", label: "left" },
+          { from: "root", to: "child2", label: "right" },
+        ]
+      }
+    ],
+    width: "400px",
+    height: "300px",
+    fontSize: 14,
+  },
 }; 

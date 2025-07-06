@@ -17,8 +17,10 @@ export interface TreeNode {
 export interface GraphData {
   nodes: TreeNode[];
   edges?: Array<{
-    from: string;
-    to: string;
+    from?: string;
+    to?: string;
+    source?: string;
+    target?: string;
     label?: string;
     color?: string;
     style?: string;
@@ -51,12 +53,16 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
         throw new Error('データが提供されていません');
       }
 
+      // デバッグ用ログ
+      console.log('VisDotGraph - データ受信:', data);
+
       // 単一のルートノードの場合
       if ('id' in data && 'label' in data && !('nodes' in data)) {
         const result = {
           nodes: flattenTree(data as TreeNode),
           edges: [],
         };
+        console.log('VisDotGraph - 単一ノード処理:', result);
         return result;
       }
 
@@ -67,11 +73,13 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
           nodes: graphData.nodes,
           edges: graphData.edges || [],
         };
+        console.log('VisDotGraph - グラフデータ処理:', result);
         return result;
       }
 
       throw new Error('無効なデータ形式です');
     } catch (err) {
+      console.error('VisDotGraph - エラー:', err);
       setError(err instanceof Error ? err.message : String(err));
       return { nodes: [], edges: [] };
     }
