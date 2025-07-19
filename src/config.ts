@@ -1,6 +1,6 @@
 export default {
   metadata: {
-    title: "All You Need Is",
+    title: "NO SEA. I SEE.",
     description:
       "プログラミング、技術、その他の話題について共有するブログです。",
     url: "https://suzumiyaaoba.com",
