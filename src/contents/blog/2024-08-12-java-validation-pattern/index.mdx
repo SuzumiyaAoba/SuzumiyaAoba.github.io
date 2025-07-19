@@ -84,7 +84,7 @@ import org.hibernate.validator.internal.util.logging.LoggerFactory;
  */
 public class PatternValidator implements ConstraintValidator<Pattern, CharSequence> {
 
-	private static final Log LOG = LoggerFactory.make( MethodHandles.lookup() );
+	private static final Log LOG = LoggerFactory.make(MethodHandles.lookup());
 
 	private java.util.regex.Pattern pattern;
 	private String escapedRegexp;
@@ -93,31 +93,31 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
 	public void initialize(Pattern parameters) {
 		Pattern.Flag[] flags = parameters.flags();
 		int intFlag = 0;
-		for ( Pattern.Flag flag : flags ) {
+		for (Pattern.Flag flag : flags) {
 			intFlag = intFlag | flag.getValue();
 		}
 
 		try {
-			pattern = java.util.regex.Pattern.compile( parameters.regexp(), intFlag );
+			pattern = java.util.regex.Pattern.compile(parameters.regexp(), intFlag);
 		}
 		catch (PatternSyntaxException e) {
-			throw LOG.getInvalidRegularExpressionException( e );
+			throw LOG.getInvalidRegularExpressionException(e);
 		}
 
-		escapedRegexp = InterpolationHelper.escapeMessageParameter( parameters.regexp() );
+		escapedRegexp = InterpolationHelper.escapeMessageParameter(parameters.regexp());
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext constraintValidatorContext) {
-		if ( value == null ) {
+		if (value == null) {
 			return true;
 		}
 
-		if ( constraintValidatorContext instanceof HibernateConstraintValidatorContext ) {
-			constraintValidatorContext.unwrap( HibernateConstraintValidatorContext.class ).addMessageParameter( "regexp", escapedRegexp );
+		if (constraintValidatorContext instanceof HibernateConstraintValidatorContext) {
+			constraintValidatorContext.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter("regexp", escapedRegexp);
 		}
 
-		Matcher m = pattern.matcher( value );
+		Matcher m = pattern.matcher(value);
 		// !className[/matches\(\)/] underline decoration-wavy underline-green-600
 		return m.matches();
 	}
