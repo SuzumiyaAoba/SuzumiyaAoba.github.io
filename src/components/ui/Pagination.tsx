@@ -59,19 +59,46 @@ export const Pagination = ({
       {/* 前へボタン */}
       {renderNavigationButton(currentPage - 1, "前へ", currentPage > 1)}
 
-      {/* 最初のページ (1ページ目) */}
-      {currentPage > 2 && renderPageButton(1)}
-
-      {/* 現在のページ周辺のページ */}
-      {Array.from({ length: totalPages }, (_, i) => i + 1)
-        .filter((page) => {
-          if (totalPages <= 5) return true;
-          return Math.abs(page - currentPage) <= 1;
-        })
-        .map((page) => renderPageButton(page, page === currentPage))}
-
-      {/* 最後のページ */}
-      {currentPage < totalPages - 1 && renderPageButton(totalPages)}
+      {/* ページ番号の表示ロジック */}
+      {(() => {
+        const pages: (number | string)[] = [];
+        
+        // 総ページ数が5以下の場合はすべて表示
+        if (totalPages <= 5) {
+          for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
+          }
+        } else {
+          // 常に1ページ目を表示
+          pages.push(1);
+          
+          // 現在のページが1-3の場合
+          if (currentPage <= 3) {
+            pages.push(2, 3, 4);
+            pages.push("...");
+            pages.push(totalPages);
+          }
+          // 現在のページが最後から3ページ以内の場合
+          else if (currentPage >= totalPages - 2) {
+            pages.push("...");
+            pages.push(totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+          }
+          // それ以外（中間のページ）の場合
+          else {
+            pages.push("...");
+            pages.push(currentPage - 1, currentPage, currentPage + 1);
+            pages.push("...");
+            pages.push(totalPages);
+          }
+        }
+        
+        return pages.map((page, index) => {
+          if (typeof page === "string") {
+            return <span key={`ellipsis-${index}`} className="px-2">{page}</span>;
+          }
+          return renderPageButton(page, page === currentPage);
+        });
+      })()}
 
       {/* 次へボタン */}
       {renderNavigationButton(
