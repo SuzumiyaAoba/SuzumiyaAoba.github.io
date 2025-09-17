@@ -23,6 +23,7 @@ const TAG_ICON_MAP: Record<string, string> = {
   プログラミング: "i-material-symbols-code-blocks-outline",
   日記: "i-mingcute-diary-line",
   git: "i-devicon-git",
+  claude: "i-material-icon-theme:claude",
 };
 
 type TagLabel = (typeof TAG_ICON_MAP)[keyof typeof TAG_ICON_MAP];
