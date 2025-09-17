@@ -44,7 +44,8 @@ OpenAI が 2025/08/20 に [AGENTS.md](https://agents.md/) を公開した。
 
 現時点における AGENTS.md エコシステムの問題点は、最もユーザが多いと思われる CLI ツールである [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview) を開発している Anthoropic の不在だろう。
 Claude Code では `CLAUDE.md` に `AGENTS.md` 相当のドキュメントを記述する。
-Gemini CLI も同様に `GEMINI.md` だけを見ていたが、AGENTS.md に対応し、
+Gemini CLI も同様に `GEMINI.md` だけを見ていたが、AGENTS.md に対応した。
+しかし、Claude Code は現時点では `AGENTS.md` に対応するような動きは見られない。
 
 ## Claude Code の AGENTS.md 対応
 
