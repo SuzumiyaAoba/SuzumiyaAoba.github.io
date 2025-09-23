@@ -2,17 +2,15 @@ import { Tag } from "@/components/Tag";
 import { FC } from "react";
 import { cn } from "@/libs/utils";
 import { DateDisplay } from "./DateDisplay";
-import { z } from "zod";
-import {
-  bookFrontmatterSchema,
-  blogFrontmatterSchema,
-} from "@/libs/contents/schema";
-
-// A general post type that can be any of the frontmatter schemas
-type PostItem = (
-  | z.infer<typeof bookFrontmatterSchema>
-  | z.infer<typeof blogFrontmatterSchema>
-) & { _path: string };
+// PostList が必要とする最小限のプロパティ
+type PostItem = {
+  _path: string;
+  title: string;
+  date: Date;
+  tags?: string[];
+  // キーワード用に parent を持つ場合がある
+  parent?: boolean;
+};
 
 export type PostListProps = {
   posts: PostItem[];

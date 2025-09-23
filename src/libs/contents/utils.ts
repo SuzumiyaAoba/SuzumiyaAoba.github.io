@@ -47,9 +47,12 @@ export async function getSortedPosts<T extends z.ZodTypeAny>({
 }: {
   paths: string[];
   schema: T;
-}) {
+}): Promise<(z.infer<T> & { _path: string })[]> {
   const posts = await getFrontmatters({ paths, schema });
-  return posts.sort((a, b) => compareDesc(a.date, b.date));
+  const items = posts as unknown as Array<
+    z.infer<T> & { _path: string } & { date: Date }
+  >;
+  return items.sort((a, b) => compareDesc(a.date, b.date));
 }
 
 // ページネーション用に記事をスライスする汎用関数

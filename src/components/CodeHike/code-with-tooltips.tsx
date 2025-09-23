@@ -8,8 +8,9 @@ import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { Number } from "./footnote";
 import { tooltip } from "./tooltip";
+import { z } from "zod";
 
-export function CodeWithTooltips({ code, tooltips = [] }: { code: RawCode, tooltips?: Zod.infer<typeof Block>[] }) {
+export function CodeWithTooltips({ code, tooltips = [] }: { code: RawCode, tooltips?: z.infer<typeof Block>[] }) {
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "dark" ? "github-dark" : "github-light";
   const [highlighted, setHighlighted] = useState<HighlightedCode | null>(null);

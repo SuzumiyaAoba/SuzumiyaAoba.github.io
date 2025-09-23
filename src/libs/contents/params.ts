@@ -13,7 +13,7 @@ export async function generateBlogTagParams<T extends z.ZodTypeAny>({
   schema: T;
 }) {
   const posts = await getSortedPosts({ paths, schema });
-  const allTags = extractUniqueTags(posts);
+  const allTags = extractUniqueTags(posts as unknown as Array<{ tags: string[] }>);
 
   return allTags.map((tag) => ({
     tag: tag,

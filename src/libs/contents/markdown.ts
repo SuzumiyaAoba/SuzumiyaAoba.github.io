@@ -239,13 +239,13 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
   return dirs;
 };
 
-export const getFrontmatters = async <T extends z.ZodTypeAny>({
+export async function getFrontmatters<T extends z.ZodTypeAny>({
   paths,
   schema,
 }: {
   paths: string[];
   schema: T;
-}) => {
+}) {
   const contentPaths = await getPaths(...paths);
 
   const frontmatters = await Promise.all(
@@ -260,13 +260,14 @@ export const getFrontmatters = async <T extends z.ZodTypeAny>({
         // エラーはparseRawContent内でログされるのでここではnullを返す
         return null;
       }
-      return { ...content.frontmatter, _path: contentPath };
+      const fm = content.frontmatter as unknown as Record<string, unknown>;
+      return { ...fm, _path: contentPath } as z.infer<T> & { _path: string };
     }),
   );
 
   // Zodの型からdraftプロパティの存在を推論することは難しいため、anyにキャストしてフィルタリング
-  return frontmatters.filter(
-    (fm): fm is z.infer<T> & { _path: string } =>
-      fm !== null && !(fm as any).draft,
-  );
-};
+  const result = frontmatters.filter(
+    (fm) => fm !== null && !(fm as any).draft,
+  ) as Array<z.infer<T> & { _path: string }>;
+  return result;
+}

@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 const Schema = Block.extend({ tabs: z.array(CodeBlock) });
 
 export function CodeWithTabs(props: unknown) {
-  const { tabs } = parseProps(props, Schema);
+  const { tabs } = parseProps(props, Schema) as z.infer<typeof Schema>;
   return <CodeTabs tabs={tabs} />;
 }
 
