@@ -5,6 +5,14 @@ category: "Claude Code"
 tags: ["Claude Code", "AGENTS.md"]
 ---
 
+## TL;DL
+
+2025-09-24 現在においては [AGENTS.md](https://agents.md/) 推奨のシンボリックリンクが無難。
+
+```shell
+ln -s AGENTS.md CLAUDE.md
+```
+
 ## AGENTS.md
 
 OpenAI が 2025/08/20 に [AGENTS.md](https://agents.md/) を公開した。
@@ -160,6 +168,11 @@ Claude Code は `CLAUDE.md` を読み込むときに特別扱いしている場�
 フックを使う方法は恩恵が受けられない可能性が高い。
 
 そのため、`CLAUDE.md` で `AGENTS.md` を読み込むように指示するか、リンクを作成するのが今のところは良さそうだ。
+
+### 追記
+
+`CLAUDE.md` に `@AGENTS.md` を書く対応は `/init` を実行したとき `CLAUDE.md` に指示内容を書いてしまうため、その度に `AGENTS.md` に変更を反映して `CLAUDE.md` を戻す作業が発生した。
+`/init` を実行する頻度は高くないが、それでも手間ではあるのでシンボリックリンクを作る対応が無難に感じた。
 
 ## 参考文献
 
