@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { VisDotGraph } from './index';
 
 const meta: Meta<typeof VisDotGraph> = {

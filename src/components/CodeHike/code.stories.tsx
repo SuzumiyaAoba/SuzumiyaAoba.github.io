@@ -1,6 +1,6 @@
 import React from "react";
 // import { Code } from "./code"; // Original component relies on Next.js and CodeHike runtime, which breaks in Storybook.
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 const sampleCodeblock = {
   raw: "console.log('Hello, Storybook!');\n",

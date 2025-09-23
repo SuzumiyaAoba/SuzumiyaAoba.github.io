@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import SearchComponent from "./SearchComponent";
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 

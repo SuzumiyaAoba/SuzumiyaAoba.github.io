@@ -1,5 +1,5 @@
 // import { diff } from "./diff";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 export default {
   title: "Components/CodeHike/diff",

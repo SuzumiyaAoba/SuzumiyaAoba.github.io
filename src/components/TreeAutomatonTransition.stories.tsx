@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import TreeAutomatonTransition, { TransitionStep } from './TreeAutomatonTransition';
 
 const meta: Meta<typeof TreeAutomatonTransition> = {
