@@ -24,6 +24,10 @@ const TAG_ICON_MAP: Record<string, string> = {
   日記: "i-mingcute-diary-line",
   git: "i-devicon-git",
   "claude code": "i-material-icon-theme:claude",
+  anthropic: "i-material-icon-theme:claude",
+  gemini: "i-material-icon-theme:gemini-ai",
+  chatgpt: "i-logos:openai-icon",
+  openai: "i-logos:openai-icon",
 };
 
 type TagLabel = (typeof TAG_ICON_MAP)[keyof typeof TAG_ICON_MAP];
