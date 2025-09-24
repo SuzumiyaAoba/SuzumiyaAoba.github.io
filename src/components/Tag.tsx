@@ -28,6 +28,7 @@ const TAG_ICON_MAP: Record<string, string> = {
   gemini: "i-material-icon-theme:gemini-ai",
   chatgpt: "i-logos:openai-icon",
   openai: "i-logos:openai-icon",
+  cursor: "i-vscode-icons:file-type-cursorrules",
 };
 
 type TagLabel = (typeof TAG_ICON_MAP)[keyof typeof TAG_ICON_MAP];
