@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as d3 from 'd3';
 import { TreeNode } from './index';
-import 'katex/dist/katex.min.css';
 import katex from 'katex';
 
 interface D3GraphProps {

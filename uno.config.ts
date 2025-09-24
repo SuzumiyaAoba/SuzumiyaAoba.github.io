@@ -13,7 +13,13 @@ import { presetShadcn } from "unocss-preset-shadcn";
 
 export default defineConfig({
   content: {
-    filesystem: ["**/*.{html,js,ts,jsx,tsx,md,mdx}"],
+    // 限定的にスキャンし、node_modules/.next/storybook-static 等は除外
+    filesystem: [
+      "src/**/*.{html,js,ts,jsx,tsx,md,mdx,css,scss}",
+      "scripts/**/*.{js,ts}",
+      "public/**/*.{html}",
+      "README.md",
+    ],
   },
   presets: [
     presetWind4({

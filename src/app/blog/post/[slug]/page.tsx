@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import "katex/dist/katex.min.css";
 import config from "@/config";
 import { Pages } from "@/libs/contents/blog";
 import {

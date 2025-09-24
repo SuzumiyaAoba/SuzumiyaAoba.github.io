@@ -1,4 +1,5 @@
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import type { Metadata } from "next";
 import config from "@/config";
 import { exo_2, mono as monoFont, zen_maru_gothic } from "@/fonts";

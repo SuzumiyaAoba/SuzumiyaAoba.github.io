@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import "katex/dist/katex.min.css";
 import { Metadata } from "next";
 import config from "@/config";
 import { getContent, getFrontmatter } from "@/libs/contents/markdown";
