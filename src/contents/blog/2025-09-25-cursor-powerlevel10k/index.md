@@ -27,6 +27,8 @@ Cursor のトピックではいくつか解決方法が示されている。
 
 余計な設定が入っている気がする検証できていない。
 
+powerlevel10k が有効になってしまっているのが原因らしいので Cursor の AI エージェントがコマンドを実行するときは powerlevel10k が読み込まれないように zsh の設定ファイルに以下の設定が読み込まれるようにする。
+
 ```zsh
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 if [[ -n $CURSOR_TRACE_ID ]]; then
@@ -44,8 +46,7 @@ else
 fi
 ```
 
-Cursor の AI エージェントから実行されているか否かは環境変数の `CURSOR_TRACE_ID` で判断できる。
-VS Code でも同様の現象が発生する可能性があるため `TERM_PROGRAM` が `vscode` の場合も Cursor と同様の設定がされるようにしている。
+Cursor の AI エージェントから実行されているか否かは環境変数の `CURSOR_TRACE_ID` で判断している。
 
 `${pkgs.zsh-powerlevel10k}` は Nix で設定を管理しているためパスを `pkgs.zsh-powerlevel10k` で取得するようにしているが、自身の環境に合わせてパスを変える必要がある。
 
