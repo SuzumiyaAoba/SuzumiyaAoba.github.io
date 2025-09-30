@@ -105,11 +105,26 @@
     margin-left: 1.5rem;
     padding-left: 1rem;
     border-left: solid;
-    color: var(--muted);
+    color: #666 !important;
     border-color: var(--accent-primary);
     background-color: rgba(99, 102, 241, 0.1);
     padding: 1rem;
     border-radius: 0 0.25rem 0.25rem 0;
+    font-style: italic;
+    font-family: "Yuji Syuku", serif !important;
+    
+    p {
+      color: #666 !important;
+      font-family: "Yuji Syuku", serif !important;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      color: #999 !important;
+      
+      p {
+        color: #999 !important;
+      }
+    }
   }
 
   a {
