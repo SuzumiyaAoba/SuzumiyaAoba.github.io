@@ -1,6 +1,6 @@
 import React from "react";
 import { className as classNameAnnotation } from "./classname";
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const ClassnameDemo = () => {
   const Block = classNameAnnotation.Block as any;

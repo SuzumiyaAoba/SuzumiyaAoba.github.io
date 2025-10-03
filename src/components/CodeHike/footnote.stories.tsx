@@ -1,5 +1,5 @@
 // import { footnote } from "./footnote";
-import type { Meta, StoryObj } from "@storybook/nextjs";
+import type { Meta, StoryObj } from "@storybook/react";
 
 export default {
   title: "Components/CodeHike/footnote",
