@@ -213,12 +213,24 @@
   }
 
   kbd {
-    @apply px-1;
-    background-color: var(--card-bg);
-    @apply border border-rounded;
+    @apply p-1;
+    @apply text-sm;
+    @apply font-mono;
+    background-color: var(--background-secondary);
+    @apply border rounded;
     border-color: var(--border);
     color: var(--foreground);
-    @apply drop-shadow;
+    @apply shadow-sm;
+    @apply inline-block;
+    min-width: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+    
+    // ダークモード対応
+    @media (prefers-color-scheme: dark) {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
   }
 
   // Code block
