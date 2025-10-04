@@ -9,7 +9,7 @@ tags: ["キーボード", "Libertouh", "メンブレン"]
 購入したのはもちろん US 配列。
 25 台限定なので当たらないだろうと思っていたが当選したのでここ数ヶ月届くのを待っていた。
 
-![Libertouch](./images/libertouch.jpg)
+![Libertouch](./images/Libertouch.jpg)
 
 Libertouch の特徴はメンブレンキーボードという点だ。
 メンブレンキーボードを使うのは大学の授業で PC ルームに置かれていたキーボード以来だろうか。
