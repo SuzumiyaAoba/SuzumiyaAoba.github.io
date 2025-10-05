@@ -8,6 +8,7 @@ import type { Plugin } from "unified";
 
 import rehypeImageSize from "../rehype/rehype-image-size";
 import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls";
+import { rehypeTwitterUrls } from "../rehype/rehype-twitter-urls";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import rehypeExternalLinks from "rehype-external-links";
@@ -33,6 +34,7 @@ export const defaultRemarkPlugins: PluggableList = [
 
 export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
   rehypeResolveImageUrls,
+  rehypeTwitterUrls,
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],

@@ -94,15 +94,6 @@ export const SsgImage: FC<SsgImageProps> = (props) => {
     ? resolveImagePath(src, basePath) 
     : src;
 
-  // 開発環境でのデバッグ情報
-  if (process.env.NODE_ENV === 'development') {
-    console.log('SsgImage Debug:', {
-      originalSrc: src,
-      resolvedSrc,
-      basePath,
-      isString: typeof src === 'string'
-    });
-  }
 
   // ネイティブimgタグを使用する場合
   if (useNativeImg) {

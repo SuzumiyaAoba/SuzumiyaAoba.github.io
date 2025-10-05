@@ -7,6 +7,7 @@ import { CodeSwitcher } from "@/components/CodeHike/code-switcher";
 import { CodeWithTooltips } from "@/components/CodeHike/code-with-tooltips";
 import { HoverContainer, Link } from "@/components/CodeHike/code-mentions";
 import { SsgImage } from "@/components/SsgImage";
+import { Img } from "@/components/Mdx/Img";
 import { VisDotGraph } from "@/components/VisDotGraph";
 import TreeAutomatonTransition from "@/components/TreeAutomatonTransition";
 import { TweetCard } from "@/components/TweetCard";
@@ -54,6 +55,14 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
       />
     );
 
+    // pathsに基づいてImgをラップ
+    const ImgWithBasePath = (props: any) => (
+      <Img
+        {...props}
+        basePath={basePath}
+      />
+    );
+
     return (
       <MDXRemote
         source={source}
@@ -71,7 +80,8 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
         }}
         components={{
           ...defaultComponents,
-          img: ImageWithBasePath, // basePathが設定されたSsgImageを使用
+          img: ImgWithBasePath, // MDX内のimgタグをImgコンポーネントで処理
+          Img: ImgWithBasePath, // MDX内の<Img>タグを処理
           a: Link,
           Code,
           InlineCode,
