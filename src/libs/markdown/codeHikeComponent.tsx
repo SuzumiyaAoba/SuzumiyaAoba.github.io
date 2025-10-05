@@ -11,6 +11,7 @@ import { Img } from "@/components/Mdx/Img";
 import { VisDotGraph } from "@/components/VisDotGraph";
 import TreeAutomatonTransition from "@/components/TreeAutomatonTransition";
 import { TweetCard } from "@/components/TweetCard";
+import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -92,6 +93,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
           VisDotGraph,
           TreeAutomatonTransition,
           TweetCard,
+          YouTubeEmbed,
         }}
       />
     );

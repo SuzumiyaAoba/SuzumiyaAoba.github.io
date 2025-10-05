@@ -9,16 +9,19 @@ import type { Plugin } from "unified";
 import rehypeImageSize from "../rehype/rehype-image-size";
 import rehypeResolveImageUrls from "../rehype/rehype-resolve-image-urls";
 import { rehypeTwitterUrls } from "../rehype/rehype-twitter-urls";
+import { rehypeYoutubeUrls } from "../rehype/rehype-youtube-urls";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import rehypeExternalLinks from "rehype-external-links";
 import { SsgImage } from "@/components/SsgImage";
+import { Img } from "@/components/Mdx/Img";
 import { GitHubCodeLink } from "@/components/Mdx/GitHubCodeLink";
 import { Message } from "@/components/Mdx/Message";
 import { DependencyInjectionPrinciplesPracticesAndPatterns } from "@/components/Ads/rakuten/ads/DependencyInjectionPrinciplesPracticesAndPatterns";
 import { TableWrapper } from "@/components/TableWrapper";
 import { VisDotGraph } from "@/components/VisDotGraph";
 import { TweetCard } from "@/components/TweetCard";
+import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 type Pluggable = Plugin<any[], any> | [Plugin<any[], any>, unknown?];
@@ -35,6 +38,7 @@ export const defaultRemarkPlugins: PluggableList = [
 export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
   rehypeResolveImageUrls,
   rehypeTwitterUrls,
+  rehypeYoutubeUrls,
   rehypeSlug,
   [rehypeAutolinkHeadings, { behavior: "wrap" }],
   [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
@@ -51,6 +55,7 @@ export const defaultRehypePlugins = (...paths: string[]): PluggableList => [
 
 export const defaultComponents = {
   img: SsgImage,
+  Img,
   GitHubCodeLink,
   Message,
   Mermaid,
@@ -58,4 +63,5 @@ export const defaultComponents = {
   table: TableWrapper,
   VisDotGraph,
   TweetCard,
+  YouTubeEmbed,
 };
