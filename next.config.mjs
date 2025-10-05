@@ -16,6 +16,14 @@ const nextConfig = {
         protocol: "https",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "abs.twimg.com",
+      },
     ],
     // 画像の最適化
     formats: ["image/avif", "image/webp"],
