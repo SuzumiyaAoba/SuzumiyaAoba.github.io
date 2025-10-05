@@ -7,7 +7,6 @@ import { HatenaButton } from "@/components/share/HatenaButton";
 import { TwitterShareButton } from "@/components/share/TwitterShareButton";
 import BuyMeACoffee from "@/components/BuyMeACoffee";
 import { Comments } from "@/components/Comments";
-import { AuthorInfo } from "@/components/AuthorInfo";
 import Script from "next/script";
 import config from "@/config";
 import { createBlogPostingJsonLd } from "@/libs/jsonld";
@@ -99,10 +98,6 @@ export function Article({
           </section>
         )}
       </article>
-      {/* 著者情報 */}
-      <section className="mt-8 mb-8">
-        <AuthorInfo author={author} />
-      </section>
 
       {(showBuyMeACoffee || showComments) && (
         <hr className="mb-8 border-dashed border-neutral-600" />
