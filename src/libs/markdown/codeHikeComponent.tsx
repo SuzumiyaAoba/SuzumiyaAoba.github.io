@@ -9,6 +9,7 @@ import { HoverContainer, Link } from "@/components/CodeHike/code-mentions";
 import { SsgImage } from "@/components/SsgImage";
 import { VisDotGraph } from "@/components/VisDotGraph";
 import TreeAutomatonTransition from "@/components/TreeAutomatonTransition";
+import { TweetCard } from "@/components/TweetCard";
 
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -80,6 +81,7 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
           HoverContainer,
           VisDotGraph,
           TreeAutomatonTransition,
+          TweetCard,
         }}
       />
     );

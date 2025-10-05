@@ -632,3 +632,6 @@ div[data-ch-line] * {
   margin: 0.5rem 0;
   color: var(--foreground);
 }
+
+/* react-tweet スタイル */
+@import "react-tweet/theme.css";

@@ -2,6 +2,7 @@ import type { MDXComponents } from "mdx/types";
 import React from "react";
 import { VisDotGraph, TreeNode } from "@/components/VisDotGraph";
 import TreeAutomatonTransition, { TransitionStep } from "@/components/TreeAutomatonTransition";
+import { TweetCard } from "@/components/TweetCard";
 
 // VisDotGraphコンポーネントをMDXで使用するためのラッパー
 const VisDotGraphMDX: React.FC<{
@@ -58,5 +59,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ...components,
     VisDotGraph: VisDotGraphMDX,
     TreeAutomatonTransition: TreeAutomatonTransitionMDX,
+    TweetCard,
   };
 }
