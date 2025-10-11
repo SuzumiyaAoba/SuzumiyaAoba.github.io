@@ -145,9 +145,9 @@ export default async function Page({ params }: Props) {
           {/* 記事の更新履歴を表示 */}
           {gitHistory && (
             <ArticleHistory
-              history={gitHistory.commits}
               createdDate={gitHistory.createdDate ?? undefined}
               lastModified={gitHistory.lastModified ?? undefined}
+              filePath={gitHistory.filePath ?? undefined}
               repoUrl={gitHistory.repoUrl ?? undefined}
               className="mt-12"
             />

@@ -18,63 +18,20 @@ export default {
 
 type Story = StoryObj<typeof ArticleHistory>;
 
-const mockHistory = Array.from({ length: 5 }).map((_, i) => ({
-  hash: `abcdef${i}`,
-  date: formatISO(subDays(new Date(), i * 2)),
-  message: `コミットメッセージ ${i + 1}`,
-  author: "SuzumiyaAoba",
-}));
-
 export const Default: Story = {
   args: {
-    history: mockHistory,
     createdDate: formatISO(subDays(new Date(), 30)),
     lastModified: formatISO(new Date()),
+    filePath: "contents/blog/2025-10-05-llm/index.md",
+    repoUrl: "https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io",
   },
 };
 
 export const DarkTheme: Story = {
   args: {
-    history: mockHistory,
     createdDate: formatISO(subDays(new Date(), 30)),
     lastModified: formatISO(new Date()),
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark">
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-export const LongHistory: Story = {
-  args: {
-    history: Array.from({ length: 15 }).map((_, i) => ({
-      hash: `abcdef${i}${Math.random().toString(36).substr(2, 9)}`,
-      date: formatISO(subDays(new Date(), i)),
-      message: `長いコミットメッセージサンプル ${i + 1}: Lorem ipsum dolor sit amet consectetur adipiscing elit`,
-      author: "SuzumiyaAoba",
-    })),
-    createdDate: formatISO(subDays(new Date(), 30)),
-    lastModified: formatISO(new Date()),
-    repoUrl: "https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io",
-  },
-};
-
-export const LongHistoryDark: Story = {
-  args: {
-    history: Array.from({ length: 15 }).map((_, i) => ({
-      hash: `abcdef${i}${Math.random().toString(36).substr(2, 9)}`,
-      date: formatISO(subDays(new Date(), i)),
-      message: `長いコミットメッセージサンプル ${i + 1}: Lorem ipsum dolor sit amet consectetur adipiscing elit`,
-      author: "SuzumiyaAoba",
-    })),
-    createdDate: formatISO(subDays(new Date(), 30)),
-    lastModified: formatISO(new Date()),
+    filePath: "contents/blog/2025-10-05-llm/index.md",
     repoUrl: "https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io",
   },
   parameters: {
@@ -89,17 +46,15 @@ export const LongHistoryDark: Story = {
   ],
 };
 
-export const EmptyHistory: Story = {
+export const WithoutGitHubLink: Story = {
   args: {
-    history: [],
     createdDate: formatISO(subDays(new Date(), 30)),
     lastModified: formatISO(new Date()),
   },
 };
 
-export const EmptyHistoryDark: Story = {
+export const WithoutGitHubLinkDark: Story = {
   args: {
-    history: [],
     createdDate: formatISO(subDays(new Date(), 30)),
     lastModified: formatISO(new Date()),
   },

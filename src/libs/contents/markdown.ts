@@ -33,10 +33,10 @@ export type Content<FRONTMATTER> = {
   stylesheets: string[];
   Component: FC<unknown>;
   gitHistory?: {
-    commits: GitCommit[];
     createdDate: string | null;
     lastModified: string | null;
     repoUrl: string | null;
+    filePath: string | null;
   };
 };
 
@@ -145,11 +145,12 @@ export const getContent = async <T extends z.ZodTypeAny>({
 
   // Git履歴を取得
   const absolutePath = path.join(process.cwd(), rawContent.path);
+  const repoUrl = getGitHubRepoUrl();
   const gitHistory = {
-    commits: getFileGitHistory(absolutePath),
     createdDate: getFileCreationDate(absolutePath),
     lastModified: getFileLastModified(absolutePath),
-    repoUrl: getGitHubRepoUrl(),
+    repoUrl,
+    filePath: rawContent.path.replace(/^src\//, ""),
   };
 
   const vfile = new VFile({
