@@ -11,8 +11,7 @@ export default function AmazonAssociate() {
         <div>
           <p className="!mt-0 mb-1 text-sm text-amber-800 dark:text-amber-200">
             この記事には Amazon アソシエイトのリンクが含まれています。
-            リンクをクリックして商品を購入していただくと、サイト運営のための手数料が支払われます。
-            商品の価格や詳細は変更される可能性があります。
+            Amazonのアソシエイトとして、SuzumiyaAoba は適格販売により収入を得ています。
           </p>
         </div>
       </div>
