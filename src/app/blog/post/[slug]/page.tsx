@@ -18,6 +18,7 @@ import ArticleLayout from "@/components/Article/ArticleLayout";
 import { ArticleHistory } from "@/components/ArticleHistory";
 import { SeriesNavigation } from "@/components/SeriesNavigation";
 import { getSeriesNavigation } from "@/libs/contents/series";
+import AmazonAssociate from "@/components/AmazonAssociate";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -151,6 +152,13 @@ export default async function Page({ params }: Props) {
               repoUrl={gitHistory.repoUrl ?? undefined}
               className="mt-12"
             />
+          )}
+
+          {/* Amazon アソシエイト表示 */}
+          {frontmatter.amazonAssociate && (
+            <div className="mt-8">
+              <AmazonAssociate />
+            </div>
           )}
         </ArticleLayout>
       </Article>

@@ -150,7 +150,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
     createdDate: getFileCreationDate(absolutePath),
     lastModified: getFileLastModified(absolutePath),
     repoUrl,
-    filePath: rawContent.path.replace(/^src\//, ""),
+    filePath: rawContent.path,
   };
 
   const vfile = new VFile({
