@@ -96,8 +96,9 @@ export function Article({
         <section>{children}</section>
 
         {/* MyLinkBox広告 */}
-        {mylinkboxIds && mylinkboxIds.length > 0 &&
-          <MyLinkBox ids={mylinkboxIds} />}
+        {mylinkboxIds && mylinkboxIds.length > 0 && (
+          <MyLinkBox ids={mylinkboxIds} />
+        )}
 
         {showShareButtons && (
           <section className="flex gap-x-2 justify-end mt-12 mb-4">

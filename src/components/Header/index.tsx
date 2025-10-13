@@ -120,6 +120,11 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               <DesktopNavigation />
             </nav>
 
+            {/* デスクトップ専用のテーマ切替ボタンを右端に配置 */}
+            <div className="hidden md:flex ml-4">
+              <ThemeToggle />
+            </div>
+
             <button
               ref={buttonRef}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 relative z-50 focus:outline-none"
