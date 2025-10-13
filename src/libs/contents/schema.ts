@@ -19,6 +19,8 @@ export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
   seriesOrder: z.number().optional(), // シリーズ内での順序
   // Amazon アソシエイト
   amazonAssociate: z.boolean().optional(), // Amazon アソシエイトリンクが含まれるかどうか
+  // MyLinkBox
+  myLinkBoxIds: z.array(z.string()).optional(), // MyLinkBoxのID配列
 });
 
 // キーワード用のフロントマタースキーマ

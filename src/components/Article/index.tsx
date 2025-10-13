@@ -10,6 +10,8 @@ import { Comments } from "@/components/Comments";
 import Script from "next/script";
 import config from "@/config";
 import { createBlogPostingJsonLd } from "@/libs/jsonld";
+import MyLinkBoxScript from "@/components/Ads/MyLinkBox/script";
+import MyLinkBox from "@/components/Ads/MyLinkBox";
 
 export type ArticleProps = {
   title: string;
@@ -23,6 +25,7 @@ export type ArticleProps = {
   description?: string;
   author?: string;
   url?: string;
+  myLinkBoxIds?: string[];
 };
 
 export function Article({
@@ -37,6 +40,7 @@ export function Article({
   description,
   author = config.metadata.author,
   url,
+  myLinkBoxIds: mylinkboxIds,
 }: ArticleProps) {
   const formattedDate =
     typeof date === "string" ? date : format(date, "yyyy/MM/dd");
@@ -90,6 +94,10 @@ export function Article({
 
         {/* 記事コンテンツと目次 */}
         <section>{children}</section>
+
+        {/* MyLinkBox広告 */}
+        {mylinkboxIds && mylinkboxIds.length > 0 &&
+          <MyLinkBox ids={mylinkboxIds} />}
 
         {showShareButtons && (
           <section className="flex gap-x-2 justify-end mt-12 mb-4">

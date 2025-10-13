@@ -124,6 +124,7 @@ export default async function Page({ params }: Props) {
         description={frontmatter.description}
         author={frontmatter.author || config.metadata.author}
         url={url}
+        myLinkBoxIds={frontmatter.myLinkBoxIds}
       >
         <ArticleLayout
           tocSideClassName={styles.tocSideStyles}
