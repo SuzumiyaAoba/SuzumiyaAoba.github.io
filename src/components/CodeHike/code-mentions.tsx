@@ -41,7 +41,7 @@ export function Link(props: { href?: string; children?: React.ReactNode }) {
       const textContent = typeof children === 'string' ? children : 
         React.Children.toArray(children).map(child => 
           typeof child === 'string' ? child : 
-          React.isValidElement(child) ? child.props.children : child
+          React.isValidElement(child) ? (child.props as any).children : child
         ).join('');
       return <NextLink href={props.href} {...linkProps}>{textContent}</NextLink>;
     }

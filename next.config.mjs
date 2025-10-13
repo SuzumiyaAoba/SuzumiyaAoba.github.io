@@ -35,6 +35,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // TypeScript の型チェックを有効化（Next.jsの型生成は無効化）
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  // Next.jsの型生成を無効化
+  typedRoutes: false,
   // SSG設定
   output: isProd ? "export" : undefined,
   trailingSlash: true,
