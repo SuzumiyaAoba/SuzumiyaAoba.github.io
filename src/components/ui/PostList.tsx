@@ -10,6 +10,8 @@ type PostItem = {
   tags?: string[];
   // キーワード用に parent を持つ場合がある
   parent?: boolean;
+  // 一覧に表示しないドラフト項目
+  draft?: boolean;
 };
 
 export type PostListProps = {
@@ -31,7 +33,11 @@ export const PostList: FC<PostListProps> = ({
   showTags = true,
   showDate = true,
 }) => {
-  const filteredPosts = posts.filter((post) => "parent" in post && post.parent);
+  const filteredPosts = posts.filter((post) => {
+    const isDraft = "draft" in post && post.draft === true;
+    const isChildVisible = !("parent" in post) || post.parent === true;
+    return !isDraft && isChildVisible;
+  });
 
   if (filteredPosts.length === 0) return null;
 
