@@ -34,8 +34,8 @@ export const PostList: FC<PostListProps> = ({
   showDate = true,
 }) => {
   const filteredPosts = posts.filter((post) => {
-    const isDraft = "draft" in post && post.draft === true;
-    const isChildVisible = !("parent" in post) || post.parent === true;
+    const isDraft = post.draft === true;
+    const isChildVisible = post.parent !== true;
     return !isDraft && isChildVisible;
   });
 
