@@ -3,6 +3,7 @@ import React from "react";
 import { VisDotGraph, TreeNode } from "@/components/VisDotGraph";
 import TreeAutomatonTransition, { TransitionStep } from "@/components/TreeAutomatonTransition";
 import { TweetCard } from "@/components/TweetCard";
+import { Img } from "@/components/Mdx/Img";
 
 // VisDotGraphコンポーネントをMDXで使用するためのラッパー
 const VisDotGraphMDX: React.FC<{
@@ -50,7 +51,8 @@ const TreeAutomatonTransitionMDX: React.FC<{
 
 // デフォルトのMDXコンポーネント
 const defaultComponents: MDXComponents = {
-  // 既存のコンポーネントがあればここに追加
+  // Markdownの画像にzoom機能を追加
+  img: Img as any,
 };
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
