@@ -1,8 +1,8 @@
-interface MyLinkboxProps {
+interface MyLinkBoxProps {
   ids: string[];
 }
 
-export default function MyLinkBox({ ids }: MyLinkboxProps) {
+export default function MyLinkBox({ ids }: MyLinkBoxProps) {
   if (!ids || ids.length === 0) {
     return null;
   }
