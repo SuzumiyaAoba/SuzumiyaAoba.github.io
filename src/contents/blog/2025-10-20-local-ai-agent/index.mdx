@@ -23,7 +23,7 @@ amazonAssociate: true
 しかし、`ollama-ai-provider-v2` を使うと Agent が Tool を使用しないという不具合がある。
 以下の Issue でも報告されているように、ツール呼び出し後にテキストを生成しないような挙動をする。
 
-- [[https://github.com/nordwestt/ollama-ai-provider-v2/issues/40][No text generated when using tools · Issue #40 · nordwestt/ollama-ai-provider-v2]]
+- [No text generated when using tools · Issue #40 · nordwestt/ollama-ai-provider-v2](https://github.com/nordwestt/ollama-ai-provider-v2/issues/40)
 
 解決策は Issue で触れられているように `@ai-sdk/openai-compatible` を代わりに使うことでこの問題は回避できる。
 
