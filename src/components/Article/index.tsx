@@ -10,8 +10,6 @@ import { Comments } from "@/components/Comments";
 import Script from "next/script";
 import config from "@/config";
 import { createBlogPostingJsonLd } from "@/libs/jsonld";
-import MyLinkBoxScript from "@/components/Ads/MyLinkBox/script";
-import MyLinkBox from "@/components/Ads/MyLinkBox";
 
 export type ArticleProps = {
   title: string;
@@ -94,11 +92,6 @@ export function Article({
 
         {/* 記事コンテンツと目次 */}
         <section>{children}</section>
-
-        {/* MyLinkBox広告 */}
-        {mylinkboxIds && mylinkboxIds.length > 0 && (
-          <MyLinkBox ids={mylinkboxIds} />
-        )}
 
         {showShareButtons && (
           <section className="flex gap-x-2 justify-end mt-12 mb-4">

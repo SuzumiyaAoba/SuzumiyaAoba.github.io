@@ -19,7 +19,6 @@ import { ThemeProvider } from "@/components/ThemeToggle/Provider";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
-import MyLinkBoxScript from "@/components/Ads/MyLinkBox/script";
 
 export const metadata: Metadata = {
   title: config.metadata.title,
@@ -101,7 +100,6 @@ export default async function RootLayout({
             }
           `}
         </style>
-        <MyLinkBoxScript />
       </head>
       <body
         className={clsx(

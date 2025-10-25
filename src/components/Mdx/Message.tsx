@@ -69,15 +69,15 @@ export const Message: FC<MessageProps> = memo(
         <summary className="flex items-center cursor-pointer">
           {showIcon && (
             <p
-              className={iconVariants({ variant })}
+              className={cn(iconVariants({ variant }), " !mb-0")}
               style={{ color: `var(--${variant}-icon)` }}
             />
           )}
-          <p className="font-bold" style={{ color: `var(--${variant}-text)` }}>
+          <p className={cn("font-bold !mb-0", `text-${variant}-text`)}>
             {title}
           </p>
           <span
-            className="ml-auto mr-2 message-arrow"
+            className="ml-auto mr-2 message-arrow !mb-0"
             style={{
               transform: "rotate(90deg)",
               transition: "transform 0.3s ease",
