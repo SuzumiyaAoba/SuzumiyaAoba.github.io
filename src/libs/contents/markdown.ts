@@ -7,7 +7,6 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkMdx from "remark-mdx";
 import remarkRehype from "remark-rehype";
-import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import { extractTocFromTree, type TocEntry } from "../rehype/toc";
 import {

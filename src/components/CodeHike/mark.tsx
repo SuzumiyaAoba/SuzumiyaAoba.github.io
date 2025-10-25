@@ -9,6 +9,8 @@ export const mark: AnnotationHandler = {
         className="flex w-full"
         style={{
           backgroundColor: annotation && `rgb(from ${color} r g b / 0.1)`,
+          borderWidth: annotation && "0 0 0 2px",
+          borderColor: annotation && `rgb(from ${color} r g b / 0.6)`,
         }}
       >
         <InnerLine merge={props} className="px-2 flex-1" />
