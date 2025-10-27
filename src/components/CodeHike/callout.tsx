@@ -14,7 +14,6 @@ export const callout: AnnotationHandler = {
   },
   Block: ({ annotation, children }) => {
     const { column } = annotation.data
-    const left = Math.floor(annotation.query.length / 2);
     return (
       <>
         {children}
