@@ -2,14 +2,14 @@ import {
   defineConfig,
   presetAttributify,
   presetIcons,
-  presetWebFonts,
   presetTypography,
+  presetWebFonts,
+  presetWind4,
   transformerDirectives,
   transformerVariantGroup,
-  presetWind4,
-} from "unocss";
-import presetAnimations from "unocss-preset-animations";
-import { presetShadcn } from "unocss-preset-shadcn";
+} from "unocss"
+import presetAnimations from "unocss-preset-animations"
+import { presetShadcn } from "unocss-preset-shadcn"
 
 export default defineConfig({
   content: {
@@ -65,4 +65,4 @@ export default defineConfig({
     "[data-theme='light']",
     "[data-theme='system']",
   ],
-});
+})

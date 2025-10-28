@@ -17,7 +17,8 @@
     "copy:blog:css": "cpy 'src/contents/blog/**/*.css' 'public/assets/blog'",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
-    "lint": "next lint",
+    "lint": "biome check",
+    "lint:fix": "biome check --apply",
     "storybook": "npm run clean && storybook dev -p 6006",
     "build-storybook": "npm run clean && storybook build",
     "updates": "npx npm-check-updates",
@@ -73,6 +74,7 @@
     "zod": "^4.1.9"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
     "@iconify/json": "^2.2.385",
     "@storybook/nextjs": "^9.1.6",
     "@storybook/react": "^9.1.6",
@@ -88,9 +90,6 @@
     "@vitejs/plugin-react": "^5.0.3",
     "autoprefixer": "^10.4.21",
     "cpy-cli": "^6.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.3",
-    "eslint-plugin-storybook": "^9.1.6",
     "gray-matter": "^4.0.3",
     "jsdom": "^27.0.0",
     "npm-run-all2": "^8.0.4",

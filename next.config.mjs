@@ -1,6 +1,6 @@
 // @ts-check
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === "production"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -56,8 +56,8 @@ const nextConfig = {
         destination: "/blog/post/:slug/",
         permanent: true, // 301リダイレクト
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
