@@ -48,23 +48,44 @@ export type ParsedContent<FRONTMATTER> = {
 
 export async function getRawContent(
   ...paths: string[]
+): Promise<RawContent | null>;
+export async function getRawContent(
+  options: { lang?: string },
+  ...paths: string[]
+): Promise<RawContent | null>;
+export async function getRawContent(
+  ...args: [{ lang?: string }, ...string[]] | string[]
 ): Promise<RawContent | null> {
+  let lang: string | undefined;
+  let paths: string[];
+
+  // オーバーロード対応：最初の引数がオブジェクトの場合は言語指定あり
+  if (typeof args[0] === "object" && args[0] !== null && "lang" in args[0]) {
+    lang = args[0].lang;
+    paths = args.slice(1) as string[];
+  } else {
+    paths = args as string[];
+  }
+
   const relative = path.join("src", "contents", ...paths);
   const abosolute = path.join(process.cwd(), relative);
-  const mdPath = path.resolve(path.join(abosolute, "index.md"));
-  const mdxPath = path.resolve(path.join(abosolute, "index.mdx"));
+
+  // 言語指定がある場合は index.{lang}.{md,mdx} を優先
+  const suffix = lang ? `.${lang}` : "";
+  const mdPath = path.resolve(path.join(abosolute, `index${suffix}.md`));
+  const mdxPath = path.resolve(path.join(abosolute, `index${suffix}.mdx`));
 
   const readFileOptions = { encoding: "utf8" } as const;
   try {
     return {
-      path: path.join(relative, "index.md"),
+      path: path.join(relative, `index${suffix}.md`),
       format: "md",
       raw: await readFile(mdPath, readFileOptions),
     };
   } catch (err) {
     try {
       return {
-        path: path.join(relative, "index.mdx"),
+        path: path.join(relative, `index${suffix}.mdx`),
         format: "mdx",
         raw: await readFile(mdxPath, readFileOptions),
       };
@@ -100,11 +121,15 @@ export const parseRawContent = <T extends z.ZodTypeAny>(
 export async function getFrontmatter<T extends z.ZodTypeAny>({
   paths,
   schema,
+  lang,
 }: {
   paths: string[];
   schema: T;
+  lang?: string;
 }) {
-  const rawContent = await getRawContent(...paths);
+  const rawContent = lang
+    ? await getRawContent({ lang }, ...paths)
+    : await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
@@ -125,11 +150,15 @@ export async function getStylesheets(...paths: string[]): Promise<string[]> {
 export const getContent = async <T extends z.ZodTypeAny>({
   schema,
   paths,
+  lang,
 }: {
   schema: T;
   paths: string[];
+  lang?: string;
 }): Promise<(Content<z.infer<T>> & { toc: TocEntry[] }) | null> => {
-  const rawContent = await getRawContent(...paths);
+  const rawContent = lang
+    ? await getRawContent({ lang }, ...paths)
+    : await getRawContent(...paths);
   if (!rawContent) {
     return null;
   }
@@ -228,7 +257,14 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
     glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")))
   );
 
-  const dirs = [...md, ...mdx].map((filepath) =>
+  // 言語固有のファイル（index.{lang}.md, index.{lang}.mdx）を除外
+  const filteredFiles = [...md, ...mdx].filter((filepath) => {
+    const filename = path.basename(filepath);
+    // index.{lang}.md または index.{lang}.mdx のパターンにマッチする場合は除外
+    return !filename.match(/^index\.[a-z]{2}\.(md|mdx)$/);
+  });
+
+  const dirs = filteredFiles.map((filepath) =>
     path
       .parse(filepath)
       .dir.split("/")
@@ -236,8 +272,56 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
       .join("/")
   );
 
-  return dirs;
+  // 重複を削除
+  return Array.from(new Set(dirs));
 };
+
+export async function hasEnglishVersion(...paths: string[]): Promise<boolean> {
+  const englishContent = await getRawContent({ lang: "en" }, ...paths);
+  return englishContent !== null;
+}
+
+/**
+ * コンテンツで利用可能な言語を取得する
+ * @param paths コンテンツパス
+ * @returns 利用可能な言語コードの配列（例: ["ja", "en"]）
+ */
+export async function getAvailableLanguages(...paths: string[]): Promise<string[]> {
+  const relative = path.join("src", "contents", ...paths);
+  const absolute = path.join(process.cwd(), relative);
+
+  const languages: string[] = [];
+
+  // デフォルト版（日本語）をチェック
+  const defaultMdPath = path.resolve(path.join(absolute, "index.md"));
+  const defaultMdxPath = path.resolve(path.join(absolute, "index.mdx"));
+  try {
+    await readFile(defaultMdPath, { encoding: "utf8" });
+    languages.push("ja");
+  } catch {
+    try {
+      await readFile(defaultMdxPath, { encoding: "utf8" });
+      languages.push("ja");
+    } catch {
+      // デフォルト版がない
+    }
+  }
+
+  // 言語固有ファイルをチェック
+  const languageFiles = await Array.fromAsync(
+    glob(path.resolve(absolute, "index.*.{md,mdx}"))
+  );
+
+  for (const file of languageFiles) {
+    const filename = path.basename(file);
+    const match = filename.match(/^index\.([a-z]{2})\.(md|mdx)$/);
+    if (match) {
+      languages.push(match[1]);
+    }
+  }
+
+  return Array.from(new Set(languages));
+}
 
 export async function getFrontmatters<T extends z.ZodTypeAny>({
   paths,

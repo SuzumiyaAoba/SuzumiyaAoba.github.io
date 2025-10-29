@@ -27,7 +27,13 @@ export default defineConfig({
       darkSelector: '[data-theme="dark"]',
     }),
     presetAttributify(),
-    presetIcons(),
+    presetIcons({
+      scale: 1.2,
+      extraProperties: {
+        display: "inline-block",
+        "vertical-align": "middle",
+      },
+    }),
     presetWebFonts(),
     presetAnimations(),
     presetShadcn(),
@@ -64,5 +70,7 @@ export default defineConfig({
     "[data-theme='dark']",
     "[data-theme='light']",
     "[data-theme='system']",
+    // Language toggle icon
+    "i-material-symbols-translate",
   ],
 })

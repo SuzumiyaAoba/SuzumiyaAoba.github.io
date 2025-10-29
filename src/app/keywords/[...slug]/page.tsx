@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import config from "@/config";
-import { getContent, getFrontmatter } from "@/libs/contents/markdown";
+import { getContent, getFrontmatter, getAvailableLanguages } from "@/libs/contents/markdown";
 import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 import { generateNestedSlugParams } from "@/libs/contents/params";
+import { LanguageToggle, type LanguageContent } from "@/components/LanguageToggle";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -36,6 +37,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const languageLabels: Record<string, string> = {
+  ja: "日本語",
+  en: "English",
+};
+
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const content = await getContent({
@@ -49,6 +55,29 @@ export default async function Page({ params }: Props) {
 
   const { frontmatter, stylesheets, Component } = content;
 
+  // 利用可能な言語を取得
+  const availableLanguages = await getAvailableLanguages(contentBasePath, ...slug);
+
+  // 各言語のコンテンツを取得
+  const languageContents: LanguageContent[] = [];
+
+  for (const lang of availableLanguages) {
+    const langContent = await getContent({
+      paths: [contentBasePath, ...slug],
+      schema: keywordFrontmatterSchema,
+      lang: lang === "ja" ? undefined : lang,
+    });
+
+    if (langContent) {
+      const LangComponent = langContent.Component;
+      languageContents.push({
+        lang,
+        label: languageLabels[lang] || lang.toUpperCase(),
+        content: <LangComponent />,
+      });
+    }
+  }
+
   return (
     <>
       <StylesheetLoader
@@ -61,7 +90,14 @@ export default async function Page({ params }: Props) {
         date={frontmatter.date}
         tags={frontmatter.tags}
       >
-        <Component />
+        {languageContents.length > 0 ? (
+          <LanguageToggle
+            defaultLanguage="ja"
+            languages={languageContents}
+          />
+        ) : (
+          <Component />
+        )}
       </Article>
     </>
   );

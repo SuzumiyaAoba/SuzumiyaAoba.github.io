@@ -7,6 +7,7 @@ import {
   getFrontmatter,
   getFrontmatters,
   getPaths,
+  getAvailableLanguages,
 } from "@/libs/contents/markdown";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
@@ -19,6 +20,7 @@ import { ArticleHistory } from "@/components/ArticleHistory";
 import { SeriesNavigation } from "@/components/SeriesNavigation";
 import { getSeriesNavigation } from "@/libs/contents/series";
 import AmazonAssociate from "@/components/AmazonAssociate";
+import { LanguageToggle, type LanguageContent } from "@/components/LanguageToggle";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -91,6 +93,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const languageLabels: Record<string, string> = {
+  ja: "日本語",
+  en: "English",
+};
+
 export default async function Page({ params }: Props) {
   const { slug } = await params;
   const content = await getContent({
@@ -105,8 +112,31 @@ export default async function Page({ params }: Props) {
   const { frontmatter, stylesheets, Component, toc, gitHistory } = content;
   const url = `${config.metadata.url}/blog/post/${slug}/`;
 
+  // 利用可能な言語を取得
+  const availableLanguages = await getAvailableLanguages("blog", slug);
+
+  // 各言語のコンテンツを取得
+  const languageContents: LanguageContent[] = [];
+
+  for (const lang of availableLanguages) {
+    const langContent = await getContent({
+      paths: ["blog", slug],
+      schema: Pages["blog"].frontmatter,
+      lang: lang === "ja" ? undefined : lang,
+    });
+
+    if (langContent) {
+      const LangComponent = langContent.Component;
+      languageContents.push({
+        lang,
+        label: languageLabels[lang] || lang.toUpperCase(),
+        content: <LangComponent />,
+      });
+    }
+  }
+
   // シリーズナビゲーション情報を取得
-  const seriesNavigation = frontmatter.series 
+  const seriesNavigation = frontmatter.series
     ? await getSeriesNavigation(slug, frontmatter.series)
     : null;
 
@@ -130,7 +160,14 @@ export default async function Page({ params }: Props) {
           tocSideClassName={styles.tocSideStyles}
           toc={<TOC toc={toc} />}
         >
-          <Component />
+          {languageContents.length > 0 ? (
+            <LanguageToggle
+              defaultLanguage="ja"
+              languages={languageContents}
+            />
+          ) : (
+            <Component />
+          )}
 
           {/* シリーズナビゲーションを表示 */}
           {seriesNavigation && frontmatter.series && seriesNavigation.currentIndex !== -1 && (
@@ -143,7 +180,7 @@ export default async function Page({ params }: Props) {
               className="mt-12"
             />
           )}
-          
+
           {/* 記事の更新履歴を表示 */}
           {gitHistory && (
             <ArticleHistory

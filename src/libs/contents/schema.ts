@@ -21,6 +21,8 @@ export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
   amazonAssociate: z.boolean().optional(), // Amazon アソシエイトリンクが含まれるかどうか
   // MyLinkBox
   myLinkBoxIds: z.array(z.string()).optional(), // MyLinkBoxのID配列
+  // 多言語対応
+  hasEnglishVersion: z.boolean().optional(), // 英語版が存在するかどうか
 });
 
 // キーワード用のフロントマタースキーマ
