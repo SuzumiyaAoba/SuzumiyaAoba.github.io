@@ -18,7 +18,7 @@
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "lint": "biome check",
-    "lint:fix": "biome check --apply",
+    "lint:fix": "biome check --write",
     "storybook": "npm run clean && storybook dev -p 6006",
     "build-storybook": "npm run clean && storybook build",
     "updates": "npx npm-check-updates",

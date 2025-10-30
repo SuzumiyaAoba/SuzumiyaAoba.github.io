@@ -4,4 +4,4 @@ module.exports = {
     "@unocss/postcss": {},
     autoprefixer: {},
   },
-}
+};

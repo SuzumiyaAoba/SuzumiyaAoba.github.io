@@ -7,9 +7,9 @@ import {
   presetWind4,
   transformerDirectives,
   transformerVariantGroup,
-} from "unocss"
-import presetAnimations from "unocss-preset-animations"
-import { presetShadcn } from "unocss-preset-shadcn"
+} from "unocss";
+import presetAnimations from "unocss-preset-animations";
+import { presetShadcn } from "unocss-preset-shadcn";
 
 export default defineConfig({
   content: {
@@ -73,4 +73,4 @@ export default defineConfig({
     // Language toggle icon
     "i-material-symbols-translate",
   ],
-})
+});
