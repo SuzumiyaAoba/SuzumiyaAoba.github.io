@@ -26,12 +26,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run build
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
 
       - name: Fix permissions
         run: |
-          chmod -c -R +rX "dist/" | while read line; do
+          chmod -c -R +rX "out/" | while read line; do
             echo "::warning title=Invalid file permissions automatically fixed::$line"
           done
 
