@@ -58,11 +58,15 @@ export const LanguageToggle: FC<LanguageToggleProps> = ({
         <button
           aria-label={`Switch to ${nextLangConfig?.label || nextLanguage?.label || "other language"}`}
           title={`${currentLangConfig?.label || currentLanguage} → ${nextLangConfig?.label || nextLanguage?.label || "other"}`}
-          className="flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:scale-105 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+          className="flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:scale-105"
+          style={{
+            backgroundColor: "var(--background-secondary)",
+            color: "var(--foreground)",
+          }}
           onClick={toggleLanguage}
         >
-          <span className="i-material-symbols-translate text-xl text-gray-700 dark:text-gray-300" />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+          <span className="i-material-symbols-translate text-xl" />
+          <span className="text-sm font-medium">
             {currentLangConfig?.shortLabel || currentLanguage.toUpperCase()}
           </span>
         </button>

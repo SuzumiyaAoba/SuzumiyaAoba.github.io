@@ -32,7 +32,7 @@ const TimelineItem = ({
       {/* 左側の日付部分 */}
       <div className="w-12 flex-shrink-0 text-right pr-8 relative">
         <div className="font-bold text-lg">{day}</div>
-        <div className="text-xs text-gray-500 dark:text-gray-300">
+        <div className="text-xs" style={{ color: "var(--muted)" }}>
           {dayOfWeek}
         </div>
 
@@ -40,9 +40,10 @@ const TimelineItem = ({
         <div className="absolute top-0 right-0 h-full flex items-center flex-col">
           {/* 円のマーカー */}
           <div
-            className="absolute right-0 w-4 h-4 rounded-full bg-primary dark:bg-primary transform -translate-x-1/2 transition-all duration-300 group-hover:scale-125 z-10"
+            className="absolute right-0 w-4 h-4 rounded-full transform -translate-x-1/2 transition-all duration-300 group-hover:scale-125 z-10"
             style={{
               top: `${CIRCLE_CENTER_Y - CIRCLE_SIZE / 2}px`,
+              backgroundColor: "var(--accent-primary)",
               boxShadow: `0 0 0 2px var(--background), 0 0 0 4px rgba(var(--primary-rgb), 0.3)`,
             }}
           ></div>
@@ -50,10 +51,12 @@ const TimelineItem = ({
           {/* 円の中心から下に伸びる縦線 - 最後のアイテムでない場合のみ表示 */}
           {!isLastInMonth && (
             <div
-              className="absolute right-3.5 w-[2px] bg-primary/40 dark:bg-primary/40 -translate-x-1/2"
+              className="absolute right-3.5 w-[2px] -translate-x-1/2"
               style={{
                 top: `${CIRCLE_CENTER_Y}px`,
                 height: `calc(100% - ${CIRCLE_CENTER_Y}px + 1.5rem)`,
+                backgroundColor: "var(--accent-primary)",
+                opacity: 0.4,
               }}
             ></div>
           )}
@@ -63,7 +66,14 @@ const TimelineItem = ({
       {/* 右側の記事部分 */}
       <div className="pt-1 ml-6 w-full pb-5">
         {showMonth && (
-          <div className="text-sm font-semibold text-primary dark:text-primary/90 mb-3 -mt-1 border-b border-primary dark:border-primary/80 pb-1 inline-block">
+          <div
+            className="text-sm font-semibold mb-3 -mt-1 border-b pb-1 inline-block"
+            style={{
+              color: "var(--accent-primary)",
+              borderColor: "var(--accent-primary)",
+              opacity: 0.9,
+            }}
+          >
             {`${month}月`}
           </div>
         )}

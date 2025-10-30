@@ -1,6 +1,10 @@
+"use client";
+
 import { FC } from "react";
 import Link from "next/link";
 import { FooterAds } from "../Ads/FooterAds";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/libs/i18n/client";
 
 type PoweredBy =
   | {
@@ -24,6 +28,8 @@ type FooterProps = {
  * @param {PoweredBy} props.poweredBy - "Powered by" の情報（文字列またはリンクオブジェクト）
  */
 export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation(language, "common");
   const currentYear = new Date().getFullYear();
   const linkStyles = "transition-colors duration-200 hover:text-foreground";
 
@@ -45,21 +51,21 @@ export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
             style={{ color: "var(--muted)" }}
             href="/privacy-policy/"
           >
-            プライバシーポリシー
+            {t("footer.privacyPolicy")}
           </Link>
           <Link
             className={linkStyles}
             style={{ color: "var(--muted)" }}
             href="/contact"
           >
-            お問い合わせ
+            {t("footer.contact")}
           </Link>
           <Link
             className={linkStyles}
             style={{ color: "var(--muted)" }}
             href="/rss.xml"
           >
-            RSS
+            {t("footer.rss")}
           </Link>
         </div>
         <div className="text-sm text-center">
@@ -67,7 +73,7 @@ export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
             &copy; {currentYear} {copyright}
           </div>
           <div>
-            Powered by{" "}
+            {t("footer.poweredBy")}{" "}
             {typeof poweredBy === "string" ? (
               poweredBy
             ) : (

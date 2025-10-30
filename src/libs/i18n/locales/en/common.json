@@ -1,0 +1,71 @@
+{
+  "header": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "nav": {
+    "blog": "Blog",
+    "tags": "Tags",
+    "series": "Series",
+    "about": "About",
+    "search": "Search"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact",
+    "rss": "RSS",
+    "poweredBy": "Powered by"
+  },
+  "breadcrumb": {
+    "home": "Home"
+  },
+  "language": {
+    "ja": "Japanese",
+    "en": "English",
+    "switch": "Switch language",
+    "current": "Current language"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "pages": {
+    "home": {
+      "blog": {
+        "title": "✍️ Blog",
+        "description": "Programming essays and thoughts."
+      },
+      "series": {
+        "title": "📓 Series",
+        "description": "Article series collection."
+      },
+      "tools": {
+        "title": "🔧 Tools",
+        "description": "Useful tool collection."
+      },
+      "keywords": {
+        "title": "🔍 Keywords",
+        "description": "Programming terminology explained."
+      }
+    },
+    "blog": {
+      "title": "Blog",
+      "showAllTags": "Show all tags"
+    },
+    "tags": {
+      "title": "All Tags",
+      "postsCount": "{{count}} posts"
+    },
+    "series": {
+      "title": "Series",
+      "noSeries": "No series yet.",
+      "postsCount": "{{count}} posts",
+      "viewAll": "View all posts in this series",
+      "moreArticles": "... {{count}} more posts"
+    },
+    "timeline": {
+      "month": "{{month}}"
+    }
+  }
+}

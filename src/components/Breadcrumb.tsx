@@ -15,6 +15,8 @@ import {
   BreadcrumbItemLink,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/libs/i18n/client";
 
 // 静的データをサーバーから取得するためのプロップスタイプ
 export interface BreadcrumbNavProps {
@@ -24,6 +26,8 @@ export interface BreadcrumbNavProps {
 }
 
 export default function BreadcrumbNav(props: BreadcrumbNavProps) {
+  const { language } = useLanguage();
+  const { t } = useTranslation(language, "common");
   const { pathSegments, data } = useBreadcrumbs(props);
 
   if (pathSegments.length === 0) {
@@ -35,7 +39,7 @@ export default function BreadcrumbNav(props: BreadcrumbNavProps) {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbItemLink asChild>
-            <Link href="/" aria-label="Home">
+            <Link href="/" aria-label={t("breadcrumb.home")}>
               <HomeIcon className="h-4 w-4" />
             </Link>
           </BreadcrumbItemLink>

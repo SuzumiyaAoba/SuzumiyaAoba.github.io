@@ -3,6 +3,8 @@
 import { type FC, useEffect } from "react";
 import Link from "next/link";
 import { MENUS } from "./menu";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/libs/i18n/client";
 
 type MobileNavigationProps = {
   onNavigate: () => void;
@@ -20,6 +22,8 @@ export const MobileNavigation: FC<MobileNavigationProps> = ({
   onNavigate,
   isVisible,
 }) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation(language, "common");
   useEffect(() => {
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== "Tab" || !isVisible) return;
@@ -56,7 +60,7 @@ export const MobileNavigation: FC<MobileNavigationProps> = ({
             className="block py-2 text-lg font-semibold transition-colors hover:text-primary"
             onClick={onNavigate}
           >
-            {menu.name}
+            {t(menu.i18nKey)}
           </Link>
         </li>
       ))}

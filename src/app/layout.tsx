@@ -16,6 +16,7 @@ import {
   getBookTitleMap,
 } from "@/libs/contents/title-map";
 import { ThemeProvider } from "@/components/ThemeToggle/Provider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 // メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
 import "./layout-globals.css";
@@ -110,28 +111,30 @@ export default async function RootLayout({
         )}
       >
         <ThemeProvider>
-          <Header siteName={config.metadata.title} />
-          <div className="content-container mt-header flex-grow w-full">
-            <div className="max-w-6xl w-full mx-auto px-4 xl:max-w-7xl">
-              <div className="md:pl-20 mb-6">
-                <BreadcrumbNav
-                  blogTitleMap={blogTitleMap}
-                  keywordTitleMap={keywordTitleMap}
-                  bookTitleMap={bookTitleMap}
-                />
+          <LanguageProvider>
+            <Header siteName={config.metadata.title} />
+            <div className="content-container mt-header flex-grow w-full">
+              <div className="max-w-6xl w-full mx-auto px-4 xl:max-w-7xl">
+                <div className="md:pl-20 mb-6">
+                  <BreadcrumbNav
+                    blogTitleMap={blogTitleMap}
+                    keywordTitleMap={keywordTitleMap}
+                    bookTitleMap={bookTitleMap}
+                  />
+                </div>
               </div>
+              {children}
             </div>
-            {children}
-          </div>
-          <Footer
-            copyright="SuzumiyaAoba"
-            poweredBy={{
-              name: "Next.js",
-              url: "https://nextjs.org",
-            }}
-          />
-          <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-          <GoogleAdsenseScript />
+            <Footer
+              copyright="SuzumiyaAoba"
+              poweredBy={{
+                name: "Next.js",
+                url: "https://nextjs.org",
+              }}
+            />
+            <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+            <GoogleAdsenseScript />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

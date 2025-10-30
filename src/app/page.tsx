@@ -1,5 +1,9 @@
+"use client";
+
 import { FC } from "react";
 import { DevelopmentOnly } from "@/components/DevelopmentOnly";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/libs/i18n/client";
 
 type CardProps = {
   title: string;
@@ -22,30 +26,33 @@ const Card: FC<CardProps> = ({ title, href, description }) => {
   );
 };
 
-const cards: CardProps[] = [
-  {
-    title: "✍️ Blog",
-    href: "/blog/",
-    description: "プログラミングを中心に散文を。",
-  },
-  {
-    title: "📓 Series",
-    href: "/series/",
-    description: "連載記事のシリーズ。",
-  },
-  {
-    title: "🔧 Tools",
-    href: "/tools/",
-    description: "便利なツール集。",
-  },
-  {
-    title: "🔍 Keywords",
-    href: "/keywords/",
-    description: "プログラミング用語の解説。",
-  },
-];
-
 export default function Home() {
+  const { language } = useLanguage();
+  const { t } = useTranslation(language, "common");
+
+  const cards: CardProps[] = [
+    {
+      title: t("pages.home.blog.title"),
+      href: "/blog/",
+      description: t("pages.home.blog.description"),
+    },
+    {
+      title: t("pages.home.series.title"),
+      href: "/series/",
+      description: t("pages.home.series.description"),
+    },
+    {
+      title: t("pages.home.tools.title"),
+      href: "/tools/",
+      description: t("pages.home.tools.description"),
+    },
+    {
+      title: t("pages.home.keywords.title"),
+      href: "/keywords/",
+      description: t("pages.home.keywords.description"),
+    },
+  ];
+
   return (
     <main className="px-4 py-6 max-w-4xl mx-auto">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-16">

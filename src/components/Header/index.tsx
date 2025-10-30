@@ -5,7 +5,10 @@ import Link from "next/link";
 import clsx from "clsx";
 import { exo_2 } from "@/fonts";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useHeaderVisibility } from "./useHeaderVisibility";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/libs/i18n/client";
 import { MENUS } from "./menu";
 import { SiteLogo } from "./SiteLogo";
 import { DesktopNavigation } from "./DesktopNavigation";
@@ -35,6 +38,8 @@ type HeaderProps = {
  */
 export const Header: FC<HeaderProps> = ({ siteName }) => {
   const { isScrolled, isVisible } = useHeaderVisibility();
+  const { language } = useLanguage();
+  const { t } = useTranslation(language, "common");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -120,8 +125,9 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               <DesktopNavigation />
             </nav>
 
-            {/* デスクトップ専用のテーマ切替ボタンを右端に配置 */}
-            <div className="hidden md:flex ml-4">
+            {/* デスクトップ専用のテーマ切替ボタンと言語切替ボタンを右端に配置 */}
+            <div className="hidden md:flex items-center gap-2 ml-4">
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
 
@@ -129,7 +135,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               ref={buttonRef}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 relative z-50 focus:outline-none"
               onClick={toggleMenu}
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={isMobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")}
               aria-expanded={isMobileMenuOpen}
             >
               <HamburgerIcon isOpen={isMobileMenuOpen} />
@@ -158,7 +164,8 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
                 isVisible={isMobileMenuOpen}
               />
             </div>
-            <div className="flex justify-center my-4">
+            <div className="flex justify-center items-center gap-4 my-4">
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
           </div>
