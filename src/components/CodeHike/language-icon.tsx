@@ -2,6 +2,10 @@ import clsx from "clsx";
 
 const languageToIcon = (lang: string) => {
   switch (lang.toLocaleLowerCase()) {
+    case "":
+    case "text":
+    case "txt":
+      return "i-mdi-text";
     case "javascript":
       return "i-skill-icons-javascript";
     case "css":
