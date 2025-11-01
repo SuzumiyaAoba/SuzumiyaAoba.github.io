@@ -3,7 +3,7 @@
 import { Message, MessageContent } from "./ai-elements/message";
 import { Response } from "./ai-elements/response";
 import { Reasoning, ReasoningContent, ReasoningTrigger } from "./ai-elements/reasoning";
-import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput } from "./ai-elements/tool";
+import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput, ToolInputProps, ToolOutputProps } from "./ai-elements/tool";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
 import markdownStyles from "@/styles/markdown.module.scss";
@@ -14,8 +14,8 @@ export type ToolInvocation = {
   toolCallId: string;
   toolName: string;
   state: ToolUIPart["state"];
-  input?: unknown;
-  output?: unknown;
+  input?: ToolInputProps["input"];
+  output?: ToolOutputProps["output"];
   errorText?: string;
 };
 
@@ -68,7 +68,7 @@ export const ChatHistory = ({
                       title={invocation.toolName}
                     />
                     <ToolContent>
-                      {invocation.input && <ToolInput input={invocation.input} />}
+                      {(invocation as any).input && <ToolInput input={invocation.input} />}
                       <ToolOutput
                         output={invocation.output}
                         errorText={invocation.errorText}
