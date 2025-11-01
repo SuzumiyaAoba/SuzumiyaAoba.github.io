@@ -1,5 +1,5 @@
 .markdown {
-  @apply break-words;
+  @apply wrap-break-word;
 
   h1 {
     font-size: 1.85rem;
@@ -241,7 +241,6 @@
     padding: 1rem 0;
     border-radius: 8px;
     border: 1px solid var(--border);
-    margin: 1.5rem 0;
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
 
     @media screen and (max-width: 768px) {
@@ -617,6 +616,3 @@
     transform: translateX(0);
   }
 }
-
-
-

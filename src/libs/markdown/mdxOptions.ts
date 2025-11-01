@@ -22,6 +22,7 @@ import { TableWrapper } from "@/components/TableWrapper";
 import { VisDotGraph } from "@/components/VisDotGraph";
 import { TweetCard } from "@/components/TweetCard";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
+import { ChatHistory } from "@/components/ChatHistory";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 type Pluggable = Plugin<any[], any> | [Plugin<any[], any>, unknown?];
@@ -64,4 +65,5 @@ export const defaultComponents = {
   VisDotGraph,
   TweetCard,
   YouTubeEmbed,
+  ChatHistory,
 };

@@ -1,0 +1,89 @@
+// ChatHistory コンポーネント内の Markdown スタイルをオーバーライド
+.chatMarkdown {
+  // 段落のマージンを調整
+  :global(p) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  // 見出しのマージンを調整
+  :global(h1) {
+    margin-top: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  :global(h2) {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  :global(h3) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  // リストのマージンを調整
+  :global(ul),
+  :global(ol) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  :global(li) {
+    margin-top: 0.125rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+
+  // コードブロックのパディングとマージンを調整
+  :global(pre) {
+    @apply my-0 px-2!;
+    @apply border-none;
+    @apply rounded-none;
+  }
+
+  // インラインコードのパディングを調整
+  :global(:not(pre) > code) {
+    padding: 0.125rem 0.25rem !important;
+  }
+
+  :global(div[data-code-block-header="true"]) {
+    @apply py-1;
+  }
+
+  // 引用のマージンとパディングを調整
+  :global(blockquote) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  // 画像のマージンを調整
+  :global(img) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0.5rem !important;
+  }
+
+  // テーブルのマージンを調整
+  :global(table) {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  // 見出しの「##」などのマーカーを非表示にする
+  :global(h2)::before,
+  :global(h3)::before,
+  :global(h4)::before,
+  :global(h5)::before,
+  :global(h6)::before {
+    content: "" !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  // メディアクエリでのpadding-leftも無効化
+  @media (width >= 768px) {
+    padding-left: 0 !important;
+  }
+}

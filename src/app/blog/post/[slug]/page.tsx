@@ -5,15 +5,12 @@ import { Pages } from "@/libs/contents/blog";
 import {
   getContent,
   getFrontmatter,
-  getFrontmatters,
-  getPaths,
   getAvailableLanguages,
 } from "@/libs/contents/markdown";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 import TOC from "@/components/TOC";
 import styles from "@/styles/markdown.module.scss";
-import { compareDesc } from "date-fns";
 import { generateSlugParams } from "@/libs/contents/params";
 import ArticleLayout from "@/components/Article/ArticleLayout";
 import { ArticleHistory } from "@/components/ArticleHistory";
