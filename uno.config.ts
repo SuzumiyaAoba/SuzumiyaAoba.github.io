@@ -48,14 +48,27 @@ export default defineConfig({
         dark: "#818cf8", // 明るいインディゴ
       },
       background: {
-        DEFAULT: "var(--color-background)",
+        DEFAULT: "var(--background)",
         light: "#ffffff",
         dark: "#1e1e2e",
+      },
+      foreground: {
+        DEFAULT: "var(--foreground)",
       },
       text: {
         DEFAULT: "var(--color-text)",
         light: "#1e293b",
         dark: "#e2e8f0",
+      },
+      border: {
+        DEFAULT: "var(--border)",
+      },
+      secondary: {
+        DEFAULT: "var(--background-secondary)",
+      },
+      muted: {
+        DEFAULT: "var(--muted)",
+        foreground: "var(--muted)",
       },
     },
   },

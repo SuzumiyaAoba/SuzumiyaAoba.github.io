@@ -47,8 +47,8 @@ const getStatusBadge = (status: ToolUIPart["state"]) => {
   const icons: Record<ToolUIPart["state"], ReactNode> = {
     "input-streaming": <CircleIcon className="size-4" />,
     "input-available": <ClockIcon className="size-4 animate-pulse" />,
-    "output-available": <CheckCircleIcon className="size-4 text-green-600" />,
-    "output-error": <XCircleIcon className="size-4 text-red-600" />,
+    "output-available": <CheckCircleIcon className="size-4 text-green-600 dark:text-green-400" />,
+    "output-error": <XCircleIcon className="size-4 text-red-600 dark:text-red-400" />,
   };
 
   return (

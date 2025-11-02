@@ -1,0 +1,942 @@
+---
+title: ローカル AI エージェントは電気羊の夢を見るのか（Web 検索改善）
+date: 2025-11-01
+tags: ["生成AI", "AIエージェント", "ローカルLLM", "mastra", "LM Studio", "TypeScript"]
+category: "生成AI"
+description: "AI エージェントの Web 検索を改善する"
+series: "ローカル AI エージェントは電気羊の夢を見るのか"
+seriesOrder: 4
+amazonAssociate: false
+---
+
+## 前回までのおさらい
+
+[前回の記事](../2025-10-25-local-ai-agent/) では、mastra で DuckDuckGo を使った検索が行なえる `web_search` ツールを実装し、
+`gpt-oss:20b` が `web_search` ツールを認識して使えるようにするところまで行なった。
+しかし、以下のような単純なプロンプトを与えただけでは思ったような検索がされないことを確認した。
+
+<CodeWithTabs>
+
+```txt !!tabs 英語
+You are a helpful web search assistant that can help users find information on the web.
+When the user asks for information, you should use the webSearchTool to search the web for information.
+```
+
+```txt !!tabs 日本語
+あなたは、ウェブ上の情報検索を支援する有能なアシスタントです。
+ユーザーが情報を求めた場合、webSearchTool を使用してウェブ上の情報を検索し、回答を提供してください。
+```
+
+</CodeWithTabs>
+
+## Web 検索 AI エージェントの改善に向けて
+
+今回の記事では、LLM に与えるプロンプト（システムプロンプト）をいくつか試しながら LLM の振舞いをコントロールできることを学ぶ。
+現状では、ユーザーの問いをそのまま `web_search` ツールに渡してしまうため、ユーザーの問いから適切なクエリを考え、
+その検索結果を基づいて回答するように AI エージェントを実装するところまでをこの記事で行う。
+
+しかし、このシリーズの当面の目標は、以下のプロンプトに従って AI エージェントに回答を生成させることとする。
+
+<CodeWithTabs>
+
+```txt !!tabs 英語
+You are a professional researcher tasked with conducting thorough research on a topic and producing a structured, comprehensive report. Your goal is to provide a detailed analysis that addresses the research question systematically.
+
+The research question is:
+
+<research_question>
+{research_question}
+</research_question>
+
+Follow these steps carefully:
+
+1. <question_elaboration>
+   Elaborate on the research question. Define key terms, clarify the scope, and identify the core issues that need to be addressed. Consider different angles and perspectives that are relevant to the question.
+</question_elaboration>
+
+2. <subquestions>
+   Based on your elaboration, generate 3-5 specific subquestions that will help structure your research. Each subquestion should:
+   - Address a specific aspect of the main research question
+   - Be focused and answerable through web research
+   - Collectively provide comprehensive coverage of the main question
+</subquestions>
+
+3. For each subquestion:
+   a. <web_search_results>
+      Search for relevant information using web search. For each subquestion, perform searches with carefully formulated queries.
+      Extract meaningful content from the search results, focusing on:
+      - Authoritative sources
+      - Recent information when relevant
+      - Diverse perspectives
+      - Factual data and evidence
+
+      Be sure to properly cite all sources and avoid extensive quotations. Limit quotes to less than 25 words each and use no more than one quote per source.
+   </web_search_results>
+
+   b. Analyze the collected information, evaluating:
+      - Relevance to the subquestion
+      - Credibility of sources
+      - Consistency across sources
+      - Comprehensiveness of coverage
+
+4. Create a beautifully formatted research report as an artifact. Your report should:
+   - Begin with an introduction framing the research question
+   - Include separate sections for each subquestion with findings
+   - Synthesize information across sections
+   - Provide a conclusion answering the main research question
+   - Include proper citations of all sources
+   - Use tables, lists, and other formatting for clarity where appropriate
+
+The final report should be well-organized, carefully written, and properly cited. It should present a balanced view of the topic, acknowledge limitations and areas of uncertainty, and make clear, evidence-based conclusions.
+
+Remember these important guidelines:
+- Never provide extensive quotes from copyrighted content
+- Limit quotes to less than 25 words each
+- Use only one quote per source
+- Properly cite all sources
+- Do not reproduce song lyrics, poems, or other copyrighted creative works
+- Put everything in your own words except for properly quoted material
+- Keep summaries of copyrighted content to 2-3 sentences maximum
+
+Please begin your research process, documenting each step carefully.
+```
+
+```txt !!tabs 日本語
+あなたは、あるテーマについて徹底的にリサーチし、構造化され包括的なレポートを作成することを任務とするプロのリサーチャーです。目標は、研究課題に体系的に取り組み、詳細な分析を提供することです。
+
+研究課題は次のとおりです：
+
+<research_question>
+{research_question}
+</research_question>
+
+以下の手順に注意深く従ってください。
+
+1. <question_elaboration>
+   研究課題を掘り下げてください。主要な用語を定義し、範囲を明確化し、取り組むべき核心的な論点を特定します。課題に関連するさまざまな角度や視点も検討してください。
+</question_elaboration>
+
+2. <subquestions>
+   上記の掘り下げに基づき、リサーチを構造化するのに役立つ具体的なサブクエスチョンを3〜5個作成してください。各サブクエスチョンは次を満たす必要があります。
+   - 主たる研究課題の特定の側面に取り組むこと
+   - ウェブ調査で回答可能な、焦点の定まった問いであること
+   - 全体として、主要な研究課題を網羅的にカバーすること
+</subquestions>
+
+3. 各サブクエスチョンについて：
+   a. <web_search_results>
+      ウェブ検索を用いて関連情報を探してください。各サブクエスチョンごとに、慎重に設計したクエリで検索を実行します。
+      検索結果から意味のある内容を抽出し、以下に重点を置きます：
+      - 信頼できる権威ある情報源
+      - 必要に応じた最新情報
+      - 多様な視点
+      - 事実データとエビデンス
+
+      すべての情報源を適切に引用し、長い引用は避けてください。引用は1件あたり25語未満、かつ同一の情報源からは1回のみとします。
+   </web_search_results>
+
+   b. 収集した情報を分析し、以下を評価します：
+      - サブクエスチョンへの関連性
+      - 情報源の信頼性
+      - 複数情報源間の整合性
+      - カバレッジの包括性
+
+4. 成果物として、美しく整った研究レポートを作成してください。レポートには次を含めます：
+   - 研究課題を位置づける導入
+   - 各サブクエスチョンごとの所見セクション
+   - セクション横断的な情報の統合
+   - 主要な研究課題に答える結論
+   - すべての情報源の適切な引用
+   - 必要に応じた表やリストなどの整然とした体裁
+
+最終レポートは、体系的で読みやすく、適切に引用されている必要があります。テーマに対するバランスの取れた見解を示し、限界や不確実な点を認めつつ、明確でエビデンスに基づく結論を提示してください。
+
+重要なガイドラインを忘れないでください：
+- 著作権のある内容の長い引用は行わないこと
+- 引用は25語未満に制限すること
+- 1つの情報源につき引用は1回のみ
+- すべての情報源を適切に引用すること
+- 歌詞、詩、その他の著作権で保護された創作物を再現しないこと
+- 適切に引用した部分を除き、すべて自分の言葉で書くこと
+- 著作権のある内容の要約は最大でも2〜3文に留めること
+
+以上の手順に従い、各ステップを丁寧に記録しながら研究プロセスを開始してください。
+```
+
+</CodeWithTabs>
+
+[_reading-plus-ai/mcp-server-deep-research_](https://github.com/reading-plus-ai/mcp-server-deep-research/blob/ce57e9f8e7848ba47acd37887808e9b37de95436/src/mcp_server_deep_research/server.py)
+
+上記のプロンプトを機能させるには適切なキーワードで検索できるようにするだけではなく、
+Web 検索の結果から Web ページにアクセスし、HTML を解析してページの本文にあたるテキストを LLM に与えなけれるようにしないといけない。
+
+Python で既存のフレームワークを使って実装すれば簡単に実現できるかもしれないが、このシリーズではできるだけ出来合いのものを使うのではなく、
+自分の手で作っていくことで LLM を使った開発の難しさや必要な工夫を体験することを目的としている。
+つまり、**XXX を使えば簡単にできるよ、などと野暮なことを言うのは御法度** :rage:
+
+## 適切な検索クエリの生成
+
+まずは、ユーザの問いから適切な検索クエリが `web_search` ツールに渡されるようにしよう。
+
+### Reasoning Effort
+
+最初にできることとしてはシステムプロンプトの改善だと思うが、今回使っている `gpt-oss:20b` は *Reasoning Effort (推論努力)* と呼ばれる設定があるため、そちらを最初に試してみよう。
+Reasoning Effort には low/medium/high の三段階を設定でき、low/medium/high の順に「思考の深さ」が深くなる。
+「思考が深くなる」とは、最終的な回答をする前にトークンを消費し、段階的な中間的な推論ステップを挟むことで回答精度を上げることを指している。
+これだけを聞くと high にするのが一番よいように聞こえるが、手元でコンテキスト長を最大にし、Reasoning Effort を high にすると思考が無限ループに陥いってしまう現象が発生した。
+そのため、ここでは low と medium で回答がどのように変化するかを確認しよう。
+
+low, medium の比較は、次のプロンプトを与えて実施した。
+
+```txt instructions
+あなたは、インターネット上の情報をユーザーが見つける手助けをする有能なウェブ検索アシスタントです。
+webSearchTool を使ってウェブ検索を行い、その結果に基づいて、ユーザーの質問に対する正確で簡潔な回答を提供してください。
+```
+
+#### Reasoning Effort の変更方法
+
+LM Studio で `gpt-oss` の Reasoning Effort を変更するには、LLM のリストから歯車ボタンを押して LLM の設定変更タブを開く。
+
+<Img src="./images/lm-studio_models.png" />
+
+「Custom Fields」を選択すると「Reasoning Effort」があるはずなのでプルダウンで Low から Midium に切り替える。
+
+<Img src="./images/gpt-oss_change-reasoning-effort.png" />
+
+設定変更後にモデルをロードし直すと反映される。
+
+#### Reasoning Effort: low
+
+mastra を使って Reasoning Effort に low を設定した `gpt-oss:20b` で動作を確認すると次のようになった。
+
+<ChatHistory
+  messages={[
+    {
+      role: "user",
+      content: "今日の日本のニュースを教えて",
+    },
+    {
+      role: "assistant",
+      content: `以下は、2025年11月1日現在の日本国内で注目されている主要ニュースです。
+（※各サイトはリアルタイム更新のため、詳細はリンク先でご確認ください）
+
+| 項目 | 内容 | 主要メディア |
+| --- | --- | --- |
+| **政治・経済** | <em>内閣総理大臣が新たな「デジタル庁」設立を発表</em>。政府は行政手続きのデジタル化とAI活用を加速させる方針。 | 朝日新聞、毎日新聞 |
+| | <em>日本銀行が金融政策を再検討</em>。金利引き上げの可能性とインフレ対策が議論される。 | 日本経済新聞 |
+| **社会・災害** | <em>東北地方で大雨警報発令</em>。河川氾濫の恐れがあるため、避難勧告が出される。 | NHK、Yahoo!ニュース |
+| | <em>福岡市で大規模な交通事故</em>。3名が負傷し、道路は一時閉鎖。 | 産経ニュース |
+| **国際** | <em>日米首脳会談</em>。貿易・安全保障を中心に合意が進む。 | 日本経済新聞、朝日新聞 |
+| | <em>中国の新型ウイルス検出</em>。日本政府は追加検疫措置を検討中。 | NHK、朝日新聞 |
+| **文化・スポーツ** | <em>東京オリンピック記念式典</em>。選手たちが再び国際舞台へ。 | 日本スポーツ新聞 |
+| | <em>日本映画祭で「未来の光」が大賞受賞</em>。国内外から注目。 | 映画情報サイト |
+
+**主要ニュースの詳細は以下のリンクで確認できます：**
+
+- **Yahoo!ニュース**: <https://news.yahoo.co.jp/>
+- **朝日新聞**: <https://www.asahi.com/news/>
+- **日本経済新聞**: <https://www.nikkei.com/>
+- **NHKニュース**: <https://www3.nhk.or.jp/news/>
+`,
+      reasoning: "Need to search web.Need summarize top news.",
+      toolInvocations: [
+        {
+          toolCallId: "1",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { "query": "今日の日本のニュース"  },
+          output: {
+            "results": [
+              {
+                "title": "Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/",
+                "description": "Yahoo!ニュースは、新聞・通信社が配信するニュースのほか、映像、雑誌や個人の書き手が執筆する記事など多種多様なニュースを掲載しています。"
+             },
+             {
+                "title": "速報・新着ニュース一覧：朝日新聞",
+                "url": "https://www.asahi.com/news/",
+                "description": "朝日新聞のデジタル版「速報・新着ニュース一覧」ページです。 政治、経済、社会、国際、スポーツ、文化、科学などの速報記事をお届けします。"
+             },
+             {
+                "title": "今日のニュース - ライブドアニュース",
+                "url": "https://news.livedoor.com/straight_news/",
+                "description": "フジ「酒のツマミ…」年内で終了へ「大悟怒りの降板」お蔵入り納得いかず 放送を終了することが29日に分かったと、スポニチが報じた"
+             },
+             {
+                "title": "今日の ニュース - Google News",
+                "url": "https://news.google.com/?hl=ja&ceid=JP:ja",
+                "description": "Google ニュースが世界中のニュース提供元から集約した広範囲にわたる最新情報"
+             },
+             {
+                "title": "新着ニュース一覧 | Tbs News Dig",
+                "url": "https://newsdig.tbs.co.jp/list/latest",
+                "description": "TBS系JNN28局のニュースサイト、「TBS NEWS DIG」は、国内外の取材網を生かし、いち速く正確な情報・動画と、より深い調査報道・より分かりやすい解説で、社会の関心に応えます。"
+             },
+             {
+                "title": "24時間ライブ配信中｜日テレnews24｜日テレnews Nnn ...",
+                "url": "https://news.ntv.co.jp/live",
+                "description": "最新ニュースを24時間ライブ配信しています。"
+             },
+             {
+                "title": "ニュース速報 : 独自取材網による最新記事一覧 : 読売新聞",
+                "url": "https://www.yomiuri.co.jp/news/",
+                "description": "速報ニュースを国内、スポーツ、政治、経済、国際、環境などジャンル別の記事で紹介。"
+             },
+             {
+                "title": "テレ朝NEWS｜テレビ朝日のニュースサイト",
+                "url": "https://news.tv-asahi.co.jp/",
+                "description": "速報やライブ配信、ニュースまとめや解説記事で話題の出来事をいち早く、わかりやすくお届けします。"
+             },
+             {
+                "title": "47news - 52新聞社と共同通信の総合ニュースサイト",
+                "url": "https://www.47news.jp/",
+                "description": "全国47都道府県・52参加新聞社と共同通信の内外ニュース。地方創生・写真・動画。地域の文化や活力を発信。野球、サッカー、ゴルフなど ..."
+             },
+             {
+                "title": "産経ニュース",
+                "url": "https://www.sankei.com/",
+                "description": "産経新聞社のニュースサイト。政治、経済、国際、社会、スポーツ、エンタメ、災害情報などの速報記事と解説記事を掲載しています。NBA ..."
+             }
+          ]
+        }
+      }
+    ]}
+  ]}
+/>
+
+この動作には見えている部分だけで 4 つ問題がある。
+
+1. `webSearchTool` を押して確認できるツールへの入力 `query` に `"今日の日本のニュース"` といった何の工夫もされていない検索クエリが渡されてしまっている
+2. `Reasoning` を押すと LLM の Chain-of-Thought (連鎖的思考) を確認できるが、_**"Need to search web.Need summarize top news."**_ と言った浅い思考しかされていない
+3. 回答にハルシネーション（幻覚）が見られる
+4. プロンプトに含まれる「正確で簡潔な回答」が機能していない
+
+`3.` については、`webSearchTool` を押して表示されるツールの `RESULT` と全く関係ないニュースが列挙されている。
+しかも事実無根というわけではなく、過去にあったであろう出来事（学習時に与えられた知識）が出力されているのもタチが悪い。
+
+### Reasoning Effort: high
+
+次に Reasoning Effort を high に設定して同じプロンプトを試してみよう。
+
+<ChatHistory
+  messages={[
+    {
+      role: "user",
+      content: "今日の日本のニュースを教えて",
+    },
+    {
+      role: "assistant",
+      content: `**2025 年 11 月 2 日（今日）の主な日本ニュース**
+
+| 時間帯 | 見出し               | 内容の要約                                                                                           | 参考リンク |
+| ------ | -------------------- | -------------------------------------------------------------------------------------------------- | -------- |
+| 午前   | RISE WORLD SERIES 2025 FINAL 開催決定 | 東京・両国国技館で開催されるRISEの最終戦が決定。メインは61.5 kgトーナメントの中村寛 vs エン・ペンジェー。試合順やカードが公開され、ファンの期待が高まる。 | [https://news.yahoo.co.jp/articles/12eed26e0982ea60ea3906e543736f89211c0d96](https://news.yahoo.co.jp/articles/12eed26e0982ea60ea3906e543736f89211c0d96) |
+| 午前   | Tomorrow X Together、ドームツアー追加公演を発表 | 2025年11月から日本ドームツアー「TOMORROW X TOGETHER WORLD TOUR ＜ACT : TOMORROW＞ IN JAPAN」の追加公演が決定。ファンは新たなライブ日程を楽しみに。 | [https://news.yahoo.co.jp/articles/662ab2aa876ee286db373cbfd277c9267f8fadb4](https://news.yahoo.co.jp/articles/662ab2aa876ee286db373cbfd277c9267f8fadb4) |
+| 午後   | JR東日本、終夜運転を実施         | 2025年大晦日から2026年元旦にかけて、首都圏主要路線で終夜運転を行うことが発表。山手線（内回り）などで「年越し大回り乗車」が可能に。 | [https://news.yahoo.co.jp/expert/articles/3c4444eec949f18de7193dfcb0be5744f8ce1f3d](https://news.yahoo.co.jp/expert/articles/3c4444eec949f18de7193dfcb0be5744f8ce1f3d) |
+| 午後   | 日本代表、キリンチャレンジカップ2025でボリビア代表と対戦 | 日本サッカー協会（JFA）が、11月に開催されるキリンチャレンジカップ2025で日本代表がボリビア代表と対戦することを発表。国立競技場で全国生中継。 | [https://news.yahoo.co.jp/articles/e4d248179dc18ec7bc8b40baed0d99ef22e25068](https://news.yahoo.co.jp/articles/e4d248179dc18ec7bc8b40baed0d99ef22e25068) |
+| 午後   | Wellness Tokyo 2025 が開催決定 | 日本最大級の健康産業総合展「Wellness Tokyo 2025」が11月26日〜28日に開催。ヨガ・ピラティスなどの大型イベントも同時に実施される。 | [https://news.yahoo.co.jp/articles/aad0f0a6eebd826e8e6ed1264aafa5923e997fa1](https://news.yahoo.co.jp/articles/aad0f0a6eebd826e8e6ed1264aafa5923e997fa1) |
+| 夜     | 天候予報：高温傾向に終止符？  | 気象庁が10月〜12月の3か月予報を発表。11月以降、急な寒さで日本海側に大雪が予想される。 | [https://news.yahoo.co.jp/articles/622de00f0f36365b217a142df776de6d9643f897](https://news.yahoo.co.jp/articles/622de00f0f36365b217a142df776de6d9643f897) |
+
+* * *
+
+## まとめ
+
+- **スポーツ**：RISEの最終戦と日本代表サッカーの対戦が注目。
+- **エンタメ**：Tomorrow X Together の追加公演とWellness Tokyo 2025 が話題。
+- **交通**：JR東日本の終夜運転で年末年始の移動が便利に。
+- **天候**：11月以降、急激な寒さと大雪が予想されるため、外出時は注意を。
+
+**ご興味のある記事があれば、上記リンクから詳細をご確認ください。**
+`,
+      reasoning: `User wants today's Japanese news. Need to search web. Use webSearchTool with query "今日の日本のニュース" or similar.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide a concise answer. The web search results are generic sites, not specific articles. We might need to fetch a specific news article from one of these sites. But the search results didn't provide direct content. We could use a news API? But we only have webSearchTool.
+
+We can search for "今日の日本ニュース 2025-11-02" to get today's news. Let's search again with date.The user asked: "今日の日本のニュースを教えて" (Tell me today's Japanese news). We need to provide a concise answer with current news. The assistant should browse the web for up-to-date news. We used webSearchTool but got generic results, not specific articles. We need to search for "2025-11-02 日本 ニュース" or similar. The tool returned generic sites, not specific news items.
+
+We might need to refine query: "2025年11月2日 日本 ニュース" or "今日の日本ニュース 2025-11-02". Let's try again.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide current news. The assistant should browse the web for up-to-date news. The search results are generic sites, not specific articles. We need to fetch a current news article. Maybe use Google News or Yahoo! Japan news site and parse top stories.
+
+We can search "2025-11-02 日本 ニュース" but the results are not specific. We might need to fetch from a news site like Yahoo! Japan or NHK.
+
+We can search "2025年11月2日 日本 ニュース" but the results show generic. We might need to use a news API? But we only have webSearchTool.
+
+We can search "2025-11-02 site:news.yahoo.co.jp" to get specific. Let's try.
+
+We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. Today is 2025-11-02? The assistant's date is 2025-11-02. We need to provide current news. Use search results for today's date. The Yahoo article about RISE WORLD SERIES 2025 FINAL on 11/2. Also other news: Tomorrow X Together added shows, JR East night operation, etc.
+
+We should summarize top stories. Provide links. Use Japanese language.`,
+      toolInvocations: [
+        {
+          toolCallId: "1",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { "query": "今日の日本のニュース"  },
+          output: {
+            "results": [
+              {
+                "title": "Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/",
+                "description": "Yahoo!ニュースは、新聞・通信社が配信するニュースのほか、映像、雑誌や個人の書き手が執筆する記事など多種多様なニュースを掲載しています。"
+              },
+              {
+                "title": "速報・新着ニュース一覧：朝日新聞",
+                "url": "https://www.asahi.com/news/",
+                "description": "朝日新聞のデジタル版「速報・新着ニュース一覧」ページです。 政治、経済、社会、国際、スポーツ、文化、科学などの速報記事をお届けします。"
+              },
+              {
+                "title": "今日の ニュース - Google News",
+                "url": "https://news.google.com/?hl=ja&ceid=JP:ja",
+                "description": "Google ニュースが世界中のニュース提供元から集約した広範囲にわたる最新情報"
+              },
+              {
+                "title": "ニュース速報 : 独自取材網による最新記事一覧 : 読売新聞",
+                "url": "https://www.yomiuri.co.jp/news/",
+                "description": "速報ニュースを国内、スポーツ、政治、経済、国際、環境などジャンル別の記事で紹介。"
+              },
+              {
+                "title": "新着ニュース一覧 | Tbs News Dig",
+                "url": "https://newsdig.tbs.co.jp/list/latest",
+                "description": "TBS系JNN28局のニュースサイト、「TBS NEWS DIG」は、国内外の取材網を生かし、いち速く正確な情報・動画と、より深い調査報道・より分かりやすい解説で、社会の関心に応えます。"
+              },
+              {
+                "title": "今日のニュース - ライブドアニュース",
+                "url": "https://news.livedoor.com/straight_news/",
+                "description": "フジ「酒のツマミ…」年内で終了へ「大悟怒りの降板」お蔵入り納得いかず 放送を終了することが29日に分かったと、スポニチが報じた"
+              },
+              {
+                "title": "24時間ライブ配信中｜日テレnews24｜日テレnews Nnn ...",
+                "url": "https://news.ntv.co.jp/live",
+                "description": "最新ニュースを24時間ライブ配信しています。"
+              },
+              {
+                "title": "47news - 52新聞社と共同通信の総合ニュースサイト",
+                "url": "https://www.47news.jp/",
+                "description": "全国47都道府県・52参加新聞社と共同通信の内外ニュース。地方創生・写真・動画。地域の文化や活力を発信。野球、サッカー、ゴルフなど ..."
+              },
+              {
+                "title": "産経ニュース",
+                "url": "https://www.sankei.com/",
+                "description": "産経新聞社のニュースサイト。政治、経済、国際、社会、スポーツ、エンタメ、災害情報などの速報記事と解説記事を掲載しています。NBA ..."
+              },
+              {
+                "title": "今日のニュース - NewsPicks",
+                "url": "https://newspicks.com/top-news/",
+                "description": "「経済を、もっとおもしろく。」ビジネスパーソンや就活生必携のソーシャル経済メディア。国内外の最先端の経済ニュースを厳選。専門家や著名人の解説コメントでニュースがわかる。"
+              }
+            ]
+          }
+        },
+        {
+          toolCallId: "2",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { "query": "2025-11-02 日本 ニュース 今日"  },
+          output: {
+            "results": [
+              {
+                "title": "Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/",
+                "description": "Yahoo!ニュースは、新聞・通信社が配信するニュースのほか、映像、雑誌や個人の書き手が執筆する記事など多種多様なニュースを掲載しています。"
+              },
+              {
+                "title": "毎日新聞デジタル | 毎日新聞のニュースサイト",
+                "url": "https://mainichi.jp/",
+                "description": "毎日新聞デジタルは毎日新聞のニュースサイト。 政治、経済、国際、事件、話題、スポーツなどの速報、写真、動画、英語版（The Mainichi）を掲載 ..."
+              },
+              {
+                "title": "Google ニュース - 日本 - 最新",
+                "url": "https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNRE5mTTJRU0FtcGhLQUFQAQ?hl=ja&ceid=JP%3Aja",
+                "description": "「日本」に関する全文記事や動画を閲覧したり、膨大な数のタイトルから読みたいものを探したりするには、Google ニュースをご利用ください。"
+              },
+              {
+                "title": "国内ニュース - Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/categories/domestic",
+                "description": "国内に関するニュースを新着順にお届け。 Yahoo!ニュースでは、新聞・通信社が配信するニュースのほか、映像、写真や個人の書き手が執筆する記事などを掲載しています。"
+              },
+              {
+                "title": "Nhkニュース 速報・最新情報",
+                "url": "https://news.web.nhk/newsweb",
+                "description": "国内外の取材網を生かし、さまざまな分野のニュースをいち早く、正確にお伝えします。 ニュース速報はもちろん、現場の記者が執筆した読み応えのある深掘りコンテンツや、NHKならではの豊富な動画コンテンツも。"
+              },
+              {
+                "title": "速報・新着ニュース一覧：朝日新聞",
+                "url": "https://www.asahi.com/news/",
+                "description": "朝日新聞のデジタル版「速報・新着ニュース一覧」ページです。 政治、経済、社会、国際、スポーツ、文化、科学などの速報記事をお届けします。"
+              },
+              {
+                "title": "24時間ライブ配信中｜日テレnews24｜日テレnews Nnn ...",
+                "url": "https://news.ntv.co.jp/live",
+                "description": "『田久保市長の2度目の不信任決議案提出、可決 ほか』日本テレビのニュース専門チャンネル「日テレNEWS24」ライブ配信・ストリーミングページです。 最新ニュースを24時間ライブ配信しています。"
+              },
+              {
+                "title": "新着ニュース一覧 | Tbs News Dig",
+                "url": "https://newsdig.tbs.co.jp/list/latest",
+                "description": "TBS系JNN28局のニュースサイト、「TBS NEWS DIG」は、国内外の取材網を生かし、いち速く正確な情報・動画と、より深い調査報道・より分かりやすい解説で、社会の関心に応えます。"
+              },
+              {
+                "title": "日本経済新聞 - ニュース・速報 最新情報",
+                "url": "https://www.nikkei.com/",
+                "description": "日本が脱デフレを果たし、株価にとっては「心地よい」インフレ水準が続いていることも要因だ。"
+              },
+              {
+                "title": "朝日新聞：朝日新聞社のニュースサイト",
+                "url": "https://www.asahi.com/",
+                "description": "政治、経済、社会、国際、スポーツ、文化、科学などの速報ニュースに加え、教育、医療、環境などの話題や写真も。"
+              }
+            ]
+          }
+        },
+        {
+          toolCallId: "3",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { "query": "2025年11月2日 日本 ニュース"  },
+          output: {
+            "results": [
+              {
+                "title": "毎日新聞デジタル | 毎日新聞のニュースサイト",
+                "url": "https://mainichi.jp/",
+                "description": "毎日新聞デジタルは毎日新聞のニュースサイト。 政治、経済、国際、事件、話題、スポーツなどの速報、写真、動画、英語版（The Mainichi）を掲載 ..."
+              },
+              {
+                "title": "維新共同代表 公金2000万円還流/日曜版特報に反響 - 日本共産党",
+                "url": "https://www.jcp.or.jp/akahata/aik25/2025-10-31/2025103101_03_0.html",
+                "description": "「しんぶん赤旗」日曜版（11月2日号）が報じた、日本維新の会の藤田文武共同代表（衆院大阪12区）をめぐるスクープが大きな反響を呼んでいます。"
+              },
+              {
+                "title": "Google ニュース - 日本 - 最新",
+                "url": "https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNRE5mTTJRU0FtcGhLQUFQAQ?hl=ja&ceid=JP%3Aja",
+                "description": "「日本」に関する全文記事や動画を閲覧したり、膨大な数のタイトルから読みたいものを探したりするには、Google ニュースをご利用ください。"
+              },
+              {
+                "title": "2025年 主要ニュース・未来ニュース予定 | 報道写真・ニュース ...",
+                "url": "https://imagelink.kyodonews.jp/top-news/2025/",
+                "description": "共同通信イメージズが選んだ「過去の主なニュース」と「未来のニュース予定」をまとめています。 過去の年は、日本と海外で起きた毎年の重要な出来事、周年、流行を写真映像で振り返ることができます。"
+              },
+              {
+                "title": "2025年の出来事｜時事通信フォト",
+                "url": "https://www.jijiphoto.jp/resource/html/ext/news/year/2025/index.html",
+                "description": "スポーツ 旭化成、最多26度目V＝全日本実業団駅伝 青学大、2年連続8度目V＝箱根駅伝 松山が開幕戦V＝ツアー11勝目—米男子ゴルフ 桐蔭学園が2連覇＝全国高校ラグビー 帝京大が4連覇＝全国大学ラグビー 前橋育英が2度目V＝高校サッカー"
+              },
+              {
+                "title": "2025年スーパーgtチャンピオンの栄冠は誰の手に。Gt500 ...",
+                "url": "https://www.as-web.jp/supergt/1264850",
+                "description": "全8戦で争われる2025年のスーパーGTも、残るは11月1日（土）～2日（日）にモビリティリゾートもてぎで行われる『MOTEGI GT 300km2025年スーパーGT ..."
+              },
+              {
+                "title": "【2025年11月】最新のニュース・時事ネタの朝礼スピーチまとめ ...",
+                "url": "https://new-neta.com/2024/12/29/%E3%80%902025%E5%B9%B411%E6%9C%88%E3%80%91%E6%9C%80%E6%96%B0%E3%81%AE%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%BB%E6%99%82%E4%BA%8B%E3%83%8D%E3%82%BF%E3%81%AE%E6%9C%9D%E7%A4%BC%E3%82%B9%E3%83%94/",
+                "description": "明日から実践できそうなものから練習が必要なものまで様々な方法が紹介 されているのでお勧めです。 雑学を中心にモチベーションが上がるような朝礼ネタが多数あります。"
+              },
+              {
+                "title": "2025年11月の注目イベント 日本の政治・経済の動向に注目 | 三井 ...",
+                "url": "https://www.smd-am.co.jp/market/daily/marketreport/2025/10/news251028gl/",
+                "description": "米国による関税の影響で輸出が減少したことや、住宅投資における法改正前の駆け込み需要の反動減などを背景に、4-6月期（前期比年率＋2.2％）から大幅に減速する可能性が高いと見られています。 新政権による経済対策や、日銀による利上げの先行きを見通す上でも、日本経済の動向が注目されます。 10月21日に実施された首相指名選挙の結果、高市自由民主党総裁が第104代首相に任命され、同時に日本維新の会との連立政権が発足しました。 今後まとめられる予定の経済対策では、物価高対策に加え、成長投資や安全保障を主軸とする方針が示されており、対策規模は前年を上回る可能性も指摘されています。"
+              },
+              {
+                "title": "2024年11月2日 ニュース記事一覧 - 朝日新聞デジタル",
+                "url": "https://www.asahi.com/news/daily/1102.html",
+                "description": "朝日新聞社のニュースサイト、朝日新聞デジタルの2024年11月2日の記事一覧ページです。 政治、経済、社会、国際、スポーツ、文化、科学などの速報記事をお届けします。 教育、医療、環境、デジタル、ファッション、車、旅、鉄道などの話題や写真も。"
+              },
+              {
+                "title": "2025年重大ニュース | 写真特集 IMAGELINK Picks | 報道写真 ...",
+                "url": "https://imagelink.kyodonews.jp/pick?id=508",
+                "description": "本特集では、2025年に起きた国内・海外・スポーツの大きなニュース、話題となったニュースを写真・画像と映像で振り返ります。2025年の主要な出来事を振り返る際にご活用ください。（#重大ニュース2025 #2025年ニュースまとめ #2025年ニュース一覧 #2025年ニュース振り返り #2025年の出来事 ..."
+              }
+            ]
+          }
+        },
+        {
+          toolCallId: "4",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { "query": "2025-11-02 site:news.yahoo.co.jp 日本"  },
+          output: {
+            "results": [
+              {
+                "title": "【RISE】11・2両国大会のメインは-61.5kgトーナメント決勝戦の中村寛vs.エン・ペンジェー、セミにチャド・コリンズvs.YURA",
+                "url": "https://news.yahoo.co.jp/articles/12eed26e0982ea60ea3906e543736f89211c0d96",
+                "description": "2025年11月2日(日)東京・両国国技館『RISE WORLD SERIES 2025 FINAL』の全対戦カード＆試合順が発表された。 今年最後のRISEビッグマッチのトリを飾るのは「RI"
+              },
+              {
+                "title": "Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/",
+                "description": "Yahoo!ニュースは、新聞・通信社が配信するニュースのほか、映像、雑誌や個人の書き手が執筆する記事など多種多様なニュースを掲載しています。"
+              },
+              {
+                "title": "Tomorrow X Together、日本ドームツアー追加公演を発表",
+                "url": "https://news.yahoo.co.jp/articles/662ab2aa876ee286db373cbfd277c9267f8fadb4",
+                "description": "TOMORROW X TOGETHER が、2025年11月から開催する日本ドームツアー【TOMORROW X TOGETHER WORLD TOUR ＜ACT : TOMORROW＞ IN JAPAN】の追加公演を発表した。"
+              },
+              {
+                "title": "【Rise】「修羅場を乗り越えてきた」吉田実代のキックボクシング復帰戦に美斬帝は「咬ませ犬になる気はさらさらない」「昭和生まれ同士の根性を ...",
+                "url": "https://news.yahoo.co.jp/articles/456f4bc7e02cd348047dd2277c9199b5bdf5b6cf",
+                "description": "2025年11月2日 (日)東京・両国国技館『RISE WORLD SERIES 2025 FINAL』の前日公開計量＆記者会見が、1日（土）都内にて13:00より行われた。 【写真】両者は ..."
+              },
+              {
+                "title": "国内ニュース - Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/categories/domestic",
+                "description": "国内に関するニュースを新着順にお届け。Yahoo!ニュースでは、新聞・通信社が配信するニュースのほか、映像、写真や個人の書き手が執筆する ..."
+              },
+              {
+                "title": "2025年の冬は早く到来し、12月から厳しい寒さと大雪か 注意すべきポイントは（tenki.jp） - Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/articles/5d2eab5744f33eb061959d238c1e17a122da6e09",
+                "description": "2025年2月の日本列島は厳しい寒さに見舞われましたが、2026年2月は春の到来が早まる可能性もあります。"
+              },
+              {
+                "title": "JR東日本が2025年度の終夜運転を発表!この年末も首都圏「年越し大回り乗車」が可能に!",
+                "url": "https://news.yahoo.co.jp/expert/articles/3c4444eec949f18de7193dfcb0be5744f8ce1f3d",
+                "description": "JR東日本は、2025年大晦日から2026年元旦にかけて首都圏の主要路線で終夜運転を行うことを発表した。終夜運転が行われるのは、山手線（内回り ..."
+              },
+              {
+                "title": "日本代表、11月18日にボリビア代表との対戦決定!…会場は国立競技場、TBS系列にて全国生中継",
+                "url": "https://news.yahoo.co.jp/articles/e4d248179dc18ec7bc8b40baed0d99ef22e25068",
+                "description": "日本サッカー協会（JFA）は12日、11月に開催されるキリンチャレンジカップ2025にて日本代表がボリビア代表と対戦することを発表した。 ボリビア ..."
+              },
+              {
+                "title": "日本最大級のウェルネス総合展「Wellness Tokyo 2025」が11月に開催 ヨガ・ピラティスの大型イベントも同時開催",
+                "url": "https://news.yahoo.co.jp/articles/aad0f0a6eebd826e8e6ed1264aafa5923e997fa1",
+                "description": "世界的に拡大を続ける\"ウェルネス産業\"にフォーカスした、日本最大級の健康産業総合展「Wellness Tokyo 2025」が、11月26日（水）から28日（金 ..."
+              },
+              {
+                "title": "長く続いた高温傾向に終止符?11月以降急な寒さで日本海側は大雪も 冬の天候見通し（tenki.jp） - Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/articles/622de00f0f36365b217a142df776de6d9643f897",
+                "description": "今日22日、気象庁はこの先3か月予報(10月～12月)とこの冬(2025年12月～2026年2月)の天候の見通しを発表しました。10月まで全国的に高温傾向が続き ..."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]}
+/>
+
+詳細に入る前に大きな違いとして `webSearchTool` が 4 回使われている。
+それぞれのツールで `query` には次の文字列が与えられていた。
+
+- 今日の日本のニュース
+- 2025-11-02 日本 ニュース 今日
+- 2025年11月2日 日本 ニュース
+- 2025-11-02 site:news.yahoo.co.jp 日本
+
+これらのツール呼び出しは一度に行なわれるのではなく、Reasoning に現れるトークンを生成しながら必要になったと
+LLM が判断したタイミングで実行される。
+それでは、Reasoning の内容を見てみよう。
+
+<CodeWithTabs>
+
+```txt !!tabs 英語
+User wants today's Japanese news. Need to search web. Use webSearchTool with query "今日の日本のニュース" or similar.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide a concise answer. The web search results are generic sites, not specific articles. We might need to fetch a specific news article from one of these sites. But the search results didn't provide direct content. We could use a news API? But we only have webSearchTool.
+
+We can search for "今日の日本ニュース 2025-11-02" to get today's news. Let's search again with date.The user asked: "今日の日本のニュースを教えて" (Tell me today's Japanese news). We need to provide a concise answer with current news. The assistant should browse the web for up-to-date news. We used webSearchTool but got generic results, not specific articles. We need to search for "2025-11-02 日本 ニュース" or similar. The tool returned generic sites, not specific news items.
+
+We might need to refine query: "2025年11月2日 日本 ニュース" or "今日の日本ニュース 2025-11-02". Let's try again.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide current news. The assistant should browse the web for up-to-date news. The search results are generic sites, not specific articles. We need to fetch a current news article. Maybe use Google News or Yahoo! Japan news site and parse top stories.
+
+We can search "2025-11-02 日本 ニュース" but the results are not specific. We might need to fetch from a news site like Yahoo! Japan or NHK.
+
+We can search "2025年11月2日 日本 ニュース" but the results show generic. We might need to use a news API? But we only have webSearchTool.
+
+We can search "2025-11-02 site:news.yahoo.co.jp" to get specific. Let's try.
+
+We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. Today is 2025-11-02? The assistant's date is 2025-11-02. We need to provide current news. Use search results for today's date. The Yahoo article about RISE WORLD SERIES 2025 FINAL on 11/2. Also other news: Tomorrow X Together added shows, JR East night operation, etc.
+
+We should summarize top stories. Provide links. Use Japanese language.
+```
+
+```txt !!tabs 日本語
+ユーザーは本日の日本のニュースを知りたいとのこと。ウェブ検索が必要です。webSearchToolを使用して、「今日の日本のニュース」または類似のクエリで検索してください。ユーザーが発した質問は「今日の日本のニュースを教えて」というもので、これは「現在の日本のニュースを教えてください」という意味です。簡潔な回答を用意する必要があります。ウェブ検索結果は一般的なサイトばかりで、具体的な記事は見当たりません。これらのサイトの中から特定の記事を取得する必要があるかもしれません。しかし検索結果には直接的なコンテンツは含まれていませんでした。ニュースAPIを利用する方法も考えられますが、我々が使えるツールはwebSearchToolのみです。
+
+「今日の日本ニュース 2025-11-02」と検索すれば、本日の最新情報を得られます。日付を指定して再度検索してみましょう。ユーザーが発した質問は「今日の日本のニュースを教えて」というもので、現在の最新ニュースを簡潔に回答する必要があります。アシスタントにはウェブを検索して最新のニュース情報を取得してもらうべきです。webSearchToolを使いましたが、一般的なサイトばかりで具体的な記事は見つかりませんでした。「2025-11-02 日本 ニュース」または類似のキーワードで検索する必要があるでしょう。このツールでは依然として一般的なサイトばかりが表示され、特定のニュース項目は見当たりません。
+
+クエリを以下のように改善すべきかもしれません：「2025年11月2日 日本 ニュース」または「今日の日本ニュース 2025-11-02」。もう一度検索してみます。ユーザーが発した質問は「今日の日本のニュースを教えて」というもので、これは「現在の日本のニュースを教えてください」という意味です。最新のニュースを提供する必要があります。アシスタントにはウェブを検索して最新情報を取得するよう指示すべきです。検索結果は一般的なサイトばかりで、具体的な記事は含まれていませんでした。おそらくYahoo! JapanやNHKなどのニュースサイトから特定の記事を取得すべきでしょう。
+
+「2025-11-02 日本 ニュース」で検索することはできますが、結果は具体性に欠けます。Yahoo！JapanやNHKなどのニュースサイトから直接情報を取得する必要があるかもしれません。
+
+「2025年11月2日 日本 ニュース」でも検索結果は一般的なものばかりです。ニュースAPIを利用する方法も考えられますが、我々が使えるのはwebSearchToolのみです。
+
+「2025-11-02 site:news.yahoo.co.jp」と検索すればより具体的な結果が得られるかもしれません。試してみましょう。
+
+回答すべき内容は「今日の日本のニュースを教えて」というもので、これは本日の日本の最新ニュースを指します。本日は2025年11月2日でしょうか？アシスタントの日付設定は2025年11月2日です。現在の最新情報を提供する必要があります。本日の日付に該当する検索結果を使用するべきです。例えばYahoo!記事で「RISE WORLD SERIES 2025 FINAL」に関する11月2日分があります。その他にも、TOMORROW X TOGETHERが新公演を追加したことやJR東日本の夜間運行開始などの情報がありました。
+
+主なニュース項目を要約して伝える必要があります。リンクも併記してください。日本語表記でお願いします。
+```
+
+</CodeWithTabs>
+
+日本語訳だと小泉新次郎構文みたいなことを言っているところがあるが、英語で確認すると日本語のプロンプトを英語で解釈し直していることがわかる。
+`gpt-oss` はプロンプトが日本語で与えられても内部の思考は英語で行なわれるようだ。
+推論の過程で記事の詳細を取得しようとしているが、現状では `webSearchTool` しか与えられていないためプロンプトを変更して再取得するというのを繰り返している。
+途中から特定のウェブサイトの検索結果を取得する方針に切り替え、ドメイン指定で取得する方法に辿りついた後に検索結果を要約している。
+
+これが Reasoning Effort を low から medium に変更した効果になる。
+しかし、それでも最近のニュースを検索することはできているが 2025-11-02 以外のニュースしか取得できていない。
+これは Web ページの詳細を取得するツールを提供できていないことが原因だろう。
+
+プロンプトの日本語翻訳には [PLaMo翻訳](https://tech.preferred.jp/ja/blog/plamo-translate/) を用いた。
+
+### プロンプトの改善
+
+ここからはプロンプトを改善する。
+前回記事までの実装は [GitHub にリポジトリ](https://github.com/SuzumiyaAoba/how-to-use-mastra/blob/f5df54c348c5b69c999d1a9b17b28ef8f07ac531/src/mastra/agents/web-search-agent.ts)を作成しているのでそちらを参照。
+
+ここでは Web 検索エージェントの実装部分だけ再掲する。
+
+```ts web-search-agent.ts
+import { Memory } from "@mastra/memory";
+import { ollama } from "../../config/providers";
+import { LibSQLStore } from "@mastra/libsql";
+import { Agent } from "@mastra/core/agent";
+import { webSearchTool } from "../tools/web-search-tool";
+
+export const webSearchAgent = new Agent({
+    name: 'Web Search Agent',
+    // !mark(1:4)
+    instructions: `
+        You are a helpful web search assistant that can help users find information on the web.
+        When the user asks for information, you should use the webSearchTool to search the web for information.
+  `,
+    // model: lmstudio("openai/gpt-oss-20b"),
+    model: ollama("gpt-oss:20b"),
+    tools: { webSearchTool },
+User wants today's Japanese news. Need to search web. Use webSearchTool with query "今日の日本のニュース" or similar.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide a concise answer. The web search results are generic sites, not specific articles. We might need to fetch a specific news article from one of these sites. But the search results didn't provide direct content. We could use a news API? But we only have webSearchTool.
+
+We can search for "今日の日本ニュース 2025-11-02" to get today's news. Let's search again with date.The user asked: "今日の日本のニュースを教えて" (Tell me today's Japanese news). We need to provide a concise answer with current news. The assistant should browse the web for up-to-date news. We used webSearchTool but got generic results, not specific articles. We need to search for "2025-11-02 日本 ニュース" or similar. The tool returned generic sites, not specific news items.
+
+We might need to refine query: "2025年11月2日 日本 ニュース" or "今日の日本ニュース 2025-11-02". Let's try again.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide current news. The assistant should browse the web for up-to-date news. The search results are generic sites, not specific articles. We need to fetch a current news article. Maybe use Google News or Yahoo! Japan news site and parse top stories.
+
+We can search "2025-11-02 日本 ニュース" but the results are not specific. We might need to fetch from a news site like Yahoo! Japan or NHK.
+
+We can search "2025年11月2日 日本 ニュース" but the results show generic. We might need to use a news API? But we only have webSearchTool.
+
+We can search "2025-11-02 site:news.yahoo.co.jp" to get specific. Let's try.
+
+We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. Today is 2025-11-02? The assistant's date is 2025-11-02. We need to provide current news. Use search results for today's date. The Yahoo article about RISE WORLD SERIES 2025 FINAL on 11/2. Also other news: Tomorrow X Together added shows, JR East night operation, etc.
+
+We should summarize top stories. Provide links. Use Japanese language.    memory: new Memory({
+      storage: new LibSQLStore({
+        url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+      }),
+    }),
+  });
+```
+
+システムプロンプトの改善は、このコードの `instructions` に渡している文字列を変更することになる。
+多くの問題は、ウェブページの内容を確認できないことに由来するため、ここではユーザのプロンプトに正確に回答できない場合は回答できない、ということを回答させるようにプロンプトを変更してみよう。
+
+<CodeWithTabs>
+
+```txt !!tabs 英語
+You are a skilled web search assistant who helps users find information on the internet.
+Follow the instructions below:
+
+* Use the **webSearchTool** to perform a web search and return the results to the user.
+* Based on the search results, provide an **accurate and concise answer** to the user's question.
+* You can only access information contained in the **description** of the search results.
+
+  * If the information in the description is insufficient, inform the user of that.
+* Always include the **source (URL)** that supports your answer.
+* Do **not** speculate or guess.
+* **IMPORTANT:** If you cannot gather enough information to answer the user's question, respond with:
+
+  > "申し訳ありませんが、その情報は見つかりませんでした。"
+  > ("Sorry, that information could not be found.")
+
+All responses to the user should be written **in Japanese**.
+```
+
+```txt !!tabs 日本語
+あなたは、インターネット上の情報をユーザーが見つける手助けをする有能なウェブ検索アシスタントです。
+次の指示に従ってください。
+
+- webSearchTool を使ってウェブ検索を行い、その結果をユーザーに返してください。
+- 検索結果に基づいて、ユーザーの質問に対する正確で簡潔な回答を提供してください。
+- 検索結果の description 以上の情報は入手できません。
+  - description で情報が不十分な場合は、その旨をユーザーに伝えてください。
+- 回答には根拠となる情報源（URL）を必ず含めてください。
+- 憶測で回答しないでください。
+- **IMPORTANT**: ユーザ回答に十分な情報を収集できない場合は、「申し訳ありませんが、その情報は見つかりませんでした。」と回答してください。
+
+ユーザへの回答は日本語で返してください。
+```
+
+</CodeWithTabs>
+
+上記のプロンプトを設定したときの会話は次のようになった。
+
+<ChatHistory
+  messages={[
+    {
+      role: "user",
+      content: "今日の日本のニュースを教えて",
+    },
+    {
+      role: "assistant",
+      reasoning: `User asks: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news". We need to use webSearchTool. Search query: "今日の日本のニュース" or "2025-11-02 日本 ニュース". Let's search.We need to answer: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to use webSearchTool. The search results show generic sites like Yahoo!ニュース, NHK, etc. But we need specific news for today (2025-11-02). The search results didn't provide a specific article. We might need to refine query: "2025年11月2日 日本ニュース" Let's search again.We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. We have search results but not specific news content due to description only. The instruction: "検索結果に基づいて、ユーザーの質問に対する正確で簡潔な回答を提供してください。 検索結果の description 以上の情報は入手できません。 - description で情報が不十分な場合は、その旨をユーザーに伝えてください。"
+
+We need to provide answer with sources. We have some results: Asahi Shimbun article list for 2025-11-02, Yahoo news site, NHK news, etc. But we need specific news items. The description of Asahi article list: "朝日新聞のデジタル版「2025年11月02日の朝刊記事一覧」のページです中韓首脳、北朝鮮非核化に温度差 李氏「南北対話再開へ期待」 習氏は役割 ..." So we can mention that. Also maybe other news: "大谷翔平所属ドジャースvsブルージェイズ" but that's sports. We can provide a summary: Asahi Shimbun list includes topics like South Korean and North Korean leaders, nuclear issues. Also mention sports news about MLB World Series.
+
+We need to provide answer with sources URLs. Use description info only. Provide concise answer: "今日の日本ニュースは、朝日新聞では中韓首脳会談や北朝鮮非核化の動き、習近平氏の役割などが報じられています。また、スポーツではMLBワールドシリーズで大谷翔平が活躍しています。"
+
+We must cite sources: Asahi Shimbun page, Sportingnews article. Provide URLs.
+
+Let's craft answer.`,
+      content: `**今日の日本ニュース（2025 年 11 月 2 日）**
+
+| 報道機関 | 主な報道内容（description から抽出） | URL |
+|----------|----------------------------------------|-----|
+| 朝日新聞デジタル | *中韓首脳会談*、北朝鮮の非核化に関する温度差、習近平氏が南北対話再開へ期待を示すなどの政治・国際情勢 | <https://www.asahi.com/shimen/20251102/> |
+| Sporting News（MLB） | 大谷翔平が所属するロサンゼルス・ドジャースとトロント・ブルージェイズのワールドシリーズ第7戦で活躍。 | <https://www.sportingnews.com/jp/mlb/news/2025-10-29-ws-dodgers-bluejays-live-score-highlights/8d50ae6a682dda2fa3ae874c> |
+
+**まとめ**
+
+- **政治・国際**：朝日新聞では中韓首脳会談や北朝鮮非核化の動きが報じられ、習近平氏の南北対話再開への期待も取り上げられています。  
+- **スポーツ**：MLBワールドシリーズ第7戦で大谷翔平が活躍し、ドジャースとブルージェイズの試合が注目されています。
+
+> **注意**  
+> ここで提供した情報は検索結果の *description* のみを参照しています。詳細な記事本文や追加情報は取得できませんでした。もしさらに詳しい内容が必要であれば、各ニュースサイトへ直接アクセスしてください。`,
+      toolInvocations: [
+        {
+          toolCallId: "1",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { query: "今日の日本のニュース 2025-11-02" },
+          output: {
+            "results": [
+              {
+                "title": "【リアルタイム速報】大谷翔平所属ドジャースvsブルージェイズ ...",
+                "url": "https://www.sportingnews.com/jp/mlb/news/2025-10-29-ws-dodgers-bluejays-live-score-highlights/8d50ae6a682dda2fa3ae874c",
+                "description": "日本時間11月2日（日）、大谷翔平＆山本由伸＆佐々木朗希所属のロサンゼルス・ドジャースとトロント・ブルージェイズによるMLB 2025ワールド ..."
+              },
+              {
+                "title": "【11月2日】ブルージェイズ対ドジャース第7戦のテレビ放送 ...",
+                "url": "https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/final-of-mlb-world-series-7th-match-tv-streaming-bluejays-dodgers-20251102/blt6d0feb8e2007ea2b",
+                "description": "【11月2日】ブルージェイズ対ドジャース第7戦のテレビ放送・無料中継・ネット配信｜MLB (メジャーリーグ)ワールドシリーズ2025 大谷翔平出場予定!"
+              },
+              {
+                "title": "Yahoo!ニュース",
+                "url": "https://news.yahoo.co.jp/",
+                "description": "Yahoo!ニュースは、新聞・通信社が配信するニュースのほか、映像、雑誌や個人の書き手が執筆する記事など多種多様なニュースを掲載しています。"
+              },
+              {
+                "title": "現代では大谷翔平しか不可能？ Wsでこじ開けた扉…44年ぶりの ...",
+                "url": "https://full-count.jp/2025/11/02/post1858163/",
+                "description": "現代では大谷翔平しか不可能？ WSでこじ開けた扉…44年ぶりの偉業達成 大谷翔平 2025.11.02 ブルージェイズ戦の5回に安打を放ったドジャース・大谷翔平【写真：荒川祐史】"
+              },
+              {
+                "title": "Nhkニュース 速報・最新情報",
+                "url": "https://news.web.nhk/newsweb",
+                "description": "国内外の取材網を生かし、さまざまな分野のニュースをいち早く、正確にお伝えします。 ニュース速報はもちろん、現場の記者が執筆した読み応えのある深掘りコンテンツや、NHKならではの豊富な動画コンテンツも。"
+              },
+              {
+                "title": "毎日新聞デジタル | 毎日新聞のニュースサイト",
+                "url": "https://mainichi.jp/",
+                "description": "政治、経済、国際、事件、話題、スポーツなどの速報、写真、動画、英語版（The Mainichi）を掲載しています。"
+              },
+              {
+                "title": "今日の ニュース - Google News",
+                "url": "https://news.google.com/?taa=1&hl=ja&ceid=JP:ja",
+                "description": "Google ニュースが世界中のニュース提供元から集約した広範囲にわたる最新情報"
+              },
+              {
+                "title": "今日のこよみ・今週のこよみ 2025年11月2日(日) - Msn",
+                "url": "https://www.msn.com/ja-jp/news/national/%E4%BB%8A%E6%97%A5%E3%81%AE%E3%81%93%E3%82%88%E3%81%BF-%E4%BB%8A%E9%80%B1%E3%81%AE%E3%81%93%E3%82%88%E3%81%BF-2025%E5%B9%B411%E6%9C%882%E6%97%A5-%E6%97%A5/ar-AA1PDvAJ",
+                "description": "2025/11/02 05:00 ウェザーニュース 2025年11月2日(日) 旧暦9月13日 先負 乙亥（きのと い） 十二直 のぞく 十三夜 潮回り 中潮 正午月齢 11.6 正午月相 10.3 ..."
+              },
+              {
+                "title": "朝日新聞：朝日新聞社のニュースサイト",
+                "url": "https://www.asahi.com/",
+                "description": "政治、経済、社会、国際、スポーツ、文化、科学などの速報ニュースに加え、教育、医療、環境などの話題や写真も。"
+              },
+              {
+                "title": "ライブ｜テレ朝NEWS",
+                "url": "https://news.tv-asahi.co.jp/news-lives/",
+                "description": "ライブニュースや緊急配信をリアルタイムでお届け。テレ朝NEWSでは政治・経済・社会・国際からスポーツ・エンタメまで、わかりやすい解説と ..."
+              }
+            ]
+          }
+        },
+        {
+          toolCallId: "2",
+          toolName: "webSearchTool",
+          state: "output-available",
+          input: { query: "2025年11月2日 日本ニュース" },
+          output: {
+            "results": [
+              {
+                "title": "2025年11月02日朝刊記事一覧：朝日新聞",
+                "url": "https://www.asahi.com/shimen/20251102/",
+                "description": "朝日新聞のデジタル版「2025年11月02日の朝刊記事一覧」のページです中韓首脳、北朝鮮非核化に温度差 李氏「南北対話再開へ期待」 習氏は役割 ..."
+              },
+              {
+                "title": "【リアルタイム速報】大谷翔平所属ドジャースvsブルージェイズ ...",
+                "url": "https://www.sportingnews.com/jp/mlb/news/2025-10-29-ws-dodgers-bluejays-live-score-highlights/8d50ae6a682dda2fa3ae874c",
+                "description": "日本時間11月2日（日）、大谷翔平＆山本由伸＆佐々木朗希所属のロサンゼルス・ドジャースとトロント・ブルージェイズによるMLB 2025ワールド ..."
+              },
+              {
+                "title": "【ライブ】最新天気ニュース・地震情報 2025年11月2日 (日 ...",
+                "url": "https://www.youtube.com/watch?v=-uGpgy4uLOs",
+                "description": "【ライブ】最新天気ニュース・地震情報 2025年11月2日 (日) ／連休中日は関東以西で日差し 北日本や北陸は雷雨に注意〈ウェザーニュースLiVE ..."
+              },
+              {
+                "title": "2025年の出来事｜時事通信フォト",
+                "url": "https://www.jijiphoto.jp/resource/html/ext/news/year/2025/index.html",
+                "description": "スポーツ 旭化成、最多26度目V＝全日本実業団駅伝 青学大、2年連続8度目V＝箱根駅伝 松山が開幕戦V＝ツアー11勝目—米男子ゴルフ 桐蔭学園が2連覇＝全国高校ラグビー 帝京大が4連覇＝全国大学ラグビー 前橋育英が2度目V＝高校サッカー"
+              },
+              {
+                "title": "全日本大学駅伝対校選手権2025丨日程・放送予定・ライブ配信 ...",
+                "url": "https://www.olympics.com/ja/news/athletics-all-japan-university-men-s-ekiden-championships-2025-long-feature",
+                "description": "第57回全日本大学駅伝対校選手権大会が11月2日に開催される。愛知県名古屋市の熱田神宮西門前から、三重県伊勢市の伊勢神宮内宮宇治橋前までの伊勢路を制すのは？ 大会の見どころや日程、放送予定、出場校や区間エントリーを紹介する。"
+              },
+              {
+                "title": "2025年 主要ニュース・未来ニュース予定 | 報道写真・ニュース ...",
+                "url": "https://imagelink.kyodonews.jp/top-news/2025/",
+                "description": "共同通信イメージズが選んだ「過去の主なニュース」と「未来のニュース予定」をまとめています。 過去の年は、日本と海外で起きた毎年の重要な出来事、周年、流行を写真映像で振り返ることができます。"
+              },
+              {
+                "title": "2025年11月のニュース Jra",
+                "url": "https://jra.jp/news/202511/index.html",
+                "description": "JRAニュース 2025年11月 すべてのニュース ピックアップ レース ・ 馬 ・ 騎手など 現金 ・ UMACA ・ ネット馬券 イベント ・ キャンペーン その他"
+              },
+              {
+                "title": "2025年11月の注目イベント 日本の政治・経済の動向に注目 | 三井 ...",
+                "url": "https://www.smd-am.co.jp/market/daily/marketreport/2025/10/news251028gl/",
+                "description": "米国による関税の影響で輸出が減少したことや、住宅投資における法改正前の駆け込み需要の反動減などを背景に、4-6月期（前期比年率＋2.2％）から大幅に減速する可能性が高いと見られています。 新政権による経済対策や、日銀による利上げの先行きを見通す上でも、日本経済の動向が注目されます。 10月21日に実施された首相指名選挙の結果、高市自由民主党総裁が第104代首相に任命され、同時に日本維新の会との連立政権が発足しました。 今後まとめられる予定の経済対策では、物価高対策に加え、成長投資や安全保障を主軸とする方針が示されており、対策規模は前年を上回る可能性も指摘されています。"
+              },
+              {
+                "title": "2025年11月 - 日経ビジネス電子版",
+                "url": "https://business.nikkei.com/atcl/gen/19/00697/032800011/",
+                "description": "月ごとに国内外の注目すべき主な予定を掲載します。 日経ビジネス電子版の関連記事もご参照ください。"
+              },
+              {
+                "title": "2025年11月の星空情報 - 国立天文台(Naoj)",
+                "url": "https://www.nao.ac.jp/news/blog/2025/20251031-astro.html",
+                "description": "2025年11月の星空情報です。11月2日は十三夜。中秋の名月に次ぐ2度目のお月見の日です。2日の夜には、月が土星に寄り添うように輝きます。太陰太陽暦にちなんだ日本ならではのお月見。空を見上げて楽しんでみてください。 11月5日の満月は、ことし地球に最も近く、見かけ上いちばん大きく ..."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]}
+/>
+
+大分改善したのではないだろうか。
+提供してくれるニュースの数は減ってしまったがどちらも 2025 年 11 月 2 日に本当にあったニュースになっている。
+また、プロンプトで当たえた指示を元に注意文言も表示してくれた。
+この手の動作はありがたいが、指示に忠実ではないということでもあるので一概に良いとは言えない。
+何はともあれ、「正確な」回答をさせるという目的は達成できた。
+
+ここまで見てきた例からもわかるが、出力フォーマットに一貫性がない問題が発生している。
+これについてはプロンプトで出力フォーマットを与えることで解消できる。
+
+次の記事では、Web ページの内容を取得するためのツールを実装し、
+出力フォーマットにある程度の一貫性を持たせるところまでを目指そう。
+
+## おわりに
+
+この記事では、`gpt-oss` の Reasoning Effort の違いによって LLM の推論や回答が改善することを確認した。
+また、プロンプトを改善することで Web 検索ツールの結果を元に正確な回答をさせることがわかった。
+ここでは、たった一つの例に対して上手く動作することが確認できただけなので、
+他の質問について高い精度で回答で正しい回答ができるかといった検証はできていない。
+複数の問いに対して一定の品質を保つために自動評価をするための環境を整えなければならないが、それは今後の課題として取り組もう。
+
+次の記事では Web ページの内容を取得するためのツールを実装し、
+それを LLM に与えた場合にどのようなことが起こるのか見ていきたい。

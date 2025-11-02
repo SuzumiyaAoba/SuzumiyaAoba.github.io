@@ -18,7 +18,7 @@
 
   /* ライトテーマの変数 */
   --background-light: #f8fafc;
-  --background-secondary-light: #e2e8f0;
+  --background-secondary-light: #fafbfc;
   --foreground-light: #0f172a;
   --muted-light: #64748b;
   --muted-secondary-light: #94a3b8;
@@ -631,4 +631,15 @@ div[data-ch-line] * {
 .footnotes ol li {
   margin: 0.5rem 0;
   color: var(--foreground);
+}
+
+/* Chat UI のダークモード対応 */
+[data-theme="dark"] .group.is-user [class*="rounded-lg"],
+[data-theme="dark"].group.is-user [class*="rounded-lg"] {
+  background-color: rgba(30, 58, 138, 0.3) !important; /* blue-900/30 */
+}
+
+[data-theme="dark"] .group.is-assistant [class*="rounded-lg"],
+[data-theme="dark"].group.is-assistant [class*="rounded-lg"] {
+  background-color: var(--background-secondary) !important;
 }

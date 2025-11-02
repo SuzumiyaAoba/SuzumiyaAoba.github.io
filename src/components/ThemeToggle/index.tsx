@@ -24,7 +24,8 @@ export const ThemeToggle = () => {
   return (
     <button
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-      className="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-background text-text hover:bg-opacity-90"
+      className="w-10 h-10 rounded-full flex items-center justify-center transition-colors text-foreground hover:opacity-80"
+      style={{ backgroundColor: "var(--background-secondary)" }}
       onClick={toggleTheme}
     >
       {theme === "dark" ? (
