@@ -34,6 +34,17 @@
   --header-scrolled-bg-light: rgba(255, 255, 255, 0.92);
   --input-bg-light: #ffffff;
 
+  /* CodeHikeコンポーネント用のライトテーマ変数 */
+  --codehike-callout-bg-light: #eff6ff;
+  --codehike-callout-border-light: #93c5fd;
+  --codehike-tooltip-bg-light: #ffffff;
+  --codehike-tooltip-border-light: #cbd5e1;
+  --codehike-tooltip-text-light: #1e293b;
+  --codehike-muted-text-light: #94a3b8;
+  --codehike-footnote-border-light: #94a3b8;
+  --codehike-diff-add-light: #3fb950;
+  --codehike-diff-remove-light: #f85149;
+
   /* Messageコンポーネント用のライトテーマ変数 */
   --info-bg-light: #f0f7ff;
   --info-border-light: #93c5fd;
@@ -73,6 +84,17 @@
   --header-scrolled-bg-dark: rgba(41, 50, 68, 0.92);
   --input-bg-dark: #293244;
 
+  /* CodeHikeコンポーネント用のダークテーマ変数 */
+  --codehike-callout-bg-dark: #1e3a5f;
+  --codehike-callout-border-dark: #3b82f6;
+  --codehike-tooltip-bg-dark: #2c3549;
+  --codehike-tooltip-border-dark: #475569;
+  --codehike-tooltip-text-dark: #e2e8f0;
+  --codehike-muted-text-dark: #cbd5e1;
+  --codehike-footnote-border-dark: #64748b;
+  --codehike-diff-add-dark: #3fb950;
+  --codehike-diff-remove-dark: #f85149;
+
   /* Messageコンポーネント用のダークテーマ変数 */
   --info-bg-dark: #172554;
   --info-border-dark: #3b82f6;
@@ -111,6 +133,17 @@
   --header-bg: var(--header-bg-light);
   --header-scrolled-bg: var(--header-scrolled-bg-light);
   --input-bg: var(--input-bg-light);
+
+  /* CodeHikeコンポーネントのデフォルト変数 */
+  --codehike-callout-bg: var(--codehike-callout-bg-light);
+  --codehike-callout-border: var(--codehike-callout-border-light);
+  --codehike-tooltip-bg: var(--codehike-tooltip-bg-light);
+  --codehike-tooltip-border: var(--codehike-tooltip-border-light);
+  --codehike-tooltip-text: var(--codehike-tooltip-text-light);
+  --codehike-muted-text: var(--codehike-muted-text-light);
+  --codehike-footnote-border: var(--codehike-footnote-border-light);
+  --codehike-diff-add: var(--codehike-diff-add-light);
+  --codehike-diff-remove: var(--codehike-diff-remove-light);
 
   /* Messageコンポーネントのデフォルト変数 */
   --info-bg: var(--info-bg-light);
@@ -164,6 +197,17 @@
     /* SVGフィルター用変数 */
     --svg-filter: invert(1);
 
+    /* CodeHike コンポーネント用ダークモード設定 */
+    --codehike-callout-bg: var(--codehike-callout-bg-dark);
+    --codehike-callout-border: var(--codehike-callout-border-dark);
+    --codehike-tooltip-bg: var(--codehike-tooltip-bg-dark);
+    --codehike-tooltip-border: var(--codehike-tooltip-border-dark);
+    --codehike-tooltip-text: var(--codehike-tooltip-text-dark);
+    --codehike-muted-text: var(--codehike-muted-text-dark);
+    --codehike-footnote-border: var(--codehike-footnote-border-dark);
+    --codehike-diff-add: var(--codehike-diff-add-dark);
+    --codehike-diff-remove: var(--codehike-diff-remove-dark);
+
     /* Message コンポーネント用ダークモード設定 */
     --info-bg: var(--info-bg-dark);
     --info-border: var(--info-border-dark);
@@ -212,6 +256,17 @@
 
   /* SVGフィルター用変数 */
   --svg-filter: invert(1);
+
+  /* CodeHike コンポーネント用ダークモード設定 */
+  --codehike-callout-bg: var(--codehike-callout-bg-dark);
+  --codehike-callout-border: var(--codehike-callout-border-dark);
+  --codehike-tooltip-bg: var(--codehike-tooltip-bg-dark);
+  --codehike-tooltip-border: var(--codehike-tooltip-border-dark);
+  --codehike-tooltip-text: var(--codehike-tooltip-text-dark);
+  --codehike-muted-text: var(--codehike-muted-text-dark);
+  --codehike-footnote-border: var(--codehike-footnote-border-dark);
+  --codehike-diff-add: var(--codehike-diff-add-dark);
+  --codehike-diff-remove: var(--codehike-diff-remove-dark);
 
   /* Message コンポーネント用ダークモード設定 */
   --info-bg: var(--info-bg-dark);
@@ -347,6 +402,17 @@
     --header-bg: var(--header-bg-dark);
     --header-scrolled-bg: var(--header-scrolled-bg-dark);
     --input-bg: var(--input-bg-dark);
+
+    /* CodeHike コンポーネント用ダークモード設定 */
+    --codehike-callout-bg: var(--codehike-callout-bg-dark);
+    --codehike-callout-border: var(--codehike-callout-border-dark);
+    --codehike-tooltip-bg: var(--codehike-tooltip-bg-dark);
+    --codehike-tooltip-border: var(--codehike-tooltip-border-dark);
+    --codehike-tooltip-text: var(--codehike-tooltip-text-dark);
+    --codehike-muted-text: var(--codehike-muted-text-dark);
+    --codehike-footnote-border: var(--codehike-footnote-border-dark);
+    --codehike-diff-add: var(--codehike-diff-add-dark);
+    --codehike-diff-remove: var(--codehike-diff-remove-dark);
 
     /* Message コンポーネント用ダークモード設定 */
     --info-bg: var(--info-bg-dark);
@@ -538,6 +604,17 @@ div[data-ch-line] * {
   --header-bg: var(--header-bg-dark);
   --header-scrolled-bg: var(--header-scrolled-bg-dark);
   --input-bg: var(--input-bg-dark);
+
+  /* CodeHikeコンポーネント用のダークテーマ変数 */
+  --codehike-callout-bg: var(--codehike-callout-bg-dark);
+  --codehike-callout-border: var(--codehike-callout-border-dark);
+  --codehike-tooltip-bg: var(--codehike-tooltip-bg-dark);
+  --codehike-tooltip-border: var(--codehike-tooltip-border-dark);
+  --codehike-tooltip-text: var(--codehike-tooltip-text-dark);
+  --codehike-muted-text: var(--codehike-muted-text-dark);
+  --codehike-footnote-border: var(--codehike-footnote-border-dark);
+  --codehike-diff-add: var(--codehike-diff-add-dark);
+  --codehike-diff-remove: var(--codehike-diff-remove-dark);
 
   /* Messageコンポーネント用のダークテーマ変数 */
   --info-bg: var(--info-bg-dark);

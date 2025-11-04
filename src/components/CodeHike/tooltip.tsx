@@ -5,23 +5,25 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { useTheme } from "next-themes";
 
 export const tooltip: AnnotationHandler = {
   name: "tooltip",
   Inline: ({ children, annotation }) => {
     const { query, data } = annotation;
-    const { resolvedTheme } = useTheme();
-    
+
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger className="underline decoration-dashed">
             {children}
           </TooltipTrigger>
-          <TooltipContent 
+          <TooltipContent
             align="start"
-            className={`${resolvedTheme === "dark" ? "border-gray-700 bg-gray-800 text-gray-200" : ""}`}
+            style={{
+              backgroundColor: "var(--codehike-tooltip-bg)",
+              borderColor: "var(--codehike-tooltip-border)",
+              color: "var(--codehike-tooltip-text)"
+            }}
           >
             {data?.children || query}
           </TooltipContent>

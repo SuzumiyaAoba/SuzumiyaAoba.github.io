@@ -26,7 +26,7 @@ export function InlineCode({ codeblock }: { codeblock: RawCode }) {
   }, [codeblock, theme]);
 
   if (loading || !highlighted) {
-    return <span className="text-gray-400">...</span>;
+    return <span style={{ color: "var(--codehike-muted-text)" }}>...</span>;
   }
 
   return <Inline code={highlighted} style={highlighted.style} />;

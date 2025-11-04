@@ -4,7 +4,10 @@ export const diff: AnnotationHandler = {
   name: "diff",
   onlyIfAnnotated: true,
   transform: (annotation: BlockAnnotation) => {
-    const color = annotation.query == "-" ? "#f85149" : "#3fb950";
+    const color =
+      annotation.query === "-"
+        ? "var(--codehike-diff-remove)"
+        : "var(--codehike-diff-add)";
     return [annotation, { ...annotation, name: "mark", query: color }];
   },
   Line: ({ annotation, ...props }) => (
