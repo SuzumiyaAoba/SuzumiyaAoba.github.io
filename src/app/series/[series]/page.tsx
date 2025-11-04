@@ -144,7 +144,7 @@ export default async function SeriesDetailPage({ params }: Props) {
 
       <div className="mt-8">
         <Link
-          href="/series"
+          href="/series/"
           className="hover:underline transition-colors duration-200"
           style={{ color: "var(--accent-primary)" }}
         >

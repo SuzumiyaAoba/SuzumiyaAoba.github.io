@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/libs/i18n/client";
+import type { SeriesInfo } from "@/libs/contents/series";
 
 type SeriesPageClientProps = {
-  seriesEntries: [string, any][];
+  seriesEntries: [string, SeriesInfo][];
 };
 
 export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
@@ -50,7 +51,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold mb-2">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}`}
+                      href={`/series/${encodeURIComponent(seriesName)}/`}
                       className="hover:underline transition-colors duration-200"
                       style={{
                         color: "var(--foreground)",
@@ -79,7 +80,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
                   </div>
 
                   <div className="space-y-2">
-                    {seriesInfo.posts.slice(0, 3).map((post: any, index: number) => (
+                    {seriesInfo.posts.slice(0, 3).map((post, index) => (
                       <div key={post.slug} className="text-sm">
                         <Link
                           href={`/blog/post/${post.slug}`}
@@ -101,7 +102,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
 
                   <div className="mt-4">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}`}
+                      href={`/series/${encodeURIComponent(seriesName)}/`}
                       className="text-sm hover:underline transition-colors duration-200"
                       style={{ color: "var(--accent-primary)" }}
                     >
