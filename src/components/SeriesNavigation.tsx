@@ -84,7 +84,7 @@ export function SeriesNavigation({
 
       <div className="mt-4">
         <Link
-          href={`/series/${encodeURIComponent(seriesName)}`}
+          href={`/series/${encodeURIComponent(seriesName)}/`}
           className="text-sm hover:underline transition-colors duration-200"
           style={{ color: "var(--accent-primary)" }}
         >
