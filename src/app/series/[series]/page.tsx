@@ -15,24 +15,22 @@ type Props = {
 export async function generateStaticParams() {
   const allSeries = await getAllSeries();
   return Object.keys(allSeries).map((seriesName) => ({
-    series: encodeURIComponent(seriesName),
+    series: seriesName,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { series } = await params;
-  const seriesName = decodeURIComponent(series);
 
   return {
-    title: `${seriesName} シリーズ | ${config.metadata.title}`,
-    description: `${seriesName} シリーズの記事一覧`,
+    title: `${series} シリーズ | ${config.metadata.title}`,
+    description: `${series} シリーズの記事一覧`,
   };
 }
 
 export default async function SeriesDetailPage({ params }: Props) {
   const { series } = await params;
-  const seriesName = decodeURIComponent(series);
-  const seriesPosts = await getSeriesPosts(seriesName);
+  const seriesPosts = await getSeriesPosts(series);
 
   if (seriesPosts.length === 0) {
     notFound();
@@ -52,7 +50,7 @@ export default async function SeriesDetailPage({ params }: Props) {
             className="text-3xl font-bold"
             style={{ color: "var(--foreground)" }}
           >
-            {seriesName}
+            {series}
           </h1>
         </div>
         
