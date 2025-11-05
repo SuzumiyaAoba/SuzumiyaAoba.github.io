@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getAllSeries } from "@/libs/contents/series";
+import { encodeSeriesName } from "@/libs/contents/series-utils";
 import config from "@/config";
 
 export const dynamic = "force-static";
@@ -9,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const seriesEntries = Object.entries(allSeries);
 
   const seriesSitemaps: MetadataRoute.Sitemap = seriesEntries.map(([seriesName]) => ({
-    url: `${config.metadata.url}/series/${encodeURIComponent(seriesName)}/`,
+    url: `${config.metadata.url}/series/${encodeSeriesName(seriesName)}/`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.8,

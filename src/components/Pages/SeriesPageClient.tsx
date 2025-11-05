@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/libs/i18n/client";
+import { encodeSeriesName } from "@/libs/contents/series-utils";
 import type { SeriesInfo } from "@/libs/contents/series";
 
 type SeriesPageClientProps = {
@@ -51,7 +52,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold mb-2">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}/`}
+                      href={`/series/${encodeSeriesName(seriesName)}/`}
                       className="hover:underline transition-colors duration-200"
                       style={{
                         color: "var(--foreground)",
@@ -102,7 +103,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
 
                   <div className="mt-4">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}/`}
+                      href={`/series/${encodeSeriesName(seriesName)}/`}
                       className="text-sm hover:underline transition-colors duration-200"
                       style={{ color: "var(--accent-primary)" }}
                     >
