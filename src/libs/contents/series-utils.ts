@@ -1,4 +1,22 @@
 /**
+ * シリーズ名から自動的にslugを生成
+ * 日本語の場合はbase64urlエンコード、英数字の場合はケバブケースに変換
+ */
+export function generateSlugFromSeriesName(seriesName: string): string {
+  // 英数字と一部の記号のみの場合はケバブケースに変換
+  if (/^[a-zA-Z0-9\s\-_.]+$/.test(seriesName)) {
+    return seriesName
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\-]/g, "");
+  }
+
+  // 日本語などの多バイト文字を含む場合はbase64urlエンコード
+  return encodeSeriesName(seriesName);
+}
+
+/**
  * シリーズ名をURLセーフなbase64文字列にエンコード
  * 静的エクスポート時のファイルシステム互換性のため
  * Node.jsとブラウザの両方で動作

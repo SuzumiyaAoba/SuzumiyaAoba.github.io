@@ -16,6 +16,7 @@ export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
   ogImage: z.string().optional(),
   // シリーズ機能
   series: z.string().optional(), // シリーズ名
+  seriesSlug: z.string().optional(), // シリーズのURL用slug（設定しない場合は自動生成）
   seriesOrder: z.number().optional(), // シリーズ内での順序
   // Amazon アソシエイト
   amazonAssociate: z.boolean().optional(), // Amazon アソシエイトリンクが含まれるかどうか

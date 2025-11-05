@@ -170,6 +170,7 @@ export default async function Page({ params }: Props) {
           {seriesNavigation && frontmatter.series && seriesNavigation.currentIndex !== -1 && (
             <SeriesNavigation
               seriesName={frontmatter.series}
+              seriesSlug={seriesNavigation.seriesSlug}
               currentIndex={seriesNavigation.currentIndex}
               totalPosts={seriesNavigation.totalPosts}
               previous={seriesNavigation.previous}

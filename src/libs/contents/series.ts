@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Content } from "./markdown";
 import { blogFrontmatterSchema } from "./schema";
 import { getFrontmatters } from "./markdown";
+import { generateSlugFromSeriesName } from "./series-utils";
 
 export type SeriesContent = Content<z.infer<typeof blogFrontmatterSchema>>;
 
@@ -19,6 +20,7 @@ export interface SeriesPost {
  */
 export interface SeriesInfo {
   name: string;
+  slug: string; // URL用のslug
   posts: SeriesPost[];
   totalPosts: number;
 }
@@ -48,7 +50,7 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
     }
   });
 
-  // 各シリーズの記事をseriesOrderでソート
+  // 各シリーズの記事をseriesOrderでソート、slugを設定
   const result: Record<string, SeriesInfo> = {};
   Object.entries(seriesMap).forEach(([seriesName, posts]) => {
     const sortedPosts = posts.sort((a, b) => {
@@ -57,8 +59,12 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
       return orderA - orderB;
     });
 
+    // slugを取得（最初の記事のseriesSlugを使用、なければ自動生成）
+    const slug = sortedPosts[0]?.frontmatter.seriesSlug || generateSlugFromSeriesName(seriesName);
+
     result[seriesName] = {
       name: seriesName,
+      slug,
       posts: sortedPosts,
       totalPosts: sortedPosts.length,
     };
@@ -68,11 +74,28 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
 }
 
 /**
- * 特定のシリーズの記事を取得
+ * slugからシリーズ情報を取得
+ */
+export async function getSeriesBySlug(slug: string): Promise<SeriesInfo | null> {
+  const allSeries = await getAllSeries();
+  const series = Object.values(allSeries).find((s) => s.slug === slug);
+  return series || null;
+}
+
+/**
+ * 特定のシリーズの記事を取得（シリーズ名で検索）
  */
 export async function getSeriesPosts(seriesName: string): Promise<SeriesPost[]> {
   const allSeries = await getAllSeries();
   return allSeries[seriesName]?.posts || [];
+}
+
+/**
+ * 特定のシリーズの記事を取得（slugで検索）
+ */
+export async function getSeriesPostsBySlug(slug: string): Promise<SeriesPost[]> {
+  const series = await getSeriesBySlug(slug);
+  return series?.posts || [];
 }
 
 /**
@@ -82,16 +105,31 @@ export async function getSeriesNavigation(
   currentSlug: string,
   seriesName: string
 ): Promise<{
+  seriesSlug: string;
   previous: SeriesPost | null;
   next: SeriesPost | null;
   currentIndex: number;
   totalPosts: number;
 }> {
-  const seriesPosts = await getSeriesPosts(seriesName);
+  const allSeries = await getAllSeries();
+  const seriesInfo = allSeries[seriesName];
+
+  if (!seriesInfo) {
+    return {
+      seriesSlug: "",
+      previous: null,
+      next: null,
+      currentIndex: -1,
+      totalPosts: 0,
+    };
+  }
+
+  const seriesPosts = seriesInfo.posts;
   const currentIndex = seriesPosts.findIndex((post) => post.slug === currentSlug);
 
   if (currentIndex === -1) {
     return {
+      seriesSlug: seriesInfo.slug,
       previous: null,
       next: null,
       currentIndex: -1,
@@ -100,6 +138,7 @@ export async function getSeriesNavigation(
   }
 
   return {
+    seriesSlug: seriesInfo.slug,
     previous: currentIndex > 0 ? seriesPosts[currentIndex - 1] : null,
     next: currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null,
     currentIndex,

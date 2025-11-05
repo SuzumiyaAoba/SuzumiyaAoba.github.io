@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { encodeSeriesName } from "@/libs/contents/series-utils";
 import type { SeriesPost } from "@/libs/contents/series";
 
 interface SeriesNavigationProps {
   seriesName: string;
+  seriesSlug: string;
   currentIndex: number;
   totalPosts: number;
   previous: SeriesPost | null;
@@ -14,6 +14,7 @@ interface SeriesNavigationProps {
 
 export function SeriesNavigation({
   seriesName,
+  seriesSlug,
   currentIndex,
   totalPosts,
   previous,
@@ -85,7 +86,7 @@ export function SeriesNavigation({
 
       <div className="mt-4">
         <Link
-          href={`/series/${encodeSeriesName(seriesName)}/`}
+          href={`/series/${seriesSlug}/`}
           className="text-sm hover:underline transition-colors duration-200"
           style={{ color: "var(--accent-primary)" }}
         >

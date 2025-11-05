@@ -3,8 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@iconify/react";
 import config from "@/config";
-import { getAllSeries, getSeriesPosts } from "@/libs/contents/series";
-import { encodeSeriesName, decodeSeriesName } from "@/libs/contents/series-utils";
+import { getAllSeries, getSeriesBySlug } from "@/libs/contents/series";
 import { Tag } from "@/components/Tag";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -15,29 +14,37 @@ type Props = {
 
 export async function generateStaticParams() {
   const allSeries = await getAllSeries();
-  return Object.keys(allSeries).map((seriesName) => ({
-    series: encodeSeriesName(seriesName),
+  return Object.values(allSeries).map((seriesInfo) => ({
+    series: seriesInfo.slug,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { series: encodedSeries } = await params;
-  const seriesName = decodeSeriesName(encodedSeries);
+  const { series: slug } = await params;
+  const seriesInfo = await getSeriesBySlug(slug);
+
+  if (!seriesInfo) {
+    return {
+      title: `シリーズが見つかりません | ${config.metadata.title}`,
+      description: "指定されたシリーズが見つかりません",
+    };
+  }
 
   return {
-    title: `${seriesName} シリーズ | ${config.metadata.title}`,
-    description: `${seriesName} シリーズの記事一覧`,
+    title: `${seriesInfo.name} シリーズ | ${config.metadata.title}`,
+    description: `${seriesInfo.name} シリーズの記事一覧`,
   };
 }
 
 export default async function SeriesDetailPage({ params }: Props) {
-  const { series: encodedSeries } = await params;
-  const seriesName = decodeSeriesName(encodedSeries);
-  const seriesPosts = await getSeriesPosts(seriesName);
+  const { series: slug } = await params;
+  const seriesInfo = await getSeriesBySlug(slug);
 
-  if (seriesPosts.length === 0) {
+  if (!seriesInfo || seriesInfo.posts.length === 0) {
     notFound();
   }
+
+  const { name: seriesName, posts: seriesPosts } = seriesInfo;
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">
