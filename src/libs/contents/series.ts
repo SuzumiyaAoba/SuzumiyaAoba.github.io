@@ -1,8 +1,10 @@
 import { z } from "zod";
+import path from "node:path";
+import fs from "node:fs/promises";
 import type { Content } from "./markdown";
 import { blogFrontmatterSchema } from "./schema";
 import { getFrontmatters } from "./markdown";
-import { generateSlugFromSeriesName } from "./series-utils";
+import { seriesDefinitionSchema, type SeriesDefinition } from "./series-schema";
 
 export type SeriesContent = Content<z.infer<typeof blogFrontmatterSchema>>;
 
@@ -26,49 +28,73 @@ export interface SeriesInfo {
 }
 
 /**
+ * シリーズ定義ディレクトリから全てのJSONファイルを読み込む
+ */
+async function loadSeriesDefinitions(): Promise<SeriesDefinition[]> {
+  const seriesDir = path.join(process.cwd(), "src/contents/series");
+
+  try {
+    const files = await fs.readdir(seriesDir);
+    const jsonFiles = files.filter((file) => file.endsWith(".json"));
+
+    const definitions = await Promise.all(
+      jsonFiles.map(async (file) => {
+        const filePath = path.join(seriesDir, file);
+        const content = await fs.readFile(filePath, "utf-8");
+        const json = JSON.parse(content);
+        return seriesDefinitionSchema.parse(json);
+      })
+    );
+
+    return definitions;
+  } catch (error) {
+    console.error("Failed to load series definitions:", error);
+    return [];
+  }
+}
+
+/**
  * 全てのシリーズを取得
  */
 export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
+  const definitions = await loadSeriesDefinitions();
   const allPosts = await getFrontmatters({
     paths: ["blog"],
     schema: blogFrontmatterSchema,
   });
 
-  const seriesMap: Record<string, SeriesPost[]> = {};
-
+  // 記事をslugでマップ化
+  const postMap = new Map<string, z.infer<typeof blogFrontmatterSchema>>();
   allPosts.forEach((post) => {
-    if (post.series) {
-      const seriesName = post.series;
-      if (!seriesMap[seriesName]) {
-        seriesMap[seriesName] = [];
-      }
-      seriesMap[seriesName].push({
-        slug: post._path,
-        frontmatter: post,
-        path: post._path,
-      });
-    }
+    postMap.set(post._path, post);
   });
 
-  // 各シリーズの記事をseriesOrderでソート、slugを設定
   const result: Record<string, SeriesInfo> = {};
-  Object.entries(seriesMap).forEach(([seriesName, posts]) => {
-    const sortedPosts = posts.sort((a, b) => {
-      const orderA = a.frontmatter.seriesOrder ?? 0;
-      const orderB = b.frontmatter.seriesOrder ?? 0;
-      return orderA - orderB;
-    });
 
-    // slugを取得（最初の記事のseriesSlugを使用、なければ自動生成）
-    const slug = sortedPosts[0]?.frontmatter.seriesSlug || generateSlugFromSeriesName(seriesName);
+  for (const definition of definitions) {
+    const posts: SeriesPost[] = [];
 
-    result[seriesName] = {
-      name: seriesName,
-      slug,
-      posts: sortedPosts,
-      totalPosts: sortedPosts.length,
+    // 定義されたpostsの順序で記事を取得
+    for (const postSlug of definition.posts) {
+      const frontmatter = postMap.get(postSlug);
+      if (frontmatter) {
+        posts.push({
+          slug: postSlug,
+          frontmatter,
+          path: postSlug,
+        });
+      } else {
+        console.warn(`Post not found for slug: ${postSlug} in series: ${definition.name}`);
+      }
+    }
+
+    result[definition.name] = {
+      name: definition.name,
+      slug: definition.slug,
+      posts,
+      totalPosts: posts.length,
     };
-  });
+  }
 
   return result;
 }
@@ -99,45 +125,48 @@ export async function getSeriesPostsBySlug(slug: string): Promise<SeriesPost[]> 
 }
 
 /**
+ * 記事が属するシリーズを検索
+ */
+export async function findSeriesByPostSlug(postSlug: string): Promise<SeriesInfo | null> {
+  const allSeries = await getAllSeries();
+
+  for (const seriesInfo of Object.values(allSeries)) {
+    if (seriesInfo.posts.some((post) => post.slug === postSlug)) {
+      return seriesInfo;
+    }
+  }
+
+  return null;
+}
+
+/**
  * 記事が属するシリーズの前後の記事を取得
  */
 export async function getSeriesNavigation(
-  currentSlug: string,
-  seriesName: string
+  currentSlug: string
 ): Promise<{
+  seriesName: string;
   seriesSlug: string;
   previous: SeriesPost | null;
   next: SeriesPost | null;
   currentIndex: number;
   totalPosts: number;
-}> {
-  const allSeries = await getAllSeries();
-  const seriesInfo = allSeries[seriesName];
+} | null> {
+  const seriesInfo = await findSeriesByPostSlug(currentSlug);
 
   if (!seriesInfo) {
-    return {
-      seriesSlug: "",
-      previous: null,
-      next: null,
-      currentIndex: -1,
-      totalPosts: 0,
-    };
+    return null;
   }
 
   const seriesPosts = seriesInfo.posts;
   const currentIndex = seriesPosts.findIndex((post) => post.slug === currentSlug);
 
   if (currentIndex === -1) {
-    return {
-      seriesSlug: seriesInfo.slug,
-      previous: null,
-      next: null,
-      currentIndex: -1,
-      totalPosts: seriesPosts.length,
-    };
+    return null;
   }
 
   return {
+    seriesName: seriesInfo.name,
     seriesSlug: seriesInfo.slug,
     previous: currentIndex > 0 ? seriesPosts[currentIndex - 1] : null,
     next: currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null,

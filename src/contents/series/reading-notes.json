@@ -1,0 +1,9 @@
+{
+  "name": "読書メモ",
+  "slug": "reading-notes",
+  "description": "技術書やプログラミング関連書籍の読書メモ",
+  "posts": [
+    "2024-12-31-dependency-injection-book",
+    "2025-05-17-prompt-enginnering-for-llms"
+  ]
+}
