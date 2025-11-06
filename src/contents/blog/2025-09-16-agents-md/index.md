@@ -9,6 +9,14 @@ tags: ["Claude Code", "AGENTS.md"]
 
 2025-09-24 現在においては [AGENTS.md](https://agents.md/) 推奨のシンボリックリンクが無難。
 
+### 2025-11-06 追記
+
+https://code.claude.com/docs/en/claude-code-on-the-web#best-practices
+
+> **Document requirements**: Clearly specify dependencies and commands in your `CLAUDE.md` file. If you have an `AGENTS.md` file, you can source it in your CLAUDE.md using `@AGENTS.md` to maintain a single source of truth.
+
+Claude Code の公式ドキュメントは `CLAUDE.md` 内で `@AGENTS.md` を使って参照させる方式推し。
+
 ```shell
 ln -s AGENTS.md CLAUDE.md
 ```
