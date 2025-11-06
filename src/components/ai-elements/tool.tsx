@@ -6,7 +6,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import type { ToolUIPart } from "ai";
 import {
   CheckCircleIcon,

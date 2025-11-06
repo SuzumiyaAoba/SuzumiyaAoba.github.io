@@ -3,7 +3,7 @@ import {
   encodeSeriesName,
   decodeSeriesName,
   generateSlugFromSeriesName,
-} from "@/libs/contents/series-utils";
+} from "@/libs/contents/series";
 
 describe("series-utils", () => {
   describe("encodeSeriesName and decodeSeriesName", () => {

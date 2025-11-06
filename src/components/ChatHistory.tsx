@@ -4,7 +4,7 @@ import { Message, MessageContent } from "./ai-elements/message";
 import { Response } from "./ai-elements/response";
 import { Reasoning, ReasoningContent, ReasoningTrigger } from "./ai-elements/reasoning";
 import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput, ToolInputProps, ToolOutputProps } from "./ai-elements/tool";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import markdownStyles from "@/styles/markdown.module.scss";
 import chatStyles from "./ChatHistory.module.scss";
 import type { ToolUIPart } from "ai";
