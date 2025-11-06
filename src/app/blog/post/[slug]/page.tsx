@@ -132,10 +132,8 @@ export default async function Page({ params }: Props) {
     }
   }
 
-  // シリーズナビゲーション情報を取得
-  const seriesNavigation = frontmatter.series
-    ? await getSeriesNavigation(slug, frontmatter.series)
-    : null;
+  // シリーズナビゲーション情報を取得（記事slugから自動検索）
+  const seriesNavigation = await getSeriesNavigation(slug);
 
   return (
     <>
@@ -167,9 +165,10 @@ export default async function Page({ params }: Props) {
           )}
 
           {/* シリーズナビゲーションを表示 */}
-          {seriesNavigation && frontmatter.series && seriesNavigation.currentIndex !== -1 && (
+          {seriesNavigation && (
             <SeriesNavigation
-              seriesName={frontmatter.series}
+              seriesName={seriesNavigation.seriesName}
+              seriesSlug={seriesNavigation.seriesSlug}
               currentIndex={seriesNavigation.currentIndex}
               totalPosts={seriesNavigation.totalPosts}
               previous={seriesNavigation.previous}

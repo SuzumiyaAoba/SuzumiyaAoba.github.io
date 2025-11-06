@@ -4,6 +4,7 @@ import type { SeriesPost } from "@/libs/contents/series";
 
 interface SeriesNavigationProps {
   seriesName: string;
+  seriesSlug: string;
   currentIndex: number;
   totalPosts: number;
   previous: SeriesPost | null;
@@ -13,6 +14,7 @@ interface SeriesNavigationProps {
 
 export function SeriesNavigation({
   seriesName,
+  seriesSlug,
   currentIndex,
   totalPosts,
   previous,
@@ -84,7 +86,7 @@ export function SeriesNavigation({
 
       <div className="mt-4">
         <Link
-          href={`/series/${encodeURIComponent(seriesName)}/`}
+          href={`/series/${seriesSlug}/`}
           className="text-sm hover:underline transition-colors duration-200"
           style={{ color: "var(--accent-primary)" }}
         >

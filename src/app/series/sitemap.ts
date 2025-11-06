@@ -8,8 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allSeries = await getAllSeries();
   const seriesEntries = Object.entries(allSeries);
 
-  const seriesSitemaps: MetadataRoute.Sitemap = seriesEntries.map(([seriesName]) => ({
-    url: `${config.metadata.url}/series/${encodeURIComponent(seriesName)}/`,
+  const seriesSitemaps: MetadataRoute.Sitemap = seriesEntries.map(([, seriesInfo]) => ({
+    url: `${config.metadata.url}/series/${seriesInfo.slug}/`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.8,

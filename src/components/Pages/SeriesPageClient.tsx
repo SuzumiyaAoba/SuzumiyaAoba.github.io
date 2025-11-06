@@ -51,7 +51,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold mb-2">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}/`}
+                      href={`/series/${seriesInfo.slug}/`}
                       className="hover:underline transition-colors duration-200"
                       style={{
                         color: "var(--foreground)",
@@ -102,7 +102,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
 
                   <div className="mt-4">
                     <Link
-                      href={`/series/${encodeURIComponent(seriesName)}/`}
+                      href={`/series/${seriesInfo.slug}/`}
                       className="text-sm hover:underline transition-colors duration-200"
                       style={{ color: "var(--accent-primary)" }}
                     >

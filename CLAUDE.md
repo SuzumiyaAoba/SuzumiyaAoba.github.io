@@ -134,9 +134,40 @@ Each content item is a directory containing:
 6. `getPaths()` - Automatically excludes language-specific files from path generation
 
 **Frontmatter Schemas** (`src/libs/contents/schema.ts`):
-- `blogFrontmatterSchema` - Required: title, date, category, tags. Optional: description, author, ogImage, series, seriesOrder, amazonAssociate, myLinkBoxIds
+- `blogFrontmatterSchema` - Required: title, date, category, tags. Optional: description, author, ogImage, amazonAssociate, myLinkBoxIds
 - `keywordFrontmatterSchema` - Adds parent and draft fields
 - `bookFrontmatterSchema` - Minimal schema for book content
+
+### Series Management
+
+Blog posts can be organized into series using JSON definition files in `src/contents/series/`.
+
+**Series Definition** (`src/contents/series/{slug}.json`):
+```json
+{
+  "name": "Series Display Name",
+  "slug": "series-url-slug",
+  "description": "Optional series description",
+  "posts": [
+    "2024-01-01-first-post",
+    "2024-01-02-second-post"
+  ]
+}
+```
+
+**How it works**:
+1. Create a JSON file in `src/contents/series/` (e.g., `my-series.json`)
+2. Define series metadata and list of post slugs in order
+3. Series information is automatically loaded and available at `/series/{slug}/`
+4. Articles automatically show series navigation if they're included in a series
+
+**Key Functions** (`src/libs/contents/series.ts`):
+- `getAllSeries()` - Returns all series definitions with their posts
+- `getSeriesBySlug(slug)` - Get series information by slug
+- `findSeriesByPostSlug(postSlug)` - Find which series a post belongs to
+- `getSeriesNavigation(postSlug)` - Get previous/next navigation for a post
+
+**Important**: Blog posts do NOT need series-related fields in their frontmatter. Series membership is determined solely by the JSON definition files.
 
 ### MDX Processing
 
