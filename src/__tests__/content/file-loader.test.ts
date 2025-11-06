@@ -6,7 +6,7 @@ describe("file-loader", () => {
     it("should return available languages for a blog post", async () => {
       // 実際のブログポストのパスを使用する必要があります
       // このテストは実際のコンテンツが存在する場合にのみ機能します
-      const languages = await getAvailableLanguages("blog", "2024-09-29-build-blog");
+      const languages = await getAvailableLanguages("blog", "2024-08-08-java-to-list");
       expect(Array.isArray(languages)).toBe(true);
       expect(languages).toContain("ja");
     });
