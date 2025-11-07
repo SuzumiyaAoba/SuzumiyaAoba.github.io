@@ -1,57 +1,8 @@
 import { z } from "zod";
-import path from "node:path";
-import fs from "node:fs/promises";
-import type { Content } from "./markdown";
-import { blogFrontmatterSchema } from "./schema";
-import { getFrontmatters } from "./markdown";
-import { seriesDefinitionSchema, type SeriesDefinition } from "./series-schema";
-
-export type SeriesContent = Content<z.infer<typeof blogFrontmatterSchema>>;
-
-/**
- * シリーズ情報を含む記事の型
- */
-export interface SeriesPost {
-  slug: string;
-  frontmatter: z.infer<typeof blogFrontmatterSchema>;
-  path: string;
-}
-
-/**
- * シリーズの情報
- */
-export interface SeriesInfo {
-  name: string;
-  slug: string; // URL用のslug
-  posts: SeriesPost[];
-  totalPosts: number;
-}
-
-/**
- * シリーズ定義ディレクトリから全てのJSONファイルを読み込む
- */
-async function loadSeriesDefinitions(): Promise<SeriesDefinition[]> {
-  const seriesDir = path.join(process.cwd(), "src/contents/series");
-
-  try {
-    const files = await fs.readdir(seriesDir);
-    const jsonFiles = files.filter((file) => file.endsWith(".json"));
-
-    const definitions = await Promise.all(
-      jsonFiles.map(async (file) => {
-        const filePath = path.join(seriesDir, file);
-        const content = await fs.readFile(filePath, "utf-8");
-        const json = JSON.parse(content);
-        return seriesDefinitionSchema.parse(json);
-      })
-    );
-
-    return definitions;
-  } catch (error) {
-    console.error("Failed to load series definitions:", error);
-    return [];
-  }
-}
+import { blogFrontmatterSchema } from "../schema";
+import { getFrontmatters } from "../query";
+import { loadSeriesDefinitions } from "./loader";
+import type { SeriesInfo, SeriesPost, SeriesNavigation } from "./types";
 
 /**
  * 全てのシリーズを取得
@@ -91,6 +42,7 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
     result[definition.name] = {
       name: definition.name,
       slug: definition.slug,
+      description: definition.description,
       posts,
       totalPosts: posts.length,
     };
@@ -144,14 +96,7 @@ export async function findSeriesByPostSlug(postSlug: string): Promise<SeriesInfo
  */
 export async function getSeriesNavigation(
   currentSlug: string
-): Promise<{
-  seriesName: string;
-  seriesSlug: string;
-  previous: SeriesPost | null;
-  next: SeriesPost | null;
-  currentIndex: number;
-  totalPosts: number;
-} | null> {
+): Promise<SeriesNavigation | null> {
   const seriesInfo = await findSeriesByPostSlug(currentSlug);
 
   if (!seriesInfo) {
@@ -173,4 +118,4 @@ export async function getSeriesNavigation(
     currentIndex,
     totalPosts: seriesPosts.length,
   };
-} 
+}
