@@ -52,7 +52,13 @@ const getStatusBadge = (status: ToolUIPart["state"]) => {
   };
 
   return (
-    <Badge className="gap-1.5 rounded-full text-xs" variant="secondary">
+    <Badge
+      className={cn(
+        "gap-1.5 rounded-full text-xs",
+        status === "output-available" && "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800"
+      )}
+      variant={status === "output-available" ? "outline" : "secondary"}
+    >
       {icons[status]}
       {labels[status]}
     </Badge>
