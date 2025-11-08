@@ -53,13 +53,13 @@ export default function BreadcrumbNav(props: BreadcrumbNavProps) {
               {segment.isLast ? (
                 <BreadcrumbItemLink asChild variant="active">
                   <span aria-current="page">
-                    {getDisplayTitle({ segment, data })}
+                    {getDisplayTitle({ segment, data, t })}
                   </span>
                 </BreadcrumbItemLink>
               ) : (
                 <BreadcrumbItemLink asChild>
                   <Link href={segment.path}>
-                    {getDisplayTitle({ segment, data })}
+                    {getDisplayTitle({ segment, data, t })}
                   </Link>
                 </BreadcrumbItemLink>
               )}

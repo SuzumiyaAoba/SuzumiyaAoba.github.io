@@ -74,21 +74,23 @@ interface BreadcrumbData {
   bookTitleMap: Record<string, string>;
 }
 
-// パスセグメントの表示名をマッピングするオブジェクト
-const segmentMappings: Record<string, string> = {
-  [ContentType.BLOG]: "ブログ",
-  [ContentType.SERIES]: "シリーズ",
-  [ContentType.KEYWORD]: "キーワード",
-  [ContentType.TOOL]: "ツール",
-  [ContentType.SEARCH]: "Search",
-  [ContentType.BOOKS]: "書籍",
-  programming: "プログラミング",
-  scala: "Scala",
-  cats: "Cats",
-  post: "記事",
-  page: "ページ",
-  "privacy-policy": "プライバシーポリシー",
-  contact: "お問い合わせ",
+// パスセグメントと翻訳キーのマッピング
+const segmentToTranslationKey: Record<string, string> = {
+  [ContentType.BLOG]: "blog",
+  [ContentType.SERIES]: "series",
+  [ContentType.KEYWORD]: "keywords",
+  [ContentType.TOOL]: "tools",
+  [ContentType.SEARCH]: "search",
+  [ContentType.BOOKS]: "books",
+  tags: "tags",
+  about: "about",
+  programming: "programming",
+  scala: "scala",
+  cats: "cats",
+  post: "post",
+  page: "page",
+  "privacy-policy": "privacyPolicy",
+  contact: "contact",
 };
 
 // 型ガード関数
@@ -230,15 +232,18 @@ function getPathSegments(segments: string[]): PathSegment[] {
 interface GetDisplayTitleProps {
   segment: PathSegment;
   data: BreadcrumbData;
+  t: (key: string) => string;
 }
 
 export function getDisplayTitle({
   segment,
   data,
+  t,
 }: GetDisplayTitleProps): string {
-  // 基本的なマッピングから取得
-  if (segment.name in segmentMappings) {
-    return segmentMappings[segment.name];
+  // 翻訳キーが存在する場合は翻訳を使用
+  const translationKey = segmentToTranslationKey[segment.name];
+  if (translationKey) {
+    return t(`breadcrumb.${translationKey}`);
   }
 
   // ブログのスラグからタイトルを取得

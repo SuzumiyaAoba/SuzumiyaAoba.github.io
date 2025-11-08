@@ -17,7 +17,22 @@
     "poweredBy": "Powered by"
   },
   "breadcrumb": {
-    "home": "ホーム"
+    "home": "ホーム",
+    "blog": "ブログ",
+    "series": "シリーズ",
+    "keywords": "キーワード",
+    "tools": "ツール",
+    "search": "検索",
+    "books": "書籍",
+    "tags": "タグ",
+    "about": "About",
+    "contact": "お問い合わせ",
+    "privacyPolicy": "プライバシーポリシー",
+    "programming": "プログラミング",
+    "scala": "Scala",
+    "cats": "Cats",
+    "post": "記事",
+    "page": "ページ"
   },
   "language": {
     "ja": "日本語",
