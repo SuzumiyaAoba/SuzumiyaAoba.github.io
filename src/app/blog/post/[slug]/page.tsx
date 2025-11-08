@@ -46,8 +46,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `${config.metadata.url}/blog/post/${slug}/opengraph-image`;
   const url = `${config.metadata.url}/blog/post/${slug}/`;
 
+  const fullTitle = frontmatter.subtitle
+    ? `${frontmatter.title} - ${frontmatter.subtitle}`
+    : frontmatter.title;
+
   return {
-    title: `${frontmatter.title} | ${config.metadata.title}`,
+    title: `${fullTitle} | ${config.metadata.title}`,
     description:
       frontmatter.description ||
       `${frontmatter.title}に関する記事です。${config.metadata.description}`,
@@ -60,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: url,
     },
     openGraph: {
-      title: frontmatter.title,
+      title: fullTitle,
       description:
         frontmatter.description || `${frontmatter.title}に関する記事です。`,
       url,
@@ -81,7 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: frontmatter.title,
+      title: fullTitle,
       description:
         frontmatter.description || `${frontmatter.title}に関する記事です。`,
       creator: config.metadata.twitterHandle,
@@ -144,6 +148,7 @@ export default async function Page({ params }: Props) {
       />
       <Article
         title={frontmatter.title}
+        subtitle={frontmatter.subtitle}
         date={frontmatter.date}
         tags={frontmatter.tags}
         description={frontmatter.description}

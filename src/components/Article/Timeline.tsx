@@ -17,7 +17,7 @@ const TimelineItem = ({
   showMonth = false,
   isLastInMonth = false, // デフォルトはfalse
 }: TimelineItemProps) => {
-  const { _path, title, date, tags } = post;
+  const { _path, title, subtitle, date, tags } = post;
   const year = format(date, "yyyy");
   const month = format(date, "M"); // 0埋めなしの月
   const day = format(date, "d"); // 0埋めなしの日
@@ -84,6 +84,14 @@ const TimelineItem = ({
         >
           {title}
         </Link>
+        {subtitle && (
+          <div
+            className="text-sm mb-2"
+            style={{ color: "var(--muted)" }}
+          >
+            {subtitle}
+          </div>
+        )}
         <div className="flex flex-wrap mt-2 gap-2 text-xs">
           {tags.map((tag) => (
             <Tag
