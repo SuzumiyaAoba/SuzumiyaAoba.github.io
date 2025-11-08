@@ -54,10 +54,10 @@ export function SeriesNavigation({
             style={{ color: "var(--accent-primary)" }}
           >
             <Icon icon="lucide:chevron-left" width={16} height={16} style={{ color: "currentColor" }} />
-            <span>前の記事: {previous.frontmatter.title}</span>
+            <span>前の記事: {previous.frontmatter.subtitle || previous.frontmatter.title}</span>
           </Link>
         ) : (
-          <div 
+          <div
             className="text-sm"
             style={{ color: "var(--muted)" }}
           >
@@ -71,11 +71,11 @@ export function SeriesNavigation({
             className="flex items-center gap-2 text-sm hover:underline transition-colors duration-200"
             style={{ color: "var(--accent-primary)" }}
           >
-            <span>次の記事: {next.frontmatter.title}</span>
+            <span>次の記事: {next.frontmatter.subtitle || next.frontmatter.title}</span>
             <Icon icon="lucide:chevron-right" width={16} height={16} style={{ color: "currentColor" }} />
           </Link>
         ) : (
-          <div 
+          <div
             className="text-sm"
             style={{ color: "var(--muted)" }}
           >

@@ -95,7 +95,7 @@ export default async function SeriesDetailPage({ params }: Props) {
                   <Link
                     href={`/blog/post/${post.slug}`}
                     className="hover:underline transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--foreground)",
                       textDecorationColor: "var(--accent-primary)"
                     }}
@@ -104,7 +104,16 @@ export default async function SeriesDetailPage({ params }: Props) {
                   </Link>
                 </h2>
 
-                <div 
+                {post.frontmatter.subtitle && (
+                  <div
+                    className="text-sm mb-2"
+                    style={{ color: "var(--muted)" }}
+                  >
+                    {post.frontmatter.subtitle}
+                  </div>
+                )}
+
+                <div
                   className="flex items-center gap-4 mb-3 text-sm"
                   style={{ color: "var(--muted)" }}
                 >

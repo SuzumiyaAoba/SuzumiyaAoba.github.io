@@ -13,6 +13,7 @@ import { createBlogPostingJsonLd } from "@/libs/jsonld";
 
 export type ArticleProps = {
   title: string;
+  subtitle?: string;
   date: string | Date;
   tags: string[];
   children: ReactNode;
@@ -28,6 +29,7 @@ export type ArticleProps = {
 
 export function Article({
   title,
+  subtitle,
   date,
   tags,
   children,
@@ -71,6 +73,15 @@ export function Article({
           <h1 className="mb-8 text-center" data-pagefind-meta="title">
             {title}
           </h1>
+
+          {subtitle && (
+            <div
+              className="text-xl mb-6 text-center"
+              style={{ color: "var(--muted)" }}
+            >
+              {subtitle}
+            </div>
+          )}
 
           <div className="flex mt-2 mb-2 justify-center items-center">
             <span className="i-ic-outline-sync mr-0.5" />

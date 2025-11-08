@@ -11,6 +11,7 @@ export const baseFrontmatterSchema = z.object({
 
 // ブログ用のフロントマタースキーマ（基本 + 追加フィールド）
 export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
+  subtitle: z.string().optional(), // サブタイトル
   description: z.string().optional(),
   author: z.string().optional(),
   ogImage: z.string().optional(),
