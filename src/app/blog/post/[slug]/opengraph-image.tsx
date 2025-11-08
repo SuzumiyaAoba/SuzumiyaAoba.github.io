@@ -6,6 +6,7 @@ import {
 } from "@/libs/og-image";
 import { getFrontmatter } from "@/libs/contents/markdown";
 import { Pages } from "@/libs/contents/blog";
+import { generateSlugParams } from "@/libs/contents/params";
 
 // 静的生成の設定
 export const dynamic = "force-static";
@@ -18,6 +19,11 @@ export const alt = "Blog Post OGP Image";
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+// 静的エクスポートに必要な関数（すべてのブログ記事のslugを返す）
+export async function generateStaticParams() {
+  return generateSlugParams("blog");
+}
 
 // ブログ記事のOGP画像を生成
 export default async function Image({ params }: Props) {
