@@ -50,9 +50,9 @@ export default function BreadcrumbNav(props: BreadcrumbNavProps) {
         {pathSegments.map((segment) => (
           <React.Fragment key={segment.path}>
             <BreadcrumbItem>
-              {segment.isLast ? (
-                <BreadcrumbItemLink asChild variant="active">
-                  <span aria-current="page">
+              {segment.isLast || !segment.shouldLink ? (
+                <BreadcrumbItemLink asChild variant={segment.isLast ? "active" : "default"}>
+                  <span aria-current={segment.isLast ? "page" : undefined}>
                     {getDisplayTitle({ segment, data, t })}
                   </span>
                 </BreadcrumbItemLink>

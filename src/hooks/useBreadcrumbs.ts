@@ -16,6 +16,7 @@ interface BasePathSegment {
   path: string;
   isLast: boolean;
   type: ContentType | string;
+  shouldLink: boolean; // リンクにすべきかどうか
 }
 
 // ブログのパスセグメント
@@ -92,6 +93,15 @@ const segmentToTranslationKey: Record<string, string> = {
   "privacy-policy": "privacyPolicy",
   contact: "contact",
 };
+
+// リンクにすべきでない中間セグメント名のセット
+// これらは単独ではページが存在しないため、リンク化しない
+const NON_LINKABLE_SEGMENTS = new Set(["post", "page"]);
+
+// セグメントがリンク可能かどうかを判定する関数
+function shouldBeLink(segmentName: string): boolean {
+  return !NON_LINKABLE_SEGMENTS.has(segmentName);
+}
 
 // 型ガード関数
 function isBlogSegment(segment: PathSegment): segment is BlogPathSegment {
@@ -208,6 +218,7 @@ function getPathSegments(segments: string[]): PathSegment[] {
       path: fullPath,
       isLast,
       type: decodedSegment,
+      shouldLink: shouldBeLink(decodedSegment),
     };
 
     // 最初のセグメントによってコンテンツタイプを判定
