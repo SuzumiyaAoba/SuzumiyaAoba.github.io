@@ -35,18 +35,17 @@ export default async function Image({ params }: Props) {
     schema: Pages["blog"].frontmatter,
   });
 
+  // 日本語フォントデータの取得
+  const fontData = await loadJapaneseFont();
+
   if (!frontmatter) {
     // フロントマターが取得できない場合はデフォルト画像
-    const fontData = await loadJapaneseFont();
     return generateOgImage({
       title: "Blog Post",
       category: "Blog",
       fontData,
     });
   }
-
-  // 日本語フォントデータの取得
-  const fontData = await loadJapaneseFont();
 
   // ブログ記事用のOGP画像を生成して返す
   return generateOgImage({
