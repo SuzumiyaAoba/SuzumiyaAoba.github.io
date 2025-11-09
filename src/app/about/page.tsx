@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: `${config.metadata.url}/about/opengraph-image`,
+        url: `${config.metadata.url}/about/opengraph-image.svg`,
         width: 1200,
         height: 630,
         alt: "About Me",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "About Me",
     description: "プロフィールとブログについての情報です。",
     creator: config.metadata.twitterHandle,
-    images: [`${config.metadata.url}/about/twitter-image`],
+    images: [`${config.metadata.url}/about/twitter-image.svg`],
   },
 };
 
