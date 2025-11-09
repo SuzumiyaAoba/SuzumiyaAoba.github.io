@@ -1,4 +1,4 @@
-import { ImageResponse } from "next/og";
+import satori from "satori";
 import fs from "fs";
 import path from "path";
 import React from "react";
@@ -11,7 +11,7 @@ export const OG_IMAGE_SIZE = {
 };
 
 // コンテンツタイプ
-export const OG_CONTENT_TYPE = "image/png";
+export const OG_CONTENT_TYPE = "image/svg+xml";
 
 // テーマカラー
 export const THEME = {
@@ -234,7 +234,7 @@ export async function generateOgImage({
   date,
   fontData,
 }: GenerateOgImageOptions) {
-  return new ImageResponse(
+  const svg = await satori(
     (
       <OgBaseLayout>
         <TopBar date={date} />
@@ -265,6 +265,13 @@ export async function generateOgImage({
       ],
     }
   );
+
+  return new Response(svg, {
+    headers: {
+      "Content-Type": OG_CONTENT_TYPE,
+      "Cache-Control": "public, immutable, no-transform, max-age=31536000",
+    },
+  });
 }
 
 // ホームページOGP画像の生成関数
@@ -275,7 +282,7 @@ interface GenerateHomeOgImageOptions {
 export async function generateHomeOgImage({
   fontData,
 }: GenerateHomeOgImageOptions) {
-  return new ImageResponse(
+  const svg = await satori(
     (
       <div
         style={{
@@ -433,4 +440,11 @@ export async function generateHomeOgImage({
       ],
     }
   );
+
+  return new Response(svg, {
+    headers: {
+      "Content-Type": OG_CONTENT_TYPE,
+      "Cache-Control": "public, immutable, no-transform, max-age=31536000",
+    },
+  });
 }
