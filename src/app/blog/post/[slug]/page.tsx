@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // 動的に生成されたOGP画像URLを設定
   const ogImageUrl =
     frontmatter.ogImage ||
-    `${config.metadata.url}/blog/post/${slug}/opengraph-image`;
+    `${config.metadata.url}/blog/post/${slug}/opengraph-image.svg`;
   const url = `${config.metadata.url}/blog/post/${slug}/`;
 
   const fullTitle = frontmatter.subtitle

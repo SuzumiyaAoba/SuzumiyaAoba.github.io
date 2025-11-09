@@ -1,6 +1,4 @@
 import {
-  OG_IMAGE_SIZE,
-  OG_CONTENT_TYPE,
   loadJapaneseFont,
   generateOgImage,
 } from "@/libs/og-image";
@@ -10,11 +8,6 @@ import { generateSlugParams } from "@/libs/contents/params";
 
 // 静的生成の設定
 export const dynamic = "force-static";
-
-// メタデータ
-export const size = OG_IMAGE_SIZE;
-export const contentType = OG_CONTENT_TYPE;
-export const alt = "Blog Post OGP Image";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -26,7 +19,7 @@ export async function generateStaticParams() {
 }
 
 // ブログ記事のOGP画像を生成
-export default async function Image({ params }: Props) {
+export async function GET(_request: Request, { params }: Props) {
   const { slug } = await params;
 
   // フロントマターを取得
