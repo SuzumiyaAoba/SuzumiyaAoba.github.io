@@ -30,6 +30,7 @@ export const ArticleFooter = () => {
         data-ad-format="autorelaxed"
         data-ad-client="ca-pub-4374004258861110"
         data-ad-slot="9361206074"
+        data-full-width-responsive="false"
       ></ins>
     </>
   );
