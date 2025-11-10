@@ -119,7 +119,7 @@ export function Article({
 
       <ArticleFooter />
 
-      {showBuyMeACoffee && <BuyMeACoffee />}
+      {showBuyMeACoffee && <BuyMeACoffee className="mt-8" />}
 
       {showComments && (
         <section className="mt-8">
