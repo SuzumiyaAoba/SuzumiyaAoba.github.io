@@ -25,8 +25,8 @@ export const ArticleFooter = () => {
         crossOrigin="anonymous"
       ></script>
       <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
+        className="adsbygoogle justify-center"
+        style={{ display: "flex" }}
         data-ad-format="autorelaxed"
         data-ad-client="ca-pub-4374004258861110"
         data-ad-slot="9361206074"
