@@ -10,6 +10,7 @@ import { Comments } from "@/components/Comments";
 import Script from "next/script";
 import config from "@/config";
 import { createBlogPostingJsonLd } from "@/libs/jsonld";
+import { ArticleFooter } from "../Ads/google/GoogleAds";
 
 export type ArticleProps = {
   title: string;
@@ -115,6 +116,8 @@ export function Article({
       {(showBuyMeACoffee || showComments) && (
         <hr className="mb-8 border-dashed border-neutral-600" />
       )}
+
+      <ArticleFooter />
 
       {showBuyMeACoffee && <BuyMeACoffee />}
 
