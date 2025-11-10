@@ -8,8 +8,8 @@
   "files": {
     "ignoreUnknown": true,
     "includes": [
-      "src",
-      "scripts",
+      "src/**/*.{js,jsx,ts,tsx,mjs,cjs}",
+      "scripts/**/*.{js,jsx,ts,tsx,mjs,cjs}",
       "uno.config.ts",
       "vitest.config.ts",
       "next.config.mjs",
