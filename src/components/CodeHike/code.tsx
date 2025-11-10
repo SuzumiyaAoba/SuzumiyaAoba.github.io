@@ -1,7 +1,7 @@
 "use client";
 
 import { highlight, RawCode, HighlightedCode } from "codehike/code";
-import type { Block } from "codehike/blocks"
+import type { Block } from "codehike/blocks";
 import { CustomCodeBlock } from "./custom-code-block";
 import { LanguageIcon } from "./language-icon";
 import { useTheme } from "next-themes";
@@ -40,7 +40,7 @@ export function Code({ codeblock }: { codeblock: RawCode }) {
   const notes = noteAnnotations.map(({ query }) => query);
 
   noteAnnotations.forEach((a, index) => {
-    a.data = { n: index + 1 }
+    a.data = { n: index + 1 };
   });
 
   return (

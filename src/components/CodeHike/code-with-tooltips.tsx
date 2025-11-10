@@ -1,7 +1,7 @@
 "use client";
 
 import { highlight, RawCode, HighlightedCode } from "codehike/code";
-import type { Block } from "codehike/blocks"
+import type { Block } from "codehike/blocks";
 import { CustomCodeBlock } from "./custom-code-block";
 import { LanguageIcon } from "./language-icon";
 import { useTheme } from "next-themes";
@@ -10,7 +10,13 @@ import { Number } from "./footnote";
 import { tooltip } from "./tooltip";
 import { z } from "zod";
 
-export function CodeWithTooltips({ code, tooltips = [] }: { code: RawCode, tooltips?: z.infer<typeof Block>[] }) {
+export function CodeWithTooltips({
+  code,
+  tooltips = [],
+}: {
+  code: RawCode;
+  tooltips?: z.infer<typeof Block>[];
+}) {
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "dark" ? "github-dark" : "github-light";
   const [highlighted, setHighlighted] = useState<HighlightedCode | null>(null);
@@ -41,16 +47,16 @@ export function CodeWithTooltips({ code, tooltips = [] }: { code: RawCode, toolt
   const notes = noteAnnotations.map(({ query }) => query);
 
   noteAnnotations.forEach((a, index) => {
-    a.data = { n: index + 1 }
+    a.data = { n: index + 1 };
   });
 
   highlighted.annotations = highlighted.annotations.map((a) => {
-    const tooltip = tooltips.find((t) => t.title === a.query)
-    if (!tooltip) return a
+    const tooltip = tooltips.find((t) => t.title === a.query);
+    if (!tooltip) return a;
     return {
       ...a,
       data: { ...a.data, children: tooltip.children },
-    }
+    };
   });
 
   return (

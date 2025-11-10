@@ -42,24 +42,28 @@ type SsgImageProps = Omit<
  * 相対パスを絶対パスに変換する
  */
 const defaultResolveImagePath = (src: string, basePath?: string): string => {
-  if (typeof src !== 'string') {
+  if (typeof src !== "string") {
     return src as string;
   }
 
   // 既に絶対パスまたはURL の場合はそのまま返す
-  if (src.startsWith('/') || src.startsWith('http://') || src.startsWith('https://')) {
+  if (
+    src.startsWith("/") ||
+    src.startsWith("http://") ||
+    src.startsWith("https://")
+  ) {
     return src;
   }
 
   // 相対パスの場合
   if (basePath) {
-    if (src.startsWith('./')) {
-      return `${basePath}/${src.replace('./', '')}`;
-    } else if (src.startsWith('../')) {
+    if (src.startsWith("./")) {
+      return `${basePath}/${src.replace("./", "")}`;
+    } else if (src.startsWith("../")) {
       // 一階層上に移動する場合の簡易的な処理
-      const pathParts = basePath.split('/').filter(Boolean);
+      const pathParts = basePath.split("/").filter(Boolean);
       pathParts.pop(); // 最後の要素を削除
-      return `/${pathParts.join('/')}/${src.replace('../', '')}`;
+      return `/${pathParts.join("/")}/${src.replace("../", "")}`;
     } else {
       // "./", "../" がない相対パスの場合
       return `${basePath}/${src}`;
@@ -67,10 +71,10 @@ const defaultResolveImagePath = (src: string, basePath?: string): string => {
   }
 
   // basePathがない場合は、ルートからの相対パスとして扱う
-  if (src.startsWith('./')) {
-    return src.replace('./', '/');
-  } else if (src.startsWith('../')) {
-    return src.replace('../', '/');
+  if (src.startsWith("./")) {
+    return src.replace("./", "/");
+  } else if (src.startsWith("../")) {
+    return src.replace("../", "/");
   }
 
   // デフォルトでルートパスを追加
@@ -78,11 +82,11 @@ const defaultResolveImagePath = (src: string, basePath?: string): string => {
 };
 
 export const SsgImage: FC<SsgImageProps> = (props) => {
-  const { 
-    src, 
-    alt, 
-    width, 
-    height, 
+  const {
+    src,
+    alt,
+    width,
+    height,
     style,
     basePath,
     resolveImagePath = defaultResolveImagePath,
@@ -94,15 +98,14 @@ export const SsgImage: FC<SsgImageProps> = (props) => {
     unoptimized = true, // SSG環境のためデフォルトで最適化を無効化
     useNativeImg = false,
     disableZoom = false,
-    ...rest 
+    ...rest
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
 
   // パスを解決
-  const resolvedSrc = typeof src === 'string' 
-    ? resolveImagePath(src, basePath) 
-    : src;
+  const resolvedSrc =
+    typeof src === "string" ? resolveImagePath(src, basePath) : src;
 
   // 画像のクリックハンドラ
   const handleClick = () => {

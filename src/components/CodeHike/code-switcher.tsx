@@ -15,7 +15,7 @@ export function CodeSwitcher(props: { code: RawCode[] }) {
     const loadHighlighted = async () => {
       try {
         const result = await Promise.all(
-          props.code.map((codeblock) => highlight(codeblock, theme))
+          props.code.map((codeblock) => highlight(codeblock, theme)),
         );
         setHighlighted(result);
       } catch (error) {

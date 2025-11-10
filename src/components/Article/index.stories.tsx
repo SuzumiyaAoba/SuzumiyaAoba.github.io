@@ -6,11 +6,13 @@ import { Article } from "./index";
 const sampleContent = (
   <div className="space-y-4">
     <p>
-      これは Storybook 上で Article コンポーネントをプレビューするためのサンプル本文です。
+      これは Storybook 上で Article
+      コンポーネントをプレビューするためのサンプル本文です。
     </p>
     <h2>セクション 1</h2>
     <p>
-      Next.js と Tailwind CSS を用いて開発されたブログ記事の本文を想定しています。
+      Next.js と Tailwind CSS
+      を用いて開発されたブログ記事の本文を想定しています。
     </p>
     <h3>小見出し</h3>
     <p>
@@ -53,4 +55,4 @@ export const Default: Story = {
     showComments: false,
     showBuyMeACoffee: false,
   },
-}; 
+};

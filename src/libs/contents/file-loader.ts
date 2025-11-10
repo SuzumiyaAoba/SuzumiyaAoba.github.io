@@ -67,7 +67,9 @@ export async function getStylesheets(...paths: string[]): Promise<string[]> {
  * @param paths コンテンツパス
  * @returns 利用可能な言語コードの配列（例: ["ja", "en"]）
  */
-export async function getAvailableLanguages(...paths: string[]): Promise<string[]> {
+export async function getAvailableLanguages(
+  ...paths: string[]
+): Promise<string[]> {
   const relative = path.join("src", "contents", ...paths);
   const absolute = path.join(process.cwd(), relative);
 
@@ -90,7 +92,7 @@ export async function getAvailableLanguages(...paths: string[]): Promise<string[
 
   // 言語固有ファイルをチェック
   const languageFiles = await Array.fromAsync(
-    glob(path.resolve(absolute, "index.*.{md,mdx}"))
+    glob(path.resolve(absolute, "index.*.{md,mdx}")),
   );
 
   for (const file of languageFiles) {

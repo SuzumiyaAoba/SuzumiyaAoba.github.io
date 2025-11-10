@@ -9,5 +9,13 @@ interface ImgProps {
 }
 
 export const Img = ({ src, alt, width, height, basePath }: ImgProps) => {
-  return <SsgImage src={src} alt={alt} width={width} height={height} basePath={basePath} />;
+  return (
+    <SsgImage
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      basePath={basePath}
+    />
+  );
 };

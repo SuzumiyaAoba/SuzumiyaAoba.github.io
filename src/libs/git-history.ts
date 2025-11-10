@@ -76,7 +76,7 @@ export function getFileGitHistory(filePath: string): GitCommit[] {
       {
         encoding: "utf8",
         cwd: gitRoot,
-      }
+      },
     );
 
     if (!gitLog.trim()) {
@@ -114,7 +114,7 @@ export function getFileCreationDate(filePath: string): string | null {
     if (history.length === 0) {
       return null;
     }
-    
+
     // 最後のコミット（最初の作成）の日付を返す
     return history[history.length - 1].date;
   } catch (error) {
@@ -132,11 +132,14 @@ export function getFileLastModified(filePath: string): string | null {
     if (history.length === 0) {
       return null;
     }
-    
+
     // 最初のコミット（最新の更新）の日付を返す
     return history[0].date;
   } catch (error) {
-    console.error(`Error getting file last modified date for ${filePath}:`, error);
+    console.error(
+      `Error getting file last modified date for ${filePath}:`,
+      error,
+    );
     return null;
   }
-} 
+}

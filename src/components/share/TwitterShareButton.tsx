@@ -24,12 +24,12 @@ const TwitterShareButton: FC<{
   // UTMパラメータを追加してTwitterからの流入を追跡
   const addUtmParams = (url: string) => {
     if (!url) return url;
-    
+
     const urlObj = new URL(url);
-    urlObj.searchParams.set('utm_source', 'twitter');
-    urlObj.searchParams.set('utm_medium', 'social');
-    urlObj.searchParams.set('utm_campaign', 'share');
-    
+    urlObj.searchParams.set("utm_source", "twitter");
+    urlObj.searchParams.set("utm_medium", "social");
+    urlObj.searchParams.set("utm_campaign", "share");
+
     return urlObj.toString();
   };
 

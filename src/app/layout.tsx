@@ -7,7 +7,7 @@ import { Header } from "@/components/Header";
 import clsx from "clsx";
 import { Footer } from "@/components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { GoogleAdsenseScript } from "@/components/Ads/GoogleAdsenseScript";
+import { GoogleAdsenseScript } from "@/components/Ads/google/GoogleAdsenseScript";
 import BreadcrumbNav from "@/components/Breadcrumb";
 import Script from "next/script";
 import {
@@ -70,22 +70,17 @@ export default async function RootLayout({
   let keywordTitleMap = {};
   let bookTitleMap = {};
   try {
-    [blogTitleMap, keywordTitleMap, bookTitleMap] =
-      await Promise.all([
-        getBlogTitleMap(),
-        getKeywordTitleMap(),
-        getBookTitleMap(),
-      ]);
+    [blogTitleMap, keywordTitleMap, bookTitleMap] = await Promise.all([
+      getBlogTitleMap(),
+      getKeywordTitleMap(),
+      getBookTitleMap(),
+    ]);
   } catch (e) {
     console.error("Failed to build one or more title maps", e);
   }
 
   return (
-    <html
-      lang="ja"
-      className="h-full"
-      suppressHydrationWarning
-    >
+    <html lang="ja" className="h-full" suppressHydrationWarning>
       <head>
         <link
           rel="alternate"
@@ -107,7 +102,7 @@ export default async function RootLayout({
           zen_maru_gothic.className,
           exo_2.variable,
           monoFont.variable,
-          "flex flex-col w-full min-h-screen"
+          "flex flex-col w-full min-h-screen",
         )}
       >
         <ThemeProvider>

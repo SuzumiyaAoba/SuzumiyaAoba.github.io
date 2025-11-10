@@ -39,7 +39,7 @@ function useActiveHeading(entries: TocEntry[]): string | null {
         if (visibleEntries.length > 0) {
           // 最も上にある見出しを選択
           const sortedEntries = visibleEntries.sort(
-            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
           );
           const headingId = sortedEntries[0].target.id;
           setActiveId(headingId);
@@ -48,7 +48,7 @@ function useActiveHeading(entries: TocEntry[]): string | null {
       {
         rootMargin: "-80px 0px -20% 0px", // ヘッダー分を調整
         threshold: 0.1,
-      }
+      },
     );
 
     // 各見出し要素を監視
@@ -84,7 +84,7 @@ function useTocSticky() {
         const headerHeight = header.offsetHeight;
         document.documentElement.style.setProperty(
           "--header-height",
-          `${headerHeight}px`
+          `${headerHeight}px`,
         );
       }
     };
@@ -109,7 +109,7 @@ function useTocSticky() {
 function renderToc(
   entries: TocEntry[],
   activeId: string | null,
-  depth: number = 0
+  depth: number = 0,
 ): React.ReactNode {
   return (
     <ul className={`toc-list depth-${depth}`}>
@@ -119,8 +119,8 @@ function renderToc(
           (child) =>
             child.heading.id === activeId ||
             child.children.some(
-              (grandChild) => grandChild.heading.id === activeId
-            )
+              (grandChild) => grandChild.heading.id === activeId,
+            ),
         );
 
         return (

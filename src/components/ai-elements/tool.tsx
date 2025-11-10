@@ -47,15 +47,20 @@ const getStatusBadge = (status: ToolUIPart["state"]) => {
   const icons: Record<ToolUIPart["state"], ReactNode> = {
     "input-streaming": <CircleIcon className="size-4" />,
     "input-available": <ClockIcon className="size-4 animate-pulse" />,
-    "output-available": <CheckCircleIcon className="size-4 text-green-600 dark:text-green-400" />,
-    "output-error": <XCircleIcon className="size-4 text-red-600 dark:text-red-400" />,
+    "output-available": (
+      <CheckCircleIcon className="size-4 text-green-600 dark:text-green-400" />
+    ),
+    "output-error": (
+      <XCircleIcon className="size-4 text-red-600 dark:text-red-400" />
+    ),
   };
 
   return (
     <Badge
       className={cn(
         "gap-1.5 rounded-full text-xs",
-        status === "output-available" && "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800"
+        status === "output-available" &&
+          "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800",
       )}
       variant={status === "output-available" ? "outline" : "secondary"}
     >
@@ -75,7 +80,7 @@ export const ToolHeader = ({
   <CollapsibleTrigger
     className={cn(
       "flex w-full items-center justify-between gap-4 p-3",
-      className
+      className,
     )}
     {...props}
   >
@@ -96,7 +101,7 @@ export const ToolContent = ({ className, ...props }: ToolContentProps) => (
   <CollapsibleContent
     className={cn(
       "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-popover-foreground outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
-      className
+      className,
     )}
     {...props}
   />
@@ -107,7 +112,10 @@ export type ToolInputProps = ComponentProps<"div"> & {
 };
 
 export const ToolInput = ({ className, input, ...props }: ToolInputProps) => (
-  <div className={cn("space-y-2 overflow-hidden px-4 pt-3 pb-4", className)} {...props}>
+  <div
+    className={cn("space-y-2 overflow-hidden px-4 pt-3 pb-4", className)}
+    {...props}
+  >
     <h4 className="font-medium text-muted-foreground text-xs! uppercase tracking-wide !before:content-none my-0!">
       Parameters
     </h4>

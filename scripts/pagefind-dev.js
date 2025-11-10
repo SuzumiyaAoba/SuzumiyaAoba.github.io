@@ -21,12 +21,12 @@ const copyAdapterFile = async () => {
   const srcAdapterPath = path.join(
     process.cwd(),
     "public",
-    "pagefind-adapter.js"
+    "pagefind-adapter.js",
   );
   const destAdapterPath = path.join(
     process.cwd(),
     "public",
-    "pagefind-adapter.js"
+    "pagefind-adapter.js",
   );
 
   try {
@@ -134,11 +134,11 @@ console.log('[開発環境] Pagefindスタブがロードされました');
     // スタブファイルの書き込み
     await fs.promises.writeFile(
       path.join(pagefindDir, "pagefind.js"),
-      pagefindJs
+      pagefindJs,
     );
     await fs.promises.writeFile(
       path.join(pagefindDir, "pagefind-ui.css"),
-      pagefindCss
+      pagefindCss,
     );
 
     console.log("✅ 開発環境用Pagefindスタブファイルが正常に作成されました");

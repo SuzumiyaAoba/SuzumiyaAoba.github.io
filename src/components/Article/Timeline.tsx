@@ -85,10 +85,7 @@ const TimelineItem = ({
           {title}
         </Link>
         {subtitle && (
-          <div
-            className="text-sm mb-2"
-            style={{ color: "var(--muted)" }}
-          >
+          <div className="text-sm mb-2" style={{ color: "var(--muted)" }}>
             {subtitle}
           </div>
         )}
@@ -121,12 +118,12 @@ export function Timeline({ posts }: TimelineProps) {
       grouped[year].push(post);
       return grouped;
     },
-    {}
+    {},
   );
 
   // 年を降順でソート
   const years = Object.keys(postsByYear).sort(
-    (a, b) => parseInt(b) - parseInt(a)
+    (a, b) => parseInt(b) - parseInt(a),
   );
 
   return (
@@ -145,7 +142,7 @@ export function Timeline({ posts }: TimelineProps) {
 
         // 月の配列を降順に取得
         const months = Object.keys(postsByMonth).sort(
-          (a, b) => parseInt(b) - parseInt(a)
+          (a, b) => parseInt(b) - parseInt(a),
         );
 
         return (

@@ -4,4 +4,4 @@ export const MENUS = Object.freeze([
   { name: "Series", href: "/series/", i18nKey: "nav.series" },
   { name: "About", href: "/about/", i18nKey: "nav.about" },
   { name: "Search", href: "/search/", i18nKey: "nav.search" },
-] as const); 
+] as const);

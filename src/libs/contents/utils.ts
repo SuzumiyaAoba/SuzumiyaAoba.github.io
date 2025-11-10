@@ -59,7 +59,7 @@ export async function getSortedPosts<T extends z.ZodTypeAny>({
 export function paginatePosts<T>(
   posts: T[],
   pageNumber: number,
-  itemsPerPage: number
+  itemsPerPage: number,
 ): {
   paginatedPosts: T[];
   totalPages: number;

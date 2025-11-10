@@ -20,8 +20,6 @@ export async function getBlogTitleMap(): Promise<Record<string, string>> {
   return titleMap;
 }
 
-
-
 // キーワード記事のタイトルマップを取得
 export async function getKeywordTitleMap(): Promise<Record<string, string>> {
   const keywordEntries = await getFrontmatters({

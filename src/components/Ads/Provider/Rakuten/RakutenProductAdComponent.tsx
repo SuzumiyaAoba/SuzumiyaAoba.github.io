@@ -173,7 +173,7 @@ export const RakutenProductAdComponent = memo(
         </>
       </AdComponent>
     );
-  }
+  },
 );
 
 RakutenProductAdComponent.displayName = "RakutenProductAdComponent";

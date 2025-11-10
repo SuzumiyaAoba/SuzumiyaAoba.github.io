@@ -63,7 +63,7 @@ export const A8netAdComponent = memo(
         />
       </AdComponent>
     );
-  }
+  },
 );
 
 A8netAdComponent.displayName = "A8netAdComponent";

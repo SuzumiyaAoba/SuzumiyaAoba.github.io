@@ -60,4 +60,4 @@ export function extractTocFromTree(tree: Root): TocEntry[] {
     return [];
   }
   return buildHierarchy(headings);
-} 
+}

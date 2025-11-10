@@ -26,7 +26,7 @@ export const THEME = {
 export const NOTO_SANS_JP_PATH = path.join(
   process.cwd(),
   "node_modules",
-  "@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff"
+  "@fontsource/noto-sans-jp/files/noto-sans-jp-japanese-400-normal.woff",
 );
 
 // 日本語フォントの読み込み関数
@@ -235,24 +235,22 @@ export async function generateOgImage({
   fontData,
 }: GenerateOgImageOptions) {
   const svg = await satori(
-    (
-      <OgBaseLayout>
-        <TopBar date={date} />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "40px",
-            flex: 1,
-          }}
-        >
-          <CategoryTag category={category} />
-          <Title title={title} />
-          <DecorationBar />
-          <Footer />
-        </div>
-      </OgBaseLayout>
-    ),
+    <OgBaseLayout>
+      <TopBar date={date} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "40px",
+          flex: 1,
+        }}
+      >
+        <CategoryTag category={category} />
+        <Title title={title} />
+        <DecorationBar />
+        <Footer />
+      </div>
+    </OgBaseLayout>,
     {
       ...OG_IMAGE_SIZE,
       fonts: [
@@ -263,7 +261,7 @@ export async function generateOgImage({
           weight: 400,
         },
       ],
-    }
+    },
   );
 
   return new Response(svg, {
@@ -283,151 +281,149 @@ export async function generateHomeOgImage({
   fontData,
 }: GenerateHomeOgImageOptions) {
   const svg = await satori(
-    (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        padding: "0",
+        background:
+          "linear-gradient(125deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)",
+        fontFamily: '"Noto Sans JP", Inter, system-ui, sans-serif',
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      {/* 背景装飾 */}
+      <div
+        style={{
+          position: "absolute",
+          width: "800px",
+          height: "800px",
+          borderRadius: "50%",
+          background: `linear-gradient(135deg, ${THEME.primaryColor}15 0%, ${THEME.accentColor}10 100%)`,
+          top: "-400px",
+          right: "-200px",
+          zIndex: "1",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "600px",
+          height: "600px",
+          borderRadius: "50%",
+          background: `linear-gradient(135deg, ${THEME.primaryColor}10 0%, ${THEME.accentColor}05 100%)`,
+          bottom: "-300px",
+          left: "-100px",
+          zIndex: "1",
+        }}
+      />
+
+      {/* メインコンテンツ */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          width: "100%",
-          height: "100%",
-          padding: "0",
-          background:
-            "linear-gradient(125deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)",
-          fontFamily: '"Noto Sans JP", Inter, system-ui, sans-serif',
-          overflow: "hidden",
-          position: "relative",
+          zIndex: "2",
+          textAlign: "center",
+          padding: "40px",
+          maxWidth: "800px",
         }}
       >
-        {/* 背景装飾 */}
+        {/* サイトタイトル */}
         <div
           style={{
-            position: "absolute",
-            width: "800px",
-            height: "800px",
-            borderRadius: "50%",
-            background: `linear-gradient(135deg, ${THEME.primaryColor}15 0%, ${THEME.accentColor}10 100%)`,
-            top: "-400px",
-            right: "-200px",
-            zIndex: "1",
+            fontSize: "88px",
+            fontWeight: "900",
+            color: THEME.textColor,
+            letterSpacing: "-0.05em",
+            marginBottom: "16px",
+            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
-        />
+        >
+          {config.metadata.title}
+        </div>
+
+        {/* アクセントバー */}
         <div
           style={{
-            position: "absolute",
-            width: "600px",
-            height: "600px",
-            borderRadius: "50%",
-            background: `linear-gradient(135deg, ${THEME.primaryColor}10 0%, ${THEME.accentColor}05 100%)`,
-            bottom: "-300px",
-            left: "-100px",
-            zIndex: "1",
+            width: "180px",
+            height: "10px",
+            background: `linear-gradient(90deg, ${THEME.primaryColor} 0%, ${THEME.accentColor} 100%)`,
+            borderRadius: "5px",
+            margin: "24px 0",
+            boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
           }}
         />
 
-        {/* メインコンテンツ */}
+        {/* 説明文 */}
+        <div
+          style={{
+            fontSize: "28px",
+            lineHeight: "1.5",
+            fontWeight: "500",
+            color: THEME.lightTextColor,
+            maxWidth: "700px",
+            marginBottom: "32px",
+          }}
+        >
+          {config.metadata.description}
+        </div>
+
+        {/* 著者＆URL */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            zIndex: "2",
-            textAlign: "center",
-            padding: "40px",
-            maxWidth: "800px",
+            gap: "16px",
+            marginTop: "20px",
           }}
         >
-          {/* サイトタイトル */}
-          <div
-            style={{
-              fontSize: "88px",
-              fontWeight: "900",
-              color: THEME.textColor,
-              letterSpacing: "-0.05em",
-              marginBottom: "16px",
-              textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-            }}
-          >
-            {config.metadata.title}
-          </div>
-
-          {/* アクセントバー */}
-          <div
-            style={{
-              width: "180px",
-              height: "10px",
-              background: `linear-gradient(90deg, ${THEME.primaryColor} 0%, ${THEME.accentColor} 100%)`,
-              borderRadius: "5px",
-              margin: "24px 0",
-              boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
-            }}
-          />
-
-          {/* 説明文 */}
-          <div
-            style={{
-              fontSize: "28px",
-              lineHeight: "1.5",
-              fontWeight: "500",
-              color: THEME.lightTextColor,
-              maxWidth: "700px",
-              marginBottom: "32px",
-            }}
-          >
-            {config.metadata.description}
-          </div>
-
-          {/* 著者＆URL */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
-              marginTop: "20px",
+              gap: "12px",
+              background: "rgba(30, 41, 59, 0.7)",
+              padding: "12px 24px",
+              borderRadius: "9999px",
             }}
           >
             <div
               style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: `linear-gradient(135deg, ${THEME.primaryColor} 0%, ${THEME.accentColor} 100%)`,
                 display: "flex",
                 alignItems: "center",
-                gap: "12px",
-                background: "rgba(30, 41, 59, 0.7)",
-                padding: "12px 24px",
-                borderRadius: "9999px",
+                justifyContent: "center",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
               }}
             >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${THEME.primaryColor} 0%, ${THEME.accentColor} 100%)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                }}
-              >
-                {config.metadata.author[0]}
-              </div>
-              <div
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "600",
-                  color: THEME.textColor,
-                }}
-              >
-                {config.metadata.url.replace(/^https?:\/\//, "")}
-              </div>
+              {config.metadata.author[0]}
+            </div>
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                color: THEME.textColor,
+              }}
+            >
+              {config.metadata.url.replace(/^https?:\/\//, "")}
             </div>
           </div>
         </div>
       </div>
-    ),
+    </div>,
     {
       ...OG_IMAGE_SIZE,
       fonts: [
@@ -438,7 +434,7 @@ export async function generateHomeOgImage({
           weight: 400,
         },
       ],
-    }
+    },
   );
 
   return new Response(svg, {

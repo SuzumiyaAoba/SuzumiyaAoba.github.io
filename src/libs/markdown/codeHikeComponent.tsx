@@ -43,25 +43,19 @@ const codeHikeComponent: MDXComponent = ({ paths, format, scope, source }) => {
     // このパスがpublicディレクトリの中での画像ファイルの場所を指定する
     // 例: ["assets", "blog", "2023-09-30-astro"]
     const rehypePaths = ["assets", ...paths];
-    
+
     // SsgImageで使用するbasePath
     // 例: "/assets/blog/2023-09-30-astro"
-    const basePath = `/${rehypePaths.join('/')}`;
+    const basePath = `/${rehypePaths.join("/")}`;
 
     // pathsに基づいてSsgImageをラップ
     const ImageWithBasePath = (props: any) => (
-      <SsgImage
-        {...props}
-        basePath={basePath}
-      />
+      <SsgImage {...props} basePath={basePath} />
     );
 
     // pathsに基づいてImgをラップ
     const ImgWithBasePath = (props: any) => (
-      <Img
-        {...props}
-        basePath={basePath}
-      />
+      <Img {...props} basePath={basePath} />
     );
 
     return (

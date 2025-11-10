@@ -51,12 +51,12 @@ export const AsciiTable = ({
             isHovered
               ? themeColors.hover.highlight
               : isClicked
-              ? themeColors.hover.secondary
-              : isHoveredRow
-              ? themeColors.hover.rowHighlight
-              : isHoveredCol
-              ? themeColors.hover.colHighlight
-              : "transparent"
+                ? themeColors.hover.secondary
+                : isHoveredRow
+                  ? themeColors.hover.rowHighlight
+                  : isHoveredCol
+                    ? themeColors.hover.colHighlight
+                    : "transparent"
           }
           offsetX={offsetX}
           stroke={themeColors.stroke}
@@ -72,6 +72,6 @@ export const AsciiTable = ({
           {ASCII_TABLE[py][px]}
         </RectText>
       );
-    })
+    }),
   );
 };

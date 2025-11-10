@@ -11,12 +11,12 @@ import { Icon } from "@iconify/react";
  */
 export const HamburgerIcon: FC<{ isOpen: boolean }> = ({ isOpen }) => {
   return (
-    <Icon 
-      icon={isOpen ? "lucide:x" : "lucide:menu"} 
-      width={24} 
-      height={24} 
+    <Icon
+      icon={isOpen ? "lucide:x" : "lucide:menu"}
+      width={24}
+      height={24}
       style={{ color: "currentColor" }}
       className="transition-transform duration-300 ease-in-out"
     />
   );
-}; 
+};

@@ -31,7 +31,7 @@ export const FooterAds = memo(
           */}
       </div>
     );
-  }
+  },
 );
 
 FooterAds.displayName = "FooterAds";

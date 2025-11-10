@@ -18,7 +18,7 @@ export async function loadSeriesDefinitions(): Promise<SeriesDefinition[]> {
         const content = await fs.readFile(filePath, "utf-8");
         const json = JSON.parse(content);
         return seriesDefinitionSchema.parse(json);
-      })
+      }),
     );
 
     return definitions;

@@ -110,7 +110,6 @@ export function Article({
             <TwitterShareButton title={title} />
           </section>
         )}
-
       </article>
 
       {(showBuyMeACoffee || showComments) && (

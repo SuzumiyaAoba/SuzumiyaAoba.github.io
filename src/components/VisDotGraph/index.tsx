@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import { D3Graph } from './D3Graph';
+import React, { useState, useMemo } from "react";
+import { D3Graph } from "./D3Graph";
 
 export interface TreeNode {
   id: string;
@@ -38,9 +38,9 @@ interface VisDotGraphProps {
 
 export const VisDotGraph: React.FC<VisDotGraphProps> = ({
   data,
-  width = '100%',
-  height = '400px',
-  className = '',
+  width = "100%",
+  height = "400px",
+  className = "",
   fontSize = 14,
 }) => {
   const [error, setError] = useState<string | null>(null);
@@ -50,11 +50,11 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
     try {
       // dataがundefinedまたはnullの場合
       if (!data) {
-        throw new Error('データが提供されていません');
+        throw new Error("データが提供されていません");
       }
 
       // 単一のルートノードの場合
-      if ('id' in data && 'label' in data && !('nodes' in data)) {
+      if ("id" in data && "label" in data && !("nodes" in data)) {
         const result = {
           nodes: flattenTree(data as TreeNode),
           edges: [],
@@ -63,7 +63,7 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
       }
 
       // グラフデータの場合
-      if ('nodes' in data) {
+      if ("nodes" in data) {
         const graphData = data as GraphData;
         const result = {
           nodes: graphData.nodes,
@@ -72,7 +72,7 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
         return result;
       }
 
-      throw new Error('無効なデータ形式です');
+      throw new Error("無効なデータ形式です");
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       return { nodes: [], edges: [] };
@@ -83,7 +83,7 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
   const flattenTree = (node: TreeNode): TreeNode[] => {
     const result: TreeNode[] = [node];
     if (node.children) {
-      node.children.forEach(child => {
+      node.children.forEach((child) => {
         result.push(...flattenTree(child));
       });
     }
@@ -91,14 +91,16 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
   };
 
   // 木構造からエッジを生成する関数
-  const generateEdges = (node: TreeNode): Array<{ from: string; to: string; label?: string }> => {
+  const generateEdges = (
+    node: TreeNode,
+  ): Array<{ from: string; to: string; label?: string }> => {
     const edges: Array<{ from: string; to: string; label?: string }> = [];
     if (node.children) {
-      node.children.forEach(child => {
+      node.children.forEach((child) => {
         edges.push({
           from: node.id,
           to: child.id,
-          label: child.state || '',
+          label: child.state || "",
         });
         edges.push(...generateEdges(child));
       });
@@ -112,7 +114,7 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
       return { nodes: [], edges: [] };
     }
 
-    if ('id' in data && 'label' in data && !('nodes' in data)) {
+    if ("id" in data && "label" in data && !("nodes" in data)) {
       const rootNode = data as TreeNode;
       return {
         nodes: normalizedData.nodes,
@@ -128,24 +130,24 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
         style={{
           width,
           height,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          backgroundColor: '#f9fafb',
-          color: '#6b7280',
-          fontFamily: 'monospace',
-          fontSize: fontSize.toString() + 'px',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "1px solid #e5e7eb",
+          borderRadius: "8px",
+          backgroundColor: "#f9fafb",
+          color: "#6b7280",
+          fontFamily: "monospace",
+          fontSize: fontSize.toString() + "px",
         }}
         className={className}
         role="region"
         aria-label="グラフ表示エリア"
       >
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>エラー:</div>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontWeight: "bold", marginBottom: "8px" }}>エラー:</div>
           <div>{error}</div>
-          <div style={{ marginTop: '12px', fontSize: '12px' }}>
+          <div style={{ marginTop: "12px", fontSize: "12px" }}>
             データ: {JSON.stringify(data, null, 2)}
           </div>
         </div>
@@ -159,15 +161,15 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
         style={{
           width,
           height,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          backgroundColor: '#f9fafb',
-          color: '#6b7280',
-          fontFamily: 'monospace',
-          fontSize: fontSize.toString() + 'px',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "1px solid #e5e7eb",
+          borderRadius: "8px",
+          backgroundColor: "#f9fafb",
+          color: "#6b7280",
+          fontFamily: "monospace",
+          fontSize: fontSize.toString() + "px",
         }}
         className={className}
         role="region"
@@ -187,4 +189,4 @@ export const VisDotGraph: React.FC<VisDotGraphProps> = ({
       fontSize={fontSize}
     />
   );
-}; 
+};

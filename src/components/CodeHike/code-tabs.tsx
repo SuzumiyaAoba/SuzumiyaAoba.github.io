@@ -29,7 +29,7 @@ export function CodeTabs(props: { tabs: RawCode[] }) {
     const loadHighlighted = async () => {
       try {
         const result = await Promise.all(
-          tabs.map((tab) => highlight(tab, theme))
+          tabs.map((tab) => highlight(tab, theme)),
         );
         setHighlighted(result);
       } catch (error) {

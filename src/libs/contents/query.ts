@@ -10,10 +10,12 @@ import { parseRawContent } from "./parser";
 export const getPaths = async (...paths: string[]): Promise<string[]> => {
   const basePath = ["src", "contents", ...paths];
   const md = await Array.fromAsync(
-    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.md")))
+    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.md"))),
   );
   const mdx = await Array.fromAsync(
-    glob(path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")))
+    glob(
+      path.relative(process.cwd(), path.resolve(...basePath, "**", "*.mdx")),
+    ),
   );
 
   // 言語固有のファイル（index.{lang}.md, index.{lang}.mdx）を除外
@@ -28,7 +30,7 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
       .parse(filepath)
       .dir.split("/")
       .slice(2 + paths.length)
-      .join("/")
+      .join("/"),
   );
 
   // 重複を削除

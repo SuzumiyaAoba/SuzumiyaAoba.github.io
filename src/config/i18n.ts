@@ -14,10 +14,7 @@ export type Language = (typeof i18nConfig.languages)[number];
 /**
  * i18next オプションを取得
  */
-export function getI18nOptions(
-  lng?: Language | string,
-  ns?: string
-) {
+export function getI18nOptions(lng?: Language | string, ns?: string) {
   const language = lng || i18nConfig.fallbackLng;
   const namespace = ns || i18nConfig.defaultNS;
   return {

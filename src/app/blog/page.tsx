@@ -11,7 +11,7 @@ export default async function BlogPage() {
   const { paginatedPosts, totalPages } = paginatePosts(
     posts,
     1,
-    POSTS_PER_PAGE
+    POSTS_PER_PAGE,
   );
 
   return (

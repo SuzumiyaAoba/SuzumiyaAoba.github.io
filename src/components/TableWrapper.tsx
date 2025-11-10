@@ -24,7 +24,7 @@ export const TableWrapper: FC<TableWrapperProps> = memo(
         </table>
       </div>
     );
-  }
+  },
 );
 
 TableWrapper.displayName = "TableWrapper";

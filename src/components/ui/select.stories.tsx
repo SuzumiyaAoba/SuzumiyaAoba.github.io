@@ -1,6 +1,12 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "./select";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 
 export default {
   title: "Components/Ui/Select",

@@ -56,10 +56,10 @@ describe("AsciiInfo", () => {
     // グリーンの0とスカイブルーの0があることを確認
     // それぞれのspanのstyle.colorで判定する
     const greenZero = zeros.find(
-      (z) => z instanceof HTMLElement && z.style.color === "rgb(22, 163, 74)"
+      (z) => z instanceof HTMLElement && z.style.color === "rgb(22, 163, 74)",
     );
     const skyZero = zeros.find(
-      (z) => z instanceof HTMLElement && z.style.color === "rgb(2, 132, 199)"
+      (z) => z instanceof HTMLElement && z.style.color === "rgb(2, 132, 199)",
     );
     expect(greenZero).toBeDefined();
     expect(skyZero).toBeDefined();

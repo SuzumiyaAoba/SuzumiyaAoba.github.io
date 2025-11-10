@@ -14,4 +14,4 @@ declare module "mdx/types" {
       };
     }>;
   }
-} 
+}

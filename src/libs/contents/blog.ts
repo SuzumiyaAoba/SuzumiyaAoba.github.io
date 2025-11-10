@@ -7,7 +7,11 @@
 import { z } from "zod";
 import type { Content } from "./types";
 import { blogFrontmatterSchema } from "./schema";
-import { Pages as ConfigPages, layoutSchema as configLayoutSchema, contentConfig } from "@/config/content";
+import {
+  Pages as ConfigPages,
+  layoutSchema as configLayoutSchema,
+  contentConfig,
+} from "@/config/content";
 
 export const layoutSchema = configLayoutSchema;
 export const Pages = ConfigPages;

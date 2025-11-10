@@ -30,7 +30,7 @@ export const GoogleAdsenseScript = memo(
         strategy={strategy}
       />
     );
-  }
+  },
 );
 
 GoogleAdsenseScript.displayName = "GoogleAdsenseScript";

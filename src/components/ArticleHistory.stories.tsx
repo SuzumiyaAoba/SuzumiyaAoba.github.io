@@ -7,10 +7,10 @@ export default {
   component: ArticleHistory,
   parameters: {
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
-        { name: 'light', value: '#ffffff' },
-        { name: 'dark', value: '#1f2937' },
+        { name: "light", value: "#ffffff" },
+        { name: "dark", value: "#1f2937" },
       ],
     },
   },
@@ -35,7 +35,7 @@ export const DarkTheme: Story = {
     repoUrl: "https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io",
   },
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (Story) => (
@@ -59,7 +59,7 @@ export const WithoutGitHubLinkDark: Story = {
     lastModified: formatISO(new Date()),
   },
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (Story) => (

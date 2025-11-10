@@ -63,8 +63,8 @@ export default async function SeriesDetailPage({ params }: Props) {
             {seriesName}
           </h1>
         </div>
-        
-        <div 
+
+        <div
           className="flex items-center gap-2"
           style={{ color: "var(--muted)" }}
         >
@@ -74,8 +74,8 @@ export default async function SeriesDetailPage({ params }: Props) {
 
       <div className="space-y-6">
         {seriesPosts.map((post, index) => (
-          <article 
-            key={post.slug} 
+          <article
+            key={post.slug}
             className="border rounded-lg p-6"
             style={{
               backgroundColor: "var(--background)",
@@ -83,13 +83,13 @@ export default async function SeriesDetailPage({ params }: Props) {
             }}
           >
             <div className="flex items-start gap-4">
-              <div 
+              <div
                 className="flex-shrink-0 w-8 h-8 text-white rounded-full flex items-center justify-center text-sm font-semibold"
                 style={{ backgroundColor: "var(--accent-primary)" }}
               >
                 {index + 1}
               </div>
-              
+
               <div className="flex-1">
                 <h2 className="text-xl font-semibold mb-2">
                   <Link
@@ -97,7 +97,7 @@ export default async function SeriesDetailPage({ params }: Props) {
                     className="hover:underline transition-colors duration-200"
                     style={{
                       color: "var(--foreground)",
-                      textDecorationColor: "var(--accent-primary)"
+                      textDecorationColor: "var(--accent-primary)",
                     }}
                   >
                     {post.frontmatter.title}
@@ -118,9 +118,16 @@ export default async function SeriesDetailPage({ params }: Props) {
                   style={{ color: "var(--muted)" }}
                 >
                   <div className="flex items-center gap-1">
-                    <Icon icon="lucide:calendar" width={14} height={14} style={{ color: "currentColor" }} />
+                    <Icon
+                      icon="lucide:calendar"
+                      width={14}
+                      height={14}
+                      style={{ color: "currentColor" }}
+                    />
                     <span>
-                      {format(new Date(post.frontmatter.date), "yyyy年M月d日", { locale: ja })}
+                      {format(new Date(post.frontmatter.date), "yyyy年M月d日", {
+                        locale: ja,
+                      })}
                     </span>
                   </div>
                 </div>
@@ -138,10 +145,7 @@ export default async function SeriesDetailPage({ params }: Props) {
                 )}
 
                 {post.frontmatter.description && (
-                  <p 
-                    className="mb-3"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <p className="mb-3" style={{ color: "var(--muted)" }}>
                     {post.frontmatter.description}
                   </p>
                 )}
@@ -170,4 +174,4 @@ export default async function SeriesDetailPage({ params }: Props) {
       </div>
     </main>
   );
-} 
+}

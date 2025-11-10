@@ -31,4 +31,4 @@ export interface TreeAutomatonTransitionProps {
   autoPlayInterval?: number;
 }
 
-export { default as TreeAutomatonTransition } from '../TreeAutomatonTransition'; 
+export { default as TreeAutomatonTransition } from "../TreeAutomatonTransition";

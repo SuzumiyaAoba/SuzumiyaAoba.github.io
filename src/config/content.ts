@@ -26,7 +26,14 @@ export type PageKey = keyof typeof Pages;
  */
 export const contentConfig = {
   postsPerPage: 10,
-  contentTypes: ["blog", "series", "keywords", "books", "tools", "search"] as const,
+  contentTypes: [
+    "blog",
+    "series",
+    "keywords",
+    "books",
+    "tools",
+    "search",
+  ] as const,
 } as const;
 
 export type ContentType = (typeof contentConfig.contentTypes)[number];

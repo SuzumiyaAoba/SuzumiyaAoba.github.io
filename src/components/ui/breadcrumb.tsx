@@ -14,7 +14,7 @@ const Breadcrumb = React.forwardRef<
     aria-label="breadcrumb"
     className={cn(
       "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground",
-      className
+      className,
     )}
     {...props}
   />
@@ -57,7 +57,7 @@ const breadcrumbItemLinkVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 export interface BreadcrumbItemLinkProps

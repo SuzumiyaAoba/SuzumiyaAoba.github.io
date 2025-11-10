@@ -21,7 +21,10 @@ const getKeywords = (path: string[]) =>
 type KeywordItem = z.infer<typeof keywordFrontmatterSchema> & { _path: string };
 
 export default async function Page() {
-  const programmingKeywords = (await getKeywords(["keywords", "programming"])) as KeywordItem[];
+  const programmingKeywords = (await getKeywords([
+    "keywords",
+    "programming",
+  ])) as KeywordItem[];
 
   return (
     <main className="flex flex-col w-full max-w-4xl mx-auto px-4 pb-16">

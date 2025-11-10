@@ -1,1 +1,1 @@
-declare module 'remark-join-cjk-lines'; 
+declare module "remark-join-cjk-lines";

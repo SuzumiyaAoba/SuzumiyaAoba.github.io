@@ -33,7 +33,7 @@ const rehypeResolveImageUrls: Plugin<[], Root> = () => {
             // 相対パスを絶対パスに解決
             const resolvedSrc = path.posix.resolve(
               "/" + contentDir,
-              String(src).replace(/^\.\//, "")
+              String(src).replace(/^\.\//, ""),
             );
 
             // 新しい絶対パスを生成 (URLなので必ず / 区切りを使う)
@@ -47,4 +47,4 @@ const rehypeResolveImageUrls: Plugin<[], Root> = () => {
   };
 };
 
-export default rehypeResolveImageUrls; 
+export default rehypeResolveImageUrls;

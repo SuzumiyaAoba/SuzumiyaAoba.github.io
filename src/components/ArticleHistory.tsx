@@ -22,9 +22,8 @@ export function ArticleHistory({
   }
 
   // GitHubの変更履歴へのURL
-  const historyUrl = repoUrl && filePath
-    ? `${repoUrl}/commits/master/${filePath}`
-    : null;
+  const historyUrl =
+    repoUrl && filePath ? `${repoUrl}/commits/master/${filePath}` : null;
 
   return (
     <div
@@ -38,7 +37,12 @@ export function ArticleHistory({
         className="flex items-center gap-2 text-lg font-semibold mb-3"
         style={{ color: "var(--foreground)" }}
       >
-        <Icon icon="lucide:calendar" width={20} height={20} style={{ color: "currentColor" }} />
+        <Icon
+          icon="lucide:calendar"
+          width={20}
+          height={20}
+          style={{ color: "currentColor" }}
+        />
         記事履歴
       </div>
 
@@ -57,7 +61,10 @@ export function ArticleHistory({
         )}
 
         {historyUrl && (
-          <div className="mt-3 pt-3 border-t" style={{ borderColor: "var(--border)" }}>
+          <div
+            className="mt-3 pt-3 border-t"
+            style={{ borderColor: "var(--border)" }}
+          >
             <a
               href={historyUrl}
               target="_blank"
@@ -73,4 +80,4 @@ export function ArticleHistory({
       </div>
     </div>
   );
-} 
+}

@@ -25,9 +25,7 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
 
       {seriesEntries.length === 0 ? (
         <div className="text-center py-12">
-          <p style={{ color: "var(--muted)" }}>
-            {t("pages.series.noSeries")}
-          </p>
+          <p style={{ color: "var(--muted)" }}>{t("pages.series.noSeries")}</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -92,7 +90,10 @@ export function SeriesPageClient({ seriesEntries }: SeriesPageClientProps) {
                       </div>
                     ))}
                     {seriesInfo.posts.length > 3 && (
-                      <div className="text-sm" style={{ color: "var(--muted)" }}>
+                      <div
+                        className="text-sm"
+                        style={{ color: "var(--muted)" }}
+                      >
                         {t("pages.series.moreArticles", {
                           count: seriesInfo.posts.length - 3,
                         })}

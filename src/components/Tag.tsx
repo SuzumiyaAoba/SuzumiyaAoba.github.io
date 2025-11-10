@@ -71,7 +71,7 @@ const tagVariants = cva(
       size: "md",
       variant: "default",
     },
-  }
+  },
 );
 
 // タグのスタイル（CSS変数を使用）
@@ -143,7 +143,7 @@ export const Tag: FC<TagProps> = memo(
           className={cn(
             tagVariants({ size, variant }),
             "no-underline font-normal hover:opacity-90",
-            className
+            className,
           )}
           style={getTagLinkStyle(variantName)}
         >
@@ -160,7 +160,7 @@ export const Tag: FC<TagProps> = memo(
         {tagContent}
       </span>
     );
-  }
+  },
 );
 
 Tag.displayName = "Tag";

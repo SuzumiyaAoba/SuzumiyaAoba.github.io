@@ -51,7 +51,10 @@ export default function BreadcrumbNav(props: BreadcrumbNavProps) {
           <React.Fragment key={segment.path}>
             <BreadcrumbItem>
               {segment.isLast || !segment.shouldLink ? (
-                <BreadcrumbItemLink asChild variant={segment.isLast ? "active" : "default"}>
+                <BreadcrumbItemLink
+                  asChild
+                  variant={segment.isLast ? "active" : "default"}
+                >
                   <span aria-current={segment.isLast ? "page" : undefined}>
                     {getDisplayTitle({ segment, data, t })}
                   </span>
@@ -70,4 +73,4 @@ export default function BreadcrumbNav(props: BreadcrumbNavProps) {
       </BreadcrumbList>
     </Breadcrumb>
   );
-} 
+}

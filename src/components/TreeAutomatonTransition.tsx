@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { VisDotGraph, TreeNode as VisTreeNode } from './VisDotGraph';
+import React, { useState, useCallback, useEffect, useMemo } from "react";
+import { VisDotGraph, TreeNode as VisTreeNode } from "./VisDotGraph";
 
 export interface TreeNode {
   id: string;
@@ -47,7 +47,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
   showStepIndicator = true,
   showDescription = true,
   autoPlay = false,
-  autoPlayInterval = 2000
+  autoPlayInterval = 2000,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isClient, setIsClient] = useState(false);
@@ -63,14 +63,18 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
   useEffect(() => {
     try {
       if (!steps || !Array.isArray(steps) || steps.length === 0) {
-        throw new Error('ステップデータが無効です');
+        throw new Error("ステップデータが無効です");
       }
-      
+
       const currentStepData = steps[currentStep];
-      if (!currentStepData || !currentStepData.nodes || !Array.isArray(currentStepData.nodes)) {
+      if (
+        !currentStepData ||
+        !currentStepData.nodes ||
+        !Array.isArray(currentStepData.nodes)
+      ) {
         throw new Error(`ステップ${currentStep + 1}のデータが無効です`);
       }
-      
+
       setError(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -83,7 +87,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
     if (!autoPlay || !isPlaying || !isClient) return;
 
     const interval = setInterval(() => {
-      setCurrentStep(prev => {
+      setCurrentStep((prev) => {
         if (prev >= steps.length - 1) {
           setIsPlaying(false);
           return prev;
@@ -97,11 +101,11 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
 
   // ナビゲーション関数
   const handleNext = useCallback(() => {
-    setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   }, [steps.length]);
 
   const handlePrevious = useCallback(() => {
-    setCurrentStep(prev => Math.max(prev - 1, 0));
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
   }, []);
 
   const handleReset = useCallback(() => {
@@ -113,24 +117,31 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
     if (currentStep >= steps.length - 1) {
       setCurrentStep(0);
     }
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
   }, [currentStep, steps.length]);
 
   // 現在のステップデータ
   const currentStepData = useMemo(() => {
-    return steps[currentStep] || { nodes: [], edges: [], description: '', stepNumber: 0 };
+    return (
+      steps[currentStep] || {
+        nodes: [],
+        edges: [],
+        description: "",
+        stepNumber: 0,
+      }
+    );
   }, [steps, currentStep]);
 
   // VisDotGraph用のデータ変換
   const visDotGraphData = useMemo(() => {
-    const nodes: VisTreeNode[] = currentStepData.nodes.map(node => ({
+    const nodes: VisTreeNode[] = currentStepData.nodes.map((node) => ({
       id: node.id,
       label: node.label,
       state: node.state,
       color: node.color,
     }));
 
-    const edges = currentStepData.edges.map(edge => ({
+    const edges = currentStepData.edges.map((edge) => ({
       source: edge.from || edge.source,
       target: edge.to || edge.target,
       from: edge.from || edge.source,
@@ -143,7 +154,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
       nodes,
       edges,
     };
-    
+
     return result;
   }, [currentStepData]);
 
@@ -155,7 +166,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
   // サーバーサイドレンダリング時の表示
   if (!isClient) {
     return (
-      <div 
+      <div
         className={`tree-automaton-transition border border-gray-200 rounded-lg p-4 my-4 ${className}`}
         role="region"
         aria-label="木オートマトン遷移コンポーネント"
@@ -174,7 +185,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
   // エラー表示
   if (error) {
     return (
-      <div 
+      <div
         className={`tree-automaton-transition border border-red-200 rounded-lg p-4 my-4 bg-red-50 ${className}`}
         role="alert"
         aria-live="polite"
@@ -188,7 +199,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
   }
 
   return (
-    <div 
+    <div
       className={`tree-automaton-transition border border-gray-200 rounded-lg p-4 my-4 ${className}`}
       role="region"
       aria-label="木オートマトン遷移コンポーネント"
@@ -203,7 +214,7 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
         >
           ← 前へ
         </button>
-        
+
         <button
           onClick={handleReset}
           className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
@@ -216,16 +227,16 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
           <button
             onClick={handlePlayPause}
             className={`px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-              isPlaying 
-                ? 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500' 
-                : 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-500'
+              isPlaying
+                ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
+                : "bg-green-500 text-white hover:bg-green-600 focus:ring-green-500"
             }`}
-            aria-label={isPlaying ? '再生を停止' : '自動再生を開始'}
+            aria-label={isPlaying ? "再生を停止" : "自動再生を開始"}
           >
-            {isPlaying ? '⏸ 停止' : '▶ 再生'}
+            {isPlaying ? "⏸ 停止" : "▶ 再生"}
           </button>
         )}
-        
+
         <button
           onClick={handleNext}
           disabled={currentStep === steps.length - 1}
@@ -240,11 +251,13 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
       {showStepIndicator && (
         <div className="step-indicator mb-4">
           <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-            <span>ステップ {currentStep + 1} / {steps.length}</span>
+            <span>
+              ステップ {currentStep + 1} / {steps.length}
+            </span>
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
               role="progressbar"
@@ -259,7 +272,9 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
       {/* ステップ説明 */}
       {showDescription && currentStepData.description && (
         <div className="step-description mb-4 p-4 bg-gray-100 rounded">
-          <h4 className="font-semibold mb-2">ステップ {currentStep + 1} の説明:</h4>
+          <h4 className="font-semibold mb-2">
+            ステップ {currentStep + 1} の説明:
+          </h4>
           <p className="text-gray-700">{currentStepData.description}</p>
         </div>
       )}
@@ -278,4 +293,4 @@ const TreeAutomatonTransition: React.FC<TreeAutomatonTransitionProps> = ({
 };
 
 export default TreeAutomatonTransition;
-export { TreeAutomatonTransition }; 
+export { TreeAutomatonTransition };

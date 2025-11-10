@@ -31,12 +31,7 @@ export type ReasoningProps = ComponentProps<typeof Collapsible> & {
 };
 
 export const Reasoning = memo(
-  ({
-    className,
-    defaultOpen = false,
-    children,
-    ...props
-  }: ReasoningProps) => {
+  ({ className, defaultOpen = false, children, ...props }: ReasoningProps) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
@@ -51,7 +46,7 @@ export const Reasoning = memo(
         </Collapsible>
       </ReasoningContext.Provider>
     );
-  }
+  },
 );
 
 export type ReasoningTriggerProps = ComponentProps<typeof CollapsibleTrigger>;
@@ -64,7 +59,7 @@ export const ReasoningTrigger = memo(
       <CollapsibleTrigger
         className={cn(
           "flex w-full items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground py-0 min-h-0",
-          className
+          className,
         )}
         {...props}
       >
@@ -75,14 +70,14 @@ export const ReasoningTrigger = memo(
             <ChevronDownIcon
               className={cn(
                 "size-4 transition-transform",
-                isOpen ? "rotate-180" : "rotate-0"
+                isOpen ? "rotate-180" : "rotate-0",
               )}
             />
           </>
         )}
       </CollapsibleTrigger>
     );
-  }
+  },
 );
 
 export type ReasoningContentProps = ComponentProps<
@@ -97,18 +92,23 @@ export const ReasoningContent = memo(
       className={cn(
         "mt-4 text-xs",
         "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-muted-foreground outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
-        className
+        className,
       )}
       {...props}
     >
-      <Response className="grid gap-2 p-2 border border-rounded" components={
-        {
+      <Response
+        className="grid gap-2 p-2 border border-rounded"
+        components={{
           p: ({ children }) => <p className="m-0!">{children}</p>,
-          ol: ({ children }) => <ol className="pl-6! m-0! list-decimal">{children}</ol>,
-        }
-      }>{children}</Response>
+          ol: ({ children }) => (
+            <ol className="pl-6! m-0! list-decimal">{children}</ol>
+          ),
+        }}
+      >
+        {children}
+      </Response>
     </CollapsibleContent>
-  )
+  ),
 );
 
 Reasoning.displayName = "Reasoning";

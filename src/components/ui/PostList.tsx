@@ -60,7 +60,7 @@ export const PostList: FC<PostListProps> = ({
         className={cn(
           variant === "card"
             ? "card p-4 transition-all duration-300 hover:transform hover:scale-[1.02]"
-            : ""
+            : "",
         )}
       >
         {showDate && <DateDisplay date={date} className="text-sm mb-2" />}
@@ -70,7 +70,7 @@ export const PostList: FC<PostListProps> = ({
             "hover:underline",
             variant === "card"
               ? "text-lg block my-2 transition-colors"
-              : "block"
+              : "block",
           )}
           style={{ color: "var(--foreground)" }}
         >
@@ -101,7 +101,7 @@ export const PostList: FC<PostListProps> = ({
         <div
           className={cn(
             "flex flex-col gap-6",
-            variant === "card" ? "gap-4" : "gap-6"
+            variant === "card" ? "gap-4" : "gap-6",
           )}
         >
           {filteredPosts.map(renderPost)}

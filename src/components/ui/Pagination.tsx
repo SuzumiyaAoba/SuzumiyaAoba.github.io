@@ -29,7 +29,7 @@ export const Pagination = ({
         "px-4 py-2 rounded transition-colors",
         isCurrent
           ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-          : "bg-gray-100 hover:bg-gray-200"
+          : "bg-gray-100 hover:bg-gray-200",
       )}
       aria-current={isCurrent ? "page" : undefined}
     >
@@ -40,7 +40,7 @@ export const Pagination = ({
   const renderNavigationButton = (
     page: number,
     label: string,
-    condition: boolean
+    condition: boolean,
   ) => {
     if (!condition) return null;
 
@@ -62,7 +62,7 @@ export const Pagination = ({
       {/* ページ番号の表示ロジック */}
       {(() => {
         const pages: (number | string)[] = [];
-        
+
         // 総ページ数が5以下の場合はすべて表示
         if (totalPages <= 5) {
           for (let i = 1; i <= totalPages; i++) {
@@ -71,7 +71,7 @@ export const Pagination = ({
         } else {
           // 常に1ページ目を表示
           pages.push(1);
-          
+
           // 現在のページが1-3の場合
           if (currentPage <= 3) {
             pages.push(2, 3, 4);
@@ -81,7 +81,12 @@ export const Pagination = ({
           // 現在のページが最後から3ページ以内の場合
           else if (currentPage >= totalPages - 2) {
             pages.push("...");
-            pages.push(totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+            pages.push(
+              totalPages - 3,
+              totalPages - 2,
+              totalPages - 1,
+              totalPages,
+            );
           }
           // それ以外（中間のページ）の場合
           else {
@@ -91,10 +96,14 @@ export const Pagination = ({
             pages.push(totalPages);
           }
         }
-        
+
         return pages.map((page, index) => {
           if (typeof page === "string") {
-            return <span key={`ellipsis-${index}`} className="px-2">{page}</span>;
+            return (
+              <span key={`ellipsis-${index}`} className="px-2">
+                {page}
+              </span>
+            );
           }
           return renderPageButton(page, page === currentPage);
         });
@@ -104,7 +113,7 @@ export const Pagination = ({
       {renderNavigationButton(
         currentPage + 1,
         "次へ",
-        currentPage < totalPages
+        currentPage < totalPages,
       )}
     </div>
   );

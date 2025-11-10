@@ -22,7 +22,7 @@ export function SeriesNavigation({
   className = "",
 }: SeriesNavigationProps) {
   return (
-    <div 
+    <div
       className={`border rounded-lg p-4 ${className}`}
       style={{
         backgroundColor: "var(--background-secondary)",
@@ -30,8 +30,13 @@ export function SeriesNavigation({
       }}
     >
       <div className="flex items-center gap-2 mb-4">
-        <Icon icon="lucide:book-open" width={20} height={20} style={{ color: "currentColor" }} />
-        <div 
+        <Icon
+          icon="lucide:book-open"
+          width={20}
+          height={20}
+          style={{ color: "currentColor" }}
+        />
+        <div
           className="text-lg font-semibold"
           style={{ color: "var(--foreground)" }}
         >
@@ -39,10 +44,7 @@ export function SeriesNavigation({
         </div>
       </div>
 
-      <div 
-        className="mb-4 text-sm"
-        style={{ color: "var(--muted)" }}
-      >
+      <div className="mb-4 text-sm" style={{ color: "var(--muted)" }}>
         {currentIndex + 1} / {totalPosts} 記事
       </div>
 
@@ -53,14 +55,19 @@ export function SeriesNavigation({
             className="flex items-center gap-2 text-sm hover:underline transition-colors duration-200"
             style={{ color: "var(--accent-primary)" }}
           >
-            <Icon icon="lucide:chevron-left" width={16} height={16} style={{ color: "currentColor" }} />
-            <span>前の記事: {previous.frontmatter.subtitle || previous.frontmatter.title}</span>
+            <Icon
+              icon="lucide:chevron-left"
+              width={16}
+              height={16}
+              style={{ color: "currentColor" }}
+            />
+            <span>
+              前の記事:{" "}
+              {previous.frontmatter.subtitle || previous.frontmatter.title}
+            </span>
           </Link>
         ) : (
-          <div
-            className="text-sm"
-            style={{ color: "var(--muted)" }}
-          >
+          <div className="text-sm" style={{ color: "var(--muted)" }}>
             最初の記事です
           </div>
         )}
@@ -71,14 +78,18 @@ export function SeriesNavigation({
             className="flex items-center gap-2 text-sm hover:underline transition-colors duration-200"
             style={{ color: "var(--accent-primary)" }}
           >
-            <span>次の記事: {next.frontmatter.subtitle || next.frontmatter.title}</span>
-            <Icon icon="lucide:chevron-right" width={16} height={16} style={{ color: "currentColor" }} />
+            <span>
+              次の記事: {next.frontmatter.subtitle || next.frontmatter.title}
+            </span>
+            <Icon
+              icon="lucide:chevron-right"
+              width={16}
+              height={16}
+              style={{ color: "currentColor" }}
+            />
           </Link>
         ) : (
-          <div
-            className="text-sm"
-            style={{ color: "var(--muted)" }}
-          >
+          <div className="text-sm" style={{ color: "var(--muted)" }}>
             最後の記事です
           </div>
         )}
@@ -95,4 +106,4 @@ export function SeriesNavigation({
       </div>
     </div>
   );
-} 
+}

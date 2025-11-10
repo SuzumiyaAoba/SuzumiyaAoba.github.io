@@ -1,4 +1,4 @@
-import { AnnotationHandler } from "codehike/code"
+import { AnnotationHandler } from "codehike/code";
 import {
   TooltipProvider,
   Tooltip,
@@ -22,13 +22,13 @@ export const tooltip: AnnotationHandler = {
             style={{
               backgroundColor: "var(--codehike-tooltip-bg)",
               borderColor: "var(--codehike-tooltip-border)",
-              color: "var(--codehike-tooltip-text)"
+              color: "var(--codehike-tooltip-text)",
             }}
           >
             {data?.children || query}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    )
+    );
   },
-}
+};

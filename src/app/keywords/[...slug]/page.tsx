@@ -1,12 +1,19 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import config from "@/config";
-import { getContent, getFrontmatter, getAvailableLanguages } from "@/libs/contents/markdown";
+import {
+  getContent,
+  getFrontmatter,
+  getAvailableLanguages,
+} from "@/libs/contents/markdown";
 import { keywordFrontmatterSchema } from "@/libs/contents/keyword";
 import { Article } from "@/components/Article";
 import { StylesheetLoader } from "@/components/StylesheetLoader";
 import { generateNestedSlugParams } from "@/libs/contents/params";
-import { LanguageToggle, type LanguageContent } from "@/components/LanguageToggle";
+import {
+  LanguageToggle,
+  type LanguageContent,
+} from "@/components/LanguageToggle";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -56,7 +63,10 @@ export default async function Page({ params }: Props) {
   const { frontmatter, stylesheets, Component } = content;
 
   // 利用可能な言語を取得
-  const availableLanguages = await getAvailableLanguages(contentBasePath, ...slug);
+  const availableLanguages = await getAvailableLanguages(
+    contentBasePath,
+    ...slug,
+  );
 
   // 各言語のコンテンツを取得
   const languageContents: LanguageContent[] = [];
@@ -91,10 +101,7 @@ export default async function Page({ params }: Props) {
         tags={frontmatter.tags}
       >
         {languageContents.length > 0 ? (
-          <LanguageToggle
-            defaultLanguage="ja"
-            languages={languageContents}
-          />
+          <LanguageToggle defaultLanguage="ja" languages={languageContents} />
         ) : (
           <Component />
         )}

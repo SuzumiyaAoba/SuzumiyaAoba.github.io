@@ -1,7 +1,4 @@
-import {
-  loadJapaneseFont,
-  generateOgImage,
-} from "@/libs/og-image";
+import { loadJapaneseFont, generateOgImage } from "@/libs/og-image";
 import { getFrontmatter } from "@/libs/contents/markdown";
 import { Pages } from "@/libs/contents/blog";
 import { generateSlugParams } from "@/libs/contents/params";

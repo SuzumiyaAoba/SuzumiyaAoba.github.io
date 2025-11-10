@@ -34,7 +34,7 @@ const giscusThemeMap: Record<string, string> = {
 // テーマ変更時のメッセージを送信する関数
 function sendMessageToGiscus(message: { setConfig: { theme: string } }) {
   const iframe = document.querySelector(
-    "iframe.giscus-frame"
+    "iframe.giscus-frame",
   ) as HTMLIFrameElement;
   if (!iframe) return;
   iframe.contentWindow?.postMessage({ giscus: message }, "https://giscus.app");

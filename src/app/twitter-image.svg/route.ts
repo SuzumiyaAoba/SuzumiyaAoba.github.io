@@ -1,7 +1,4 @@
-import {
-  loadJapaneseFont,
-  generateHomeOgImage,
-} from "@/libs/og-image";
+import { loadJapaneseFont, generateHomeOgImage } from "@/libs/og-image";
 
 // 静的生成の設定
 export const dynamic = "force-static";

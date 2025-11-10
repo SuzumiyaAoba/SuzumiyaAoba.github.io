@@ -52,4 +52,4 @@ export const useHeaderVisibility = () => {
   const shouldBeVisible = isVisible || isAtTopRef.current;
 
   return { isScrolled, isVisible: shouldBeVisible };
-}; 
+};

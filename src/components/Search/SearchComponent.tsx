@@ -33,7 +33,7 @@ type PagefindModule = {
   debouncedSearch: (
     query: string,
     options?: Record<string, unknown>,
-    debounceTimeoutMs?: number
+    debounceTimeoutMs?: number,
   ) => Promise<PagefindSearchResponse>;
 };
 
@@ -69,7 +69,7 @@ export default function SearchComponent() {
 
     if (!window.pagefind || !window.__pagefind_loaded) {
       setPagefindError(
-        "検索エンジンがロードされていません。しばらく待つか、ページを更新してください。"
+        "検索エンジンがロードされていません。しばらく待つか、ページを更新してください。",
       );
       return;
     }
@@ -93,8 +93,8 @@ export default function SearchComponent() {
           async (result: PagefindSearchResponse["results"][0]) => {
             const data = await result.data();
             return data;
-          }
-        )
+          },
+        ),
       );
 
       // zodで型安全に結果を取得
@@ -125,7 +125,7 @@ export default function SearchComponent() {
     function handlePagefindError(event: CustomEvent) {
       console.error("Pagefind error event received:", event.detail);
       setPagefindError(
-        `検索エンジンの読み込みに失敗しました: ${event.detail?.error || "不明なエラー"}`
+        `検索エンジンの読み込みに失敗しました: ${event.detail?.error || "不明なエラー"}`,
       );
     }
 
@@ -142,14 +142,17 @@ export default function SearchComponent() {
 
     // 初期化イベントのリスナーを設定
     window.addEventListener("pagefind:initialized", handlePagefindInitialized);
-    window.addEventListener("pagefind:error", handlePagefindError as EventListener);
+    window.addEventListener(
+      "pagefind:error",
+      handlePagefindError as EventListener,
+    );
 
     // 一定時間後にタイムアウト処理
     const timeoutId = setTimeout(() => {
       if (!window.__pagefind_loaded && !window.__pagefind_loading) {
         console.error("Pagefind loading timeout");
         setPagefindError(
-          "検索エンジンの読み込みがタイムアウトしました。ページを更新してください。"
+          "検索エンジンの読み込みがタイムアウトしました。ページを更新してください。",
         );
       }
     }, 10000); // 10秒でタイムアウト
@@ -158,9 +161,12 @@ export default function SearchComponent() {
     return () => {
       window.removeEventListener(
         "pagefind:initialized",
-        handlePagefindInitialized
+        handlePagefindInitialized,
       );
-      window.removeEventListener("pagefind:error", handlePagefindError as EventListener);
+      window.removeEventListener(
+        "pagefind:error",
+        handlePagefindError as EventListener,
+      );
       clearTimeout(timeoutId);
     };
   }, [initialQuery, performSearch]);
@@ -196,7 +202,7 @@ export default function SearchComponent() {
   const handleDevSetup = () => {
     // 開発環境セットアップ用のコマンドを実行するよう指示
     alert(
-      "開発環境でPagefindを使用するには、以下のコマンドを実行してください：\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev"
+      "開発環境でPagefindを使用するには、以下のコマンドを実行してください：\n\nnpm run build\nnpm run pagefind:dev\nnpm run dev",
     );
   };
 

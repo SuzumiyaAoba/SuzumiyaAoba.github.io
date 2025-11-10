@@ -155,7 +155,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
               <a
                 href={`https://twitter.com/${config.metadata.twitterHandle.replace(
                   "@",
-                  ""
+                  "",
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

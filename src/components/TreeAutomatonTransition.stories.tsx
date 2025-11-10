@@ -1,29 +1,31 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import TreeAutomatonTransition, { TransitionStep } from './TreeAutomatonTransition';
+import type { Meta, StoryObj } from "@storybook/react";
+import TreeAutomatonTransition, {
+  TransitionStep,
+} from "./TreeAutomatonTransition";
 
 const meta: Meta<typeof TreeAutomatonTransition> = {
-  title: 'Components/TreeAutomatonTransition',
+  title: "Components/TreeAutomatonTransition",
   component: TreeAutomatonTransition,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     autoPlay: {
-      control: 'boolean',
-      description: '自動再生機能を有効にする',
+      control: "boolean",
+      description: "自動再生機能を有効にする",
     },
     autoPlayInterval: {
-      control: { type: 'number', min: 500, max: 5000, step: 100 },
-      description: '自動再生の間隔（ミリ秒）',
+      control: { type: "number", min: 500, max: 5000, step: 100 },
+      description: "自動再生の間隔（ミリ秒）",
     },
     showStepIndicator: {
-      control: 'boolean',
-      description: 'ステップインジケーターを表示する',
+      control: "boolean",
+      description: "ステップインジケーターを表示する",
     },
     showDescription: {
-      control: 'boolean',
-      description: 'ステップ説明を表示する',
+      control: "boolean",
+      description: "ステップ説明を表示する",
     },
   },
 };
@@ -34,13 +36,22 @@ type Story = StoryObj<typeof meta>;
 const sampleSteps: TransitionStep[] = [
   {
     stepNumber: 1,
-    description: "初期状態：すべてのノードに初期状態 q_init が割り当てられています",
+    description:
+      "初期状態：すべてのノードに初期状態 q_init が割り当てられています",
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{init}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{init}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{init}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{init}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{init}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{init}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{init}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{init}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{init}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{init}$" },
@@ -55,17 +66,26 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
+    ],
   },
   {
     stepNumber: 2,
-    description: "リーフノードの状態を確定：true, false, 1, 2 のノードに適切な状態を割り当て",
+    description:
+      "リーフノードの状態を確定：true, false, 1, 2 のノードに適切な状態を割り当て",
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{init}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{init}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{init}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{init}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{int}$" },
@@ -80,7 +100,7 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
+    ],
   },
   {
     stepNumber: 3,
@@ -88,9 +108,17 @@ const sampleSteps: TransitionStep[] = [
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{init}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{init}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{bool}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{init}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{int}$" },
@@ -105,17 +133,26 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
+    ],
   },
   {
     stepNumber: 4,
-    description: "AND演算の評価：true AND (false OR true) の結果が q_bool として計算される",
+    description:
+      "AND演算の評価：true AND (false OR true) の結果が q_bool として計算される",
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{init}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{bool}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{bool}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{init}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{int}$" },
@@ -130,7 +167,7 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
+    ],
   },
   {
     stepNumber: 5,
@@ -138,9 +175,17 @@ const sampleSteps: TransitionStep[] = [
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{init}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{bool}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{bool}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{int}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{int}$" },
@@ -155,17 +200,26 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
+    ],
   },
   {
     stepNumber: 6,
-    description: "最終状態：if文の条件が q_bool で真のため、真の分岐 q_int が選択される",
+    description:
+      "最終状態：if文の条件が q_bool で真のため、真の分岐 q_int が選択される",
     nodes: [
       { id: "if_root", label: "$\\mathrm{if}$", state: "$q_\\mathit{int}$" },
       { id: "and_cond", label: "$\\mathrm{and}$", state: "$q_\\mathit{bool}$" },
-      { id: "true_cond", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "true_cond",
+        label: "$\\mathrm{true}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "or_cond", label: "$\\mathrm{or}$", state: "$q_\\mathit{bool}$" },
-      { id: "false_or", label: "$\\mathrm{false}$", state: "$q_\\mathit{bool}$" },
+      {
+        id: "false_or",
+        label: "$\\mathrm{false}$",
+        state: "$q_\\mathit{bool}$",
+      },
       { id: "true_or", label: "$\\mathrm{true}$", state: "$q_\\mathit{bool}$" },
       { id: "plus_true", label: "$\\mathrm{+}$", state: "$q_\\mathit{int}$" },
       { id: "num1", label: "$\\mathrm{1}$", state: "$q_\\mathit{int}$" },
@@ -180,8 +234,8 @@ const sampleSteps: TransitionStep[] = [
       { from: "or_cond", to: "true_or", label: "右", color: "black" },
       { from: "plus_true", to: "num1", label: "左", color: "black" },
       { from: "plus_true", to: "num2", label: "右", color: "black" },
-    ]
-  }
+    ],
+  },
 ];
 
 export const Default: Story = {
@@ -289,11 +343,11 @@ export const SimpleTest: Story = {
         edges: [
           { from: "root", to: "child1", label: "left" },
           { from: "root", to: "child2", label: "right" },
-        ]
-      }
+        ],
+      },
     ],
     width: "400px",
     height: "300px",
     fontSize: 14,
   },
-}; 
+};

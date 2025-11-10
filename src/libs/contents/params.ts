@@ -13,7 +13,9 @@ export async function generateBlogTagParams<T extends z.ZodTypeAny>({
   schema: T;
 }) {
   const posts = await getSortedPosts({ paths, schema });
-  const allTags = extractUniqueTags(posts as unknown as Array<{ tags: string[] }>);
+  const allTags = extractUniqueTags(
+    posts as unknown as Array<{ tags: string[] }>,
+  );
 
   return allTags.map((tag) => ({
     tag: tag,
@@ -72,7 +74,7 @@ export async function generateBookChapterParams(contentBasePath: string) {
   const allParams = await generateBookParams(contentBasePath);
   const chapterParams = allParams
     .filter(
-      (param): param is { name: string; chapter: string } => !!param.chapter
+      (param): param is { name: string; chapter: string } => !!param.chapter,
     )
     .map((param) => ({ name: param.name, chapter: param.chapter }));
 

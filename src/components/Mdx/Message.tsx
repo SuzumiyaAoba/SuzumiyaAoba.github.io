@@ -58,7 +58,7 @@ export const Message: FC<MessageProps> = memo(
           messageVariants({ variant }),
           className,
           "open:ring",
-          "message-details"
+          "message-details",
         )}
         style={{
           borderColor: `var(--${variant}-border)`,
@@ -96,7 +96,7 @@ export const Message: FC<MessageProps> = memo(
         </div>
       </details>
     );
-  }
+  },
 );
 
 Message.displayName = "Message";

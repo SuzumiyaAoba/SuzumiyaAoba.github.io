@@ -35,7 +35,9 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
           path: postSlug,
         });
       } else {
-        console.warn(`Post not found for slug: ${postSlug} in series: ${definition.name}`);
+        console.warn(
+          `Post not found for slug: ${postSlug} in series: ${definition.name}`,
+        );
       }
     }
 
@@ -54,7 +56,9 @@ export async function getAllSeries(): Promise<Record<string, SeriesInfo>> {
 /**
  * slugからシリーズ情報を取得
  */
-export async function getSeriesBySlug(slug: string): Promise<SeriesInfo | null> {
+export async function getSeriesBySlug(
+  slug: string,
+): Promise<SeriesInfo | null> {
   const allSeries = await getAllSeries();
   const series = Object.values(allSeries).find((s) => s.slug === slug);
   return series || null;
@@ -63,7 +67,9 @@ export async function getSeriesBySlug(slug: string): Promise<SeriesInfo | null> 
 /**
  * 特定のシリーズの記事を取得（シリーズ名で検索）
  */
-export async function getSeriesPosts(seriesName: string): Promise<SeriesPost[]> {
+export async function getSeriesPosts(
+  seriesName: string,
+): Promise<SeriesPost[]> {
   const allSeries = await getAllSeries();
   return allSeries[seriesName]?.posts || [];
 }
@@ -71,7 +77,9 @@ export async function getSeriesPosts(seriesName: string): Promise<SeriesPost[]> 
 /**
  * 特定のシリーズの記事を取得（slugで検索）
  */
-export async function getSeriesPostsBySlug(slug: string): Promise<SeriesPost[]> {
+export async function getSeriesPostsBySlug(
+  slug: string,
+): Promise<SeriesPost[]> {
   const series = await getSeriesBySlug(slug);
   return series?.posts || [];
 }
@@ -79,7 +87,9 @@ export async function getSeriesPostsBySlug(slug: string): Promise<SeriesPost[]> 
 /**
  * 記事が属するシリーズを検索
  */
-export async function findSeriesByPostSlug(postSlug: string): Promise<SeriesInfo | null> {
+export async function findSeriesByPostSlug(
+  postSlug: string,
+): Promise<SeriesInfo | null> {
   const allSeries = await getAllSeries();
 
   for (const seriesInfo of Object.values(allSeries)) {
@@ -95,7 +105,7 @@ export async function findSeriesByPostSlug(postSlug: string): Promise<SeriesInfo
  * 記事が属するシリーズの前後の記事を取得
  */
 export async function getSeriesNavigation(
-  currentSlug: string
+  currentSlug: string,
 ): Promise<SeriesNavigation | null> {
   const seriesInfo = await findSeriesByPostSlug(currentSlug);
 
@@ -104,7 +114,9 @@ export async function getSeriesNavigation(
   }
 
   const seriesPosts = seriesInfo.posts;
-  const currentIndex = seriesPosts.findIndex((post) => post.slug === currentSlug);
+  const currentIndex = seriesPosts.findIndex(
+    (post) => post.slug === currentSlug,
+  );
 
   if (currentIndex === -1) {
     return null;
@@ -114,7 +126,10 @@ export async function getSeriesNavigation(
     seriesName: seriesInfo.name,
     seriesSlug: seriesInfo.slug,
     previous: currentIndex > 0 ? seriesPosts[currentIndex - 1] : null,
-    next: currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null,
+    next:
+      currentIndex < seriesPosts.length - 1
+        ? seriesPosts[currentIndex + 1]
+        : null,
     currentIndex,
     totalPosts: seriesPosts.length,
   };

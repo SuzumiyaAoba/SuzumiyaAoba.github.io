@@ -1,27 +1,31 @@
 import type { MDXComponents } from "mdx/types";
 import React from "react";
 import { VisDotGraph, TreeNode } from "@/components/VisDotGraph";
-import TreeAutomatonTransition, { TransitionStep } from "@/components/TreeAutomatonTransition";
+import TreeAutomatonTransition, {
+  TransitionStep,
+} from "@/components/TreeAutomatonTransition";
 import { TweetCard } from "@/components/TweetCard";
 import { Img } from "@/components/Mdx/Img";
 
 // VisDotGraphコンポーネントをMDXで使用するためのラッパー
 const VisDotGraphMDX: React.FC<{
-  data: TreeNode | {
-    nodes: TreeNode[];
-    edges?: Array<{
-      from: string;
-      to: string;
-      label?: string;
-      color?: string;
-      style?: string;
-      width?: number;
-    }>;
-  };
+  data:
+    | TreeNode
+    | {
+        nodes: TreeNode[];
+        edges?: Array<{
+          from: string;
+          to: string;
+          label?: string;
+          color?: string;
+          style?: string;
+          width?: number;
+        }>;
+      };
   width?: string;
   height?: string;
   className?: string;
-}> = ({ data, width = '100%', height = '400px', className = '' }) => {
+}> = ({ data, width = "100%", height = "400px", className = "" }) => {
   return (
     <VisDotGraph
       data={data}

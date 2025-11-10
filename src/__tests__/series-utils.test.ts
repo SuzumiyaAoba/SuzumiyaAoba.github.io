@@ -34,10 +34,10 @@ describe("series-utils", () => {
     it("should convert English series names to kebab-case", () => {
       expect(generateSlugFromSeriesName("Reading Notes")).toBe("reading-notes");
       expect(generateSlugFromSeriesName("My Programming Journey")).toBe(
-        "my-programming-journey"
+        "my-programming-journey",
       );
       expect(generateSlugFromSeriesName("Web Development 101")).toBe(
-        "web-development-101"
+        "web-development-101",
       );
     });
 
@@ -54,8 +54,12 @@ describe("series-utils", () => {
     });
 
     it("should handle mixed alphanumeric with special characters", () => {
-      expect(generateSlugFromSeriesName("Next.js Tutorial")).toBe("nextjs-tutorial");
-      expect(generateSlugFromSeriesName("TypeScript 101")).toBe("typescript-101");
+      expect(generateSlugFromSeriesName("Next.js Tutorial")).toBe(
+        "nextjs-tutorial",
+      );
+      expect(generateSlugFromSeriesName("TypeScript 101")).toBe(
+        "typescript-101",
+      );
     });
   });
 });

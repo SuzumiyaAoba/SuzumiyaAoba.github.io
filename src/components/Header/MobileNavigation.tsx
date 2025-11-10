@@ -29,7 +29,7 @@ export const MobileNavigation: FC<MobileNavigationProps> = ({
       if (e.key !== "Tab" || !isVisible) return;
 
       const focusableElements = document.querySelectorAll<HTMLElement>(
-        'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+        'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
       );
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];
@@ -66,4 +66,4 @@ export const MobileNavigation: FC<MobileNavigationProps> = ({
       ))}
     </ul>
   );
-}; 
+};

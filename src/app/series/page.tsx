@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SeriesPage() {
   const allSeries = await getAllSeries();
   const seriesEntries = Object.entries(allSeries).sort((a, b) =>
-    a[1].name.localeCompare(b[1].name)
+    a[1].name.localeCompare(b[1].name),
   );
 
   return <SeriesPageClient seriesEntries={seriesEntries} />;

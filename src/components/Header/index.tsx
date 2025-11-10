@@ -89,7 +89,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       <div
         className={clsx(
           "fixed left-0 right-0 z-50 transition-transform duration-300",
-          !isVisible && "translate-y-[-100%]"
+          !isVisible && "translate-y-[-100%]",
         )}
       >
         <header
@@ -97,12 +97,10 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             "w-full transition-all duration-300",
             isScrolled
               ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-transparent py-2 backdrop-blur-md border border-opacity-40 border-white/25"
-              : "w-full bg-transparent py-4"
+              : "w-full bg-transparent py-4",
           )}
           style={{
-            transform: `translateY(${
-              isVisible && isScrolled ? "16px" : "0"
-            })`,
+            transform: `translateY(${isVisible && isScrolled ? "16px" : "0"})`,
             opacity: isVisible ? 1 : 0,
             transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
             backgroundColor: isScrolled
@@ -116,7 +114,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           <div
             className={clsx(
               "flex items-center justify-between",
-              isScrolled ? "px-4 sm:px-6 mx-auto" : "max-w-4xl px-4 mx-auto"
+              isScrolled ? "px-4 sm:px-6 mx-auto" : "max-w-4xl px-4 mx-auto",
             )}
           >
             <SiteLogo siteName={siteName} />
@@ -135,13 +133,15 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               ref={buttonRef}
               className="md:hidden flex flex-col justify-center items-center w-10 h-10 relative z-50 focus:outline-none"
               onClick={toggleMenu}
-              aria-label={isMobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")}
+              aria-label={
+                isMobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")
+              }
               aria-expanded={isMobileMenuOpen}
             >
               <HamburgerIcon isOpen={isMobileMenuOpen} />
             </button>
           </div>
-          
+
           <div
             ref={menuRef}
             role="navigation"
@@ -150,7 +150,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               isScrolled && "rounded-b-xl",
               isMobileMenuOpen
                 ? "opacity-100 shadow-inner visible"
-                : "max-h-0 opacity-0 invisible"
+                : "max-h-0 opacity-0 invisible",
             )}
             style={{
               maxHeight: isMobileMenuOpen ? MOBILE_MENU_MAX_HEIGHT : "0px",
@@ -172,7 +172,9 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
         </header>
       </div>
       <div
-        style={{ height: isScrolled ? HEADER_HEIGHT.scrolled : HEADER_HEIGHT.default }}
+        style={{
+          height: isScrolled ? HEADER_HEIGHT.scrolled : HEADER_HEIGHT.default,
+        }}
       />
     </>
   );

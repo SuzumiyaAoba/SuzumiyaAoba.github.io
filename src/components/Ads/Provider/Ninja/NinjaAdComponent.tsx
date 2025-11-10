@@ -58,7 +58,7 @@ export const NinjaAdComponent = memo(
         />
       </AdComponent>
     );
-  }
+  },
 );
 
 NinjaAdComponent.displayName = "NinjaAdComponent";

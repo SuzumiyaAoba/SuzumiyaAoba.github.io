@@ -17,7 +17,10 @@ import { ArticleHistory } from "@/components/ArticleHistory";
 import { SeriesNavigation } from "@/components/SeriesNavigation";
 import { getSeriesNavigation } from "@/libs/contents/series";
 import AmazonAssociate from "@/components/AmazonAssociate";
-import { LanguageToggle, type LanguageContent } from "@/components/LanguageToggle";
+import {
+  LanguageToggle,
+  type LanguageContent,
+} from "@/components/LanguageToggle";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -161,10 +164,7 @@ export default async function Page({ params }: Props) {
           toc={<TOC toc={toc} />}
         >
           {languageContents.length > 0 ? (
-            <LanguageToggle
-              defaultLanguage="ja"
-              languages={languageContents}
-            />
+            <LanguageToggle defaultLanguage="ja" languages={languageContents} />
           ) : (
             <Component />
           )}

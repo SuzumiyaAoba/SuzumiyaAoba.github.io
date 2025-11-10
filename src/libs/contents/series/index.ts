@@ -10,7 +10,12 @@
  */
 
 // 型定義
-export type { SeriesContent, SeriesPost, SeriesInfo, SeriesNavigation } from "./types";
+export type {
+  SeriesContent,
+  SeriesPost,
+  SeriesInfo,
+  SeriesNavigation,
+} from "./types";
 
 // スキーマ
 export { seriesDefinitionSchema, type SeriesDefinition } from "./schema";

@@ -35,7 +35,7 @@ export const AdComponent = memo(
             "sm:hidden block": displayOn === "mobile",
             block: displayOn === "all",
           },
-          className
+          className,
         )}
         role="complementary"
         aria-label={description || "広告"}
@@ -49,7 +49,7 @@ export const AdComponent = memo(
     }
 
     return content;
-  }
+  },
 );
 
 AdComponent.displayName = "AdComponent";

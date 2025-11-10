@@ -17,20 +17,20 @@ const SEARCH_PAGE_PATH = path.join(
   process.cwd(),
   "out",
   "search",
-  "index.html"
+  "index.html",
 );
 
 // pagefind-adapter.js のパス
 const PAGEFIND_ADAPTER_SRC = path.join(
   process.cwd(),
   "public",
-  "pagefind-adapter.js"
+  "pagefind-adapter.js",
 );
 
 const PAGEFIND_ADAPTER_DEST = path.join(
   process.cwd(),
   "out",
-  "pagefind-adapter.js"
+  "pagefind-adapter.js",
 );
 
 /**
@@ -39,7 +39,10 @@ const PAGEFIND_ADAPTER_DEST = path.join(
 async function copyPagefindAdapter() {
   try {
     if (!fs.existsSync(PAGEFIND_ADAPTER_SRC)) {
-      console.log("⚠️ pagefind-adapter.js が見つかりません:", PAGEFIND_ADAPTER_SRC);
+      console.log(
+        "⚠️ pagefind-adapter.js が見つかりません:",
+        PAGEFIND_ADAPTER_SRC,
+      );
       return false;
     }
 
@@ -58,17 +61,17 @@ async function copyPagefindAdapter() {
 function checkPagefindFiles() {
   const pagefindDir = path.join(process.cwd(), "out", "pagefind");
   const pagefindJs = path.join(pagefindDir, "pagefind.js");
-  
+
   if (!fs.existsSync(pagefindDir)) {
     console.log("⚠️ pagefind ディレクトリが見つかりません:", pagefindDir);
     return false;
   }
-  
+
   if (!fs.existsSync(pagefindJs)) {
     console.log("⚠️ pagefind.js が見つかりません:", pagefindJs);
     return false;
   }
-  
+
   console.log("✅ pagefind ファイルの存在を確認しました");
   return true;
 }
@@ -82,7 +85,9 @@ async function main() {
   try {
     // 1. pagefind ファイルの存在確認
     if (!checkPagefindFiles()) {
-      console.log("❌ pagefind ファイルが見つかりません。ビルドプロセスを確認してください。");
+      console.log(
+        "❌ pagefind ファイルが見つかりません。ビルドプロセスを確認してください。",
+      );
       process.exit(1);
     }
 
@@ -101,16 +106,15 @@ async function main() {
 
     // スクリプトタグの存在確認
     if (searchPageContent.includes('src="/pagefind-adapter.js"')) {
-      console.log("✅ 検索ページにはすでに pagefind-adapter.js が含まれています");
+      console.log(
+        "✅ 検索ページにはすでに pagefind-adapter.js が含まれています",
+      );
       return;
     }
 
     console.log("✅ Pagefind 本番環境用修正が完了しました");
   } catch (error) {
-    console.error(
-      "❌ Pagefind 修正中にエラーが発生しました:",
-      error
-    );
+    console.error("❌ Pagefind 修正中にエラーが発生しました:", error);
     process.exit(1);
   }
 }

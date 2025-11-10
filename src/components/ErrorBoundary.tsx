@@ -48,7 +48,9 @@ export class ErrorBoundary extends Component<
         return this.props.fallback;
       }
 
-      return <DefaultErrorFallback error={this.state.error} reset={this.reset} />;
+      return (
+        <DefaultErrorFallback error={this.state.error} reset={this.reset} />
+      );
     }
 
     return this.props.children;
@@ -80,14 +82,20 @@ function DefaultErrorFallback({
           borderColor: "var(--border)",
         }}
       >
-        <h2 className="text-xl font-bold mb-4" style={{ color: "var(--foreground)" }}>
+        <h2
+          className="text-xl font-bold mb-4"
+          style={{ color: "var(--foreground)" }}
+        >
           エラーが発生しました
         </h2>
         <p className="mb-4" style={{ color: "var(--muted)" }}>
           申し訳ございません。予期しないエラーが発生しました。
         </p>
         <details className="mb-4">
-          <summary className="cursor-pointer text-sm" style={{ color: "var(--muted)" }}>
+          <summary
+            className="cursor-pointer text-sm"
+            style={{ color: "var(--muted)" }}
+          >
             エラーの詳細を表示
           </summary>
           <pre
@@ -122,7 +130,7 @@ function DefaultErrorFallback({
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<ErrorBoundaryProps, "children">
+  errorBoundaryProps?: Omit<ErrorBoundaryProps, "children">,
 ): React.FC<P> {
   const WrappedComponent: React.FC<P> = (props) => (
     <ErrorBoundary {...errorBoundaryProps}>

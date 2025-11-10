@@ -32,7 +32,9 @@ export function encodeSeriesName(seriesName: string): string {
   else {
     // UTF-8エンコード後、base64エンコード
     const utf8Bytes = new TextEncoder().encode(seriesName);
-    const binaryString = Array.from(utf8Bytes, (byte) => String.fromCharCode(byte)).join("");
+    const binaryString = Array.from(utf8Bytes, (byte) =>
+      String.fromCharCode(byte),
+    ).join("");
     base64 = btoa(binaryString);
   }
 

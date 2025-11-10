@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { getSortedPosts } from '@/libs/contents/utils';
-import { Pages } from '@/libs/contents/blog';
-import config from '@/config';
+import { NextResponse } from "next/server";
+import { getSortedPosts } from "@/libs/contents/utils";
+import { Pages } from "@/libs/contents/blog";
+import config from "@/config";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 export async function GET() {
   const posts = await getSortedPosts({
@@ -15,10 +15,10 @@ export async function GET() {
   const recentPosts = posts.slice(0, 10);
 
   const rssItems = recentPosts
-    .map(post => {
+    .map((post) => {
       const pubDate = new Date(post.date).toUTCString();
       const link = `${config.metadata.url}/blog/post/${post._path}/`;
-      
+
       return `
     <item>
       <title><![CDATA[${post.title}]]></title>
@@ -26,10 +26,10 @@ export async function GET() {
       <link>${link}</link>
       <guid>${link}</guid>
       <pubDate>${pubDate}</pubDate>
-      ${post.tags.map(tag => `<category><![CDATA[${tag}]]></category>`).join('')}
+      ${post.tags.map((tag) => `<category><![CDATA[${tag}]]></category>`).join("")}
     </item>`;
     })
-    .join('');
+    .join("");
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -48,8 +48,8 @@ export async function GET() {
   return new NextResponse(rss, {
     status: 200,
     headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, s-maxage=1200, stale-while-revalidate=600',
+      "Content-Type": "application/rss+xml; charset=utf-8",
+      "Cache-Control": "public, s-maxage=1200, stale-while-revalidate=600",
     },
   });
-} 
+}

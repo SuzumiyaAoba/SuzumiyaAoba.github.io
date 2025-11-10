@@ -112,9 +112,7 @@ function isSeriesSegment(segment: PathSegment): segment is SeriesPathSegment {
   return segment.type === ContentType.SERIES;
 }
 
-function isKeywordSegment(
-  segment: PathSegment,
-): segment is KeywordPathSegment {
+function isKeywordSegment(segment: PathSegment): segment is KeywordPathSegment {
   return segment.type === ContentType.KEYWORD;
 }
 
@@ -198,8 +196,7 @@ function getPathSegments(segments: string[]): PathSegment[] {
     return [];
   }
 
-  const isBlogPost =
-    segments[0] === ContentType.BLOG && segments[1] === "post";
+  const isBlogPost = segments[0] === ContentType.BLOG && segments[1] === "post";
 
   // "post" を除外した表示用のセグメント配列を作る
   const processedSegments = isBlogPost
@@ -285,4 +282,4 @@ export function useBreadcrumbs(data: BreadcrumbData) {
   const pathSegments = getPathSegments(segments ?? []);
 
   return { pathSegments, data };
-} 
+}
