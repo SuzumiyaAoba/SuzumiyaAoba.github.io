@@ -9,6 +9,10 @@ tags: ["Claude Code", "AGENTS.md"]
 
 2025-09-24 現在においては [AGENTS.md](https://agents.md/) 推奨のシンボリックリンクが無難。
 
+```shell
+ln -s AGENTS.md CLAUDE.md
+```
+
 ### 2025-11-06 追記
 
 https://code.claude.com/docs/en/claude-code-on-the-web#best-practices
@@ -17,8 +21,8 @@ https://code.claude.com/docs/en/claude-code-on-the-web#best-practices
 
 Claude Code の公式ドキュメントは `CLAUDE.md` 内で `@AGENTS.md` を使って参照させる方式推し。
 
-```shell
-ln -s AGENTS.md CLAUDE.md
+```md CLAUDE.md
+@AGENTS.md
 ```
 
 ## AGENTS.md
