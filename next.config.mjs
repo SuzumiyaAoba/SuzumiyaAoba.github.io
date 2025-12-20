@@ -31,10 +31,6 @@ const nextConfig = {
     unoptimized: isProd, // 本番ビルドでは画像最適化を無効化（静的エクスポートのため）
   },
   reactStrictMode: true,
-  // ビルド時の ESLint を無効化（Storybook のみ対象のルールで失敗するため）
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // TypeScript の型チェックを有効化（Next.jsの型生成は無効化）
   typescript: {
     ignoreBuildErrors: false,
