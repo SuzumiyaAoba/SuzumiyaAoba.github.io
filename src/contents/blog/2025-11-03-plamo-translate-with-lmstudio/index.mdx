@@ -52,7 +52,7 @@ PLaMo 翻訳を LM Studio で使うには「**Prompt**」タブにある「**プ
 デフォルトで「テンプレート（Jinia）」に設定されている文字列をすべて消し、次のテンプレートに変更する。
 
 ```txt
-<plamo:op>dataset
+<|plamo:op|>dataset
 translation
 {% for message in messages %}
 <|plamo:op|>input lang=English
@@ -65,7 +65,7 @@ translation
 逆に「日本語から英語へ翻訳」する場合は次のように設定する。
 
 ```txt
-<plamo:op>dataset
+<|plamo:op|>dataset
 translation
 {% for message in messages %}
 <|plamo:op|>input lang=Japanese
@@ -184,7 +184,7 @@ While writing this article, I noticed that changing the "**Additional Stop Strin
 Delete all the default template text ("Template (Jinia)"), and replace it with the following template:
 
 ```txt
-<plamo:op>dataset
+<|plamo:op|>dataset
 translation
 {% for message in messages %}
 <|plamo:op|>input lang=English
@@ -197,7 +197,7 @@ The current configuration is set up for "English to Japanese translation."
 For "Japanese to English translation," you should configure it as follows:
 
 ```txt
-<plamo:op>dataset
+<|plamo:op|>dataset
 translation
 {% for message in messages %}
 <|plamo:op|>input lang=Japanese
