@@ -1,3 +1,6 @@
+// Base markdown styles for use in client components like ChatHistory
+// This file avoids :global blocks that cause issues with Turbopack
+
 .markdown {
   @apply wrap-break-word;
 
@@ -112,7 +115,7 @@
     border-radius: 0 0.25rem 0.25rem 0;
     font-style: italic;
     font-family: "Yuji Syuku", serif !important;
-    
+
     p {
       color: var(--muted);
       font-family: "Yuji Syuku", serif !important;
@@ -122,13 +125,8 @@
   a {
     @apply font-bold;
     color: var(--accent-primary);
-    /* @apply underline underline-offset-4 decoration-wavy decoration-neutral-400; */
     @apply decoration-wavy;
     @apply hover:underline;
-    &:hover {
-      color: var(--accent-secondary);
-      text-decoration-color: var(--accent-secondary);
-    }
   }
 
   img {
@@ -157,19 +155,6 @@
 
   ol {
     @apply list-decimal;
-  }
-
-  :not(li) > ul,
-  :not(li) > ol {
-    @apply my-2;
-  }
-
-  ul[class="contains-task-list"] {
-    list-style-type: none;
-  }
-
-  :not(li) > ul[class="contains-task-list"] {
-    padding-left: 0.25rem;
   }
 
   table {
@@ -217,15 +202,7 @@
     min-width: 1.5rem;
     text-align: center;
     font-weight: 500;
-    
-    // ダークモード対応
-    @media (prefers-color-scheme: dark) {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
   }
-
-  // Code block
 
   figure {
     margin-inline-start: 0px;
@@ -252,7 +229,6 @@
     padding: 0 1rem;
   }
 
-  // CodeHikeの行番号のスタイリング
   [data-ch-line] {
     border-left: none !important;
   }
@@ -268,23 +244,6 @@
     @apply bg-transparent;
   }
 
-  pre:has(span[class="katex-display"]) {
-    border: none;
-  }
-
-  :not(pre) > code {
-    font-family: var(--font-mono), monospace;
-    @apply tracking-tighter;
-    color: var(--accent-secondary);
-    background-color: rgba(34, 211, 238, 0.15);
-    border-radius: 4px;
-    padding: 0.1rem 0.3rem;
-  }
-
-  :not(pre) > code[class*="language-math"] {
-    color: var(--foreground);
-  }
-
   code {
     counter-reset: line;
   }
@@ -292,8 +251,6 @@
   pre > code > [data-line]::before {
     counter-increment: line;
     content: counter(line);
-
-    /* Other styling */
     display: inline-block;
     width: 1rem;
     margin-right: 1rem;
@@ -307,173 +264,5 @@
 
   code[data-line-numbers-max-digits="3"] > [data-line]::before {
     width: 3rem;
-  }
-
-  // CodeHikeコンポーネントのスタイル調整
-  div[data-ch-line] div {
-    border-left: none !important;
-  }
-
-  figure[data-rehype-pretty-code-figure] {
-    @apply my-6;
-
-    figcaption + pre {
-      @apply my-0;
-      @apply border-t-none rounded-t-none;
-    }
-
-    figcaption[data-rehype-pretty-code-title] {
-      @apply text-xs font-bold;
-      @apply px-2 py-1;
-      @apply bg-slate-100;
-      @apply rounded-t;
-      border: solid 0.5px;
-    }
-  }
-
-  [data-radix-popper-content-wrapper] {
-    p {
-      @apply leading-none;
-    }
-  }
-
-  // 脚注のスタイル
-  .footnotes {
-    margin-top: 3rem;
-    
-    #footnote-label {
-      // sr-onlyクラスを無効化して見出しを表示
-      position: static !important;
-      width: auto !important;
-      height: auto !important;
-      padding: 0 !important;
-      margin: 0 0 1rem 0 !important;
-      overflow: visible !important;
-      clip: auto !important;
-      white-space: normal !important;
-      
-      // 見出し2のスタイルを適用
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--foreground);
-      
-      &:before {
-        content: "## ";
-        color: var(--muted);
-      }
-      
-      &:hover:before {
-        color: var(--accent-primary);
-      }
-      
-      @media (width >= 768px) {
-        &:before {
-          content: "##";
-          margin-left: -1.75rem;
-          margin-right: 0.5rem;
-        }
-      }
-    }
-    
-    ol {
-      @apply list-decimal;
-      padding-left: 2.5rem;
-      
-      li {
-        @apply my-2;
-        color: var(--foreground);
-      }
-    }
-  }
-}
-
-.tocWrapper {
-  display: flex;
-  gap: 2rem;
-}
-
-.tocMain {
-  flex: 1;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.tocSide {
-  display: none;
-  position: sticky;
-  top: calc(var(--header-height, 80px) + 1.5rem);
-  max-height: calc(100vh - var(--header-height, 80px) - 3rem);
-  overflow-y: auto;
-  align-self: flex-start;
-  z-index: 10;
-  width: 280px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) transparent;
-
-  @media (min-width: 1080px) {
-    display: block;
-  }
-}
-
-.tocSideHiddenState {
-  width: auto;
-  overflow: hidden;
-}
-
-.tocClosing {
-  animation: fadeOutRight 0.3s ease-out forwards;
-}
-
-.tocOpening {
-  animation: fadeInRight 0.3s ease-out forwards;
-}
-
-/* TOCスタイル（サイドバー用）は src/styles/toc-global.css に移動 */
-
-.showTocButtonContainer {
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem;
-}
-
-.showTocButton {
-  background-color: var(--background-secondary);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  cursor: pointer;
-  border-radius: 9999px;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--background-tertiary);
-    transform: scale(1.1);
-  }
-}
-
-@keyframes fadeOutRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }

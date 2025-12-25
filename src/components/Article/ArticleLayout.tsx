@@ -2,6 +2,7 @@
 
 import { useState, cloneElement, isValidElement } from "react";
 import styles from "@/styles/markdown.module.scss";
+import "@/styles/toc-global.css";
 import { ListTree } from "lucide-react";
 
 type Props = {

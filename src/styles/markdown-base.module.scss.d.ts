@@ -1,5 +1,5 @@
 export type Styles = {
-  'rakuten-ads': string;
+  'markdown': string;
 };
 
 export type ClassNames = keyof Styles;

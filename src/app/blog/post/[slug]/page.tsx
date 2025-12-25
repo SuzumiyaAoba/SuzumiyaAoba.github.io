@@ -159,10 +159,7 @@ export default async function Page({ params }: Props) {
         url={url}
         myLinkBoxIds={frontmatter.myLinkBoxIds}
       >
-        <ArticleLayout
-          tocSideClassName={styles.tocSideStyles}
-          toc={<TOC toc={toc} />}
-        >
+        <ArticleLayout toc={<TOC toc={toc} />}>
           {languageContents.length > 0 ? (
             <LanguageToggle defaultLanguage="ja" languages={languageContents} />
           ) : (

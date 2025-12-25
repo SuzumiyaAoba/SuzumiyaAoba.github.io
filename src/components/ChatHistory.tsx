@@ -17,7 +17,7 @@ import {
   ToolOutputProps,
 } from "./ai-elements/tool";
 import { cn } from "@/libs/utils";
-import markdownStyles from "@/styles/markdown.module.scss";
+import markdownStyles from "@/styles/markdown-base.module.scss";
 import chatStyles from "./ChatHistory.module.scss";
 import type { ToolUIPart } from "ai";
 
