@@ -7,6 +7,7 @@ import { extractTocFromTree } from "../rehype/toc";
 import { getRawContent, getStylesheets } from "./file-loader";
 import { parseRawContent } from "./parser";
 import { createProcessor } from "./processor";
+import { extractAndLoadJsonImports } from "./mdx-imports";
 import codeHikeComponent from "../markdown/codeHikeComponent";
 import {
   getFileCreationDate,
@@ -39,6 +40,14 @@ export const getContent = async <T extends z.ZodTypeAny>({
   }
   const { frontmatter, content, data, format } = parsedContent;
 
+  // JSON インポートを抽出してロード
+  const contentDir = path.dirname(rawContent.path);
+  const { content: processedContent, imports: jsonImports } =
+    extractAndLoadJsonImports(content, contentDir);
+
+  // frontmatter データと JSON インポートをマージ
+  const scope = { ...data, ...jsonImports };
+
   const stylesheets = await getStylesheets(path.dirname(rawContent.path));
 
   // Git履歴を取得
@@ -53,7 +62,7 @@ export const getContent = async <T extends z.ZodTypeAny>({
 
   const vfile = new VFile({
     path: rawContent.path,
-    value: parsedContent.content,
+    value: processedContent,
   });
 
   const basePath = path.dirname(rawContent.path);
@@ -73,8 +82,8 @@ export const getContent = async <T extends z.ZodTypeAny>({
     frontmatter,
     stylesheets,
     Component: codeHikeComponent({
-      source: content,
-      scope: data,
+      source: processedContent,
+      scope,
       format,
       paths: rawContent.path
         .replace(/^src\/contents\//, "")

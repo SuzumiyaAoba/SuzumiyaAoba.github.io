@@ -23,11 +23,6 @@ import { VisDotGraph } from "@/components/VisDotGraph";
 import { TweetCard } from "@/components/TweetCard";
 import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { ChatHistory } from "@/components/ChatHistory";
-import {
-  ChatReasoningLow,
-  ChatReasoningHigh,
-  ChatImprovedPrompt,
-} from "@/components/ChatHistoryData";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 type Pluggable = Plugin<any[], any> | [Plugin<any[], any>, unknown?];
@@ -71,7 +66,4 @@ export const defaultComponents = {
   TweetCard,
   YouTubeEmbed,
   ChatHistory,
-  ChatReasoningLow,
-  ChatReasoningHigh,
-  ChatImprovedPrompt,
 };

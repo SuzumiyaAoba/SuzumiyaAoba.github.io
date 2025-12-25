@@ -9,6 +9,10 @@ seriesOrder: 4
 amazonAssociate: false
 ---
 
+import chatReasoningLow from "./chat-reasoning-low.json";
+import chatReasoningHigh from "./chat-reasoning-high.json";
+import chatImprovedPrompt from "./chat-improved-prompt.json";
+
 ## 前回までのおさらい
 
 [前回の記事](../2025-10-25-local-ai-agent/) では、mastra で DuckDuckGo を使った検索が行なえる `web_search` ツールを実装し、
@@ -209,7 +213,7 @@ LM Studio で `gpt-oss` の Reasoning Effort を変更するには、LLM のリ�
 
 mastra を使って Reasoning Effort に low を設定した `gpt-oss:20b` で動作を確認すると次のようになった。
 
-<ChatReasoningLow />
+<ChatHistory messages={chatReasoningLow.messages} />
 
 この動作には見えている部分だけで 4 つ問題がある。
 
@@ -225,7 +229,7 @@ mastra を使って Reasoning Effort に low を設定した `gpt-oss:20b` で�
 
 次に Reasoning Effort を high に設定して同じプロンプトを試してみよう。
 
-<ChatReasoningHigh />
+<ChatHistory messages={chatReasoningHigh.messages} />
 
 詳細に入る前に大きな違いとして `webSearchTool` が 4 回使われている。
 それぞれのツールで `query` には次の文字列が与えられていた。
@@ -314,26 +318,6 @@ export const webSearchAgent = new Agent({
     // model: lmstudio("openai/gpt-oss-20b"),
     model: ollama("gpt-oss:20b"),
     tools: { webSearchTool },
-User wants today's Japanese news. Need to search web. Use webSearchTool with query "今日の日本のニュース" or similar.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide a concise answer. The web search results are generic sites, not specific articles. We might need to fetch a specific news article from one of these sites. But the search results didn't provide direct content. We could use a news API? But we only have webSearchTool.
-
-We can search for "今日の日本ニュース 2025-11-02" to get today's news. Let's search again with date.The user asked: "今日の日本のニュースを教えて" (Tell me today's Japanese news). We need to provide a concise answer with current news. The assistant should browse the web for up-to-date news. We used webSearchTool but got generic results, not specific articles. We need to search for "2025-11-02 日本 ニュース" or similar. The tool returned generic sites, not specific news items.
-
-We might need to refine query: "2025年11月2日 日本 ニュース" or "今日の日本ニュース 2025-11-02". Let's try again.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide current news. The assistant should browse the web for up-to-date news. The search results are generic sites, not specific articles. We need to fetch a current news article. Maybe use Google News or Yahoo! Japan news site and parse top stories.
-
-We can search "2025-11-02 日本 ニュース" but the results are not specific. We might need to fetch from a news site like Yahoo! Japan or NHK.
-
-We can search "2025年11月2日 日本 ニュース" but the results show generic. We might need to use a news API? But we only have webSearchTool.
-
-We can search "2025-11-02 site:news.yahoo.co.jp" to get specific. Let's try.
-
-We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. Today is 2025-11-02? The assistant's date is 2025-11-02. We need to provide current news. Use search results for today's date. The Yahoo article about RISE WORLD SERIES 2025 FINAL on 11/2. Also other news: Tomorrow X Together added shows, JR East night operation, etc.
-
-We should summarize top stories. Provide links. Use Japanese language.    memory: new Memory({
-      storage: new LibSQLStore({
-        url: 'file:../mastra.db', // path is relative to the .mastra/output directory
-      }),
-    }),
-  });
 ```
 
 システムプロンプトの改善は、このコードの `instructions` に渡している文字列を変更することになる。
@@ -379,7 +363,7 @@ All responses to the user should be written **in Japanese**.
 
 上記のプロンプトを設定したときの会話は次のようになった。
 
-<ChatImprovedPrompt />
+<ChatHistory messages={chatImprovedPrompt.messages} />
 
 大分改善したのではないだろうか。
 提供してくれるニュースの数は減ってしまったがどちらも 2025 年 11 月 2 日に本当にあったニュースになっている。
