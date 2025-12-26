@@ -26,7 +26,7 @@ export const DevelopmentOnly: FC = () => {
         <ThemeTest />
       </div>
       <section
-        className="mt-16 p-6 rounded-xl shadow-md border border-text/10 transition-all duration-300"
+        className="mt-16 p-6 rounded-xl border border-text/10 transition-all duration-300"
         style={{ backgroundColor: "var(--card-bg)" }}
       >
         <h2 className="text-2xl font-bold text-primary mb-4">

@@ -44,7 +44,6 @@ const TimelineItem = ({
             style={{
               top: `${CIRCLE_CENTER_Y - CIRCLE_SIZE / 2}px`,
               backgroundColor: "var(--accent-primary)",
-              boxShadow: `0 0 0 2px var(--background), 0 0 0 4px rgba(var(--primary-rgb), 0.3)`,
             }}
           ></div>
 

@@ -44,13 +44,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
         <div className="flex-shrink-0">
           <div className="relative">
             {/* メインアバター - 実際のプロフィール画像を使用 */}
-            <div
-              className="w-20 h-20 rounded-full overflow-hidden shadow-xl"
-              style={{
-                boxShadow:
-                  "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 4px rgba(var(--border-rgb), 0.2)",
-              }}
-            >
+            <div className="w-20 h-20 rounded-full overflow-hidden">
               <Image
                 src="/assets/profile.jpg"
                 alt={`${author}のプロフィール画像`}
@@ -159,7 +153,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105"
                 style={{
                   backgroundColor: isTwitterHovered ? "#1a8cd8" : "#1d9bf0",
                 }}
@@ -178,7 +172,7 @@ export const AuthorInfo: FC<AuthorInfoProps> = ({
                 href="https://github.com/SuzumiyaAoba"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105 hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 text-white rounded-lg hover:scale-105"
                 style={{
                   backgroundColor: isGitHubHovered ? "#32383f" : "#24292f",
                 }}

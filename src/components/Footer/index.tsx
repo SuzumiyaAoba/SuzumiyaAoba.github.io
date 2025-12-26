@@ -42,7 +42,6 @@ export const Footer: FC<FooterProps> = ({ copyright, poweredBy }) => {
           backgroundColor: "var(--background-secondary)",
           borderTop: "1px solid var(--border)",
           color: "var(--muted)",
-          boxShadow: "0 -4px 12px rgba(15, 23, 42, 0.06)",
         }}
       >
         <div className="flex gap-x-6 mb-4">

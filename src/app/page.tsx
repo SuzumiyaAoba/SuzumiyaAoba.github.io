@@ -14,7 +14,7 @@ type CardProps = {
 const Card: FC<CardProps> = ({ title, href, description }) => {
   return (
     <a
-      className="p-6 rounded-xl shadow-md border border-text/10 transition-all duration-300 hover:transform hover:scale-[1.03]"
+      className="p-6 rounded-xl border border-text/10 transition-all duration-300 hover:transform hover:scale-[1.03]"
       style={{ backgroundColor: "var(--card-bg)" }}
       href={href}
     >
