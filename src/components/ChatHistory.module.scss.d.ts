@@ -1,5 +1,5 @@
 export type Styles = {
-  'chatMarkdown': string;
+  chatMarkdown: string;
 };
 
 export type ClassNames = keyof Styles;

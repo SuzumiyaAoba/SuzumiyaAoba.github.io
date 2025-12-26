@@ -20,7 +20,7 @@ export interface MdxImportResult {
  */
 export function extractAndLoadJsonImports(
   content: string,
-  basePath: string
+  basePath: string,
 ): MdxImportResult {
   const imports: Record<string, unknown> = {};
 
@@ -54,7 +54,7 @@ export function extractAndLoadJsonImports(
         console.error(`Failed to load JSON: ${absolutePath}`, error);
         return match; // エラーの場合はそのまま
       }
-    }
+    },
   );
 
   return {

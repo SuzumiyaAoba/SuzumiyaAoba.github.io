@@ -138,7 +138,6 @@
     border-color: var(--border);
     border-radius: 8px;
     background-color: rgba(44, 53, 73, 0.8);
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
   }
 
   li {
@@ -212,12 +211,11 @@
     @apply border rounded;
     border-color: var(--border);
     color: var(--foreground);
-    @apply shadow-sm;
     @apply inline-block;
     min-width: 1.5rem;
     text-align: center;
     font-weight: 500;
-    
+
     // ダークモード対応
     @media (prefers-color-scheme: dark) {
       background-color: rgba(255, 255, 255, 0.1);
@@ -241,7 +239,6 @@
     padding: 1rem 0;
     border-radius: 8px;
     border: 1px solid var(--border);
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
 
     @media screen and (max-width: 768px) {
       width: 100%;
@@ -447,7 +444,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 
   &:hover {

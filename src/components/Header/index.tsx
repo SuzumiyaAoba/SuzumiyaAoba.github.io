@@ -96,7 +96,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
           className={clsx(
             "w-full transition-all duration-300",
             isScrolled
-              ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl shadow-lg bg-transparent py-2 backdrop-blur-md border border-opacity-40 border-white/25"
+              ? "top-4 w-[90%] max-w-4xl mx-auto rounded-xl bg-transparent py-2 backdrop-blur-md border border-opacity-40 border-white/25"
               : "w-full bg-transparent py-4",
           )}
           style={{
@@ -106,9 +106,6 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
             backgroundColor: isScrolled
               ? "var(--header-scrolled-bg)"
               : "var(--header-bg)",
-            boxShadow: isScrolled
-              ? "0 10px 25px -5px rgba(15, 23, 42, 0.15)"
-              : "none",
           }}
         >
           <div
@@ -149,7 +146,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
               "md:hidden overflow-y-auto transition-all duration-300 absolute w-full left-0 right-0",
               isScrolled && "rounded-b-xl",
               isMobileMenuOpen
-                ? "opacity-100 shadow-inner visible"
+                ? "opacity-100 visible"
                 : "max-h-0 opacity-0 invisible",
             )}
             style={{

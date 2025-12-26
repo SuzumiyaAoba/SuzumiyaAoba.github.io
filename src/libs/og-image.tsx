@@ -114,7 +114,6 @@ export function CategoryTag({ category }: CategoryTagProps) {
         borderRadius: "9999px",
         fontSize: "18px",
         fontWeight: "600",
-        boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
         marginBottom: "24px",
         width: "auto",
       }}
@@ -141,7 +140,6 @@ export function Title({ title }: TitleProps) {
         letterSpacing: "-0.05em",
         maxWidth: "90%",
         overflow: "hidden",
-        textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
       }}
     >
       {title}
@@ -344,7 +342,6 @@ export async function generateHomeOgImage({
             color: THEME.textColor,
             letterSpacing: "-0.05em",
             marginBottom: "16px",
-            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
           {config.metadata.title}
@@ -358,7 +355,6 @@ export async function generateHomeOgImage({
             background: `linear-gradient(90deg, ${THEME.primaryColor} 0%, ${THEME.accentColor} 100%)`,
             borderRadius: "5px",
             margin: "24px 0",
-            boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
           }}
         />
 

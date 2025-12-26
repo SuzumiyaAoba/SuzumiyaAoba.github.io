@@ -515,7 +515,6 @@ a,
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s, background-color 0.3s;
