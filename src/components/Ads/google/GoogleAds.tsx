@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const ArticleFooter = () => {
   const pushedRef = useRef(false);
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     try {
       if (!pushedRef.current) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -15,7 +23,11 @@ export const ArticleFooter = () => {
         console.warn("Adsbygoogle push error:", e);
       }
     }
-  }, []);
+  }, [isMounted]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>

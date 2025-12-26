@@ -18,11 +18,18 @@ export const getPaths = async (...paths: string[]): Promise<string[]> => {
     ),
   );
 
-  // 言語固有のファイル（index.{lang}.md, index.{lang}.mdx）を除外
+  // 言語固有のファイル（index.{lang}.md, index.{lang}.mdx）と特定のディレクトリを除外
   const filteredFiles = [...md, ...mdx].filter((filepath) => {
     const filename = path.basename(filepath);
     // index.{lang}.md または index.{lang}.mdx のパターンにマッチする場合は除外
-    return !filename.match(/^index\.[a-z]{2}\.(md|mdx)$/);
+    if (filename.match(/^index\.[a-z]{2}\.(md|mdx)$/)) {
+      return false;
+    }
+    // data, assets などのディレクトリを除外
+    if (filepath.includes('/data/') || filepath.includes('/assets/')) {
+      return false;
+    }
+    return true;
   });
 
   const dirs = filteredFiles.map((filepath) =>
