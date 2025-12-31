@@ -44,16 +44,20 @@ const nextConfig = {
   compress: true, // gzip圧縮を有効化
   poweredByHeader: false, // X-Powered-By ヘッダーを無効化
 
-  // リダイレクト設定
-  async redirects() {
-    return [
-      {
-        source: "/blog/:slug/",
-        destination: "/blog/post/:slug/",
-        permanent: true, // 301リダイレクト
-      },
-    ];
-  },
+  ...(isProd
+    ? {}
+    : {
+        // リダイレクト設定（静的エクスポートでは無効）
+        async redirects() {
+          return [
+            {
+              source: "/blog/:slug/",
+              destination: "/blog/post/:slug/",
+              permanent: true, // 301リダイレクト
+            },
+          ];
+        },
+      }),
 };
 
 export default nextConfig;

@@ -305,7 +305,6 @@ export async function generateHomeOgImage({
           background: `linear-gradient(135deg, ${THEME.primaryColor}15 0%, ${THEME.accentColor}10 100%)`,
           top: "-400px",
           right: "-200px",
-          zIndex: "1",
         }}
       />
       <div
@@ -317,7 +316,6 @@ export async function generateHomeOgImage({
           background: `linear-gradient(135deg, ${THEME.primaryColor}10 0%, ${THEME.accentColor}05 100%)`,
           bottom: "-300px",
           left: "-100px",
-          zIndex: "1",
         }}
       />
 
@@ -328,7 +326,6 @@ export async function generateHomeOgImage({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          zIndex: "2",
           textAlign: "center",
           padding: "40px",
           maxWidth: "800px",

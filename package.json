@@ -7,7 +7,7 @@
     "next:dev": "next dev",
     "build": "run-s clean copy:assets build:next build:pagefind fix:pagefind",
     "build:next": "NODE_ENV=production next build --webpack",
-    "build:pagefind": "pagefind --site out --output-path out/pagefind",
+    "build:pagefind": "pagefind --site out --output-path out/pagefind --glob \"**/index.html\"",
     "fix:pagefind": "node scripts/fix-pagefind-path.js",
     "pagefind:dev": "node scripts/pagefind-dev.js",
     "clean": "rimraf .next out",
