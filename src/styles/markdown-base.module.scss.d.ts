@@ -1,5 +1,5 @@
 export type Styles = {
-  markdown: string;
+  'markdown': string;
 };
 
 export type ClassNames = keyof Styles;
