@@ -1,7 +1,7 @@
 "use client";
 
 import { LineChart } from "@/components/Charts";
-import section55Data from "@/contents/blog/2025-12-26-kakekin/data/section55.json";
+import section55Data from "@/contents/blog/2026-01-01-kakekin/data/section55.json";
 import { buildAutoChartConfig } from "@/components/FinancialDataVisualization/sectionChartUtils";
 
 export const Section55ChartWrapper: React.FC = () => {

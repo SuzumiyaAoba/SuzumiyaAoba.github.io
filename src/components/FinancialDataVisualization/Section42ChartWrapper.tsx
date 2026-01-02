@@ -1,7 +1,7 @@
 "use client";
 
 import { LineChart } from "@/components/Charts";
-import section42Data from "@/contents/blog/2025-12-26-kakekin/data/section42.json";
+import section42Data from "@/contents/blog/2026-01-01-kakekin/data/section42.json";
 
 const HEADERS = {
   overallCost: "老後のひと月当たり 最低予想生活費 | 万円",

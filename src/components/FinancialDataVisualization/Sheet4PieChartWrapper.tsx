@@ -1,7 +1,7 @@
 "use client";
 
 import { PieChart } from "@/components/Charts/PieChart";
-import assetsData from "@/contents/blog/2025-12-26-kakekin/data/assets.json";
+import assetsData from "@/contents/blog/2026-01-01-kakekin/data/assets.json";
 import type { SheetData } from "@/components/Charts";
 
 export const Sheet4PieChartWrapper: React.FC = () => {

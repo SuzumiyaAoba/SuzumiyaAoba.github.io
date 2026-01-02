@@ -1,7 +1,7 @@
 "use client";
 
 import { LineChart } from "@/components/Charts";
-import section41Data from "@/contents/blog/2025-12-26-kakekin/data/section41.json";
+import section41Data from "@/contents/blog/2026-01-01-kakekin/data/section41.json";
 
 export const Section41ChartWrapper: React.FC = () => {
   if (!section41Data) {

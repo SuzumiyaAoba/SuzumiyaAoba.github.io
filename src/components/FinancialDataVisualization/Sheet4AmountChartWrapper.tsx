@@ -2,7 +2,7 @@
 
 import { LineChart } from "@/components/Charts";
 import type { SheetData } from "@/components/Charts";
-import assetsData from "@/contents/blog/2025-12-26-kakekin/data/assets.json";
+import assetsData from "@/contents/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet4AmountChartWrapper: React.FC = () => {
   const sheet4Data = assetsData.sheets["4"] as SheetData;

@@ -162,7 +162,7 @@ type ChartConfig = {
 
 import { LineChart } from "@/components/Charts";
 import type { MetricGroup } from "@/components/Charts";
-import assetsData from "@/contents/blog/2025-12-26-kakekin/data/assets.json";
+import assetsData from "@/contents/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet2ChartWrapper: React.FC = () => {
   const sheetData = assetsData.sheets["2"];

@@ -1,7 +1,7 @@
 "use client";
 
 import { Sheet1StackedChart } from "./Sheet1StackedChart";
-import assetsData from "@/contents/blog/2025-12-26-kakekin/data/assets.json";
+import assetsData from "@/contents/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet1StackedChartWrapper: React.FC = () => {
   const sheet1Data = assetsData.sheets["1"];

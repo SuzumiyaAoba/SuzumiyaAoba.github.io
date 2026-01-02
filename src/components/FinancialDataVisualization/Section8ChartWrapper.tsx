@@ -2,7 +2,7 @@
 
 import { LineChart } from "@/components/Charts";
 import type { MetricGroup } from "@/components/Charts/types";
-import section8Data from "@/contents/blog/2025-12-26-kakekin/data/section8.json";
+import section8Data from "@/contents/blog/2026-01-01-kakekin/data/section8.json";
 
 export const Section8ChartWrapper: React.FC = () => {
   if (!section8Data) {
