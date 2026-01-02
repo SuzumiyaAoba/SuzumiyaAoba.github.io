@@ -65,6 +65,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isProd = process.env.NODE_ENV === "production";
   // タイトルマップを取得
   let blogTitleMap = {};
   let keywordTitleMap = {};
@@ -127,8 +128,12 @@ export default async function RootLayout({
                 url: "https://nextjs.org",
               }}
             />
-            <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-            <GoogleAdsenseScript />
+            {isProd && (
+              <>
+                <GoogleAnalytics gaId="G-6YJ00MPQBT" />
+                <GoogleAdsenseScript />
+              </>
+            )}
           </LanguageProvider>
         </ThemeProvider>
       </body>
