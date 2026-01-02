@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run clean && npm run pagefind:dev && run-p next:dev tsm",
     "next:dev": "next dev",
-    "build": "run-s clean copy:assets build:next build:pagefind fix:pagefind",
+    "build": "run-s clean copy:assets build:ogp build:next build:pagefind fix:pagefind",
     "build:next": "NODE_ENV=production next build --webpack",
     "build:pagefind": "pagefind --site out --output-path out/pagefind --glob \"**/index.html\"",
     "fix:pagefind": "node scripts/fix-pagefind-path.js",
@@ -15,6 +15,7 @@
     "copy:blog:images": "cpy 'src/contents/blog/**/*.{png,jpg,jpeg,svg}' 'public/assets/blog'",
     "copy:notes:images": "cpy 'src/contents/notes/**/*.{png,jpg,jpeg,svg}' 'public/assets/notes'",
     "copy:blog:css": "cpy 'src/contents/blog/**/*.css' 'public/assets/blog'",
+    "build:ogp": "node scripts/generate-og-images.mjs",
     "start": "next start",
     "tsm": "typed-scss-modules src --watch --implementation sass --nameFormat none --exportType default --aliasPrefixes.@ src/",
     "format": "biome format --write",

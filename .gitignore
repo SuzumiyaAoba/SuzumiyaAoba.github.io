@@ -46,3 +46,7 @@ storybook-static/
 
 # pagefind
 public/pagefind/
+
+# generated OGP images
+public/opengraph-image.svg
+public/blog/post/*/opengraph-image.svg
