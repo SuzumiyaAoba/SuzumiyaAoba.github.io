@@ -18,7 +18,7 @@ export const siteConfig = {
       "Java",
       "TypeScript",
     ],
-    ogImage: "/opengraph-image", // 動的に生成されるOGP画像
+    ogImage: "/opengraph-image.svg", // 静的OGP画像
   },
 } as const satisfies SiteConfig;
 
