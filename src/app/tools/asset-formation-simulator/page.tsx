@@ -649,8 +649,17 @@ export default function AssetFormationSimulator() {
   return (
     <main className="flex flex-col w-full max-w-5xl mx-auto px-4 pb-16">
       <h1 className="mb-6 text-3xl">資産形成シミュレーション</h1>
-      <p className="mb-8 text-sm text-foreground/80">
+      <p className="mb-4 text-sm text-foreground/80">
         毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。
+      </p>
+      <p className="mb-2 text-xs text-foreground/70">
+        ※ 本シミュレーションは実際の値動きを反映したものではありません。
+      </p>
+      <p className="mb-2 text-xs text-foreground/70">
+        ※ 本ツールは情報提供を目的としたもので、投資助言・勧誘を意図するものではありません。最終的な投資判断はご自身の責任で行ってください。
+      </p>
+      <p className="mb-6 text-xs text-foreground/70">
+        ※ 情報の正確性には配慮していますが、その完全性・最新性を保証するものではありません。
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
