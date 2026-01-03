@@ -13,3 +13,7 @@ products:
     title: "Claude CodeによるAI駆動開発入門"
     imageUrl: "https://m.media-amazon.com/images/I/71lGGWE2CuL._SY522_.jpg"
     productUrl: "https://amzn.to/4q7zbKa"
+  - id: "現場で活用するためのAIエージェント実践入門"
+    title: "現場で活用するためのAIエージェント実践入門"
+    imageUrl: "https://m.media-amazon.com/images/I/71pMju+I6+L._SY522_.jpg"
+    productUrl: "https://amzn.to/3YGwjbf"
