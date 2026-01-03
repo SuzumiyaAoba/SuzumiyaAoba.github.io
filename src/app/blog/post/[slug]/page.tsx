@@ -17,6 +17,8 @@ import { ArticleHistory } from "@/components/ArticleHistory";
 import { SeriesNavigation } from "@/components/SeriesNavigation";
 import { getSeriesNavigation } from "@/libs/contents/series";
 import AmazonAssociate from "@/components/AmazonAssociate";
+import AmazonProductSection from "@/components/AmazonProductSection";
+import { getAmazonProductsByIds } from "@/libs/amazon-products";
 import {
   LanguageToggle,
   type LanguageContent,
@@ -141,6 +143,9 @@ export default async function Page({ params }: Props) {
 
   // シリーズナビゲーション情報を取得（記事slugから自動検索）
   const seriesNavigation = await getSeriesNavigation(slug);
+  const amazonProducts = frontmatter.amazonProductIds
+    ? await getAmazonProductsByIds(frontmatter.amazonProductIds)
+    : [];
 
   return (
     <>
@@ -179,6 +184,10 @@ export default async function Page({ params }: Props) {
             />
           )}
 
+          {amazonProducts.length > 0 && (
+            <AmazonProductSection products={amazonProducts} />
+          )}
+
           {/* 記事の更新履歴を表示 */}
           {gitHistory && (
             <ArticleHistory
@@ -190,12 +199,12 @@ export default async function Page({ params }: Props) {
             />
           )}
 
-          {/* Amazon アソシエイト表示 */}
           {frontmatter.amazonAssociate && (
             <div className="mt-8">
               <AmazonAssociate />
             </div>
           )}
+
         </ArticleLayout>
       </Article>
     </>

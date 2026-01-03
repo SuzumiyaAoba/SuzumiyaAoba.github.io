@@ -21,6 +21,7 @@ export const blogFrontmatterSchema = baseFrontmatterSchema.extend({
   seriesOrder: z.number().optional(), // シリーズ内での順序
   // Amazon アソシエイト
   amazonAssociate: z.boolean().optional(), // Amazon アソシエイトリンクが含まれるかどうか
+  amazonProductIds: z.array(z.string()).optional(),
   // MyLinkBox
   myLinkBoxIds: z.array(z.string()).optional(), // MyLinkBoxのID配列
   // 多言語対応

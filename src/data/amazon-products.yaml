@@ -1,0 +1,7 @@
+# Amazon 商品データ
+# id を記事の frontmatter から参照します。
+products:
+  - id: "TAPL"
+    title: "型システム入門 プログラミング言語と型の理論 Kindle版"
+    imageUrl: "https://m.media-amazon.com/images/I/81pEdMiseFL._SY522_.jpg"
+    productUrl: "https://amzn.to/49oHpX7"
