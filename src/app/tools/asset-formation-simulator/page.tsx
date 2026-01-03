@@ -92,6 +92,7 @@ const normalizeScenarioList = (list: ScenarioInput[]) =>
   }));
 
 type VisibleState = Record<string, boolean>;
+type ColorState = Record<string, string>;
 
 const normalizeVisibleState = (
   value: unknown,
@@ -114,6 +115,61 @@ const normalizeVisibleState = (
     });
   });
   return next;
+};
+
+const normalizeColorState = (
+  value: unknown,
+  scenarioList: ScenarioInput[],
+): ColorState => {
+  if (!value || typeof value !== "object") {
+    return {};
+  }
+  const raw = value as Record<string, unknown>;
+  const next: ColorState = {};
+  scenarioList.forEach((scenario) => {
+    const rawValue = raw[scenario.id];
+    if (typeof rawValue === "string" && rawValue.startsWith("#")) {
+      next[scenario.id] = rawValue;
+    }
+  });
+  return next;
+};
+
+const encodeVisibilityPayload = (
+  visible: VisibleState,
+  colors: ColorState,
+  scenarioList: ScenarioInput[],
+) => {
+  const normalizedVisible = normalizeVisibleState(visible, scenarioList);
+  const normalizedColors = normalizeColorState(colors, scenarioList);
+  return compressToEncodedURIComponent(
+    JSON.stringify({
+      visible: normalizedVisible,
+      colors: normalizedColors,
+    }),
+  );
+};
+
+const decodeVisibilityPayload = (
+  value: string,
+  scenarioList: ScenarioInput[],
+): { visible: VisibleState; colors: ColorState } | null => {
+  const json = decompressFromEncodedURIComponent(value);
+  if (!json) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(json) as {
+      visible?: unknown;
+      colors?: unknown;
+    };
+    return {
+      visible: normalizeVisibleState(parsed.visible, scenarioList),
+      colors: normalizeColorState(parsed.colors, scenarioList),
+    };
+  } catch {
+    return null;
+  }
 };
 const normalizeScenarios = (value: unknown): ScenarioInput[] | null => {
   if (!Array.isArray(value)) {
@@ -188,6 +244,7 @@ export default function AssetFormationSimulator() {
     parseAsString,
   );
   const [visibleSeries, setVisibleSeries] = useState<VisibleState>({});
+  const [colorOverrides, setColorOverrides] = useState<ColorState>({});
   const [tooltip, setTooltip] = useState<{
     x: number;
     y: number;
@@ -227,7 +284,9 @@ export default function AssetFormationSimulator() {
         return { ...row, gainDiff };
       });
 
-      const color = scenarioPalette[index % scenarioPalette.length];
+      const color =
+        colorOverrides[scenario.id] ??
+        scenarioPalette[index % scenarioPalette.length];
 
       return {
         id: scenario.id,
@@ -239,7 +298,7 @@ export default function AssetFormationSimulator() {
         label: scenario.name || `パターン${index + 1}`,
       };
     });
-  }, [scenarioList, years]);
+  }, [scenarioList, years, colorOverrides]);
 
   const selectedScenario =
     scenarioData.find((scenario) => scenario.id === selectedScenarioId) ??
@@ -278,26 +337,29 @@ export default function AssetFormationSimulator() {
     if (!visibleSeriesParam) {
       return;
     }
-    try {
-      const parsed = JSON.parse(visibleSeriesParam);
-      const normalized = normalizeVisibleState(parsed, scenarioList);
-      setVisibleSeries((prev) => ({ ...prev, ...normalized }));
-    } catch {
-      // ignore invalid JSON
+    const decoded = decodeVisibilityPayload(visibleSeriesParam, scenarioList);
+    if (!decoded) {
+      return;
     }
+    setVisibleSeries((prev) => ({ ...prev, ...decoded.visible }));
+    setColorOverrides((prev) => ({ ...prev, ...decoded.colors }));
   }, [visibleSeriesParam, scenarioList]);
 
   useEffect(() => {
     if (Object.keys(visibleSeries).length === 0) {
       return;
     }
-    const normalized = normalizeVisibleState(visibleSeries, scenarioList);
-    const serialized = JSON.stringify(normalized);
-    if (serialized !== visibleSeriesParam) {
-      setVisibleSeriesParam(serialized);
+    const encoded = encodeVisibilityPayload(
+      visibleSeries,
+      colorOverrides,
+      scenarioList,
+    );
+    if (encoded !== visibleSeriesParam) {
+      setVisibleSeriesParam(encoded);
     }
   }, [
     visibleSeries,
+    colorOverrides,
     scenarioList,
     visibleSeriesParam,
     setVisibleSeriesParam,
