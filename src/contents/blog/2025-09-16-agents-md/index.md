@@ -3,6 +3,9 @@ title: Claude Code の AGENTS.md 対応
 date: 2025-09-16
 category: "Claude Code"
 tags: ["Claude Code", "AGENTS.md"]
+amazonProductIds:
+  - "実践Claude Code入門"
+  - "Claude CodeによるAI駆動開発"
 ---
 
 ## TL;DL
