@@ -17,3 +17,7 @@ products:
     title: "現場で活用するためのAIエージェント実践入門"
     imageUrl: "https://m.media-amazon.com/images/I/71pMju+I6+L._SY522_.jpg"
     productUrl: "https://amzn.to/3YGwjbf"
+  - id: "Javaによる関数型プログラミング"
+    title: "Javaによる関数型プログラミング ―Java 8ラムダ式とStream"
+    imageUrl: "https://m.media-amazon.com/images/I/81rtHTBa6iL._SY522_.jpg"
+    productUrl: "https://amzn.to/4pq0TAP"
