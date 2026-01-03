@@ -13,6 +13,14 @@ export default async function AsciiStandardCode() {
             ASCII Standard Code
           </Link>
         </li>
+        <li>
+          <Link
+            href="/tools/asset-formation-simulator/"
+            className="text-blue-600 hover:underline"
+          >
+            資産形成シミュレーション
+          </Link>
+        </li>
       </ul>
     </main>
   );
