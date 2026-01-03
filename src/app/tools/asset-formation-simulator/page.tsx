@@ -1027,6 +1027,31 @@ export default function AssetFormationSimulator() {
           </div>
         )}
       </div>
+      <div className="mb-10 flex justify-end">
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-black text-white hover:bg-black/90"
+          onClick={() => {
+            const url = window.location.href;
+            const text = "資産形成シミュレーションの結果を共有します。";
+            const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
+              text,
+            )}&url=${encodeURIComponent(url)}`;
+            window.open(shareUrl, "_blank", "noopener,noreferrer");
+          }}
+        >
+          <svg
+            aria-hidden="true"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817-5.963 6.817H1.68l7.73-8.84L1.25 2.25h6.828l4.713 6.231 5.454-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" />
+          </svg>
+          ポスト
+        </button>
+      </div>
 
       <div className="overflow-x-auto">
         <div className="mb-3 flex items-center gap-2 text-sm">
