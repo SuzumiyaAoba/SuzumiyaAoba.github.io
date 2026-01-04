@@ -6,7 +6,7 @@ import {
   decompressFromEncodedURIComponent,
 } from "lz-string";
 import { parseAsString, useQueryState } from "nuqs";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type Row = {
   month: number;
@@ -41,6 +41,12 @@ const numberFormatter = new Intl.NumberFormat("ja-JP");
 const inputStyle = {
   color: "var(--foreground)",
   backgroundColor: "var(--input-bg)",
+};
+
+const formatYenWithMan = (value: number) => {
+  const yen = Math.round(value);
+  const man = Math.floor(yen / 10000);
+  return `${numberFormatter.format(yen)} 円 (${numberFormatter.format(man)} 万円)`;
 };
 
 const formatYears = (months: number) => {
@@ -256,6 +262,19 @@ export default function AssetFormationSimulator() {
   const scenarioList = scenarios ?? defaultScenarios;
   const years = Number(yearsInput) || 0;
 
+  const syncScenarios = useCallback(
+    (updater: (prev: ScenarioInput[]) => ScenarioInput[]) => {
+      setScenarios((prev) => {
+        const next = updater(prev);
+        const encoded = encodeScenarios(next);
+        lastEncodedRef.current = encoded;
+        setCompressedParam(encoded);
+        return next;
+      });
+    },
+    [setCompressedParam],
+  );
+
   const scenarioData = useMemo<ScenarioData[]>(() => {
     const monthsCount = Math.max(0, Math.floor(years * 12));
 
@@ -369,18 +388,19 @@ export default function AssetFormationSimulator() {
     if (!compressedParam) {
       return;
     }
-    if (lastEncodedRef.current === compressedParam) {
-      return;
-    }
-    const currentEncoded = encodeScenarios(scenarioList);
-    if (compressedParam === currentEncoded) {
+    if (lastEncodedRef.current) {
+      if (compressedParam !== lastEncodedRef.current) {
+        return;
+      }
+      lastEncodedRef.current = null;
       return;
     }
     const decoded = decodeScenarios(compressedParam);
-    if (decoded && !isSameScenarios(scenarioList, decoded)) {
-      setScenarios(decoded);
+    if (!decoded) {
+      return;
     }
-  }, [compressedParam, scenarioList]);
+    setScenarios((prev) => (isSameScenarios(prev, decoded) ? prev : decoded));
+  }, [compressedParam]);
 
   useEffect(() => {
     const encoded = encodeScenarios(scenarioList);
@@ -690,7 +710,7 @@ export default function AssetFormationSimulator() {
             type="button"
             className="text-sm text-blue-600 hover:underline"
             onClick={() => {
-              setScenarios((prev) => {
+              syncScenarios((prev) => {
                 const nextIndex = prev.length + 1;
                 return [
                   ...prev,
@@ -723,7 +743,7 @@ export default function AssetFormationSimulator() {
                     type="button"
                     className="text-xs text-red-600 hover:underline"
                     onClick={() => {
-                      setScenarios((prev) =>
+                      syncScenarios((prev) =>
                         prev.filter((item) => item.id !== scenario.id),
                       );
                     }}
@@ -739,7 +759,7 @@ export default function AssetFormationSimulator() {
                   value={scenario.name}
                   onChange={(event) => {
                     const value = event.target.value;
-                    setScenarios((prev) =>
+                    syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id ? { ...item, name: value } : item,
                       ),
@@ -759,7 +779,7 @@ export default function AssetFormationSimulator() {
                   value={scenario.monthlyContributionInput}
                   onChange={(event) => {
                     const value = event.target.value;
-                    setScenarios((prev) =>
+                    syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id
                           ? { ...item, monthlyContributionInput: value }
@@ -780,7 +800,7 @@ export default function AssetFormationSimulator() {
                   value={scenario.annualRateInput}
                   onChange={(event) => {
                     const value = event.target.value;
-                    setScenarios((prev) =>
+                    syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id
                           ? { ...item, annualRateInput: value }
@@ -804,7 +824,7 @@ export default function AssetFormationSimulator() {
         >
           <p className="text-xs text-foreground/60 mb-1">元本合計</p>
           <p className="text-xl font-semibold">
-            {numberFormatter.format(Math.round(summary.principal))} 円
+            {formatYenWithMan(summary.principal)}
           </p>
         </div>
         <div
@@ -813,7 +833,7 @@ export default function AssetFormationSimulator() {
         >
           <p className="text-xs text-foreground/60 mb-1">運用益</p>
           <p className="text-xl font-semibold">
-            {numberFormatter.format(Math.round(summary.gain))} 円
+            {formatYenWithMan(summary.gain)}
           </p>
         </div>
         <div
@@ -822,7 +842,7 @@ export default function AssetFormationSimulator() {
         >
           <p className="text-xs text-foreground/60 mb-1">評価額</p>
           <p className="text-xl font-semibold">
-            {numberFormatter.format(Math.round(summary.balance))} 円
+            {formatYenWithMan(summary.balance)}
           </p>
         </div>
       </div>
