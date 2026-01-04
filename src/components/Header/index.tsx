@@ -71,13 +71,13 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
     };
   }, [isMobileMenuOpen]);
 
-  // ヘッダー高さを取得とCSS変数の設定
+  // レイアウト用のヘッダー高さは固定（スクロールで変えない）
   useEffect(() => {
-    const headerHeight = isScrolled
-      ? `${HEADER_HEIGHT.scrolled}px`
-      : `${HEADER_HEIGHT.default}px`;
-    document.documentElement.style.setProperty("--header-height", headerHeight);
-  }, [isScrolled]);
+    document.documentElement.style.setProperty(
+      "--header-height",
+      `${HEADER_HEIGHT.default}px`,
+    );
+  }, []);
 
   const toggleMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -170,7 +170,7 @@ export const Header: FC<HeaderProps> = ({ siteName }) => {
       </div>
       <div
         style={{
-          height: isScrolled ? HEADER_HEIGHT.scrolled : HEADER_HEIGHT.default,
+          height: HEADER_HEIGHT.default,
         }}
       />
     </>
