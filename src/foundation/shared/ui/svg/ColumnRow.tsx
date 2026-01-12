@@ -12,12 +12,7 @@ export const ColumnRow = () => {
 
   return (
     <>
-      <text
-        x={cellWidth * 16}
-        y={textY}
-        fontSize="0.8rem"
-        fill={themeColors.text.normal}
-      >
+      <text x={cellWidth * 16} y={textY} fontSize="0.8rem" fill={themeColors.text.normal}>
         COLUMN
       </text>
       <Arrow

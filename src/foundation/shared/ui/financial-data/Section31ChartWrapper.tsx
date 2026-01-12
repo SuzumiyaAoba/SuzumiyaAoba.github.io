@@ -20,7 +20,7 @@ export const Section31ChartWrapper: React.FC = () => {
     "1000～1500万円未満 | ％": "1000～1500万円",
     "1500～2000万円未満 | ％": "1500～2000万円",
     "2000～3000万円未満 | ％": "2000～3000万円",
-    "3000万円以上 | ％": "3000万円以上"
+    "3000万円以上 | ％": "3000万円以上",
   };
   const startYear = Number(section31Data.metadata?.startYear ?? 2006);
 
@@ -37,7 +37,7 @@ export const Section31ChartWrapper: React.FC = () => {
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap: distributionLabelMap
+            labelMap: distributionLabelMap,
           }}
         />
       </div>
@@ -58,14 +58,14 @@ export const Section31ChartWrapper: React.FC = () => {
             "1000～1500万円未満 | ％",
             "1500～2000万円未満 | ％",
             "2000～3000万円未満 | ％",
-            "3000万円以上 | ％"
+            "3000万円以上 | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 2000,
             yAxisLabel: "万円",
             startYear,
-            labelMap: { "平均 | 万円": "平均" }
+            labelMap: { "平均 | 万円": "平均" },
           }}
         />
       </div>

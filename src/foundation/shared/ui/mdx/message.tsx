@@ -34,12 +34,7 @@ export function Message({
 }: MessageProps) {
   return (
     <details
-      className={cn(
-        "my-6 rounded-md border px-4 py-3",
-        variantStyles[variant],
-        "group",
-        className,
-      )}
+      className={cn("my-6 rounded-md border px-4 py-3", variantStyles[variant], "group", className)}
       open={defaultOpen}
     >
       {title ? (

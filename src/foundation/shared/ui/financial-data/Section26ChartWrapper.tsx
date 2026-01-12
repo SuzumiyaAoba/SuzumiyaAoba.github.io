@@ -16,7 +16,7 @@ export const Section26ChartWrapper: React.FC = () => {
     "40 ～ 50 万円 未満 | ％",
     "50 ～ 70 万円 未満 | ％",
     "70 ～ 100 万円 未満 | ％",
-    "100 ～ 万円 以上 | ％"
+    "100 ～ 万円 以上 | ％",
   ];
 
   const labelMap: Record<string, string> = {
@@ -27,7 +27,7 @@ export const Section26ChartWrapper: React.FC = () => {
     "40 ～ 50 万円 未満 | ％": "40～50万円",
     "50 ～ 70 万円 未満 | ％": "50～70万円",
     "70 ～ 100 万円 未満 | ％": "70～100万円",
-    "100 ～ 万円 以上 | ％": "100万円以上"
+    "100 ～ 万円 以上 | ％": "100万円以上",
   };
 
   return (
@@ -43,7 +43,7 @@ export const Section26ChartWrapper: React.FC = () => {
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear: 1991,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -58,7 +58,7 @@ export const Section26ChartWrapper: React.FC = () => {
             yAxisMax: 90,
             yAxisLabel: "万円",
             startYear: 1991,
-            labelMap: { "平均 | 万円": "平均" }
+            labelMap: { "平均 | 万円": "平均" },
           }}
         />
       </div>

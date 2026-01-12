@@ -7,14 +7,7 @@ export type MdxImgProps = ImgHTMLAttributes<HTMLImageElement> & {
   basePath?: string;
 };
 
-export function Img({
-  basePath,
-  src,
-  width,
-  height,
-  className,
-  ...props
-}: MdxImgProps) {
+export function Img({ basePath, src, width, height, className, ...props }: MdxImgProps) {
   const resolvedSrc =
     typeof src === "string"
       ? basePath && src.startsWith("./")

@@ -69,7 +69,8 @@ export async function ChatHistory({ messages, variant = "contained" }: ChatHisto
               "shadow-[0_1px_0_rgba(0,0,0,0.04)]",
             )}
           >
-            {message.reasoning || (message.toolInvocations && message.toolInvocations.length > 0) ? (
+            {message.reasoning ||
+            (message.toolInvocations && message.toolInvocations.length > 0) ? (
               <div className="flex flex-col gap-2">
                 {message.reasoning ? (
                   <Reasoning>
@@ -81,10 +82,7 @@ export async function ChatHistory({ messages, variant = "contained" }: ChatHisto
                   <div className="flex flex-col gap-2">
                     {message.toolInvocations.map((invocation) => (
                       <Tool key={invocation.toolCallId}>
-                        <ToolHeader
-                          title={invocation.toolName}
-                          state={invocation.state}
-                        />
+                        <ToolHeader title={invocation.toolName} state={invocation.state} />
                         <ToolContent>
                           <div className={cn("space-y-3")}>
                             <ToolInput input={invocation.input} />

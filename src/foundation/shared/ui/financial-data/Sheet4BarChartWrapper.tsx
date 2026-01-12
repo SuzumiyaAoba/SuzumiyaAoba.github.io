@@ -12,8 +12,8 @@ export const Sheet4BarChartWrapper: React.FC = () => {
   }
 
   const excludeHeaders = [
-    "平均 | 万円",         // 金額データ
-    "中央値 | 万円"        // 金額データ
+    "平均 | 万円", // 金額データ
+    "中央値 | 万円", // 金額データ
   ];
 
   // ラベルマッピング
@@ -42,7 +42,7 @@ export const Sheet4BarChartWrapper: React.FC = () => {
         yAxisMax: 100,
         yAxisLabel: "%",
         startYear: 2004,
-        labelMap
+        labelMap,
       }}
     />
   );

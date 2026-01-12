@@ -44,13 +44,7 @@ export function MdxLink({ href, children, className, ...rest }: MdxLinkProps) {
     const isExternal = href.startsWith("http") || href.startsWith("mailto:");
     if (isExternal) {
       return (
-        <a
-          href={href}
-          className={className}
-          target="_blank"
-          rel="noopener noreferrer"
-          {...rest}
-        >
+        <a href={href} className={className} target="_blank" rel="noopener noreferrer" {...rest}>
           {children}
         </a>
       );

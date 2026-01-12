@@ -12,7 +12,7 @@ export const Section41ChartWrapper: React.FC = () => {
     "取得ないし増改築 総額 | 万円": "取得・増改築 総額",
     "取得ないし増改築 自己資金 | 万円": "取得・増改築 自己資金",
     "取得ないし増改築 借入金 | 万円": "取得・増改築 借入金",
-    "売却 総額 | 万円": "売却 総額"
+    "売却 総額 | 万円": "売却 総額",
   };
 
   return (
@@ -28,7 +28,7 @@ export const Section41ChartWrapper: React.FC = () => {
             yAxisMax: 3000,
             yAxisLabel: "万円",
             startYear: 2007,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -40,14 +40,14 @@ export const Section41ChartWrapper: React.FC = () => {
           excludeHeaders={[
             "取得ないし増改築 総額 | 万円",
             "取得ないし増改築 自己資金 | 万円",
-            "取得ないし増改築 借入金 | 万円"
+            "取得ないし増改築 借入金 | 万円",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 3000,
             yAxisLabel: "万円",
             startYear: 2007,
-            labelMap
+            labelMap,
           }}
         />
       </div>

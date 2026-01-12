@@ -19,7 +19,7 @@ export const Section34ChartWrapper: React.FC = () => {
     "30～35%未満 | ％": "30～35%",
     "35%以上 | ％": "35%以上",
     "振り分けしなかった | ％": "振り分けなし",
-    "平均 | ％": "平均"
+    "平均 | ％": "平均",
   };
   const startYear = Number(section34Data.metadata?.startYear ?? 2006);
 
@@ -30,17 +30,13 @@ export const Section34ChartWrapper: React.FC = () => {
         <LineChart
           data={section34Data}
           groups={[]}
-          excludeHeaders={[
-            "金融資産に振り分けた | ％",
-            "振り分けしなかった | ％",
-            "平均 | ％"
-          ]}
+          excludeHeaders={["金融資産に振り分けた | ％", "振り分けしなかった | ％", "平均 | ％"]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -58,14 +54,14 @@ export const Section34ChartWrapper: React.FC = () => {
             "25～30%未満 | ％",
             "30～35%未満 | ％",
             "35%以上 | ％",
-            "平均 | ％"
+            "平均 | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -84,14 +80,14 @@ export const Section34ChartWrapper: React.FC = () => {
             "25～30%未満 | ％",
             "30～35%未満 | ％",
             "35%以上 | ％",
-            "振り分けしなかった | ％"
+            "振り分けしなかった | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>

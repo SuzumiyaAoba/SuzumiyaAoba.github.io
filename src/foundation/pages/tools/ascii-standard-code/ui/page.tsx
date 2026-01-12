@@ -40,7 +40,8 @@ export default function Page() {
             >
               RFC 20
             </Link>
-            の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2 進数への変換表。
+            の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
+            進数への変換表。
           </p>
         </section>
 

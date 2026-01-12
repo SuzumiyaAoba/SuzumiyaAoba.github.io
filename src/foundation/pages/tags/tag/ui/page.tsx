@@ -110,7 +110,10 @@ export default async function Page({ params }: PageProps) {
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-3xl font-semibold">#{decodedTag}</h1>
-            <Badge variant="secondary" className="bg-muted text-xs font-medium text-muted-foreground">
+            <Badge
+              variant="secondary"
+              className="bg-muted text-xs font-medium text-muted-foreground"
+            >
               {entries.length} posts
             </Badge>
           </div>
@@ -121,54 +124,55 @@ export default async function Page({ params }: PageProps) {
             const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
             const isFallback = thumbnail === "/icon.svg";
             return (
-            <li key={post.slug}>
-              <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                <Link
-                  href={`/blog/post/${post.slug}`}
-                  className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted md:w-44">
-                    <Image
-                      src={thumbnail}
-                      alt={isFallback ? "Site icon" : post.title}
-                      fill
-                      sizes="(min-width: 768px) 176px, 100vw"
-                      className={isFallback ? "object-contain p-6 opacity-70" : "object-cover"}
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col gap-2 py-2">
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        <span>{formatDate(post.date)}</span>
-                        {post.category ? (
-                          <Badge
-                            variant="outline"
-                            className="border-border/40 text-[11px] font-medium"
-                          >
-                            {post.category}
-                          </Badge>
-                        ) : null}
-                      </div>
-                      <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
-                        {post.title}
-                      </p>
+              <li key={post.slug}>
+                <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
+                  <Link
+                    href={`/blog/post/${post.slug}`}
+                    className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted md:w-44">
+                      <Image
+                        src={thumbnail}
+                        alt={isFallback ? "Site icon" : post.title}
+                        fill
+                        sizes="(min-width: 768px) 176px, 100vw"
+                        className={isFallback ? "object-contain p-6 opacity-70" : "object-cover"}
+                      />
                     </div>
-                    {post.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-2 md:mt-auto">
-                        {post.tags.map((tagName) => (
-                          <Tag
-                            key={tagName}
-                            tag={tagName}
-                            className="bg-muted text-xs font-medium text-muted-foreground"
-                          />
-                        ))}
+                    <div className="flex-1 flex flex-col gap-2 py-2">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          <span>{formatDate(post.date)}</span>
+                          {post.category ? (
+                            <Badge
+                              variant="outline"
+                              className="border-border/40 text-[11px] font-medium"
+                            >
+                              {post.category}
+                            </Badge>
+                          ) : null}
+                        </div>
+                        <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
+                          {post.title}
+                        </p>
                       </div>
-                    ) : null}
-                  </div>
-                </Link>
-              </Card>
-            </li>
-          )})}
+                      {post.tags.length > 0 ? (
+                        <div className="flex flex-wrap gap-2 md:mt-auto">
+                          {post.tags.map((tagName) => (
+                            <Tag
+                              key={tagName}
+                              tag={tagName}
+                              className="bg-muted text-xs font-medium text-muted-foreground"
+                            />
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </Link>
+                </Card>
+              </li>
+            );
+          })}
         </ul>
       </main>
       <Footer />

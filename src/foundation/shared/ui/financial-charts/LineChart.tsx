@@ -15,7 +15,7 @@ export const LineChart: React.FC<Props> = ({
   data,
   groups = [],
   config = {},
-  excludeHeaders = []
+  excludeHeaders = [],
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
@@ -26,7 +26,7 @@ export const LineChart: React.FC<Props> = ({
     yAxisMax = 100,
     yAxisLabel = "%",
     startYear = 2006,
-    labelMap = {}
+    labelMap = {},
   } = config;
 
   // ラベルを取得する関数
@@ -35,7 +35,10 @@ export const LineChart: React.FC<Props> = ({
       return labelMap[metric];
     }
     // デフォルト: パイプ区切りを整形
-    const parts = metric.split("|").map(p => p.trim()).filter(p => p && p !== "％");
+    const parts = metric
+      .split("|")
+      .map((p) => p.trim())
+      .filter((p) => p && p !== "％");
     return parts.join("");
   };
 
@@ -43,9 +46,7 @@ export const LineChart: React.FC<Props> = ({
     return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
   });
 
-  const effectiveGroups = groups.length > 0
-    ? groups
-    : [{ name: "", metrics: availableMetrics }];
+  const effectiveGroups = groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }];
 
   useEffect(() => {
     if (selectedMetrics.length === 0 && availableMetrics.length > 0) {
@@ -88,26 +89,22 @@ export const LineChart: React.FC<Props> = ({
     if (parseData.length === 0) return;
 
     const maxYear = d3.max(parseData, (d) => d.year) || 2025;
-    const x = d3
-      .scaleLinear()
-      .domain([startYear, maxYear])
-      .range([0, width]);
+    const x = d3.scaleLinear().domain([startYear, maxYear]).range([0, width]);
 
-    const y = d3
-      .scaleLinear()
-      .domain([yAxisMin, yAxisMax])
-      .range([height, 0]);
+    const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
     g.append("g")
       .attr("class", "grid")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).tickSize(-height).tickFormat(() => ""))
+      .call(
+        d3
+          .axisBottom(x)
+          .tickSize(-height)
+          .tickFormat(() => ""),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
-        g
-          .selectAll(".tick line")
-          .attr("stroke", "currentColor")
-          .attr("stroke-opacity", 0.1),
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
       );
 
     g.append("g")
@@ -119,13 +116,15 @@ export const LineChart: React.FC<Props> = ({
 
     g.append("g")
       .attr("class", "grid")
-      .call(d3.axisLeft(y).tickSize(-width).tickFormat(() => ""))
+      .call(
+        d3
+          .axisLeft(y)
+          .tickSize(-width)
+          .tickFormat(() => ""),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
-        g
-          .selectAll(".tick line")
-          .attr("stroke", "currentColor")
-          .attr("stroke-opacity", 0.1),
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
       );
 
     g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
@@ -170,9 +169,7 @@ export const LineChart: React.FC<Props> = ({
 
             const value = d[metric];
             tooltip
-              .html(
-                `<strong>${d.year}年</strong><br/>${getLabel(metric)}: ${value}${yAxisLabel}`,
-              )
+              .html(`<strong>${d.year}年</strong><br/>${getLabel(metric)}: ${value}${yAxisLabel}`)
               .style("left", `${event.pageX + 10}px`)
               .style("top", `${event.pageY - 28}px`);
 
@@ -189,17 +186,17 @@ export const LineChart: React.FC<Props> = ({
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);
     if (isActive) {
-      setSelectedMetrics(selectedMetrics.filter(m => m !== metric));
+      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
     } else {
       setSelectedMetrics([...selectedMetrics, metric]);
     }
   };
 
   const handleGroupClick = (groupMetrics: string[]) => {
-    const allSelected = groupMetrics.every(m => selectedMetrics.includes(m));
+    const allSelected = groupMetrics.every((m) => selectedMetrics.includes(m));
 
     if (allSelected) {
-      const newSelected = selectedMetrics.filter(m => !groupMetrics.includes(m));
+      const newSelected = selectedMetrics.filter((m) => !groupMetrics.includes(m));
       setSelectedMetrics(newSelected);
     } else {
       const newSelected = [...new Set([...selectedMetrics, ...groupMetrics])];
@@ -210,7 +207,7 @@ export const LineChart: React.FC<Props> = ({
   return (
     <div className="my-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^[0-9]+[\s.、]*/, '')}
+        {data.metadata.title.replace(/^[0-9]+[\s.、]*/, "")}
       </div>
       <div className="overflow-x-auto">
         <svg ref={svgRef} />
@@ -218,7 +215,7 @@ export const LineChart: React.FC<Props> = ({
 
       <div className="mt-4 space-y-4">
         {effectiveGroups.map((group) => (
-          <div key={group.name || 'default'}>
+          <div key={group.name || "default"}>
             {group.name && (
               <div
                 className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600"

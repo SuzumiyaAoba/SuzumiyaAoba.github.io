@@ -12,21 +12,20 @@ export const Sheet4ChartWrapper: React.FC = () => {
   }
 
   const excludeHeaders = [
-    "平均 | 万円",         // 金額データ
-    "中央値 | 万円"        // 金額データ
+    "平均 | 万円", // 金額データ
+    "中央値 | 万円", // 金額データ
   ];
 
   // パーセンテージデータのみを抽出（平均・中央値以外）
   const percentageMetrics = sheet4Data.headers.filter((header) => {
-    return !excludeHeaders.includes(header) &&
-           sheet4Data.series.some((s) => s.values[header] !== null);
+    return (
+      !excludeHeaders.includes(header) && sheet4Data.series.some((s) => s.values[header] !== null)
+    );
   });
 
   // Y軸の最大値を計算
   const maxValue = Math.max(
-    ...sheet4Data.series.flatMap(s =>
-      percentageMetrics.map(m => s.values[m] as number || 0)
-    )
+    ...sheet4Data.series.flatMap((s) => percentageMetrics.map((m) => (s.values[m] as number) || 0)),
   );
   const yAxisMax = Math.ceil(maxValue / 5) * 5; // 5の倍数に切り上げ
 
@@ -56,7 +55,7 @@ export const Sheet4ChartWrapper: React.FC = () => {
         yAxisMax: yAxisMax,
         yAxisLabel: "%",
         startYear: 2004,
-        labelMap
+        labelMap,
       }}
     />
   );

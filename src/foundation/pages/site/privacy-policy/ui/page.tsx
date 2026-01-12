@@ -7,7 +7,12 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
-      <JsonLd data={buildBreadcrumbList([{ name: "Home", path: "/" }, { name: "Privacy", path: "/privacy-policy" }])} />
+      <JsonLd
+        data={buildBreadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Privacy", path: "/privacy-policy" },
+        ])}
+      />
       <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
@@ -26,9 +31,7 @@ export default function Page() {
               <li>お問い合わせへの対応</li>
               <li>サービス向上のための分析</li>
             </ul>
-            <p>
-              取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。
-            </p>
+            <p>取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。</p>
           </div>
 
           <div className="space-y-2">

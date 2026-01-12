@@ -24,12 +24,12 @@ import type { MetricGroup } from "@/components/Charts";
 const groups: MetricGroup[] = [
   {
     name: "グループ1",
-    metrics: ["メトリクス1", "メトリクス2"]
+    metrics: ["メトリクス1", "メトリクス2"],
   },
   {
     name: "グループ2",
-    metrics: ["メトリクス3", "メトリクス4"]
-  }
+    metrics: ["メトリクス3", "メトリクス4"],
+  },
 ];
 
 <LineChart
@@ -39,10 +39,10 @@ const groups: MetricGroup[] = [
     yAxisMin: 0,
     yAxisMax: 100,
     yAxisLabel: "%",
-    startYear: 2006
+    startYear: 2006,
   }}
   excludeHeaders={["除外するヘッダー"]}
-/>
+/>;
 ```
 
 ### StackedBarChart
@@ -65,12 +65,12 @@ import type { MetricGroup } from "@/components/Charts";
 const groups: MetricGroup[] = [
   {
     name: "グループ1",
-    metrics: ["メトリクス1", "メトリクス2"]
+    metrics: ["メトリクス1", "メトリクス2"],
   },
   {
     name: "グループ2",
-    metrics: ["メトリクス3", "メトリクス4"]
-  }
+    metrics: ["メトリクス3", "メトリクス4"],
+  },
 ];
 
 <StackedBarChart
@@ -80,10 +80,10 @@ const groups: MetricGroup[] = [
     yAxisMin: 0,
     yAxisMax: 100,
     yAxisLabel: "%",
-    startYear: 2006
+    startYear: 2006,
   }}
   excludeHeaders={["除外するヘッダー"]}
-/>
+/>;
 ```
 
 ## 型定義
@@ -123,11 +123,11 @@ type MetricGroup = {
 
 ```typescript
 type ChartConfig = {
-  yAxisMin?: number;      // Y軸の最小値（デフォルト: 0）
-  yAxisMax?: number;      // Y軸の最大値（デフォルト: 100）
-  yAxisLabel?: string;    // Y軸のラベル（デフォルト: "%"）
-  startYear?: number;     // 開始年（デフォルト: 2006）
-  colors?: string[];      // カスタムカラーパレット（デフォルト: d3.schemeCategory10）
+  yAxisMin?: number; // Y軸の最小値（デフォルト: 0）
+  yAxisMax?: number; // Y軸の最大値（デフォルト: 100）
+  yAxisLabel?: string; // Y軸のラベル（デフォルト: "%"）
+  startYear?: number; // 開始年（デフォルト: 2006）
+  colors?: string[]; // カスタムカラーパレット（デフォルト: d3.schemeCategory10）
 };
 ```
 
@@ -177,8 +177,8 @@ export const Sheet2ChartWrapper: React.FC = () => {
   const groups: MetricGroup[] = [
     {
       name: "グループ1",
-      metrics: ["メトリクス1", "メトリクス2"]
-    }
+      metrics: ["メトリクス1", "メトリクス2"],
+    },
   ];
 
   return (
@@ -190,7 +190,7 @@ export const Sheet2ChartWrapper: React.FC = () => {
         yAxisMin: 0,
         yAxisMax: 100,
         yAxisLabel: "%",
-        startYear: 2006
+        startYear: 2006,
       }}
     />
   );

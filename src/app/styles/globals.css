@@ -47,8 +47,7 @@
 }
 
 .font-noto {
-  font-family: var(--font-noto-sans-jp), "Noto Sans JP", var(--font-sans), ui-sans-serif,
-    system-ui;
+  font-family: var(--font-noto-sans-jp), "Noto Sans JP", var(--font-sans), ui-sans-serif, system-ui;
 }
 
 :root {

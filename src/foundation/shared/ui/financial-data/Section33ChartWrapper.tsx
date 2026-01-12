@@ -21,7 +21,7 @@ export const Section33ChartWrapper: React.FC = () => {
     "外貨建投資信託 | 万円": "外貨建投信",
     "外貨建債券 | 万円": "外貨建債券",
     "外貨建株式 | 万円": "外貨建株式",
-    "その他外貨建金融商品 | 万円": "その他外貨建"
+    "その他外貨建金融商品 | 万円": "その他外貨建",
   };
   const startYear = Number(section33Data.metadata?.startYear ?? 2006);
 
@@ -34,15 +34,12 @@ export const Section33ChartWrapper: React.FC = () => {
         "新NISA 成長投資枠 | 万円",
         "旧NISA 一般NISA | 万円",
         "旧NISA ジュニアNISA | 万円",
-        "旧NISA つみたてNISA | 万円"
-      ]
+        "旧NISA つみたてNISA | 万円",
+      ],
     },
     {
       name: "確定拠出年金関連",
-      metrics: [
-        "企業型DC | 万円",
-        "iDeCo | 万円"
-      ]
+      metrics: ["企業型DC | 万円", "iDeCo | 万円"],
     },
     {
       name: "外貨建金融商品関連",
@@ -52,9 +49,9 @@ export const Section33ChartWrapper: React.FC = () => {
         "外貨建投資信託 | 万円",
         "外貨建債券 | 万円",
         "外貨建株式 | 万円",
-        "その他外貨建金融商品 | 万円"
-      ]
-    }
+        "その他外貨建金融商品 | 万円",
+      ],
+    },
   ];
 
   return (
@@ -70,7 +67,7 @@ export const Section33ChartWrapper: React.FC = () => {
             yAxisMax: 800,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -87,14 +84,14 @@ export const Section33ChartWrapper: React.FC = () => {
             "外貨建投資信託 | 万円",
             "外貨建債券 | 万円",
             "外貨建株式 | 万円",
-            "その他外貨建金融商品 | 万円"
+            "その他外貨建金融商品 | 万円",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 300,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -114,14 +111,14 @@ export const Section33ChartWrapper: React.FC = () => {
             "外貨建投資信託 | 万円",
             "外貨建債券 | 万円",
             "外貨建株式 | 万円",
-            "その他外貨建金融商品 | 万円"
+            "その他外貨建金融商品 | 万円",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 800,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -138,14 +135,14 @@ export const Section33ChartWrapper: React.FC = () => {
             "旧NISA つみたてNISA | 万円",
             "企業型DC | 万円",
             "iDeCo | 万円",
-            "外貨建金融商品合計 | 万円"
+            "外貨建金融商品合計 | 万円",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 250,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>

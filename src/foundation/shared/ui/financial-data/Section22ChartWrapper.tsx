@@ -11,7 +11,7 @@ export const Section22ChartWrapper: React.FC = () => {
   const labelMap: Record<string, string> = {
     "積極的に保有しようと思っている | ％": "積極的に保有",
     "一部は保有しようと思っている | ％": "一部は保有",
-    "保有しようとは全く思わない | ％": "全く思わない"
+    "保有しようとは全く思わない | ％": "全く思わない",
   };
 
   return (
@@ -24,7 +24,7 @@ export const Section22ChartWrapper: React.FC = () => {
         yAxisMax: 90,
         yAxisLabel: "％",
         startYear: 2007,
-        labelMap
+        labelMap,
       }}
     />
   );

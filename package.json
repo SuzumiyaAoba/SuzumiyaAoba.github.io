@@ -2,11 +2,6 @@
   "name": "suzumiyaaoba-github-io-renewal",
   "version": "0.1.0",
   "private": true,
-  "siteConfig": {
-    "siteUrl": "https://suzumiyaaoba.com",
-    "googleAnalyticsId": "G-6YJ00MPQBT",
-    "googleAdsenseClientId": "ca-pub-4374004258861110"
-  },
   "scripts": {
     "dev": "run-s pagefind:dev dev:next",
     "dev:next": "next dev --webpack",
@@ -109,5 +104,10 @@
       "oxfmt",
       "oxlint --fix"
     ]
+  },
+  "siteConfig": {
+    "siteUrl": "https://suzumiyaaoba.com",
+    "googleAnalyticsId": "G-6YJ00MPQBT",
+    "googleAdsenseClientId": "ca-pub-4374004258861110"
   }
 }

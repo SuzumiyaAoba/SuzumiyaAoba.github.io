@@ -14,7 +14,7 @@ export const Section38ChartWrapper: React.FC = () => {
     "相場予想が外れた | ％": "相場予想外れ",
     "リスク理解不足 | ％": "リスク理解不足",
     "金融機関の説明不足 | ％": "金融機関説明不足",
-    "誤解招く広告・勧誘 | ％": "誤解招く広告"
+    "誤解招く広告・勧誘 | ％": "誤解招く広告",
   };
   const startYear = Number(section38Data.metadata?.startYear ?? 2006);
 
@@ -29,14 +29,14 @@ export const Section38ChartWrapper: React.FC = () => {
             "相場予想が外れた | ％",
             "リスク理解不足 | ％",
             "金融機関の説明不足 | ％",
-            "誤解招く広告・勧誘 | ％"
+            "誤解招く広告・勧誘 | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -45,16 +45,13 @@ export const Section38ChartWrapper: React.FC = () => {
         <LineChart
           data={section38Data}
           groups={[]}
-          excludeHeaders={[
-            "元本割れ経験あり | ％",
-            "元本割れ経験なし | ％"
-          ]}
+          excludeHeaders={["元本割れ経験あり | ％", "元本割れ経験なし | ％"]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>

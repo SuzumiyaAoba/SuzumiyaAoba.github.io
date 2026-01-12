@@ -26,9 +26,7 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
           {binary ? (
             <>
               <span style={{ color: getMutedColor() }}>0b</span>
-              <span style={{ color: getGreenColor() }}>
-                {binary.slice(0, 3)}
-              </span>
+              <span style={{ color: getGreenColor() }}>{binary.slice(0, 3)}</span>
               <span style={{ color: getSkyColor() }}>{binary.slice(3, 7)}</span>
             </>
           ) : (
@@ -42,12 +40,8 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
           {hex ? (
             <>
               <span style={{ color: getMutedColor() }}>0x</span>
-              <span style={{ color: getGreenColor() }}>
-                {hex.slice(0, 1).toUpperCase()}
-              </span>
-              <span style={{ color: getSkyColor() }}>
-                {hex.slice(1, 2).toUpperCase()}
-              </span>
+              <span style={{ color: getGreenColor() }}>{hex.slice(0, 1).toUpperCase()}</span>
+              <span style={{ color: getSkyColor() }}>{hex.slice(1, 2).toUpperCase()}</span>
             </>
           ) : (
             "--"

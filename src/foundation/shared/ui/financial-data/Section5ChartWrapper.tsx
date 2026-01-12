@@ -23,7 +23,7 @@ export const Section5ChartWrapper: React.FC = () => {
     "株式 | 万円": "株式",
     "投資信託 | 万円": "投資信託",
     "財形貯蓄 | 万円": "財形貯蓄",
-    "その他金融商品 | 万円": "その他金融商品"
+    "その他金融商品 | 万円": "その他金融商品",
   };
 
   return (
@@ -36,7 +36,7 @@ export const Section5ChartWrapper: React.FC = () => {
         yAxisMax: 2500,
         yAxisLabel: "万円",
         startYear: 1972,
-        labelMap
+        labelMap,
       }}
     />
   );

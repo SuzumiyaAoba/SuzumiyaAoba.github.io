@@ -29,7 +29,7 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
   // グループヘッダーを定義
   const groupHeaders = [
     "口座の有無 （注１） | 口座を保有 している | ％",
-    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％"
+    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％",
   ];
 
   // データがあるメトリクスを取得（グループヘッダーを除外）
@@ -44,15 +44,15 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx > 0 && headerIdx < 5;
-      })
+      }),
     },
     {
       name: "現在保有している金融商品",
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx >= 6;
-      })
-    }
+      }),
+    },
   ];
 
   useEffect(() => {
@@ -97,27 +97,23 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
     if (parseData.length === 0) return;
 
     const maxYear = d3.max(parseData, (d) => d.year) || 2025;
-    const x = d3
-      .scaleLinear()
-      .domain([2006, maxYear])
-      .range([0, width]);
+    const x = d3.scaleLinear().domain([2006, maxYear]).range([0, width]);
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, 100])
-      .range([height, 0]);
+    const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
     // X軸のグリッド線
     g.append("g")
       .attr("class", "grid")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).tickSize(-height).tickFormat(() => ""))
+      .call(
+        d3
+          .axisBottom(x)
+          .tickSize(-height)
+          .tickFormat(() => ""),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
-        g
-          .selectAll(".tick line")
-          .attr("stroke", "currentColor")
-          .attr("stroke-opacity", 0.1),
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
       );
 
     // X軸
@@ -131,13 +127,15 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
     // Y軸のグリッド線
     g.append("g")
       .attr("class", "grid")
-      .call(d3.axisLeft(y).tickSize(-width).tickFormat(() => ""))
+      .call(
+        d3
+          .axisLeft(y)
+          .tickSize(-width)
+          .tickFormat(() => ""),
+      )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
-        g
-          .selectAll(".tick line")
-          .attr("stroke", "currentColor")
-          .attr("stroke-opacity", 0.1),
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
       );
 
     // Y軸
@@ -202,7 +200,7 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);
     if (isActive) {
-      setSelectedMetrics(selectedMetrics.filter(m => m !== metric));
+      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
     } else {
       setSelectedMetrics([...selectedMetrics, metric]);
     }
@@ -210,11 +208,11 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
 
   const handleGroupClick = (groupMetrics: string[]) => {
     // グループ内のメトリクスがすべて選択されているかチェック
-    const allSelected = groupMetrics.every(m => selectedMetrics.includes(m));
+    const allSelected = groupMetrics.every((m) => selectedMetrics.includes(m));
 
     if (allSelected) {
       // すべて選択されている場合は、グループのメトリクスをすべて非選択に
-      const newSelected = selectedMetrics.filter(m => !groupMetrics.includes(m));
+      const newSelected = selectedMetrics.filter((m) => !groupMetrics.includes(m));
       setSelectedMetrics(newSelected);
     } else {
       // 一部または全部が非選択の場合は、グループのメトリクスをすべて選択に
@@ -226,7 +224,7 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
   return (
     <div className="my-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^1[\s.、]*/, '')}
+        {data.metadata.title.replace(/^1[\s.、]*/, "")}
       </div>
       <div className="overflow-x-auto">
         <svg ref={svgRef} />
@@ -258,10 +256,7 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
                     className="flex items-center gap-2 cursor-pointer"
                     style={{ opacity: isActive ? 1 : 0.3 }}
                   >
-                    <div
-                      className="w-4 h-4"
-                      style={{ backgroundColor: swatch }}
-                    />
+                    <div className="w-4 h-4" style={{ backgroundColor: swatch }} />
                     <span className="text-sm">{safeMetric.split("|")[0]?.trim() ?? ""}</span>
                   </div>
                 );

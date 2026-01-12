@@ -8,7 +8,12 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
-      <JsonLd data={buildBreadcrumbList([{ name: "Home", path: "/" }, { name: "About", path: "/about" }])} />
+      <JsonLd
+        data={buildBreadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ])}
+      />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-10 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">
           <div className="space-y-2">

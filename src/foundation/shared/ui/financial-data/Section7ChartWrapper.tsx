@@ -22,7 +22,7 @@ export const Section7ChartWrapper: React.FC = () => {
     "外貨建投資信託 | 万円": "外貨建投資信託",
     "外貨建債券 | 万円": "外貨建債券",
     "外貨建株式 | 万円": "外貨建株式",
-    "その他の外貨建金融商品 | 万円": "その他外貨建"
+    "その他の外貨建金融商品 | 万円": "その他外貨建",
   };
 
   const groups: MetricGroup[] = [
@@ -35,8 +35,8 @@ export const Section7ChartWrapper: React.FC = () => {
         "旧ＮＩＳＡ制度「ジュニアＮＩＳＡ」 | 万円",
         "旧ＮＩＳＡ制度「つみたてＮＩＳＡ」 | 万円",
         "企業型確定拠出年金（企業型ＤＣ） | 万円",
-        "個人型確定拠出年金（ｉＤｅＣｏ） | 万円"
-      ]
+        "個人型確定拠出年金（ｉＤｅＣｏ） | 万円",
+      ],
     },
     {
       name: "外貨建金融商品",
@@ -46,9 +46,9 @@ export const Section7ChartWrapper: React.FC = () => {
         "外貨建投資信託 | 万円",
         "外貨建債券 | 万円",
         "外貨建株式 | 万円",
-        "その他の外貨建金融商品 | 万円"
-      ]
-    }
+        "その他の外貨建金融商品 | 万円",
+      ],
+    },
   ];
 
   return (
@@ -61,7 +61,7 @@ export const Section7ChartWrapper: React.FC = () => {
         yAxisMax: 800,
         yAxisLabel: "万円",
         startYear: 1999,
-        labelMap
+        labelMap,
       }}
     />
   );

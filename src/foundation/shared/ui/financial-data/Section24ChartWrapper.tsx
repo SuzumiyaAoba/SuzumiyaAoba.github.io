@@ -16,7 +16,7 @@ export const Section24ChartWrapper: React.FC = () => {
     "50,000円超：現金 | ％": "50,000円超：現金",
     "50,000円超：クレジットカード | ％": "50,000円超：カード",
     "50,000円超：電子マネー | ％": "50,000円超：電子マネー",
-    "50,000円超：その他 | ％": "50,000円超：その他"
+    "50,000円超：その他 | ％": "50,000円超：その他",
   };
 
   return (
@@ -29,7 +29,7 @@ export const Section24ChartWrapper: React.FC = () => {
         yAxisMax: 90,
         yAxisLabel: "％",
         startYear: 2007,
-        labelMap
+        labelMap,
       }}
     />
   );

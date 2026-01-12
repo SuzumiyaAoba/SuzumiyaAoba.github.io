@@ -19,14 +19,12 @@ export const Sheet3AmountChartWrapper: React.FC = () => {
 
   // 万円データのみを抽出（平均と中央値）
   const amountMetrics = ["平均 | 万円", "中央値 | 万円"].filter((header) =>
-    sheet3Data.series.some((s) => s.values[header] !== null)
+    sheet3Data.series.some((s) => s.values[header] !== null),
   );
 
   // Y軸の最大値を計算
   const maxValue = Math.max(
-    ...sheet3Data.series.flatMap(s =>
-      amountMetrics.map(m => s.values[m] as number || 0)
-    )
+    ...sheet3Data.series.flatMap((s) => amountMetrics.map((m) => (s.values[m] as number) || 0)),
   );
   const yAxisMax = Math.ceil(maxValue / 500) * 500; // 500の倍数に切り上げ
 
@@ -46,7 +44,7 @@ export const Sheet3AmountChartWrapper: React.FC = () => {
         yAxisMax: yAxisMax,
         yAxisLabel: "万円",
         startYear: 1963,
-        labelMap
+        labelMap,
       }}
     />
   );

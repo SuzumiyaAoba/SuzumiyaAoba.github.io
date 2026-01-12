@@ -20,7 +20,7 @@ export const Section21ChartWrapper: React.FC = () => {
     "公社債投資信託 | ％": "公社債投信",
     "外貨建金融商品 | ％": "外貨建商品",
     "不動産投資信託 | ％": "REIT",
-    "保有希望はない | ％": "保有希望なし"
+    "保有希望はない | ％": "保有希望なし",
   };
 
   return (
@@ -33,7 +33,7 @@ export const Section21ChartWrapper: React.FC = () => {
         yAxisMax: 60,
         yAxisLabel: "％",
         startYear: 1999,
-        labelMap
+        labelMap,
       }}
     />
   );

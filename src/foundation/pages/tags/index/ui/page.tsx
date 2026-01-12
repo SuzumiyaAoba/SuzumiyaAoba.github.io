@@ -41,7 +41,12 @@ export default async function Page() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
-      <JsonLd data={buildBreadcrumbList([{ name: "Home", path: "/" }, { name: "Tags", path: "/tags" }])} />
+      <JsonLd
+        data={buildBreadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Tags", path: "/tags" },
+        ])}
+      />
       <main
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
         data-pagefind-ignore="all"

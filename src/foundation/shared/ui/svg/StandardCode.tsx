@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Cell,
-  cellToInfo,
-} from "./StandardCode.utils";
+import { Cell, cellToInfo } from "./StandardCode.utils";
 import { AsciiTable } from "./AsciiTable";
 import { LeftSide } from "./LeftSide";
 import { TopSide } from "./TopSide";

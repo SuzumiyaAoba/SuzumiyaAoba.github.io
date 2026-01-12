@@ -19,7 +19,8 @@ export function AmazonAssociate({ className }: AmazonAssociateProps) {
         <div className="space-y-1">
           <p className="text-sm font-semibold">Amazon アソシエイトについて</p>
           <p className="text-xs leading-5">
-            この記事には Amazon アソシエイトのリンクが含まれています。Amazonのアソシエイトとして、SuzumiyaAoba
+            この記事には Amazon
+            アソシエイトのリンクが含まれています。Amazonのアソシエイトとして、SuzumiyaAoba
             は適格販売により収入を得ています。
           </p>
         </div>

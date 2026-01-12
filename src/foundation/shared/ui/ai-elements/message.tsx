@@ -30,12 +30,7 @@ export function Message({ className, from, showAvatar = true, children, ...props
           <Icon icon={from === "user" ? "lucide:user" : "lucide:bot"} className="size-4" />
         </div>
       ) : null}
-      <div
-        className={cn(
-          "flex-1 min-w-0",
-          from === "user" ? "order-0" : "order-1",
-        )}
-      >
+      <div className={cn("flex-1 min-w-0", from === "user" ? "order-0" : "order-1")}>
         {children}
       </div>
     </div>

@@ -13,8 +13,8 @@ export const Sheet3BarChartWrapper: React.FC = () => {
 
   const excludeHeaders = [
     "％ | （150万円以上）", // nullデータ
-    "平均 | 万円",         // 金額データ
-    "中央値 | 万円"        // 金額データ
+    "平均 | 万円", // 金額データ
+    "中央値 | 万円", // 金額データ
   ];
 
   // ラベルマッピング
@@ -42,7 +42,7 @@ export const Sheet3BarChartWrapper: React.FC = () => {
         yAxisMax: 100,
         yAxisLabel: "%",
         startYear: 1963,
-        labelMap
+        labelMap,
       }}
     />
   );

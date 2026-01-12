@@ -45,9 +45,7 @@ export function Tabs({ children }: TabsProps) {
           );
         })}
       </div>
-      <div className="rounded-b-lg bg-muted/30 px-3 py-4">
-        {tabs[activeTab]}
-      </div>
+      <div className="rounded-b-lg bg-muted/30 px-3 py-4">{tabs[activeTab]}</div>
     </div>
   );
 }

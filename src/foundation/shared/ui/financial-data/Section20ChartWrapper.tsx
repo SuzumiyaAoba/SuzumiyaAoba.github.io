@@ -19,7 +19,7 @@ export const Section20ChartWrapper: React.FC = () => {
     "2000～3000万円未満 | ％": "2000～3000万円",
     "3000～5000万円未満 | ％": "3000～5000万円",
     "5000～7000万円未満 | ％": "5000～7000万円",
-    "7000万円以上 | ％": "7000万円以上"
+    "7000万円以上 | ％": "7000万円以上",
   };
 
   return (
@@ -32,7 +32,7 @@ export const Section20ChartWrapper: React.FC = () => {
         yAxisMax: 70,
         yAxisLabel: "％",
         startYear: 1963,
-        labelMap
+        labelMap,
       }}
     />
   );

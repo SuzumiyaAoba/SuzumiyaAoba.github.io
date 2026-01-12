@@ -19,7 +19,7 @@ export const Section18ChartWrapper: React.FC = () => {
     "納税資金 | ％": "納税資金",
     "遺産として 子孫に残す | ％": "遺産として残す",
     "とくに目的はないが、 金融資産を保有 していれば安心 | ％": "目的なし（安心）",
-    "その他 | ％": "その他"
+    "その他 | ％": "その他",
   };
 
   return (
@@ -32,7 +32,7 @@ export const Section18ChartWrapper: React.FC = () => {
         yAxisMax: 70,
         yAxisLabel: "％",
         startYear: 2007,
-        labelMap
+        labelMap,
       }}
     />
   );

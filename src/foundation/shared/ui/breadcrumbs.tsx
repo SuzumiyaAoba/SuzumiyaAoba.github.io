@@ -30,11 +30,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               ) : null}
               {isLast ? (
                 <span className="font-medium text-foreground">
-                  {item.path === "/" ? (
-                    <Icon icon="lucide:home" className="size-3.5" />
-                  ) : (
-                    item.name
-                  )}
+                  {item.path === "/" ? <Icon icon="lucide:home" className="size-3.5" /> : item.name}
                 </span>
               ) : item.path === "/" ? (
                 <Link

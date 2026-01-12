@@ -19,7 +19,7 @@ export const Section36ChartWrapper: React.FC = () => {
     "現金に換えやすい | ％": "現金化容易",
     "預入・引出自由 | ％": "預入引出自由",
     "商品内容が理解しやすい | ％": "理解容易",
-    "その他 | ％": "その他"
+    "その他 | ％": "その他",
   };
   const startYear = Number(section36Data.metadata?.startYear ?? 2006);
 
@@ -27,28 +27,16 @@ export const Section36ChartWrapper: React.FC = () => {
   const groups = [
     {
       name: "収益性",
-      metrics: [
-        "収益性 | ％",
-        "利回りが良い | ％",
-        "値上がり期待 | ％"
-      ]
+      metrics: ["収益性 | ％", "利回りが良い | ％", "値上がり期待 | ％"],
     },
     {
       name: "安全性",
-      metrics: [
-        "安全性 | ％",
-        "元本保証 | ％",
-        "金融機関が信用できる | ％"
-      ]
+      metrics: ["安全性 | ％", "元本保証 | ％", "金融機関が信用できる | ％"],
     },
     {
       name: "流動性",
-      metrics: [
-        "流動性 | ％",
-        "現金に換えやすい | ％",
-        "預入・引出自由 | ％"
-      ]
-    }
+      metrics: ["流動性 | ％", "現金に換えやすい | ％", "預入・引出自由 | ％"],
+    },
   ];
 
   return (
@@ -64,7 +52,7 @@ export const Section36ChartWrapper: React.FC = () => {
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -81,14 +69,14 @@ export const Section36ChartWrapper: React.FC = () => {
             "現金に換えやすい | ％",
             "預入・引出自由 | ％",
             "商品内容が理解しやすい | ％",
-            "その他 | ％"
+            "その他 | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>

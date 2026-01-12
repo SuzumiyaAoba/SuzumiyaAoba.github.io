@@ -12,14 +12,15 @@ export const Sheet4PieChartWrapper: React.FC = () => {
   }
 
   const excludeHeaders = [
-    "平均 | 万円",         // 金額データ
-    "中央値 | 万円"        // 金額データ
+    "平均 | 万円", // 金額データ
+    "中央値 | 万円", // 金額データ
   ];
 
   // パーセンテージデータのみを抽出（平均・中央値以外）
   const percentageMetrics = sheet4Data.headers.filter((header) => {
-    return !excludeHeaders.includes(header) &&
-           sheet4Data.series.some((s) => s.values[header] !== null);
+    return (
+      !excludeHeaders.includes(header) && sheet4Data.series.some((s) => s.values[header] !== null)
+    );
   });
 
   // ラベルマッピング
@@ -39,9 +40,9 @@ export const Sheet4PieChartWrapper: React.FC = () => {
   };
 
   // 2023年、2024年、2025年のデータを取得
-  const year2023Data = sheet4Data.series.find(s => s.year === "2023");
-  const year2024Data = sheet4Data.series.find(s => s.year === "2024");
-  const year2025Data = sheet4Data.series.find(s => s.year === "2025");
+  const year2023Data = sheet4Data.series.find((s) => s.year === "2023");
+  const year2024Data = sheet4Data.series.find((s) => s.year === "2024");
+  const year2025Data = sheet4Data.series.find((s) => s.year === "2025");
 
   if (!year2023Data || !year2024Data || !year2025Data) {
     return <div>2023年、2024年、または2025年のデータが見つかりません</div>;
@@ -49,24 +50,24 @@ export const Sheet4PieChartWrapper: React.FC = () => {
 
   // 円グラフ用のデータを作成
   const pieData2023 = percentageMetrics
-    .filter(metric => year2023Data.values[metric] !== null)
-    .map(metric => ({
+    .filter((metric) => year2023Data.values[metric] !== null)
+    .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2023Data.values[metric] as number
+      value: year2023Data.values[metric] as number,
     }));
 
   const pieData2024 = percentageMetrics
-    .filter(metric => year2024Data.values[metric] !== null)
-    .map(metric => ({
+    .filter((metric) => year2024Data.values[metric] !== null)
+    .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2024Data.values[metric] as number
+      value: year2024Data.values[metric] as number,
     }));
 
   const pieData2025 = percentageMetrics
-    .filter(metric => year2025Data.values[metric] !== null)
-    .map(metric => ({
+    .filter((metric) => year2025Data.values[metric] !== null)
+    .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2025Data.values[metric] as number
+      value: year2025Data.values[metric] as number,
     }));
 
   return (
@@ -75,21 +76,9 @@ export const Sheet4PieChartWrapper: React.FC = () => {
         金融資産保有額の分布（金融資産を保有していない世帯を含む）
       </div>
       <div className="flex flex-col gap-4">
-        <PieChart
-          data={pieData2023}
-          title="2023年"
-          config={{}}
-        />
-        <PieChart
-          data={pieData2024}
-          title="2024年"
-          config={{}}
-        />
-        <PieChart
-          data={pieData2025}
-          title="2025年"
-          config={{}}
-        />
+        <PieChart data={pieData2023} title="2023年" config={{}} />
+        <PieChart data={pieData2024} title="2024年" config={{}} />
+        <PieChart data={pieData2025} title="2025年" config={{}} />
       </div>
     </div>
   );

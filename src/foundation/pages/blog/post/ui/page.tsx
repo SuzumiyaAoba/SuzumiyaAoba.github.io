@@ -120,10 +120,7 @@ export default async function Page({ params }: PageProps) {
           <h1 className="text-3xl font-semibold">{postTitle}</h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {post.frontmatter.category ? (
-              <Badge
-                variant="outline"
-                className="border-border/40 text-[11px] font-medium"
-              >
+              <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
                 {post.frontmatter.category}
               </Badge>
             ) : null}
@@ -135,23 +132,19 @@ export default async function Page({ params }: PageProps) {
                 className="bg-muted text-[11px] font-medium text-muted-foreground"
               />
             ))}
-            <Button asChild variant="outline" size="sm" className="ml-auto">
-              <a
-                href={shareUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Share on X"
-              >
-                <Icon icon="simple-icons:x" className="size-3.5" />
-                Share on X
-              </a>
-            </Button>
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
           <article className="prose prose-neutral min-w-0 max-w-none font-sans">{content}</article>
           <div className="hidden lg:block">
             <Toc headings={headings} />
+          </div>
+          <div className="flex justify-end">
+            <Button asChild variant="outline" size="sm">
+              <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+                <Icon icon="simple-icons:x" className="size-3.5" />ポスト
+              </a>
+            </Button>
           </div>
         </div>
         {amazonProducts.length > 0 ? (

@@ -77,9 +77,7 @@ export function SearchPanel() {
 
     try {
       const search = await window.pagefind.search(searchQuery);
-      const searchResults = await Promise.all(
-        search.results.map(async (result) => result.data()),
-      );
+      const searchResults = await Promise.all(search.results.map(async (result) => result.data()));
       setResults(searchResults.filter(Boolean));
     } catch {
       setResults([]);
@@ -100,9 +98,7 @@ export function SearchPanel() {
 
     function handlePagefindError(event: CustomEvent) {
       const detail = event.detail as { error?: string } | undefined;
-      setPagefindError(
-        `検索エンジンの読み込みに失敗しました。${detail?.error ?? ""}`.trim(),
-      );
+      setPagefindError(`検索エンジンの読み込みに失敗しました。${detail?.error ?? ""}`.trim());
     }
 
     if (window.__pagefind_loaded) {
@@ -170,7 +166,8 @@ export function SearchPanel() {
           <div className="space-y-2 px-4 py-4 text-sm text-muted-foreground">
             <p>{pagefindError}</p>
             <p className="text-xs">
-              ビルド後に Pagefind を実行していない場合は、検索インデックスが生成されていない可能性があります。
+              ビルド後に Pagefind
+              を実行していない場合は、検索インデックスが生成されていない可能性があります。
             </p>
           </div>
         </Card>

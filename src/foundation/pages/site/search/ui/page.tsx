@@ -8,9 +8,7 @@ import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 
 function SearchLoading() {
-  return (
-    <div className="px-4 py-6 text-sm text-muted-foreground">検索機能を読み込み中...</div>
-  );
+  return <div className="px-4 py-6 text-sm text-muted-foreground">検索機能を読み込み中...</div>;
 }
 
 export default function Page() {
@@ -18,7 +16,12 @@ export default function Page() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Script src="/pagefind-adapter.js" strategy="afterInteractive" />
       <Header />
-      <JsonLd data={buildBreadcrumbList([{ name: "Home", path: "/" }, { name: "Search", path: "/search" }])} />
+      <JsonLd
+        data={buildBreadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Search", path: "/search" },
+        ])}
+      />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-3">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">

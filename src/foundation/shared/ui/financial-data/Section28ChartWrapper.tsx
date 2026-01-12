@@ -20,7 +20,7 @@ export const Section28ChartWrapper: React.FC = () => {
     "1500～2000万円未満 | ％": "1500～2000万円",
     "2000万円以上 | ％": "2000万円以上",
     "平均 | 万円": "平均",
-    "中央値 | 万円": "中央値"
+    "中央値 | 万円": "中央値",
   };
 
   return (
@@ -36,7 +36,7 @@ export const Section28ChartWrapper: React.FC = () => {
             yAxisMax: 100,
             yAxisLabel: "％",
             startYear: 1967,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -55,7 +55,7 @@ export const Section28ChartWrapper: React.FC = () => {
             "700～1000万円未満 | ％",
             "1000～1500万円未満 | ％",
             "1500～2000万円未満 | ％",
-            "2000万円以上 | ％"
+            "2000万円以上 | ％",
           ]}
           config={{
             yAxisMin: 0,
@@ -64,8 +64,8 @@ export const Section28ChartWrapper: React.FC = () => {
             startYear: 1967,
             labelMap: {
               "平均 | 万円": "平均",
-              "中央値 | 万円": "中央値"
-            }
+              "中央値 | 万円": "中央値",
+            },
           }}
         />
       </div>

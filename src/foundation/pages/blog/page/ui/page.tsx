@@ -95,7 +95,10 @@ export default async function Page({ params }: PageProps) {
           items={[
             { name: "Home", path: "/" },
             { name: "Blog", path: "/blog" },
-            { name: `Page ${pageNumber}`, path: pageNumber === 1 ? "/blog" : `/blog/${pageNumber}` },
+            {
+              name: `Page ${pageNumber}`,
+              path: pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`,
+            },
           ]}
         />
         <section className="space-y-4">

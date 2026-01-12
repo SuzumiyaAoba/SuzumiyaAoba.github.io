@@ -35,9 +35,7 @@ export const TopSide = () => {
               stroke={themeColors.stroke}
               fill={isHovered ? themeColors.hover.primary : "transparent"}
               fontWeight={isHovered ? "bold" : "normal"}
-              color={
-                isHovered ? themeColors.text.hover : themeColors.text.normal
-              }
+              color={isHovered ? themeColors.text.hover : themeColors.text.normal}
             >
               {b}
             </RectText>

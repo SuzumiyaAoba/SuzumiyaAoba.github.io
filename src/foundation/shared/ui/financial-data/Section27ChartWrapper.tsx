@@ -10,7 +10,7 @@ export const Section27ChartWrapper: React.FC = () => {
 
   const labelMap: Record<string, string> = {
     "借入金がある | ％": "借入金がある",
-    "借入金がない | ％": "借入金がない"
+    "借入金がない | ％": "借入金がない",
   };
 
   return (
@@ -23,7 +23,7 @@ export const Section27ChartWrapper: React.FC = () => {
         yAxisMax: 100,
         yAxisLabel: "％",
         startYear: 1967,
-        labelMap
+        labelMap,
       }}
     />
   );

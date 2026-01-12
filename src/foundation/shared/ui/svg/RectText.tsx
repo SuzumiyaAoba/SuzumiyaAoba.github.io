@@ -20,15 +20,7 @@ export type RectTextProps = {
   onMouseOver?: MouseEventHandler<SVGElement>;
 };
 
-const LineRect = ({
-  x,
-  y,
-  width,
-  height,
-  sides,
-  stroke,
-  strokeWidth,
-}: RectTextProps) => {
+const LineRect = ({ x, y, width, height, sides, stroke, strokeWidth }: RectTextProps) => {
   const lines = {
     top: { x1: x, y1: y, x2: x + width, y2: y },
     right: { x1: x + width, y1: y, x2: x + width, y2: y + height },

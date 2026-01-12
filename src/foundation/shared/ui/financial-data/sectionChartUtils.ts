@@ -7,7 +7,7 @@ const UNIT_PRIORITY = ["％", "%", "万円", "円", "歳", "人", "件"] as cons
 const normalizeUnit = (unit: string) => (unit === "%" ? "％" : unit);
 
 const extractUnit = (header: string): string | null => {
-  const parts = header.split("|").map(part => part.trim());
+  const parts = header.split("|").map((part) => part.trim());
   const candidate = parts[parts.length - 1];
   if (!candidate) {
     return null;
@@ -55,7 +55,9 @@ const roundUp = (value: number, step: number) => Math.ceil(value / step) * step;
 
 export const buildAutoChartConfig = (data: SheetData): ChartConfig => {
   const unit = selectUnit(data.headers);
-  const startYear = Math.min(...data.series.map(s => Number(s.year)).filter(n => Number.isFinite(n)));
+  const startYear = Math.min(
+    ...data.series.map((s) => Number(s.year)).filter((n) => Number.isFinite(n)),
+  );
   const maxValue = computeMaxValue(data, unit);
 
   let yAxisMax = 100;
@@ -75,6 +77,6 @@ export const buildAutoChartConfig = (data: SheetData): ChartConfig => {
     yAxisMin: 0,
     yAxisMax,
     yAxisLabel: unit,
-    startYear: Number.isFinite(startYear) ? startYear : 2006
+    startYear: Number.isFinite(startYear) ? startYear : 2006,
   };
 };

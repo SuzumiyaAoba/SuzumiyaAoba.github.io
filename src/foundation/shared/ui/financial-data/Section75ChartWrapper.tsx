@@ -33,14 +33,14 @@ export const Section75ChartWrapper: React.FC = () => {
             "500～750万円未満 | ％",
             "750～1000万円未満 | ％",
             "1000～1200万円未満 | ％",
-            "1200万円以上 | ％"
+            "1200万円以上 | ％",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 700,
             yAxisLabel: "万円",
             startYear: Number(section75Data.metadata?.startYear ?? 2006),
-            labelMap: { "平均 | 万円": "平均", "中央値 | 万円": "中央値" }
+            labelMap: { "平均 | 万円": "平均", "中央値 | 万円": "中央値" },
           }}
         />
       </div>

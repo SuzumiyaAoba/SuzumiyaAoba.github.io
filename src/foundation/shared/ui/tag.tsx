@@ -17,8 +17,8 @@ const TAG_ICON_MAP: Record<string, string> = {
   ollama: "simple-icons:ollama",
   "github copilot": "octicon:mark-github-16",
   llm: "ri:speak-ai-line",
-  "ローカルllm": "ri:speak-ai-line",
-  "生成ai": "ri:speak-ai-line",
+  ローカルllm: "ri:speak-ai-line",
+  生成ai: "ri:speak-ai-line",
   キーボード: "material-symbols:keyboard-outline",
   自作キーボード: "material-symbols:keyboard-outline",
   プログラミング: "material-symbols:code-blocks-outline",
@@ -67,11 +67,7 @@ export function Tag({
       <span>{normalizeLabel(tag, label)}</span>
     </>
   );
-  const tagClassName = cn(
-    badgeVariants({ variant }),
-    "gap-1.5 font-medium",
-    className,
-  );
+  const tagClassName = cn(badgeVariants({ variant }), "gap-1.5 font-medium", className);
 
   if (href) {
     return (

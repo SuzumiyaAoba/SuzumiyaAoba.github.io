@@ -40,9 +40,7 @@ export const LeftSide = () => {
                 offsetX={offset.x}
                 fontSize="0.8rem"
                 fontWeight={isHover ? "bold" : "normal"}
-                color={
-                  isHover ? themeColors.text.hover : themeColors.text.normal
-                }
+                color={isHover ? themeColors.text.hover : themeColors.text.normal}
               >
                 {b}
               </RectText>

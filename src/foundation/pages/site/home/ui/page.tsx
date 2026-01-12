@@ -70,9 +70,7 @@ export default async function Page() {
           </div>
           {latestPosts.length === 0 ? (
             <Card className="border-transparent bg-card/40 shadow-none">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                まだ記事がありません。
-              </div>
+              <div className="px-5 py-6 text-sm text-muted-foreground">まだ記事がありません。</div>
             </Card>
           ) : (
             <ul className="space-y-4">
@@ -86,7 +84,10 @@ export default async function Page() {
                       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                         <span>{formatDate(post.frontmatter.date)}</span>
                         {post.frontmatter.category ? (
-                          <Badge variant="secondary" className="bg-muted/70 text-[11px] text-muted-foreground">
+                          <Badge
+                            variant="secondary"
+                            className="bg-muted/70 text-[11px] text-muted-foreground"
+                          >
                             {post.frontmatter.category}
                           </Badge>
                         ) : null}

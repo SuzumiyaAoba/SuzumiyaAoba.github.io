@@ -4,24 +4,14 @@ import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
 
-export type ToolState =
-  | "input-streaming"
-  | "input-available"
-  | "output-available"
-  | "output-error";
+export type ToolState = "input-streaming" | "input-available" | "output-available" | "output-error";
 
 export type ToolProps = HTMLAttributes<HTMLDetailsElement> & {
   defaultOpen?: boolean;
 };
 
 export function Tool({ className, defaultOpen = false, ...props }: ToolProps) {
-  return (
-    <details
-      className={cn("group not-prose m-0", className)}
-      open={defaultOpen}
-      {...props}
-    />
-  );
+  return <details className={cn("group not-prose m-0", className)} open={defaultOpen} {...props} />;
 }
 
 export type ToolHeaderProps = HTMLAttributes<HTMLElement> & {
@@ -87,10 +77,7 @@ export type ToolContentProps = HTMLAttributes<HTMLDivElement>;
 
 export function ToolContent({ className, ...props }: ToolContentProps) {
   return (
-    <div
-      className={cn("mt-1 w-full max-w-full rounded-md px-0 py-2", className)}
-      {...props}
-    />
+    <div className={cn("mt-1 w-full max-w-full rounded-md px-0 py-2", className)} {...props} />
   );
 }
 
@@ -125,12 +112,7 @@ export function ToolOutput({ className, output, errorText, ...props }: ToolOutpu
     return null;
   }
 
-  const body =
-    typeof output === "string"
-      ? output
-      : output
-        ? JSON.stringify(output, null, 2)
-        : "";
+  const body = typeof output === "string" ? output : output ? JSON.stringify(output, null, 2) : "";
 
   return (
     <div className={cn("space-y-1.5 text-xs", className)} {...props}>

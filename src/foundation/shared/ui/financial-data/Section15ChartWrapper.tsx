@@ -16,7 +16,7 @@ export const Section15ChartWrapper: React.FC = () => {
     "相続、退職金等による臨時収入があったから | ％": "相続・退職金",
     "株式、債券価格の上昇により、これらの評価額が増加したから | ％": "株式・債券評価額上昇",
     "扶養家族が減ったから | ％": "扶養家族減少",
-    "その他 | ％": "その他"
+    "その他 | ％": "その他",
   };
 
   return (
@@ -29,7 +29,7 @@ export const Section15ChartWrapper: React.FC = () => {
         yAxisMax: 60,
         yAxisLabel: "％",
         startYear: 1989,
-        labelMap
+        labelMap,
       }}
     />
   );

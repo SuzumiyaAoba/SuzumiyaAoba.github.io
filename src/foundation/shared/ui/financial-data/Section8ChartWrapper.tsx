@@ -20,16 +20,13 @@ export const Section8ChartWrapper: React.FC = () => {
     "30～35%未満 | ％": "30～35%未満",
     "35%以上 | ％": "35%以上",
     "振り分けしなかった | ％": "振り分けしなかった",
-    "平均 | ％": "平均"
+    "平均 | ％": "平均",
   };
 
   const groups: MetricGroup[] = [
     {
       name: "振り分け状況",
-      metrics: [
-        "振り分けた | ％",
-        "振り分けしなかった | ％"
-      ]
+      metrics: ["振り分けた | ％", "振り分けしなかった | ％"],
     },
     {
       name: "振り分け割合の分布",
@@ -42,9 +39,9 @@ export const Section8ChartWrapper: React.FC = () => {
         "20～25%未満 | ％",
         "25～30%未満 | ％",
         "30～35%未満 | ％",
-        "35%以上 | ％"
-      ]
-    }
+        "35%以上 | ％",
+      ],
+    },
   ];
 
   return (
@@ -57,7 +54,7 @@ export const Section8ChartWrapper: React.FC = () => {
         yAxisMax: 70,
         yAxisLabel: "％",
         startYear: 1965,
-        labelMap
+        labelMap,
       }}
     />
   );

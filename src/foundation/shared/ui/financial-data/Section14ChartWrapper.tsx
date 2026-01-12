@@ -11,7 +11,7 @@ export const Section14ChartWrapper: React.FC = () => {
   const labelMap: Record<string, string> = {
     "増えた | ％": "増えた",
     "変わらない | ％": "変わらない",
-    "減った | ％": "減った"
+    "減った | ％": "減った",
   };
 
   return (
@@ -24,7 +24,7 @@ export const Section14ChartWrapper: React.FC = () => {
         yAxisMax: 60,
         yAxisLabel: "％",
         startYear: 2007,
-        labelMap
+        labelMap,
       }}
     />
   );

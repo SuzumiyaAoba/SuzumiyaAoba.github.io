@@ -29,7 +29,7 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
   // グループヘッダーを定義
   const groupHeaders = [
     "口座の有無 （注１） | 口座を保有 している | ％",
-    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％"
+    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％",
   ];
 
   // データがあるメトリクスを取得（グループヘッダーを除外）
@@ -44,21 +44,21 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx > 0 && headerIdx < 5;
-      })
+      }),
     },
     {
       name: "現在保有している金融商品",
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx >= 6;
-      })
-    }
+      }),
+    },
   ];
 
   const renderStackedChart = (
     svgElement: SVGSVGElement,
-    group: typeof groups[0],
-    groupIndex: number
+    group: (typeof groups)[0],
+    groupIndex: number,
   ) => {
     const svg = d3.select(svgElement);
     svg.selectAll("*").remove();
@@ -85,7 +85,8 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
     ];
 
     patterns.forEach((pattern, i) => {
-      const patternEl = defs.append("pattern")
+      const patternEl = defs
+        .append("pattern")
         .attr("id", `${pattern.id}-${groupIndex}`)
         .attr("patternUnits", "userSpaceOnUse")
         .attr("width", 8)
@@ -95,61 +96,110 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
 
       switch (pattern.type) {
         case "horizontal":
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 4).attr("x2", 8).attr("y2", 4)
-            .attr("stroke", color).attr("stroke-width", 2);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 4)
+            .attr("x2", 8)
+            .attr("y2", 4)
+            .attr("stroke", color)
+            .attr("stroke-width", 2);
           break;
         case "vertical":
-          patternEl.append("line")
-            .attr("x1", 4).attr("y1", 0).attr("x2", 4).attr("y2", 8)
-            .attr("stroke", color).attr("stroke-width", 2);
+          patternEl
+            .append("line")
+            .attr("x1", 4)
+            .attr("y1", 0)
+            .attr("x2", 4)
+            .attr("y2", 8)
+            .attr("stroke", color)
+            .attr("stroke-width", 2);
           break;
         case "diagonal-right":
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 0).attr("x2", 8).attr("y2", 8)
-            .attr("stroke", color).attr("stroke-width", 2);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 8)
+            .attr("y2", 8)
+            .attr("stroke", color)
+            .attr("stroke-width", 2);
           break;
         case "diagonal-left":
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 8).attr("x2", 8).attr("y2", 0)
-            .attr("stroke", color).attr("stroke-width", 2);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 8)
+            .attr("x2", 8)
+            .attr("y2", 0)
+            .attr("stroke", color)
+            .attr("stroke-width", 2);
           break;
         case "dots":
-          patternEl.append("circle")
-            .attr("cx", 4).attr("cy", 4).attr("r", 2)
-            .attr("fill", color);
+          patternEl.append("circle").attr("cx", 4).attr("cy", 4).attr("r", 2).attr("fill", color);
           break;
         case "cross":
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 4).attr("x2", 8).attr("y2", 4)
-            .attr("stroke", color).attr("stroke-width", 1);
-          patternEl.append("line")
-            .attr("x1", 4).attr("y1", 0).attr("x2", 4).attr("y2", 8)
-            .attr("stroke", color).attr("stroke-width", 1);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 4)
+            .attr("x2", 8)
+            .attr("y2", 4)
+            .attr("stroke", color)
+            .attr("stroke-width", 1);
+          patternEl
+            .append("line")
+            .attr("x1", 4)
+            .attr("y1", 0)
+            .attr("x2", 4)
+            .attr("y2", 8)
+            .attr("stroke", color)
+            .attr("stroke-width", 1);
           break;
         case "grid":
-          patternEl.append("rect")
-            .attr("width", 8).attr("height", 8)
+          patternEl
+            .append("rect")
+            .attr("width", 8)
+            .attr("height", 8)
             .attr("fill", "none")
-            .attr("stroke", color).attr("stroke-width", 1);
+            .attr("stroke", color)
+            .attr("stroke-width", 1);
           break;
         case "horizontal-thick":
-          patternEl.append("rect")
-            .attr("x", 0).attr("y", 0).attr("width", 8).attr("height", 3)
+          patternEl
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 8)
+            .attr("height", 3)
             .attr("fill", color);
           break;
         case "vertical-thick":
-          patternEl.append("rect")
-            .attr("x", 0).attr("y", 0).attr("width", 3).attr("height", 8)
+          patternEl
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 3)
+            .attr("height", 8)
             .attr("fill", color);
           break;
         case "diagonal-cross":
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 0).attr("x2", 8).attr("y2", 8)
-            .attr("stroke", color).attr("stroke-width", 1);
-          patternEl.append("line")
-            .attr("x1", 0).attr("y1", 8).attr("x2", 8).attr("y2", 0)
-            .attr("stroke", color).attr("stroke-width", 1);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 8)
+            .attr("y2", 8)
+            .attr("stroke", color)
+            .attr("stroke-width", 1);
+          patternEl
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 8)
+            .attr("x2", 8)
+            .attr("y2", 0)
+            .attr("stroke", color)
+            .attr("stroke-width", 1);
           break;
       }
     });
@@ -173,18 +223,13 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
 
     // スケール設定
     const maxYear = d3.max(parseData, (d) => d.year) || 2025;
-    const x = d3
-      .scaleLinear()
-      .domain([2006, maxYear])
-      .range([0, width]);
+    const x = d3.scaleLinear().domain([2006, maxYear]).range([0, width]);
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, 100])
-      .range([height, 0]);
+    const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
     // スタックレイアウト
-    const stack = d3.stack<any>()
+    const stack = d3
+      .stack<any>()
       .keys(group.metrics)
       .order(d3.stackOrderNone)
       .offset(d3.stackOffsetNone);
@@ -192,7 +237,8 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
     const stackedData = stack(parseData);
 
     // エリア生成
-    const area = d3.area<any>()
+    const area = d3
+      .area<any>()
       .x((d) => x(d.data.year))
       .y0((d) => y(d[0]))
       .y1((d) => y(d[1]));
@@ -202,14 +248,15 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
       .attr("class", "grid")
       .attr("transform", `translate(0,${height})`)
       .call(
-        d3.axisBottom(x)
+        d3
+          .axisBottom(x)
           .tickSize(-height)
-          .tickFormat(() => "")
+          .tickFormat(() => ""),
       )
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line")
-        .attr("stroke", "currentColor")
-        .attr("stroke-opacity", 0.1));
+      .call((g) => g.select(".domain").remove())
+      .call((g) =>
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+      );
 
     // X軸
     g.append("g")
@@ -223,14 +270,15 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
     g.append("g")
       .attr("class", "grid")
       .call(
-        d3.axisLeft(y)
+        d3
+          .axisLeft(y)
           .tickSize(-width)
-          .tickFormat(() => "")
+          .tickFormat(() => ""),
       )
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line")
-        .attr("stroke", "currentColor")
-        .attr("stroke-opacity", 0.1));
+      .call((g) => g.select(".domain").remove())
+      .call((g) =>
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+      );
 
     // Y軸
     g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}%`));
@@ -306,14 +354,12 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
   return (
     <div className="my-8 space-y-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^1[\s.、]*/, '')}（帯グラフ）
+        {data.metadata.title.replace(/^1[\s.、]*/, "")}（帯グラフ）
       </div>
 
       {group1 ? (
         <div>
-          <div className="text-center font-semibold text-sm mb-2">
-            {group1.name}
-          </div>
+          <div className="text-center font-semibold text-sm mb-2">{group1.name}</div>
           <div className="overflow-x-auto">
             <svg ref={svgRef1} />
           </div>
@@ -322,9 +368,7 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
 
       {group2 ? (
         <div>
-          <div className="text-center font-semibold text-sm mb-2">
-            {group2.name}
-          </div>
+          <div className="text-center font-semibold text-sm mb-2">{group2.name}</div>
           <div className="overflow-x-auto">
             <svg ref={svgRef2} />
           </div>

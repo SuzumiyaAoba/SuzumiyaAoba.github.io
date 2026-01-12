@@ -30,7 +30,7 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
   // グループヘッダーを定義
   const groupHeaders = [
     "口座の有無 （注１） | 口座を保有 している | ％",
-    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％"
+    "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％",
   ];
 
   // データがあるメトリクスを取得（グループヘッダーを除外）
@@ -45,15 +45,15 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx > 0 && headerIdx < 5;
-      })
+      }),
     },
     {
       name: "現在保有している金融商品",
       metrics: availableMetrics.filter((m) => {
         const headerIdx = data.headers.indexOf(m);
         return headerIdx >= 6;
-      })
-    }
+      }),
+    },
   ];
 
   useEffect(() => {
@@ -66,17 +66,17 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);
     if (isActive) {
-      setSelectedMetrics(selectedMetrics.filter(m => m !== metric));
+      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
     } else {
       setSelectedMetrics([...selectedMetrics, metric]);
     }
   };
 
   const handleGroupClick = (groupMetrics: string[]) => {
-    const allSelected = groupMetrics.every(m => selectedMetrics.includes(m));
+    const allSelected = groupMetrics.every((m) => selectedMetrics.includes(m));
 
     if (allSelected) {
-      const newSelected = selectedMetrics.filter(m => !groupMetrics.includes(m));
+      const newSelected = selectedMetrics.filter((m) => !groupMetrics.includes(m));
       setSelectedMetrics(newSelected);
     } else {
       const newSelected = [...new Set([...selectedMetrics, ...groupMetrics])];
@@ -84,10 +84,7 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
     }
   };
 
-  const renderBarLineChart = (
-    svgElement: SVGSVGElement,
-    group: typeof groups[0]
-  ) => {
+  const renderBarLineChart = (svgElement: SVGSVGElement, group: (typeof groups)[0]) => {
     const svg = d3.select(svgElement);
     svg.selectAll("*").remove();
 
@@ -102,7 +99,7 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // 選択されているメトリクスのみをフィルタリング
-    const activeMetrics = group.metrics.filter(m => selectedMetrics.includes(m));
+    const activeMetrics = group.metrics.filter((m) => selectedMetrics.includes(m));
 
     if (activeMetrics.length === 0) return;
 
@@ -118,21 +115,15 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
     if (parseData.length === 0) return;
 
     // スケール設定
-    const years = parseData.map(d => d.year);
+    const years = parseData.map((d) => d.year);
 
-    const x = d3
-      .scaleBand()
-      .domain(years.map(String))
-      .range([0, width])
-      .padding(0.3);
+    const x = d3.scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, 100])
-      .range([height, 0]);
+    const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
     // スタックレイアウト
-    const stack = d3.stack<any>()
+    const stack = d3
+      .stack<any>()
       .keys(activeMetrics)
       .order(d3.stackOrderNone)
       .offset(d3.stackOffsetNone);
@@ -144,23 +135,25 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
       .attr("class", "grid")
       .attr("transform", `translate(0,${height})`)
       .call(
-        d3.axisBottom(x)
+        d3
+          .axisBottom(x)
           .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
           .tickSize(-height)
-          .tickFormat(() => "")
+          .tickFormat(() => ""),
       )
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line")
-        .attr("stroke", "currentColor")
-        .attr("stroke-opacity", 0.1));
+      .call((g) => g.select(".domain").remove())
+      .call((g) =>
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+      );
 
     // X軸
     g.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(
-        d3.axisBottom(x)
+        d3
+          .axisBottom(x)
           .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
-          .tickFormat((d) => `${d}年`)
+          .tickFormat((d) => `${d}年`),
       )
       .selectAll("text")
       .attr("transform", "rotate(-45)")
@@ -170,14 +163,15 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
     g.append("g")
       .attr("class", "grid")
       .call(
-        d3.axisLeft(y)
+        d3
+          .axisLeft(y)
           .tickSize(-width)
-          .tickFormat(() => "")
+          .tickFormat(() => ""),
       )
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line")
-        .attr("stroke", "currentColor")
-        .attr("stroke-opacity", 0.1));
+      .call((g) => g.select(".domain").remove())
+      .call((g) =>
+        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+      );
 
     // Y軸
     g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}%`));
@@ -224,7 +218,7 @@ export const Sheet1BarLineChart: React.FC<Props> = ({ data }) => {
   return (
     <div className="my-8 space-y-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^1[\s.、]*/, '')}（積み上げ棒グラフ）
+        {data.metadata.title.replace(/^1[\s.、]*/, "")}（積み上げ棒グラフ）
       </div>
 
       {group1 ? (

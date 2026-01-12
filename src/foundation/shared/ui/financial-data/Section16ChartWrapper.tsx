@@ -16,7 +16,7 @@ export const Section16ChartWrapper: React.FC = () => {
     "旅行、レジャー 費用の支出が あったから | ％": "旅行・レジャー",
     "株式、債券価格の 低下により、 これらの評価額が 減少したから | ％": "株式・債券評価額下落",
     "扶養家族が 増えたから | ％": "扶養家族増加",
-    "その他 | ％": "その他"
+    "その他 | ％": "その他",
   };
 
   return (
@@ -29,7 +29,7 @@ export const Section16ChartWrapper: React.FC = () => {
         yAxisMax: 60,
         yAxisLabel: "％",
         startYear: 1989,
-        labelMap
+        labelMap,
       }}
     />
   );

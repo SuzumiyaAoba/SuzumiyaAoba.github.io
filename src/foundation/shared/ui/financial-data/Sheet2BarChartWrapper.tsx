@@ -14,12 +14,13 @@ export const Sheet2BarChartWrapper: React.FC = () => {
   const excludeHeaders = ["column_8", "column_9", "column_10", "column_11"];
 
   const availableMetrics = sheet2Data.headers.filter((header) => {
-    return !excludeHeaders.includes(header) &&
-           sheet2Data.series.some((s) => s.values[header] !== null);
+    return (
+      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null)
+    );
   });
 
   // パーセンテージデータのみを抽出
-  const percentageMetrics = availableMetrics.filter(m => m.includes("％"));
+  const percentageMetrics = availableMetrics.filter((m) => m.includes("％"));
 
   const groups: MetricGroup[] = [
     {
@@ -27,15 +28,15 @@ export const Sheet2BarChartWrapper: React.FC = () => {
       metrics: percentageMetrics.filter((m) => {
         const headerIdx = sheet2Data.headers.indexOf(m);
         return headerIdx >= 0 && headerIdx < 2;
-      })
+      }),
     },
     {
       name: "金融資産非保有世帯の預貯金口座の有無（注2）",
       metrics: percentageMetrics.filter((m) => {
         const headerIdx = sheet2Data.headers.indexOf(m);
         return headerIdx >= 2 && headerIdx < 5;
-      })
-    }
+      }),
+    },
   ];
 
   return (
@@ -47,7 +48,7 @@ export const Sheet2BarChartWrapper: React.FC = () => {
         yAxisMin: 0,
         yAxisMax: 100,
         yAxisLabel: "%",
-        startYear: 1963
+        startYear: 1963,
       }}
     />
   );

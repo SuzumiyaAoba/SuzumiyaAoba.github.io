@@ -22,7 +22,7 @@ export const Section32ChartWrapper: React.FC = () => {
     "債券 | 万円": "債券",
     "株式 | 万円": "株式",
     "投資信託 | 万円": "投資信託",
-    "財形貯蓄 | 万円": "財形貯蓄"
+    "財形貯蓄 | 万円": "財形貯蓄",
   };
   const startYear = Number(section32Data.metadata?.startYear ?? 2006);
 
@@ -35,26 +35,17 @@ export const Section32ChartWrapper: React.FC = () => {
         "うち決済用預金 | 万円",
         "うち定期性預貯金 | 万円",
         "郵便貯金 | 万円",
-        "うち定期性貯金 | 万円"
-      ]
+        "うち定期性貯金 | 万円",
+      ],
     },
     {
       name: "保険関連",
-      metrics: [
-        "生命保険 | 万円",
-        "損害保険 | 万円",
-        "個人年金保険 | 万円"
-      ]
+      metrics: ["生命保険 | 万円", "損害保険 | 万円", "個人年金保険 | 万円"],
     },
     {
       name: "有価証券関連",
-      metrics: [
-        "金銭信託 | 万円",
-        "債券 | 万円",
-        "株式 | 万円",
-        "投資信託 | 万円"
-      ]
-    }
+      metrics: ["金銭信託 | 万円", "債券 | 万円", "株式 | 万円", "投資信託 | 万円"],
+    },
   ];
 
   return (
@@ -70,7 +61,7 @@ export const Section32ChartWrapper: React.FC = () => {
             yAxisMax: 2500,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>
@@ -84,14 +75,14 @@ export const Section32ChartWrapper: React.FC = () => {
             "うち定期性預貯金 | 万円",
             "郵便貯金 | 万円",
             "うち定期性貯金 | 万円",
-            "損害保険 | 万円"
+            "損害保険 | 万円",
           ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 2500,
             yAxisLabel: "万円",
             startYear,
-            labelMap
+            labelMap,
           }}
         />
       </div>

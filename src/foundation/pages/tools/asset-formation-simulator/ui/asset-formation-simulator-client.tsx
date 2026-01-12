@@ -1,10 +1,7 @@
 "use client";
 
 import { axisBottom, axisLeft, format, line, max, scaleLinear, select } from "d3";
-import {
-  compressToEncodedURIComponent,
-  decompressFromEncodedURIComponent,
-} from "lz-string";
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 import { parseAsString, useQueryState } from "nuqs";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
@@ -100,10 +97,7 @@ const normalizeScenarioList = (list: ScenarioInput[]) =>
 type VisibleState = Record<string, boolean>;
 type ColorState = Record<string, string>;
 
-const normalizeVisibleState = (
-  value: unknown,
-  scenarioList: ScenarioInput[],
-): VisibleState => {
+const normalizeVisibleState = (value: unknown, scenarioList: ScenarioInput[]): VisibleState => {
   if (!value || typeof value !== "object") {
     return {};
   }
@@ -123,10 +117,7 @@ const normalizeVisibleState = (
   return next;
 };
 
-const normalizeColorState = (
-  value: unknown,
-  scenarioList: ScenarioInput[],
-): ColorState => {
+const normalizeColorState = (value: unknown, scenarioList: ScenarioInput[]): ColorState => {
   if (!value || typeof value !== "object") {
     return {};
   }
@@ -190,16 +181,11 @@ const normalizeScenarios = (value: unknown): ScenarioInput[] | null => {
       const raw = item as Record<string, unknown>;
       const monthlyContributionInput = raw["monthlyContributionInput"];
       const annualRateInput = raw["annualRateInput"];
-      if (
-        typeof monthlyContributionInput !== "string" ||
-        typeof annualRateInput !== "string"
-      ) {
+      if (typeof monthlyContributionInput !== "string" || typeof annualRateInput !== "string") {
         return null;
       }
-      const id =
-        typeof raw["id"] === "string" ? raw["id"] : `scenario-${index + 1}`;
-      const name =
-        typeof raw["name"] === "string" ? raw["name"] : `パターン${index + 1}`;
+      const id = typeof raw["id"] === "string" ? raw["id"] : `scenario-${index + 1}`;
+      const name = typeof raw["name"] === "string" ? raw["name"] : `パターン${index + 1}`;
 
       return {
         id,
@@ -217,8 +203,7 @@ const encodeScenarios = (value: ScenarioInput[]) =>
   compressToEncodedURIComponent(JSON.stringify(normalizeScenarioList(value)));
 
 const isSameScenarios = (a: ScenarioInput[], b: ScenarioInput[]) =>
-  JSON.stringify(normalizeScenarioList(a)) ===
-  JSON.stringify(normalizeScenarioList(b));
+  JSON.stringify(normalizeScenarioList(a)) === JSON.stringify(normalizeScenarioList(b));
 
 const decodeScenarios = (value: string): ScenarioInput[] | null => {
   const json = decompressFromEncodedURIComponent(value);
@@ -233,22 +218,15 @@ const decodeScenarios = (value: string): ScenarioInput[] | null => {
 };
 
 export default function AssetFormationSimulator() {
-  const [compressedParam, setCompressedParam] = useQueryState(
-    "p",
-    parseAsString,
-  );
-  const [scenarios, setScenarios] =
-    useState<ScenarioInput[]>(defaultScenarios);
+  const [compressedParam, setCompressedParam] = useQueryState("p", parseAsString);
+  const [scenarios, setScenarios] = useState<ScenarioInput[]>(defaultScenarios);
   const [selectedScenarioId, setSelectedScenarioId] = useState("scenario-1");
   const [yearsInput, setYearsInput] = useState("20");
   const chartRef = useRef<SVGSVGElement | null>(null);
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const lastEncodedRef = useRef<string | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
-  const [visibleSeriesParam, setVisibleSeriesParam] = useQueryState(
-    "v",
-    parseAsString,
-  );
+  const [visibleSeriesParam, setVisibleSeriesParam] = useQueryState("v", parseAsString);
   const [visibleSeries, setVisibleSeries] = useState<VisibleState>({});
   const [colorOverrides, setColorOverrides] = useState<ColorState>({});
   const [tooltip, setTooltip] = useState<{
@@ -303,8 +281,7 @@ export default function AssetFormationSimulator() {
         return { ...row, gainDiff };
       });
 
-      const baseColor =
-        scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
+      const baseColor = scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
       const color = colorOverrides[scenario.id] ?? baseColor;
 
       return {
@@ -320,8 +297,7 @@ export default function AssetFormationSimulator() {
   }, [scenarioList, years, colorOverrides]);
 
   const selectedScenario =
-    scenarioData.find((scenario) => scenario.id === selectedScenarioId) ??
-    scenarioData[0];
+    scenarioData.find((scenario) => scenario.id === selectedScenarioId) ?? scenarioData[0];
 
   const summary = selectedScenario?.schedule.at(-1) ?? {
     principal: 0,
@@ -329,10 +305,7 @@ export default function AssetFormationSimulator() {
     balance: 0,
   };
 
-  const tableRows = useMemo(
-    () => selectedScenario?.tableRows ?? [],
-    [selectedScenario],
-  );
+  const tableRows = useMemo(() => selectedScenario?.tableRows ?? [], [selectedScenario]);
 
   useEffect(() => {
     setVisibleSeries((prev) => {
@@ -371,21 +344,11 @@ export default function AssetFormationSimulator() {
     if (Object.keys(visibleSeries).length === 0) {
       return;
     }
-    const encoded = encodeVisibilityPayload(
-      visibleSeries,
-      colorOverrides,
-      scenarioList,
-    );
+    const encoded = encodeVisibilityPayload(visibleSeries, colorOverrides, scenarioList);
     if (encoded !== visibleSeriesParam) {
       setVisibleSeriesParam(encoded);
     }
-  }, [
-    visibleSeries,
-    colorOverrides,
-    scenarioList,
-    visibleSeriesParam,
-    setVisibleSeriesParam,
-  ]);
+  }, [visibleSeries, colorOverrides, scenarioList, visibleSeriesParam, setVisibleSeriesParam]);
 
   useEffect(() => {
     if (!compressedParam) {
@@ -411,11 +374,7 @@ export default function AssetFormationSimulator() {
       lastEncodedRef.current = encoded;
       setCompressedParam(encoded);
     }
-  }, [
-    scenarioList,
-    compressedParam,
-    setCompressedParam,
-  ]);
+  }, [scenarioList, compressedParam, setCompressedParam]);
 
   useEffect(() => {
     if (!selectedScenarioId && scenarioList[0]) {
@@ -425,10 +384,7 @@ export default function AssetFormationSimulator() {
       }
       return;
     }
-    if (
-      scenarioList.length > 0 &&
-      !scenarioList.some((s) => s.id === selectedScenarioId)
-    ) {
+    if (scenarioList.length > 0 && !scenarioList.some((s) => s.id === selectedScenarioId)) {
       const firstScenarioId = scenarioList[0]?.id;
       if (firstScenarioId) {
         setSelectedScenarioId(firstScenarioId);
@@ -464,23 +420,16 @@ export default function AssetFormationSimulator() {
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const lastMonth =
-      selectedScenario.schedule[selectedScenario.schedule.length - 1]?.month ??
-      1;
+    const lastMonth = selectedScenario.schedule[selectedScenario.schedule.length - 1]?.month ?? 1;
     const maxValue = max(scenarioData, (scenario) =>
-      max(scenario.schedule, (row) =>
-        Math.max(row.balance, row.principal, row.gain),
-      ),
+      max(scenario.schedule, (row) => Math.max(row.balance, row.principal, row.gain)),
     );
     const maxDiff = max(tableRows, (row) => row.gainDiff);
     const yMax = maxValue ? maxValue * 1.05 : 0;
-    const yMaxWithDiff =
-      maxDiff && maxDiff > yMax ? maxDiff * 1.05 : yMax;
+    const yMaxWithDiff = maxDiff && maxDiff > yMax ? maxDiff * 1.05 : yMax;
 
     const xScale = scaleLinear().domain([1, lastMonth]).range([0, innerWidth]);
-    const yScale = scaleLinear()
-      .domain([0, yMaxWithDiff])
-      .range([innerHeight, 0]);
+    const yScale = scaleLinear().domain([0, yMaxWithDiff]).range([innerHeight, 0]);
 
     const tickValues = (() => {
       if (lastMonth <= 12) {
@@ -531,9 +480,7 @@ export default function AssetFormationSimulator() {
 
     const yAxis = axisLeft(yScale)
       .ticks(5)
-      .tickFormat(
-        (value) => `${format(",")((value as number) / 10000)}万円`,
-      );
+      .tickFormat((value) => `${format(",")((value as number) / 10000)}万円`);
 
     chartGroup
       .append("g")
@@ -672,7 +619,6 @@ export default function AssetFormationSimulator() {
       .on("mouseleave", () => {
         setTooltip(null);
       });
-
   }, [scenarioData, selectedScenario, tableRows, visibleSeries]);
 
   return (
@@ -685,7 +631,8 @@ export default function AssetFormationSimulator() {
         ※ 本シミュレーションは実際の値動きを反映したものではありません。
       </p>
       <p className="mb-2 text-xs text-foreground/70">
-        ※ 本ツールは情報提供を目的としたもので、投資助言・勧誘を意図するものではありません。最終的な投資判断はご自身の責任で行ってください。
+        ※
+        本ツールは情報提供を目的としたもので、投資助言・勧誘を意図するものではありません。最終的な投資判断はご自身の責任で行ってください。
       </p>
       <p className="mb-6 text-xs text-foreground/70">
         ※ 情報の正確性には配慮していますが、その完全性・最新性を保証するものではありません。
@@ -712,9 +659,7 @@ export default function AssetFormationSimulator() {
 
       <div className="mb-8 space-y-4">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-sm font-semibold text-foreground/80">
-            積立てパターン
-          </h2>
+          <h2 className="text-sm font-semibold text-foreground/80">積立てパターン</h2>
           <button
             type="button"
             className="text-sm text-blue-600 hover:underline"
@@ -744,17 +689,13 @@ export default function AssetFormationSimulator() {
               style={{ backgroundColor: "var(--card)" }}
             >
               <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">
-                  パターン{index + 1}
-                </div>
+                <div className="text-sm font-semibold">パターン{index + 1}</div>
                 {scenarioList.length > 1 && (
                   <button
                     type="button"
                     className="text-xs text-red-600 hover:underline"
                     onClick={() => {
-                      syncScenarios((prev) =>
-                        prev.filter((item) => item.id !== scenario.id),
-                      );
+                      syncScenarios((prev) => prev.filter((item) => item.id !== scenario.id));
                     }}
                   >
                     削除
@@ -811,9 +752,7 @@ export default function AssetFormationSimulator() {
                     const value = event.target.value;
                     syncScenarios((prev) =>
                       prev.map((item) =>
-                        item.id === scenario.id
-                          ? { ...item, annualRateInput: value }
-                          : item,
+                        item.id === scenario.id ? { ...item, annualRateInput: value } : item,
                       ),
                     );
                   }}
@@ -827,32 +766,17 @@ export default function AssetFormationSimulator() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div
-          className="p-4 border rounded-md"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
           <p className="text-xs text-foreground/60 mb-1">元本合計</p>
-          <p className="text-xl font-semibold">
-            {formatYenWithMan(summary.principal)}
-          </p>
+          <p className="text-xl font-semibold">{formatYenWithMan(summary.principal)}</p>
         </div>
-        <div
-          className="p-4 border rounded-md"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
           <p className="text-xs text-foreground/60 mb-1">運用益</p>
-          <p className="text-xl font-semibold">
-            {formatYenWithMan(summary.gain)}
-          </p>
+          <p className="text-xl font-semibold">{formatYenWithMan(summary.gain)}</p>
         </div>
-        <div
-          className="p-4 border rounded-md"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
           <p className="text-xs text-foreground/60 mb-1">評価額</p>
-          <p className="text-xl font-semibold">
-            {formatYenWithMan(summary.balance)}
-          </p>
+          <p className="text-xl font-semibold">{formatYenWithMan(summary.balance)}</p>
         </div>
       </div>
 
@@ -898,29 +822,15 @@ export default function AssetFormationSimulator() {
                 onClick={() =>
                   setVisibleSeries((prev) => ({
                     ...prev,
-                    [`${scenario.id}:balance`]:
-                      !prev[`${scenario.id}:balance`],
+                    [`${scenario.id}:balance`]: !prev[`${scenario.id}:balance`],
                   }))
                 }
                 aria-pressed={!!visibleSeries[`${scenario.id}:balance`]}
               >
                 <svg width="18" height="6" viewBox="0 0 18 6">
-                  <line
-                    x1="0"
-                    y1="3"
-                    x2="18"
-                    y2="3"
-                    stroke={scenario.color}
-                    strokeWidth="2"
-                  />
+                  <line x1="0" y1="3" x2="18" y2="3" stroke={scenario.color} strokeWidth="2" />
                 </svg>
-                <span
-                  className={
-                    visibleSeries[`${scenario.id}:balance`]
-                      ? ""
-                      : "opacity-40"
-                  }
-                >
+                <span className={visibleSeries[`${scenario.id}:balance`] ? "" : "opacity-40"}>
                   評価額
                 </span>
               </button>
@@ -930,8 +840,7 @@ export default function AssetFormationSimulator() {
                 onClick={() =>
                   setVisibleSeries((prev) => ({
                     ...prev,
-                    [`${scenario.id}:principal`]:
-                      !prev[`${scenario.id}:principal`],
+                    [`${scenario.id}:principal`]: !prev[`${scenario.id}:principal`],
                   }))
                 }
                 aria-pressed={!!visibleSeries[`${scenario.id}:principal`]}
@@ -948,13 +857,7 @@ export default function AssetFormationSimulator() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span
-                  className={
-                    visibleSeries[`${scenario.id}:principal`]
-                      ? ""
-                      : "opacity-40"
-                  }
-                >
+                <span className={visibleSeries[`${scenario.id}:principal`] ? "" : "opacity-40"}>
                   元本
                 </span>
               </button>
@@ -981,11 +884,7 @@ export default function AssetFormationSimulator() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span
-                  className={
-                    visibleSeries[`${scenario.id}:gain`] ? "" : "opacity-40"
-                  }
-                >
+                <span className={visibleSeries[`${scenario.id}:gain`] ? "" : "opacity-40"}>
                   運用益
                 </span>
               </button>
@@ -995,8 +894,7 @@ export default function AssetFormationSimulator() {
                 onClick={() =>
                   setVisibleSeries((prev) => ({
                     ...prev,
-                    [`${scenario.id}:gainDiff`]:
-                      !prev[`${scenario.id}:gainDiff`],
+                    [`${scenario.id}:gainDiff`]: !prev[`${scenario.id}:gainDiff`],
                   }))
                 }
                 aria-pressed={!!visibleSeries[`${scenario.id}:gainDiff`]}
@@ -1013,13 +911,7 @@ export default function AssetFormationSimulator() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span
-                  className={
-                    visibleSeries[`${scenario.id}:gainDiff`]
-                      ? ""
-                      : "opacity-40"
-                  }
-                >
+                <span className={visibleSeries[`${scenario.id}:gainDiff`] ? "" : "opacity-40"}>
                   前年差
                 </span>
               </button>
@@ -1036,8 +928,7 @@ export default function AssetFormationSimulator() {
                 if (!container) {
                   return tooltip.x + 12;
                 }
-                const maxLeft =
-                  container.clientWidth - tooltipSize.width - 8;
+                const maxLeft = container.clientWidth - tooltipSize.width - 8;
                 return Math.max(8, Math.min(tooltip.x + 12, maxLeft));
               })(),
               top: (() => {
@@ -1045,8 +936,7 @@ export default function AssetFormationSimulator() {
                 if (!container) {
                   return tooltip.y + 12;
                 }
-                const maxTop =
-                  container.clientHeight - tooltipSize.height - 8;
+                const maxTop = container.clientHeight - tooltipSize.height - 8;
                 return Math.max(8, Math.min(tooltip.y + 12, maxTop));
               })(),
               backgroundColor: "var(--card)",
@@ -1059,9 +949,7 @@ export default function AssetFormationSimulator() {
             <div>元本: {numberFormatter.format(Math.round(tooltip.row.principal))} 円</div>
             <div>運用益: {numberFormatter.format(Math.round(tooltip.row.gain))} 円</div>
             <div>評価額: {numberFormatter.format(Math.round(tooltip.row.balance))} 円</div>
-            <div>
-              前年差: {numberFormatter.format(Math.round(tooltip.row.gainDiff))} 円
-            </div>
+            <div>前年差: {numberFormatter.format(Math.round(tooltip.row.gainDiff))} 円</div>
           </div>
         )}
       </div>
@@ -1078,13 +966,7 @@ export default function AssetFormationSimulator() {
             window.open(shareUrl, "_blank", "noopener,noreferrer");
           }}
         >
-          <svg
-            aria-hidden="true"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817-5.963 6.817H1.68l7.73-8.84L1.25 2.25h6.828l4.713 6.231 5.454-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" />
           </svg>
           ポスト

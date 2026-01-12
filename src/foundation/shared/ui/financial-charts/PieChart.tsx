@@ -15,11 +15,7 @@ type Props = {
   config?: ChartConfig;
 };
 
-export const PieChart: React.FC<Props> = ({
-  data,
-  title,
-  config = {}
-}) => {
+export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const colors = config.colors || d3.schemeCategory10;
 
@@ -40,32 +36,26 @@ export const PieChart: React.FC<Props> = ({
       .append("g")
       .attr("transform", `translate(${width / 2},${height / 2})`);
 
-    const pie = d3.pie<PieData>()
-      .value(d => d.value)
+    const pie = d3
+      .pie<PieData>()
+      .value((d) => d.value)
       .sort(null);
 
-    const arc = d3.arc<d3.PieArcDatum<PieData>>()
-      .innerRadius(0)
-      .outerRadius(radius);
+    const arc = d3.arc<d3.PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
 
-    const arcs = g.selectAll(".arc")
-      .data(pie(data))
-      .enter()
-      .append("g")
-      .attr("class", "arc");
+    const arcs = g.selectAll(".arc").data(pie(data)).enter().append("g").attr("class", "arc");
 
-    arcs.append("path")
+    arcs
+      .append("path")
       .attr("d", arc)
       .attr("fill", (_d, i) => colors[i % colors.length] ?? "#000")
       .attr("stroke", "white")
       .attr("stroke-width", 2)
-      .on("mouseover", function(event, d) {
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 0.7);
+      .on("mouseover", function (event, d) {
+        d3.select(this).transition().duration(200).attr("opacity", 0.7);
 
-        const tooltip = d3.select("body")
+        const tooltip = d3
+          .select("body")
           .append("div")
           .attr("class", "tooltip")
           .style("position", "absolute")
@@ -81,11 +71,8 @@ export const PieChart: React.FC<Props> = ({
           .style("left", `${event.pageX + 10}px`)
           .style("top", `${event.pageY - 28}px`);
       })
-      .on("mouseout", function() {
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 1);
+      .on("mouseout", function () {
+        d3.select(this).transition().duration(200).attr("opacity", 1);
 
         d3.selectAll(".tooltip").remove();
       });
@@ -129,7 +116,7 @@ export const PieChart: React.FC<Props> = ({
 
         const arcPos = arc.centroid(d);
 
-        return [arcPos, [outerX, outerY], [finalX, outerY]].map(p => p.join(',')).join(' ');
+        return [arcPos, [outerX, outerY], [finalX, outerY]].map((p) => p.join(",")).join(" ");
       });
 
     // 外側のラベル
@@ -173,8 +160,6 @@ export const PieChart: React.FC<Props> = ({
       })
       .attr("font-size", "11px")
       .text((d) => `${d.data.label} (${d.data.value}%)`);
-
-
   }, [data, colors]);
 
   return (

@@ -12,7 +12,7 @@ export const Section40ChartWrapper: React.FC = () => {
     "取得ないし 増改築した | ％": "取得・増改築",
     "売却した | ％": "売却",
     "取得ないし 増改築し、 売却もした | ％": "取得・増改築＋売却",
-    "取得、増改築、 売却ともに していない | ％": "いずれもなし"
+    "取得、増改築、 売却ともに していない | ％": "いずれもなし",
   };
 
   return (
@@ -25,7 +25,7 @@ export const Section40ChartWrapper: React.FC = () => {
         yAxisMax: 100,
         yAxisLabel: "％",
         startYear: 2007,
-        labelMap
+        labelMap,
       }}
     />
   );

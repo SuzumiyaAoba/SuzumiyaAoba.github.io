@@ -9,9 +9,7 @@ export type ReasoningProps = HTMLAttributes<HTMLDetailsElement> & {
 };
 
 export function Reasoning({ className, defaultOpen = false, ...props }: ReasoningProps) {
-  return (
-    <details className={cn("group not-prose m-0", className)} open={defaultOpen} {...props} />
-  );
+  return <details className={cn("group not-prose m-0", className)} open={defaultOpen} {...props} />;
 }
 
 export type ReasoningTriggerProps = HTMLAttributes<HTMLElement>;
