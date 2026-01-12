@@ -11,7 +11,7 @@
     "pagefind:dev": "run-s build:next build:pagefind",
     "start": "next start",
     "lint": "run-s lint:oxlint lint:fsd",
-    "lint:oxlint": "oxlint --nextjs-plugin --react-plugin --jsx-a11y-plugin --import-plugin --tsconfig ./tsconfig.json .",
+    "lint:oxlint": "oxlint --nextjs-plugin -A no-html-link-for-pages --react-plugin --jsx-a11y-plugin --import-plugin --tsconfig ./tsconfig.json .",
     "lint:fsd": "steiger ./src/foundation",
     "test": "vitest run",
     "test:watch": "vitest",

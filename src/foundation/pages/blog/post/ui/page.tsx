@@ -148,7 +148,6 @@ export default async function Page({ params }: PageProps) {
             </div>
             <div className="flex justify-end mt-4">
               <Button asChild variant="outline" size="sm">
-                {/* oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンク (X/Twitter) は <a> タグを使用 */}
                 <a
                   href={shareUrl}
                   target="_blank"
