@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 
@@ -30,17 +30,20 @@ export const LineChart: React.FC<Props> = ({
   } = config;
 
   // ラベルを取得する関数
-  const getLabel = (metric: string): string => {
-    if (labelMap[metric]) {
-      return labelMap[metric];
-    }
-    // デフォルト: パイプ区切りを整形
-    const parts = metric
-      .split("|")
-      .map((p) => p.trim())
-      .filter((p) => p && p !== "％");
-    return parts.join("");
-  };
+  const getLabel = useCallback(
+    (metric: string): string => {
+      if (labelMap[metric]) {
+        return labelMap[metric];
+      }
+      // デフォルト: パイプ区切りを整形
+      const parts = metric
+        .split("|")
+        .map((p) => p.trim())
+        .filter((p) => p && p !== "％");
+      return parts.join("");
+    },
+    [labelMap],
+  );
 
   const availableMetrics = data.headers.filter((header) => {
     return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
@@ -181,7 +184,7 @@ export const LineChart: React.FC<Props> = ({
           });
       });
     });
-  }, [data, selectedMetrics, config, startYear, yAxisMin, yAxisMax, yAxisLabel]);
+  }, [data, selectedMetrics, config, startYear, yAxisMin, yAxisMax, yAxisLabel, colors, getLabel, availableMetrics]);
 
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);
@@ -217,22 +220,24 @@ export const LineChart: React.FC<Props> = ({
         {effectiveGroups.map((group) => (
           <div key={group.name || "default"}>
             {group.name && (
-              <div
-                className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600"
+              <button
+                type="button"
+                className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 text-left"
                 onClick={() => handleGroupClick(group.metrics)}
               >
                 {group.name}
-              </div>
+              </button>
             )}
             <div className="flex flex-wrap gap-4">
               {group.metrics.map((metric, metricIndex) => {
                 const index = availableMetrics.indexOf(metric);
                 const isActive = selectedMetrics.includes(metric);
                 return (
-                  <div
+                  <button
                     key={`${metric}-${metricIndex}`}
+                    type="button"
                     onClick={() => handleLegendClick(metric)}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
                     style={{ opacity: isActive ? 1 : 0.3 }}
                   >
                     <div
@@ -240,7 +245,7 @@ export const LineChart: React.FC<Props> = ({
                       style={{ backgroundColor: colors[index % colors.length] }}
                     />
                     <span className="text-sm">{getLabel(metric)}</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>

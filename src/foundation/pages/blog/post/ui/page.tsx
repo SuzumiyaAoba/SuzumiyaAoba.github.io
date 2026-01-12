@@ -141,6 +141,7 @@ export default async function Page({ params }: PageProps) {
           </div>
           <div className="flex justify-end">
             <Button asChild variant="outline" size="sm">
+              {/* oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンク (X/Twitter) は <a> タグを使用 */}
               <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
                 <Icon icon="simple-icons:x" className="size-3.5" />ポスト
               </a>

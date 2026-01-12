@@ -195,7 +195,7 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
           });
       });
     });
-  }, [data, selectedMetrics]);
+  }, [data, selectedMetrics, colors, availableMetrics]);
 
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);
@@ -233,12 +233,13 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
       <div className="mt-4 space-y-4">
         {groups.map((group) => (
           <div key={group.name}>
-            <div
-              className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600"
+            <button
+              type="button"
+              className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 text-left"
               onClick={() => handleGroupClick(group.metrics)}
             >
               {group.name}
-            </div>
+            </button>
             <div className="flex flex-wrap gap-4">
               {group.metrics.map((metric) => {
                 const safeMetric = metric ?? "";
@@ -250,15 +251,16 @@ export const Sheet1Chart: React.FC<Props> = ({ data }) => {
                 const colorIndex = index >= 0 ? index : 0;
                 const swatch = colors[colorIndex % colors.length] ?? "#000";
                 return (
-                  <div
+                  <button
                     key={safeMetric}
+                    type="button"
                     onClick={() => handleLegendClick(safeMetric)}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
                     style={{ opacity: isActive ? 1 : 0.3 }}
                   >
                     <div className="w-4 h-4" style={{ backgroundColor: swatch }} />
                     <span className="text-sm">{safeMetric.split("|")[0]?.trim() ?? ""}</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>

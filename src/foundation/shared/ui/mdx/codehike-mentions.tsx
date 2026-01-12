@@ -36,6 +36,7 @@ export function MdxLink({ href, children, className, ...rest }: MdxLinkProps) {
   if (href) {
     if (href.startsWith("#")) {
       return (
+        // oxlint-disable-next-line next/no-html-link-for-pages -- ページ内アンカーは <a> タグを使用
         <a href={href} className={className} {...rest}>
           {children}
         </a>
@@ -44,6 +45,7 @@ export function MdxLink({ href, children, className, ...rest }: MdxLinkProps) {
     const isExternal = href.startsWith("http") || href.startsWith("mailto:");
     if (isExternal) {
       return (
+        // oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンクは <a> タグを使用
         <a href={href} className={className} target="_blank" rel="noopener noreferrer" {...rest}>
           {children}
         </a>

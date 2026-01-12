@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 
@@ -36,11 +36,15 @@ export const StackedBarChart: React.FC<Props> = ({
     return parts.join("");
   };
 
-  const availableMetrics = data.headers.filter((header) => {
-    return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
-  });
+  const availableMetrics = useMemo(() => {
+    return data.headers.filter((header) => {
+      return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
+    });
+  }, [data, excludeHeaders]);
 
-  const effectiveGroups = groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }];
+  const effectiveGroups = useMemo(() => {
+    return groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }];
+  }, [groups, availableMetrics]);
 
   useEffect(() => {
     if (selectedMetrics.length === 0 && availableMetrics.length > 0) {
@@ -69,110 +73,121 @@ export const StackedBarChart: React.FC<Props> = ({
     }
   };
 
-  const renderBarChart = (svgElement: SVGSVGElement, group: MetricGroup) => {
-    const svg = d3.select(svgElement);
-    svg.selectAll("*").remove();
+  const renderBarChart = useCallback(
+    (svgElement: SVGSVGElement, group: MetricGroup) => {
+      const svg = d3.select(svgElement);
+      svg.selectAll("*").remove();
 
-    const margin = { top: 20, right: 20, bottom: 60, left: 80 };
-    const width = 700 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+      const margin = { top: 20, right: 20, bottom: 60, left: 80 };
+      const width = 700 - margin.left - margin.right;
+      const height = 400 - margin.top - margin.bottom;
 
-    const g = svg
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      const g = svg
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const activeMetrics = group.metrics.filter((m) => selectedMetrics.includes(m));
+      const activeMetrics = group.metrics.filter((m) => selectedMetrics.includes(m));
 
-    if (activeMetrics.length === 0) return;
+      if (activeMetrics.length === 0) return;
 
-    const parseData = data.series.map((d) => {
-      const yearData: any = { year: Number.parseInt(d.year) };
-      activeMetrics.forEach((metric) => {
-        yearData[metric] = d.values[metric] || 0;
+      const parseData = data.series.map((d) => {
+        const yearData: any = { year: Number.parseInt(d.year) };
+        activeMetrics.forEach((metric) => {
+          yearData[metric] = d.values[metric] || 0;
+        });
+        return yearData;
       });
-      return yearData;
-    });
 
-    if (parseData.length === 0) return;
+      if (parseData.length === 0) return;
 
-    const years = parseData.map((d) => d.year);
+      const years = parseData.map((d) => d.year);
 
-    const x = d3.scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
+      const x = d3.scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
 
-    const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
+      const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
-    const stack = d3
-      .stack<any>()
-      .keys(activeMetrics)
-      .order(d3.stackOrderNone)
-      .offset(d3.stackOffsetNone);
+      const stack = d3
+        .stack<any>()
+        .keys(activeMetrics)
+        .order(d3.stackOrderNone)
+        .offset(d3.stackOffsetNone);
 
-    const stackedData = stack(parseData);
+      const stackedData = stack(parseData);
 
-    g.append("g")
-      .attr("class", "grid")
-      .attr("transform", `translate(0,${height})`)
-      .call(
-        d3
-          .axisBottom(x)
-          .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
-          .tickSize(-height)
-          .tickFormat(() => ""),
-      )
-      .call((g) => g.select(".domain").remove())
-      .call((g) =>
-        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-      );
+      g.append("g")
+        .attr("class", "grid")
+        .attr("transform", `translate(0,${height})`)
+        .call(
+          d3
+            .axisBottom(x)
+            .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
+            .tickSize(-height)
+            .tickFormat(() => ""),
+        )
+        .call((g) => g.select(".domain").remove())
+        .call((g) =>
+          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+        );
 
-    g.append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(
-        d3
-          .axisBottom(x)
-          .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
-          .tickFormat((d) => `${d}年`),
-      )
-      .selectAll("text")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      g.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(
+          d3
+            .axisBottom(x)
+            .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
+            .tickFormat((d) => `${d}年`),
+        )
+        .selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
 
-    g.append("g")
-      .attr("class", "grid")
-      .call(
-        d3
-          .axisLeft(y)
-          .tickSize(-width)
-          .tickFormat(() => ""),
-      )
-      .call((g) => g.select(".domain").remove())
-      .call((g) =>
-        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-      );
+      g.append("g")
+        .attr("class", "grid")
+        .call(
+          d3
+            .axisLeft(y)
+            .tickSize(-width)
+            .tickFormat(() => ""),
+        )
+        .call((g) => g.select(".domain").remove())
+        .call((g) =>
+          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
+        );
 
-    g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
+      g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
 
-    stackedData.forEach((layer) => {
-      const metricIndex = availableMetrics.indexOf(layer.key);
-      const colorIndex = metricIndex >= 0 ? metricIndex : 0;
-      const barColor = colors[colorIndex % colors.length] ?? "#000";
+      stackedData.forEach((layer) => {
+        const metricIndex = availableMetrics.indexOf(layer.key);
+        const colorIndex = metricIndex >= 0 ? metricIndex : 0;
+        const barColor = colors[colorIndex % colors.length] ?? "#000";
 
-      g.selectAll(`.bar-${metricIndex}`)
-        .data(layer)
-        .enter()
-        .append("rect")
-        .attr("class", `bar-${metricIndex}`)
-        .attr("x", (d) => x(String(d.data.year)) || 0)
-        .attr("y", (d) => y(d[1]))
-        .attr("height", (d) => y(d[0]) - y(d[1]))
-        .attr("width", x.bandwidth())
-        .attr("fill", barColor)
-        .attr("fill-opacity", 0.7)
-        .attr("stroke", barColor)
-        .attr("stroke-width", 1);
-    });
-  };
+        g.selectAll(`.bar-${metricIndex}`)
+          .data(layer)
+          .enter()
+          .append("rect")
+          .attr("class", `bar-${metricIndex}`)
+          .attr("x", (d) => x(String(d.data.year)) || 0)
+          .attr("y", (d) => y(d[1]))
+          .attr("height", (d) => y(d[0]) - y(d[1]))
+          .attr("width", x.bandwidth())
+          .attr("fill", barColor)
+          .attr("fill-opacity", 0.7)
+          .attr("stroke", barColor)
+          .attr("stroke-width", 1);
+      });
+    },
+    [
+      availableMetrics,
+      colors,
+      data.series,
+      selectedMetrics,
+      yAxisLabel,
+      yAxisMax,
+      yAxisMin,
+    ],
+  );
 
   useEffect(() => {
     effectiveGroups.forEach((group, index) => {
@@ -180,7 +195,7 @@ export const StackedBarChart: React.FC<Props> = ({
         renderBarChart(svgRefs.current[index]!, group);
       }
     });
-  }, [data, selectedMetrics, config, yAxisMin, yAxisMax, yAxisLabel]);
+  }, [effectiveGroups, renderBarChart]);
 
   return (
     <div className="my-8 space-y-8">
@@ -191,12 +206,13 @@ export const StackedBarChart: React.FC<Props> = ({
       {effectiveGroups.map((group, groupIndex) => (
         <div key={group.name || `group-${groupIndex}`}>
           {group.name && (
-            <div
-              className="text-center font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600"
+            <button
+              type="button"
+              className="text-center font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 w-full"
               onClick={() => handleGroupClick(group.metrics)}
             >
               {group.name}
-            </div>
+            </button>
           )}
           <div className="overflow-x-auto">
             <svg
@@ -210,10 +226,11 @@ export const StackedBarChart: React.FC<Props> = ({
               const index = availableMetrics.indexOf(metric);
               const isActive = selectedMetrics.includes(metric);
               return (
-                <div
+                <button
                   key={metric}
+                  type="button"
                   onClick={() => handleLegendClick(metric)}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
                   style={{ opacity: isActive ? 1 : 0.3 }}
                 >
                   <div
@@ -221,7 +238,7 @@ export const StackedBarChart: React.FC<Props> = ({
                     style={{ backgroundColor: colors[index % colors.length], opacity: 0.7 }}
                   />
                   <span className="text-sm">{getLabel(metric)}</span>
-                </div>
+                </button>
               );
             })}
           </div>
