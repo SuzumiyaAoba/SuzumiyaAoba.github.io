@@ -133,30 +133,41 @@ export default async function Page({ params }: PageProps) {
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
-          <article className="prose prose-neutral min-w-0 max-w-none font-sans">{content}</article>
+          <div className="flex flex-col w-full min-w-0">
+            <article className="prose prose-neutral min-w-0 max-w-none font-sans">
+              {content}
+            </article>
+            <div>
+              {amazonProducts.length > 0 ? (
+                <AmazonProductSection products={amazonProducts} className="mt-8" />
+              ) : null}
+              {post.frontmatter.amazonAssociate ? (
+                <div className="mt-6">
+                  <AmazonAssociate />
+                </div>
+              ) : null}
+            </div>
+            <div className="flex justify-end mt-4">
+              <Button asChild variant="outline" size="sm">
+                {/* oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンク (X/Twitter) は <a> タグを使用 */}
+                <a
+                  href={shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on X"
+                >
+                  <Icon icon="simple-icons:x" className="size-3.5" />
+                  ポスト
+                </a>
+              </Button>
+            </div>
+          </div>
           <div className="hidden lg:block">
             <Toc headings={headings} />
           </div>
-          {amazonProducts.length > 0 ? (
-            <AmazonProductSection products={amazonProducts} className="mt-8" />
-          ) : null}
-          {post.frontmatter.amazonAssociate ? (
-            <div className="mt-6">
-              <AmazonAssociate />
-            </div>
-          ) : null}
-          <div className="flex justify-end">
-            <Button asChild variant="outline" size="sm">
-              {/* oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンク (X/Twitter) は <a> タグを使用 */}
-              <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
-                <Icon icon="simple-icons:x" className="size-3.5" />
-                ポスト
-              </a>
-            </Button>
-          </div>
         </div>
 
-        <div className="mt-12 space-y-8">
+        <div className="mt-6 space-y-8">
           <Separator className="bg-border/40" />
           <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {prev ? (

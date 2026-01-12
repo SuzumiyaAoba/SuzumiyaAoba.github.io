@@ -10,12 +10,12 @@ export function AmazonAssociate({ className }: AmazonAssociateProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-amber-200/70 bg-amber-50/70 px-4 py-3 text-sm text-amber-900",
+        "rounded-lg border border-blue-200/70 bg-blue-50/70 px-4 py-3 text-sm text-blue-900",
         className,
       )}
     >
       <div className="flex items-start gap-2">
-        <Icon icon="lucide:alert-triangle" className="mt-0.5 size-4 text-amber-600" />
+        <Icon icon="lucide:info" className="mt-0.5 size-3.5 shrink-0 text-blue-600" />
         <div className="space-y-1">
           <p className="text-sm font-semibold">Amazon アソシエイトについて</p>
           <p className="text-xs leading-5">
