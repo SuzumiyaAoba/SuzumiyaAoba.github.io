@@ -76,6 +76,7 @@
     "eslint-plugin-storybook": "^10.1.11",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
+    "knip": "^5.80.2",
     "lint-staged": "^16.2.7",
     "npm-run-all2": "^8.0.4",
     "oxfmt": "^0.23.0",

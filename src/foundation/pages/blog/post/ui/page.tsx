@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getBlogPost, getBlogSlugs } from "@/entities/blog";
+import { getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
 import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
@@ -24,10 +24,7 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const slugs = await getBlogSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+
 
 async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
   const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;

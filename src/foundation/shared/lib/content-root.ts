@@ -19,6 +19,4 @@ export async function resolveContentRoot(): Promise<string> {
   }
 }
 
-export function getContentRootCandidates(): { contentRoot: string; fallbackContentRoot: string } {
-  return { contentRoot, fallbackContentRoot };
-}
+

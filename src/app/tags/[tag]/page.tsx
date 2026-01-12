@@ -30,7 +30,15 @@ export async function generateStaticParams(): Promise<Array<{ tag: string }>> {
     (post.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
   });
 
-  return [...tags.values()].map((tag) => ({ tag }));
+  return [...tags.values()]
+    .filter((tag) => typeof tag === "string" && tag.length > 0)
+    .flatMap((tag) => {
+      const encoded = encodeURIComponent(tag);
+      if (tag === encoded) {
+        return [{ tag }];
+      }
+      return [{ tag }, { tag: encoded }];
+    });
 }
 
 export { default } from "@/pages/tags/tag";

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
+import { getSeriesBySlug } from "@/entities/series-item";
 import { getBlogPost } from "@/entities/blog";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
@@ -16,10 +16,7 @@ type PageProps = {
   params: Promise<{ series: string }>;
 };
 
-export async function generateStaticParams(): Promise<Array<{ series: string }>> {
-  const slugs = await getSeriesSlugs();
-  return slugs.map((slug) => ({ series: slug }));
-}
+
 
 export default async function Page({ params }: PageProps) {
   const { series: slug } = await params;

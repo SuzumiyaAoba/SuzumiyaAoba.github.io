@@ -40,10 +40,10 @@ export const THEME_COLORS = {
 };
 
 // ユーティリティ関数
-export const cellToBinary = ([x, y]: Cell) =>
+const cellToBinary = ([x, y]: Cell) =>
   x.toString(2).padStart(3, "0") + y.toString(2).padStart(4, "0");
 
-export const cellToHex = ([x, y]: Cell) =>
+const cellToHex = ([x, y]: Cell) =>
   x.toString(16).padStart(1, "0") + y.toString(16).padStart(1, "0");
 
 export const ASCII_TABLE: string[][] = [

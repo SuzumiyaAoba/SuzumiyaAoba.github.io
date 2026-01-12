@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPostSlugs } from "@/entities/post";
+import { getPostSlugs } from "../lib";
 
 export default async function Page() {
   const slugs = await getPostSlugs();

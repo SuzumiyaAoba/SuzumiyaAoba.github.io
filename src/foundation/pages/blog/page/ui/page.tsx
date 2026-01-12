@@ -47,13 +47,7 @@ function getPageCount(total: number): number {
   return Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
 }
 
-export async function generateStaticParams(): Promise<Array<{ page: string }>> {
-  const posts = await getBlogPosts();
-  const pageCount = getPageCount(posts.length);
-  return Array.from({ length: pageCount }, (_, index) => ({
-    page: String(index + 1),
-  }));
-}
+
 
 type PageProps = {
   params: Promise<{ page: string }>;

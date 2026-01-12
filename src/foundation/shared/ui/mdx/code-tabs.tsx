@@ -18,7 +18,7 @@ export function CodeWithTabs(props: CodeWithTabsProps) {
   return <CodeTabs tabs={tabs} />;
 }
 
-export function CodeTabs({ tabs }: { tabs: RawCode[] }) {
+function CodeTabs({ tabs }: { tabs: RawCode[] }) {
   const [highlighted, setHighlighted] = useState<HighlightedCode[]>([]);
   const [active, setActive] = useState(0);
   const labels = useMemo(() => tabs.map((tab) => tab.meta || tab.lang || "tab"), [tabs]);

@@ -81,7 +81,7 @@ export async function renderMdx(
         recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
         rehypePlugins: [
           rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: "wrap" }],
+          [rehypeAutolinkHeadings, { behavior: "append" }],
           [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
           [
             rehypeKatex,

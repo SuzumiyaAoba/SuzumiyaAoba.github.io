@@ -14,7 +14,7 @@ type AmazonProductSource = {
   products?: AmazonProduct[];
 };
 
-export async function getAmazonProducts(): Promise<AmazonProduct[]> {
+async function getAmazonProducts(): Promise<AmazonProduct[]> {
   const root = await resolveContentRoot();
   const filePath = path.join(root, "amazon-products.json");
 
