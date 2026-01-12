@@ -184,7 +184,18 @@ export const LineChart: React.FC<Props> = ({
           });
       });
     });
-  }, [data, selectedMetrics, config, startYear, yAxisMin, yAxisMax, yAxisLabel, colors, getLabel, availableMetrics]);
+  }, [
+    data,
+    selectedMetrics,
+    config,
+    startYear,
+    yAxisMin,
+    yAxisMax,
+    yAxisLabel,
+    colors,
+    getLabel,
+    availableMetrics,
+  ]);
 
   const handleLegendClick = (metric: string) => {
     const isActive = selectedMetrics.includes(metric);

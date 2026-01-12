@@ -53,8 +53,6 @@ function resolveThumbnail(slug: string, thumbnail?: string): string {
   return `/contents/blog/${slug}/${thumbnail}`;
 }
 
-
-
 export default async function Page({ params }: PageProps) {
   const { tag } = await params;
   const decodedTag = normalizeTagParam(tag);

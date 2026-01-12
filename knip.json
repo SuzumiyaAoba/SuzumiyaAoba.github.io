@@ -9,9 +9,7 @@
     "vitest.config.{js,ts}",
     "steiger.config.ts"
   ],
-  "project": [
-    "src/**/*.{js,jsx,ts,tsx}"
-  ],
+  "project": ["src/**/*.{js,jsx,ts,tsx}"],
   "ignore": [
     "src/**/*.test.{js,jsx,ts,tsx}",
     "src/**/*.spec.{js,jsx,ts,tsx}",

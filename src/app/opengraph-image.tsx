@@ -31,41 +31,39 @@ export default async function Image() {
   const fontBuffer = await fetch(fontUrl).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        background: "white",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "80px",
+        fontFamily: '"Shippori Mincho"',
+      }}
+    >
       <div
         style={{
-          background: "white",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "80px",
-          fontFamily: '"Shippori Mincho"',
+          fontSize: 100,
+          fontWeight: 700,
+          color: "#18181b",
+          textAlign: "center",
         }}
       >
-        <div
-          style={{
-            fontSize: 100,
-            fontWeight: 700,
-            color: "#18181b",
-            textAlign: "center",
-          }}
-        >
-          {SITE_TITLE}
-        </div>
-        <div
-          style={{
-            marginTop: "40px",
-            fontSize: 40,
-            color: "#71717a",
-          }}
-        >
-          suzumiyaaoba.com
-        </div>
+        {SITE_TITLE}
       </div>
-    ),
+      <div
+        style={{
+          marginTop: "40px",
+          fontSize: 40,
+          color: "#71717a",
+        }}
+      >
+        suzumiyaaoba.com
+      </div>
+    </div>,
     {
       ...size,
       fonts: [

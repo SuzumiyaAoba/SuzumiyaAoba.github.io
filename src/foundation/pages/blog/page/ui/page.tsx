@@ -47,8 +47,6 @@ function getPageCount(total: number): number {
   return Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
 }
 
-
-
 type PageProps = {
   params: Promise<{ page: string }>;
 };

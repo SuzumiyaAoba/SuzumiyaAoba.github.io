@@ -16,8 +16,6 @@ type PageProps = {
   params: Promise<{ series: string }>;
 };
 
-
-
 export default async function Page({ params }: PageProps) {
   const { series: slug } = await params;
   const series = await getSeriesBySlug(slug);

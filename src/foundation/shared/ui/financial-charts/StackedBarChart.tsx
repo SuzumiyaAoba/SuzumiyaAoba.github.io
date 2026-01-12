@@ -178,15 +178,7 @@ export const StackedBarChart: React.FC<Props> = ({
           .attr("stroke-width", 1);
       });
     },
-    [
-      availableMetrics,
-      colors,
-      data.series,
-      selectedMetrics,
-      yAxisLabel,
-      yAxisMax,
-      yAxisMin,
-    ],
+    [availableMetrics, colors, data.series, selectedMetrics, yAxisLabel, yAxisMax, yAxisMin],
   );
 
   useEffect(() => {

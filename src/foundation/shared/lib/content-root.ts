@@ -18,5 +18,3 @@ export async function resolveContentRoot(): Promise<string> {
     return fallbackContentRoot;
   }
 }
-
-

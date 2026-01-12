@@ -27,8 +27,6 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-
-
 async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
   const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;
   const matches = [...source.matchAll(importRegex)];
@@ -139,11 +137,20 @@ export default async function Page({ params }: PageProps) {
           <div className="hidden lg:block">
             <Toc headings={headings} />
           </div>
+          {amazonProducts.length > 0 ? (
+            <AmazonProductSection products={amazonProducts} className="mt-8" />
+          ) : null}
+          {post.frontmatter.amazonAssociate ? (
+            <div className="mt-6">
+              <AmazonAssociate />
+            </div>
+          ) : null}
           <div className="flex justify-end">
             <Button asChild variant="outline" size="sm">
               {/* oxlint-disable-next-line next/no-html-link-for-pages -- 外部リンク (X/Twitter) は <a> タグを使用 */}
               <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
-                <Icon icon="simple-icons:x" className="size-3.5" />ポスト
+                <Icon icon="simple-icons:x" className="size-3.5" />
+                ポスト
               </a>
             </Button>
           </div>
@@ -197,14 +204,6 @@ export default async function Page({ params }: PageProps) {
           </nav>
         </div>
 
-        {amazonProducts.length > 0 ? (
-          <AmazonProductSection products={amazonProducts} className="mt-8" />
-        ) : null}
-        {post.frontmatter.amazonAssociate ? (
-          <div className="mt-6">
-            <AmazonAssociate />
-          </div>
-        ) : null}
         <div className="mt-12 mb-8">
           <GoogleAdsenseAd slot="9361206074" format="autorelaxed" responsive="false" />
         </div>
