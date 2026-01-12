@@ -214,10 +214,6 @@ export default async function Page({ params }: PageProps) {
             )}
           </nav>
         </div>
-
-        <div className="mt-12 mb-8">
-          <GoogleAdsenseAd slot="9361206074" format="autorelaxed" responsive="false" />
-        </div>
         <Comments />
       </main>
       <Footer />
