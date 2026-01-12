@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-# サイトマップの場所
-Sitemap: https://suzumiyaaoba.com/sitemap.xml 
