@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getBlogPost } from "@/entities/blog";
+import { getAdjacentPosts, getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
 import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
@@ -19,7 +19,9 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
 import { GoogleAdsenseAd } from "@/shared/ui/google-adsense-ad";
+import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
+import Link from "next/link";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -57,7 +59,7 @@ async function loadMdxScope(source: string, slug: string): Promise<Record<string
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const [post, { prev, next }] = await Promise.all([getBlogPost(slug), getAdjacentPosts(slug)]);
 
   if (!post) {
     notFound();
@@ -146,6 +148,47 @@ export default async function Page({ params }: PageProps) {
             </Button>
           </div>
         </div>
+
+        <div className="mt-12 space-y-8">
+          <Separator className="bg-border/40" />
+          <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {prev ? (
+              <Button
+                asChild
+                variant="ghost"
+                className="h-auto flex-col items-start gap-1 px-4 py-4 hover:bg-muted/50 sm:items-start"
+              >
+                <Link href={`/blog/post/${prev.slug}`}>
+                  <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                    <Icon icon="lucide:chevron-left" className="size-3" />
+                    Previous Post
+                  </span>
+                  <span className="line-clamp-2 text-sm font-semibold">{prev.frontmatter.title}</span>
+                </Link>
+              </Button>
+            ) : (
+              <div />
+            )}
+            {next ? (
+              <Button
+                asChild
+                variant="ghost"
+                className="h-auto flex-col items-end gap-1 px-4 py-4 text-right hover:bg-muted/50 sm:items-end"
+              >
+                <Link href={`/blog/post/${next.slug}`}>
+                  <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Next Post
+                    <Icon icon="lucide:chevron-right" className="size-3" />
+                  </span>
+                  <span className="line-clamp-2 text-sm font-semibold">{next.frontmatter.title}</span>
+                </Link>
+              </Button>
+            ) : (
+              <div />
+            )}
+          </nav>
+        </div>
+
         {amazonProducts.length > 0 ? (
           <AmazonProductSection products={amazonProducts} className="mt-8" />
         ) : null}

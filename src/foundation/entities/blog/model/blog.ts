@@ -114,3 +114,21 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     .filter((post) => !post.frontmatter.draft)
     .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1));
 }
+
+export async function getAdjacentPosts(
+  slug: string,
+): Promise<{ prev: BlogPost | null; next: BlogPost | null }> {
+  const posts = await getBlogPosts();
+  const index = posts.findIndex((post) => post.slug === slug);
+
+  if (index === -1) {
+    return { prev: null, next: null };
+  }
+
+  // posts are sorted by date desc (newest first)
+  // next is newer (index - 1), prev is older (index + 1)
+  return {
+    prev: posts[index + 1] ?? null,
+    next: posts[index - 1] ?? null,
+  };
+}
