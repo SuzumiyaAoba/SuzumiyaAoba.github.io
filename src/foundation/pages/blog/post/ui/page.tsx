@@ -106,7 +106,7 @@ export default async function Page({ params }: PageProps) {
           },
         }}
       />
-      <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <Breadcrumbs
           items={[
             { name: "Home", path: "/" },
@@ -117,7 +117,7 @@ export default async function Page({ params }: PageProps) {
         />
         <header className="mb-10 space-y-3">
           <p className="text-sm text-muted-foreground">{post.frontmatter.date}</p>
-          <h1 className="text-3xl font-semibold">{postTitle}</h1>
+          <h1 className="text-3xl font-semibold break-all">{postTitle}</h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {post.frontmatter.category ? (
               <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
@@ -153,36 +153,44 @@ export default async function Page({ params }: PageProps) {
           <Separator className="bg-border/40" />
           <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {prev ? (
-              <Button
-                asChild
-                variant="ghost"
-                className="h-auto flex-col items-start gap-1 px-4 py-4 hover:bg-muted/50 sm:items-start"
-              >
-                <Link href={`/blog/post/${prev.slug}`}>
-                  <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                    <Icon icon="lucide:chevron-left" className="size-3" />
-                    Previous Post
-                  </span>
-                  <span className="line-clamp-2 text-sm font-semibold">{prev.frontmatter.title}</span>
-                </Link>
-              </Button>
+              <div className="flex min-w-0 flex-1">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-auto w-full min-w-0 flex-col items-start gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                >
+                  <Link href={`/blog/post/${prev.slug}`} className="w-full min-w-0">
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                      <Icon icon="lucide:chevron-left" className="size-3" />
+                      Previous Post
+                    </span>
+                    <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
+                      {prev.frontmatter.title}
+                    </span>
+                  </Link>
+                </Button>
+              </div>
             ) : (
               <div />
             )}
             {next ? (
-              <Button
-                asChild
-                variant="ghost"
-                className="h-auto flex-col items-end gap-1 px-4 py-4 text-right hover:bg-muted/50 sm:items-end"
-              >
-                <Link href={`/blog/post/${next.slug}`}>
-                  <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                    Next Post
-                    <Icon icon="lucide:chevron-right" className="size-3" />
-                  </span>
-                  <span className="line-clamp-2 text-sm font-semibold">{next.frontmatter.title}</span>
-                </Link>
-              </Button>
+              <div className="flex min-w-0 flex-1">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-auto w-full min-w-0 flex-col items-end gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                >
+                  <Link href={`/blog/post/${next.slug}`} className="w-full min-w-0">
+                    <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
+                      Next Post
+                      <Icon icon="lucide:chevron-right" className="size-3" />
+                    </span>
+                    <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
+                      {next.frontmatter.title}
+                    </span>
+                  </Link>
+                </Button>
+              </div>
             ) : (
               <div />
             )}
