@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+
 
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
@@ -187,7 +187,7 @@ export function SearchPanel() {
             {results.map((result) => (
               <li key={result.url}>
                 <Card className="border-transparent bg-card/40 shadow-none">
-                  <Link
+                  <a
                     href={result.url}
                     className="flex flex-col gap-2 px-5 py-5 transition-colors hover:text-foreground/80"
                   >
@@ -201,7 +201,7 @@ export function SearchPanel() {
                       />
                     ) : null}
                     <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
-                  </Link>
+                  </a>
                 </Card>
               </li>
             ))}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
@@ -58,21 +58,21 @@ export default function Page() {
             <h2 className="text-lg font-semibold">Contents</h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/blog" className="font-medium text-foreground">
+                <a href="/blog" className="font-medium text-foreground">
                   ブログ
-                </Link>
+                </a>
                 <span>：技術メモと更新履歴</span>
               </li>
               <li>
-                <Link href="/series" className="font-medium text-foreground">
+                <a href="/series" className="font-medium text-foreground">
                   シリーズ
-                </Link>
+                </a>
                 <span>：テーマ別の連載まとめ</span>
               </li>
               <li>
-                <Link href="/tools" className="font-medium text-foreground">
+                <a href="/tools" className="font-medium text-foreground">
                   ツール
-                </Link>
+                </a>
                 <span>：小さなプロダクトの公開</span>
               </li>
             </ul>
@@ -81,9 +81,9 @@ export default function Page() {
             <h2 className="text-lg font-semibold">Contact</h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               お問い合わせは
-              <Link href="/contact" className="font-medium text-foreground">
+              <a href="/contact" className="font-medium text-foreground">
                 Contact
-              </Link>
+              </a>
               ページからお願いします。
             </p>
           </div>

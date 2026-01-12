@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+
 
 import { Button } from "@/shared/ui/button";
 
@@ -59,21 +59,21 @@ export function Header() {
           />
         </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 md:border-b-0">
-          <Link href="/" className="flex items-center gap-4">
+          <a href="/" className="flex items-center gap-4">
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-wide text-foreground">NO SEA. I SEE.</p>
             </div>
-          </Link>
+          </a>
 
           <nav className="hidden items-center gap-1 rounded-full p-1 text-sm font-medium text-muted-foreground md:flex">
             {navItems.map((item) => (
-              <Link
+              <a
                 key={item.href}
                 href={item.href}
                 className="rounded-full px-4 py-1.5 transition-colors hover:bg-background hover:text-foreground"
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -84,7 +84,7 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <Link href="/about">About</Link>
+              <a href="/about">About</a>
             </Button>
             <span className="text-border/70">/</span>
             <Button
@@ -93,7 +93,7 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <Link href="/search">Search</Link>
+              <a href="/search">Search</a>
             </Button>
           </div>
 
@@ -135,30 +135,30 @@ export function Header() {
       >
         <nav className="flex flex-col gap-3 py-4 text-sm font-medium text-muted-foreground">
           {navItems.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
               onClick={() => setIsMenuOpen(false)}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
           <div className="h-px bg-border/60" />
-          <Link
+          <a
             href="/about"
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
             About
-          </Link>
-          <Link
+          </a>
+          <a
             href="/search"
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
             Search
-          </Link>
+          </a>
         </nav>
       </div>
     </header>

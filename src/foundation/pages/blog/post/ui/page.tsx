@@ -20,7 +20,7 @@ import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
-import Link from "next/link";
+
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -176,7 +176,7 @@ export default async function Page({ params }: PageProps) {
                   variant="ghost"
                   className="h-auto w-full min-w-0 flex-col items-start gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
                 >
-                  <Link href={`/blog/post/${prev.slug}`} className="w-full min-w-0">
+                  <a href={`/blog/post/${prev.slug}`} className="w-full min-w-0">
                     <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                       <Icon icon="lucide:chevron-left" className="size-3" />
                       Previous Post
@@ -184,7 +184,7 @@ export default async function Page({ params }: PageProps) {
                     <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
                       {prev.frontmatter.title}
                     </span>
-                  </Link>
+                  </a>
                 </Button>
               </div>
             ) : (
@@ -197,7 +197,7 @@ export default async function Page({ params }: PageProps) {
                   variant="ghost"
                   className="h-auto w-full min-w-0 flex-col items-end gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
                 >
-                  <Link href={`/blog/post/${next.slug}`} className="w-full min-w-0">
+                  <a href={`/blog/post/${next.slug}`} className="w-full min-w-0">
                     <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
                       Next Post
                       <Icon icon="lucide:chevron-right" className="size-3" />
@@ -205,7 +205,7 @@ export default async function Page({ params }: PageProps) {
                     <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
                       {next.frontmatter.title}
                     </span>
-                  </Link>
+                  </a>
                 </Button>
               </div>
             ) : (

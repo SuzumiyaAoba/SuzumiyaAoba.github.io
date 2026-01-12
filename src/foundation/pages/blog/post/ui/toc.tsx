@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+
 
 import { cn } from "@/shared/lib/utils";
 import type { TocHeading } from "@/shared/lib/mdx";
@@ -72,7 +72,7 @@ export function Toc({ headings }: TocProps) {
       <ol className="space-y-2 text-muted-foreground">
         {headings.map((heading) => (
           <li key={heading.id} className={heading.level === 3 ? "pl-5" : ""}>
-            <Link
+            <a
               href={`#${heading.id}`}
               className={cn(
                 "group flex items-start gap-2 border-l border-transparent py-1 pl-2 text-sm transition-colors hover:text-foreground",
@@ -82,7 +82,7 @@ export function Toc({ headings }: TocProps) {
               )}
             >
               <span className="min-w-0 flex-1">{heading.text}</span>
-            </Link>
+            </a>
           </li>
         ))}
       </ol>

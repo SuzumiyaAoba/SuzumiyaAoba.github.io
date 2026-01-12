@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import Link from "next/link";
+
 
 import { getSeriesList } from "@/entities/series-item";
 import { Card } from "@/shared/ui/card";
@@ -37,7 +37,7 @@ export default async function Page() {
             {seriesList.map((series) => (
               <li key={series.slug}>
                 <Card className="border-transparent bg-card/40 shadow-none">
-                  <Link
+                  <a
                     href={`/series/${series.slug}`}
                     className="flex h-full flex-col gap-3 px-5 py-6"
                   >
@@ -50,7 +50,7 @@ export default async function Page() {
                     <span className="text-xs font-medium text-muted-foreground">
                       {series.posts.length} posts →
                     </span>
-                  </Link>
+                  </a>
                 </Card>
               </li>
             ))}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -95,9 +95,9 @@ export default async function Page({ params }: PageProps) {
           className="mb-2"
         />
         <section className="space-y-3">
-          <Link href="/tags" className="text-xs font-medium text-muted-foreground">
+          <a href="/tags" className="text-xs font-medium text-muted-foreground">
             ← タグ一覧
-          </Link>
+          </a>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-3xl font-semibold">#{decodedTag}</h1>
             <Badge
@@ -116,7 +116,7 @@ export default async function Page({ params }: PageProps) {
             return (
               <li key={post.slug}>
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                  <Link
+                  <a
                     href={`/blog/post/${post.slug}`}
                     className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
                   >
@@ -158,7 +158,7 @@ export default async function Page({ params }: PageProps) {
                         </div>
                       ) : null}
                     </div>
-                  </Link>
+                  </a>
                 </Card>
               </li>
             );

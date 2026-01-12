@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { cn } from "@/shared/lib/utils";
 import { Card } from "@/shared/ui/card";
 
@@ -21,7 +21,7 @@ export function AmazonProductSection({ products, className }: AmazonProductSecti
           key={product.id}
           className="border border-border/60 bg-card/40 shadow-none transition-colors hover:bg-card/60"
         >
-          <Link
+          <a
             href={product.productUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -43,7 +43,7 @@ export function AmazonProductSection({ products, className }: AmazonProductSecti
                 Amazon.co.jp で購入する
               </span>
             </div>
-          </Link>
+          </a>
         </Card>
       ))}
     </section>

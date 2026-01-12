@@ -1,6 +1,6 @@
 import type { AnnotationHandler } from "codehike/code";
 import { InnerLine } from "codehike/code";
-import Link from "next/link";
+
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 export function HoverContainer({ children }: { children: ReactNode }) {
@@ -52,14 +52,10 @@ export function MdxLink({ href, children, className, ...rest }: MdxLinkProps) {
       );
     }
 
-    const linkProps = Object.fromEntries(
-      Object.entries(rest).filter(([, value]) => value !== undefined),
-    ) as Omit<ComponentPropsWithoutRef<typeof Link>, "href">;
-
     return (
-      <Link href={href} className={className} {...linkProps}>
+      <a href={href} className={className} {...rest}>
         {children}
-      </Link>
+      </a>
     );
   }
 

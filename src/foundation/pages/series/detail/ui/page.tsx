@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -54,9 +54,9 @@ export default async function Page({ params }: PageProps) {
           className="mb-2"
         />
         <section className="space-y-3">
-          <Link href="/series" className="text-xs font-medium text-muted-foreground">
+          <a href="/series" className="text-xs font-medium text-muted-foreground">
             ← シリーズ一覧
-          </Link>
+          </a>
           <h1 className="text-3xl font-semibold">{series.name}</h1>
           {series.description ? (
             <p className="text-sm leading-6 text-muted-foreground">{series.description}</p>
@@ -72,7 +72,7 @@ export default async function Page({ params }: PageProps) {
             {entries.map((post) => (
               <li key={post.slug}>
                 <Card className="border-transparent bg-card/40 shadow-none">
-                  <Link href={`/blog/post/${post.slug}`} className="flex flex-col gap-3 px-5 py-5">
+                  <a href={`/blog/post/${post.slug}`} className="flex flex-col gap-3 px-5 py-5">
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{post.date}</span>
                       <Badge
@@ -96,7 +96,7 @@ export default async function Page({ params }: PageProps) {
                         </div>
                       ) : null}
                     </div>
-                  </Link>
+                  </a>
                 </Card>
               </li>
             ))}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
@@ -52,11 +52,11 @@ export default async function Page() {
             },
           ].map((item) => (
             <Card key={item.title} className="border-transparent bg-card/40 shadow-none">
-              <Link href={item.href} className="flex h-full flex-col gap-3 px-5 py-6">
+              <a href={item.href} className="flex h-full flex-col gap-3 px-5 py-6">
                 <div className="text-lg font-semibold">{item.title}</div>
                 <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
                 <span className="text-xs font-medium text-muted-foreground">詳しく見る →</span>
-              </Link>
+              </a>
             </Card>
           ))}
         </section>
@@ -64,9 +64,9 @@ export default async function Page() {
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-xl font-semibold">最新のブログ</h2>
-            <Link href="/blog" className="text-sm font-medium text-muted-foreground">
+            <a href="/blog" className="text-sm font-medium text-muted-foreground">
               すべて見る →
-            </Link>
+            </a>
           </div>
           {latestPosts.length === 0 ? (
             <Card className="border-transparent bg-card/40 shadow-none">
@@ -77,7 +77,7 @@ export default async function Page() {
               {latestPosts.map((post) => (
                 <li key={post.slug}>
                   <Card className="border-transparent bg-card/40 shadow-none">
-                    <Link
+                    <a
                       href={`/blog/post/${post.slug}`}
                       className="flex flex-col gap-3 px-5 py-5"
                     >
@@ -108,7 +108,7 @@ export default async function Page() {
                           </div>
                         ) : null}
                       </div>
-                    </Link>
+                    </a>
                   </Card>
                 </li>
               ))}

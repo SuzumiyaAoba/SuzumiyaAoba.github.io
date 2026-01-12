@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { StandardCode } from "@/shared/ui/svg";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -32,14 +32,14 @@ export default function Page() {
           </p>
           <h1 className="text-3xl font-semibold tracking-tight">ASCII Standard Code</h1>
           <p className="text-sm leading-6 text-muted-foreground">
-            <Link
+            <a
               href="https://www.rfc-editor.org/rfc/rfc20#section-2"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
               RFC 20
-            </Link>
+            </a>
             の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
             進数への変換表。
           </p>

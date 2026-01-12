@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
@@ -33,20 +33,20 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                   {item.path === "/" ? <Icon icon="lucide:home" className="size-3.5" /> : item.name}
                 </span>
               ) : item.path === "/" ? (
-                <Link
+                <a
                   href={item.path}
                   className="font-medium text-foreground/70 hover:text-foreground"
                   aria-label="Home"
                 >
                   <Icon icon="lucide:home" className="size-3.5" />
-                </Link>
+                </a>
               ) : (
-                <Link
+                <a
                   href={item.path}
                   className="font-medium text-foreground/70 hover:text-foreground"
                 >
                   {item.name}
-                </Link>
+                </a>
               )}
             </li>
           );

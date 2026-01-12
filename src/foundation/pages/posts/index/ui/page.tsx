@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { getPostSlugs } from "../lib";
 
 export default async function Page() {
@@ -10,9 +10,9 @@ export default async function Page() {
       <ul className="mt-6 space-y-2">
         {slugs.map((slug) => (
           <li key={slug}>
-            <Link className="underline underline-offset-4" href={`/posts/${slug}`}>
+            <a className="underline underline-offset-4" href={`/posts/${slug}`}>
               {slug}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

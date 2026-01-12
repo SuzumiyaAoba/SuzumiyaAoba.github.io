@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
@@ -66,7 +66,7 @@ export default async function Page() {
             {tags.map((tag) => (
               <li key={tag.name}>
                 <Card className="border-transparent bg-card/40 shadow-none transition-colors hover:bg-card/60">
-                  <Link
+                  <a
                     href={`/tags/${encodeURIComponent(tag.name)}`}
                     className="flex items-center justify-between gap-3 px-3 py-2"
                   >
@@ -75,7 +75,7 @@ export default async function Page() {
                       label={`${tag.name} (${tag.count})`}
                       className="bg-muted text-xs font-semibold text-muted-foreground"
                     />
-                  </Link>
+                  </a>
                 </Card>
               </li>
             ))}

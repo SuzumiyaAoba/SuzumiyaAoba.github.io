@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 
 export type GitHubCodeLinkProps = {
   url: string;
@@ -11,14 +11,14 @@ export function GitHubCodeLink({ url, skipPath = 0 }: GitHubCodeLinkProps) {
 
   return (
     <div className="my-4 text-center text-sm">
-      <Link
+      <a
         href={url}
         className="underline underline-offset-4"
         target="_blank"
         rel="noopener noreferrer"
       >
         {rest.slice(skipPath).join("/")}
-      </Link>
+      </a>
     </div>
   );
 }

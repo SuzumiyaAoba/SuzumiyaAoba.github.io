@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { Icon } from "@iconify/react";
 import { type VariantProps } from "class-variance-authority";
 
@@ -71,9 +71,9 @@ export function Tag({
 
   if (href) {
     return (
-      <Link href={href} className={cn(tagClassName, "transition-colors hover:text-foreground")}>
+      <a href={href} className={cn(tagClassName, "transition-colors hover:text-foreground")}>
         {content}
-      </Link>
+      </a>
     );
   }
 

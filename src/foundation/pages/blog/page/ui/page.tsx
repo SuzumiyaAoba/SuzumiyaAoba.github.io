@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -111,7 +111,7 @@ export default async function Page({ params }: PageProps) {
               <li key={post.slug}>
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
                   <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
-                    <Link
+                    <a
                       href={`/blog/post/${post.slug}`}
                       className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted md:w-44"
                     >
@@ -122,7 +122,7 @@ export default async function Page({ params }: PageProps) {
                         sizes="(min-width: 768px) 176px, 100vw"
                         className={isFallback ? "object-contain p-6 opacity-70" : "object-cover"}
                       />
-                    </Link>
+                    </a>
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -136,12 +136,12 @@ export default async function Page({ params }: PageProps) {
                             </Badge>
                           ) : null}
                         </div>
-                        <Link
+                        <a
                           href={`/blog/post/${post.slug}`}
                           className="block text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80"
                         >
                           {title}
-                        </Link>
+                        </a>
                       </div>
                       {tags.length > 0 ? (
                         <div className="flex flex-wrap gap-2 md:mt-auto">
@@ -165,12 +165,12 @@ export default async function Page({ params }: PageProps) {
 
         <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
           {pageNumber > 1 ? (
-            <Link
+            <a
               href={pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`}
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
               ← 前のページ
-            </Link>
+            </a>
           ) : (
             <span className="w-[5.5rem]" />
           )}
@@ -180,7 +180,7 @@ export default async function Page({ params }: PageProps) {
               const href = page === 1 ? "/blog" : `/blog/${page}`;
               const isActive = page === pageNumber;
               return (
-                <Link
+                <a
                   key={page}
                   href={href}
                   className={
@@ -190,17 +190,17 @@ export default async function Page({ params }: PageProps) {
                   }
                 >
                   {page}
-                </Link>
+                </a>
               );
             })}
           </div>
           {pageNumber < pageCount ? (
-            <Link
+            <a
               href={`/blog/${pageNumber + 1}`}
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
               次のページ →
-            </Link>
+            </a>
           ) : (
             <span className="w-[5.5rem]" />
           )}
