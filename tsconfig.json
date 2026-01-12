@@ -1,13 +1,10 @@
 {
+  "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -23,28 +20,27 @@
       }
     ],
     "paths": {
-      "@/fonts": [
-        "./src/styles/fonts"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-      "/pagefind/pagefind.js": [
-        "./src/types/pagefind.d.ts"
-      ]
-    },
-    "target": "ES2017"
+      "@/*": ["./src/*"],
+      "@/content/*": ["./content/*"],
+      "@/shared": ["./src/foundation/shared"],
+      "@/shared/*": ["./src/foundation/shared/*"],
+      "@/entities": ["./src/foundation/entities"],
+      "@/entities/*": ["./src/foundation/entities/*"],
+      "@/features": ["./src/foundation/features"],
+      "@/features/*": ["./src/foundation/features/*"],
+      "@/widgets": ["./src/foundation/widgets"],
+      "@/widgets/*": ["./src/foundation/widgets/*"],
+      "@/pages": ["./src/foundation/pages"],
+      "@/pages/*": ["./src/foundation/pages/*"]
+    }
   },
   "include": [
+    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "next-env.d.ts",
-    "src/libs/rehype/rehype-image-size.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
   ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ]
+  "exclude": ["node_modules"]
 }

@@ -1,0 +1,2140 @@
+{
+  "category": "その他",
+  "sheets": {
+    "71-74": {
+      "metadata": {
+        "title": "71 配偶者の学歴（配偶者あり）　＜属性(a)＞",
+        "toc_title": "74 世帯の回答者　＜属性(a)＞"
+      },
+      "headers": [
+        "小中学校 | ％",
+        "column_3",
+        "高等学校 | ％",
+        "column_5",
+        "専修学校・ 各種学校等 | ％",
+        "column_7",
+        "高専・ 短期大学 | ％",
+        "column_9",
+        "大学 | ％",
+        "column_11",
+        "大学院 | ％",
+        "column_13",
+        "その他 | ％",
+        "column_15"
+      ],
+      "series": [
+        {
+          "year": "2007",
+          "values": {
+            "小中学校 | ％": 10.7,
+            "column_3": null,
+            "高等学校 | ％": 44.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 8.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 13.7,
+            "column_9": null,
+            "大学 | ％": 9.8,
+            "column_11": null,
+            "大学院 | ％": 0.2,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2008",
+          "values": {
+            "小中学校 | ％": 11.4,
+            "column_3": null,
+            "高等学校 | ％": 45.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 8.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 13.6,
+            "column_9": null,
+            "大学 | ％": 10.2,
+            "column_11": null,
+            "大学院 | ％": 0.3,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2009",
+          "values": {
+            "小中学校 | ％": 11.5,
+            "column_3": null,
+            "高等学校 | ％": 44.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 8.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 13.2,
+            "column_9": null,
+            "大学 | ％": 10.9,
+            "column_11": null,
+            "大学院 | ％": 0.3,
+            "column_13": null,
+            "その他 | ％": 0.5,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2010",
+          "values": {
+            "小中学校 | ％": 11.1,
+            "column_3": null,
+            "高等学校 | ％": 44.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 8.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 14.3,
+            "column_9": null,
+            "大学 | ％": 10.2,
+            "column_11": null,
+            "大学院 | ％": 0.6,
+            "column_13": null,
+            "その他 | ％": 0.6,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2011",
+          "values": {
+            "小中学校 | ％": 9.4,
+            "column_3": null,
+            "高等学校 | ％": 42.8,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 13.8,
+            "column_9": null,
+            "大学 | ％": 11.6,
+            "column_11": null,
+            "大学院 | ％": 0.6,
+            "column_13": null,
+            "その他 | ％": 0.3,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2012",
+          "values": {
+            "小中学校 | ％": 9.6,
+            "column_3": null,
+            "高等学校 | ％": 43.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 14.5,
+            "column_9": null,
+            "大学 | ％": 10.8,
+            "column_11": null,
+            "大学院 | ％": 0.7,
+            "column_13": null,
+            "その他 | ％": 0.3,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2013",
+          "values": {
+            "小中学校 | ％": 8.3,
+            "column_3": null,
+            "高等学校 | ％": 43.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 9.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 15.6,
+            "column_9": null,
+            "大学 | ％": 11,
+            "column_11": null,
+            "大学院 | ％": 0.5,
+            "column_13": null,
+            "その他 | ％": 0.3,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2014",
+          "values": {
+            "小中学校 | ％": 7.5,
+            "column_3": null,
+            "高等学校 | ％": 43.2,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 9.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 15.6,
+            "column_9": null,
+            "大学 | ％": 12.2,
+            "column_11": null,
+            "大学院 | ％": 0.6,
+            "column_13": null,
+            "その他 | ％": 0.5,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2015",
+          "values": {
+            "小中学校 | ％": 7.3,
+            "column_3": null,
+            "高等学校 | ％": 42.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 15.2,
+            "column_9": null,
+            "大学 | ％": 13.4,
+            "column_11": null,
+            "大学院 | ％": 0.7,
+            "column_13": null,
+            "その他 | ％": 0.2,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2016",
+          "values": {
+            "小中学校 | ％": 6.4,
+            "column_3": null,
+            "高等学校 | ％": 40.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 9.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 14.8,
+            "column_9": null,
+            "大学 | ％": 14.4,
+            "column_11": null,
+            "大学院 | ％": 0.9,
+            "column_13": null,
+            "その他 | ％": 0.3,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2017",
+          "values": {
+            "小中学校 | ％": 5.5,
+            "column_3": null,
+            "高等学校 | ％": 42.2,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 14.3,
+            "column_9": null,
+            "大学 | ％": 15.2,
+            "column_11": null,
+            "大学院 | ％": 0.6,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2018",
+          "values": {
+            "小中学校 | ％": 5.9,
+            "column_3": null,
+            "高等学校 | ％": 41.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.1,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 15.5,
+            "column_9": null,
+            "大学 | ％": 14.1,
+            "column_11": null,
+            "大学院 | ％": 0.9,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2019",
+          "values": {
+            "小中学校 | ％": 4.7,
+            "column_3": null,
+            "高等学校 | ％": 41,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 15.2,
+            "column_9": null,
+            "大学 | ％": 15.8,
+            "column_11": null,
+            "大学院 | ％": 1.1,
+            "column_13": null,
+            "その他 | ％": 0.3,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2020",
+          "values": {
+            "小中学校 | ％": 3.6,
+            "column_3": null,
+            "高等学校 | ％": 35,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 16.4,
+            "column_9": null,
+            "大学 | ％": 18.9,
+            "column_11": null,
+            "大学院 | ％": 0.8,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2021",
+          "values": {
+            "小中学校 | ％": 2.5,
+            "column_3": null,
+            "高等学校 | ％": 32.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 9.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 22.5,
+            "column_9": null,
+            "大学 | ％": 26.3,
+            "column_11": null,
+            "大学院 | ％": 1.5,
+            "column_13": null,
+            "その他 | ％": 5.1,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2022",
+          "values": {
+            "小中学校 | ％": 2.2,
+            "column_3": null,
+            "高等学校 | ％": 30.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.5,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 23.1,
+            "column_9": null,
+            "大学 | ％": 26.8,
+            "column_11": null,
+            "大学院 | ％": 1.2,
+            "column_13": null,
+            "その他 | ％": 5.5,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2023",
+          "values": {
+            "小中学校 | ％": 2.3,
+            "column_3": null,
+            "高等学校 | ％": 29.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 21.4,
+            "column_9": null,
+            "大学 | ％": 28.1,
+            "column_11": null,
+            "大学院 | ％": 1.9,
+            "column_13": null,
+            "その他 | ％": 6.2,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2024",
+          "values": {
+            "小中学校 | ％": 1.8,
+            "column_3": null,
+            "高等学校 | ％": 29.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.6,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 20.6,
+            "column_9": null,
+            "大学 | ％": 29.7,
+            "column_11": null,
+            "大学院 | ％": 1.9,
+            "column_13": null,
+            "その他 | ％": 5.9,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2025",
+          "values": {
+            "小中学校 | ％": 1.3,
+            "column_3": null,
+            "高等学校 | ％": 29.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 10.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 22.5,
+            "column_9": null,
+            "大学 | ％": 33,
+            "column_11": null,
+            "大学院 | ％": 1.9,
+            "column_13": null,
+            "その他 | ％": 0.4,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2007",
+          "values": {
+            "小中学校 | ％": 15.6,
+            "column_3": null,
+            "高等学校 | ％": 24.8,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 5.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 35,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2008",
+          "values": {
+            "小中学校 | ％": 15.3,
+            "column_3": null,
+            "高等学校 | ％": 26.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 6.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 42.4,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2009",
+          "values": {
+            "小中学校 | ％": 16.9,
+            "column_3": null,
+            "高等学校 | ％": 25.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 6,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.3,
+            "column_9": null,
+            "大学 | ％": 45.3,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2010",
+          "values": {
+            "小中学校 | ％": 16,
+            "column_3": null,
+            "高等学校 | ％": 25.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 5.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 46.3,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2011",
+          "values": {
+            "小中学校 | ％": 15.4,
+            "column_3": null,
+            "高等学校 | ％": 26.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 5.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 45.2,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2012",
+          "values": {
+            "小中学校 | ％": 15.5,
+            "column_3": null,
+            "高等学校 | ％": 26.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 5.5,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 45.6,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2013",
+          "values": {
+            "小中学校 | ％": 17.1,
+            "column_3": null,
+            "高等学校 | ％": 27.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 5.1,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 44,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2014",
+          "values": {
+            "小中学校 | ％": 16.8,
+            "column_3": null,
+            "高等学校 | ％": 29.2,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 42.8,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2015",
+          "values": {
+            "小中学校 | ％": 17.2,
+            "column_3": null,
+            "高等学校 | ％": 30,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.3,
+            "column_9": null,
+            "大学 | ％": 41,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2016",
+          "values": {
+            "小中学校 | ％": 16.4,
+            "column_3": null,
+            "高等学校 | ％": 28.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.6,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.4,
+            "column_9": null,
+            "大学 | ％": 41.9,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2017",
+          "values": {
+            "小中学校 | ％": 18.7,
+            "column_3": null,
+            "高等学校 | ％": 30.1,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.3,
+            "column_9": null,
+            "大学 | ％": 39.6,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2018",
+          "values": {
+            "小中学校 | ％": 19.4,
+            "column_3": null,
+            "高等学校 | ％": 29.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.2,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 40.6,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2019",
+          "values": {
+            "小中学校 | ％": 21.4,
+            "column_3": null,
+            "高等学校 | ％": 31,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": null,
+            "大学 | ％": 37.5,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2020",
+          "values": {
+            "小中学校 | ％": 18.9,
+            "column_3": null,
+            "高等学校 | ％": 29.7,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 4.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.4,
+            "column_9": null,
+            "大学 | ％": 36.4,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2021",
+          "values": {
+            "小中学校 | ％": 18.9,
+            "column_3": null,
+            "高等学校 | ％": 29.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 2.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.3,
+            "column_9": null,
+            "大学 | ％": 48.3,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2022",
+          "values": {
+            "小中学校 | ％": 21.2,
+            "column_3": null,
+            "高等学校 | ％": 28.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 3.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 45.9,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2023",
+          "values": {
+            "小中学校 | ％": 21.5,
+            "column_3": null,
+            "高等学校 | ％": 29.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 2.5,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.5,
+            "column_9": null,
+            "大学 | ％": 46,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2024",
+          "values": {
+            "小中学校 | ％": 22.5,
+            "column_3": null,
+            "高等学校 | ％": 28.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 3.6,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 44.8,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2025",
+          "values": {
+            "小中学校 | ％": 25.6,
+            "column_3": null,
+            "高等学校 | ％": 28.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 2.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": null,
+            "大学 | ％": 43.3,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2007",
+          "values": {
+            "小中学校 | ％": 24.1,
+            "column_3": null,
+            "高等学校 | ％": 2.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 25.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 28.1,
+            "column_9": null,
+            "大学 | ％": 10.2,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2008",
+          "values": {
+            "小中学校 | ％": 22.6,
+            "column_3": null,
+            "高等学校 | ％": 1.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 27.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 29.2,
+            "column_9": null,
+            "大学 | ％": 12.6,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2009",
+          "values": {
+            "小中学校 | ％": 23.5,
+            "column_3": null,
+            "高等学校 | ％": 2.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 27.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 29.2,
+            "column_9": null,
+            "大学 | ％": 14.4,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2010",
+          "values": {
+            "小中学校 | ％": 23,
+            "column_3": null,
+            "高等学校 | ％": 2.1,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 27,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 29,
+            "column_9": null,
+            "大学 | ％": 15.1,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2011",
+          "values": {
+            "小中学校 | ％": 23.5,
+            "column_3": null,
+            "高等学校 | ％": 2.2,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 26.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 27.9,
+            "column_9": null,
+            "大学 | ％": 14.7,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2012",
+          "values": {
+            "小中学校 | ％": 23.1,
+            "column_3": null,
+            "高等学校 | ％": 2.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 27,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 29.1,
+            "column_9": null,
+            "大学 | ％": 14.5,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2013",
+          "values": {
+            "小中学校 | ％": 22.9,
+            "column_3": null,
+            "高等学校 | ％": 2.1,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 29.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 27.4,
+            "column_9": null,
+            "大学 | ％": 14,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2014",
+          "values": {
+            "小中学校 | ％": 21.4,
+            "column_3": null,
+            "高等学校 | ％": 2.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 30.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 27.6,
+            "column_9": null,
+            "大学 | ％": 14,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2015",
+          "values": {
+            "小中学校 | ％": 21.1,
+            "column_3": null,
+            "高等学校 | ％": 2.7,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 30.4,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 26.8,
+            "column_9": null,
+            "大学 | ％": 14,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2016",
+          "values": {
+            "小中学校 | ％": 21.6,
+            "column_3": null,
+            "高等学校 | ％": 2.3,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 29.8,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 26.5,
+            "column_9": null,
+            "大学 | ％": 14.6,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2017",
+          "values": {
+            "小中学校 | ％": 20.5,
+            "column_3": null,
+            "高等学校 | ％": 2.4,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 33,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 25.8,
+            "column_9": null,
+            "大学 | ％": 14,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2018",
+          "values": {
+            "小中学校 | ％": 20.8,
+            "column_3": null,
+            "高等学校 | ％": 1.9,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 33.3,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 26.9,
+            "column_9": null,
+            "大学 | ％": 14.1,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2019",
+          "values": {
+            "小中学校 | ％": 18.1,
+            "column_3": null,
+            "高等学校 | ％": 2.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 36.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 24.7,
+            "column_9": null,
+            "大学 | ％": 14.9,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2020",
+          "values": {
+            "小中学校 | ％": 22.4,
+            "column_3": null,
+            "高等学校 | ％": 3.8,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 34.3,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 19.8,
+            "column_9": null,
+            "大学 | ％": 12.4,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2021",
+          "values": {
+            "小中学校 | ％": 25.3,
+            "column_3": null,
+            "高等学校 | ％": 2.7,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 32.1,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 25.1,
+            "column_9": null,
+            "大学 | ％": 14.8,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2022",
+          "values": {
+            "小中学校 | ％": 24.8,
+            "column_3": null,
+            "高等学校 | ％": 2.5,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 34.3,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 24.1,
+            "column_9": null,
+            "大学 | ％": 14.2,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2023",
+          "values": {
+            "小中学校 | ％": 23.6,
+            "column_3": null,
+            "高等学校 | ％": 2.2,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 34.9,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 23.2,
+            "column_9": null,
+            "大学 | ％": 16.1,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2024",
+          "values": {
+            "小中学校 | ％": 23,
+            "column_3": null,
+            "高等学校 | ％": 2.6,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 34.7,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 24.3,
+            "column_9": null,
+            "大学 | ％": 15.4,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2025",
+          "values": {
+            "小中学校 | ％": 9.7,
+            "column_3": null,
+            "高等学校 | ％": 2.7,
+            "column_5": null,
+            "専修学校・ 各種学校等 | ％": 36.3,
+            "column_7": null,
+            "高専・ 短期大学 | ％": 37.2,
+            "column_9": null,
+            "大学 | ％": 14.1,
+            "column_11": null,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2018",
+          "values": {
+            "小中学校 | ％": 57.9,
+            "column_3": 37.3,
+            "高等学校 | ％": 2.2,
+            "column_5": 0.8,
+            "専修学校・ 各種学校等 | ％": 0.5,
+            "column_7": 0,
+            "高専・ 短期大学 | ％": 0,
+            "column_9": 0,
+            "大学 | ％": 0.3,
+            "column_11": 0,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2019",
+          "values": {
+            "小中学校 | ％": 58.2,
+            "column_3": 37.2,
+            "高等学校 | ％": 1.9,
+            "column_5": 0.9,
+            "専修学校・ 各種学校等 | ％": 0.3,
+            "column_7": 0.1,
+            "高専・ 短期大学 | ％": 0,
+            "column_9": 0,
+            "大学 | ％": 0.3,
+            "column_11": 0.1,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2020",
+          "values": {
+            "小中学校 | ％": 63.4,
+            "column_3": 27.2,
+            "高等学校 | ％": 1.8,
+            "column_5": 0.5,
+            "専修学校・ 各種学校等 | ％": 0.1,
+            "column_7": 0,
+            "高専・ 短期大学 | ％": 0,
+            "column_9": 0,
+            "大学 | ％": 0.1,
+            "column_11": 0.1,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2021",
+          "values": {
+            "小中学校 | ％": 65.5,
+            "column_3": 26.1,
+            "高等学校 | ％": 6.8,
+            "column_5": 0.4,
+            "専修学校・ 各種学校等 | ％": 0.3,
+            "column_7": 0.1,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": 0,
+            "大学 | ％": 0.5,
+            "column_11": 0.4,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2022",
+          "values": {
+            "小中学校 | ％": 62.9,
+            "column_3": 29.8,
+            "高等学校 | ％": 5.8,
+            "column_5": 0.4,
+            "専修学校・ 各種学校等 | ％": 0.4,
+            "column_7": 0,
+            "高専・ 短期大学 | ％": 0.2,
+            "column_9": 0.1,
+            "大学 | ％": 0.4,
+            "column_11": 0.1,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2023",
+          "values": {
+            "小中学校 | ％": 57.9,
+            "column_3": 34.3,
+            "高等学校 | ％": 5.8,
+            "column_5": 0.8,
+            "専修学校・ 各種学校等 | ％": 0.4,
+            "column_7": 0,
+            "高専・ 短期大学 | ％": 0,
+            "column_9": 0,
+            "大学 | ％": 0.6,
+            "column_11": 0.1,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2024",
+          "values": {
+            "小中学校 | ％": 59.4,
+            "column_3": 32.1,
+            "高等学校 | ％": 6,
+            "column_5": 0.8,
+            "専修学校・ 各種学校等 | ％": 0.6,
+            "column_7": 0.1,
+            "高専・ 短期大学 | ％": 0.1,
+            "column_9": 0,
+            "大学 | ％": 0.7,
+            "column_11": 0.2,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        },
+        {
+          "year": "2025",
+          "values": {
+            "小中学校 | ％": 78.5,
+            "column_3": 17.1,
+            "高等学校 | ％": 2.5,
+            "column_5": 0.1,
+            "専修学校・ 各種学校等 | ％": 0.1,
+            "column_7": 0.1,
+            "高専・ 短期大学 | ％": 0,
+            "column_9": 0,
+            "大学 | ％": 0.3,
+            "column_11": 1.4,
+            "大学院 | ％": null,
+            "column_13": null,
+            "その他 | ％": null,
+            "column_15": null
+          }
+        }
+      ]
+    },
+    "75": {
+      "metadata": {
+        "title": "75 年間手取り収入（税引後）　＜属性(b)＞",
+        "toc_title": "75 年間手取り収入（税引後）　＜属性(b)＞"
+      },
+      "headers": [
+        "％ | （180万円未満）",
+        "万円 | 未満 | ％ | （180万円以上）",
+        "～ | 500 | 万円 | 未満 | ％",
+        "column_5",
+        "～ | 750 | 万円 | 未満 | ％",
+        "column_7",
+        "～ | 1000 | 万円 | 未満 | ％",
+        "～ | 1200 | 万円 | 未満 | ％",
+        "万円 | 以上 | ％",
+        "万円",
+        "万円"
+      ],
+      "series": [
+        {
+          "year": "1969",
+          "values": {
+            "％ | （180万円未満）": 91.5,
+            "万円 | 未満 | ％ | （180万円以上）": 7,
+            "～ | 500 | 万円 | 未満 | ％": null,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": null,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1970",
+          "values": {
+            "％ | （180万円未満）": 85.4,
+            "万円 | 未満 | ％ | （180万円以上）": 8.2,
+            "～ | 500 | 万円 | 未満 | ％": null,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": null,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1971",
+          "values": {
+            "％ | （180万円未満）": 87.7,
+            "万円 | 未満 | ％ | （180万円以上）": 6.9,
+            "～ | 500 | 万円 | 未満 | ％": 3.8,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": null,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1972",
+          "values": {
+            "％ | （180万円未満）": 83.3,
+            "万円 | 未満 | ％ | （180万円以上）": 10.1,
+            "～ | 500 | 万円 | 未満 | ％": 5.2,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": null,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1973",
+          "values": {
+            "％ | （180万円未満）": 76.2,
+            "万円 | 未満 | ％ | （180万円以上）": 13.4,
+            "～ | 500 | 万円 | 未満 | ％": 6.4,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 1.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1974",
+          "values": {
+            "％ | （180万円未満）": 60.5,
+            "万円 | 未満 | ％ | （180万円以上）": 23.8,
+            "～ | 500 | 万円 | 未満 | ％": 7.7,
+            "column_5": 3,
+            "～ | 750 | 万円 | 未満 | ％": 2.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1975",
+          "values": {
+            "％ | （180万円未満）": 44.9,
+            "万円 | 未満 | ％ | （180万円以上）": 31.2,
+            "～ | 500 | 万円 | 未満 | ％": 10.3,
+            "column_5": 4,
+            "～ | 750 | 万円 | 未満 | ％": 4.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1976",
+          "values": {
+            "％ | （180万円未満）": 34,
+            "万円 | 未満 | ％ | （180万円以上）": 34.6,
+            "～ | 500 | 万円 | 未満 | ％": 15,
+            "column_5": 7.1,
+            "～ | 750 | 万円 | 未満 | ％": 5.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": null,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1977",
+          "values": {
+            "％ | （180万円未満）": 24.5,
+            "万円 | 未満 | ％ | （180万円以上）": 32.7,
+            "～ | 500 | 万円 | 未満 | ％": 21.6,
+            "column_5": 10.2,
+            "～ | 750 | 万円 | 未満 | ％": 5.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 2.9,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1978",
+          "values": {
+            "％ | （180万円未満）": 20.8,
+            "万円 | 未満 | ％ | （180万円以上）": 31.8,
+            "～ | 500 | 万円 | 未満 | ％": 22,
+            "column_5": 12,
+            "～ | 750 | 万円 | 未満 | ％": 7.2,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 3.5,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1979",
+          "values": {
+            "％ | （180万円未満）": 15.9,
+            "万円 | 未満 | ％ | （180万円以上）": 28.2,
+            "～ | 500 | 万円 | 未満 | ％": 24.5,
+            "column_5": 14.9,
+            "～ | 750 | 万円 | 未満 | ％": 8.4,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 5.5,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1980",
+          "values": {
+            "％ | （180万円未満）": 16,
+            "万円 | 未満 | ％ | （180万円以上）": 25.5,
+            "～ | 500 | 万円 | 未満 | ％": 23.2,
+            "column_5": 15.4,
+            "～ | 750 | 万円 | 未満 | ％": 9.6,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 6.7,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1981",
+          "values": {
+            "％ | （180万円未満）": 14.1,
+            "万円 | 未満 | ％ | （180万円以上）": 22.4,
+            "～ | 500 | 万円 | 未満 | ％": 22.7,
+            "column_5": 16.2,
+            "～ | 750 | 万円 | 未満 | ％": 12.1,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.9,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1982",
+          "values": {
+            "％ | （180万円未満）": 12.4,
+            "万円 | 未満 | ％ | （180万円以上）": 22.8,
+            "～ | 500 | 万円 | 未満 | ％": 22.9,
+            "column_5": 16.6,
+            "～ | 750 | 万円 | 未満 | ％": 12.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.9,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1983",
+          "values": {
+            "％ | （180万円未満）": 11.9,
+            "万円 | 未満 | ％ | （180万円以上）": 20,
+            "～ | 500 | 万円 | 未満 | ％": 24.1,
+            "column_5": 17.9,
+            "～ | 750 | 万円 | 未満 | ％": 13.1,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.9,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1984",
+          "values": {
+            "％ | （180万円未満）": 12.3,
+            "万円 | 未満 | ％ | （180万円以上）": 19.3,
+            "～ | 500 | 万円 | 未満 | ％": 22.2,
+            "column_5": 18.4,
+            "～ | 750 | 万円 | 未満 | ％": 14.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 9.6,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1985",
+          "values": {
+            "％ | （180万円未満）": 11.1,
+            "万円 | 未満 | ％ | （180万円以上）": 17.4,
+            "～ | 500 | 万円 | 未満 | ％": 23.1,
+            "column_5": 17.4,
+            "～ | 750 | 万円 | 未満 | ％": 14.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 9.7,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1986",
+          "values": {
+            "％ | （180万円未満）": 9.8,
+            "万円 | 未満 | ％ | （180万円以上）": 16.8,
+            "～ | 500 | 万円 | 未満 | ％": 20.9,
+            "column_5": 18.1,
+            "～ | 750 | 万円 | 未満 | ％": 15.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.8,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1987",
+          "values": {
+            "％ | （180万円未満）": 9.2,
+            "万円 | 未満 | ％ | （180万円以上）": 15.7,
+            "～ | 500 | 万円 | 未満 | ％": 18.9,
+            "column_5": 17.9,
+            "～ | 750 | 万円 | 未満 | ％": 16.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13.5,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1988",
+          "values": {
+            "％ | （180万円未満）": 7.7,
+            "万円 | 未満 | ％ | （180万円以上）": 13.7,
+            "～ | 500 | 万円 | 未満 | ％": 17.7,
+            "column_5": 19.5,
+            "～ | 750 | 万円 | 未満 | ％": 19,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 16.1,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1989",
+          "values": {
+            "％ | （180万円未満）": 6.8,
+            "万円 | 未満 | ％ | （180万円以上）": 12,
+            "～ | 500 | 万円 | 未満 | ％": 17.3,
+            "column_5": 19.1,
+            "～ | 750 | 万円 | 未満 | ％": 19.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 17.7,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1990",
+          "values": {
+            "％ | （180万円未満）": 2.7,
+            "万円 | 未満 | ％ | （180万円以上）": 7.5,
+            "～ | 500 | 万円 | 未満 | ％": 13,
+            "column_5": 14.3,
+            "～ | 750 | 万円 | 未満 | ％": 23.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 23.5,
+            "～ | 1200 | 万円 | 未満 | ％": null,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1991",
+          "values": {
+            "％ | （180万円未満）": 3.8,
+            "万円 | 未満 | ％ | （180万円以上）": 6.4,
+            "～ | 500 | 万円 | 未満 | ％": 12.6,
+            "column_5": 14.1,
+            "～ | 750 | 万円 | 未満 | ％": 22.6,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 12.1,
+            "～ | 1200 | 万円 | 未満 | ％": 5.3,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1992",
+          "values": {
+            "％ | （180万円未満）": 3.5,
+            "万円 | 未満 | ％ | （180万円以上）": 6.8,
+            "～ | 500 | 万円 | 未満 | ％": 12,
+            "column_5": 13.1,
+            "～ | 750 | 万円 | 未満 | ％": 22.2,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 12.3,
+            "～ | 1200 | 万円 | 未満 | ％": 6.1,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1993",
+          "values": {
+            "％ | （180万円未満）": 3.5,
+            "万円 | 未満 | ％ | （180万円以上）": 5.6,
+            "～ | 500 | 万円 | 未満 | ％": 10.9,
+            "column_5": 10.5,
+            "～ | 750 | 万円 | 未満 | ％": 18.1,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13.2,
+            "～ | 1200 | 万円 | 未満 | ％": 7.1,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1994",
+          "values": {
+            "％ | （180万円未満）": 3.6,
+            "万円 | 未満 | ％ | （180万円以上）": 6,
+            "～ | 500 | 万円 | 未満 | ％": 10.8,
+            "column_5": 10.7,
+            "～ | 750 | 万円 | 未満 | ％": 19.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13,
+            "～ | 1200 | 万円 | 未満 | ％": 6.8,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1995",
+          "values": {
+            "％ | （180万円未満）": 3.2,
+            "万円 | 未満 | ％ | （180万円以上）": 6.1,
+            "～ | 500 | 万円 | 未満 | ％": 9.8,
+            "column_5": 12,
+            "～ | 750 | 万円 | 未満 | ％": 19.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 14,
+            "～ | 1200 | 万円 | 未満 | ％": 7.9,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1996",
+          "values": {
+            "％ | （180万円未満）": 2.4,
+            "万円 | 未満 | ％ | （180万円以上）": 5.9,
+            "～ | 500 | 万円 | 未満 | ％": 11.5,
+            "column_5": 11.8,
+            "～ | 750 | 万円 | 未満 | ％": 21.2,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 15.2,
+            "～ | 1200 | 万円 | 未満 | ％": 7.9,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1997",
+          "values": {
+            "％ | （180万円未満）": 1.9,
+            "万円 | 未満 | ％ | （180万円以上）": 6.1,
+            "～ | 500 | 万円 | 未満 | ％": 11.7,
+            "column_5": 12.2,
+            "～ | 750 | 万円 | 未満 | ％": 19.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 15.6,
+            "～ | 1200 | 万円 | 未満 | ％": 9,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1998",
+          "values": {
+            "％ | （180万円未満）": 2.4,
+            "万円 | 未満 | ％ | （180万円以上）": 6,
+            "～ | 500 | 万円 | 未満 | ％": 10.9,
+            "column_5": 12.1,
+            "～ | 750 | 万円 | 未満 | ％": 20.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 14.4,
+            "～ | 1200 | 万円 | 未満 | ％": 6.5,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "1999",
+          "values": {
+            "％ | （180万円未満）": 3.1,
+            "万円 | 未満 | ％ | （180万円以上）": 7.1,
+            "～ | 500 | 万円 | 未満 | ％": 11.9,
+            "column_5": 10.7,
+            "～ | 750 | 万円 | 未満 | ％": 18.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13.3,
+            "～ | 1200 | 万円 | 未満 | ％": 7.1,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "2000",
+          "values": {
+            "％ | （180万円未満）": 3.1,
+            "万円 | 未満 | ％ | （180万円以上）": 7.6,
+            "～ | 500 | 万円 | 未満 | ％": 12.5,
+            "column_5": 11.6,
+            "～ | 750 | 万円 | 未満 | ％": 18.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 12,
+            "～ | 1200 | 万円 | 未満 | ％": 7.1,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "2001",
+          "values": {
+            "％ | （180万円未満）": 4,
+            "万円 | 未満 | ％ | （180万円以上）": 8,
+            "～ | 500 | 万円 | 未満 | ％": 13,
+            "column_5": 11.7,
+            "～ | 750 | 万円 | 未満 | ％": 17.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.1,
+            "～ | 1200 | 万円 | 未満 | ％": 7.4,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "2002",
+          "values": {
+            "％ | （180万円未満）": 4.9,
+            "万円 | 未満 | ％ | （180万円以上）": 9.7,
+            "～ | 500 | 万円 | 未満 | ％": 14.1,
+            "column_5": 11.1,
+            "～ | 750 | 万円 | 未満 | ％": 17.6,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.5,
+            "～ | 1200 | 万円 | 未満 | ％": 5.2,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "2003",
+          "values": {
+            "％ | （180万円未満）": 7.3,
+            "万円 | 未満 | ％ | （180万円以上）": 11.3,
+            "～ | 500 | 万円 | 未満 | ％": 14.2,
+            "column_5": 11.5,
+            "～ | 750 | 万円 | 未満 | ％": 16.7,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 9.5,
+            "～ | 1200 | 万円 | 未満 | ％": 4.8,
+            "万円 | 以上 | ％": null,
+            "万円": null
+          }
+        },
+        {
+          "year": "2004",
+          "values": {
+            "％ | （180万円未満）": 1.4,
+            "万円 | 未満 | ％ | （180万円以上）": 23.7,
+            "～ | 500 | 万円 | 未満 | ％": 27.9,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 20.4,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13.7,
+            "～ | 1200 | 万円 | 未満 | ％": 4.1,
+            "万円 | 以上 | ％": 4.9,
+            "万円": null
+          }
+        },
+        {
+          "year": "2005",
+          "values": {
+            "％ | （180万円未満）": 1.2,
+            "万円 | 未満 | ％ | （180万円以上）": 21.9,
+            "～ | 500 | 万円 | 未満 | ％": 28.9,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.4,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.8,
+            "～ | 1200 | 万円 | 未満 | ％": 3.9,
+            "万円 | 以上 | ％": 4.3,
+            "万円": null
+          }
+        },
+        {
+          "year": "2006",
+          "values": {
+            "％ | （180万円未満）": 0.8,
+            "万円 | 未満 | ％ | （180万円以上）": 24.9,
+            "～ | 500 | 万円 | 未満 | ％": 27.7,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 20.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.9,
+            "～ | 1200 | 万円 | 未満 | ％": 4.5,
+            "万円 | 以上 | ％": 4.6,
+            "万円": null
+          }
+        },
+        {
+          "year": "2007",
+          "values": {
+            "％ | （180万円未満）": 0.6,
+            "万円 | 未満 | ％ | （180万円以上）": 16.8,
+            "～ | 500 | 万円 | 未満 | ％": 29.2,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.9,
+            "～ | 1200 | 万円 | 未満 | ％": 3.4,
+            "万円 | 以上 | ％": 3.5,
+            "万円": 450
+          }
+        },
+        {
+          "year": "2008",
+          "values": {
+            "％ | （180万円未満）": 0.5,
+            "万円 | 未満 | ％ | （180万円以上）": 18.7,
+            "～ | 500 | 万円 | 未満 | ％": 27.7,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.9,
+            "～ | 1200 | 万円 | 未満 | ％": 4.2,
+            "万円 | 以上 | ％": 4.2,
+            "万円": 450
+          }
+        },
+        {
+          "year": "2009",
+          "values": {
+            "％ | （180万円未満）": 0.7,
+            "万円 | 未満 | ％ | （180万円以上）": 18.9,
+            "～ | 500 | 万円 | 未満 | ％": 29.3,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23.4,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.3,
+            "～ | 1200 | 万円 | 未満 | ％": 4.1,
+            "万円 | 以上 | ％": 3.7,
+            "万円": 420
+          }
+        },
+        {
+          "year": "2010",
+          "values": {
+            "％ | （180万円未満）": 0.4,
+            "万円 | 未満 | ％ | （180万円以上）": 20.2,
+            "～ | 500 | 万円 | 未満 | ％": 29.8,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.5,
+            "～ | 1200 | 万円 | 未満 | ％": 3.4,
+            "万円 | 以上 | ％": 4,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2011",
+          "values": {
+            "％ | （180万円未満）": 0.6,
+            "万円 | 未満 | ％ | （180万円以上）": 19.8,
+            "～ | 500 | 万円 | 未満 | ％": 29.9,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.2,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.2,
+            "～ | 1200 | 万円 | 未満 | ％": 3.8,
+            "万円 | 以上 | ％": 3,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2012",
+          "values": {
+            "％ | （180万円未満）": 0.8,
+            "万円 | 未満 | ％ | （180万円以上）": 20.2,
+            "～ | 500 | 万円 | 未満 | ％": 30,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23.5,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.4,
+            "～ | 1200 | 万円 | 未満 | ％": 3.4,
+            "万円 | 以上 | ％": 2.5,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2013",
+          "values": {
+            "％ | （180万円未満）": 0.7,
+            "万円 | 未満 | ％ | （180万円以上）": 18.3,
+            "～ | 500 | 万円 | 未満 | ％": 30.6,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23.2,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.5,
+            "～ | 1200 | 万円 | 未満 | ％": 3.7,
+            "万円 | 以上 | ％": 2.6,
+            "万円": 410
+          }
+        },
+        {
+          "year": "2014",
+          "values": {
+            "％ | （180万円未満）": 0.5,
+            "万円 | 未満 | ％ | （180万円以上）": 19.5,
+            "～ | 500 | 万円 | 未満 | ％": 30.8,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.2,
+            "～ | 1200 | 万円 | 未満 | ％": 3.5,
+            "万円 | 以上 | ％": 2.8,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2015",
+          "values": {
+            "％ | （180万円未満）": 0.5,
+            "万円 | 未満 | ％ | （180万円以上）": 18.2,
+            "～ | 500 | 万円 | 未満 | ％": 29.2,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.5,
+            "～ | 1200 | 万円 | 未満 | ％": 3.6,
+            "万円 | 以上 | ％": 3.2,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2016",
+          "values": {
+            "％ | （180万円未満）": 0.6,
+            "万円 | 未満 | ％ | （180万円以上）": 19.4,
+            "～ | 500 | 万円 | 未満 | ％": 29.7,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 7.3,
+            "～ | 1200 | 万円 | 未満 | ％": 3.8,
+            "万円 | 以上 | ％": 2.9,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2017",
+          "values": {
+            "％ | （180万円未満）": 0.7,
+            "万円 | 未満 | ％ | （180万円以上）": 18.4,
+            "～ | 500 | 万円 | 未満 | ％": 29,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.1,
+            "～ | 1200 | 万円 | 未満 | ％": 3.4,
+            "万円 | 以上 | ％": 2.4,
+            "万円": 400
+          }
+        },
+        {
+          "year": "2018",
+          "values": {
+            "％ | （180万円未満）": 0.7,
+            "万円 | 未満 | ％ | （180万円以上）": 16.6,
+            "～ | 500 | 万円 | 未満 | ％": 28.6,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 22.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.1,
+            "～ | 1200 | 万円 | 未満 | ％": 3.8,
+            "万円 | 以上 | ％": 3.7,
+            "万円": 450
+          }
+        },
+        {
+          "year": "2019",
+          "values": {
+            "％ | （180万円未満）": 0.8,
+            "万円 | 未満 | ％ | （180万円以上）": 16,
+            "～ | 500 | 万円 | 未満 | ％": 28.5,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 23,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8,
+            "～ | 1200 | 万円 | 未満 | ％": 4.5,
+            "万円 | 以上 | ％": 4.2,
+            "万円": 450
+          }
+        },
+        {
+          "year": "2020",
+          "values": {
+            "％ | （180万円未満）": 1,
+            "万円 | 未満 | ％ | （180万円以上）": 17,
+            "～ | 500 | 万円 | 未満 | ％": 32.1,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 26.6,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 8.7,
+            "～ | 1200 | 万円 | 未満 | ％": 4.9,
+            "万円 | 以上 | ％": 4.5,
+            "万円": 450
+          }
+        },
+        {
+          "year": "2021",
+          "values": {
+            "％ | （180万円未満）": 3.6,
+            "万円 | 未満 | ％ | （180万円以上）": 15.5,
+            "～ | 500 | 万円 | 未満 | ％": 28.9,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 29.6,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 10.7,
+            "～ | 1200 | 万円 | 未満 | ％": 5,
+            "万円 | 以上 | ％": 6.7,
+            "万円": 500
+          }
+        },
+        {
+          "year": "2022",
+          "values": {
+            "％ | （180万円未満）": 3.6,
+            "万円 | 未満 | ％ | （180万円以上）": 17.5,
+            "～ | 500 | 万円 | 未満 | ％": 28.9,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 28.3,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 11.2,
+            "～ | 1200 | 万円 | 未満 | ％": 4.9,
+            "万円 | 以上 | ％": 5.5,
+            "万円": 494.5
+          }
+        },
+        {
+          "year": "2023",
+          "values": {
+            "％ | （180万円未満）": 3.8,
+            "万円 | 未満 | ％ | （180万円以上）": 18.5,
+            "～ | 500 | 万円 | 未満 | ％": 27.5,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 27.9,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 10.9,
+            "～ | 1200 | 万円 | 未満 | ％": 5,
+            "万円 | 以上 | ％": 6.4,
+            "万円": 500
+          }
+        },
+        {
+          "year": "2024",
+          "values": {
+            "％ | （180万円未満）": 4.3,
+            "万円 | 未満 | ％ | （180万円以上）": 18.2,
+            "～ | 500 | 万円 | 未満 | ％": 26.4,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 27.1,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 12.3,
+            "～ | 1200 | 万円 | 未満 | ％": 5.1,
+            "万円 | 以上 | ％": 6.6,
+            "万円": 500
+          }
+        },
+        {
+          "year": "2025",
+          "values": {
+            "％ | （180万円未満）": 1,
+            "万円 | 未満 | ％ | （180万円以上）": 16.9,
+            "～ | 500 | 万円 | 未満 | ％": 25.4,
+            "column_5": null,
+            "～ | 750 | 万円 | 未満 | ％": 28.8,
+            "column_7": null,
+            "～ | 1000 | 万円 | 未満 | ％": 13.7,
+            "～ | 1200 | 万円 | 未満 | ％": 6.5,
+            "万円 | 以上 | ％": 7.7,
+            "万円": 500
+          }
+        }
+      ]
+    }
+  }
+}

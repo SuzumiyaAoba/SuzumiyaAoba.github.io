@@ -1,144 +1,63 @@
-import "./globals.css";
-import "katex/dist/katex.min.css";
 import type { Metadata } from "next";
-import config from "@/config";
-import { exo_2, mono as monoFont, zen_maru_gothic } from "@/fonts";
-import { Header } from "@/components/Header";
-import clsx from "clsx";
-import { Footer } from "@/components/Footer";
+import { Noto_Sans_JP, Shippori_Mincho, Source_Code_Pro } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { GoogleAdsenseScript } from "@/components/Ads/google/GoogleAdsenseScript";
-import BreadcrumbNav from "@/components/Breadcrumb";
-import Script from "next/script";
-import {
-  getBlogTitleMap,
-  getKeywordTitleMap,
-  getBookTitleMap,
-} from "@/libs/contents/title-map";
-import { ThemeProvider } from "@/components/ThemeToggle/Provider";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { NuqsProvider } from "@/components/NuqsProvider";
+import "@/app/styles/globals.css";
+import "katex/dist/katex.min.css";
+import { AppProviders } from "@/app/providers";
+import { GoogleAdsenseScript } from "@/shared/ui/google-adsense-script";
+import { getSiteConfig } from "@/shared/lib/site-config";
+import { SITE_TITLE } from "@/shared/lib/site-title";
 
-// メインコンテンツに適用するスタイル（ヘッダーの下に表示するため）
-import "./layout-globals.css";
+const sourceCodePro = Source_Code_Pro({
+  variable: "--font-source-code-pro",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+});
+
+const shipporiMincho = Shippori_Mincho({
+  variable: "--font-shippori-mincho",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+});
+
+const notoSansJp = Noto_Sans_JP({
+  variable: "--font-noto-sans-jp",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: config.metadata.title,
-  description: config.metadata.description,
-  keywords: config.metadata.keywords,
-  authors: [{ name: config.metadata.author }],
-  generator: "Next.js",
-  metadataBase: new URL(config.metadata.url),
-  alternates: {
-    canonical: "/",
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_TITLE}`,
   },
-  openGraph: {
-    title: config.metadata.title,
-    description: config.metadata.description,
-    url: config.metadata.url,
-    siteName: config.metadata.title,
-    locale: "ja_JP",
-    type: "website",
-    images: [
-      {
-        url: config.metadata.ogImage,
-        width: 1200,
-        height: 630,
-        alt: config.metadata.title,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: config.metadata.title,
-    description: config.metadata.description,
-    creator: config.metadata.twitterHandle,
-    images: [config.metadata.ogImage],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  description: SITE_TITLE,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const isProd = process.env.NODE_ENV === "production";
-  // タイトルマップを取得
-  let blogTitleMap = {};
-  let keywordTitleMap = {};
-  let bookTitleMap = {};
-  try {
-    [blogTitleMap, keywordTitleMap, bookTitleMap] = await Promise.all([
-      getBlogTitleMap(),
-      getKeywordTitleMap(),
-      getBookTitleMap(),
-    ]);
-  } catch (e) {
-    console.error("Failed to build one or more title maps", e);
-  }
-
+  const siteConfig = getSiteConfig();
   return (
-    <html lang="ja" className="h-full" suppressHydrationWarning>
-      <head>
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title={`${config.metadata.title} RSS Feed`}
-          href="/rss.xml"
-        />
-        <style>
-          {`
-            html {
-              scroll-padding-top: calc(var(--header-height, 80px) + 16px);
-              scroll-behavior: smooth;
-            }
-          `}
-        </style>
-      </head>
-      <body
-        className={clsx(
-          zen_maru_gothic.className,
-          exo_2.variable,
-          monoFont.variable,
-          "flex flex-col w-full min-h-screen",
-        )}
-      >
-        <NuqsProvider>
-          <ThemeProvider>
-            <LanguageProvider>
-              <Header siteName={config.metadata.title} />
-              <div className="content-container mt-header flex-grow w-full">
-                <div className="max-w-6xl w-full mx-auto px-4 xl:max-w-7xl">
-                  <div className="md:pl-20 mb-6">
-                    <BreadcrumbNav
-                      blogTitleMap={blogTitleMap}
-                      keywordTitleMap={keywordTitleMap}
-                      bookTitleMap={bookTitleMap}
-                    />
-                  </div>
-                </div>
-                {children}
-              </div>
-              <Footer
-                copyright="SuzumiyaAoba"
-                poweredBy={{
-                  name: "Next.js",
-                  url: "https://nextjs.org",
-                }}
-              />
-              {isProd && (
-                <>
-                  <GoogleAnalytics gaId="G-6YJ00MPQBT" />
-                  <GoogleAdsenseScript />
-                </>
-              )}
-            </LanguageProvider>
-          </ThemeProvider>
-        </NuqsProvider>
+    <html
+      lang="ja"
+      className={`${shipporiMincho.variable} ${sourceCodePro.variable} ${notoSansJp.variable}`}
+    >
+      <body className="font-sans antialiased">
+        <AppProviders>{children}</AppProviders>
+        {isProd ? (
+          <>
+            {siteConfig.googleAnalyticsId ? (
+              <GoogleAnalytics gaId={siteConfig.googleAnalyticsId} />
+            ) : null}
+            {siteConfig.googleAdsenseClientId ? (
+              <GoogleAdsenseScript clientId={siteConfig.googleAdsenseClientId} />
+            ) : null}
+          </>
+        ) : null}
       </body>
     </html>
   );

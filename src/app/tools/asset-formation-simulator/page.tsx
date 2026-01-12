@@ -1,10 +1,7 @@
-import { Suspense } from "react";
-import AssetFormationSimulatorClient from "./AssetFormationSimulatorClient";
+import type { Metadata } from "next";
 
-export default function AssetFormationSimulatorPage() {
-  return (
-    <Suspense>
-      <AssetFormationSimulatorClient />
-    </Suspense>
-  );
-}
+export const metadata: Metadata = {
+  title: "資産形成シミュレーション",
+};
+
+export { default } from "@/pages/tools/asset-formation-simulator";

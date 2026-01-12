@@ -1,0 +1,6 @@
+{
+  "name": "Scala Cats 型クラス",
+  "slug": "scala-cats-typeclass",
+  "description": "Scala Cats ライブラリの型クラスについて学ぶシリーズ",
+  "posts": ["2024-12-19-scala-cats", "2024-12-20-scala-cats-eq", "2024-12-21-scala-cats-order"]
+}
