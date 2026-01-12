@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
+export const dynamic = "force-static";
+
 const contentTypeMap: Record<string, string> = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
@@ -12,7 +14,36 @@ const contentTypeMap: Record<string, string> = {
   ".svg": "image/svg+xml",
   ".webp": "image/webp",
   ".avif": "image/avif",
+  ".json": "application/json",
 };
+
+async function collectFilePaths(root: string, current: string): Promise<string[]> {
+  const entries = await fs.readdir(current, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(current, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await collectFilePaths(root, entryPath)));
+      continue;
+    }
+
+    const ext = path.extname(entry.name).toLowerCase();
+    if (ext === ".md" || ext === ".mdx") {
+      continue;
+    }
+
+    files.push(path.relative(root, entryPath));
+  }
+
+  return files;
+}
+
+export async function generateStaticParams(): Promise<Array<{ path: string[] }>> {
+  const root = await resolveContentRoot();
+  const files = await collectFilePaths(root, root);
+  return files.map((file) => ({ path: file.split(path.sep) }));
+}
 
 export async function GET(_request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const { path: segments } = await params;

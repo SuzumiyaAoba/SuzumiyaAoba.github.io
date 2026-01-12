@@ -1,1 +1,1 @@
-export { default } from "./ui/page";
+export { generateStaticParams, default } from "./ui/page";
