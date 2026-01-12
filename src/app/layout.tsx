@@ -27,11 +27,30 @@ const notoSansJp = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteConfig().siteUrl || "http://localhost:3000"),
   title: {
     default: SITE_TITLE,
     template: `%s | ${SITE_TITLE}`,
   },
   description: SITE_TITLE,
+  openGraph: {
+    title: {
+      default: SITE_TITLE,
+      template: `%s | ${SITE_TITLE}`,
+    },
+    description: SITE_TITLE,
+    siteName: SITE_TITLE,
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: {
+      default: SITE_TITLE,
+      template: `%s | ${SITE_TITLE}`,
+    },
+    description: SITE_TITLE,
+  },
 };
 
 export default function RootLayout({
