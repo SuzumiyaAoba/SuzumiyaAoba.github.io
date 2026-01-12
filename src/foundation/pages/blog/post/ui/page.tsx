@@ -18,6 +18,7 @@ import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
+import { GoogleAdsenseAd } from "@/shared/ui/google-adsense-ad";
 import { Toc } from "./toc";
 
 type PageProps = {
@@ -153,6 +154,9 @@ export default async function Page({ params }: PageProps) {
             <AmazonAssociate />
           </div>
         ) : null}
+        <div className="mt-12 mb-8">
+          <GoogleAdsenseAd slot="9361206074" format="autorelaxed" responsive="false" />
+        </div>
         <Comments />
       </main>
       <Footer />
