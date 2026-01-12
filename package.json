@@ -43,6 +43,7 @@
     "nuqs": "^2.5.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-medium-image-zoom": "^5.4.0",
     "rehype-katex": "^7.0.1",
     "remark": "^15.0.1",
     "remark-emoji": "^5.0.2",

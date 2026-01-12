@@ -1,5 +1,8 @@
+"use client";
 import Image from "next/image";
 import type { ImgHTMLAttributes } from "react";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -18,13 +21,15 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
   const resolvedHeight = typeof height === "number" ? height : 675;
 
   return (
-    <Image
-      src={resolvedSrc}
-      alt={props.alt ?? ""}
-      width={resolvedWidth}
-      height={resolvedHeight}
-      className={cn("mx-auto block", className)}
-      unoptimized
-    />
+    <Zoom>
+      <Image
+        src={resolvedSrc}
+        alt={props.alt ?? ""}
+        width={resolvedWidth}
+        height={resolvedHeight}
+        className={cn("mx-auto block", className)}
+        unoptimized
+      />
+    </Zoom>
   );
 }
