@@ -1,0 +1,302 @@
+---
+title: ForkJoinPool を使ってみる
+date: 2024-12-08
+category: "プログラミング"
+tags: ["プログラミング", "Java", "並列プログラミング"]
+layout: CodeHike
+---
+
+## はじめに
+
+最初は `CompletableFuture` についての記事を書こうとしてたが、その前段として `ForkJoinPool` について調べていたところ、単独の記事とした方がいいようなボリュームとなった。
+この記事では `CompletableFuture` や `Stream` で並列処理を記述したときに裏側で使われる `ForkJoinPool` を用いてプログラムを書いてみた備忘録。
+
+## `ForkJoinPool` とは？
+
+[`ForkJoinPool`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) は [`ForkJoinTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) を実行するための [`ExecutorServie`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ExecutorService.html) (Javadoc まま)。
+
+`ForkJoinPool` では `ForkJoinTask` を実装したクラスを用いて並列計算を処理していく。
+標準ライブラリでは `ForkJoinTask` を実装したクラスとして次の 3 つを提供している。
+
+- [`CountedCompleter`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/CountedCompleter.html)
+- [`RecursiveAction`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html)
+- [`RecursiveTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveTask.html)
+
+`CountedCompleter` は馴染みがないクラスだが `Stream` の並列処理を実現するために JDK 内部で使われているようだ[^JDK-CountedCompleter] [^日経XTECH]。
+本記事では `RecursiveAction` と `RecursiveTask` について注目する。
+`RecursiveAction` と `RecursiveTask` の違いは並列処理の実行後に計算結果を値として取得できるか否かになる。
+つまり、計算の主目的が副作用を発生させることであれば `RecursiveAction` を使い、新しい値を作ることが目的であれば `RecursiveTask` を使うことになる。
+
+[^JDK-CountedCompleter]: [repo:openjdk21 CountedCompleter | Code search results](https://github.com/search?q=repo%3Aopenjdk%2Fjdk21+CountedCompleter&type=code)
+
+[^日経XTECH]: [詳解 Java SE 8 第 22 回 Concurrency Utilities のアップデート その 4 | 日経クロステック（xTECH）](https://xtech.nikkei.com/it/atcl/column/14/224071/012900017/)
+
+## `ForkJoinPool` の使い方
+
+`RecursiveAction` と `RecursiveTask` の使い方を見てみよう。
+
+### `RecursiveAction` を使った例
+
+`RecursiveAction` を使った実装例として [Javadoc に載っているソート](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html)を見てみよう。
+Javadoc のコードは紙面の都合からなのかインデントや行間の空行や `if`、`for` の括弧が省略されてしまっているので少し整えて、実装を強制される `compute` メソッドに `@Override` アノテーションを追加している。
+また `import` 文の追加し、クラス名を `SortTask` から `SortAction` に変更している。
+
+```java
+import java.util.Arrays;
+import java.util.concurrent.RecursiveAction;
+
+public class SortAction extends RecursiveAction {
+
+    final long[] array;
+    final int lo, hi;
+
+    SortAction(long[] array, int lo, int hi) {
+        this.array = array;
+        this.lo = lo;
+        this.hi = hi;
+    }
+
+    SortAction(long[] array) {
+        this(array, 0, array.length);
+    }
+
+    @Override
+    protected void compute() {
+        if (hi - lo < THRESHOLD) {
+            sortSequentially(lo, hi);
+        } else {
+            int mid = (lo + hi) >>> 1; // 2 で割るのと同等
+
+            invokeAll(new SortAction(array, lo, mid), new SortAction(array, mid, hi));
+
+            merge(lo, mid, hi);
+        }
+    }
+
+    // implementation details follow:
+    static final int THRESHOLD = 1000;
+
+    void sortSequentially(int lo, int hi) {
+        Arrays.sort(array, lo, hi);
+    }
+
+    void merge(int lo, int mid, int hi) {
+        // array を分割した後ろは再利用している
+        long[] buf = Arrays.copyOfRange(array, lo, mid);
+        for (int i = 0, j = lo, k = mid; i < buf.length; j++)  {
+            array[j] = (k == hi || buf[i] < array[k])
+                ? buf[i++]
+                : array[k++];
+        }
+    }
+}
+```
+
+Javadoc では直接的に書かれていないがマージソートと Java 標準ライブラリの `sort` の組み合わせによってソートしている。
+要素数が `1000` 未満の場合は標準ライブラリを用いてソート行い、それよりも大きい場合は配列を二つの領域に分割して再帰的に自身を呼び出している (インデックスによる分割であり、配列の複製はされていない)。
+ソートアルゴリズムのパフォーマンスは要素数によって左右されるため、この手の簡単な工夫によって要素数による性能劣化を抑制する手法はコスパがいい。
+[`Arrays#sort()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Arrays.html#sort(byte[],int,int)>) は [Dual pivot Quicksort](https://www.geeksforgeeks.org/dual-pivot-quicksort/) で実装されている。
+
+分割された二つの領域について `SortAction` のコンストラクタにそれぞれの領域を渡すことで再帰的な呼び出しを行い、[`invokeAll`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinTask.html#invokeAll(java.util.concurrent.ForkJoinTask...)>) メソッドに渡してそれぞれのタスクをフォークし、実行の完了後に `merge` メソッドによってソート対象の配列にマージソートと同じ要領でソートされたデータを詰めている。
+
+### `RecursiveTask`
+
+`RecursiveAction` と違い、`RecursiveTask` で並列化できる処理の簡単な例としてフィボナッチ数列の `n` 番目を求めるような問題が思いつくが、既に Qiita に[フィボナッチ数列](https://qiita.com/koduki/items/086d42b5a3c74ed8b59e)を使った解説があるため、ここでは[マージソート](https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%82%B8%E3%82%BD%E3%83%BC%E3%83%88)を `RecursiveTask` を使って実装する。
+`RecursiveAction` の例と一緒になってしまっているが、こちらは非破壊的なソートとなっている。
+また、要素数によってソートアルゴリズムを切り替えるような工夫はしていない。
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.RecursiveTask;
+
+public class MergeSortTask<T extends Comparable<? super T>, U extends Comparator<T>> extends RecursiveTask<List<T>> {
+
+    /** ソート対象リスト。 */
+    private final List<T> xs;
+
+    private final Comparator<T> comparator;
+
+    public MergeSortTask(List<T> xs, Comparator<T> comparator) {
+        this.xs = xs;
+        this.comparator = comparator;
+    }
+
+    @Override
+    protected List<T> compute() {
+        // リストが空、もしくは要素数が 1 の場合はソート済みとして返す
+        if (xs.size() <= 1) {
+            return xs;
+        }
+
+        // リストを左右に分割
+        final var mid = Math.floorDiv(xs.size(), 2);
+        final var left = new MergeSortTask<>(xs.subList(0, mid), comparator);
+        final var right = new MergeSortTask<>(xs.subList(mid, xs.size()), comparator);
+
+        // 右側のソートの非同期実行を調整
+        right.fork();
+
+        final var sortedLeft = left.compute();
+        final var sortedRight = right.join();
+
+        final var sorted = new ArrayList<T>();
+        int l = 0, r = 0;
+        while (l < sortedLeft.size() && r < sortedRight.size()) {
+            final var x = sortedLeft.get(l);
+            final var y = sortedRight.get(r);
+
+            if (comparator.compare(x, y) <= 0) {
+                sorted.add(x);
+                l++;
+            } else {
+                sorted.add(y);
+                r++;
+            }
+        }
+
+        while (l < sortedLeft.size()) {
+            sorted.add(sortedLeft.get(l++));
+        }
+
+        while (r < sortedRight.size()) {
+            sorted.add(sortedRight.get(r++));
+        }
+
+        return Collections.unmodifiableList(sorted);
+    }
+}
+```
+
+実装しているアルゴリズムはオーソドックスなマージソートとなっているので特筆すべき点はないだろう。
+アルゴリズム以外の違いとしては Javadoc に載っている `RecursiveAction` の例とは異なり、任意の比較可能な型 (`Comparable`) に対応しているためジェネリクス部分が少しだけ複雑になっていることくらいだろうか。
+
+### パフォーマンス
+
+それぞれの実装について実行速度を比較してみよう。
+実行速度以外にメモリの比較も本来すべきだが今回は時間だけに注目する。
+
+先に紹介した `SortAction`、`MergeSortTask` の他に `Stream#sorted()`、 `Stream#parallelStream()#sorted()` を比較する。
+
+比較するまでもなく `SortAction` > `Stream#parallelStream()#sorted()` > `MergeSortTask` > `Stream#sort()` の順だと思うが要素数 100,000,000 (= 1 億) の配列、リストに対して実行した結果を載せておく。
+
+| 実装                               | 実行時間 (s)   |
+| :--------------------------------- | :------------- |
+| `Stream#sort()`                    | `36.263888375` |
+| `MergeSortTask`                    | `13.619412583` |
+| `SortAction`                       | `1.5119055`    |
+| `Stream#parallelStream()#sorted()` | `4.816473459`  |
+
+ソート対象のデータを生成する部分は計測に含めていない。このことからデータ複製は恐しく高コストだし、並列化は高速化にとって有用であることがわかる。
+非破壊的なソートを実装する場合は配列を複製して `SortAction` に渡すのが一番高速になりそうだが、恐らく `paralellStream` を使う例と同じくらいの実行速度になるだろう。
+
+実行速度は以下の環境で行った。
+
+- Mac mini 2024
+  - チップ: Apple M4 Pro
+  - CPU: 14 コア
+  - GPU: 16 コア
+  - メモリ: 64 GB
+  - SSD: 1 TB
+  - macOS: Squoia 15.1
+
+2024/12/08 時点においてはスペック高めだと思うので一般的な PC であればもっと時間がかかるだろう。
+高速化の余地があるとは言え 1 億個の要素のソートで 1.5 秒もかかってしまうのかー。C で書いたらもっと早いのかなー。
+測定の方法が雑なので実際にはもっとよくなるかもしれない。
+
+後述するが今回の測定では `parallelism` の調整を行っていない。
+そのため、[java - Setting Ideal size of Thread Pool - Stack Overflow](https://stackoverflow.com/questions/16128436/setting-ideal-size-of-thread-pool) を参考にスレッド数を調整するとより高速に行えるか可能性がある。
+
+## `ForkJoinPool` の並列度
+
+今回は `ForkJoinPool` の使用において何のチューニングも行なわなかった。
+`ForkJoinPool` のコンストラクタではパフォーマンスに影響するパラメータとして、
+
+- `int parallelism`
+- `int corePoolSize`
+- `int maximumPoolSize`
+- `int minimumRunnable`
+- `long keepAliveTime`
+
+を引数で指定できる。
+
+```java ForkJoinPool.java
+    // !className[/int parallelism/] underline decoration-wavy underline-green-600
+    public ForkJoinPool(int parallelism,
+                        ForkJoinWorkerThreadFactory factory,
+                        UncaughtExceptionHandler handler,
+                        boolean asyncMode,
+                        // !className[/int corePoolSize/] underline decoration-wavy underline-green-600
+                        int corePoolSize,
+                        // !className[/int maximumPoolSize/] underline decoration-wavy underline-green-600
+                        int maximumPoolSize,
+                        // !className[/int minimumRunnable/] underline decoration-wavy underline-green-600
+                        int minimumRunnable,
+                        Predicate<? super ForkJoinPool> saturate,
+                        long keepAliveTime,
+                        TimeUnit unit) {
+        checkPermission();
+        int p = parallelism;
+        if (p <= 0 || p > MAX_CAP || p > maximumPoolSize || keepAliveTime <= 0L)
+            throw new IllegalArgumentException();
+        if (factory == null || unit == null)
+            throw new NullPointerException();
+        this.parallelism = p;
+        this.factory = factory;
+        this.ueh = handler;
+        this.saturate = saturate;
+        this.config = asyncMode ? FIFO : 0;
+        this.keepAlive = Math.max(unit.toMillis(keepAliveTime), TIMEOUT_SLOP);
+        int corep = Math.clamp(corePoolSize, p, MAX_CAP);
+        int maxSpares = Math.clamp(maximumPoolSize - p, 0, MAX_CAP);
+        int minAvail = Math.clamp(minimumRunnable, 0, MAX_CAP);
+        this.bounds = (long)(minAvail & SMASK) | (long)(maxSpares << SWIDTH) |
+            ((long)corep << 32);
+        int size = 1 << (33 - Integer.numberOfLeadingZeros(p - 1));
+        this.registrationLock = new ReentrantLock();
+        this.queues = new WorkQueue[size];
+        String pid = Integer.toString(getAndAddPoolIds(1) + 1);
+        String name = "ForkJoinPool-" + pid;
+        this.workerNamePrefix = name + "-worker-";
+        this.container = SharedThreadContainer.create(name);
+    }
+```
+
+## `ForkJoinPool` の仕組み
+
+ここから書く内容は、`ForkJoinPool` について学習中に書かれているため誤った情報を含む可能性がある。
+あくまで筆者の理解ということを念頭に置いて読んで欲しい。
+
+`ForkJoinPool` は引数無しのコンストラクタで生成したとき、プロセッサ数を `parallelism` (並列度レベル) としてインスタンスを生成する。
+`parallelism` は `ForkJoinPool` が生成するスレッド数と対応する。
+ドキュメントを読むと並列処理を維持するためにデフォルトでは 256 スレッドが余分に確保されるスレッドの最大数として書かれているが、手元でいくつかコードを書いてみたが `parallelism` を越える数のスレッドが実行されることを確認できなかった。
+
+`ForkJoinPool` ではスレッドごとに `WorkerQueue` を持っており、そのキューにタスクを追加していく。
+各スレッドの `WorkerQueue` に入ったタスクは他のスレッドで空きがあるとそれを盗んで (steal) 実行する。
+そうすることで全てのスレッドにおいて空きが発生し難いようになっている。
+ワークスティール (work stealing) 方式については http://www.yasugi.ai.kyutech.ac.jp/2012/4/k6.html が参考になる。
+
+もしかしたら `WorkerQueue` の上限を越えた場合にスレッドが増えるのかもしれない。それであれば理に適っているように感じる。
+しかし、コードを読めていないので実際のところは不明だ。
+
+## `ForkJoinPool` のアルゴリズムの詳細
+
+`ForkJoinPool` のソースコードを読むと理解するためには以下の資料を読むといいらしい。
+
+- Herlihy and Shavit's book "The Art of Multiprocessor programming", chapter 16
+- ["DynamicCircular Work-Stealing Deque" by Chase and Lev, SPAA 2005](http://research.sun.com/scalable/pubs/index.html)
+  - リンク切れてる :smile:
+- ["Idempotent work stealing" by Michael, Saraswat, and Vechev, PPoPP 2009](http://portal.acm.org/citation.cfm?id=1504186)
+  - 論文のタイトルでググると PDF が出てきますが著者がアップロードしているものではないように見えるのでリンクは貼らない
+- ["Correct and Efficient Work-Stealing for Weak Memory Models" by Le, Pop, Cohen, and Nardelli, PPoPP 2013](http://www.di.ens.fr/~zappa/readings/ppopp13.pdf)
+
+アルゴリズムの概要だけを理解するのは難しくないように思うが、最適化されている部分があるようでそこまで含めて理解するのは時間がかかりそうだ…。
+
+## おわりに
+
+この記事では Java の `CompletableFuture` や `Stream` の並列計算をするとき、デフォルトとして使われる `ForkJoinPool` について学んだ。
+`ForkJoinPool` の使い方や大まかな仕組みについて見ることができたが、ドキュメントとの差異やアルゴリズムの詳細については謎が深まってしまった。
+
+`CompletableFuture` についての記事を書いた後に `ForkJoinPool` の詳細に帰ってこようと思う。

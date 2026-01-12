@@ -1,0 +1,214 @@
+---
+title: ローカル LLM を体験する
+date: 2024-11-16
+category: "LLM"
+tags: ["ローカルLLM", "LLM", "Ollama"]
+---
+
+## はじめに
+
+自宅で作業するときにメインで使っている Mac mini をハイスペックなものに買い換えた。
+その結果としてローカル LLM を運用できるようになったため、ローカル LLM 導入の手順と感想を記す。
+
+## 環境
+
+- Mac mini 2024
+  - チップ: Apple M4 Pro
+  - CPU: 14 コア
+  - GPU: 16 コア
+  - メモリ: 64 GB
+  - SSD: 1 TB
+  - macOS: Squoia 15.1
+
+何に使うの？
+
+## ローカル LLM 実行までの手順
+
+### ollama をインストール
+
+[Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/) を使って環境を管理しているため、以下の設定を普段使っている設定ファイルから `import` する。
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    ollama
+  ];
+}
+```
+
+Nix + Home Manager を使って管理していない方は[公式のインストーラ](https://ollama.com/download)をダウンロードして、インストールしてください。
+
+正しくインストールされていれば、ターミナルで `ollama` コマンドが使える。
+
+```shell
+$ ollama --version
+Warning: could not connect to a running Ollama instance
+Warning: client version is 0.3.12
+```
+
+### LLM をダウンロード
+
+はじめに使いたい LLM をダウンロードします。モデルは Ollama のウェブページで検索できる。
+
+https://ollama.com/library
+
+今回はこの記事を執筆している数日前に [Gigazine で紹介](https://gigazine.net/news/20241114-qwen2-5-coder-32b-released/)されていた [Qwen2.5-Coder](https://gigazine.net/news/20241114-qwen2-5-coder-32b-released/) を使う。
+
+次のコマンドを実行してモデルをダウンロード。
+
+```shell
+$ ollama pull qwen2.5-coder:32b
+```
+
+モデル名の `:` の後にある `32b` は自身の環境に合わせて調整してください。
+あとで書きますが `32b` を使うと私の環境で 20 GB ほどメモリを持っていかれた。
+
+### サーバを立てる
+
+ローカル LLM を実行するために `ollama` を使ってサーバを立てる。
+サーバを立てると言っても以下のコマンドを実行するだけでよい。
+
+```shell
+$ ollama serve
+```
+
+実行に成功すると以下のようなログが流れる。
+
+```shell
+$ ollama serve
+2024/11/16 21:53:13 routes.go:1153: INFO server config env="map[HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_DEBUG:false OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:11434 OLLAMA_KEEP_ALIVE:5m0s OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MODELS:/Users/suzumiyaaoba/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NUM_PARALLEL:0 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://*] OLLAMA_SCHED_SPREAD:false OLLAMA_TMPDIR: http_proxy: https_proxy: no_proxy:]"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=images.go:753 msg="total blobs: 8"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=images.go:760 msg="total unused blobs removed: 0"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=routes.go:1200 msg="Listening on 127.0.0.1:11434 (version 0.3.12)"
+time=2024-11-16T21:53:13.739+09:00 level=INFO source=common.go:135 msg="extracting embedded files" dir=/var/folders/9f/5ppq6dg904l3bp8t3zxhbzw40000gn/T/ollama1365314392/runners
+time=2024-11-16T21:53:13.758+09:00 level=INFO source=common.go:49 msg="Dynamic LLM libraries" runners=[metal]
+time=2024-11-16T21:53:13.771+09:00 level=INFO source=types.go:107 msg="inference compute" id=0 library=metal variant="" compute="" driver=0.0 name="" total="48.0 GiB" available="48.0 GiB"
+```
+
+### ローカル LLM を実行
+
+ダウンロードした LLM を実行してみる。
+実行も簡単で次のコマンドを実行するだけだ。
+モデル名はダウンロードの手順で指定したものに合わせる。
+
+```shell
+$ ollama run qwen2.5-coder:32b
+```
+
+実行に成功するとプロンプトが表示される。
+
+```shell
+ollama run qwen2.5-coder:32b
+>>> Send a message (/? for help)
+```
+
+このプロンプトで簡易的だが LLM と対話できる。
+
+ソースコードに特化しているモデルを使っているので簡単のコードを書いてもらおう。
+
+````shell
+$ ollama run qwen2.5-coder:32b
+>>> Please write Hello, World using Java
+Certainly! Here is a simple "Hello, World" program in Java:
+
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World");
+    }
+}
+```
+
+To run this program, follow these steps:
+
+1. Save the code in a file named `HelloWorld.java`.
+2. Open a terminal or command prompt and navigate to the directory where you saved the file.
+3. Compile the Java program using the Java compiler with the following command:
+   ```sh
+   javac HelloWorld.java
+   ```
+4. Run the compiled Java program with the following command:
+   ```sh
+   java HelloWorld
+   ```
+
+You should see the output:
+```
+Hello, World
+```
+````
+
+流石に簡単すぎたかな？  
+実行方法まで合わせて教えてくれた。
+
+次はフィボナッチ数列を 100 まで出力するプログラムを書かせてみよう。
+
+````shell
+>>> Write code in Java to output 100 Fibonacci numbers
+Certainly! To generate and print the first 100 Fibonacci numbers in Java, you can use a simple loop. Here's a complete Java program that does this:
+
+```java
+public class Fibonacci {
+    public static void main(String[] args) {
+        int n = 100; // Number of Fibonacci numbers to print
+        long[] fibonacciSeries = new long[n];
+
+        // Initialize the first two Fibonacci numbers
+        if (n > 0) {
+            fibonacciSeries[0] = 0;
+        }
+        if (n > 1) {
+            fibonacciSeries[1] = 1;
+        }
+
+        // Calculate the rest of the Fibonacci series
+        for (int i = 2; i < n; i++) {
+            fibonacciSeries[i] = fibonacciSeries[i - 1] + fibonacciSeries[i - 2];
+        }
+
+        // Print the Fibonacci series
+        System.out.println("The first " + n + " Fibonacci numbers are:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(fibonacciSeries[i] + " ");
+        }
+    }
+}
+```
+
+### Explanation:
+1. **Initialization**: The first two Fibonacci numbers are initialized as `0` and `1`.
+2. **Loop to Calculate Series**: A loop runs from index `2` to `n-1` to calculate the remaining Fibonacci numbers by summing the two preceding numbers.
+3. **Output**: Another loop prints out all 100 Fibonacci numbers.
+
+### Steps to Run:
+1. Save the code in a file named `Fibonacci.java`.
+2. Open a terminal or command prompt and navigate to the directory where you saved the file.
+3. Compile the Java program using the Java compiler with the following command:
+   ```sh
+   javac Fibonacci.java
+   ```
+4. Run the compiled Java program with the following command:
+   ```sh
+   java Fibonacci
+   ```
+
+This will print the first 100 Fibonacci numbers to the console.
+````
+
+フィボナッチ数列を出力するプログラムを正しく書けてそうだ。
+流石にフィボナッチ数列を出力するプログラムくらいは書けてしまうか。
+
+更に実験を続けてもいいが、ターミナル上で会話するというのは体験としてはよろしくないだろう。
+次の記事では異なる UI 越しにローカル LLM を利用する方法を試してみる。
+
+### おわりに
+
+ローカル LLM の導入は驚くほど簡単になっている。
+Ollama のおかけでこれから新しいモデルが登場したとしてもコマンド一発で実行できるだろう。
+
+日本語の LLM を試したい人は [日本語 LLM まとめ | LLM-jp](https://llm-jp.github.io/awesome-japanese-llm/) で気になったモデルを試してみるのがよさそうだ。
+
+[Llama-3-ELYZA-JP-8B-GGUF](https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF) を試してみたが日本語 LLM は会話として成り立たないことがあるように感じた。
+これから発展していく分野だと思うので定期的に新しいモデルを探索していくつもりだ。

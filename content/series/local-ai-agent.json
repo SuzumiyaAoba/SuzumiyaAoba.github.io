@@ -1,0 +1,11 @@
+{
+  "name": "ローカル AI エージェントは電気羊の夢を見るのか",
+  "slug": "local-ai-agent",
+  "description": "ローカル環境で動作する AI エージェントの構築と活用について探求するシリーズ",
+  "posts": [
+    "2025-10-18-local-ai-agent",
+    "2025-10-20-local-ai-agent",
+    "2025-10-25-local-ai-agent",
+    "2025-11-01-local-ai-agent"
+  ]
+}

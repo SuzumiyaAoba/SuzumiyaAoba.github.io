@@ -1,0 +1,165 @@
+---
+title: CodeHike
+date: 2024-12-01
+category: "プログラミング"
+tags: ["プログラミング", "Next.js", "CodeHike"]
+draft: true
+layout: CodeHike
+---
+
+Code Hike の動作確認用ページ
+
+## Basic code block
+
+シンプルなコードブロック。
+
+```js
+console.log("Hello, CodeHike!");
+```
+
+## File name
+
+タイトル付きのコードブロック。
+
+```js index.js
+console.log("Hello, CodeHike!");
+```
+
+## Tabs
+
+タブ付きのコードブロック。
+
+<CodeWithTabs>
+
+```js !!tabs main.js
+function lorem(ipsum, dolor = 1) {
+  const sit = ipsum == null ? 0 : ipsum.sit;
+  dolor = sit - amet(dolor);
+  return sit ? consectetur(ipsum) : [];
+}
+```
+
+```css !!tabs styles.css
+body {
+  margin: 0;
+  padding: 0;
+}
+```
+
+</CodeWithTabs>
+
+## Language Switcher
+
+<CodeSwitcher>
+
+```java !! Main.java
+public class Main {
+  public static int factorial(int n) {
+    if (n == 0) {
+      return 1;
+    } else {
+      return n * factorial(n - 1);
+    }
+  }
+}
+```
+
+```cpp !!
+int factorial(int n) {
+  if (n == 0) {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
+}
+```
+
+```scala !!
+object Main {
+  def factorial(n: Int): Int = {
+    if (n == 0) {
+      return 1
+    } else {
+      return n * factorial(n - 1)
+    }
+  }
+}
+```
+
+```py !!
+def factorial(n):
+  if n == 0:
+    return 1
+  else:
+    return n * factorial(n - 1)
+```
+
+```matlab !!
+function result = factorial(n)
+  if n == 0
+    result = 1;
+  else
+    result = n * factorial(n - 1);
+  end
+end
+```
+
+```js !!
+function factorial(n) {
+  if (n === 0) {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
+}
+```
+
+```kotlin !!
+fun factorial(n: Int): Int {
+  return if (n == 0) {
+    1
+  } else {
+    n * factorial(n - 1)
+  }
+}
+```
+
+```go !!
+func factorial(n int) int {
+  if n == 0 {
+    return 1
+  } else {
+    return n * factorial(n - 1)
+  }
+}
+```
+
+```swift !!
+func factorial(n: Int) -> Int {
+  if n == 0 {
+    return 1
+  } else {
+    return n * factorial(n: n - 1)
+  }
+}
+```
+
+```rust !!
+fn factorial(n: i32) -> i32 {
+  if n == 0 {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
+}
+```
+
+```fsharp !!
+let rec factorial n =
+  if n = 0 then
+    1
+  else
+    n * factorial (n - 1)
+```
+
+</CodeSwitcher>

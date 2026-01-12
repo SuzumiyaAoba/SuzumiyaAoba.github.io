@@ -1,0 +1,98 @@
+---
+title: Reader モナド
+date: 2025-01-11
+category: プログラミング
+tags: ["Scala", "Cats", "プログラミング", "関数型プログラミング"]
+---
+
+今回は Reader モナドに触れるということで[モナドのすべて](https://www.sampou.org/haskell/a-a-monads/html/index.html)の
+Reader モナドのページに載っているサンプルを [Cats](https://typelevel.org/cats/) を使って実装してみた。
+Cats を触り始めたばっかりなのでよりよい書き方があるかもしれないが、一旦動くところまで書けたのでコードだけ載せておく。
+
+[Cats MTL](https://typelevel.org/cats-mtl/) を使うともう少しわかりやすく書ける部分がありそうな気がしている。
+
+```scala
+import cats.Id
+import cats.data.Kleisli.{ask, pure}
+import cats.data.{Reader, ReaderT}
+import cats.syntax.all.*
+
+enum Template {
+  case Text(value: String)
+  case Variable(template: Template)
+  case Quote(template: Template)
+  case Include(template: Template, definitions: List[Definition])
+  case Compound(templates: List[Template])
+}
+
+case class Definition(name: Template, value: Template)
+
+case class Environment(templates: List[(String, Template)], variables: List[(String, String)])
+
+object Template {
+
+  def localVar(name: String, env: Environment): Option[String] =
+    env.variables.find(_._1 == name).map(_._2)
+
+  def lookupTemplate(name: String, env: Environment): Option[Template] =
+    env.templates.find(_._1 == name).map(_._2)
+
+  def addDefs(defs: List[(String, String)], env: Environment): Environment =
+    Environment(env.templates, defs ++ env.variables)
+
+  def resolveDef(definition: Definition): Reader[Environment, (String, String)] =
+    for {
+      name <- resolve(definition.name)
+      value <- resolve(definition.value)
+    } yield (name, value)
+
+  def resolve(template: Template): Reader[Environment, String] =
+    template match {
+      case Text(value) => pure(value)
+      case Variable(template) =>
+        for {
+          varName <- resolve(template)
+          varValue <- ask[Id, Environment].map(localVar(varName, _))
+        } yield varValue.getOrElse("")
+      case Quote(template) =>
+        for {
+          tmplName <- resolve(template)
+          body <- ask[Id, Environment].map(lookupTemplate(tmplName, _))
+        } yield body.map(_.toString).getOrElse("")
+      case Include(template, definitions) =>
+        for {
+          tmplName <- resolve(template)
+          body <- ask[Id, Environment].map(lookupTemplate(tmplName, _))
+          rendered <- body match {
+            case Some(bodyTmpl) => for {
+              defs <- definitions.traverse(resolveDef)
+              rendered <- ReaderT.local(addDefs(defs, _))(resolve(bodyTmpl))
+            } yield rendered
+            case None => ReaderT.pure[Id, Environment, String]("")
+          }
+        } yield rendered
+      case Compound(templates) =>
+        for {
+          resolved <- templates.traverse(resolve)
+        } yield resolved.mkString
+    }
+}
+```
+
+Haskell のコードと比べると次の点が異なっていた。
+
+- Haskell の `asks` が Scala では `ReaderT.ask[Id, _].map(...)`
+  - `asks` 相当の関数は提供されていない（？）
+- Haskell の `mapM` が Scala では `traverse`
+  - [Prelude](https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:mapM)
+    ```haskell
+    mapM :: (Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)
+    ```
+  - [Traverse - cats-docs_2.13 2.12.0 javadoc](https://www.javadoc.io/doc/org.typelevel/cats-docs_2.13/latest/cats/Traverse.html)
+    ```scala
+    def traverse[G[_], A, B](fa: F[A])(f: (A) => G[B])(implicit arg0: Applicative[G]): G[F[B]]
+    ```
+- 書き方がよくないのか Haskell のように型推論が上手く働かない :cry:
+
+働き始めてからこの手のコードを書く機会がまったく無くなってしまったので、手続き型でコードを書いた方がわかりやすいのはで？と思ってしまった。
+そのため、上記のコードと同じコードを Reader モナドを使わずに実装して比較してみようと思う。

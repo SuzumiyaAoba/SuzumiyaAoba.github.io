@@ -1,0 +1,158 @@
+---
+title: Bean Validation の @Pattern の仕様
+date: 2024-08-12
+category: "プログラミング"
+tags: ["Java", "プログラミング"]
+---
+
+## はじめに
+
+今回は Java の Bean Validation の `@Pattern` の仕様について説明する。
+誤った例を使っている解説が多く、それを参照したコードをレビューで見て疲弊する日々を過しているため、
+世の中に正しい情報が提供されることを期待するのは諦めて自ら発信していくことにした。
+
+先日の[記事](../2024-08-08-java-to-list)もその一環の中の一つである。
+
+## TL;DL
+
+- `@Pattern` の `regexp` で指定する正規表現の先頭に `^` と末尾に `$` を付ける必要はない
+- ドキュメントを読んで仕様を確認しましょう
+- 個人のブログや Qiita、Zenn の情報を鵜呑みにしない (自己矛盾)
+
+## 誤った実装
+
+Google で Spring Boot を使ってリクエストに `@Pattern` アノテーションを使い正規表現でバリデーションをかける方法を[検索](https://www.google.com/search?q=spring+boot+%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3+%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE)すると次のような例をよく見る。
+
+```java
+@Value
+@Builder
+public class Example {
+
+    // !className[/\^/] underline decoration-wavy underline-green-600
+    // !className[/\$/] underline decoration-wavy underline-green-600
+    @Pattern(regexp = "^[A-Z][a-z]+$")
+    String name = "Name";
+}
+```
+
+`^` と `$` の両方、もしくはいずれかを使っている例も見られるが `^<正規表現>$` という形式で `@Pattern` の `regexp` に正規表現を記述している。
+これは正しく動作するため、誤った実装ではないが `^` と `$` を使う必要はない。
+
+`^`、`$` をわざわざ付けている人は `@Pattern` の仕様を理解していない可能性がある。
+
+## Jakarta Bean Validation
+
+Java でバリデーションを実装したい場合は、[Jakarta Bean Validation](https://beanvalidation.org/) に準拠したライブラリを使うのが一般的でだろう。
+Jakarta Bean Validation は、[JSR 303](https://www.jcp.org/en/jsr/detail?id=303)、[JSR 349](https://www.jcp.org/en/jsr/detail?id=349), [JSR 380](https://www.jcp.org/en/jsr/detail?id=380) で定められた Bean Validation が移管され、
+Eclipse Foundation により管理されている Bean Validation について定めた仕様である [^1]。
+
+[^1]: Java EE と Jakarta EE については [Java EE から Jakarta EE へ](https://blogs.oracle.com/otnjp/post/transition-from-java-ee-to-jakarta-ee-ja) を参照。
+
+Java では Jakarta Bean Validation のように仕様のみが独立して定められ、それを実装するライブラリが複数存在することがある。
+例えば、Jakarta Bean Validation のリファレンス実装として [Hibernate Validator](https://hibernate.org/validator/) がある。
+Hibernate Validator を使うことが多いが、Jakarta Bean Validation に準拠した実装には [Apache BVal](https://bval.apache.org/) もある。
+
+## Hibernate Validator
+
+### `PatternValidator`
+
+`@Pattern` アノテーションのバリデーションは `PatternValidator` で行われる。
+
+```java
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+package org.hibernate.validator.internal.constraintvalidators.bv;
+
+import java.lang.invoke.MethodHandles;
+import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.hibernate.validator.internal.engine.messageinterpolation.util.InterpolationHelper;
+import org.hibernate.validator.internal.util.logging.Log;
+import org.hibernate.validator.internal.util.logging.LoggerFactory;
+
+/**
+ * @author Hardy Ferentschik
+ */
+public class PatternValidator implements ConstraintValidator<Pattern, CharSequence> {
+
+	private static final Log LOG = LoggerFactory.make(MethodHandles.lookup());
+
+	private java.util.regex.Pattern pattern;
+	private String escapedRegexp;
+
+	@Override
+	public void initialize(Pattern parameters) {
+		Pattern.Flag[] flags = parameters.flags();
+		int intFlag = 0;
+		for (Pattern.Flag flag : flags) {
+			intFlag = intFlag | flag.getValue();
+		}
+
+		try {
+			pattern = java.util.regex.Pattern.compile(parameters.regexp(), intFlag);
+		}
+		catch (PatternSyntaxException e) {
+			throw LOG.getInvalidRegularExpressionException(e);
+		}
+
+		escapedRegexp = InterpolationHelper.escapeMessageParameter(parameters.regexp());
+	}
+
+	@Override
+	public boolean isValid(CharSequence value, ConstraintValidatorContext constraintValidatorContext) {
+		if (value == null) {
+			return true;
+		}
+
+		if (constraintValidatorContext instanceof HibernateConstraintValidatorContext) {
+			constraintValidatorContext.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter("regexp", escapedRegexp);
+		}
+
+		Matcher m = pattern.matcher(value);
+		// !className[/matches\(\)/] underline decoration-wavy underline-green-600
+		return m.matches();
+	}
+}
+```
+
+<GitHubCodeLink
+  url="https://github.com/hibernate/hibernate-validator/blob/8.0/engine/src/main/java/org/hibernate/validator/internal/constraintvalidators/bv/PatternValidator.java"
+  skipPath={4}
+/>
+
+検証成功するかどうかは [`Mather#matches`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/regex/Matcher.html#matches()>) メソッドで判定される。
+`Matcher#matches` は、**文字列全体**が正規表現に一致するかどうかを判定するメソッドである。
+一部のみが一致している場合は検証は失敗する。
+そのため、`@Pattern` アノテーションでは `^` と `$` を使わなくても文字列全体が正規表現に一致すれば検証は成功する。
+
+## 正しい (?) 実装
+
+`^` と `$` を付けても動作としては変わらないが、ただのノイズでしかないため、不要な記述は避けるべきだろう。
+よって、始めに見た実装例は次のように書き換えることができる。
+
+```java
+@Value
+@Builder
+public class Example {
+
+    @Pattern(regexp = "[A-Z][a-z]+")
+    String name = "Name";
+}
+```
+
+## おわりに
+
+`@Pattern` の `regexp` に正規表現を指定する際に `^` と `$` を付ける必要はない。
+昔に書かれた記事では `^$` を使う例はないが、最近書かれた記事では `^$` を付けているものが多いように思う。
+
+ある時点で誤った情報が書かれてしまい、ネットで見つけたコードをそのまま使う人が多いということだろう。
+ネットで見つけた情報を鵜呑みにせず、公式ドキュメントを読んで仕様を確認することが大切。
