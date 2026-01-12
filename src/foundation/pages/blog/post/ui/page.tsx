@@ -16,6 +16,8 @@ import { getSiteUrl } from "@/shared/lib/site-url";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { Button } from "@/shared/ui/button";
+import { Icon } from "@iconify/react";
 import { Toc } from "./toc";
 
 type PageProps = {
@@ -64,6 +66,11 @@ export default async function Page({ params }: PageProps) {
   }
 
   const scope = await loadMdxScope(post.content, slug);
+  const postTitle = post.frontmatter.title || post.slug;
+  const postUrl = `${getSiteUrl()}/blog/post/${slug}`;
+  const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
+    postTitle,
+  )}&url=${encodeURIComponent(postUrl)}`;
   const [content, headings, amazonProducts] = await Promise.all([
     renderMdx(post.content, { basePath: `/contents/blog/${slug}`, scope }),
     getTocHeadings(post.content),
@@ -104,13 +111,13 @@ export default async function Page({ params }: PageProps) {
           items={[
             { name: "Home", path: "/" },
             { name: "Blog", path: "/blog" },
-            { name: post.frontmatter.title || post.slug, path: `/blog/post/${slug}` },
+            { name: postTitle, path: `/blog/post/${slug}` },
           ]}
           className="mb-4"
         />
         <header className="mb-10 space-y-3">
           <p className="text-sm text-muted-foreground">{post.frontmatter.date}</p>
-          <h1 className="text-3xl font-semibold">{post.frontmatter.title}</h1>
+          <h1 className="text-3xl font-semibold">{postTitle}</h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {post.frontmatter.category ? (
               <Badge
@@ -128,6 +135,17 @@ export default async function Page({ params }: PageProps) {
                 className="bg-muted text-[11px] font-medium text-muted-foreground"
               />
             ))}
+            <Button asChild variant="outline" size="sm" className="ml-auto">
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on X"
+              >
+                <Icon icon="simple-icons:x" className="size-3.5" />
+                Share on X
+              </a>
+            </Button>
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
