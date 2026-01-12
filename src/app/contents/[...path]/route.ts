@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
@@ -34,6 +35,11 @@ async function collectFilePaths(root: string, current: string): Promise<string[]
     }
 
     files.push(path.relative(root, entryPath));
+
+    // Add .webp for supported image formats
+    if ([".png", ".jpg", ".jpeg"].includes(ext)) {
+      files.push(path.relative(root, entryPath.replace(ext, ".webp")));
+    }
   }
 
   return files;
@@ -51,16 +57,54 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
   const filePath = path.join(root, ...segments);
 
   try {
-    const file = await fs.readFile(filePath);
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = contentTypeMap[ext] ?? "application/octet-stream";
+    // Check if the file exists directly
+    try {
+      const file = await fs.readFile(filePath);
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = contentTypeMap[ext] ?? "application/octet-stream";
 
-    return new NextResponse(file, {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
+      return new NextResponse(file, {
+        headers: {
+          "Content-Type": contentType,
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    } catch (error: unknown) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        throw error;
+      }
+
+      // If file not found, check if it's a requested .webp derived from an existing image
+      if (filePath.endsWith(".webp")) {
+        const extensions = [".png", ".jpg", ".jpeg"];
+        let sourcePath: string | null = null;
+
+        for (const ext of extensions) {
+          const possibleSource = filePath.replace(/\.webp$/, ext);
+          try {
+            await fs.access(possibleSource);
+            sourcePath = possibleSource;
+            break;
+          } catch {
+            continue;
+          }
+        }
+
+        if (sourcePath) {
+          const source = await fs.readFile(sourcePath);
+          const webp = await sharp(source).webp().toBuffer();
+
+          return new NextResponse(webp as unknown as BodyInit, {
+            headers: {
+              "Content-Type": "image/webp",
+              "Cache-Control": "public, max-age=31536000, immutable",
+            },
+          });
+        }
+      }
+
+      throw error;
+    }
   } catch {
     return new NextResponse("Not Found", { status: 404 });
   }
