@@ -18,7 +18,6 @@ import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
-import { GoogleAdsenseAd } from "@/shared/ui/google-adsense-ad";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
 import Link from "next/link";
