@@ -10,79 +10,79 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: siteUrl,
+      url: `${siteUrl}/`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
-      url: `${siteUrl}/about`,
+      url: `${siteUrl}/about/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${siteUrl}/blog`,
+      url: `${siteUrl}/blog/`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${siteUrl}/contact`,
+      url: `${siteUrl}/contact/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${siteUrl}/keywords`,
+      url: `${siteUrl}/keywords/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.6,
     },
     {
-      url: `${siteUrl}/posts`,
+      url: `${siteUrl}/posts/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
-      url: `${siteUrl}/privacy-policy`,
+      url: `${siteUrl}/privacy-policy/`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: `${siteUrl}/search`,
+      url: `${siteUrl}/search/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${siteUrl}/series`,
+      url: `${siteUrl}/series/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${siteUrl}/tags`,
+      url: `${siteUrl}/tags/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
-      url: `${siteUrl}/tools`,
+      url: `${siteUrl}/tools/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
-      url: `${siteUrl}/tools/asset-formation-simulator`,
+      url: `${siteUrl}/tools/asset-formation-simulator/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${siteUrl}/tools/ascii-standard-code`,
+      url: `${siteUrl}/tools/ascii-standard-code/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
@@ -91,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const posts = await getBlogPosts();
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${siteUrl}/blog/post/${post.slug}`,
+    url: `${siteUrl}/blog/post/${post.slug}/`,
     lastModified: post.frontmatter.date ? new Date(post.frontmatter.date) : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
@@ -99,7 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const seriesSlugs = await getSeriesSlugs();
   const seriesPages: MetadataRoute.Sitemap = seriesSlugs.map((slug) => ({
-    url: `${siteUrl}/series/${slug}`,
+    url: `${siteUrl}/series/${slug}/`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
@@ -115,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const tagPages: MetadataRoute.Sitemap = Array.from(allTags).map((tag) => ({
-    url: `${siteUrl}/tags/${encodeURIComponent(tag)}`,
+    url: `${siteUrl}/tags/${encodeURIComponent(tag)}/`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.6,
