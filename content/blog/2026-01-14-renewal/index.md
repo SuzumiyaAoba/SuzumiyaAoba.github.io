@@ -16,7 +16,7 @@ thumbnail: images/renewal.png
 
 技術的に違う点としては、次の三点だ。
 
-- UnocSS → TailwindCSS
+- UnoCSS → TailwindCSS
 - Feature Sliced Design
 - RadixUI、shadecn/ui
 
