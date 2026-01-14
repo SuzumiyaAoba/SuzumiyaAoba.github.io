@@ -3,6 +3,7 @@ title: Astro を使ってブログを作成する
 date: 2023-09-30
 tags: ["Astro", "プログラミング"]
 category: プログラミング
+thumbnail: images/how-standards-proliferate.png
 ---
 
 ## Astro v3

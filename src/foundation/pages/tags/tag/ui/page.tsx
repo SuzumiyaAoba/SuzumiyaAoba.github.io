@@ -43,14 +43,24 @@ function resolveThumbnail(slug: string, thumbnail?: string): string {
   if (!thumbnail) {
     return "/icon.svg";
   }
+
+  let resolvedPath: string;
   if (
     thumbnail.startsWith("http://") ||
     thumbnail.startsWith("https://") ||
     thumbnail.startsWith("/")
   ) {
-    return thumbnail;
+    resolvedPath = thumbnail;
+  } else {
+    resolvedPath = `/contents/blog/${slug}/${thumbnail}`;
   }
-  return `/contents/blog/${slug}/${thumbnail}`;
+
+  // Convert supported image formats to webp
+  if (/\.(png|jpe?g)$/i.test(resolvedPath)) {
+    return resolvedPath.replace(/\.(png|jpe?g)$/i, ".webp");
+  }
+
+  return resolvedPath;
 }
 
 export default async function Page({ params }: PageProps) {
@@ -120,7 +130,7 @@ export default async function Page({ params }: PageProps) {
                     href={`/blog/post/${post.slug}`}
                     className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted md:w-44">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
                       <Image
                         src={thumbnail}
                         alt={isFallback ? "Site icon" : post.title}

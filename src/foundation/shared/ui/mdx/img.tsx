@@ -21,15 +21,17 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
   const resolvedHeight = typeof height === "number" ? height : 675;
 
   return (
-    <Zoom>
-      <Image
-        src={resolvedSrc}
-        alt={props.alt ?? ""}
-        width={resolvedWidth}
-        height={resolvedHeight}
-        className={cn("mx-auto block", className)}
-        unoptimized
-      />
-    </Zoom>
+    <figure className="my-4">
+      <Zoom>
+        <Image
+          src={resolvedSrc}
+          alt={props.alt ?? ""}
+          width={resolvedWidth}
+          height={resolvedHeight}
+          className={cn("mx-auto block", className)}
+          unoptimized
+        />
+      </Zoom>
+    </figure>
   );
 }

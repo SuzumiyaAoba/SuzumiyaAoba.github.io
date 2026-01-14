@@ -3,6 +3,7 @@ title: デザインリニューアル
 date: 2026-01-16
 tags: ["デザイン", "Vibe Coding", "ポエム"]
 category: プログラミング
+thumbnail: images/renewal.png
 ---
 
 サイトのデザインをリニューアルした。
