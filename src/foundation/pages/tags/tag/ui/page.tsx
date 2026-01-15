@@ -136,7 +136,11 @@ export default async function Page({ params }: PageProps) {
                         alt={isFallback ? "Site icon" : post.title}
                         fill
                         sizes="(min-width: 768px) 176px, 100vw"
-                        className={isFallback ? "object-contain p-6 opacity-70" : "object-cover"}
+                        className={
+                          isFallback
+                            ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
+                            : "object-cover"
+                        }
                       />
                     </div>
                     <div className="flex-1 flex flex-col gap-2 py-2">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { useEffect, useId, useState } from "react";
 import mermaid from "mermaid";
 
@@ -9,6 +10,7 @@ type MermaidProps = {
 };
 
 export function Mermaid({ code, className }: MermaidProps) {
+  const { resolvedTheme } = useTheme();
   const [svg, setSvg] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
   const reactId = useId();
@@ -19,7 +21,21 @@ export function Mermaid({ code, className }: MermaidProps) {
 
     const render = async () => {
       try {
-        mermaid.initialize({ startOnLoad: false });
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: resolvedTheme === "dark" ? "dark" : "base",
+          themeVariables:
+            resolvedTheme === "dark"
+              ? {}
+              : {
+                  primaryColor: "#f1f5f9",
+                  primaryTextColor: "#0f172a",
+                  primaryBorderColor: "#e2e8f0",
+                  lineColor: "#64748b",
+                  secondaryColor: "#f8fafc",
+                  tertiaryColor: "#ffffff",
+                },
+        });
         const { svg } = await mermaid.render(renderId, code);
         if (isActive) {
           setSvg(svg);
@@ -37,7 +53,7 @@ export function Mermaid({ code, className }: MermaidProps) {
     return () => {
       isActive = false;
     };
-  }, [code, renderId]);
+  }, [code, renderId, resolvedTheme]);
 
   if (hasError) {
     return (

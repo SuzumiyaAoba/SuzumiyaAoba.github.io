@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
+import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -15,7 +16,6 @@ type CommentsProps = {
   reactionsEnabled?: "0" | "1";
   emitMetadata?: "0" | "1";
   inputPosition?: "top" | "bottom";
-  theme?: string;
   lang?: string;
   loading?: "lazy" | "eager";
 };
@@ -31,15 +31,22 @@ export function Comments({
   reactionsEnabled = "1",
   emitMetadata = "1",
   inputPosition = "top",
-  theme = "light",
   lang = "ja",
   loading = "lazy",
 }: CommentsProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const giscusTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || !mounted) return;
     container.innerHTML = "";
 
     const script = document.createElement("script");
@@ -55,7 +62,7 @@ export function Comments({
     script.setAttribute("data-reactions-enabled", reactionsEnabled);
     script.setAttribute("data-emit-metadata", emitMetadata);
     script.setAttribute("data-input-position", inputPosition);
-    script.setAttribute("data-theme", theme);
+    script.setAttribute("data-theme", giscusTheme);
     script.setAttribute("data-lang", lang);
     script.setAttribute("data-loading", loading);
     container.appendChild(script);
@@ -69,10 +76,27 @@ export function Comments({
     reactionsEnabled,
     emitMetadata,
     inputPosition,
-    theme,
     lang,
     loading,
+    mounted,
+    giscusTheme,
   ]);
+
+  // テーマ変更時にGiscusにメッセージを送信
+  useEffect(() => {
+    if (!mounted) return;
+
+    const iframe = document.querySelector<HTMLIFrameElement>(
+      "iframe.giscus-frame"
+    );
+    if (iframe) {
+      iframe.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme } } },
+        "https://giscus.app"
+      );
+    }
+  }, [giscusTheme, mounted]);
 
   return <div ref={containerRef} className={cn("mt-12", className)} />;
 }
+

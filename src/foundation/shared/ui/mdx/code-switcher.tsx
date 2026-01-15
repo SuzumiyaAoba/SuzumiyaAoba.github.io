@@ -14,7 +14,11 @@ export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      const result = await Promise.all(code.map((block) => highlight(block, "github-light")));
+      const result = await Promise.all(
+        code.map((block) =>
+          highlight(block, "github-from-css"),
+        ),
+      );
       if (!cancelled) {
         setHighlighted(result);
       }

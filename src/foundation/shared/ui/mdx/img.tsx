@@ -21,7 +21,7 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
   const resolvedHeight = typeof height === "number" ? height : 675;
 
   return (
-    <figure className="my-4">
+    <span className="my-4 block">
       <Zoom>
         <Image
           src={resolvedSrc}
@@ -32,6 +32,6 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
           unoptimized
         />
       </Zoom>
-    </figure>
+    </span>
   );
 }

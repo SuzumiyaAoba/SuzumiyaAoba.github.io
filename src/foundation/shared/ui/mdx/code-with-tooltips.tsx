@@ -25,7 +25,7 @@ export function CodeWithTooltips({
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      const result = await highlight(code, "github-light");
+      const result = await highlight(code, "github-from-css");
       if (!cancelled) {
         setHighlighted(result);
       }

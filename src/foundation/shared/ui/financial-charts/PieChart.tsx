@@ -49,7 +49,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .append("path")
       .attr("d", arc)
       .attr("fill", (_d, i) => colors[i % colors.length] ?? "#000")
-      .attr("stroke", "white")
+      .attr("stroke", "var(--card)")
       .attr("stroke-width", 2)
       .on("mouseover", function (event, d) {
         d3.select(this).transition().duration(200).attr("opacity", 0.7);
@@ -59,8 +59,9 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
           .append("div")
           .attr("class", "tooltip")
           .style("position", "absolute")
-          .style("background", "white")
-          .style("border", "1px solid #ccc")
+          .style("background", "var(--card)")
+          .style("color", "var(--foreground)")
+          .style("border", "1px solid var(--border)")
           .style("border-radius", "4px")
           .style("padding", "8px")
           .style("pointer-events", "none")

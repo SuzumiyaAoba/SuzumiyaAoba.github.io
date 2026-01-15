@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-
 import { Button } from "@/shared/ui/button";
+import { ThemeToggle } from "@/shared/ui/theme-toggle";
 
 const navItems = [
   { href: "/blog", label: "Blog" },
@@ -95,6 +95,8 @@ export function Header() {
             >
               <a href="/search">Search</a>
             </Button>
+            <span className="text-border/70">/</span>
+            <ThemeToggle />
           </div>
 
           <div className="flex items-center md:hidden">
@@ -159,6 +161,11 @@ export function Header() {
           >
             Search
           </a>
+          <div className="h-px bg-border/60" />
+          <div className="flex items-center gap-2 px-3 py-2">
+            <span className="text-sm">テーマ</span>
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
     </header>

@@ -53,7 +53,9 @@ export async function renderMdx(
 ) {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
-    syntaxHighlighting: { theme: "github-light" },
+    syntaxHighlighting: {
+      theme: "github-from-css",
+    },
   };
 
   const components = basePath

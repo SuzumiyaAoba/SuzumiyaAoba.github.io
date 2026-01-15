@@ -59,8 +59,9 @@ const chartConfig = {
   height: 360,
   margin: { top: 24, right: 24, bottom: 48, left: 92 },
   colors: {
-    grid: "rgba(0, 0, 0, 0.08)",
-    axis: "rgba(0, 0, 0, 0.6)",
+    grid: "var(--border)",
+    axis: "var(--muted-foreground)",
+    pointStroke: "var(--card)",
   },
 };
 
@@ -465,7 +466,7 @@ export default function AssetFormationSimulator() {
       .tickFormat(() => "");
 
     const gridGroup = chartGroup.append("g").call(gridAxis);
-    gridGroup.selectAll("line").attr("stroke", colors.grid);
+    gridGroup.selectAll("line").attr("stroke", colors.grid).attr("stroke-opacity", 0.6);
     gridGroup.selectAll(".domain").remove();
 
     const xAxis = axisBottom(xScale)
@@ -482,20 +483,16 @@ export default function AssetFormationSimulator() {
       .ticks(5)
       .tickFormat((value) => `${format(",")((value as number) / 10000)}万円`);
 
-    chartGroup
+    const xAxisGroup = chartGroup
       .append("g")
       .attr("transform", `translate(0,${innerHeight})`)
-      .call(xAxis)
-      .selectAll("text")
-      .attr("fill", colors.axis)
-      .attr("font-size", 11);
+      .call(xAxis);
+    xAxisGroup.selectAll("text").attr("fill", colors.axis).attr("font-size", 11);
+    xAxisGroup.selectAll("line").attr("stroke", colors.axis);
 
-    chartGroup
-      .append("g")
-      .call(yAxis)
-      .selectAll("text")
-      .attr("fill", colors.axis)
-      .attr("font-size", 11);
+    const yAxisGroup = chartGroup.append("g").call(yAxis);
+    yAxisGroup.selectAll("text").attr("fill", colors.axis).attr("font-size", 11);
+    yAxisGroup.selectAll("line").attr("stroke", colors.axis);
 
     chartGroup.selectAll("path.domain").attr("stroke", colors.axis);
 
@@ -587,7 +584,7 @@ export default function AssetFormationSimulator() {
       .attr("cy", (item) => yScale(item.row.balance))
       .attr("r", (item) => (item.label === selectedScenario.label ? 4.5 : 4))
       .attr("fill", (item) => item.color)
-      .attr("stroke", "#ffffff")
+      .attr("stroke", colors.pointStroke)
       .attr("stroke-width", 1.5)
       .style("cursor", "pointer");
 
@@ -940,7 +937,7 @@ export default function AssetFormationSimulator() {
                 return Math.max(8, Math.min(tooltip.y + 12, maxTop));
               })(),
               backgroundColor: "var(--card)",
-              borderColor: "var(--foreground)",
+              borderColor: "var(--border)",
             }}
           >
             <div className="mb-1">
@@ -956,7 +953,7 @@ export default function AssetFormationSimulator() {
       <div className="mb-10 flex justify-end">
         <button
           type="button"
-          className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-black text-white hover:bg-black/90"
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-foreground text-background hover:bg-foreground/90"
           onClick={() => {
             const url = window.location.href;
             const text = "資産形成シミュレーションの結果を共有します。";

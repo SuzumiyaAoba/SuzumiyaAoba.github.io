@@ -63,6 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
+      suppressHydrationWarning
       className={`${shipporiMincho.variable} ${sourceCodePro.variable} ${notoSansJp.variable}`}
     >
       <body className="font-sans antialiased">

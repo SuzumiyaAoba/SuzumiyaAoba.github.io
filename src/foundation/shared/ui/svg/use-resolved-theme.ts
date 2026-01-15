@@ -1,47 +1,24 @@
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
-const getCurrentTheme = (): Theme => {
-  if (typeof document === "undefined") {
-    return "light";
-  }
-  const isDarkClass = document.documentElement.classList.contains("dark");
-  if (isDarkClass) {
-    return "dark";
-  }
-  if (typeof window !== "undefined" && window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-  return "light";
-};
-
+/**
+ * 現在のテーマを取得するフック
+ * next-themesのuseThemeをラップして、解決済みのテーマを返す
+ */
 export function useResolvedTheme(): Theme {
-  const [theme, setTheme] = useState<Theme>("light");
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const updateTheme = () => setTheme(getCurrentTheme());
-
-    updateTheme();
-
-    const media =
-      typeof window !== "undefined" && window.matchMedia
-        ? window.matchMedia("(prefers-color-scheme: dark)")
-        : null;
-
-    const observer = typeof document !== "undefined" ? new MutationObserver(updateTheme) : null;
-
-    media?.addEventListener?.("change", updateTheme);
-    observer?.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => {
-      media?.removeEventListener?.("change", updateTheme);
-      observer?.disconnect();
-    };
+    setMounted(true);
   }, []);
 
-  return theme;
+  if (!mounted) {
+    return "light";
+  }
+
+  return resolvedTheme === "dark" ? "dark" : "light";
 }
+
