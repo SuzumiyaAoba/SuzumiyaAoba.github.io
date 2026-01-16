@@ -1,6 +1,7 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { Card } from "@/shared/ui/card";
+import { I18nText } from "@/shared/ui/i18n-text";
 
 export default function NotFoundPage() {
   return (
@@ -10,9 +11,14 @@ export default function NotFoundPage() {
         <section className="flex flex-col items-center justify-center gap-8 py-12">
           <div className="text-center space-y-4">
             <h1 className="text-6xl font-bold text-muted-foreground">404</h1>
-            <h2 className="text-2xl font-semibold">ページが見つかりません</h2>
+            <h2 className="text-2xl font-semibold">
+              <I18nText ja="ページが見つかりません" en="Page not found" />
+            </h2>
             <p className="text-muted-foreground">
-              お探しのページは存在しないか、移動または削除された可能性があります。
+              <I18nText
+                ja="お探しのページは存在しないか、移動または削除された可能性があります。"
+                en="The page you’re looking for might have been moved or removed."
+              />
             </p>
           </div>
           <Card className="border-transparent bg-card/40 shadow-none">
@@ -20,7 +26,7 @@ export default function NotFoundPage() {
               href="/"
               className="flex items-center gap-2 px-6 py-4 text-sm font-medium"
             >
-              ← ホームに戻る
+              <I18nText ja="← ホームに戻る" en="← Back to home" />
             </a>
           </Card>
         </section>

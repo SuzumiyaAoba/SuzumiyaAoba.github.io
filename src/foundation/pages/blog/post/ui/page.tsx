@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getAdjacentPosts, getBlogPost } from "@/entities/blog";
+import { getAdjacentPostsVariants, getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
 import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
@@ -20,6 +20,7 @@ import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
+import { I18nText } from "@/shared/ui/i18n-text";
 
 
 type PageProps = {
@@ -56,21 +57,43 @@ async function loadMdxScope(source: string, slug: string): Promise<Record<string
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  const [post, { prev, next }] = await Promise.all([getBlogPost(slug), getAdjacentPosts(slug)]);
+  const [postJa, postEn, { prev, next }] = await Promise.all([
+    getBlogPost(slug, { locale: "ja", fallback: false }),
+    getBlogPost(slug, { locale: "en", fallback: false }),
+    getAdjacentPostsVariants(slug),
+  ]);
+
+  const post = postJa ?? postEn;
 
   if (!post) {
     notFound();
   }
 
-  const scope = await loadMdxScope(post.content, slug);
-  const postTitle = post.frontmatter.title || post.slug;
+  const postTitleJa = postJa?.frontmatter.title || post.slug;
+  const postTitleEn = postEn?.frontmatter.title || postTitleJa;
+  const categoryJa = postJa?.frontmatter.category;
+  const categoryEn = postEn?.frontmatter.category ?? categoryJa;
+  const tagsJa = postJa?.frontmatter.tags ?? postEn?.frontmatter.tags ?? [];
+  const tagsEn = postEn?.frontmatter.tags ?? tagsJa;
   const postUrl = `${getSiteUrl()}/blog/post/${slug}`;
-  const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
-    postTitle,
+  const shareUrlJa = `https://x.com/intent/tweet?text=${encodeURIComponent(
+    postTitleJa,
   )}&url=${encodeURIComponent(postUrl)}`;
-  const [content, headings, amazonProducts] = await Promise.all([
-    renderMdx(post.content, { basePath: `/contents/blog/${slug}`, scope }),
+  const shareUrlEn = `https://x.com/intent/tweet?text=${encodeURIComponent(
+    postTitleEn,
+  )}&url=${encodeURIComponent(postUrl)}`;
+  const scopeJa = postJa ? await loadMdxScope(postJa.content, slug) : {};
+  const scopeEn = postEn ? await loadMdxScope(postEn.content, slug) : scopeJa;
+  const contentEnSource = postEn?.content ?? post.content;
+  const [contentJa, contentEn, headingsJa, headingsEn, amazonProducts] = await Promise.all([
+    renderMdx(post.content, { basePath: `/contents/blog/${slug}`, scope: scopeJa }),
+    renderMdx(contentEnSource, {
+      basePath: `/contents/blog/${slug}`,
+      scope: scopeEn,
+      idPrefix: "en-",
+    }),
     getTocHeadings(post.content),
+    getTocHeadings(contentEnSource, { idPrefix: "en-" }),
     post.frontmatter.amazonProductIds
       ? getAmazonProductsByIds(post.frontmatter.amazonProductIds)
       : Promise.resolve([]),
@@ -104,37 +127,77 @@ export default async function Page({ params }: PageProps) {
         }}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: "/" },
-            { name: "Blog", path: "/blog" },
-            { name: postTitle, path: `/blog/post/${slug}` },
-          ]}
-          className="mb-4"
-        />
+        <div className="lang-ja">
+          <Breadcrumbs
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: postTitleJa, path: `/blog/post/${slug}` },
+            ]}
+            className="mb-4"
+          />
+        </div>
+        <div className="lang-en">
+          <Breadcrumbs
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: postTitleEn, path: `/blog/post/${slug}` },
+            ]}
+            className="mb-4"
+          />
+        </div>
         <header className="mb-10 space-y-3">
-          <p className="text-sm text-muted-foreground">{post.frontmatter.date}</p>
-          <h1 className="text-3xl font-semibold break-all">{postTitle}</h1>
+          <p className="text-sm text-muted-foreground">
+            <span className="lang-ja">
+              {postJa?.frontmatter.date ?? post.frontmatter.date}
+            </span>
+            <span className="lang-en">
+              {postEn?.frontmatter.date ?? postJa?.frontmatter.date ?? post.frontmatter.date}
+            </span>
+          </p>
+          <h1 className="text-3xl font-semibold break-all">
+            <span className="lang-ja">{postTitleJa}</span>
+            <span className="lang-en">{postTitleEn}</span>
+          </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            {post.frontmatter.category ? (
+            {categoryJa ? (
               <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
-                {post.frontmatter.category}
+                <span className="lang-ja">{categoryJa}</span>
+                <span className="lang-en">{categoryEn}</span>
               </Badge>
             ) : null}
-            {(post.frontmatter.tags ?? []).map((tag) => (
-              <Tag
-                key={tag}
-                tag={tag}
-                href={`/tags/${encodeURIComponent(tag)}`}
-                className="bg-muted text-[11px] font-medium text-muted-foreground"
-              />
-            ))}
+            {tagsJa.length > 0 ? (
+              <>
+                <div className="flex flex-wrap gap-2 lang-ja">
+                  {tagsJa.map((tag) => (
+                    <Tag
+                      key={tag}
+                      tag={tag}
+                      href={`/tags/${encodeURIComponent(tag)}`}
+                      className="bg-muted text-[11px] font-medium text-muted-foreground"
+                    />
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-2 lang-en">
+                  {tagsEn.map((tag) => (
+                    <Tag
+                      key={`en-${tag}`}
+                      tag={tag}
+                      href={`/tags/${encodeURIComponent(tag)}`}
+                      className="bg-muted text-[11px] font-medium text-muted-foreground"
+                    />
+                  ))}
+                </div>
+              </>
+            ) : null}
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
           <div className="flex flex-col w-full min-w-0">
             <article className="prose prose-neutral min-w-0 max-w-none font-sans">
-              {content}
+              <div className="lang-ja">{contentJa}</div>
+              <div className="lang-en">{contentEn}</div>
             </article>
             <div>
               {amazonProducts.length > 0 ? (
@@ -146,22 +209,38 @@ export default async function Page({ params }: PageProps) {
                 </div>
               ) : null}
             </div>
-            <div className="flex justify-end mt-4">
-              <Button asChild variant="outline" size="sm">
+            <div className="flex justify-end gap-2 mt-4">
+              <Button asChild variant="outline" size="sm" className="lang-ja">
                 <a
-                  href={shareUrl}
+                  href={shareUrlJa}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Share on X"
                 >
                   <Icon icon="simple-icons:x" className="size-3.5" />
-                  ポスト
+                  <I18nText ja="ポスト" en="Post" />
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="lang-en">
+                <a
+                  href={shareUrlEn}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on X"
+                >
+                  <Icon icon="simple-icons:x" className="size-3.5" />
+                  <I18nText ja="ポスト" en="Post" />
                 </a>
               </Button>
             </div>
           </div>
           <div className="hidden lg:block">
-            <Toc headings={headings} />
+            <div className="lang-ja">
+              <Toc headings={headingsJa} />
+            </div>
+            <div className="lang-en">
+              <Toc headings={headingsEn} />
+            </div>
           </div>
         </div>
 
@@ -178,10 +257,15 @@ export default async function Page({ params }: PageProps) {
                   <a href={`/blog/post/${prev.slug}`} className="w-full min-w-0">
                     <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                       <Icon icon="lucide:chevron-left" className="size-3" />
-                      Previous Post
+                      <I18nText ja="前の記事" en="Previous Post" />
                     </span>
                     <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
-                      {prev.frontmatter.title}
+                      <span className="lang-ja">
+                        {(prev.ja ?? prev.en)?.frontmatter.title ?? prev.slug}
+                      </span>
+                      <span className="lang-en">
+                        {(prev.en ?? prev.ja)?.frontmatter.title ?? prev.slug}
+                      </span>
                     </span>
                   </a>
                 </Button>
@@ -198,11 +282,16 @@ export default async function Page({ params }: PageProps) {
                 >
                   <a href={`/blog/post/${next.slug}`} className="w-full min-w-0">
                     <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
-                      Next Post
+                      <I18nText ja="次の記事" en="Next Post" />
                       <Icon icon="lucide:chevron-right" className="size-3" />
                     </span>
                     <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
-                      {next.frontmatter.title}
+                      <span className="lang-ja">
+                        {(next.ja ?? next.en)?.frontmatter.title ?? next.slug}
+                      </span>
+                      <span className="lang-en">
+                        {(next.en ?? next.ja)?.frontmatter.title ?? next.slug}
+                      </span>
                     </span>
                   </a>
                 </Button>

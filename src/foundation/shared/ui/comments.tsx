@@ -37,10 +37,28 @@ export function Comments({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [activeLang, setActiveLang] = useState(lang);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const updateLang = () => {
+      const docLang = document.documentElement.dataset["lang"];
+      if (docLang === "en" || docLang === "ja") {
+        setActiveLang(docLang);
+      } else {
+        setActiveLang(lang);
+      }
+    };
+
+    updateLang();
+    document.addEventListener("languagechange", updateLang);
+    return () => {
+      document.removeEventListener("languagechange", updateLang);
+    };
+  }, [lang]);
 
   const giscusTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 
@@ -63,7 +81,7 @@ export function Comments({
     script.setAttribute("data-emit-metadata", emitMetadata);
     script.setAttribute("data-input-position", inputPosition);
     script.setAttribute("data-theme", giscusTheme);
-    script.setAttribute("data-lang", lang);
+    script.setAttribute("data-lang", activeLang);
     script.setAttribute("data-loading", loading);
     container.appendChild(script);
   }, [
@@ -76,7 +94,7 @@ export function Comments({
     reactionsEnabled,
     emitMetadata,
     inputPosition,
-    lang,
+    activeLang,
     loading,
     mounted,
     giscusTheme,
@@ -99,4 +117,3 @@ export function Comments({
 
   return <div ref={containerRef} className={cn("mt-12", className)} />;
 }
-

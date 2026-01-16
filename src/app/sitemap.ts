@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBlogPosts } from "@/entities/blog";
+import { getBlogPostsVariants } from "@/entities/blog";
 import { getSeriesSlugs } from "@/entities/series-item/model/series";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteConfig().siteUrl || "https://suzumiyaaoba.com";
 
-  const staticPages: MetadataRoute.Sitemap = [
+  const staticPagesBase: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/`,
       lastModified: new Date(),
@@ -89,10 +89,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const posts = await getBlogPosts();
+  const staticPagesEn = staticPagesBase.map((entry) => ({
+    ...entry,
+    url: entry.url.replace(`${siteUrl}/`, `${siteUrl}/en/`),
+  }));
+
+  const staticPages = [...staticPagesBase, ...staticPagesEn];
+
+  const posts = await getBlogPostsVariants();
+  const postsForDates = posts.map((post) => post.ja ?? post.en).filter(Boolean);
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${siteUrl}/blog/post/${post.slug}/`,
-    lastModified: post.frontmatter.date ? new Date(post.frontmatter.date) : new Date(),
+    lastModified: (post.ja ?? post.en)?.frontmatter.date
+      ? new Date((post.ja ?? post.en)?.frontmatter.date ?? new Date())
+      : new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+  const blogPagesEn: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${siteUrl}/en/blog/post/${post.slug}/`,
+    lastModified: (post.en ?? post.ja)?.frontmatter.date
+      ? new Date((post.en ?? post.ja)?.frontmatter.date ?? new Date())
+      : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
@@ -104,10 +122,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
+  const seriesPagesEn: MetadataRoute.Sitemap = seriesSlugs.map((slug) => ({
+    url: `${siteUrl}/en/series/${slug}/`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   const allTags = new Set<string>();
-  for (const post of posts) {
-    if (post.frontmatter.tags) {
+  for (const post of postsForDates) {
+    if (post?.frontmatter.tags) {
       for (const tag of post.frontmatter.tags) {
         allTags.add(tag);
       }
@@ -120,6 +144,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
+  const tagPagesEn: MetadataRoute.Sitemap = Array.from(allTags).map((tag) => ({
+    url: `${siteUrl}/en/tags/${encodeURIComponent(tag)}/`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
 
-  return [...staticPages, ...blogPages, ...seriesPages, ...tagPages];
+  return [
+    ...staticPages,
+    ...blogPages,
+    ...blogPagesEn,
+    ...seriesPages,
+    ...seriesPagesEn,
+    ...tagPages,
+    ...tagPagesEn,
+  ];
 }

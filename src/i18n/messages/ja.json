@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "blog": "ブログ",
+    "series": "シリーズ",
+    "tags": "タグ",
+    "tools": "ツール",
+    "about": "概要",
+    "search": "検索"
+  },
+  "footer": {
+    "contact": "お問い合わせ",
+    "privacy": "プライバシー"
+  },
+  "ui": {
+    "theme": "テーマ",
+    "language": "言語"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "英語"
+  }
+}

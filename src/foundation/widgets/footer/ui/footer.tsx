@@ -1,5 +1,7 @@
 
 
+import { T } from "@/shared/ui/t";
+
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -9,10 +11,10 @@ export function Footer() {
         <p className="text-xs text-muted-foreground">© {year} SuzumiyaAoba</p>
         <nav className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
           <a href="/contact" className="hover:text-foreground">
-            Contact
+            <T id="footer.contact" />
           </a>
           <a href="/privacy-policy" className="hover:text-foreground">
-            Privacy
+            <T id="footer.privacy" />
           </a>
         </nav>
       </div>

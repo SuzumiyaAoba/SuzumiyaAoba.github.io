@@ -33,25 +33,9 @@ type ScenarioData = {
   label: string;
 };
 
-const numberFormatter = new Intl.NumberFormat("ja-JP");
-
 const inputStyle = {
   color: "var(--foreground)",
   backgroundColor: "var(--input)",
-};
-
-const formatYenWithMan = (value: number) => {
-  const yen = Math.round(value);
-  const man = Math.floor(yen / 10000);
-  return `${numberFormatter.format(yen)} 円 (${numberFormatter.format(man)} 万円)`;
-};
-
-const formatYears = (months: number) => {
-  const yearsValue = months / 12;
-  if (Number.isInteger(yearsValue)) {
-    return `${yearsValue}年`;
-  }
-  return `${yearsValue.toFixed(1)}年`;
 };
 
 const chartConfig = {
@@ -219,6 +203,52 @@ const decodeScenarios = (value: string): ScenarioInput[] | null => {
 };
 
 export default function AssetFormationSimulator() {
+  const [lang, setLang] = useState<"ja" | "en">("ja");
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat(lang === "en" ? "en-US" : "ja-JP"),
+    [lang],
+  );
+  const t = useCallback((ja: string, en: string) => (lang === "en" ? en : ja), [lang]);
+  const formatYenWithMan = useCallback(
+    (value: number) => {
+      const yen = Math.round(value);
+      const man = Math.floor(yen / 10000);
+      return t(
+        `${numberFormatter.format(yen)} 円 (${numberFormatter.format(man)} 万円)`,
+        `¥${numberFormatter.format(yen)} (${numberFormatter.format(man)} x10k JPY)`,
+      );
+    },
+    [numberFormatter, t],
+  );
+  const formatYears = useCallback(
+    (months: number) => {
+      const yearsValue = months / 12;
+      if (Number.isInteger(yearsValue)) {
+        if (lang === "en") {
+          return `${yearsValue} ${yearsValue === 1 ? "year" : "years"}`;
+        }
+        return `${yearsValue}年`;
+      }
+      if (lang === "en") {
+        return `${yearsValue.toFixed(1)} years`;
+      }
+      return `${yearsValue.toFixed(1)}年`;
+    },
+    [lang],
+  );
+
+  useEffect(() => {
+    const updateLang = () => {
+      const docLang = document.documentElement.dataset["lang"];
+      setLang(docLang === "en" ? "en" : "ja");
+    };
+    updateLang();
+    document.addEventListener("languagechange", updateLang);
+    return () => {
+      document.removeEventListener("languagechange", updateLang);
+    };
+  }, []);
+
   const [compressedParam, setCompressedParam] = useQueryState("p", parseAsString);
   const [scenarios, setScenarios] = useState<ScenarioInput[]>(defaultScenarios);
   const [selectedScenarioId, setSelectedScenarioId] = useState("scenario-1");
@@ -237,6 +267,24 @@ export default function AssetFormationSimulator() {
     label: string;
   } | null>(null);
   const [tooltipSize, setTooltipSize] = useState({ width: 0, height: 0 });
+
+  const defaultPatternName = useCallback(
+    (index: number) => (lang === "en" ? `Pattern ${index}` : `パターン${index}`),
+    [lang],
+  );
+
+  useEffect(() => {
+    setScenarios((prev) =>
+      prev.map((scenario, index) => {
+        const jaDefault = `パターン${index + 1}`;
+        const enDefault = `Pattern ${index + 1}`;
+        if (scenario.name === jaDefault || scenario.name === enDefault) {
+          return { ...scenario, name: defaultPatternName(index + 1) };
+        }
+        return scenario;
+      }),
+    );
+  }, [defaultPatternName]);
 
   const scenarioList = scenarios ?? defaultScenarios;
   const years = Number(yearsInput) || 0;
@@ -292,10 +340,10 @@ export default function AssetFormationSimulator() {
         schedule,
         tableRows,
         color,
-        label: scenario.name || `パターン${index + 1}`,
+        label: scenario.name || defaultPatternName(index + 1),
       };
     });
-  }, [scenarioList, years, colorOverrides]);
+  }, [scenarioList, years, colorOverrides, defaultPatternName]);
 
   const selectedScenario =
     scenarioData.find((scenario) => scenario.id === selectedScenarioId) ?? scenarioData[0];
@@ -476,12 +524,16 @@ export default function AssetFormationSimulator() {
         if (monthValue >= 12) {
           return formatYears(monthValue);
         }
-        return `${monthValue}ヶ月`;
+        return lang === "en" ? `${monthValue} mo` : `${monthValue}ヶ月`;
       });
 
     const yAxis = axisLeft(yScale)
       .ticks(5)
-      .tickFormat((value) => `${format(",")((value as number) / 10000)}万円`);
+      .tickFormat((value) =>
+        lang === "en"
+          ? `¥${format(",")((value as number) / 10000)} x10k`
+          : `${format(",")((value as number) / 10000)}万円`,
+      );
 
     const xAxisGroup = chartGroup
       .append("g")
@@ -616,28 +668,39 @@ export default function AssetFormationSimulator() {
       .on("mouseleave", () => {
         setTooltip(null);
       });
-  }, [scenarioData, selectedScenario, tableRows, visibleSeries]);
+  }, [scenarioData, selectedScenario, tableRows, visibleSeries, lang, formatYears]);
 
   return (
     <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-      <h1 className="mb-6 text-3xl">資産形成シミュレーション</h1>
+      <h1 className="mb-6 text-3xl">{t("資産形成シミュレーション", "Asset Formation Simulator")}</h1>
       <p className="mb-4 text-sm text-foreground/80">
-        毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。
+        {t(
+          "毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。",
+          "Contributions are made at month-end. Annual returns are converted to monthly rates and compounded across scenarios under the same conditions. Taxes and fees are not considered.",
+        )}
       </p>
       <p className="mb-2 text-xs text-foreground/70">
-        ※ 本シミュレーションは実際の値動きを反映したものではありません。
+        {t(
+          "※ 本シミュレーションは実際の値動きを反映したものではありません。",
+          "※ This simulation does not reflect actual market movements.",
+        )}
       </p>
       <p className="mb-2 text-xs text-foreground/70">
-        ※
-        本ツールは情報提供を目的としたもので、投資助言・勧誘を意図するものではありません。最終的な投資判断はご自身の責任で行ってください。
+        {t(
+          "※ 本ツールは情報提供を目的としたもので、投資助言・勧誘を意図するものではありません。最終的な投資判断はご自身の責任で行ってください。",
+          "※ This tool is for informational purposes only and is not investment advice. Make decisions at your own risk.",
+        )}
       </p>
       <p className="mb-6 text-xs text-foreground/70">
-        ※ 情報の正確性には配慮していますが、その完全性・最新性を保証するものではありません。
+        {t(
+          "※ 情報の正確性には配慮していますが、その完全性・最新性を保証するものではありません。",
+          "※ We strive for accuracy but do not guarantee completeness or timeliness.",
+        )}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <label className="flex flex-col gap-2">
-          <span className="text-sm">積立て期間（年）</span>
+          <span className="text-sm">{t("積立て期間（年）", "Contribution period (years)")}</span>
           <input
             type="number"
             inputMode="numeric"
@@ -656,7 +719,9 @@ export default function AssetFormationSimulator() {
 
       <div className="mb-8 space-y-4">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-sm font-semibold text-foreground/80">積立てパターン</h2>
+          <h2 className="text-sm font-semibold text-foreground/80">
+            {t("積立てパターン", "Contribution scenarios")}
+          </h2>
           <button
             type="button"
             className="text-sm text-blue-600 hover:underline"
@@ -667,7 +732,7 @@ export default function AssetFormationSimulator() {
                   ...prev,
                   {
                     id: `scenario-${nextIndex}`,
-                    name: `パターン${nextIndex}`,
+                    name: defaultPatternName(nextIndex),
                     monthlyContributionInput: "30000",
                     annualRateInput: "5",
                   },
@@ -675,7 +740,7 @@ export default function AssetFormationSimulator() {
               });
             }}
           >
-            パターンを追加
+            {t("パターンを追加", "Add scenario")}
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -686,7 +751,7 @@ export default function AssetFormationSimulator() {
               style={{ backgroundColor: "var(--card)" }}
             >
               <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">パターン{index + 1}</div>
+                <div className="text-sm font-semibold">{defaultPatternName(index + 1)}</div>
                 {scenarioList.length > 1 && (
                   <button
                     type="button"
@@ -695,12 +760,12 @@ export default function AssetFormationSimulator() {
                       syncScenarios((prev) => prev.filter((item) => item.id !== scenario.id));
                     }}
                   >
-                    削除
+                    {t("削除", "Remove")}
                   </button>
                 )}
               </div>
               <label className="flex flex-col gap-2">
-                <span className="text-xs">パターン名</span>
+                <span className="text-xs">{t("パターン名", "Scenario name")}</span>
                 <input
                   type="text"
                   value={scenario.name}
@@ -717,7 +782,7 @@ export default function AssetFormationSimulator() {
                 />
               </label>
               <label className="flex flex-col gap-2">
-                <span className="text-xs">毎月の積立て金額（円）</span>
+                <span className="text-xs">{t("毎月の積立て金額（円）", "Monthly contribution (JPY)")}</span>
                 <input
                   type="number"
                   inputMode="numeric"
@@ -739,7 +804,7 @@ export default function AssetFormationSimulator() {
                 />
               </label>
               <label className="flex flex-col gap-2">
-                <span className="text-xs">年平均利回り（%）</span>
+                <span className="text-xs">{t("年平均利回り（%）", "Average annual return (%)")}</span>
                 <input
                   type="number"
                   inputMode="decimal"
@@ -764,15 +829,15 @@ export default function AssetFormationSimulator() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
-          <p className="text-xs text-foreground/60 mb-1">元本合計</p>
+          <p className="text-xs text-foreground/60 mb-1">{t("元本合計", "Total principal")}</p>
           <p className="text-xl font-semibold">{formatYenWithMan(summary.principal)}</p>
         </div>
         <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
-          <p className="text-xs text-foreground/60 mb-1">運用益</p>
+          <p className="text-xs text-foreground/60 mb-1">{t("運用益", "Investment gain")}</p>
           <p className="text-xl font-semibold">{formatYenWithMan(summary.gain)}</p>
         </div>
         <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
-          <p className="text-xs text-foreground/60 mb-1">評価額</p>
+          <p className="text-xs text-foreground/60 mb-1">{t("評価額", "Balance")}</p>
           <p className="text-xl font-semibold">{formatYenWithMan(summary.balance)}</p>
         </div>
       </div>
@@ -782,7 +847,7 @@ export default function AssetFormationSimulator() {
         className="mb-8 border rounded-md p-4 relative"
         style={{ backgroundColor: "var(--card)" }}
       >
-        <div className="text-sm mb-3 text-foreground/70">推移グラフ</div>
+        <div className="text-sm mb-3 text-foreground/70">{t("推移グラフ", "Trend chart")}</div>
         <svg ref={chartRef} className="w-full h-auto" />
         <div className="mt-4 grid gap-4 text-xs text-foreground/70 md:grid-cols-2">
           {scenarioData.map((scenario) => (
@@ -828,7 +893,7 @@ export default function AssetFormationSimulator() {
                   <line x1="0" y1="3" x2="18" y2="3" stroke={scenario.color} strokeWidth="2" />
                 </svg>
                 <span className={visibleSeries[`${scenario.id}:balance`] ? "" : "opacity-40"}>
-                  評価額
+                  {t("評価額", "Balance")}
                 </span>
               </button>
               <button
@@ -855,7 +920,7 @@ export default function AssetFormationSimulator() {
                   />
                 </svg>
                 <span className={visibleSeries[`${scenario.id}:principal`] ? "" : "opacity-40"}>
-                  元本
+                  {t("元本", "Principal")}
                 </span>
               </button>
               <button
@@ -882,7 +947,7 @@ export default function AssetFormationSimulator() {
                   />
                 </svg>
                 <span className={visibleSeries[`${scenario.id}:gain`] ? "" : "opacity-40"}>
-                  運用益
+                  {t("運用益", "Gain")}
                 </span>
               </button>
               <button
@@ -909,7 +974,7 @@ export default function AssetFormationSimulator() {
                   />
                 </svg>
                 <span className={visibleSeries[`${scenario.id}:gainDiff`] ? "" : "opacity-40"}>
-                  前年差
+                  {t("前年差", "Year-over-year")}
                 </span>
               </button>
             </div>
@@ -941,12 +1006,24 @@ export default function AssetFormationSimulator() {
             }}
           >
             <div className="mb-1">
-              {tooltip.label}・{formatYears(tooltip.row.month)}
+              {tooltip.label} · {formatYears(tooltip.row.month)}
             </div>
-            <div>元本: {numberFormatter.format(Math.round(tooltip.row.principal))} 円</div>
-            <div>運用益: {numberFormatter.format(Math.round(tooltip.row.gain))} 円</div>
-            <div>評価額: {numberFormatter.format(Math.round(tooltip.row.balance))} 円</div>
-            <div>前年差: {numberFormatter.format(Math.round(tooltip.row.gainDiff))} 円</div>
+            <div>
+              {t("元本", "Principal")}: {numberFormatter.format(Math.round(tooltip.row.principal))}{" "}
+              {t("円", "JPY")}
+            </div>
+            <div>
+              {t("運用益", "Gain")}: {numberFormatter.format(Math.round(tooltip.row.gain))}{" "}
+              {t("円", "JPY")}
+            </div>
+            <div>
+              {t("評価額", "Balance")}: {numberFormatter.format(Math.round(tooltip.row.balance))}{" "}
+              {t("円", "JPY")}
+            </div>
+            <div>
+              {t("前年差", "YoY gain")}: {numberFormatter.format(Math.round(tooltip.row.gainDiff))}{" "}
+              {t("円", "JPY")}
+            </div>
           </div>
         )}
       </div>
@@ -956,7 +1033,10 @@ export default function AssetFormationSimulator() {
           className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-foreground text-background hover:bg-foreground/90"
           onClick={() => {
             const url = window.location.href;
-            const text = "資産形成シミュレーションの結果を共有します。";
+            const text = t(
+              "資産形成シミュレーションの結果を共有します。",
+              "Sharing results from the Asset Formation Simulator.",
+            );
             const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
               text,
             )}&url=${encodeURIComponent(url)}`;
@@ -966,14 +1046,14 @@ export default function AssetFormationSimulator() {
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817-5.963 6.817H1.68l7.73-8.84L1.25 2.25h6.828l4.713 6.231 5.454-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" />
           </svg>
-          ポスト
+          {t("ポスト", "Post")}
         </button>
       </div>
 
       <div className="overflow-x-auto">
         <div className="mb-3 flex items-center gap-2 text-sm">
           <label htmlFor="visible-scenario-select" className="text-foreground/70">
-            表示パターン
+            {t("表示パターン", "Visible scenario")}
           </label>
           <select
             id="visible-scenario-select"
@@ -992,11 +1072,13 @@ export default function AssetFormationSimulator() {
         <table className="w-full text-sm border border-collapse">
           <thead>
             <tr className="bg-foreground/5">
-              <th className="border px-3 py-2 text-left">年数</th>
-              <th className="border px-3 py-2 text-right">元本（累計）</th>
-              <th className="border px-3 py-2 text-right">運用益</th>
-              <th className="border px-3 py-2 text-right">前年差（運用益）</th>
-              <th className="border px-3 py-2 text-right">評価額</th>
+              <th className="border px-3 py-2 text-left">{t("年数", "Years")}</th>
+              <th className="border px-3 py-2 text-right">{t("元本（累計）", "Principal (total)")}</th>
+              <th className="border px-3 py-2 text-right">{t("運用益", "Gain")}</th>
+              <th className="border px-3 py-2 text-right">
+                {t("前年差（運用益）", "YoY gain")}
+              </th>
+              <th className="border px-3 py-2 text-right">{t("評価額", "Balance")}</th>
             </tr>
           </thead>
           <tbody>

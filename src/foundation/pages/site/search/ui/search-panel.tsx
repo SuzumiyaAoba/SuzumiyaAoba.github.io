@@ -56,8 +56,29 @@ export function SearchPanel() {
   const [results, setResults] = useState<PagefindResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagefindLoaded, setPagefindLoaded] = useState(false);
-  const [pagefindError, setPagefindError] = useState<string | null>(null);
+  const [pagefindErrorKey, setPagefindErrorKey] = useState<
+    "notLoaded" | "searchError" | "loadFailed" | "timeout" | null
+  >(null);
+  const [pagefindErrorDetail, setPagefindErrorDetail] = useState("");
+  const [lang, setLang] = useState<"ja" | "en">("ja");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const updateLang = () => {
+      const docLang = document.documentElement.dataset["lang"];
+      setLang(docLang === "en" ? "en" : "ja");
+    };
+    updateLang();
+    document.addEventListener("languagechange", updateLang);
+    return () => {
+      document.removeEventListener("languagechange", updateLang);
+    };
+  }, []);
+
+  const t = useCallback(
+    (ja: string, en: string) => (lang === "en" ? en : ja),
+    [lang],
+  );
 
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -66,14 +87,13 @@ export function SearchPanel() {
     }
 
     if (!window.pagefind || !window.__pagefind_loaded) {
-      setPagefindError(
-        "検索エンジンがまだ読み込まれていません。しばらく待つか、ページを更新してください。",
-      );
+      setPagefindErrorKey("notLoaded");
       return;
     }
 
     setIsLoading(true);
-    setPagefindError(null);
+    setPagefindErrorKey(null);
+    setPagefindErrorDetail("");
 
     try {
       const search = await window.pagefind.search(searchQuery);
@@ -81,7 +101,7 @@ export function SearchPanel() {
       setResults(searchResults.filter(Boolean));
     } catch {
       setResults([]);
-      setPagefindError("検索中にエラーが発生しました。");
+      setPagefindErrorKey("searchError");
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +110,8 @@ export function SearchPanel() {
   useEffect(() => {
     function handlePagefindInitialized() {
       setPagefindLoaded(true);
-      setPagefindError(null);
+      setPagefindErrorKey(null);
+      setPagefindErrorDetail("");
       if (initialQuery) {
         performSearch(initialQuery);
       }
@@ -98,7 +119,8 @@ export function SearchPanel() {
 
     function handlePagefindError(event: CustomEvent) {
       const detail = event.detail as { error?: string } | undefined;
-      setPagefindError(`検索エンジンの読み込みに失敗しました。${detail?.error ?? ""}`.trim());
+      setPagefindErrorKey("loadFailed");
+      setPagefindErrorDetail(detail?.error ?? "");
     }
 
     if (window.__pagefind_loaded) {
@@ -114,7 +136,7 @@ export function SearchPanel() {
 
     const timeoutId = window.setTimeout(() => {
       if (!window.__pagefind_loaded && !window.__pagefind_loading) {
-        setPagefindError("検索エンジンの読み込みがタイムアウトしました。");
+        setPagefindErrorKey("timeout");
       }
     }, 10000);
 
@@ -154,34 +176,55 @@ export function SearchPanel() {
           <Input
             value={query}
             onChange={(event) => handleInputChange(event.target.value)}
-            placeholder="キーワードで検索..."
-            aria-label="検索キーワード"
-            disabled={Boolean(pagefindError) || !pagefindLoaded}
+            placeholder={t("キーワードで検索...", "Search by keyword...")}
+            aria-label={t("検索キーワード", "Search keyword")}
+            disabled={Boolean(pagefindErrorKey) || !pagefindLoaded}
           />
         </div>
       </Card>
 
-      {pagefindError ? (
+      {pagefindErrorKey ? (
         <Card className="border-transparent bg-muted/40 shadow-none">
           <div className="space-y-2 px-4 py-4 text-sm text-muted-foreground">
-            <p>{pagefindError}</p>
+            <p>
+              {pagefindErrorKey === "notLoaded"
+                ? t(
+                    "検索エンジンがまだ読み込まれていません。しばらく待つか、ページを更新してください。",
+                    "Search is not ready yet. Please wait or reload the page.",
+                  )
+                : pagefindErrorKey === "searchError"
+                  ? t("検索中にエラーが発生しました。", "An error occurred while searching.")
+                  : pagefindErrorKey === "timeout"
+                    ? t(
+                        "検索エンジンの読み込みがタイムアウトしました。",
+                        "Search loading timed out.",
+                      )
+                    : t(
+                        `検索エンジンの読み込みに失敗しました。${pagefindErrorDetail}`.trim(),
+                        `Failed to load search.${pagefindErrorDetail ? ` ${pagefindErrorDetail}` : ""}`.trim(),
+                      )}
+            </p>
             <p className="text-xs">
-              ビルド後に Pagefind
-              を実行していない場合は、検索インデックスが生成されていない可能性があります。
+              {t(
+                "ビルド後に Pagefind を実行していない場合は、検索インデックスが生成されていない可能性があります。",
+                "If Pagefind hasn’t been run after build, the search index might be missing.",
+              )}
             </p>
           </div>
         </Card>
       ) : !pagefindLoaded ? (
-        <div className="text-sm text-muted-foreground">検索エンジンを読み込み中...</div>
+        <div className="text-sm text-muted-foreground">
+          {t("検索エンジンを読み込み中...", "Loading search...")}
+        </div>
       ) : isLoading ? (
-        <div className="text-sm text-muted-foreground">検索中...</div>
+        <div className="text-sm text-muted-foreground">{t("検索中...", "Searching...")}</div>
       ) : results.length > 0 ? (
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
-              {results.length} 件
+              {lang === "en" ? `${results.length} results` : `${results.length} 件`}
             </Badge>
-            <span>検索結果</span>
+            <span>{t("検索結果", "Results")}</span>
           </div>
           <ul className="space-y-4">
             {results.map((result) => (
@@ -192,7 +235,7 @@ export function SearchPanel() {
                     className="flex flex-col gap-2 px-5 py-5 transition-colors hover:text-foreground/80"
                   >
                     <h2 className="text-base font-semibold text-foreground">
-                      {result.meta.title ?? "タイトルなし"}
+                      {result.meta.title ?? t("タイトルなし", "Untitled")}
                     </h2>
                     {result.excerpt ? (
                       <div
@@ -209,7 +252,10 @@ export function SearchPanel() {
         </div>
       ) : query ? (
         <div className="text-sm text-muted-foreground">
-          検索結果が見つかりませんでした。別のキーワードをお試しください。
+          {t(
+            "検索結果が見つかりませんでした。別のキーワードをお試しください。",
+            "No results found. Try another keyword.",
+          )}
         </div>
       ) : null}
     </div>

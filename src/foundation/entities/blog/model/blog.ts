@@ -23,14 +23,23 @@ export type BlogPost = {
   frontmatter: BlogFrontmatter;
 };
 
-async function readContentFile(
+export type BlogLocale = "ja" | "en";
+
+type ReadContentOptions = {
+  locale?: BlogLocale;
+  fallback?: boolean;
+};
+
+async function readContentFileForLocale(
   slug: string,
+  locale: BlogLocale,
 ): Promise<{ raw: string; format: "md" | "mdx" } | null> {
   const root = await resolveContentRoot();
   const baseDir = path.join(root, "blog", slug);
 
-  const mdPath = path.join(baseDir, "index.md");
-  const mdxPath = path.join(baseDir, "index.mdx");
+  const baseName = locale === "en" ? "index.en" : "index";
+  const mdPath = path.join(baseDir, `${baseName}.md`);
+  const mdxPath = path.join(baseDir, `${baseName}.mdx`);
 
   try {
     const raw = await fs.readFile(mdPath, "utf8");
@@ -45,6 +54,28 @@ async function readContentFile(
   }
 }
 
+async function readContentFile(
+  slug: string,
+  options?: ReadContentOptions,
+): Promise<{ raw: string; format: "md" | "mdx" } | null> {
+  const locale = options?.locale ?? "ja";
+  const fallback = options?.fallback ?? true;
+
+  const file = await readContentFileForLocale(slug, locale);
+  if (file) {
+    return file;
+  }
+
+  if (!fallback || locale === "ja") {
+    if (!fallback) {
+      return null;
+    }
+    return readContentFileForLocale(slug, "en");
+  }
+
+  return readContentFileForLocale(slug, "ja");
+}
+
 export async function getBlogSlugs(): Promise<string[]> {
   const root = await resolveContentRoot();
   const blogRoot = path.join(root, "blog");
@@ -56,8 +87,11 @@ export async function getBlogSlugs(): Promise<string[]> {
     .sort();
 }
 
-export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const file = await readContentFile(slug);
+export async function getBlogPost(
+  slug: string,
+  options?: ReadContentOptions,
+): Promise<BlogPost | null> {
+  const file = await readContentFile(slug, options);
   if (!file) {
     return null;
   }
@@ -127,6 +161,56 @@ export async function getAdjacentPosts(
 
   // posts are sorted by date desc (newest first)
   // next is newer (index - 1), prev is older (index + 1)
+  return {
+    prev: posts[index + 1] ?? null,
+    next: posts[index - 1] ?? null,
+  };
+}
+
+export type LocalizedBlogPost = {
+  slug: string;
+  ja: BlogPost | null;
+  en: BlogPost | null;
+};
+
+export async function getBlogPostVariants(slug: string): Promise<LocalizedBlogPost> {
+  const [ja, en] = await Promise.all([
+    getBlogPost(slug, { locale: "ja", fallback: false }),
+    getBlogPost(slug, { locale: "en", fallback: false }),
+  ]);
+
+  return { slug, ja, en };
+}
+
+export async function getBlogPostsVariants(): Promise<LocalizedBlogPost[]> {
+  const slugs = await getBlogSlugs();
+  const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
+
+  return posts
+    .filter((post) => {
+      const reference = post.ja ?? post.en;
+      if (!reference) {
+        return false;
+      }
+      return !reference.frontmatter.draft;
+    })
+    .sort((a, b) => {
+      const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+      const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+      return dateA < dateB ? 1 : -1;
+    });
+}
+
+export async function getAdjacentPostsVariants(
+  slug: string,
+): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> {
+  const posts = await getBlogPostsVariants();
+  const index = posts.findIndex((post) => post.slug === slug);
+
+  if (index === -1) {
+    return { prev: null, next: null };
+  }
+
   return {
     prev: posts[index + 1] ?? null,
     next: posts[index - 1] ?? null,

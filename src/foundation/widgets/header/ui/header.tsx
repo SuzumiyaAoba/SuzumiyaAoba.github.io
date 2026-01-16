@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
+import { LanguageToggle } from "@/shared/ui/language-toggle";
+import { T } from "@/shared/ui/t";
 
 const navItems = [
-  { href: "/blog", label: "Blog" },
-  { href: "/series", label: "Series" },
-  { href: "/tags", label: "Tags" },
-  { href: "/tools", label: "Tools" },
+  { href: "/blog", labelKey: "nav.blog" },
+  { href: "/series", labelKey: "nav.series" },
+  { href: "/tags", labelKey: "nav.tags" },
+  { href: "/tools", labelKey: "nav.tools" },
 ];
 
 export function Header() {
@@ -72,7 +74,7 @@ export function Header() {
                 href={item.href}
                 className="rounded-full px-4 py-1.5 transition-colors hover:bg-background hover:text-foreground"
               >
-                {item.label}
+                <T id={item.labelKey} />
               </a>
             ))}
           </nav>
@@ -84,7 +86,9 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <a href="/about">About</a>
+              <a href="/about">
+                <T id="nav.about" />
+              </a>
             </Button>
             <span className="text-border/70">/</span>
             <Button
@@ -93,8 +97,12 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <a href="/search">Search</a>
+              <a href="/search">
+                <T id="nav.search" />
+              </a>
             </Button>
+            <span className="text-border/70">/</span>
+            <LanguageToggle />
             <span className="text-border/70">/</span>
             <ThemeToggle />
           </div>
@@ -103,7 +111,7 @@ export function Header() {
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors"
-              aria-label="メニューを開く"
+              aria-label="Open menu / メニューを開く"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               onClick={() => setIsMenuOpen((open) => !open)}
@@ -143,7 +151,7 @@ export function Header() {
               className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
               onClick={() => setIsMenuOpen(false)}
             >
-              {item.label}
+              <T id={item.labelKey} />
             </a>
           ))}
           <div className="h-px bg-border/60" />
@@ -152,19 +160,23 @@ export function Header() {
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            About
+            <T id="nav.about" />
           </a>
           <a
             href="/search"
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            Search
+            <T id="nav.search" />
           </a>
           <div className="h-px bg-border/60" />
           <div className="flex items-center gap-2 px-3 py-2">
-            <span className="text-sm">テーマ</span>
+            <T id="ui.theme" className="text-sm" />
             <ThemeToggle />
+          </div>
+          <div className="flex items-center gap-2 px-3 py-2">
+            <T id="ui.language" className="text-sm" />
+            <LanguageToggle />
           </div>
         </nav>
       </div>

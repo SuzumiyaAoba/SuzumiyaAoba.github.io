@@ -5,6 +5,7 @@ import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { I18nText } from "@/shared/ui/i18n-text";
 
 export default function Page() {
   return (
@@ -28,10 +29,10 @@ export default function Page() {
         />
         <section className="space-y-4">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            Tools
+            <I18nText ja="ツール" en="Tools" />
           </p>
           <h1 className="text-3xl font-semibold tracking-tight">ASCII Standard Code</h1>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-sm leading-6 text-muted-foreground lang-ja">
             <a
               href="https://www.rfc-editor.org/rfc/rfc20#section-2"
               target="_blank"
@@ -42,6 +43,18 @@ export default function Page() {
             </a>
             の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
             進数への変換表。
+          </p>
+          <p className="text-sm leading-6 text-muted-foreground lang-en">
+            An SVG version of the Standard Code table from{" "}
+            <a
+              href="https://www.rfc-editor.org/rfc/rfc20#section-2"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
+            >
+              RFC 20
+            </a>
+            . A conversion table from ASCII codes to hexadecimal and binary.
           </p>
         </section>
 

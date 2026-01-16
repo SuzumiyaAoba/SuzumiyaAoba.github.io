@@ -2,6 +2,7 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
+import { I18nText } from "@/shared/ui/i18n-text";
 
 export default function Page() {
   return (
@@ -17,23 +18,29 @@ export default function Page() {
         <section className="space-y-4">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              Contact
+              <I18nText ja="お問い合わせ" en="Contact" />
             </p>
-            <h1 className="text-3xl font-semibold tracking-tight">お問い合わせ</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              <I18nText ja="お問い合わせ" en="Contact" />
+            </h1>
           </div>
           <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-            お問い合わせは以下のフォームからお願いします。
+            <I18nText
+              ja="お問い合わせは以下のフォームからお願いします。"
+              en="Please use the form below to get in touch."
+            />
           </p>
         </section>
 
         <section className="mt-6">
           <div className="overflow-hidden rounded-2xl bg-card/40">
             <iframe
-              title="お問い合わせフォーム"
+              title="Contact form"
               src="https://docs.google.com/forms/d/e/1FAIpQLSeXOZA4Mriinisf4yXq8Y9XxfiSNvWjF_qhg5qFYY8af85bfQ/viewform?embedded=true"
               className="h-[1000px] w-full border-0"
             >
-              読み込んでいます…
+              <span className="lang-ja">読み込んでいます…</span>
+              <span className="lang-en">Loading…</span>
             </iframe>
           </div>
         </section>

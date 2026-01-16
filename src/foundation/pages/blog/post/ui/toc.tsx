@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 
 import { cn } from "@/shared/lib/utils";
+import { I18nText } from "@/shared/ui/i18n-text";
 import type { TocHeading } from "@/shared/lib/mdx";
 
 type TocProps = {
@@ -67,7 +68,7 @@ export function Toc({ headings }: TocProps) {
   return (
     <aside className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-auto pr-2 text-sm">
       <div className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-        Contents
+        <I18nText ja="目次" en="Contents" />
       </div>
       <ol className="space-y-2 text-muted-foreground">
         {headings.map((heading) => (

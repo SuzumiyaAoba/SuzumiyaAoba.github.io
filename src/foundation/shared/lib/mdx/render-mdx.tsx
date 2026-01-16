@@ -14,6 +14,23 @@ import remarkMath from "remark-math";
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
 
+function rehypeHeadingIdPrefix(prefix: string) {
+  return (tree: any) => {
+    const visit = (node: any) => {
+      if (!node || typeof node !== "object") {
+        return;
+      }
+      if (node.type === "element" && node.properties?.id) {
+        node.properties.id = `${prefix}${node.properties.id}`;
+      }
+      if (Array.isArray(node.children)) {
+        node.children.forEach(visit);
+      }
+    };
+    visit(tree);
+  };
+}
+
 function remarkMermaid() {
   return (tree: any) => {
     const visit = (node: any) => {
@@ -49,7 +66,11 @@ function remarkMermaid() {
 
 export async function renderMdx(
   source: string,
-  { basePath, scope }: { basePath?: string; scope?: Record<string, unknown> } = {},
+  {
+    basePath,
+    scope,
+    idPrefix,
+  }: { basePath?: string; scope?: Record<string, unknown>; idPrefix?: string } = {},
 ) {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
@@ -83,6 +104,7 @@ export async function renderMdx(
         recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
         rehypePlugins: [
           rehypeSlug,
+          ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
           [rehypeAutolinkHeadings, { behavior: "append" }],
           [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
           [

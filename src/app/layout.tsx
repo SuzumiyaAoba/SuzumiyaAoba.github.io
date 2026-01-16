@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Shippori_Mincho, Source_Code_Pro } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import "@/app/styles/globals.css";
 import "katex/dist/katex.min.css";
 import { AppProviders } from "@/app/providers";
@@ -63,10 +64,25 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
+      data-lang="ja"
       suppressHydrationWarning
       className={`${shipporiMincho.variable} ${sourceCodePro.variable} ${notoSansJp.variable}`}
     >
       <body className="font-sans antialiased">
+        <Script id="language-init" strategy="beforeInteractive">
+          {`(() => {
+  try {
+    const path = location.pathname;
+    const isEnPath = path === "/en" || path.startsWith("/en/");
+    const lang = isEnPath ? "en" : "ja";
+    document.documentElement.lang = lang;
+    document.documentElement.dataset.lang = lang;
+    localStorage.setItem("site-lang", lang);
+  } catch {
+    // ignore storage errors
+  }
+})();`}
+        </Script>
         <AppProviders>{children}</AppProviders>
         {isProd ? (
           <>

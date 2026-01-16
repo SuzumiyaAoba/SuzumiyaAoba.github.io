@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "series": "Series",
+    "tags": "Tags",
+    "tools": "Tools",
+    "about": "About",
+    "search": "Search"
+  },
+  "footer": {
+    "contact": "Contact",
+    "privacy": "Privacy"
+  },
+  "ui": {
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "language": {
+    "ja": "Japanese",
+    "en": "English"
+  }
+}

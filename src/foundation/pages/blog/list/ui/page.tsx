@@ -3,22 +3,23 @@ import Image from "next/image";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getBlogPosts } from "@/entities/blog";
+import { getBlogPostsVariants } from "@/entities/blog";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
+import { I18nText } from "@/shared/ui/i18n-text";
 
-function formatDate(date: string): string {
+function formatDate(date: string, locale: string): string {
   if (!date) {
-    return "Unknown date";
+    return locale.startsWith("ja") ? "不明な日付" : "Unknown date";
   }
   const parsed = new Date(date);
   if (Number.isNaN(parsed.getTime())) {
     return date;
   }
-  return parsed.toLocaleDateString("ja-JP", {
+  return parsed.toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -50,7 +51,7 @@ function resolveThumbnail(slug: string, thumbnail?: string): string {
 }
 
 export default async function Page() {
-  const posts = await getBlogPosts();
+  const posts = await getBlogPostsVariants();
   const pagePosts = posts.slice(0, 10);
 
   return (
@@ -68,28 +69,38 @@ export default async function Page() {
       >
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            BLOG
+            <I18nText ja="ブログ" en="Blog" />
           </h1>
         </section>
 
         <ul className="space-y-5">
-          {pagePosts.map((post) => {
-            const title = post.frontmatter.title || post.slug;
-            const tags = post.frontmatter.tags ?? [];
-            const category = post.frontmatter.category;
-            const thumbnail = resolveThumbnail(post.slug, post.frontmatter.thumbnail);
+          {pagePosts.map((variant) => {
+            const postJa = variant.ja ?? variant.en;
+            const postEn = variant.en ?? variant.ja;
+            if (!postJa && !postEn) return null;
+            const titleJa = postJa?.frontmatter.title || variant.slug;
+            const titleEn = postEn?.frontmatter.title || titleJa;
+            const tagsJa = postJa?.frontmatter.tags ?? [];
+            const tagsEn = postEn?.frontmatter.tags ?? tagsJa;
+            const categoryJa = postJa?.frontmatter.category;
+            const categoryEn = postEn?.frontmatter.category ?? categoryJa;
+            const altTitle = titleEn || titleJa;
+            const thumbnail = resolveThumbnail(
+              variant.slug,
+              postJa?.frontmatter.thumbnail ?? postEn?.frontmatter.thumbnail,
+            );
             const isFallback = thumbnail === "/icon.svg";
             return (
-              <li key={post.slug}>
+              <li key={variant.slug}>
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
                   <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
                     <a
-                      href={`/blog/post/${post.slug}`}
+                      href={`/blog/post/${variant.slug}`}
                       className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44"
                     >
                       <Image
                         src={thumbnail}
-                        alt={isFallback ? "Site icon" : title}
+                        alt={isFallback ? "Site icon" : altTitle}
                         fill
                         sizes="(min-width: 768px) 176px, 100vw"
                         className={
@@ -102,34 +113,53 @@ export default async function Page() {
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span>{formatDate(post.frontmatter.date)}</span>
-                          {category ? (
+                          <span className="lang-ja">
+                            {formatDate(postJa?.frontmatter.date ?? "", "ja-JP")}
+                          </span>
+                          <span className="lang-en">
+                            {formatDate(postEn?.frontmatter.date ?? postJa?.frontmatter.date ?? "", "en-US")}
+                          </span>
+                          {categoryJa ? (
                             <Badge
                               variant="outline"
                               className="border-border/40 text-[11px] font-medium"
                             >
-                              {category}
+                              <span className="lang-ja">{categoryJa}</span>
+                              <span className="lang-en">{categoryEn}</span>
                             </Badge>
                           ) : null}
                         </div>
                         <a
-                          href={`/blog/post/${post.slug}`}
+                          href={`/blog/post/${variant.slug}`}
                           className="block text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80"
                         >
-                          {title}
+                          <span className="lang-ja">{titleJa}</span>
+                          <span className="lang-en">{titleEn}</span>
                         </a>
                       </div>
-                      {tags.length > 0 ? (
-                        <div className="flex flex-wrap gap-2 md:mt-auto">
-                          {tags.map((tag) => (
-                            <Tag
-                              key={tag}
-                              tag={tag}
-                              href={`/tags/${encodeURIComponent(tag)}`}
-                              className="bg-muted text-xs font-medium text-muted-foreground"
-                            />
-                          ))}
-                        </div>
+                      {tagsJa.length > 0 ? (
+                        <>
+                          <div className="flex flex-wrap gap-2 md:mt-auto lang-ja">
+                            {tagsJa.map((tag) => (
+                              <Tag
+                                key={tag}
+                                tag={tag}
+                                href={`/tags/${encodeURIComponent(tag)}`}
+                                className="bg-muted text-xs font-medium text-muted-foreground"
+                              />
+                            ))}
+                          </div>
+                          <div className="flex flex-wrap gap-2 md:mt-auto lang-en">
+                            {tagsEn.map((tag) => (
+                              <Tag
+                                key={`en-${tag}`}
+                                tag={tag}
+                                href={`/tags/${encodeURIComponent(tag)}`}
+                                className="bg-muted text-xs font-medium text-muted-foreground"
+                              />
+                            ))}
+                          </div>
+                        </>
                       ) : null}
                     </div>
                   </div>

@@ -6,6 +6,7 @@ import { getSeriesList } from "@/entities/series-item";
 import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
+import { I18nText } from "@/shared/ui/i18n-text";
 
 export default async function Page() {
   const seriesList = await getSeriesList();
@@ -22,14 +23,14 @@ export default async function Page() {
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            SERIES
+            <I18nText ja="シリーズ" en="Series" />
           </h1>
         </section>
 
         {seriesList.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              まだシリーズがありません。
+              <I18nText ja="まだシリーズがありません。" en="No series yet." />
             </div>
           </Card>
         ) : (
@@ -48,7 +49,8 @@ export default async function Page() {
                       </p>
                     ) : null}
                     <span className="text-xs font-medium text-muted-foreground">
-                      {series.posts.length} posts →
+                      <span className="lang-ja">{series.posts.length} 件 →</span>
+                      <span className="lang-en">{series.posts.length} posts →</span>
                     </span>
                   </a>
                 </Card>

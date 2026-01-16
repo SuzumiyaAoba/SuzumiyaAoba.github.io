@@ -33,7 +33,10 @@ function walk(node: MdastNode, handler: (node: MdastNode) => void) {
   node.children?.forEach((child) => walk(child, handler));
 }
 
-export async function getTocHeadings(source: string): Promise<TocHeading[]> {
+export async function getTocHeadings(
+  source: string,
+  options?: { idPrefix?: string },
+): Promise<TocHeading[]> {
   const processor = remark()
     .use(remarkGfm)
     .use(remarkEmoji)
@@ -55,8 +58,9 @@ export async function getTocHeadings(source: string): Promise<TocHeading[]> {
     if (!text) {
       return;
     }
+    const id = slugger.slug(text);
     headings.push({
-      id: slugger.slug(text),
+      id: options?.idPrefix ? `${options.idPrefix}${id}` : id,
       text,
       level,
     });
