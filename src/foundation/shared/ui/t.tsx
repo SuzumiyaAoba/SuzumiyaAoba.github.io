@@ -11,6 +11,9 @@ type TProps = {
 };
 
 export function T({ id, values, fallback, className }: TProps) {
+  if (typeof window === "undefined") {
+    return null;
+  }
   const t = useTranslations();
 
   let text = "";

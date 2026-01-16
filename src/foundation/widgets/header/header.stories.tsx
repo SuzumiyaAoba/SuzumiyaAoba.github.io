@@ -17,7 +17,7 @@ type Story = StoryObj<typeof Header>;
 export const Default: Story = {
   render: () => (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
+      <Header locale="ja" path="/" />
       <div className="px-6 py-8 text-sm text-muted-foreground">Header preview</div>
     </div>
   ),

@@ -5,42 +5,40 @@ import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import AssetFormationSimulatorClient from "./asset-formation-simulator-client";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
-export default function Page() {
+type PageProps = {
+  locale?: Locale;
+};
+
+export default function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
+  const pagePath = toLocalePath("/tools/asset-formation-simulator", resolvedLocale);
+  const pageName =
+    resolvedLocale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション";
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Tools", path: "/tools" },
-          { name: "資産形成シミュレーション", path: "/tools/asset-formation-simulator" },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Tools", path: toLocalePath("/tools", resolvedLocale) },
+          { name: pageName, path: pagePath },
         ])}
       />
       <div className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
-        <div className="lang-ja">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Tools", path: "/tools" },
-              { name: "資産形成シミュレーション", path: "/tools/asset-formation-simulator" },
-            ]}
-          />
-        </div>
-        <div className="lang-en">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Tools", path: "/tools" },
-              { name: "Asset Formation Simulator", path: "/tools/asset-formation-simulator" },
-            ]}
-          />
-        </div>
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: toLocalePath("/", resolvedLocale) },
+            { name: "Tools", path: toLocalePath("/tools", resolvedLocale) },
+            { name: pageName, path: pagePath },
+          ]}
+        />
       </div>
       <Suspense>
-        <AssetFormationSimulatorClient />
+        <AssetFormationSimulatorClient locale={resolvedLocale} />
       </Suspense>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

@@ -1,7 +1,13 @@
 
 import { getPostSlugs } from "../lib";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
-export default async function Page() {
+type PageProps = {
+  locale?: Locale;
+};
+
+export default async function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
   const slugs = await getPostSlugs();
 
   return (
@@ -10,7 +16,10 @@ export default async function Page() {
       <ul className="mt-6 space-y-2">
         {slugs.map((slug) => (
           <li key={slug}>
-            <a className="underline underline-offset-4" href={`/posts/${slug}`}>
+            <a
+              className="underline underline-offset-4"
+              href={toLocalePath(`/posts/${slug}`, resolvedLocale)}
+            >
               {slug}
             </a>
           </li>

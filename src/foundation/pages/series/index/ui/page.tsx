@@ -7,30 +7,37 @@ import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
-export default async function Page() {
+type PageProps = {
+  locale?: Locale;
+};
+
+export default async function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
   const seriesList = await getSeriesList();
+  const pagePath = toLocalePath("/series", resolvedLocale);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Series", path: "/series" },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Series", path: pagePath },
         ])}
       />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText ja="シリーズ" en="Series" />
+            <I18nText locale={resolvedLocale} ja="シリーズ" en="Series" />
           </h1>
         </section>
 
         {seriesList.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText ja="まだシリーズがありません。" en="No series yet." />
+              <I18nText locale={resolvedLocale} ja="まだシリーズがありません。" en="No series yet." />
             </div>
           </Card>
         ) : (
@@ -39,7 +46,7 @@ export default async function Page() {
               <li key={series.slug}>
                 <Card className="border-transparent bg-card/40 shadow-none">
                   <a
-                    href={`/series/${series.slug}`}
+                    href={toLocalePath(`/series/${series.slug}`, resolvedLocale)}
                     className="flex h-full flex-col gap-3 px-5 py-6"
                   >
                     <div className="text-lg font-semibold text-foreground">{series.name}</div>
@@ -49,8 +56,11 @@ export default async function Page() {
                       </p>
                     ) : null}
                     <span className="text-xs font-medium text-muted-foreground">
-                      <span className="lang-ja">{series.posts.length} 件 →</span>
-                      <span className="lang-en">{series.posts.length} posts →</span>
+                      <I18nText
+                        locale={resolvedLocale}
+                        ja={`${series.posts.length} 件 →`}
+                        en={`${series.posts.length} posts →`}
+                      />
                     </span>
                   </a>
                 </Card>
@@ -59,7 +69,7 @@ export default async function Page() {
           </ul>
         )}
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

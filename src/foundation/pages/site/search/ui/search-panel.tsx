@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import type { Locale } from "@/shared/lib/locale-path";
 
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
+import { toLocalePath } from "@/shared/lib/locale-path";
 
 type PagefindResult = {
   url: string;
@@ -47,7 +49,11 @@ function formatUrl(url: string): string {
   }
 }
 
-export function SearchPanel() {
+type SearchPanelProps = {
+  locale: Locale;
+};
+
+export function SearchPanel({ locale }: SearchPanelProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialQuery = searchParams?.get("q") ?? "";
@@ -60,24 +66,11 @@ export function SearchPanel() {
     "notLoaded" | "searchError" | "loadFailed" | "timeout" | null
   >(null);
   const [pagefindErrorDetail, setPagefindErrorDetail] = useState("");
-  const [lang, setLang] = useState<"ja" | "en">("ja");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    const updateLang = () => {
-      const docLang = document.documentElement.dataset["lang"];
-      setLang(docLang === "en" ? "en" : "ja");
-    };
-    updateLang();
-    document.addEventListener("languagechange", updateLang);
-    return () => {
-      document.removeEventListener("languagechange", updateLang);
-    };
-  }, []);
-
   const t = useCallback(
-    (ja: string, en: string) => (lang === "en" ? en : ja),
-    [lang],
+    (ja: string, en: string) => (locale === "en" ? en : ja),
+    [locale],
   );
 
   const performSearch = useCallback(async (searchQuery: string) => {
@@ -162,7 +155,8 @@ export function SearchPanel() {
         params.delete("q");
       }
       const queryString = params.toString();
-      router.replace(queryString ? `/search?${queryString}` : "/search", {
+      const searchPath = toLocalePath("/search", locale);
+      router.replace(queryString ? `${searchPath}?${queryString}` : searchPath, {
         scroll: false,
       });
       performSearch(value);
@@ -222,7 +216,7 @@ export function SearchPanel() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
-              {lang === "en" ? `${results.length} results` : `${results.length} 件`}
+              {locale === "en" ? `${results.length} results` : `${results.length} 件`}
             </Badge>
             <span>{t("検索結果", "Results")}</span>
           </div>
@@ -231,7 +225,7 @@ export function SearchPanel() {
               <li key={result.url}>
                 <Card className="border-transparent bg-card/40 shadow-none">
                   <a
-                    href={result.url}
+                    href={toLocalePath(result.url, locale)}
                     className="flex flex-col gap-2 px-5 py-5 transition-colors hover:text-foreground/80"
                   >
                     <h2 className="text-base font-semibold text-foreground">

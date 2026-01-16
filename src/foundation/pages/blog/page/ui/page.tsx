@@ -12,6 +12,7 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 const POSTS_PER_PAGE = 10;
 
@@ -60,9 +61,11 @@ function getPageCount(total: number): number {
 
 type PageProps = {
   params: Promise<{ page: string }>;
+  locale?: Locale;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
   const { page } = await params;
   const pageNumber = Number(page);
 
@@ -79,15 +82,18 @@ export default async function Page({ params }: PageProps) {
 
   const start = (pageNumber - 1) * POSTS_PER_PAGE;
   const pagePosts = posts.slice(start, start + POSTS_PER_PAGE);
+  const pagePath = toLocalePath(pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`, resolvedLocale);
+  const dateLocale = resolvedLocale === "en" ? "en-US" : "ja-JP";
+  const pageLabel = resolvedLocale === "en" ? `Page ${pageNumber}` : `ページ ${pageNumber}`;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Blog", path: "/blog" },
-          { name: `Page ${pageNumber}`, path: pageNumber === 1 ? "/blog" : `/blog/${pageNumber}` },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Blog", path: toLocalePath("/blog", resolvedLocale) },
+          { name: pageLabel, path: pagePath },
         ])}
       />
       <main
@@ -96,38 +102,33 @@ export default async function Page({ params }: PageProps) {
       >
         <Breadcrumbs
           items={[
-            { name: "Home", path: "/" },
-            { name: "Blog", path: "/blog" },
+            { name: "Home", path: toLocalePath("/", resolvedLocale) },
+            { name: "Blog", path: toLocalePath("/blog", resolvedLocale) },
             {
-              name: `Page ${pageNumber}`,
-              path: pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`,
+              name: pageLabel,
+              path: pagePath,
             },
           ]}
         />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText ja="ブログ" en="Blog" />
+            <I18nText locale={resolvedLocale} ja="ブログ" en="Blog" />
           </h1>
           <div className="text-sm text-muted-foreground">
-            <span className="lang-ja">ページ {pageNumber}</span>
-            <span className="lang-en">Page {pageNumber}</span>
+            {pageLabel}
           </div>
         </section>
 
         <ul className="space-y-5">
           {pagePosts.map((variant) => {
-            const postJa = variant.ja ?? variant.en;
-            const postEn = variant.en ?? variant.ja;
-            if (!postJa && !postEn) return null;
-            const titleJa = postJa?.frontmatter.title || variant.slug;
-            const titleEn = postEn?.frontmatter.title || titleJa;
-            const tagsJa = postJa?.frontmatter.tags ?? [];
-            const tagsEn = postEn?.frontmatter.tags ?? tagsJa;
-            const categoryJa = postJa?.frontmatter.category;
-            const categoryEn = postEn?.frontmatter.category ?? categoryJa;
+            const post = resolvedLocale === "en" ? variant.en ?? variant.ja : variant.ja ?? variant.en;
+            if (!post) return null;
+            const title = post.frontmatter.title || variant.slug;
+            const tags = post.frontmatter.tags ?? [];
+            const category = post.frontmatter.category;
             const thumbnail = resolveThumbnail(
               variant.slug,
-              postJa?.frontmatter.thumbnail ?? postEn?.frontmatter.thumbnail,
+              post.frontmatter.thumbnail,
             );
             const isFallback = thumbnail === "/icon.svg";
             return (
@@ -135,12 +136,12 @@ export default async function Page({ params }: PageProps) {
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
                   <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
                     <a
-                      href={`/blog/post/${variant.slug}`}
+                      href={toLocalePath(`/blog/post/${variant.slug}`, resolvedLocale)}
                       className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44"
                     >
                       <Image
                         src={thumbnail}
-                        alt={isFallback ? "Site icon" : titleEn}
+                        alt={isFallback ? "Site icon" : title}
                         fill
                         sizes="(min-width: 768px) 176px, 100vw"
                         className={
@@ -153,53 +154,34 @@ export default async function Page({ params }: PageProps) {
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span className="lang-ja">
-                            {formatDate(postJa?.frontmatter.date ?? "", "ja-JP")}
-                          </span>
-                          <span className="lang-en">
-                            {formatDate(postEn?.frontmatter.date ?? postJa?.frontmatter.date ?? "", "en-US")}
-                          </span>
-                          {categoryJa ? (
+                          <span>{formatDate(post.frontmatter.date ?? "", dateLocale)}</span>
+                          {category ? (
                             <Badge
                               variant="outline"
                               className="border-border/40 text-[11px] font-medium"
                             >
-                              <span className="lang-ja">{categoryJa}</span>
-                              <span className="lang-en">{categoryEn}</span>
+                              {category}
                             </Badge>
                           ) : null}
                         </div>
                         <a
-                          href={`/blog/post/${variant.slug}`}
+                          href={toLocalePath(`/blog/post/${variant.slug}`, resolvedLocale)}
                           className="block text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80"
                         >
-                          <span className="lang-ja">{titleJa}</span>
-                          <span className="lang-en">{titleEn}</span>
+                          {title}
                         </a>
                       </div>
-                      {tagsJa.length > 0 ? (
-                        <>
-                          <div className="flex flex-wrap gap-2 md:mt-auto lang-ja">
-                            {tagsJa.map((tag) => (
-                              <Tag
-                                key={tag}
-                                tag={tag}
-                                href={`/tags/${encodeURIComponent(tag)}`}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                          <div className="flex flex-wrap gap-2 md:mt-auto lang-en">
-                            {tagsEn.map((tag) => (
-                              <Tag
-                                key={`en-${tag}`}
-                                tag={tag}
-                                href={`/tags/${encodeURIComponent(tag)}`}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                        </>
+                      {tags.length > 0 ? (
+                        <div className="flex flex-wrap gap-2 md:mt-auto">
+                          {tags.map((tag) => (
+                            <Tag
+                              key={tag}
+                              tag={tag}
+                              href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, resolvedLocale)}
+                              className="bg-muted text-xs font-medium text-muted-foreground"
+                            />
+                          ))}
+                        </div>
                       ) : null}
                     </div>
                   </div>
@@ -212,10 +194,13 @@ export default async function Page({ params }: PageProps) {
         <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
           {pageNumber > 1 ? (
             <a
-              href={pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`}
+              href={toLocalePath(
+                pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`,
+                resolvedLocale,
+              )}
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
-              <I18nText ja="← 前のページ" en="← Previous page" />
+              <I18nText locale={resolvedLocale} ja="← 前のページ" en="← Previous page" />
             </a>
           ) : (
             <span className="w-[5.5rem]" />
@@ -228,7 +213,7 @@ export default async function Page({ params }: PageProps) {
               return (
                 <a
                   key={page}
-                  href={href}
+                  href={toLocalePath(href, resolvedLocale)}
                   className={
                     isActive
                       ? "rounded-full bg-foreground px-3 py-1 text-xs font-semibold text-background"
@@ -242,17 +227,17 @@ export default async function Page({ params }: PageProps) {
           </div>
           {pageNumber < pageCount ? (
             <a
-              href={`/blog/${pageNumber + 1}`}
+              href={toLocalePath(`/blog/${pageNumber + 1}`, resolvedLocale)}
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
-              <I18nText ja="次のページ →" en="Next page →" />
+              <I18nText locale={resolvedLocale} ja="次のページ →" en="Next page →" />
             </a>
           ) : (
             <span className="w-[5.5rem]" />
           )}
         </nav>
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

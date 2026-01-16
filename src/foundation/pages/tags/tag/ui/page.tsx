@@ -12,9 +12,11 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 type PageProps = {
   params: Promise<{ tag: string }>;
+  locale?: Locale;
 };
 
 function normalizeTagParam(tag: string): string {
@@ -64,7 +66,8 @@ function resolveThumbnail(slug: string, thumbnail?: string): string {
   return resolvedPath;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
   const { tag } = await params;
   const decodedTag = normalizeTagParam(tag);
   const posts = await getBlogPostsVariants();
@@ -94,44 +97,35 @@ export default async function Page({ params }: PageProps) {
   if (entriesJa.length === 0 && entriesEn.length === 0) {
     notFound();
   }
+  const entries = resolvedLocale === "en" ? entriesEn : entriesJa;
+  const pagePath = toLocalePath(`/tags/${encodeURIComponent(decodedTag)}`, resolvedLocale);
+  const dateLocale = resolvedLocale === "en" ? "en-US" : "ja-JP";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Tags", path: "/tags" },
-          { name: decodedTag, path: `/tags/${encodeURIComponent(decodedTag)}` },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Tags", path: toLocalePath("/tags", resolvedLocale) },
+          { name: decodedTag, path: pagePath },
         ])}
       />
       <main
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
         data-pagefind-ignore="all"
       >
-        <div className="lang-ja">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Tags", path: "/tags" },
-              { name: decodedTag, path: `/tags/${encodeURIComponent(decodedTag)}` },
-            ]}
-            className="mb-2"
-          />
-        </div>
-        <div className="lang-en">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Tags", path: "/tags" },
-              { name: decodedTag, path: `/tags/${encodeURIComponent(decodedTag)}` },
-            ]}
-            className="mb-2"
-          />
-        </div>
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: toLocalePath("/", resolvedLocale) },
+            { name: "Tags", path: toLocalePath("/tags", resolvedLocale) },
+            { name: decodedTag, path: pagePath },
+          ]}
+          className="mb-2"
+        />
         <section className="space-y-3">
-          <a href="/tags" className="text-xs font-medium text-muted-foreground">
-            <I18nText ja="← タグ一覧" en="← Back to tags" />
+          <a href={toLocalePath("/tags", resolvedLocale)} className="text-xs font-medium text-muted-foreground">
+            <I18nText locale={resolvedLocale} ja="← タグ一覧" en="← Back to tags" />
           </a>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-3xl font-semibold">#{decodedTag}</h1>
@@ -139,136 +133,76 @@ export default async function Page({ params }: PageProps) {
               variant="secondary"
               className="bg-muted text-xs font-medium text-muted-foreground"
             >
-              <span className="lang-ja">{entriesJa.length} 件</span>
-              <span className="lang-en">{entriesEn.length} posts</span>
+              <I18nText
+                locale={resolvedLocale}
+                ja={`${entriesJa.length} 件`}
+                en={`${entriesEn.length} posts`}
+              />
             </Badge>
           </div>
         </section>
 
-        <div className="lang-ja">
-          <ul className="space-y-5">
-            {entriesJa.map((post) => {
-              const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
-              const isFallback = thumbnail === "/icon.svg";
-              return (
-                <li key={post.slug}>
-                  <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                    <a
-                      href={`/blog/post/${post.slug}`}
-                      className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
-                    >
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
-                        <Image
-                          src={thumbnail}
-                          alt={isFallback ? "Site icon" : post.title}
-                          fill
-                          sizes="(min-width: 768px) 176px, 100vw"
-                          className={
-                            isFallback
-                              ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
-                              : "object-cover"
-                          }
-                        />
-                      </div>
-                      <div className="flex-1 flex flex-col gap-2 py-2">
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                            <span>{formatDate(post.date, "ja-JP")}</span>
-                            {post.category ? (
-                              <Badge
-                                variant="outline"
-                                className="border-border/40 text-[11px] font-medium"
-                              >
-                                {post.category}
-                              </Badge>
-                            ) : null}
-                          </div>
-                          <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
-                            {post.title}
-                          </p>
+        <ul className="space-y-5">
+          {entries.map((post) => {
+            const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
+            const isFallback = thumbnail === "/icon.svg";
+            return (
+              <li key={`${resolvedLocale}-${post.slug}`}>
+                <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
+                  <a
+                    href={toLocalePath(`/blog/post/${post.slug}`, resolvedLocale)}
+                    className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
+                      <Image
+                        src={thumbnail}
+                        alt={isFallback ? "Site icon" : post.title}
+                        fill
+                        sizes="(min-width: 768px) 176px, 100vw"
+                        className={
+                          isFallback
+                            ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
+                            : "object-cover"
+                        }
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 py-2">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          <span>{formatDate(post.date, dateLocale)}</span>
+                          {post.category ? (
+                            <Badge
+                              variant="outline"
+                              className="border-border/40 text-[11px] font-medium"
+                            >
+                              {post.category}
+                            </Badge>
+                          ) : null}
                         </div>
-                        {post.tags.length > 0 ? (
-                          <div className="flex flex-wrap gap-2 md:mt-auto">
-                            {post.tags.map((tagName) => (
-                              <Tag
-                                key={tagName}
-                                tag={tagName}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                        ) : null}
+                        <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
+                          {post.title}
+                        </p>
                       </div>
-                    </a>
-                  </Card>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div className="lang-en">
-          <ul className="space-y-5">
-            {entriesEn.map((post) => {
-              const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
-              const isFallback = thumbnail === "/icon.svg";
-              return (
-                <li key={`en-${post.slug}`}>
-                  <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                    <a
-                      href={`/blog/post/${post.slug}`}
-                      className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
-                    >
-                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
-                        <Image
-                          src={thumbnail}
-                          alt={isFallback ? "Site icon" : post.title}
-                          fill
-                          sizes="(min-width: 768px) 176px, 100vw"
-                          className={
-                            isFallback
-                              ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
-                              : "object-cover"
-                          }
-                        />
-                      </div>
-                      <div className="flex-1 flex flex-col gap-2 py-2">
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                            <span>{formatDate(post.date, "en-US")}</span>
-                            {post.category ? (
-                              <Badge
-                                variant="outline"
-                                className="border-border/40 text-[11px] font-medium"
-                              >
-                                {post.category}
-                              </Badge>
-                            ) : null}
-                          </div>
-                          <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
-                            {post.title}
-                          </p>
+                      {post.tags.length > 0 ? (
+                        <div className="flex flex-wrap gap-2 md:mt-auto">
+                          {post.tags.map((tagName) => (
+                            <Tag
+                              key={`${resolvedLocale}-${tagName}`}
+                              tag={tagName}
+                              className="bg-muted text-xs font-medium text-muted-foreground"
+                            />
+                          ))}
                         </div>
-                        {post.tags.length > 0 ? (
-                          <div className="flex flex-wrap gap-2 md:mt-auto">
-                            {post.tags.map((tagName) => (
-                              <Tag
-                                key={`en-${tagName}`}
-                                tag={tagName}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </a>
-                  </Card>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                      ) : null}
+                    </div>
+                  </a>
+                </Card>
+              </li>
+            );
+          })}
+        </ul>
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

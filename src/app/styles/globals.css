@@ -3,14 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-html[data-lang="ja"] .lang-en {
-  display: none !important;
-}
-
-html[data-lang="en"] .lang-ja {
-  display: none !important;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

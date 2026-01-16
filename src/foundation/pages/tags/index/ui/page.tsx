@@ -8,13 +8,14 @@ import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 type TagEntry = {
   name: string;
   count: number;
 };
 
-function buildTagList(posts: BlogPost[], locale: "ja" | "en"): TagEntry[] {
+function buildTagList(posts: BlogPost[], locale: Locale): TagEntry[] {
   const tagMap = new Map<string, TagEntry>();
 
   for (const post of posts) {
@@ -35,20 +36,27 @@ function buildTagList(posts: BlogPost[], locale: "ja" | "en"): TagEntry[] {
   });
 }
 
-export default async function Page() {
+type PageProps = {
+  locale?: Locale;
+};
+
+export default async function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
   const posts = await getBlogPostsVariants();
   const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPost[];
   const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPost[];
   const tagsJa = buildTagList(postsJa, "ja");
   const tagsEn = buildTagList(postsEn, "en");
+  const tags = resolvedLocale === "en" ? tagsEn : tagsJa;
+  const pagePath = toLocalePath("/tags", resolvedLocale);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Tags", path: "/tags" },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Tags", path: pagePath },
         ])}
       />
       <main
@@ -57,68 +65,38 @@ export default async function Page() {
       >
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText ja="タグ" en="Tags" />
+            <I18nText locale={resolvedLocale} ja="タグ" en="Tags" />
           </h1>
         </section>
 
-        <div className="lang-ja">
-          {tagsJa.length === 0 ? (
-            <Card className="border-transparent bg-card/40 shadow-none">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText ja="タグがまだありません。" en="No tags yet." />
-              </div>
-            </Card>
-          ) : (
-            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {tagsJa.map((tag) => (
-                <li key={tag.name}>
-                  <Card className="border-transparent bg-card/40 shadow-none transition-colors hover:bg-card/60">
-                    <a
-                      href={`/tags/${encodeURIComponent(tag.name)}`}
-                      className="flex items-center justify-between gap-3 px-3 py-2"
-                    >
-                      <Tag
-                        tag={tag.name}
-                        label={`${tag.name} (${tag.count})`}
-                        className="bg-muted text-xs font-semibold text-muted-foreground"
-                      />
-                    </a>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="lang-en">
-          {tagsEn.length === 0 ? (
-            <Card className="border-transparent bg-card/40 shadow-none">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText ja="タグがまだありません。" en="No tags yet." />
-              </div>
-            </Card>
-          ) : (
-            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {tagsEn.map((tag) => (
-                <li key={`en-${tag.name}`}>
-                  <Card className="border-transparent bg-card/40 shadow-none transition-colors hover:bg-card/60">
-                    <a
-                      href={`/tags/${encodeURIComponent(tag.name)}`}
-                      className="flex items-center justify-between gap-3 px-3 py-2"
-                    >
-                      <Tag
-                        tag={tag.name}
-                        label={`${tag.name} (${tag.count})`}
-                        className="bg-muted text-xs font-semibold text-muted-foreground"
-                      />
-                    </a>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {tags.length === 0 ? (
+          <Card className="border-transparent bg-card/40 shadow-none">
+            <div className="px-5 py-6 text-sm text-muted-foreground">
+              <I18nText locale={resolvedLocale} ja="タグがまだありません。" en="No tags yet." />
+            </div>
+          </Card>
+        ) : (
+          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {tags.map((tag) => (
+              <li key={`${resolvedLocale}-${tag.name}`}>
+                <Card className="border-transparent bg-card/40 shadow-none transition-colors hover:bg-card/60">
+                  <a
+                    href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, resolvedLocale)}
+                    className="flex items-center justify-between gap-3 px-3 py-2"
+                  >
+                    <Tag
+                      tag={tag.name}
+                      label={`${tag.name} (${tag.count})`}
+                      className="bg-muted text-xs font-semibold text-muted-foreground"
+                    />
+                  </a>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

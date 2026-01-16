@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getBlogPost, getBlogSlugs } from "@/entities/blog";
+import BlogPostPage from "@/pages/blog/post";
 
 type PageProps = {
   params?: { slug?: string } | Promise<{ slug?: string }>;
@@ -34,4 +35,10 @@ export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export { default } from "../../../../blog/post/[slug]/page";
+type PageComponentProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <BlogPostPage {...props} locale="en" />;
+}

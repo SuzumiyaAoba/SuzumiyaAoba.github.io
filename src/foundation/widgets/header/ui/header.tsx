@@ -5,16 +5,22 @@ import { useEffect, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
-import { T } from "@/shared/ui/t";
+import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 const navItems = [
-  { href: "/blog", labelKey: "nav.blog" },
-  { href: "/series", labelKey: "nav.series" },
-  { href: "/tags", labelKey: "nav.tags" },
-  { href: "/tools", labelKey: "nav.tools" },
+  { href: "/blog", labelJa: "ブログ", labelEn: "Blog" },
+  { href: "/series", labelJa: "シリーズ", labelEn: "Series" },
+  { href: "/tags", labelJa: "タグ", labelEn: "Tags" },
+  { href: "/tools", labelJa: "ツール", labelEn: "Tools" },
 ];
 
-export function Header() {
+type HeaderProps = {
+  locale: Locale;
+  path: string;
+};
+
+export function Header({ locale, path }: HeaderProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -61,7 +67,7 @@ export function Header() {
           />
         </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 md:border-b-0">
-          <a href="/" className="flex items-center gap-4">
+          <a href={toLocalePath("/", locale)} className="flex items-center gap-4">
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-wide text-foreground">NO SEA. I SEE.</p>
             </div>
@@ -71,10 +77,10 @@ export function Header() {
             {navItems.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={toLocalePath(item.href, locale)}
                 className="rounded-full px-4 py-1.5 transition-colors hover:bg-background hover:text-foreground"
               >
-                <T id={item.labelKey} />
+                <I18nText locale={locale} ja={item.labelJa} en={item.labelEn} />
               </a>
             ))}
           </nav>
@@ -86,8 +92,8 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <a href="/about">
-                <T id="nav.about" />
+              <a href={toLocalePath("/about", locale)}>
+                <I18nText locale={locale} ja="概要" en="About" />
               </a>
             </Button>
             <span className="text-border/70">/</span>
@@ -97,12 +103,12 @@ export function Header() {
               variant="ghost"
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
-              <a href="/search">
-                <T id="nav.search" />
+              <a href={toLocalePath("/search", locale)}>
+                <I18nText locale={locale} ja="検索" en="Search" />
               </a>
             </Button>
             <span className="text-border/70">/</span>
-            <LanguageToggle />
+            <LanguageToggle locale={locale} path={path} />
             <span className="text-border/70">/</span>
             <ThemeToggle />
           </div>
@@ -111,7 +117,7 @@ export function Header() {
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors"
-              aria-label="Open menu / メニューを開く"
+              aria-label={locale === "en" ? "Open menu" : "メニューを開く"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               onClick={() => setIsMenuOpen((open) => !open)}
@@ -144,39 +150,39 @@ export function Header() {
         }`}
       >
         <nav className="flex flex-col gap-3 py-4 text-sm font-medium text-muted-foreground">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <T id={item.labelKey} />
-            </a>
-          ))}
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={toLocalePath(item.href, locale)}
+                className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <I18nText locale={locale} ja={item.labelJa} en={item.labelEn} />
+              </a>
+            ))}
           <div className="h-px bg-border/60" />
           <a
-            href="/about"
+            href={toLocalePath("/about", locale)}
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            <T id="nav.about" />
+            <I18nText locale={locale} ja="概要" en="About" />
           </a>
           <a
-            href="/search"
+            href={toLocalePath("/search", locale)}
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            <T id="nav.search" />
+            <I18nText locale={locale} ja="検索" en="Search" />
           </a>
           <div className="h-px bg-border/60" />
           <div className="flex items-center gap-2 px-3 py-2">
-            <T id="ui.theme" className="text-sm" />
+            <I18nText locale={locale} as="span" ja="テーマ" en="Theme" className="text-sm" />
             <ThemeToggle />
           </div>
           <div className="flex items-center gap-2 px-3 py-2">
-            <T id="ui.language" className="text-sm" />
-            <LanguageToggle />
+            <I18nText locale={locale} as="span" ja="言語" en="Language" className="text-sm" />
+            <LanguageToggle locale={locale} path={path} />
           </div>
         </nav>
       </div>

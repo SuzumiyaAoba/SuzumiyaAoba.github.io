@@ -4,9 +4,11 @@ import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
+import type { Locale } from "@/shared/lib/locale-path";
 
 type CommentsProps = {
   className?: string;
+  locale?: Locale;
   repo?: string;
   repoId?: string;
   category?: string;
@@ -22,6 +24,7 @@ type CommentsProps = {
 
 export function Comments({
   className,
+  locale = "ja",
   repo = "SuzumiyaAoba/comments",
   repoId = "R_kgDOOapTPQ",
   category = "Announcements",
@@ -31,34 +34,15 @@ export function Comments({
   reactionsEnabled = "1",
   emitMetadata = "1",
   inputPosition = "top",
-  lang = "ja",
   loading = "lazy",
 }: CommentsProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [activeLang, setActiveLang] = useState(lang);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    const updateLang = () => {
-      const docLang = document.documentElement.dataset["lang"];
-      if (docLang === "en" || docLang === "ja") {
-        setActiveLang(docLang);
-      } else {
-        setActiveLang(lang);
-      }
-    };
-
-    updateLang();
-    document.addEventListener("languagechange", updateLang);
-    return () => {
-      document.removeEventListener("languagechange", updateLang);
-    };
-  }, [lang]);
 
   const giscusTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 
@@ -81,7 +65,7 @@ export function Comments({
     script.setAttribute("data-emit-metadata", emitMetadata);
     script.setAttribute("data-input-position", inputPosition);
     script.setAttribute("data-theme", giscusTheme);
-    script.setAttribute("data-lang", activeLang);
+    script.setAttribute("data-lang", locale === "en" ? "en" : "ja");
     script.setAttribute("data-loading", loading);
     container.appendChild(script);
   }, [
@@ -94,7 +78,7 @@ export function Comments({
     reactionsEnabled,
     emitMetadata,
     inputPosition,
-    activeLang,
+    locale,
     loading,
     mounted,
     giscusTheme,

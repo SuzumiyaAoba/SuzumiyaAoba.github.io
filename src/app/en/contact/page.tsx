@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import ContactPage from "@/pages/site/contact";
 
 export const metadata: Metadata = {
   title: "Contact",
 };
 
-export { default } from "../../contact/page";
+export default function Page() {
+  return <ContactPage locale="en" />;
+}

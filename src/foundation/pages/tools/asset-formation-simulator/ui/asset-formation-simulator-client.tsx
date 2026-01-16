@@ -5,6 +5,8 @@ import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from
 import { parseAsString, useQueryState } from "nuqs";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import type { Locale } from "@/shared/lib/locale-path";
+
 type Row = {
   month: number;
   principal: number;
@@ -202,13 +204,16 @@ const decodeScenarios = (value: string): ScenarioInput[] | null => {
   }
 };
 
-export default function AssetFormationSimulator() {
-  const [lang, setLang] = useState<"ja" | "en">("ja");
+type AssetFormationSimulatorProps = {
+  locale: Locale;
+};
+
+export default function AssetFormationSimulator({ locale }: AssetFormationSimulatorProps) {
   const numberFormatter = useMemo(
-    () => new Intl.NumberFormat(lang === "en" ? "en-US" : "ja-JP"),
-    [lang],
+    () => new Intl.NumberFormat(locale === "en" ? "en-US" : "ja-JP"),
+    [locale],
   );
-  const t = useCallback((ja: string, en: string) => (lang === "en" ? en : ja), [lang]);
+  const t = useCallback((ja: string, en: string) => (locale === "en" ? en : ja), [locale]);
   const formatYenWithMan = useCallback(
     (value: number) => {
       const yen = Math.round(value);
@@ -224,30 +229,18 @@ export default function AssetFormationSimulator() {
     (months: number) => {
       const yearsValue = months / 12;
       if (Number.isInteger(yearsValue)) {
-        if (lang === "en") {
+        if (locale === "en") {
           return `${yearsValue} ${yearsValue === 1 ? "year" : "years"}`;
         }
         return `${yearsValue}年`;
       }
-      if (lang === "en") {
+      if (locale === "en") {
         return `${yearsValue.toFixed(1)} years`;
       }
       return `${yearsValue.toFixed(1)}年`;
     },
-    [lang],
+    [locale],
   );
-
-  useEffect(() => {
-    const updateLang = () => {
-      const docLang = document.documentElement.dataset["lang"];
-      setLang(docLang === "en" ? "en" : "ja");
-    };
-    updateLang();
-    document.addEventListener("languagechange", updateLang);
-    return () => {
-      document.removeEventListener("languagechange", updateLang);
-    };
-  }, []);
 
   const [compressedParam, setCompressedParam] = useQueryState("p", parseAsString);
   const [scenarios, setScenarios] = useState<ScenarioInput[]>(defaultScenarios);
@@ -269,8 +262,8 @@ export default function AssetFormationSimulator() {
   const [tooltipSize, setTooltipSize] = useState({ width: 0, height: 0 });
 
   const defaultPatternName = useCallback(
-    (index: number) => (lang === "en" ? `Pattern ${index}` : `パターン${index}`),
-    [lang],
+    (index: number) => (locale === "en" ? `Pattern ${index}` : `パターン${index}`),
+    [locale],
   );
 
   useEffect(() => {
@@ -524,13 +517,13 @@ export default function AssetFormationSimulator() {
         if (monthValue >= 12) {
           return formatYears(monthValue);
         }
-        return lang === "en" ? `${monthValue} mo` : `${monthValue}ヶ月`;
+        return locale === "en" ? `${monthValue} mo` : `${monthValue}ヶ月`;
       });
 
     const yAxis = axisLeft(yScale)
       .ticks(5)
       .tickFormat((value) =>
-        lang === "en"
+        locale === "en"
           ? `¥${format(",")((value as number) / 10000)} x10k`
           : `${format(",")((value as number) / 10000)}万円`,
       );
@@ -668,7 +661,7 @@ export default function AssetFormationSimulator() {
       .on("mouseleave", () => {
         setTooltip(null);
       });
-  }, [scenarioData, selectedScenario, tableRows, visibleSeries, lang, formatYears]);
+  }, [scenarioData, selectedScenario, tableRows, visibleSeries, locale, formatYears]);
 
   return (
     <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">

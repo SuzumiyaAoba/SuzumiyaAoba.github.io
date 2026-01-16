@@ -1,8 +1,12 @@
 
+import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
-import { T } from "@/shared/ui/t";
+type FooterProps = {
+  locale: Locale;
+};
 
-export function Footer() {
+export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
@@ -10,11 +14,11 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 text-center sm:px-6 md:flex-row md:justify-center">
         <p className="text-xs text-muted-foreground">© {year} SuzumiyaAoba</p>
         <nav className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-          <a href="/contact" className="hover:text-foreground">
-            <T id="footer.contact" />
+          <a href={toLocalePath("/contact", locale)} className="hover:text-foreground">
+            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
           </a>
-          <a href="/privacy-policy" className="hover:text-foreground">
-            <T id="footer.privacy" />
+          <a href={toLocalePath("/privacy-policy", locale)} className="hover:text-foreground">
+            <I18nText locale={locale} ja="プライバシー" en="Privacy" />
           </a>
         </nav>
       </div>

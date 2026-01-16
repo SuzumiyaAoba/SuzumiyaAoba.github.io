@@ -10,6 +10,7 @@ import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 function formatDate(date: string, locale: string): string {
   if (!date) {
@@ -50,17 +51,24 @@ function resolveThumbnail(slug: string, thumbnail?: string): string {
   return resolvedPath;
 }
 
-export default async function Page() {
+type PageProps = {
+  locale?: Locale;
+};
+
+export default async function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
+  const pagePath = toLocalePath("/blog", resolvedLocale);
+  const dateLocale = resolvedLocale === "en" ? "en-US" : "ja-JP";
   const posts = await getBlogPostsVariants();
   const pagePosts = posts.slice(0, 10);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Blog", path: "/blog" },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Blog", path: pagePath },
         ])}
       />
       <main
@@ -69,25 +77,21 @@ export default async function Page() {
       >
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText ja="ブログ" en="Blog" />
+            <I18nText locale={resolvedLocale} ja="ブログ" en="Blog" />
           </h1>
         </section>
 
         <ul className="space-y-5">
           {pagePosts.map((variant) => {
-            const postJa = variant.ja ?? variant.en;
-            const postEn = variant.en ?? variant.ja;
-            if (!postJa && !postEn) return null;
-            const titleJa = postJa?.frontmatter.title || variant.slug;
-            const titleEn = postEn?.frontmatter.title || titleJa;
-            const tagsJa = postJa?.frontmatter.tags ?? [];
-            const tagsEn = postEn?.frontmatter.tags ?? tagsJa;
-            const categoryJa = postJa?.frontmatter.category;
-            const categoryEn = postEn?.frontmatter.category ?? categoryJa;
-            const altTitle = titleEn || titleJa;
+            const post = resolvedLocale === "en" ? variant.en ?? variant.ja : variant.ja ?? variant.en;
+            if (!post) return null;
+            const title = post.frontmatter.title || variant.slug;
+            const tags = post.frontmatter.tags ?? [];
+            const category = post.frontmatter.category;
+            const altTitle = title;
             const thumbnail = resolveThumbnail(
               variant.slug,
-              postJa?.frontmatter.thumbnail ?? postEn?.frontmatter.thumbnail,
+              post.frontmatter.thumbnail,
             );
             const isFallback = thumbnail === "/icon.svg";
             return (
@@ -95,7 +99,7 @@ export default async function Page() {
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
                   <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
                     <a
-                      href={`/blog/post/${variant.slug}`}
+                      href={toLocalePath(`/blog/post/${variant.slug}`, resolvedLocale)}
                       className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44"
                     >
                       <Image
@@ -113,53 +117,34 @@ export default async function Page() {
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span className="lang-ja">
-                            {formatDate(postJa?.frontmatter.date ?? "", "ja-JP")}
-                          </span>
-                          <span className="lang-en">
-                            {formatDate(postEn?.frontmatter.date ?? postJa?.frontmatter.date ?? "", "en-US")}
-                          </span>
-                          {categoryJa ? (
+                          <span>{formatDate(post.frontmatter.date ?? "", dateLocale)}</span>
+                          {category ? (
                             <Badge
                               variant="outline"
                               className="border-border/40 text-[11px] font-medium"
                             >
-                              <span className="lang-ja">{categoryJa}</span>
-                              <span className="lang-en">{categoryEn}</span>
+                              {category}
                             </Badge>
                           ) : null}
                         </div>
                         <a
-                          href={`/blog/post/${variant.slug}`}
+                          href={toLocalePath(`/blog/post/${variant.slug}`, resolvedLocale)}
                           className="block text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80"
                         >
-                          <span className="lang-ja">{titleJa}</span>
-                          <span className="lang-en">{titleEn}</span>
+                          {title}
                         </a>
                       </div>
-                      {tagsJa.length > 0 ? (
-                        <>
-                          <div className="flex flex-wrap gap-2 md:mt-auto lang-ja">
-                            {tagsJa.map((tag) => (
-                              <Tag
-                                key={tag}
-                                tag={tag}
-                                href={`/tags/${encodeURIComponent(tag)}`}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                          <div className="flex flex-wrap gap-2 md:mt-auto lang-en">
-                            {tagsEn.map((tag) => (
-                              <Tag
-                                key={`en-${tag}`}
-                                tag={tag}
-                                href={`/tags/${encodeURIComponent(tag)}`}
-                                className="bg-muted text-xs font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                        </>
+                      {tags.length > 0 ? (
+                        <div className="flex flex-wrap gap-2 md:mt-auto">
+                          {tags.map((tag) => (
+                            <Tag
+                              key={tag}
+                              tag={tag}
+                              href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, resolvedLocale)}
+                              className="bg-muted text-xs font-medium text-muted-foreground"
+                            />
+                          ))}
+                        </div>
                       ) : null}
                     </div>
                   </div>
@@ -178,7 +163,7 @@ export default async function Page() {
               return (
                 <a
                   key={page}
-                  href={href}
+                  href={toLocalePath(href, resolvedLocale)}
                   className={
                     isActive
                       ? "rounded-full bg-foreground px-3 py-1 text-xs font-semibold text-background"
@@ -192,7 +177,7 @@ export default async function Page() {
           </nav>
         ) : null}
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

@@ -1,10 +1,10 @@
-"use client";
-
 import type { ElementType, ReactNode } from "react";
+import type { Locale } from "@/shared/lib/locale-path";
 
 type I18nTextProps<T extends ElementType = "span"> = {
   ja: ReactNode;
   en: ReactNode;
+  locale: Locale;
   as?: T;
   className?: string;
 };
@@ -12,15 +12,11 @@ type I18nTextProps<T extends ElementType = "span"> = {
 export function I18nText<T extends ElementType = "span">({
   ja,
   en,
+  locale,
   as,
   className,
 }: I18nTextProps<T>) {
   const Component = (as ?? "span") as ElementType;
-
-  return (
-    <>
-      <Component className={["lang-ja", className].filter(Boolean).join(" ")}>{ja}</Component>
-      <Component className={["lang-en", className].filter(Boolean).join(" ")}>{en}</Component>
-    </>
-  );
+  const text = locale === "en" ? en : ja;
+  return <Component className={className}>{text}</Component>;
 }

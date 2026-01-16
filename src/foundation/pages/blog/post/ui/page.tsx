@@ -21,10 +21,12 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 
 type PageProps = {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 };
 
 async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
@@ -55,7 +57,9 @@ async function loadMdxScope(source: string, slug: string): Promise<Record<string
   return scope;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
+  const isEn = resolvedLocale === "en";
   const { slug } = await params;
   const [postJa, postEn, { prev, next }] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
@@ -63,7 +67,7 @@ export default async function Page({ params }: PageProps) {
     getAdjacentPostsVariants(slug),
   ]);
 
-  const post = postJa ?? postEn;
+  const post = isEn ? postEn ?? postJa : postJa ?? postEn;
 
   if (!post) {
     notFound();
@@ -71,29 +75,25 @@ export default async function Page({ params }: PageProps) {
 
   const postTitleJa = postJa?.frontmatter.title || post.slug;
   const postTitleEn = postEn?.frontmatter.title || postTitleJa;
-  const categoryJa = postJa?.frontmatter.category;
-  const categoryEn = postEn?.frontmatter.category ?? categoryJa;
-  const tagsJa = postJa?.frontmatter.tags ?? postEn?.frontmatter.tags ?? [];
-  const tagsEn = postEn?.frontmatter.tags ?? tagsJa;
-  const postUrl = `${getSiteUrl()}/blog/post/${slug}`;
-  const shareUrlJa = `https://x.com/intent/tweet?text=${encodeURIComponent(
-    postTitleJa,
+  const postTitle = isEn ? postTitleEn : postTitleJa;
+  const category = post.frontmatter.category;
+  const tags = post.frontmatter.tags ?? [];
+  const postPath = toLocalePath(`/blog/post/${slug}`, resolvedLocale);
+  const postUrl = `${getSiteUrl()}${postPath}`;
+  const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
+    postTitle,
   )}&url=${encodeURIComponent(postUrl)}`;
-  const shareUrlEn = `https://x.com/intent/tweet?text=${encodeURIComponent(
-    postTitleEn,
-  )}&url=${encodeURIComponent(postUrl)}`;
-  const scopeJa = postJa ? await loadMdxScope(postJa.content, slug) : {};
-  const scopeEn = postEn ? await loadMdxScope(postEn.content, slug) : scopeJa;
-  const contentEnSource = postEn?.content ?? post.content;
-  const [contentJa, contentEn, headingsJa, headingsEn, amazonProducts] = await Promise.all([
-    renderMdx(post.content, { basePath: `/contents/blog/${slug}`, scope: scopeJa }),
-    renderMdx(contentEnSource, {
-      basePath: `/contents/blog/${slug}`,
-      scope: scopeEn,
-      idPrefix: "en-",
-    }),
-    getTocHeadings(post.content),
-    getTocHeadings(contentEnSource, { idPrefix: "en-" }),
+  const primaryContent = isEn ? postEn?.content : postJa?.content;
+  const fallbackContent = isEn ? postJa?.content : postEn?.content;
+  const contentSource = primaryContent ?? fallbackContent ?? post.content;
+  const scope = primaryContent
+    ? await loadMdxScope(primaryContent, slug)
+    : fallbackContent
+      ? await loadMdxScope(fallbackContent, slug)
+      : {};
+  const [content, headings, amazonProducts] = await Promise.all([
+    renderMdx(contentSource, { basePath: `/contents/blog/${slug}`, scope }),
+    getTocHeadings(contentSource),
     post.frontmatter.amazonProductIds
       ? getAmazonProductsByIds(post.frontmatter.amazonProductIds)
       : Promise.resolve([]),
@@ -101,24 +101,24 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header locale={resolvedLocale} path={postPath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Blog", path: "/blog" },
-          { name: post.frontmatter.title || post.slug, path: `/blog/post/${slug}` },
+          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Blog", path: toLocalePath("/blog", resolvedLocale) },
+          { name: postTitle, path: postPath },
         ])}
       />
       <JsonLd
         data={{
           "@context": "https://schema.org",
           "@type": "BlogPosting",
-          headline: post.frontmatter.title || post.slug,
+          headline: postTitle,
           datePublished: post.frontmatter.date,
           dateModified: post.frontmatter.date,
           mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `${getSiteUrl()}/blog/post/${slug}`,
+            "@id": `${getSiteUrl()}${postPath}`,
           },
           author: {
             "@type": "Person",
@@ -127,77 +127,45 @@ export default async function Page({ params }: PageProps) {
         }}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <div className="lang-ja">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Blog", path: "/blog" },
-              { name: postTitleJa, path: `/blog/post/${slug}` },
-            ]}
-            className="mb-4"
-          />
-        </div>
-        <div className="lang-en">
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Blog", path: "/blog" },
-              { name: postTitleEn, path: `/blog/post/${slug}` },
-            ]}
-            className="mb-4"
-          />
-        </div>
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: toLocalePath("/", resolvedLocale) },
+            { name: "Blog", path: toLocalePath("/blog", resolvedLocale) },
+            { name: postTitle, path: postPath },
+          ]}
+          className="mb-4"
+        />
         <header className="mb-10 space-y-3">
           <p className="text-sm text-muted-foreground">
-            <span className="lang-ja">
-              {postJa?.frontmatter.date ?? post.frontmatter.date}
-            </span>
-            <span className="lang-en">
-              {postEn?.frontmatter.date ?? postJa?.frontmatter.date ?? post.frontmatter.date}
-            </span>
+            {post.frontmatter.date}
           </p>
           <h1 className="text-3xl font-semibold break-all">
-            <span className="lang-ja">{postTitleJa}</span>
-            <span className="lang-en">{postTitleEn}</span>
+            {postTitle}
           </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            {categoryJa ? (
+            {category ? (
               <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
-                <span className="lang-ja">{categoryJa}</span>
-                <span className="lang-en">{categoryEn}</span>
+                {category}
               </Badge>
             ) : null}
-            {tagsJa.length > 0 ? (
-              <>
-                <div className="flex flex-wrap gap-2 lang-ja">
-                  {tagsJa.map((tag) => (
-                    <Tag
-                      key={tag}
-                      tag={tag}
-                      href={`/tags/${encodeURIComponent(tag)}`}
-                      className="bg-muted text-[11px] font-medium text-muted-foreground"
-                    />
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-2 lang-en">
-                  {tagsEn.map((tag) => (
-                    <Tag
-                      key={`en-${tag}`}
-                      tag={tag}
-                      href={`/tags/${encodeURIComponent(tag)}`}
-                      className="bg-muted text-[11px] font-medium text-muted-foreground"
-                    />
-                  ))}
-                </div>
-              </>
+            {tags.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <Tag
+                    key={tag}
+                    tag={tag}
+                    href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, resolvedLocale)}
+                    className="bg-muted text-[11px] font-medium text-muted-foreground"
+                  />
+                ))}
+              </div>
             ) : null}
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
           <div className="flex flex-col w-full min-w-0">
             <article className="prose prose-neutral min-w-0 max-w-none font-sans">
-              <div className="lang-ja">{contentJa}</div>
-              <div className="lang-en">{contentEn}</div>
+              <div>{content}</div>
             </article>
             <div>
               {amazonProducts.length > 0 ? (
@@ -210,37 +178,16 @@ export default async function Page({ params }: PageProps) {
               ) : null}
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <Button asChild variant="outline" size="sm" className="lang-ja">
-                <a
-                  href={shareUrlJa}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on X"
-                >
+              <Button asChild variant="outline" size="sm">
+                <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
                   <Icon icon="simple-icons:x" className="size-3.5" />
-                  <I18nText ja="ポスト" en="Post" />
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="sm" className="lang-en">
-                <a
-                  href={shareUrlEn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on X"
-                >
-                  <Icon icon="simple-icons:x" className="size-3.5" />
-                  <I18nText ja="ポスト" en="Post" />
+                  <I18nText locale={resolvedLocale} ja="ポスト" en="Post" />
                 </a>
               </Button>
             </div>
           </div>
           <div className="hidden lg:block">
-            <div className="lang-ja">
-              <Toc headings={headingsJa} />
-            </div>
-            <div className="lang-en">
-              <Toc headings={headingsEn} />
-            </div>
+            <Toc headings={headings} locale={resolvedLocale} />
           </div>
         </div>
 
@@ -254,18 +201,17 @@ export default async function Page({ params }: PageProps) {
                   variant="ghost"
                   className="h-auto w-full min-w-0 flex-col items-start gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
                 >
-                  <a href={`/blog/post/${prev.slug}`} className="w-full min-w-0">
+                  <a
+                    href={toLocalePath(`/blog/post/${prev.slug}`, resolvedLocale)}
+                    className="w-full min-w-0"
+                  >
                     <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                       <Icon icon="lucide:chevron-left" className="size-3" />
-                      <I18nText ja="前の記事" en="Previous Post" />
+                      <I18nText locale={resolvedLocale} ja="前の記事" en="Previous Post" />
                     </span>
                     <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
-                      <span className="lang-ja">
-                        {(prev.ja ?? prev.en)?.frontmatter.title ?? prev.slug}
-                      </span>
-                      <span className="lang-en">
-                        {(prev.en ?? prev.ja)?.frontmatter.title ?? prev.slug}
-                      </span>
+                      {(isEn ? prev.en ?? prev.ja : prev.ja ?? prev.en)?.frontmatter.title ??
+                        prev.slug}
                     </span>
                   </a>
                 </Button>
@@ -280,18 +226,17 @@ export default async function Page({ params }: PageProps) {
                   variant="ghost"
                   className="h-auto w-full min-w-0 flex-col items-end gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
                 >
-                  <a href={`/blog/post/${next.slug}`} className="w-full min-w-0">
+                  <a
+                    href={toLocalePath(`/blog/post/${next.slug}`, resolvedLocale)}
+                    className="w-full min-w-0"
+                  >
                     <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
-                      <I18nText ja="次の記事" en="Next Post" />
+                      <I18nText locale={resolvedLocale} ja="次の記事" en="Next Post" />
                       <Icon icon="lucide:chevron-right" className="size-3" />
                     </span>
                     <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
-                      <span className="lang-ja">
-                        {(next.ja ?? next.en)?.frontmatter.title ?? next.slug}
-                      </span>
-                      <span className="lang-en">
-                        {(next.en ?? next.ja)?.frontmatter.title ?? next.slug}
-                      </span>
+                      {(isEn ? next.en ?? next.ja : next.ja ?? next.en)?.frontmatter.title ??
+                        next.slug}
                     </span>
                   </a>
                 </Button>
@@ -301,9 +246,9 @@ export default async function Page({ params }: PageProps) {
             )}
           </nav>
         </div>
-        <Comments />
+        <Comments locale={resolvedLocale} />
       </main>
-      <Footer />
+      <Footer locale={resolvedLocale} />
     </div>
   );
 }

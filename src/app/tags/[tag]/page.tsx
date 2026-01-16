@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getBlogPosts } from "@/entities/blog";
+import { getBlogPostsVariants } from "@/entities/blog";
 
 function decodeTag(tag: string): string {
   try {
@@ -24,10 +24,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams(): Promise<Array<{ tag: string }>> {
-  const posts = await getBlogPosts();
+  const posts = await getBlogPostsVariants();
   const tags = new Set<string>();
   posts.forEach((post) => {
-    (post.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
+    (post.ja?.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
+    (post.en?.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
   });
 
   return [...tags.values()]
