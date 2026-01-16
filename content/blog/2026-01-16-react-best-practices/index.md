@@ -7,7 +7,7 @@ tags: ["Skills", "AI", "LLM", "React"]
 
 Vercel が React の Skills として [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) を公開した。
 GitHub のリポジトリは [skills/react-best-practices](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) になっている。
-内容を確認すると 40 以上ののルールが Makrkdown ファイルとして置かれている。
+内容を確認すると 40 以上のルールが Makrkdown ファイルとして置かれている。
 Vercel のこれまでの React を使った開発の経験から最適化に焦点を当てたナレッジが詰め込まれているらしい。
 
 気になるので、一つずつルールの中身を確認してみよう。
