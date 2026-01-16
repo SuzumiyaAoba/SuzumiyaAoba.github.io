@@ -15,6 +15,7 @@ import {
 import { GitHubCodeLink } from "@/shared/ui/mdx/github-code-link";
 import { MdxH2, MdxH3, MdxH4, MdxH5 } from "@/shared/ui/mdx/heading";
 import { Img } from "@/shared/ui/mdx/img";
+import { MdxTable } from "@/shared/ui/mdx/table";
 import { ChatHistory } from "@/shared/ui/mdx/chat-history";
 import { Message } from "@/shared/ui/mdx/message";
 import { YouTubeEmbed } from "@/shared/ui/mdx/youtube-embed";
@@ -61,6 +62,7 @@ export const mdxComponents: MDXComponents = {
   h3: MdxH3,
   h4: MdxH4,
   h5: MdxH5,
+  table: MdxTable,
   Message,
   Tab,
   Tabs,

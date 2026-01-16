@@ -305,8 +305,11 @@
   .prose video {
     @apply rounded-lg;
   }
+  .prose .mdx-table {
+    @apply overflow-x-auto;
+  }
   .prose table {
-    @apply my-6 w-full border-collapse text-sm;
+    @apply my-6 min-w-full w-max border-collapse text-sm;
   }
   .prose thead {
     @apply border-b border-border/60;
