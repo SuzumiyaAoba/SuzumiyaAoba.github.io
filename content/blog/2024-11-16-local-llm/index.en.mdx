@@ -1,0 +1,214 @@
+---
+title: Trying a Local LLM
+date: 2024-11-16
+category: "LLM"
+tags: ["Local LLM", "LLM", "Ollama"]
+---
+
+## Introduction
+
+I upgraded the Mac mini I use at home to a high-spec model.
+As a result I can now run local LLMs, so here are the setup steps and my impressions.
+
+## Environment
+
+- Mac mini 2024
+  - Chip: Apple M4 Pro
+  - CPU: 14 cores
+  - GPU: 16 cores
+  - Memory: 64 GB
+  - SSD: 1 TB
+  - macOS: Squoia 15.1
+
+What will I use it for?
+
+## Steps to run a local LLM
+
+### Install ollama
+
+I manage my environment with [Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/),
+so I import the following setting into my usual config.
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    ollama
+  ];
+}
+```
+
+If you are not using Nix + Home Manager, download and install the [official installer](https://ollama.com/download).
+
+If installed correctly, the `ollama` command is available in the terminal.
+
+```shell
+$ ollama --version
+Warning: could not connect to a running Ollama instance
+Warning: client version is 0.3.12
+```
+
+### Download an LLM
+
+First, download the LLM you want to use. You can search models on Ollama's website.
+
+https://ollama.com/library
+
+I will use [Qwen2.5-Coder](https://gigazine.net/news/20241114-qwen2-5-coder-32b-released/), which was introduced on Gigazine a few days before I wrote this article.
+
+Run the following command to download the model.
+
+```shell
+$ ollama pull qwen2.5-coder:32b
+```
+
+Adjust the `32b` after the colon based on your environment.
+As I mention later, `32b` consumed about 20 GB of memory on my machine.
+
+### Start the server
+
+To run a local LLM, start a server with `ollama`.
+You only need to execute this command.
+
+```shell
+$ ollama serve
+```
+
+If it succeeds, you will see logs like the following.
+
+```shell
+$ ollama serve
+2024/11/16 21:53:13 routes.go:1153: INFO server config env="map[HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_DEBUG:false OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:11434 OLLAMA_KEEP_ALIVE:5m0s OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MODELS:/Users/suzumiyaaoba/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NUM_PARALLEL:0 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://*] OLLAMA_SCHED_SPREAD:false OLLAMA_TMPDIR: http_proxy: https_proxy: no_proxy:]"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=images.go:753 msg="total blobs: 8"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=images.go:760 msg="total unused blobs removed: 0"
+time=2024-11-16T21:53:13.738+09:00 level=INFO source=routes.go:1200 msg="Listening on 127.0.0.1:11434 (version 0.3.12)"
+time=2024-11-16T21:53:13.739+09:00 level=INFO source=common.go:135 msg="extracting embedded files" dir=/var/folders/9f/5ppq6dg904l3bp8t3zxhbzw40000gn/T/ollama1365314392/runners
+time=2024-11-16T21:53:13.758+09:00 level=INFO source=common.go:49 msg="Dynamic LLM libraries" runners=[metal]
+time=2024-11-16T21:53:13.771+09:00 level=INFO source=types.go:107 msg="inference compute" id=0 library=metal variant="" compute="" driver=0.0 name="" total="48.0 GiB" available="48.0 GiB"
+```
+
+### Run the local LLM
+
+Now try running the downloaded LLM.
+Run the following command. The model name should match what you downloaded.
+
+```shell
+$ ollama run qwen2.5-coder:32b
+```
+
+If it succeeds, you will see a prompt.
+
+```shell
+ollama run qwen2.5-coder:32b
+>>> Send a message (/? for help)
+```
+
+You can have a simple conversation with the LLM at this prompt.
+
+Since this model is specialized for source code, let's ask it to write a simple program.
+
+````shell
+$ ollama run qwen2.5-coder:32b
+>>> Please write Hello, World using Java
+Certainly! Here is a simple "Hello, World" program in Java:
+
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World");
+    }
+}
+```
+
+To run this program, follow these steps:
+
+1. Save the code in a file named `HelloWorld.java`.
+2. Open a terminal or command prompt and navigate to the directory where you saved the file.
+3. Compile the Java program using the Java compiler with the following command:
+   ```sh
+   javac HelloWorld.java
+   ```
+4. Run the compiled Java program with the following command:
+   ```sh
+   java HelloWorld
+   ```
+
+You should see the output:
+```
+Hello, World
+```
+````
+
+Maybe that was too easy.
+It even explained how to run it.
+
+Next, let's ask it to write a program that outputs the first 100 Fibonacci numbers.
+
+````shell
+>>> Write code in Java to output 100 Fibonacci numbers
+Certainly! To generate and print the first 100 Fibonacci numbers in Java, you can use a simple loop. Here's a complete Java program that does this:
+
+```java
+public class Fibonacci {
+    public static void main(String[] args) {
+        int n = 100; // Number of Fibonacci numbers to print
+        long[] fibonacciSeries = new long[n];
+
+        // Initialize the first two Fibonacci numbers
+        if (n > 0) {
+            fibonacciSeries[0] = 0;
+        }
+        if (n > 1) {
+            fibonacciSeries[1] = 1;
+        }
+
+        // Calculate the rest of the Fibonacci series
+        for (int i = 2; i < n; i++) {
+            fibonacciSeries[i] = fibonacciSeries[i - 1] + fibonacciSeries[i - 2];
+        }
+
+        // Print the Fibonacci series
+        System.out.println("The first " + n + " Fibonacci numbers are:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(fibonacciSeries[i] + " ");
+        }
+    }
+}
+```
+
+### Explanation:
+1. **Initialization**: The first two Fibonacci numbers are initialized as `0` and `1`.
+2. **Loop to Calculate Series**: A loop runs from index `2` to `n-1` to calculate the remaining Fibonacci numbers by summing the two preceding numbers.
+3. **Output**: Another loop prints out all 100 Fibonacci numbers.
+
+### Steps to Run:
+1. Save the code in a file named `Fibonacci.java`.
+2. Open a terminal or command prompt and navigate to the directory where you saved the file.
+3. Compile the Java program using the Java compiler with the following command:
+   ```sh
+   javac Fibonacci.java
+   ```
+4. Run the compiled Java program with the following command:
+   ```sh
+   java Fibonacci
+   ```
+
+This will print the first 100 Fibonacci numbers to the console.
+````
+
+It seems to have written a correct Fibonacci program.
+Maybe that was too easy as well.
+
+I could continue experimenting, but chatting in a terminal isn’t a great experience.
+In the next article, I will try using a local LLM through a different UI.
+
+### Conclusion
+
+Installing a local LLM has become surprisingly easy.
+Thanks to Ollama, even if new models appear, I can probably run them with a single command.
+
+If you want to try Japanese LLMs, it seems good to explore models that catch your interest in [Japanese LLM list | LLM-jp](https://llm-jp.github.io/awesome-japanese-llm/).
+
+I tried [Llama-3-ELYZA-JP-8B-GGUF](https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF), but I felt Japanese LLMs sometimes fail to hold a conversation.
+This is a field that will keep evolving, so I plan to explore new models regularly.

@@ -1,0 +1,290 @@
+---
+title: Do Local AI Agents Dream of Electric Sheep? (Improving Web Search)
+date: 2025-11-01
+tags: ["Generative AI", "AI Agents", "Local LLM", "mastra", "LM Studio", "TypeScript"]
+category: "Generative AI"
+description: "Improve the AI agent's web search"
+thumbnail: images/gpt-oss_change-reasoning-effort.png
+series: "Do Local AI Agents Dream of Electric Sheep?"
+seriesOrder: 4
+amazonAssociate: true
+amazonProductIds:
+  - "現場で活用するためのAIエージェント実践入門"
+---
+
+import chatReasoningLow from "./chat-reasoning-low.json";
+import chatReasoningHigh from "./chat-reasoning-high.json";
+import chatImprovedPrompt from "./chat-improved-prompt.json";
+
+## Quick recap
+
+In the [previous article](../2025-10-25-local-ai-agent/), we implemented a `web_search` tool using DuckDuckGo in mastra, and enabled `gpt-oss:20b` to recognize and use it.
+However, with a simple prompt like the following, the search did not behave as expected.
+
+<CodeWithTabs>
+
+```txt !!tabs English
+You are a helpful web search assistant that can help users find information on the web.
+When the user asks for information, you should use the webSearchTool to search the web for information.
+```
+
+</CodeWithTabs>
+
+## Toward improving the web search agent
+
+In this article, we will try several system prompts to learn how to control LLM behavior.
+Right now, the agent passes the user's question directly to `web_search`, so we will implement logic that derives better queries and answers based on the results.
+
+For the time being, the goal of this series is to make the agent produce answers following the prompt below.
+
+<CodeWithTabs>
+
+```txt !!tabs English
+You are a professional researcher tasked with conducting thorough research on a topic and producing a structured, comprehensive report. Your goal is to provide a detailed analysis that addresses the research question systematically.
+
+The research question is:
+
+<research_question>
+{research_question}
+</research_question>
+
+Follow these steps carefully:
+
+1. <question_elaboration>
+   Elaborate on the research question. Define key terms, clarify the scope, and identify the core issues that need to be addressed. Consider different angles and perspectives that are relevant to the question.
+</question_elaboration>
+
+2. <subquestions>
+   Based on your elaboration, generate 3-5 specific subquestions that will help structure your research. Each subquestion should:
+   - Address a specific aspect of the main research question
+   - Be focused and answerable through web research
+   - Collectively provide comprehensive coverage of the main question
+</subquestions>
+
+3. For each subquestion:
+   a. <web_search_results>
+      Search for relevant information using web search. For each subquestion, perform searches with carefully formulated queries.
+      Extract meaningful content from the search results, focusing on:
+      - Authoritative sources
+      - Recent information when relevant
+      - Diverse perspectives
+      - Factual data and evidence
+
+      Be sure to properly cite all sources and avoid extensive quotations. Limit quotes to less than 25 words each and use no more than one quote per source.
+   </web_search_results>
+
+   b. Analyze the collected information, evaluating:
+      - Relevance to the subquestion
+      - Credibility of sources
+      - Consistency across sources
+      - Comprehensiveness of coverage
+
+4. Create a beautifully formatted research report as an artifact. Your report should:
+   - Begin with an introduction framing the research question
+   - Include separate sections for each subquestion with findings
+   - Synthesize information across sections
+   - Provide a conclusion answering the main research question
+   - Include proper citations of all sources
+   - Use tables, lists, and other formatting for clarity where appropriate
+
+The final report should be well-organized, carefully written, and properly cited. It should present a balanced view of the topic, acknowledge limitations and areas of uncertainty, and make clear, evidence-based conclusions.
+
+Remember these important guidelines:
+- Never provide extensive quotes from copyrighted content
+- Limit quotes to less than 25 words each
+- Use only one quote per source
+- Properly cite all sources
+- Do not reproduce song lyrics, poems, or other copyrighted creative works
+- Put everything in your own words except for properly quoted material
+- Keep summaries of copyrighted content to 2-3 sentences maximum
+
+Please begin your research process, documenting each step carefully.
+```
+
+</CodeWithTabs>
+
+[_reading-plus-ai/mcp-server-deep-research_](https://github.com/reading-plus-ai/mcp-server-deep-research/blob/ce57e9f8e7848ba47acd37887808e9b37de95436/src/mcp_server_deep_research/server.py)
+
+To make the prompt above work, it's not enough to just search with better keywords.
+We also need to access web pages from search results, parse HTML, and provide the main text to the LLM.
+
+It might be easy to do this in Python with existing frameworks, but this series aims to avoid ready‑made solutions.
+We want to build it ourselves to experience the difficulties and necessary tricks of LLM‑based development.
+So **please don't say "just use XXX, it's easy"** :rage:
+
+## Generating better search queries
+
+First, let's make sure the `web_search` tool receives appropriate queries derived from the user's question.
+
+### Reasoning Effort
+
+The most obvious lever is improving the system prompt, but `gpt-oss:20b` has a setting called _Reasoning Effort_, so let's try that first.
+Reasoning Effort has three levels: low, medium, high. The higher it is, the deeper the model's "thinking."
+"Deeper thinking" means it consumes tokens to insert intermediate reasoning steps before producing the final answer.
+It sounds like high would be best, but with maximum context length and high Reasoning Effort, I observed the model getting stuck in an infinite reasoning loop.
+So we'll compare low and medium here.
+
+The comparison uses this prompt:
+
+```txt instructions
+You are a helpful web search assistant who helps users find information on the internet.
+Use webSearchTool to search the web, and based on the results, provide accurate and concise answers to user questions.
+```
+
+#### How to change Reasoning Effort
+
+In LM Studio, open the model list, click the gear icon, and open the model settings tab.
+
+<Img src="./images/lm-studio_models.png" />
+
+Select "Custom Fields" and change "Reasoning Effort" from Low to Medium using the dropdown.
+
+<Img src="./images/gpt-oss_change-reasoning-effort.png" />
+
+Reload the model for the change to take effect.
+
+#### Reasoning Effort: low
+
+When running `gpt-oss:20b` with Reasoning Effort set to low via mastra, the result was as follows.
+
+<ChatHistory messages={chatReasoningLow.messages} />
+
+Even from the visible part, there are four problems:
+
+1. The tool input `query` is passed as an unprocessed string like "today's news in Japan"
+2. When you open `Reasoning`, the Chain‑of‑Thought is shallow, e.g. _**"Need to search web. Need summarize top news."**_
+3. The answer contains hallucinations
+4. The prompt's "accurate and concise answer" instruction is not followed
+
+For point `3`, the answer lists news that have nothing to do with the `RESULT` shown in `webSearchTool`.
+Worse, it outputs plausible past events (likely from training data), not pure nonsense.
+
+### Reasoning Effort: high
+
+Now let's set Reasoning Effort to high and try the same prompt.
+
+<ChatHistory messages={chatReasoningHigh.messages} />
+
+A major difference is that `webSearchTool` is called four times.
+The `query` strings were:
+
+- 今日の日本のニュース
+- 2025-11-02 日本 ニュース 今日
+- 2025年11月2日 日本 ニュース
+- 2025-11-02 site:news.yahoo.co.jp 日本
+
+These tool calls are not executed all at once; they happen when the model decides they are needed while generating reasoning tokens.
+Let's look at the Reasoning content.
+
+<CodeWithTabs>
+
+```txt !!tabs English
+User wants today's Japanese news. Need to search web. Use webSearchTool with query "今日の日本のニュース" or similar.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide a concise answer. The web search results are generic sites, not specific articles. We might need to fetch a specific news article from one of these sites. But the search results didn't provide direct content. We could use a news API? But we only have webSearchTool.
+
+We can search for "今日の日本ニュース 2025-11-02" to get today's news. Let's search again with date.The user asked: "今日の日本のニュースを教えて" (Tell me today's Japanese news). We need to provide a concise answer with current news. The assistant should browse the web for up-to-date news. We used webSearchTool but got generic results, not specific articles. We need to search for "2025-11-02 日本 ニュース" or similar. The tool returned generic sites, not specific news items.
+
+We might need to refine query: "2025年11月2日 日本 ニュース" or "今日の日本ニュース 2025-11-02". Let's try again.The user asked: "今日の日本のニュースを教えて" meaning "Tell me today's Japanese news." We need to provide current news. The assistant should browse the web for up-to-date news. The search results are generic sites, not specific articles. We need to fetch a current news article. Maybe use Google News or Yahoo! Japan news site and parse top stories.
+
+We can search "2025-11-02 日本 ニュース" but the results are not specific. We might need to fetch from a news site like Yahoo! Japan or NHK.
+
+We can search "2025年11月2日 日本 ニュース" but the results show generic. We might need to use a news API? But we only have webSearchTool.
+
+We can search "2025-11-02 site:news.yahoo.co.jp" to get specific. Let's try.
+
+We need to answer: "今日の日本のニュースを教えて" meaning today's Japanese news. Today is 2025-11-02? The assistant's date is 2025-11-02. We need to provide current news. Use search results for today's date. The Yahoo article about RISE WORLD SERIES 2025 FINAL on 11/2. Also other news: Tomorrow X Together added shows, JR East night operation, etc.
+
+We should summarize top stories. Provide links. Use Japanese language.
+```
+
+</CodeWithTabs>
+
+In the Japanese translation, there are lines that look like silly tautologies, but if you check the English you can see the model reinterprets the Japanese prompt into English.
+`gpt-oss` seems to think in English even when the prompt is Japanese.
+It tries to fetch details, but it only has `webSearchTool`, so it keeps changing the prompt and re‑querying.
+Later it switches to targeting specific websites and lands on domain‑restricted searches, then summarizes results.
+
+This is the effect of changing Reasoning Effort from low to medium.
+However, it still fails to fetch news newer than 2025‑11‑02.
+This is probably because we don't have a tool to fetch web page contents.
+
+For translating the reasoning, I used [PLaMo Translation](https://tech.preferred.jp/ja/blog/plamo-translate/).
+
+### Improving the prompt
+
+Next, we improve the prompt.
+The implementation up to the previous article is in the [GitHub repository](https://github.com/SuzumiyaAoba/how-to-use-mastra/blob/f5df54c348c5b69c999d1a9b17b28ef8f07ac531/src/mastra/agents/web-search-agent.ts).
+
+Here we re‑quote only the web search agent part.
+
+```ts web-search-agent.ts
+import { Memory } from "@mastra/memory";
+import { ollama } from "../../config/providers";
+import { LibSQLStore } from "@mastra/libsql";
+import { Agent } from "@mastra/core/agent";
+import { webSearchTool } from "../tools/web-search-tool";
+
+export const webSearchAgent = new Agent({
+    name: 'Web Search Agent',
+    // !mark(1:4)
+    instructions: `
+        You are a helpful web search assistant that can help users find information on the web.
+        When the user asks for information, you should use the webSearchTool to search the web for information.
+  `,
+    // model: lmstudio("openai/gpt-oss-20b"),
+    model: ollama("gpt-oss:20b"),
+    tools: { webSearchTool },
+```
+
+Improving the system prompt means changing the `instructions` string in this code.
+Many problems come from not being able to inspect page content, so here we change the prompt to say that if you can't answer, you must say so.
+
+<CodeWithTabs>
+
+```txt !!tabs English
+You are a skilled web search assistant who helps users find information on the internet.
+Follow the instructions below:
+
+* Use the **webSearchTool** to perform a web search and return the results to the user.
+* Based on the search results, provide an **accurate and concise answer** to the user's question.
+* You can only access information contained in the **description** of the search results.
+
+  * If the information in the description is insufficient, inform the user of that.
+* Always include the **source (URL)** that supports your answer.
+* Do **not** speculate or guess.
+* **IMPORTANT:** If you cannot gather enough information to answer the user's question, respond with:
+
+  > "申し訳ありませんが、その情報は見つかりませんでした。"
+  > ("Sorry, that information could not be found.")
+
+All responses to the user should be written **in Japanese**.
+```
+
+</CodeWithTabs>
+
+With this prompt, the conversation looked like this:
+
+<ChatHistory messages={chatImprovedPrompt.messages} />
+
+This is much better, I think.
+It provides fewer news items, but they are real news from November 2, 2025.
+It also showed a caution note based on the instructions.
+That behavior is nice, but it also means the model is not fully faithful to the instructions, so it's not always good.
+Still, the goal of producing "accurate" answers was achieved.
+
+As you can see from the examples, there's still a problem: the output format is inconsistent.
+We can fix that by providing an output format in the prompt.
+
+In the next article, we will implement a tool to fetch web page content
+and aim to make the output format more consistent.
+
+## Closing
+
+In this article, we confirmed that different Reasoning Effort settings for `gpt-oss` affect the model's reasoning and answers.
+We also found that improving the prompt makes the model answer accurately based on web search results.
+
+So far, we only confirmed it works for a single example.
+We have not verified whether it can answer other questions accurately at high quality.
+To keep quality across multiple questions, we need to build an automatic evaluation environment, which we will tackle later.
+
+In the next article, we will implement a tool to fetch web page contents
+and see what happens when we give it to the LLM.

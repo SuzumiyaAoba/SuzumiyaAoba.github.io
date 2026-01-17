@@ -1,0 +1,903 @@
+---
+title: A Look into the Household Financial Behavior Survey
+date: 2026-01-01
+category: "Finance"
+tags: ["Finance", "Investing", "Household Financial Behavior"]
+---
+
+This year's "[Household Financial Behavior Survey](https://www.j-flec.go.jp/data/kakekin_2025/)" has been published, so I took a look.
+
+## TL;DR
+
+- Average financial asset balances increased by about 5.6 million yen
+- **Average** annual income also increased by about 0.5 million yen
+- Financial asset holdings shifted upward across the board
+- Balances in the new NISA accounts continue to grow
+- The tendency to accept risk for higher returns continues
+- High prices are tough :weary:
+
+Just reading the ["Household Financial Behavior Survey" (FY2025)](https://www.j-flec.go.jp/wpimages/uploads/point2025.pdf) might be enough.
+
+## What is the "Household Financial Behavior Survey"?
+
+The "Household Financial Behavior Survey" is a nationwide statistical survey by the [Japan Financial Literacy and Education Corporation (J-FLEC)](https://www.j-flec.go.jp/about/organization/) to understand the asset and debt holdings, financial behavior, and financial literacy of general Japanese households.
+J-FLEC stands for _Japan Financial Literacy and Education Corporation_.
+
+It is a neutral, fair authorized corporation established in 2024 under the [Act on the Provision of Financial Services and Related Environments](https://laws.e-gov.go.jp/law/412AC0000000101).
+It operates with the following purpose:
+
+> Promote teaching and guidance (financial and economic education) to cultivate knowledge about finance and economics for appropriate use of financial services, and the ability to apply that knowledge.
+
+Before J-FLEC was established, the survey appears to have been published by the [Central Council for Financial Services Information](https://www.shiruporuto.jp/public/document/container/gaiyo/iinkai.html).
+According to ChatGPT DeepResearch, the survey has been conducted since 1953 with changes in the administering body.
+
+["Household Financial Behavior Survey" Administering Body History.pdf](./assets/「家計の金融行動に関する世論調査」調査主体の変遷.pdf)
+
+Treat accuracy as a rough reference.
+
+## 2025 data
+
+The 2025 data is published at ["Household Financial Behavior Survey 2025 | J-FLEC"](https://www.j-flec.go.jp/data/kakekin_2025/).
+
+## About the survey
+
+When looking at this kind of statistical data, you need to understand the methodology, timing, target population, and survey contents.
+We will first understand the survey, then visualize it.
+
+- Target population
+  - Households with two or more members
+    - Household head is 20 to under 80, with two or more household members. Sample size: 5,000 households.
+  - Single-person households
+    - Individuals aged 20 to under 80 who constitute a single-person household (excluding temporary single-person households such as for job assignments). Sample size: 2,500 households.
+- Method
+  - Internet panel survey
+- Survey period
+  - June 20, 2025 (Fri) ~ July 2, 2025 (Wed)
+- Survey topics
+  - Financial assets
+  - Financial liabilities
+  - Real assets and housing plans
+  - Life planning (retirement, consumption)
+  - Payment methods
+  - Financial systems, etc.
+
+According to the [2024 Comprehensive Survey of Living Conditions](https://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa24/index.html),
+Japan has 54.825 million households in total, including 18.995 million single-person households.
+
+## Survey questions
+
+I had never checked the full list of questions before, but there are more than I expected.
+The two‑plus household survey and the single‑person survey differ slightly.
+Since many graphs summarize results, it's worth reviewing the questions at least once.
+
+### Two-or-more-person households
+
+["Household Financial Behavior Survey" [Two-or-more-person households] (FY2025)](https://www.j-flec.go.jp/wpimages/uploads/shukeif25.pdf)
+
+<details>
+<summary>Questions</summary>
+
+- Q1
+  1. Does your household have bank savings accounts and/or brokerage accounts?
+  1. For the financial products your household currently holds (including foreign-currency products), mark the applicable numbers.
+- Q2
+  1. What are the current balances by financial product (excluding cash, including foreign-currency products, NISA, iDeCo) and the total amount?
+  1. Of the items in (a), list the current balances of foreign-currency products (yen conversion at the exchange rate at the time of entry).
+- Q3
+  1. In the past year, did your household allocate take-home income (after tax) to financial assets?
+  1. As 100% of annual take-home income, what percentage was allocated to financial assets? (Round to the nearest whole number.)
+- Q4
+  1. Select the response that applies to your household's financial asset holdings.
+- Q5
+  1. When choosing financial products to hold, what do you prioritize most? (Choose one.)
+- Q6
+  1. Have you ever experienced investment losses below principal? (Choose one.)
+  1. How do you view investment outcomes that fall below principal? (Choose one.)
+- Q7
+  1. Compared to one year ago, did your household's financial asset balance increase or decrease? (Choose one.)
+- Q8
+  1. (a) If "increased," why? (Choose all that apply.)
+  1. (b) If "decreased," why? (Choose all that apply.)
+- Q9
+  1. For what purposes does your household hold financial assets? (Choose up to three.)
+- Q10
+  1. How do you want to handle inheritance (including real assets like real estate) in the future? Choose the closest option. (Choose one.)
+- Q11
+  1. What level of financial asset balance is your household targeting? Enter a number in the table (use "0" if zero).
+- Q12
+  1. About desired holdings of financial products: Are there products you want to increase or start holding in the future? Mark all that apply.
+- Q13
+  1. For financial products with potential principal loss but higher expected returns, how much do you plan to hold in the future? (Choose one.)
+- Q14
+  1. (a) For daily payments (shopping, etc.), how do you choose payment methods by amount? Select up to two payment methods for each amount.
+  1. (b) For regular payments (utilities, etc.), which payment methods do you mainly use? Select up to two.
+  1. (c) What is your average cash balance? (Enter "0" if zero.)
+- Q15
+  1. Does your household currently have any borrowing? Excludes installment unpaid balances and revolving unpaid balances; excludes credit card "pay later" balances settled in 1–2 months. (Choose one.)
+- Q16
+  1. Enter current borrowing balance, housing loan balance, new borrowing amount, and annual repayment amount (use "0" if zero).
+- Q17
+  1. For what purposes did your household borrow? Select up to three.
+- Q18
+  1. Choose the closest description of your household's overall balance. (Choose one.)
+  1. Considering factors like changes in consumption spending, financial assets, land/house purchase or sale, borrowing and repayments, and income changes, choose the closest description of how your household was managed in the past year. (Choose one.)
+- Q19
+  1. Does your household create a "life plan" considering the future? (A plan describing what you want to do in life and how much money is needed.) (Choose one.)
+  1. How many years ahead does the life plan cover? (Choose one.)
+  1. Does your household have a savings plan to prepare funds needed for the future along with the life plan? (Choose one.)
+  1. Does your household have a savings plan to prepare funds needed for the future along with the life plan? (Choose one.)
+- Q20
+  1. What kind of housing does your household currently live in? (Choose one.)
+- Q21
+  1. For households without a home, when do you plan to acquire a home? (Choose one.)
+- Q22
+  1. For households planning to acquire or replace a home: what is the total amount needed, and how will you procure the funds? Enter amounts in the table. For replacement, enter the total for the new property, not the price difference.
+- Q23
+  1. In the past year, did your household acquire, renovate, or sell land/house? (Choose one.)
+- Q24
+  1. For households that acquired/renovated/sold land or housing in the past year: what was the total amount needed, and if sold, how much was sold for? Enter amounts in the table.
+- Q25
+  1. For retirement, how much minimum monthly living expense do you think is needed? (Based on current price levels.)
+  1. For retirement funds, how much financial asset balance should be prepared at minimum by the pension payment time? (Think of the primary earner.)
+- Q26
+  1. Regarding retirement life (or future life for older people), how do you think it will be financially? (Choose one.)
+- Q27
+  1. If you are not very worried, why? Choose all that apply.
+- Q28
+  1. If you are somewhat or very worried, why? Choose all that apply.
+- Q29
+  1. What sources will cover retirement living expenses, or are currently covering them? Choose up to three.
+  1. Regarding pensions: Do you think public/occupational pensions (excluding private pensions) can cover needed retirement funds? (Choose one.)
+  1. What is the main reason? Choose up to two.
+- Q30
+  1. How much pocket money do you give your children per month, per child, by schooling level? Enter amounts in the table.
+- Q31
+  1. If your household sends or receives financial support, what is the monthly average amount? Enter amounts in the table.
+- Q32
+  1. Are you aware of the Deposit Insurance System that protects deposits? If a financial institution fails, settlement deposits are fully protected; other insured deposits are protected up to 10 million yen per person per institution plus interest. (Choose one.)
+- Q33
+  1. Have you taken any action to make your financial assets safer? Choose all that apply.
+- Q34
+  1. When choosing a financial institution, what reasons matter? Choose up to three.
+- Q35
+  1. How do you feel about "financial richness" and "richness of the heart"? Mark one for each.
+  1. What is most important for feeling financially rich? Choose up to two.
+  1. What is most important for feeling richness of the heart? Choose up to three.
+- Q36
+  1. Where do you mainly obtain financial knowledge and information? Choose up to three.
+  1. From which entities do you think financial knowledge and information should be provided? Choose up to three.
+  1. Are you aware of J-FLEC as a neutral provider of financial education? (Choose one.)
+- Q37
+  1. Have you ever consulted specialists (financial planners, banks, etc.) about life planning, household management, or asset building? (Choose one.)
+
+</details>
+
+### Single-person households
+
+["Household Financial Behavior Survey" [Single-person households] (FY2025)](https://www.j-flec.go.jp/wpimages/uploads/shukeit25.pdf)
+
+<details>
+<summary>Questions</summary>
+
+- Q1
+  1. Do you have bank savings accounts and/or brokerage accounts?
+  1. For the financial products you currently hold (including foreign-currency products), mark the applicable numbers.
+- Q2
+  1. What are the current balances by financial product (excluding cash, including foreign-currency products, NISA, iDeCo) and the total amount?
+  1. Of the items in (a), list the current balances of foreign-currency products (yen conversion at the exchange rate at the time of entry).
+- Q3
+  1. In the past year, did you allocate take-home income (after tax) to financial assets?
+  1. As 100% of annual take-home income, what percentage was allocated to financial assets? (Round to the nearest whole number.)
+- Q4
+  1. Select the response that applies to your financial asset holdings.
+- Q5
+  1. When choosing financial products to hold, what do you prioritize most? (Choose one.)
+- Q6
+  1. Have you ever experienced investment losses below principal? (Choose one.)
+  1. How do you view investment outcomes that fall below principal? (Choose one.)
+- Q7
+  1. Compared to one year ago, did your financial asset balance increase or decrease? (Choose one.)
+- Q8
+  1. If "increased," why? (Choose all that apply.)
+  1. If "decreased," why? (Choose all that apply.)
+- Q9
+  1. For what purposes do you hold financial assets? (Choose up to three.)
+- Q10
+  1. How do you want to handle inheritance (including real assets like real estate) in the future? Choose the closest option. (Choose one.)
+- Q11
+  1. What level of financial asset balance are you targeting?
+- Q12
+  1. Are there financial products you want to increase or start holding in the future? Choose all that apply.
+- Q13
+  1. For financial products with potential principal loss but higher expected returns, how much do you plan to hold in the future? (Choose one.)
+- Q14
+  1. For daily payments, how do you choose payment methods by amount? Select up to two.
+  1. For regular payments, which payment methods do you mainly use? Select up to two.
+  1. What is your average cash balance?
+- Q15
+  1. Do you currently have any borrowing? (Choose one.)
+- Q16
+  1. Enter current borrowing balance, housing loan balance, new borrowing amount, and annual repayment amount.
+- Q17
+  1. For what purposes did you borrow? Choose up to three.
+- Q18
+  1. Choose the closest description of your overall household balance. (Choose one.)
+  1. Choose the closest description of how your household was managed in the past year. (Choose one.)
+- Q19
+  1. Do you make a "life plan" considering the future? (Choose one.)
+  1. How many years ahead does your life plan cover? (Choose one.)
+  1. Do you have a savings plan to prepare funds needed for the future? (Choose one.)
+- Q20
+  1. What kind of housing do you currently live in? (Choose one.)
+- Q21
+  1. When do you plan to acquire a home? (Choose one.)
+- Q22
+  1. Enter the total amount needed to acquire a home and how you plan to fund it.
+- Q23
+  1. In the past year, did you acquire, renovate, or sell land/house? (Choose one.)
+- Q24
+  1. Enter the amount spent for land/house acquisition/renovation/sale.
+- Q25
+  1. For retirement, how much minimum monthly living expense do you think is needed?
+  1. For retirement funds, how much financial asset balance should be prepared at minimum by the pension payment time?
+- Q26
+  1. Regarding retirement life, how do you think it will be financially? (Choose one.)
+- Q27
+  1. If you are not very worried, why? Choose all that apply.
+- Q28
+  1. If you are worried, why? Choose all that apply.
+- Q29
+  1. What sources will cover retirement living expenses? (Choose up to three.)
+  1. Do you think pensions can cover needed retirement funds? (Choose one.)
+  1. What is the reason? Choose up to two.
+- Q30
+  1. If you send or receive financial support, what is the monthly average amount?
+- Q31
+  1. Are you aware of the deposit insurance system? (Choose one.)
+- Q32
+  1. Have you taken any action to make your financial assets safer? Choose all that apply.
+- Q33
+  1. When choosing a financial institution, what reasons matter? Choose up to three.
+- Q34
+  1. How do you feel about financial richness and richness of the heart?
+  1. What do you think is important for feeling financially rich?
+  1. What do you think is important for feeling richness of the heart?
+- Q35
+  1. Where do you mainly obtain financial knowledge and information?
+  1. From which entities do you think financial knowledge and information should be provided?
+  1. Are you aware of J-FLEC?
+- Q36
+  1. Have you ever consulted specialists or financial institutions about money matters? (Choose one.)
+
+</details>
+
+### Differences
+
+I asked ChatGPT to list the differences between "two-or-more-person households" and "single-person households."
+
+| Question No.                  | Difference                                                                                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Overall                       | Subject and unit differ (single-person: **you = individual** / two-plus: **your household = household**). Even with the same question, the decision-maker and money scale differ. |
+| Q9 (Purpose of holding assets) | Choices are common, but "children's education funds" and "children's marriage funds" are **structurally not applicable** for single-person households. |
+| Q10 (Inheritance)             | Two-plus households assume "having children"; single-person assumes "no children" as the main case.                                          |
+| Q11 (Target asset balance)    | Same wording, but two-plus is **household-wide target**, single-person is **individual target**.                                              |
+| Q18 (Household balance)       | Two-plus refers to **household assets and liabilities**, single-person refers to **individual household balance**.                             |
+| Q19 (Life planning)           | Two-plus assumes life planning with spouse/family; single-person is individual planning.                                                     |
+| Q22 (Home acquisition funds)  | Same question, but two-plus assumes **joint acquisition/household income**, single-person assumes **individual acquisition**.                   |
+| Q25 (Retirement expenses)     | Two-plus is based on the "primary earner"; single-person aligns with the respondent.                                                         |
+| Q30                           | **Structural difference.** Two-plus: **children's allowance**. Single-person: **sending/receiving remittances**.                               |
+
+## Data visualization
+
+From here, let's visualize the time-series data.
+I wanted to make it easier to read, but there are 75 items, so I gave up this time.
+Rather than as a blog post, I'd like to create a dedicated page for visualization.
+
+If I went through all 75 sheets in detail, this would become very long, so I will only leave brief comments for each graph.
+
+<Message variant="warning" title="Use of generative AI">
+  I used generative AI (a coding agent) to create the graphs, so they may not be accurate.
+  Since it was used only to generate code that extracts numbers, the numbers themselves are unlikely to be wrong, but accuracy is not guaranteed.
+  For accurate figures, refer to the materials published at ["Household Financial Behavior Survey 2025 | J-FLEC"](https://www.j-flec.go.jp/data/kakekin_2025/).
+
+I take no responsibility for any disadvantage caused by the information on this site.
+
+</Message>
+
+### Sheet 1: Account ownership and financial products held
+
+<Tabs>
+  <Tab title="Line chart">
+    <Sheet1ChartWrapper />
+  </Tab>
+  <Tab title="Stacked bar chart">
+    <Sheet1BarLineChartWrapper />
+  </Tab>
+</Tabs>
+
+The answer options for this item have changed several times.
+
+> (Note 1) Until 2017, only households that answered "do not hold financial assets" were surveyed. From 2018, all households are surveyed.
+> Also, for 2016 and 2017, the share "has accounts" is the sum of households that answered "has accounts and has a current balance" and "has accounts but no current balance."
+> From 2024, options are "has both bank and securities accounts," "has bank only," "has securities only," and "has neither."
+> From 2025, options are "has both bank and securities accounts," "has bank only," and "has neither."
+>
+> (Note 2) "Money trusts" were "money trusts / loan trusts" before 2018.
+
+From 2024 onward, results distinguish "bank accounts" and "securities accounts."
+So we only have two years of comparable data, but the share of people with securities accounts increased significantly year over year.
+This is likely supported by the new NISA and the Nikkei average's rise.
+
+This is not the kind of item that would decline for reasons other than population decline, so the share should continue rising.
+Even adding the (perhaps rare) "securities only" households, more than 60% have securities accounts.
+Of course, having an account doesn't mean everyone invests.
+
+The share of "has accounts" decreased from last year to this year. Why?
+
+### Sheet 2: Financial assets, deposit accounts, and deposit balances
+
+<Tabs>
+  <Tab title="Line chart (%)">
+    <Sheet2ChartWrapper />
+  </Tab>
+  <Tab title="Stacked bar chart (%)">
+    <Sheet2BarChartWrapper />
+  </Tab>
+  <Tab title="Deposit balance (10k yen)">
+    <Sheet2AmountChartWrapper />
+  </Tab>
+</Tabs>
+
+The share of households that "do not hold financial assets" decreased, and among households without financial assets, the share without any account increased significantly.
+If you calculate it, you can estimate what portion of non‑asset households opened accounts.
+
+Among non‑asset households, the share of "has savings and has a current balance" decreased. Perhaps those people moved savings into investments and became asset‑holding households.
+This should align if you compute it together with the increase in asset‑holding households.
+
+### Sheet 3: Financial asset balances (households with financial assets)
+
+<Tabs>
+  <Tab title="Line chart (%)">
+    <Sheet3ChartWrapper />
+  </Tab>
+  <Tab title="Stacked bar chart (%)">
+    <Sheet3BarChartWrapper />
+  </Tab>
+  <Tab title="Average/median (10k yen)">
+    <Sheet3AmountChartWrapper />
+  </Tab>
+  <Tab title="Pie chart (2023–2025)">
+    <Sheet3PieChartWrapper />
+  </Tab>
+</Tabs>
+
+The breakdown can be seen in the line and stacked bar charts.
+From the stacked bar chart, you can see many totals do not sum to 100%. Likely due to non-responses.
+
+The share of households with 30 million yen or more increased significantly.
+Check the pie chart (2023–2025) to see which ranges increased or decreased.
+In practice, the share of "5–15 million" is nearly unchanged; the share below 5 million decreased; and the share above 15 million increased.
+If this continues, next year nearly half may hold 15 million yen or more, unless stock prices drop.
+
+Note that this chart is limited to "households with financial assets."
+
+### Sheet 4: Financial asset balances (including households without financial assets)
+
+<Tabs>
+  <Tab title="Line chart (%)">
+    <Sheet4ChartWrapper />
+  </Tab>
+  <Tab title="Stacked bar chart (%)">
+    <Sheet4BarChartWrapper />
+  </Tab>
+  <Tab title="Average/median (10k yen)">
+    <Sheet4AmountChartWrapper />
+  </Tab>
+  <Tab title="Pie chart (2023–2025)">
+    <Sheet4PieChartWrapper />
+  </Tab>
+</Tabs>
+
+This is the result including households without financial assets.
+As you can see, non‑asset households decreased sharply (just under 10%) in one year.
+
+The average and median asset balances both rose sharply.
+**These are likely the numbers recently mentioned in YouTube investment videos.
+The "average up by 5.6 million yen" comes from here.
+The important part is that the median also rose by nearly 3.7 million yen.**
+It was a year where financial assets increased across the board, not just among wealthy households.
+Given that the survey was conducted from June to July, it wouldn't be surprising if the current level (2026/01/01) is another 1 million yen higher.
+
+In the line chart, all categories above 5 million yen increased.
+**Perhaps you only start to have enough slack to allocate money to investment at 5 million yen or more.**
+
+You often see YouTube videos saying "save X million yen first." The answer might be 5 million.
+It might also simply reflect that you need enough salary income to save 5 million.
+
+If you look at the upward trend over the past two years, it becomes 7 million or more.
+
+### Section 5: Financial product holdings by type (households with financial assets)
+
+<Section5ChartWrapper />
+
+I gave up creating multiple chart types from here. Seeing 75 Excel tabs was too depressing.
+
+As confirmed in the previous section, financial holdings increased.
+The categories with notable increases are:
+
+- Deposits
+- Time deposits
+- Stocks
+- Investment trusts
+- Life insurance
+
+For stocks and investment trusts, rising stock prices and new NISA likely drove new investors.
+Life insurance also increased, probably due to rising stock prices (assuming it is not from new contracts).
+Depending on age, buying life‑insurance company stocks might be better insurance than buying new policies.
+Depending on the stock, buying life‑insurance stocks at the start of the year would be up 1.5–2x.
+
+### Section 6: Financial product holdings by type (including households without financial assets)
+
+<Section6ChartWrapper />
+
+Including households without financial assets probably doesn't change the trend much.
+
+### Section 7: New NISA, defined contribution pensions, and foreign-currency products
+
+<Section7ChartWrapper />
+
+This is an interesting section.
+Because the new NISA is only in its second year, the change alone cannot tell whether it is due to new buying or price changes (stocks, precious metals, bonds).
+Still, both "New NISA accumulation quota" and "New NISA growth quota" increased significantly.
+It's a bit surprising that the growth in both looks similar.
+Not everyone maxes out the accumulation quota, so if many people filled that first and then the growth quota, the pattern might differ.
+Since both increased, perhaps more people are investing in individual stocks or growth‑quota‑only funds, rather than just accumulating funds within the growth quota.
+
+Another notable point is the growth of the old tsumitate NISA.
+Its final contribution year was 2023, so it grew significantly in the two years since.
+Maybe around 1.4x.
+That is roughly the rise in the Nikkei and TOPIX, so it neither beats nor loses to the market.
+I did not use the old tsumitate NISA, so I didn't benefit (sad).
+
+### Section 8: Share of take-home income allocated to financial assets (households with financial assets)
+
+<Section8ChartWrapper />
+
+The chart is clearly broken, but ignore it. The original Excel has a format that is hard to extract mechanically.
+
+There is a big shift in values from 2023 because the question changed.
+
+> (Note 1) Before 1984, the average includes only households that saved; from 1985–2023 it includes households that did not allocate.
+>
+> (Note 2) Before 2023, the question asked "share of savings from annual take‑home income (including temporary income)."
+> From 2024, it asks "share of annual take‑home income allocated to financial assets."
+
+This is a change too big to put in the same sheet.
+"Savings ratio" and "share allocated to financial assets" mean very different things.
+
+So if we only look at 2024 to 2025, the share of take‑home income allocated to financial assets decreased.
+This is likely due to reduced purchasing power from inflation.
+Fewer people have the spare capacity to invest their take‑home income.
+**Meanwhile, the share of people allocating 35% or more to investment rose sharply from 9.8% to 15.2%, indicating accelerating polarization.**
+
+### Section 9: Year-on-year comparison of financial asset composition
+
+<Section9ChartWrapper />
+
+You can see a shift toward risk assets around 2019–2020 and again from 2023–2024.
+The former is likely COVID; the latter is the new NISA.
+I also started working from home during COVID and used the extra time to study stocks and funds, so I imagine many did the same.
+The new NISA is still early, and markets have been favorable for two years, so unless you panic‑sold, many people likely saw asset growth.
+If markets don't crash, the shift to risk assets will probably continue.
+In fact, it should accelerate when markets crash, but what happens if the so‑called AI bubble bursts...?
+
+### Section 10: Criteria for selecting financial products (households with financial assets)
+
+<Section10ChartWrapper />
+
+Since the new NISA started in 2024, the tendency to prioritize returns even at higher risk continues.
+However, from 2024 to 2025, the share of people prioritizing safety and principal protection also increased.
+Maybe the tariff shock around April had an effect.
+Since the survey period was late June to early July, the market psychology then may have influenced the results.
+In hindsight, it was a great buying opportunity (result‑based thinking).
+
+### Section 11: Criteria for selecting financial products (including households without financial assets)
+
+<Section11ChartWrapper />
+
+The trend is the same even including households without financial assets, so I will skip.
+
+### Section 12: Experience of principal loss
+
+<Section12ChartWrapper />
+
+This year the share of people experiencing principal loss increased due to the tariff shock.
+It might be good that the share of "my expectations were wrong" decreased.
+More people may have realized that you can't really predict markets. [^watanare]
+
+[^watanare]: [TV anime Watanare "There's No Way I Can Have a Lover! (Or Maybe There Is!?)" Official Site](https://www.watanare-anime.com/)
+
+### Section 13: Change in financial asset balance vs. one year ago (households with financial assets)
+
+<Section13ChartWrapper />
+
+This graph is also broken. The Excel data seems off.
+
+Compared to last year, the share of "increased" decreased, while "no change" and "decreased" increased.
+The share of "no change" is much larger than "decreased," so many likely lost unrealized gains during the tariff shock.
+If I had answered the survey in June, I might have said "no change."
+If you ran the survey now (2026/01/01), the share of "increased" would likely be much higher.
+
+### Section 14: Change in financial asset balance vs. one year ago (including households without financial assets)
+
+<Section14ChartWrapper />
+
+Including households without financial assets changes the story slightly.
+The share answering "decreased" goes down.
+
+### Section 15: Reasons for increased financial asset balance
+
+<Section15ChartWrapper />
+
+The three reasons that increased year‑over‑year are:
+
+- Increase in regular income
+- Higher savings ratio
+- Sale of real assets
+
+Maybe wage increases are finally taking effect.
+I wonder whether the savings ratio includes investment into financial assets.
+
+### Section 16: Reasons for decreased financial asset balance
+
+<Section16ChartWrapper />
+
+For those whose asset balance decreased, "decline in stock/bond valuation" is the main reason.
+Likely due to the tariff shock.
+
+Since the survey period was after the tariff shock, it also seems like rising real‑estate prices accounted for a larger share of asset increases in recent years.
+
+### Section 17: Purpose of holding financial assets (households with financial assets)
+
+<Section17ChartWrapper />
+
+Only "tax payment funds" and "leave as inheritance" increased.
+Why? :thinking:
+
+### Section 18: Purpose of holding financial assets (including households without financial assets)
+
+<Section18ChartWrapper />
+
+No change in trend compared with households that hold financial assets.
+
+### Section 19: Attitudes toward inheritance
+
+<Section19ChartWrapper />
+
+> (Note) Since 2008, the last line of the question includes "(Note) Even if you currently have no children, please answer with future plans in mind."
+
+There was a large shift in 2021, but no special note.
+Given the change from 2020 to 2021, it might be a COVID effect.
+The three items increasing from last year to this year are:
+
+- Leave under the condition of caregiving in old age
+- Leave under the condition of business succession
+- Social contribution (concern about not working)
+
+By contrast, the share of "use it all regardless of children" is decreasing.
+
+### Section 20: Target financial asset balance
+
+<Section20ChartWrapper />
+
+This graph also seems broken.
+
+Recently, more people target 30 million yen or more in financial assets.
+
+### Section 21: Desired future holdings of financial products (multiple answers)
+
+<Section21ChartWrapper />
+
+There is a trend of moving deposits into risk assets.
+However, stock mutual funds decreased. Are people betting on individual stocks instead?
+
+### Section 22: Willingness to hold higher‑return products with principal loss risk
+
+<Section22ChartWrapper />
+
+Since the new NISA started, the willingness to hold higher‑risk products continues this year.
+
+### Section 23: Primary payment methods for daily payments (<= 1,000 yen to <= 10,000 yen)
+
+<Section23ChartWrapper />
+
+For small payments under 10,000 yen, card usage decreased while "other" increased.
+"Other" likely means QR code payments.
+Card usage had increased from 2018 to 2021, but dropped sharply this year.
+Why?
+
+### Section 24: Primary payment methods for daily payments (>10,000 yen to >50,000 yen)
+
+<Section24ChartWrapper />
+
+The same trend appears for 10,000 to 50,000 yen.
+
+### Section 25: Primary payment methods for regular payments (utilities, etc.) (up to two choices)
+
+<Section25ChartWrapper />
+
+For regular payments like utilities, credit cards are gaining share, while account transfers are declining year by year.
+It dropped sharply in the past year; I wonder why.
+
+### Section 26: Average cash on hand (households with amount answers)
+
+<Section26ChartWrapper />
+
+"Cash on hand" means cash not deposited in financial institutions.
+I usually only carry a few tens of thousands of yen in my wallet, so I seem to be in the minority.
+The share holding 1 million yen or more in cash has increased.
+Why?
+
+The average amount has also continued to rise since 2020.
+It increased by about 200,000 yen in one year, but I don't know why.
+
+### Section 27: Whether households have borrowing
+
+<Section27ChartWrapper />
+
+Since 2020, the share of people with borrowing has been decreasing.
+It dropped sharply from 2020 to 2021. Why is unclear.
+Maybe credit tightening during COVID?
+
+### Section 28: Borrowing balance (households with borrowing)
+
+<Section28ChartWrapper />
+
+While the share of households with borrowing decreased, the borrowing balance increased.
+By amount, it seems the share of people borrowing 20 million yen or more increased.
+
+### Section 29: Borrowing balance (households reporting borrowing status)
+
+<Section29ChartWrapper />
+
+Some households did not answer whether they have borrowing but still answered the balance.
+Why? :thinking:
+
+### Section 30: Housing loan balance
+
+<Section30ChartWrapper />
+
+It doesn't look like a large change.
+The fluctuations are within the range seen in previous years.
+
+### Section 31: New borrowing amount (households reporting borrowing status)
+
+<Section31ChartWrapper />
+
+It looks like new borrowing decreased from 2020 to 2021.
+
+### Section 32: Annual repayment amount (households reporting borrowing status)
+
+<Section32ChartWrapper />
+
+From here on, the graphs seem unreliable, so I'll just show them and leave brief notes.
+
+### Section 33: Purpose of borrowing (households with borrowing) (up to three choices)
+
+<Section33ChartWrapper />
+
+### Section 34: Evaluation of household balance and household management
+
+<Section34ChartWrapper />
+
+### Section 35: Whether a life plan is prepared
+
+<Section35ChartWrapper />
+
+### Section 36: Life plan time horizon (households with life plans)
+
+<Section36ChartWrapper />
+
+### Section 37: Housing status
+
+<Section37ChartWrapper />
+
+The home‑ownership ratio decreased, and non‑ownership increased.
+
+### Section 38: Planned home acquisition (non‑owner households)
+
+<Section38ChartWrapper />
+
+Fewer people are considering buying a home.
+Maybe due to rising construction material and labor costs from inflation.
+
+### Section 39: Required funds for home acquisition (households answering amounts)
+
+<Section39ChartWrapper />
+
+### Section 40: Land/house acquisition, renovation, or sale in the past year
+
+<Section40ChartWrapper />
+
+### Section 41: Funds for land/house acquisition/renovation and sale price (households answering amounts)
+
+<Section41ChartWrapper />
+
+Looking at these housing data, it makes me wonder if only Tokyo housing prices are soaring despite weak demand.
+
+### Section 42: Minimum monthly living expenses in retirement / minimum financial assets needed at pension start
+
+<Section42ChartWrapper />
+
+Due to inflation, the monthly living cost people think they need has risen sharply.
+Needing nearly 400,000 to 500,000 yen per month seems like a deficit for most people...
+
+At this pace, the minimum retirement asset balance might reach 30 million yen in a few years.
+
+### Section 43: Views on retirement life
+
+<Section43ChartWrapper />
+
+Almost no one is "not worried."
+
+### Section 44: Reasons for not worrying about retirement (households not worried) (multiple answers)
+
+<Section44ChartWrapper />
+
+Most people who are not worried seem to already have sufficient assets or expect pensions/insurance to cover it.
+How long will the pension system last?
+
+### Section 45: Reasons for worrying about retirement (households worried) (multiple answers)
+
+<Section45ChartWrapper />
+
+### Section 46: Sources of retirement living funds <Q29(a)> (up to three choices)
+
+<Section46ChartWrapper />
+
+### Section 47: Sources of retirement living funds (household head age 60+) <Q29(a)> (up to three choices)
+
+<Section47ChartWrapper />
+
+### Section 48: Views on pensions <Q29(b)>
+
+<Section48ChartWrapper />
+
+### Section 49: Reasons for thinking pensions are insufficient (households with insufficient pensions) <Q29(c)> (up to two choices)
+
+<Section49ChartWrapper />
+
+### Section 50: Children's pocket money (households answering amounts) <Q30>
+
+<Section50ChartWrapper />
+
+Allowance for high school and university students increased.
+For university students, it's probably more like living expenses.
+
+### Section 51: Sending/receiving financial support (households answering amounts) <Q31(a),(b)>
+
+<Section51ChartWrapper />
+
+### Section 52: Awareness of the deposit insurance system <Q32>
+
+<Section52ChartWrapper />
+
+Awareness of deposit insurance is spreading.
+The deposit insurance system basically guarantees deposits up to 10 million yen per person per institution.
+
+### Section 53: Actions taken to make financial assets safer <Q33> (multiple answers)
+
+<Section53ChartWrapper />
+
+### Section 54: Reasons for choosing financial institutions <Q34> (up to three choices)
+
+<Section54ChartWrapper />
+
+It shows that online banks became popular during COVID.
+Recently, more people choose institutions based on product lineup and yields.
+I hope competition lowers costs.
+
+### Section 55: Sense of financial and mental richness <Q35(a)>
+
+<Section55ChartWrapper />
+
+The results seem to reflect the psychological impact of inflation.
+
+### Section 56: Conditions for feeling financially rich <Q35(b)> (up to two choices)
+
+<Section56ChartWrapper />
+
+### Section 57: Conditions for feeling financially rich (households feeling financially rich) <Q35(b)> (up to two choices)
+
+<Section57ChartWrapper />
+
+### Section 58: Conditions for feeling financially rich (households not feeling financially rich) <Q35(b)> (up to two choices)
+
+<Section58ChartWrapper />
+
+### Section 59: Conditions for feeling richness of the heart <Q35(c)> (up to three choices)
+
+<Section59ChartWrapper />
+
+### Section 60: Conditions for feeling richness of the heart (households feeling rich in heart) <Q35(c)> (up to three choices)
+
+<Section60ChartWrapper />
+
+### Section 61: Conditions for feeling richness of the heart (households not feeling rich in heart) <Q35(c)> (up to three choices)
+
+<Section61ChartWrapper />
+
+### Section 62: Sources of financial knowledge and information <Q36(a)> (up to three choices)
+
+<Section62ChartWrapper />
+
+### Section 63: Desired providers of financial knowledge and information <Q36(b)> (up to three choices)
+
+<Section63ChartWrapper />
+
+### Section 64: Awareness of J-FLEC <Q36(c)>
+
+<Section64ChartWrapper />
+
+### Section 65: Household size <Attribute (a)>
+
+<Section65ChartWrapper />
+
+### Section 66: Age of household head <Attribute (a)>
+
+<Section66ChartWrapper />
+
+### Section 67: Gender of household head, long-term absence <Attribute (a)>
+
+<Section67ChartWrapper />
+
+### Section 68: Education of household head <Attribute (a)>
+
+<Section68ChartWrapper />
+
+### Section 69: Employment or schooling status of household head <Attribute (a)>
+
+<Section69ChartWrapper />
+
+### Section 70: Industry of employer (employed) <Attribute (a)>
+
+<Section70ChartWrapper />
+
+### Section 71: Education of spouse (spouse present)
+
+<Section71ChartWrapper />
+
+### Section 72: Employment or schooling status of spouse (spouse present)
+
+<Section72ChartWrapper />
+
+### Section 73: Number of employed household members
+
+<Section73ChartWrapper />
+
+### Section 74: Household respondent <Attribute (a)>
+
+<Section74ChartWrapper />
+
+### Section 75: Annual take-home income (after tax)
+
+<Section75ChartWrapper />
+
+At the end, the average annual income rose by about 0.5 million yen!
+
+How about you? I don't think mine went up by 0.5 million :cry:
+
+## Summary
+
+In short:
+
+- Average financial asset balances increased by about 5.6 million yen
+- **Average** annual income also increased by about 0.5 million yen
+- Financial asset holdings shifted upward across the board
+- Balances in the new NISA accounts continue to grow
+- The tendency to accept risk for higher returns continues
+- High prices are tough :weary:
+
+Just reading the ["Household Financial Behavior Survey" (FY2025)](https://www.j-flec.go.jp/wpimages/uploads/point2025.pdf) might be enough.
+
+This time I had Codex generate the graphs, but I think I should write maintainable visualization code myself and use the coding agent only as support.

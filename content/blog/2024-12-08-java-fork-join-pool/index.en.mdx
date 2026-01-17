@@ -1,0 +1,311 @@
+---
+title: Trying ForkJoinPool
+date: 2024-12-08
+category: "Programming"
+tags: ["Programming", "Java", "Parallel Programming"]
+layout: CodeHike
+---
+
+## Introduction
+
+I originally planned to write about `CompletableFuture`, but while researching `ForkJoinPool` as a prerequisite, it grew into a standalone article.
+This is a memo about writing programs using `ForkJoinPool`, which is used under the hood when you write parallel processing with `CompletableFuture` or `Stream`.
+
+## What is `ForkJoinPool`?
+
+[`ForkJoinPool`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) is an [`ExecutorService`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ExecutorService.html) for executing [`ForkJoinTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) (as the Javadoc says).
+
+In `ForkJoinPool`, you process parallel computations using classes that implement `ForkJoinTask`.
+The standard library provides three such classes:
+
+- [`CountedCompleter`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/CountedCompleter.html)
+- [`RecursiveAction`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html)
+- [`RecursiveTask`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveTask.html)
+
+`CountedCompleter` is unfamiliar, but it seems to be used internally in the JDK to implement parallel streams.[^JDK-CountedCompleter] [^NikkeiXTECH]
+In this article, I focus on `RecursiveAction` and `RecursiveTask`.
+The difference is whether you can obtain a result value after the parallel computation.
+If the main purpose is side effects, use `RecursiveAction`.
+If the purpose is to produce a new value, use `RecursiveTask`.
+
+[^JDK-CountedCompleter]: [repo:openjdk21 CountedCompleter | Code search results](https://github.com/search?q=repo%3Aopenjdk%2Fjdk21+CountedCompleter&type=code)
+
+[^NikkeiXTECH]: [Detailed Java SE 8 Vol.22 Concurrency Utilities Updates Part 4 | Nikkei xTECH](https://xtech.nikkei.com/it/atcl/column/14/224071/012900017/)
+
+## How to use `ForkJoinPool`
+
+Let's look at how to use `RecursiveAction` and `RecursiveTask`.
+
+### Example using `RecursiveAction`
+
+As an example, let's look at the [sort shown in the Javadoc](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/RecursiveAction.html).
+The Javadoc code omits indentation, blank lines, and braces for `if` and `for`, so I formatted it,
+added the `@Override` annotation to the required `compute` method,
+added imports, and renamed the class from `SortTask` to `SortAction`.
+
+```java
+import java.util.Arrays;
+import java.util.concurrent.RecursiveAction;
+
+public class SortAction extends RecursiveAction {
+
+    final long[] array;
+    final int lo, hi;
+
+    SortAction(long[] array, int lo, int hi) {
+        this.array = array;
+        this.lo = lo;
+        this.hi = hi;
+    }
+
+    SortAction(long[] array) {
+        this(array, 0, array.length);
+    }
+
+    @Override
+    protected void compute() {
+        if (hi - lo < THRESHOLD) {
+            sortSequentially(lo, hi);
+        } else {
+            int mid = (lo + hi) >>> 1; // same as dividing by 2
+
+            invokeAll(new SortAction(array, lo, mid), new SortAction(array, mid, hi));
+
+            merge(lo, mid, hi);
+        }
+    }
+
+    // implementation details follow:
+    static final int THRESHOLD = 1000;
+
+    void sortSequentially(int lo, int hi) {
+        Arrays.sort(array, lo, hi);
+    }
+
+    void merge(int lo, int mid, int hi) {
+        // reuse the back half after splitting the array
+        long[] buf = Arrays.copyOfRange(array, lo, mid);
+        for (int i = 0, j = lo, k = mid; i < buf.length; j++)  {
+            array[j] = (k == hi || buf[i] < array[k])
+                ? buf[i++]
+                : array[k++];
+        }
+    }
+}
+```
+
+Although not explicitly stated in the Javadoc, this sorts by combining merge sort with Java's standard `sort`.
+If the number of elements is less than `1000`, it uses the standard library sort; otherwise it splits the array into two ranges and recursively calls itself (splitting by index; the array is not copied).
+Because sorting performance depends on input size, this simple trick is cost-effective for reducing performance degradation.
+[`Arrays#sort()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Arrays.html#sort(byte[],int,int)) is implemented with [Dual pivot Quicksort](https://www.geeksforgeeks.org/dual-pivot-quicksort/).
+
+The two split ranges are passed to the `SortAction` constructor, and the tasks are forked with [`invokeAll`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinTask.html#invokeAll(java.util.concurrent.ForkJoinTask...)).
+After both tasks complete, `merge` merges the sorted data into the target array in the same way as merge sort.
+
+### `RecursiveTask`
+
+As a simple example of a parallelizable `RecursiveTask`, you might think of computing the nth Fibonacci number,
+but there is already a [Qiita article using Fibonacci](https://qiita.com/koduki/items/086d42b5a3c74ed8b59e),
+so here I implement [merge sort](https://en.wikipedia.org/wiki/Merge_sort) with `RecursiveTask`.
+It overlaps with the `RecursiveAction` example, but this version is non-destructive.
+It also does not switch algorithms based on input size.
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.RecursiveTask;
+
+public class MergeSortTask<T extends Comparable<? super T>, U extends Comparator<T>> extends RecursiveTask<List<T>> {
+
+    /** List to sort. */
+    private final List<T> xs;
+
+    private final Comparator<T> comparator;
+
+    public MergeSortTask(List<T> xs, Comparator<T> comparator) {
+        this.xs = xs;
+        this.comparator = comparator;
+    }
+
+    @Override
+    protected List<T> compute() {
+        // If the list is empty or has one element, it is already sorted.
+        if (xs.size() <= 1) {
+            return xs;
+        }
+
+        // Split the list into left and right.
+        final var mid = Math.floorDiv(xs.size(), 2);
+        final var left = new MergeSortTask<>(xs.subList(0, mid), comparator);
+        final var right = new MergeSortTask<>(xs.subList(mid, xs.size()), comparator);
+
+        // Adjust async execution of the right side.
+        right.fork();
+
+        final var sortedLeft = left.compute();
+        final var sortedRight = right.join();
+
+        final var sorted = new ArrayList<T>();
+        int l = 0, r = 0;
+        while (l < sortedLeft.size() && r < sortedRight.size()) {
+            final var x = sortedLeft.get(l);
+            final var y = sortedRight.get(r);
+
+            if (comparator.compare(x, y) <= 0) {
+                sorted.add(x);
+                l++;
+            } else {
+                sorted.add(y);
+                r++;
+            }
+        }
+
+        while (l < sortedLeft.size()) {
+            sorted.add(sortedLeft.get(l++));
+        }
+
+        while (r < sortedRight.size()) {
+            sorted.add(sortedRight.get(r++));
+        }
+
+        return Collections.unmodifiableList(sorted);
+    }
+}
+```
+
+The algorithm is standard merge sort, so nothing special there.
+The only notable difference is that unlike the Javadoc `RecursiveAction` example, it supports arbitrary comparable types (`Comparable`), so the generics are slightly more complex.
+
+### Performance
+
+Let's compare execution times for each implementation.
+Ideally we should compare memory usage as well, but here I focus only on time.
+
+In addition to `SortAction` and `MergeSortTask`, I compare `Stream#sorted()` and `Stream#parallelStream()#sorted()`.
+
+Before even comparing, I expect the order to be `SortAction` > `Stream#parallelStream()#sorted()` > `MergeSortTask` > `Stream#sort()`,
+but here are the results for arrays/lists with 100,000,000 elements.
+
+| Implementation                       | Time (s)      |
+| :----------------------------------- | :------------ |
+| `Stream#sort()`                      | `36.263888375`|
+| `MergeSortTask`                      | `13.619412583`|
+| `SortAction`                         | `1.5119055`   |
+| `Stream#parallelStream()#sorted()`   | `4.816473459` |
+
+The time to generate the data is not included.
+From this, we can see that copying data is extremely expensive, and parallelization is useful for speed.
+If you need a non-destructive sort, copying the array and passing it to `SortAction` would likely be fastest,
+but it would probably be similar to `parallelStream`.
+
+The measurements were done on:
+
+- Mac mini 2024
+  - Chip: Apple M4 Pro
+  - CPU: 14 cores
+  - GPU: 16 cores
+  - Memory: 64 GB
+  - SSD: 1 TB
+  - macOS: Squoia 15.1
+
+As of 2024/12/08 this is a high-end machine, so it would take longer on a typical PC.
+Even if there is room for optimization, 1.5 seconds for sorting 100 million elements feels slow.
+Maybe it would be faster in C.
+The measurement method is rough, so it may be better in reality.
+
+As mentioned later, I did not adjust `parallelism` in this measurement.
+So, tuning the thread count based on [java - Setting Ideal size of Thread Pool - Stack Overflow](https://stackoverflow.com/questions/16128436/setting-ideal-size-of-thread-pool) might improve performance.
+
+## `ForkJoinPool` parallelism
+
+I did not do any tuning when using `ForkJoinPool` this time.
+In the constructor, parameters that affect performance include:
+
+- `int parallelism`
+- `int corePoolSize`
+- `int maximumPoolSize`
+- `int minimumRunnable`
+- `long keepAliveTime`
+
+```java ForkJoinPool.java
+    // !className[/int parallelism/] underline decoration-wavy underline-green-600
+    public ForkJoinPool(int parallelism,
+                        ForkJoinWorkerThreadFactory factory,
+                        UncaughtExceptionHandler handler,
+                        boolean asyncMode,
+                        // !className[/int corePoolSize/] underline decoration-wavy underline-green-600
+                        int corePoolSize,
+                        // !className[/int maximumPoolSize/] underline decoration-wavy underline-green-600
+                        int maximumPoolSize,
+                        // !className[/int minimumRunnable/] underline decoration-wavy underline-green-600
+                        int minimumRunnable,
+                        Predicate<? super ForkJoinPool> saturate,
+                        long keepAliveTime,
+                        TimeUnit unit) {
+        checkPermission();
+        int p = parallelism;
+        if (p <= 0 || p > MAX_CAP || p > maximumPoolSize || keepAliveTime <= 0L)
+            throw new IllegalArgumentException();
+        if (factory == null || unit == null)
+            throw new NullPointerException();
+        this.parallelism = p;
+        this.factory = factory;
+        this.ueh = handler;
+        this.saturate = saturate;
+        this.config = asyncMode ? FIFO : 0;
+        this.keepAlive = Math.max(unit.toMillis(keepAliveTime), TIMEOUT_SLOP);
+        int corep = Math.clamp(corePoolSize, p, MAX_CAP);
+        int maxSpares = Math.clamp(maximumPoolSize - p, 0, MAX_CAP);
+        int minAvail = Math.clamp(minimumRunnable, 0, MAX_CAP);
+        this.bounds = (long)(minAvail & SMASK) | (long)(maxSpares << SWIDTH) |
+            ((long)corep << 32);
+        int size = 1 << (33 - Integer.numberOfLeadingZeros(p - 1));
+        this.registrationLock = new ReentrantLock();
+        this.queues = new WorkQueue[size];
+        String pid = Integer.toString(getAndAddPoolIds(1) + 1);
+        String name = "ForkJoinPool-" + pid;
+        this.workerNamePrefix = name + "-worker-";
+        this.container = SharedThreadContainer.create(name);
+    }
+```
+
+## How `ForkJoinPool` works
+
+The following is written while I am still learning `ForkJoinPool`, so it may contain errors.
+Please read it as my current understanding.
+
+When you create a `ForkJoinPool` with the no-argument constructor, it uses the number of processors as `parallelism` (parallelism level).
+`parallelism` corresponds to the number of threads created by the pool.
+The documentation says that, by default, 256 threads are reserved as the maximum number of spare threads to maintain parallelism,
+but in my experiments I never observed more threads running than `parallelism`.
+
+In `ForkJoinPool`, each thread has a `WorkerQueue`, and tasks are added to that queue.
+If another thread is idle, it steals tasks from other queues and executes them.
+This makes it less likely that any thread sits idle.
+For work stealing, see http://www.yasugi.ai.kyutech.ac.jp/2012/4/k6.html.
+
+Maybe the number of threads increases when the `WorkerQueue` limit is exceeded. If so, it would make sense.
+But I haven't read the code, so I don't know.
+
+## Details of the `ForkJoinPool` algorithm
+
+To understand the `ForkJoinPool` source code, the following references are recommended.
+
+- Herlihy and Shavit's book "The Art of Multiprocessor programming", chapter 16
+- ["DynamicCircular Work-Stealing Deque" by Chase and Lev, SPAA 2005](http://research.sun.com/scalable/pubs/index.html)
+  - Link is dead :smile:
+- ["Idempotent work stealing" by Michael, Saraswat, and Vechev, PPoPP 2009](http://portal.acm.org/citation.cfm?id=1504186)
+  - You can find PDFs by searching the title, but they don't look like author uploads, so I won't link them.
+- ["Correct and Efficient Work-Stealing for Weak Memory Models" by Le, Pop, Cohen, and Nardelli, PPoPP 2013](http://www.di.ens.fr/~zappa/readings/ppopp13.pdf)
+
+Understanding the outline of the algorithm doesn't seem too hard, but it looks like there are optimizations,
+so understanding the details will take time.
+
+## Conclusion
+
+In this article, I learned about `ForkJoinPool`, which is used by default for parallel computation in Java `CompletableFuture` and `Stream`.
+I was able to look at how to use it and its rough mechanism, but the differences from the docs and the algorithm details remain unclear.
+
+After writing about `CompletableFuture`, I want to come back and dig deeper into `ForkJoinPool`.

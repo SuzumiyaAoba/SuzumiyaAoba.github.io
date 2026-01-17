@@ -1,0 +1,270 @@
+---
+title: Built a Keyball44
+date: 2025-01-04
+tags: ["Keyball", "Custom Keyboard"]
+category: Custom Keyboard
+---
+
+## Introduction
+
+One of my goals over the New Year holidays was to build a Keyball.
+The keyboard I built is the Keyball44.
+It is a well-known keyboard among people who have built or are considering custom keyboards.
+
+I use a Keyball66 as my daily driver because the larger key count gives convenience and a feel focused on typing,
+but I wanted to build at least one Keyball for the looks.
+As I gradually used smaller keyboards, I realized that just over 40 keys is enough.
+If I learn to use multiple layers well, even the Keyball39 might be enough, but I have never used a keyboard with five rows on the left hand,
+so I decided to start with the Keyball44, which has the same number of rows as the Keyball66.
+
+This time I focused on the concept rather than the typing feel.
+The concept is clear: make it all white.
+
+As of 2025/01/04, the case and trackball had not arrived yet, so I plan to update this article once everything is assembled.
+
+## Build
+
+Here is the build. As mentioned, everything is white.
+
+| Part         | Product                                                                                                                             | Price                       |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| Base kit     | [Keyball44](https://shop.yushakobo.jp/products/8337)                                                                               | 24,800 JPY                  |
+| Key switches | [HC Studio HMX Xinhai Linear Switch 37g](https://shop.yushakobo.jp/products/10302)                                                 | 3,861 JPY (99 JPY x 39 pcs) |
+| Key switches | [Lofree Ghost switch / linear (90pcs)](https://amzn.to/470FUx2)                                                                    | 8,800 JPY (90 pcs)          |
+| Keycaps      | [F10 (Flat Keys)](https://shop.yushakobo.jp/products/7038)                                                                         | 9,438 JPY (242 JPY x 39 pcs)|
+| Keycaps      | [Chocfox CFX - Keycaps For Choc Switch 1U keycap white / 10pcs](https://shop.yushakobo.jp/products/5667)                           | 550 JPY                     |
+| Trackball    | [Keyball 25mm Trackball Case (color options) - 3D Printer Workshop - BOOTH](https://3d-printer.booth.pm/items/6135736)             | 1,500 JPY                   |
+| Case         | [Keyball 25mm Trackball Case (color options) - 3D Printer Workshop - BOOTH](https://3d-printer.booth.pm/items/6135736)             | 1,750 JPY                   |
+| Case         | [Keyball44 Case - Training&KBD - BOOTH](https://booth.pm/ja/items/4920054)                                                         | 5,500 JPY                   |
+| Case         | [Keyball OLED Cover - Training&KBD - BOOTH](https://training-kbd.booth.pm/items/5122477)                                           | 2,200 JPY                   |
+
+Total: 58,399 JPY.
+
+Too expensive...
+
+If I skip the case and choose more reasonable keycaps, I could probably keep it around 35,000 JPY.
+Or if I had a 3D printer at home...
+
+## Photos
+
+I will add photos once all parts arrive.
+
+## Troubles
+
+I've built several keyboards, and every time I run into issues.
+This time I hit three main problems.
+
+### Weak soldering or missing joints
+
+I only solder when building custom keyboards, but even with multiple builds under my belt and a second Keyball,
+I still had soldering trouble.
+This was largely caused by the second issue below, but after finishing the build, three keys did not respond when I pressed the switches.
+The [build guide](https://github.com/Yowkees/keyball/blob/main/keyball44/doc/rev1/buildguide_jp.md) says to flash a test firmware and check operation
+after soldering everything except the trackball section.
+I followed the steps and tested each key to make sure it registered (apparently it didn't...).
+I used the [keyboard test](https://www.onlinemictest.com/ja/keyboard-test/) site and tweezers to check continuity for each key and confirm each key registered at least once.
+
+Normally I would check continuity with a digital multimeter before connecting to a PC,
+but as mentioned below, the battery was dead.
+So I only checked whether characters appeared when connected to a PC, and that was not enough.
+
+### Dead battery in the digital multimeter
+
+A multimeter is not essential for building a keyboard, but it makes it easy to find weak or missing solder joints,
+so I usually use a [DT83B](https://shop.yushakobo.jp/products/2780) for continuity checks.
+However, I apparently left it on last time, so the battery died and I couldn't use it this time.
+I could have waited for a new battery before building, but I wanted to finish during the holiday break, so I pushed ahead and it backfired.
+
+The DT83B uses an uncommon AAAA battery, which I didn't have, so I ordered one from Amazon.
+Next time I build a keyboard, I should be able to use the tester.
+
+### Notes on ball bearing switches
+
+Finally, the key switches.
+I originally wanted to use [Roller Linear Switches](https://shop.yushakobo.jp/products/9174), but it didn't go well.
+Roller Linear Switches are a newer type of switch with ball bearings built into the mechanism.
+Another switch with the same mechanism is [WS Pearl Switch](https://shop.yushakobo.jp/products/10291).
+
+This can also happen with non-ball-bearing switches, but if pressure is applied from the side,
+the stem can rub against the housing and not return smoothly.
+This can also happen when the stem shape is BOX or round and the keycap cross is mismatched.
+In my case, some keys were slow to return after being pressed, possibly due to top plate tolerances,
+so I decided not to use ball bearing switches.
+
+The same switches worked fine on a Tofu60, so the case is clearly the issue.
+It can't be helped, but it was good to learn that ball bearing switches can have this problem.
+
+## Keymap
+
+Finally, I will share my keymap.
+I hope it helps those who are about to decide their keymap, or those who started using Keyball but are not satisfied with their current map.
+
+I do not use the automatic mouse layer when using a Keyball.
+With tuning it might be avoidable, but I find it annoying when the layer switches unexpectedly if my hand touches the ball,
+and I also dislike having to wait a moment after using the ball before returning to the original layer.
+So I switch layers by pressing keys for left and right clicks.
+Where to place those keys is important, so I will explain how I arranged each layer.
+
+The base idea is to keep the layout close to regular QWERTY.
+I use three layers.
+If I add more, I don't make use of them, so three is enough.
+As I gradually map more keys and reduce the total key count, I might be able to add another layer in the future,
+but for now three layers are enough.
+
+### Characteristics
+
+- A general layout that does not deviate much from QWERTY
+- The following keys are on the thumbs:
+  - <kbd>Ctrl</kbd>
+  - <kbd>Backspace</kbd>
+  - <kbd>Cmd</kbd>
+  - <kbd>Enter</kbd>
+  - <kbd>Space</kbd>
+- No automatic mouse layer
+- Right-hand trackball
+- No function keys
+
+Let's get into it.
+
+### `Layer 0`
+
+`Layer 0` is the base layout. Most keys match QWERTY.
+I configure the keymap by editing source code (not using Remap), so I cannot share images.
+
+```c
+[0] = LAYOUT_universal(
+  KC_ESC   , KC_Q     , KC_W     , KC_E     , KC_R     , KC_T     ,                                        KC_Y     , KC_U     , KC_I     , KC_O     , KC_P     , KC_MINS  ,
+  KC_TAB   , KC_A     , KC_S     , KC_D     , KC_F     , KC_G     ,                                        KC_H     , KC_J     , KC_K     , KC_L     , KC_SCLN  , KC_QUOT  ,
+  KC_LSFT  , KC_Z     , KC_X     , KC_C     , KC_V     , KC_B     ,                                        KC_N     , KC_M     , KC_COMM  , KC_DOT   , KC_SLSH  , KC_LALT  ,
+                        KC_NO    , MO(1)    , KC_BSPC  , KC_LCTL  , KC_LGUI,                    KC_ENT   , KC_SPC   , KC_NO    ,            _______  , MO(2)
+),
+```
+
+Key points:
+
+- The leftmost column follows the common order: <kbd>ESC</kbd>, <kbd>TAB</kbd>, <kbd>Shift</kbd>
+  - I do not use <kbd>CAPS LOCK</kbd>, so it is not assigned
+- Left thumb keys (right to left): <kbd>Cmd</kbd>, <kbd>Ctrl</kbd>, <kbd>Backspace</kbd>
+- A key to switch to `Layer 1` sits to the left of those three thumb keys
+- Right thumb keys (left to right): <kbd>Enter</kbd>, <kbd>Space</kbd>
+- The key to the right of the trackball switches to `Layer 2`
+- <kbd>Alt</kbd> is placed where right shift normally is
+
+Numbers, <kbd>`</kbd>, <kbd>[</kbd>, <kbd>]</kbd>, <kbd>=</kbd>, <kbd>\</kbd> are assigned to `Layer 1` below.
+
+#### Thumbs
+
+Thumbs are where personal preference shows.
+This layout works well for me.
+I use Emacs often, so assigning <kbd>Ctrl</kbd> to the thumb solves the Emacs pinky problem.
+
+(Even without a split keyboard that supports thumb keys, I assign <kbd>Ctrl</kbd> to <kbd>Caps Lock</kbd> (above left shift),
+so the pinky load is not that high anyway.)
+
+I always use this layout for the three left-thumb keys and two right-thumb keys,
+but I change the surrounding thumb keys depending on the keyboard.
+For example, on keyboards like [Corne V4 Cherry](https://shop.yushakobo.jp/products/8961) or [Corne Cherry V3](https://shop.yushakobo.jp/products/corne-cherry-v3)
+that allow three right-thumb keys, I assign <kbd>MO(1)</kbd> (which is on the left thumb here) to the third right-thumb key
+(the position where the Keyball's ball is).
+On the Keyball66, I assign <kbd>Alt</kbd> to <kbd>MO(1)</kbd> and keep right shift as shift.
+I have gotten used to having shift only on the left hand, so I might adjust the Keyball66 layout too.
+
+#### Escape
+
+On the Keyball44 I put <kbd>ESC</kbd> in the top left.
+I do the same on the Corne Cherry V3.
+It feels like home.
+
+However, on my daily Keyball66 I put <kbd>ESC</kbd> in the bottom left and press it with my palm.
+Some people press <kbd>Ctrl</kbd> with the palm on a standard JIS layout, and I do the same for <kbd>ESC</kbd>.
+When I use Vim, I prefer <kbd>Ctrl-[</kbd> instead of <kbd>ESC</kbd>, so <kbd>ESC</kbd> isn't used that much.
+This layout is enough for me.
+
+#### Fifth left-thumb key
+
+The fifth key from the right on the left thumb (left of <kbd>MO(1)</kbd>) is disabled.
+This position is hard for me to use on any keyboard.
+Bending the thumb inward that far or trying to press it with the ring finger just never worked for me.
+And I can assign all the keys I need without it, so I have no motivation to use it.
+
+### `Layer 1`
+
+`Layer 2` supplements `Layer 1`.
+With 44 keys, you cannot fit numbers and some symbols into a single layer.
+So the overflow goes into `Layer 1`.
+`Layer 1` is active only while holding the <kbd>MO(1)</kbd> key on the left thumb of `Layer 0`.
+
+```c
+[1] = LAYOUT_universal(
+  KC_GRAVE , KC_1     , KC_2     , KC_3    , KC_4     , KC_5     ,                                         KC_6     , KC_7     , KC_8     , KC_9     , KC_0     , KC_EQUAL ,
+  _______  , KC_NO    , KC_NO    , KC_NO   , KC_NO    , KC_NO    ,                                         KC_NO    , KC_NO    , KC_NO    , KC_NO    , KC_NO    , KC_BSLS  ,
+  _______  , _______  , KC_NO    , KC_NO   , KC_NO    , KC_LBRC  ,                                         KC_RBRC  , KC_NO    , KC_NO    , KC_NO    , KC_NO    , _______  ,
+                        _______  , _______ , _______  , _______  , _______  ,                   _______  , _______  , _______  ,            _______  , _______
+),
+```
+
+Many people place symbols that normally require <kbd>Shift</kbd> in the empty spaces under or beside the number row.
+I do not like layouts that deviate far from QWERTY, so I keep the number row in the usual order on the next row down.
+I assign <kbd>[</kbd> and <kbd>]</kbd> to the positions of <kbd>b</kbd> and <kbd>n</kbd>.
+This seems fairly common on low-key keyboards like the Keyball44.
+
+I also place <kbd>`</kbd>, <kbd>=</kbd>, and <kbd>\</kbd> close to their QWERTY positions,
+which reduces the burden of memorizing key locations (except for <kbd>[</kbd> and <kbd>]</kbd>).
+
+### `Layer 3`
+
+`Layer 3` is for mouse operations, cursor keys, and window operations.
+It is active only while holding the key to the right of the trackball on `Layer 0`.
+I press that key with the base of my pinky while operating the trackball, which naturally switches layers during mouse use.
+
+The window bindings match macOS [Spectacle](https://github.com/eczarny/spectacle).
+Since Spectacle is no longer maintained, I use [Rectangle](https://rectangleapp.com/) with the same keybinds.
+
+```c
+[2] = LAYOUT_universal(
+  _______  , KC_NO         , LCTL(KC_UP)  , LAG(KC_F) , LCTL(KC_DOWN) , KC_NO         ,                                         KC_NO   , KC_BTN1  , KC_UP   , KC_BTN2  , KC_NO   , SCRL_MO ,
+  _______  , LCTL(KC_LEFT) , LAG(KC_LEFT) , KC_NO     , LAG(KC_RGHT)  , LCTL(KC_RGHT) ,                                         KC_NO   , KC_LEFT  , KC_DOWN , KC_RGHT  , KC_NO   , KC_NO   ,
+  _______  , KC_NO         , KC_NO        , LAG(KC_C) , KC_NO         , KC_NO         ,                                         KC_NO   , KC_NO    , KC_NO   , KC_NO    , KC_NO   , _______ ,
+                             _______      , _______   ,  _______      , _______       , _______  ,                   _______  , _______ , _______            , _______  , _______
+  ),
+```
+
+Left hand for window control, right hand for mouse and cursor.
+
+#### Left-hand controls
+
+The left-hand bindings are macOS-specific.
+I mapped window maximize, left, and right to <kbd>e</kbd>, <kbd>s</kbd>, and <kbd>f</kbd>, like WASD.
+Pressing <kbd>c</kbd> centers the window, which is useful when I want three windows on an ultrawide display.
+
+macOS has workspaces, and I mapped switching left/right to <kbd>a</kbd> and <kbd>g</kbd>.
+The default is <kbd>Ctrl-Left</kbd> and <kbd>Ctrl-Right</kbd>, so you can use it without extra keys,
+but it requires three keys at once. For frequent use I prefer easier keypresses,
+so I chose <kbd>a</kbd> and <kbd>g</kbd> as intuitive positions.
+
+I mapped Mission Control and App Expose to <kbd>w</kbd> and <kbd>r</kbd>, respectively.
+
+I use these keys for window and workspace control.
+There are still unused keys, so I could map more window actions or Raycast.
+As with Emacs bindings, if I add too many at once, I end up forgetting them.
+Now that these bindings are familiar, it may be time to add more.
+
+#### Right-hand controls
+
+Right-hand controls are simple.
+
+I mapped left click and right click to <kbd>u</kbd> and <kbd>o</kbd>.
+I set scroll mode on <kbd>-</kbd>.
+While holding <kbd>-</kbd>, the trackball scrolls vertically, and with <kbd>Shift</kbd> held it scrolls horizontally.
+That is the mouse setup.
+Scrolling is a bit special, but the click buttons are placed where the hand naturally rests when using the ball,
+so it should feel natural to most people.
+
+Cursor keys are mapped to <kbd>i</kbd>, <kbd>j</kbd>, <kbd>k</kbd>, <kbd>l</kbd> for up, left, down, right.
+Some people might prefer Vim bindings.
+
+## Future plans
+
+I forgot that I bought the Keyball44 in order to buy a [Keyballish](https://note.com/kazu_dob/n/n25c60390b9b3).
+I still want a Keyballish, but an unexpected expense came up, so unless I make money in stocks,
+it probably has to wait until around the end of next year...

@@ -1,0 +1,279 @@
+---
+title: Pitfalls of Collectors#toMap
+date: 2024-08-29
+category: "Programming"
+tags: ["Java", "Programming"]
+---
+
+## Introduction
+
+This article describes caveats of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)), which is used to convert a `Stream` to a `Map`.
+Following [the trap of `Stream#toList()`](../2024-08-29-java-to-map), this is another post about how to use `Stream`.
+`Stream` is convenient, but it feels like a tragic monster trapped in Java's fences.
+Compared with libraries in other languages that provide similar functionality, isn't the overall API rather awkward?
+
+I started writing this article and then looked up existing blog posts, only to find that this topic is, unsurprisingly, already mentioned elsewhere.
+
+## TL;DR
+
+- `Collectors#toMap` with two arguments throws an exception if there are duplicate keys
+- To avoid exceptions on duplicate keys, specify a merge function as the third argument
+
+## `Collectors#toMap`
+
+`Collectors#toMap` is a `Collector` that transforms `Stream` elements into key-value pairs.
+`Collectors#toMap` has three overloaded methods with different numbers of arguments, and you must choose appropriately.
+
+### `Collectors#toMap` with two arguments
+
+The signature of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)) with two arguments is as follows.
+
+```java
+public static <T, K, U> Collector<T, ?, Map<K,U>> toMap(
+    Function<? super T, ? extends K> keyMapper,
+    Function<? super T, ? extends U> valueMapper
+)
+```
+
+In this method, `keyMapper` provides the key and `valueMapper` provides the value.
+
+A typical usage looks like this.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991)
+   ...> ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+$1 ==> {Bob=1972, Alice=1995, Charile=1991}
+```
+
+To keep the example simple, it uses `Map.Entry` as the stream elements, but in real code you often create a map from some field of a class.
+
+This example appears to work, but `Collectors#toMap` with two arguments throws an exception when keys are duplicated :roll_eyes:
+If there are two `Alice`s, you get the following exception.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),の
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+   ...>
+|  例外java.lang.IllegalStateException: Duplicate key Alice (attempted merging values 1995 and 1992)
+|        at Collectors.duplicateKeyException (Collectors.java:135)
+|        at Collectors.lambda$uniqKeysMapAccumulator$1 (Collectors.java:182)
+|        at ReduceOps$3ReducingSink.accept (ReduceOps.java:169)
+|        at Spliterators$ArraySpliterator.forEachRemaining (Spliterators.java:992)
+|        at AbstractPipeline.copyInto (AbstractPipeline.java:509)
+|        at AbstractPipeline.wrapAndCopyInto (AbstractPipeline.java:499)
+|        at ReduceOps$ReduceOp.evaluateSequential (ReduceOps.java:921)
+|        at AbstractPipeline.evaluate (AbstractPipeline.java:234)
+|        at ReferencePipeline.collect (ReferencePipeline.java:682)
+|        at (#3:6)
+```
+
+If you have little experience with `Stream` programming, or if you are not used to thinking about behavior on key collisions when dealing with maps,
+you might not handle this pattern and end up with bugs.
+
+It may work fine until one day data with duplicate keys appears and suddenly a runtime error occurs. That would be disastrous.
+
+I wish Java would avoid providing APIs that casually throw runtime exceptions.
+It might be more beginner-friendly to only provide the three-argument `Collection#toMap` instead.
+
+<Message title="Information leakage via exception messages">
+Java's exception message helpfully states that it attempted to merge values `1995` and `1992` for the key `Alice`.
+However, APIs that output such messages must be handled carefully.
+What if the keys or values of the map you are generating contain personal information?
+Keys and values could appear in logs and lead to information leakage.
+You can suppress exception messages, but then debugging becomes harder when a bug occurs.
+In this example, the stack trace alone is enough to identify the cause, but it becomes difficult when exceptions occur in external libraries.
+
+As introduced in [ERR01-J: Do not leak sensitive information outside of an application in exception messages](https://www.jpcert.or.jp/java-rules/err01-j.html), checked exceptions help you notice the risk of exposing credentials during implementation,
+but it is very troublesome that unchecked exceptions thrown by standard APIs include object values in their messages.
+
+</Message>
+
+## `Collectors#toMap` with three arguments
+
+The signature of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator)) with three arguments is as follows.
+
+```java
+public static <T, K, U> Collector<T,?,Map<K,U>> toMap(
+  Function<? super T,? extends K> keyMapper,
+  Function<? super T,? extends U> valueMapper,
+  BinaryOperator<U> mergeFunction
+)
+```
+
+Compared to the two-argument version, a third argument `BinaryOperator<U> mergeFunction` is added.
+`mergeFunction` takes the existing value and the new value when a key collides, and returns the value to register.
+If you want to prioritize the later `Alice` in the earlier example, you can write it like this.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(
+   ...>     Map.Entry::getKey,
+   ...>     Map.Entry::getValue,
+   ...>     (existing, replacement) -> replacement
+   ...> ))
+$2 ==> {Bob=1972, Alice=1992, Charile=1991}
+```
+
+You can see that `Alice` now maps to `1992`.
+Since `mergeFunction` is just a `BinaryFunction`, you can also do the following.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(
+   ...>     Map.Entry::getKey,
+   ...>     (entry) -> entry.getValue().toString(),
+   ...>     (existing, replacement) -> existing + "," + replacement
+   ...> ))
+$3 ==> {Bob=1972, Alice=1995,1992, Charile=1991}
+```
+
+In this example, the value of `Map.entry` is converted from `Integer` to `String`,
+creating a `Map<String, String>`.
+The `mergeFunction` concatenates the existing and new values with a comma when the key is duplicated.
+
+With the three-argument `Collections#toMap`, you can build maps that properly handle duplicate keys.
+
+## `Collectors#toMap` with four arguments
+
+Finally, let's check the signature of `Collectors#toMap` with four arguments. You probably won't use this often.
+
+```java
+public static <T, K, U, M extends Map<K, U>> Collector<T,?,M> toMap(
+  Function<? super T,? extends K> keyMapper,
+  Function<? super T,? extends U> valueMapper,
+  BinaryOperator<U> mergeFunction,
+  Supplier<M> mapFactory
+)
+```
+
+The added fourth argument `mapFactory` is a function that creates the `Map` instance to store the results.
+Typically you pass something like `HashMap::new` to create a mutable map.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(
+   ...>     Map.Entry::getKey,
+   ...>     (entry) -> entry.getValue().toString(),
+   ...>     (existing, replacement) -> existing + "," + replacement,
+   ...>     HashMap::new
+   ...> ))
+$4 ==> {Bob=1972, Alice=1995,1992, Charile=1991}
+```
+
+The documentation says it is a supplier of an empty map, but it doesn't have to be empty.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(
+   ...>     Map.Entry::getKey,
+   ...>     (entry) -> entry.getValue().toString(),
+   ...>     (existing, replacement) -> existing + "," + replacement,
+   ...>     () -> {
+   ...>       var map = new HashMap<String, String>();
+   ...>       map.put("Dave", "2000");
+   ...>       return map;
+   ...>     }
+   ...> ))
+$7 ==> {Bob=1972, Alice=1995,1992, Charile=1991, Dave=2000}
+```
+
+You probably won't use it like this, but you can start with an initialized map and add data to it.
+
+## What if I want duplicates as a `List`?
+
+Use [Collectors#groupingBy](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function)).
+
+However, if you've understood `Collectors#toMap` behavior from this article, you'll realize you can implement it with `Collectors#toMap` as well.
+For example, by writing the following for `valueMapper` and `mergeFunction`, you can get the same result.
+
+```java
+jshell> Stream.of(
+   ...>     Map.entry("Alice", 1995),
+   ...>     Map.entry("Bob", 1972),
+   ...>     Map.entry("Charile", 1991),
+   ...>     Map.entry("Alice", 1992)
+   ...> ).collect(Collectors.toMap(
+   ...>     Map.Entry::getKey,
+   ...>     (entry) -> {
+   ...>       var list = new ArrayList<Integer>();
+   ...>       list.add(entry.getValue());
+   ...>
+   ...>       return list;
+   ...>     },
+   ...>     (existing, replacement) -> {
+   ...>       existing.addAll(replacement);
+   ...>
+   ...>       return existing;
+   ...>     }
+   ...> ))
+$8 ==> {Bob=[1972], Alice=[1995, 1992], Charile=[1991]}
+```
+
+But it is tedious to write this every time, so if you want to collect all duplicates into another collection, use `Collectors#groupingBy`.
+
+## Summary
+
+I covered the caveats of `Collectors#toMap` and the typical scenarios where it is used.
+As you should understand by now, when using `Collectors#toMap` you should assume you always need the third argument.
+
+When creating a `Map` from a `Stream`, the thought process should be:
+
+- The map key is `___`, so transform stream elements like `___`
+- The map value is `___`, so transform stream elements like `___`
+- If keys are duplicated, adopt the result of `___`
+
+Only after you conclude that "the map key will **never** be duplicated" should you remove the third argument.
+If we are going to force programmers to think about this, why not avoid defining the two-argument method entirely and instead provide something like:
+
+```java
+public class ToMap {
+  public static BinaryOperator<T> neverDuplicateKey(T existing, T replacement) {
+    throw new IllegalStateException(...);
+  }
+}
+```
+
+and use it like:
+
+```java
+Stream.of(
+    Map.entry("Alice", 1995),
+    Map.entry("Bob", 1972),
+    Map.entry("Charile", 1991)
+).collect(Collectors.toMap(
+  Map.Entry::getKey,
+  Map.Entry::getValue,
+  ToMap::neverDuplicateKey
+))
+```
+
+It sometimes feels like Java's collections are designed to make it easy to write code that can fail at runtime.
+
+Enough complaining about Java. I hope this article helps you avoid runtime exceptions in code using `Collectors#toMap`.
+
+## Related articles
+
+- [Collectors.toMap() は第 3 引数を意識してください - A Memorandum](https://blog1.mammb.com/entry/2017/04/21/122919)

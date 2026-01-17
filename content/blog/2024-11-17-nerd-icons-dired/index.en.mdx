@@ -1,0 +1,52 @@
+---
+title: Customize Icon Display in nerd-icons-dired
+date: 2024-11-17
+category: "Emacs"
+tags: ["Emacs"]
+---
+
+## TL;DR
+
+If you use [Setup El](https://www.emacswiki.org/emacs/SetupEl), add the following configuration.
+
+```elisp
+(setup nerd-icons-dired
+  (:elpaca t)
+  (:with-mode dired-mode
+    (:hook nerd-icons-dired-mode))
+  (:require nerd-icons)
+
+  (add-to-list 'nerd-icons-extension-icon-alist
+               '("mdx" nerd-icons-octicon "nf-oct-markdown" :face nerd-icons-lblue)))
+```
+
+## Motivation
+
+On this blog, I mainly write articles in [MDX](https://mdxjs.com/) and generate HTML with [Next.js](https://nextjs.org/).
+I use [Emacs](https://www.gnu.org/software/emacs/) when writing articles.
+
+I use [nerd-icons-dired](https://github.com/rainstormstudio/nerd-icons-dired) to display file icons in Emacs,
+but the default configuration does not show icons for MDX files.
+It is not a big problem, but seeing only a white square icon when switching buffers or viewing dired feels dull,
+so I looked into how to customize it.
+
+## Configuration
+
+This is done by adding a value to `nerd-icons-extension-icon-alist` in `nerd-icons`, not `nerd-icons-dired`.
+Install `nerd-icons` and `nerd-icons-dired` using the method that matches your package manager.
+
+If you want a package-manager-agnostic version, it looks like this.
+
+```elisp
+(require 'nerd-icons)
+
+(add-to-list 'nerd-icons-extension-icon-alist
+    '("mdx" nerd-icons-octicon "nf-oct-markdown" :face nerd-icons-lblue))
+```
+
+You can find icon names by running `M-x nerd-icon-insert`, which shows a list of icons.
+If you want to match existing icons, refer to the [nerd-icons code](https://github.com/rainstormstudio/nerd-icons.el/blob/0.1.0/nerd-icons.el#L86-L899).
+
+## References
+
+- [dired - How do I customize the icons used in nerd-icons package - Emacs Stack Exchange](https://emacs.stackexchange.com/questions/79917/how-do-i-customize-the-icons-used-in-nerd-icons-package)

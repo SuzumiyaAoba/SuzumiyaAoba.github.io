@@ -1,0 +1,122 @@
+---
+title: A Way to Remember compare/compareTo
+date: 2025-01-01
+tags: ["Programming"]
+category: Programming
+---
+
+## Introduction
+
+This is a memo I wish I had when I started programming.
+It's about how to remember the meaning of return values for comparison functions like `compare`, `comp`, and `compareTo` that exist in most languages.
+
+Learning to compare two values is one of the first things in programming.
+At first you learn operators like `<`, `>`, `=`, `<=`, `>=`, but in some languages you cannot compare non-primitive types with these operators.
+In those cases you pass values to a comparison function or method and judge ordering based on its return value.
+
+In languages like Haskell and Rust, the result is expressed as an ADT like `GT`/`Greater`, `EQ`/`Equal`, `LT`/`Less` [^Haskell] [^Rust],
+but in languages like C, Java, JavaScript, and PHP, comparison functions return a negative value, zero, or a positive value.
+I'm not well-versed in C, so I don't know which document to cite for it; I'll include docs for the other languages.
+
+[^Haskell]: https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#t:Ordering
+
+[^Rust]: https://doc.rust-lang.org/std/cmp/enum.Ordering.html
+
+- [Java](https://docs.oracle.com/javase/jp/17/docs/api/java.base/java/util/Comparator.html#compare(T,T))
+- [JavaScript](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/compare)
+- [PHP](https://www.php.net/manual/ja/collator.compare.php)
+
+There is a simple way to remember these functions, but I haven't seen it mentioned in their docs.
+Beginner sites mention that they return `-1`, `0`, or `1` when values are greater/equal/less, but they don't explain how to remember it.
+If you read the definition you'll notice it quickly, but I only learned it after seeing it mentioned somewhere.
+So this is a memo for beginners, written decades later.
+
+If you can instantly tell when each `if` condition below is true for `x` and `y`, then this article is unnecessary for you![^NoLongerNeeded]
+
+[^NoLongerNeeded]: [Sometimes I say "no longer needed"](https://www.twitch.tv/yaritaiji/clip/CuteCallousBillLeeroyJenkins-0gxu7omWcGJb6jqR)
+
+```java
+if (Integer.compare(x, y) < 0) {
+  // ...
+}
+
+if (Integer.compare(x, y) == 0) {
+  // ...
+}
+
+if (Integer.compare(x, y) > 0) {
+  // ...
+}
+```
+
+## Specification of `compare`
+
+First, let's check the specification of functions and methods named `compare`.
+Let the values be `x` and `y`, and consider `compare(x, y)` or `x.compareTo(y)` where `x` is the reference.
+In most languages, the specification is as follows.
+
+> If `x` is less than `y`, return a negative value. If `x` equals `y`, return zero. If `x` is greater than `y`, return a positive value.
+
+Even if the spec is described this way, implementations often return `-1` for smaller, `0` for equal, and `1` for larger.
+
+## How to remember `compare`
+
+For any language (basically) where the comparison function returns an integer value, it follows these rules.
+
+| `compare`            | Meaning  |
+| :------------------- | :------- |
+| `compare(x, y) < 0`  | `x < y`  |
+| `compare(x, y) == 0` | `x == y` |
+| `compare(x, y) > 0`  | `x > y`  |
+| `compare(x, y) <= 0` | `x <= y` |
+| `compare(x, y) >= 0` | `x >= y` |
+
+It's obvious in a table, but the inequality direction matches between the function form (left column) and the operator form.
+This holds **regardless of the types of `x` and `y`**.
+More precisely, if the earlier spec holds, then the table follows.
+
+> If `x` is less than `y`, return a negative value. If `x` equals `y`, return zero. If `x` is greater than `y`, return a positive value.
+
+So when you want to write code that compares `x` and `y`,
+
+```java
+if (x < y) {
+  // ...
+}
+```
+
+but `x` and `y` don't support `<` (e.g. Java's `Integer`, `Date`, etc.),
+you can keep the same inequality and compare the result of `compare` with `0`.
+
+```java
+if (Integer.compare(x, y) < 0) {
+  // ...
+}
+```
+
+Rather than remembering that smaller returns negative and larger returns positive and then mapping to `<` and `>`,
+first think about the inequality you want to test, then call `compare` and keep the inequality direction the same.
+This way you don't have to worry about the specific return values.
+It's simple but it helps you read and write code without pausing or looking things up.
+When reading, think in reverse: `Integer.compare(x, y) < 0` means it's checking `x < y`.
+
+## Conclusion
+
+While looking for how existing sites explain this, I found a Qiita article that mentions the same idea.
+
+- [[Java] Notes on Comparable and Comparator #Java - Qiita](https://qiita.com/yoshi389111/items/4211a5ea7040ec1c2f60)
+
+There are also posts about not being able to remember the sign of Java's `compareTo`, which I understand.
+
+- [I can't remember Java's compareTo, so I wrote a memo #Java - Qiita](https://qiita.com/simodake/items/eae8fd7f59f4a82a5dbb)
+
+Before I learned this trick, I used to google or read docs every time.
+
+Beginner sites keep saying "it returns 1" or "a positive value," but you don't need to memorize that :smile:
+
+- [What is Java compareTo? How to use compareTo for sorting freely](https://www.bold.ne.jp/engineer-club/java-compareto)
+- [【Java Beginner】How to compare sizes with compareTo (strings/dates) | Samurai Engineer Blog](https://www.sejuku.net/blog/24996)
+- [What is Java compareTo? How to use compareTo for sorting freely](https://www.bold.ne.jp/engineer-club/java-compareto)
+- [Easy explanation! How to use compareTo in Java | TechAcademy Magazine](https://magazine.techacademy.jp/magazine/15328)
+
+Because if `x > y`, then `> 0` is easy enough to remember, right?

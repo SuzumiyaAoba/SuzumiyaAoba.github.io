@@ -1,0 +1,105 @@
+---
+title: "Order Type Class"
+date: 2024-12-21
+category: "Programming"
+tags: ["Scala", "Cats", "Functional Programming", "Type Class", "Order"]
+description: "Learn the Order type class in Scala Cats. This post explains how Order provides type-safe total ordering and how to use comparison operators for safe ordering."
+series: "Scala Cats Type Classes"
+seriesOrder: 3
+---
+
+## `Order`
+
+`Order` is a type class that represents **total** ordering.
+
+- [Order - cats-docs_2.13 2.12.0 javadoc](https://www.javadoc.io/doc/org.typelevel/cats-docs_2.13/latest/cats/kernel/Order.htm)
+- [cats/kernel/src/main/scala/cats/kernel/Order.scala at v2.12.0 · typelevel/cats](https://github.com/typelevel/cats/blob/v2.12.0/kernel/src/main/scala/cats/kernel/Order.scala)
+
+Cats' `Order` is defined as a trait with a `compare` method.
+
+```scala
+trait Order[@sp A] extends Any with PartialOrder[A] { self =>
+
+  def compare(x: A, y: A): Int
+
+  def comparison(x: A, y: A): Comparison = Comparison.fromInt(compare(x, y))
+
+  def partialCompare(x: A, y: A): Double = compare(x, y).toDouble
+
+  def min(x: A, y: A): A = if (lt(x, y)) x else y
+
+  def max(x: A, y: A): A = if (gt(x, y)) x else y
+
+  override def eqv(x: A, y: A): Boolean =
+    compare(x, y) == 0
+
+  override def neqv(x: A, y: A): Boolean = !eqv(x, y)
+
+  override def lteqv(x: A, y: A): Boolean =
+    compare(x, y) <= 0
+
+  override def lt(x: A, y: A): Boolean =
+    compare(x, y) < 0
+
+  override def gteqv(x: A, y: A): Boolean =
+    compare(x, y) >= 0
+
+  override def gt(x: A, y: A): Boolean =
+    compare(x, y) > 0
+
+  def toOrdering: Ordering[A] =
+    compare(_, _)
+```
+
+All methods other than `compare` are default implementations that rely on `compare`.
+In the Cats type class diagram, `PartialOrder` is not highlighted, so I looked at `Order` first.
+However, you must still know what `PartialOrder` requires to implement.
+`PartialOrder` requires `partialCompare`, but `Order` can implement `partialCompare` and `eqv` via `compare`,
+so if you can define `compare` for `Order`, it can also serve as instances of `Eq` and `PartialOrder`.
+
+Unlike `Eq.fromUniversalEquals`, there doesn’t seem to be a method that returns an `Order` instance just by calling it,
+so you must define the instance yourself or use `derives`.
+
+<CodeWithTabs>
+
+```scala !!tabs given
+import cats.Order
+
+case class Fahrenheit(value: Double)
+
+given Order[Fahrenheit] = Order.from((x, y) => x.value.compareTo(y.value))
+```
+
+```scala !!tabs kittens
+import cats.derived.*
+import cats.Order
+
+case class Celsius(value: Double) derives Order
+```
+
+</CodeWithTabs>
+
+To derive instances with `derives`, all fields must already have `Order` instances defined.
+
+If you know the mathematical definition of total order, there is nothing particularly noteworthy about `Order`.
+However, partial order (`PartialOrder`) is a concept taught in discrete math (not in high school math, I guess),
+so it might be unfamiliar to those who haven't studied university math.
+That might be why it isn't highlighted.
+
+### `Order` syntax
+
+- https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/order.scala
+- https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/partialOrder.scala
+
+| Type Class    | Syntax              | Description                                                                                                  |
+| :------------ | :------------------ | :----------------------------------------------------------------------------------------------------------- |
+| `Order`       | `compare`           | Compares left and right; returns a negative value if left is smaller, positive if larger, 0 if equal.       |
+| `Order`       | `min`               | Returns the smaller of left and right.                                                                       |
+| `Order`       | `max`               | Returns the larger of left and right.                                                                        |
+| `Order`       | `comparison`        | Returns `Comparison`, equivalent to Haskell's `Ordering`.                                                    |
+| `PartialOrder`| `>`                 | Returns `true` if left is greater than right.                                                                |
+| `PartialOrder`| `>=`                | Returns `true` if left is greater than or equal to right.                                                    |
+| `PartialOrder`| `<`                 | Returns `true` if left is less than right.                                                                   |
+| `PartialOrder`| `<=`                | Returns `true` if left is less than or equal to right.                                                       |
+| `PartialOrder`| `partialCompare`    | Same as `compare`.                                                                                           |
+| `PartialOrder`| `partialComparison` | Same as `Comparison`.                                                                                        |

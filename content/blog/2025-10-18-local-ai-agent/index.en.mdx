@@ -1,0 +1,434 @@
+---
+title: Do Local AI Agents Dream of Electric Sheep? (Environment Setup)
+date: 2025-10-18
+tags: ["Generative AI", "AI Agents", "Local LLM", "mastra", "ollama", "LM Studio", "TypeScript"]
+category: "Generative AI"
+description: "Install Ollama and LM Studio, then run the mastra sample"
+thumbnail: images/lm-studio.png
+series: "Do Local AI Agents Dream of Electric Sheep?"
+seriesOrder: 1
+amazonAssociate: true
+amazonProductIds:
+  - "現場で活用するためのAIエージェント実践入門"
+---
+
+## Introduction
+
+This article explains how to install [Ollama](https://ollama.com/) and [LM Studio](https://lmstudio.ai/) and run a [mastra](https://mastra.ai/) sample.
+
+<Message title="Poem">
+
+Since the appearance of [GPT-2](https://ja.wikipedia.org/wiki/GPT-2), [LLMs (Large Language Models)](https://ja.wikipedia.org/wiki/%E5%A4%A7%E8%A6%8F%E6%A8%A1%E8%A8%80%E8%AA%9E%E3%83%A2%E3%83%87%E3%83%AB) have dominated the conversation.
+It feels like every month [OpenAI](https://ja.wikipedia.org/wiki/OpenAI), [Google](https://ja.wikipedia.org/wiki/Google), [Anthropic](https://ja.wikipedia.org/wiki/Anthropic), [Alibaba](https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AA%E3%83%90%E3%83%90%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97) announce something LLM-related.
+
+Thanks to that, general users can use tools like [ChatGPT](https://openai.com/ja-JP/), [Claude](https://claude.ai/new), [Gemini](https://gemini.google.com/app), [Qwen](https://chat.qwen.ai/).
+
+Each tool has its strengths, but the front-runner in this field is likely OpenAI.
+Anyone following (US) stock markets can feel the "AI bubble" heat; whether it is justified depends on whether LLM companies like OpenAI can monetize.
+Of course, not only the "pickaxe sellers" but also the companies using the pickaxes must make profits for sustainability.[^monetize]
+
+[^monetize]: For NVIDIA/OpenAI the pickaxe is GPUs; for companies building AI services, the pickaxe is LLMs.
+
+Services like [Artifact](https://www.itmedia.co.jp/news/articles/2401/14/news043.html) appeared but already ended.
+Companies are adding AI features to existing services, but for consumer services, it seems hard to justify charging users for "new value".
+Of course, improving UU (Unique User) or CVR (Conversion Ratio) could raise revenue and profits.
+But right now, it feels like only the companies that build LLMs and ship them as services can directly monetize them.
+In the end, the question is how to replace human work with LLMs to reduce costs and raise margins,
+and whether the time saved can be used to find sustainable monetization for LLM-powered services.
+It seems companies are pushing LLM integration for fear of missing the trend or under shareholder pressure, even at the expense of profit.
+
+That said, I think cost concerns may fade in the near future.
+For many use cases, current performance is already sufficient.
+So competition will likely move toward price and compute efficiency.
+Large models will keep developing, but the need to chase them will diminish,
+and business success will depend on delivering current-level accuracy and speed at lower cost.
+
+I also think architectures combining SLMs (Small Language Models) will become mainstream, as some claim.
+Let an LLM decompose tasks into parts that an SLM can handle, let SLMs execute them, and let the LLM orchestrate the next steps.
+This already happens in GPT-5 and Claude Code, and likely in agent workflows.[^Haiku]
+As SLMs improve in capability and specialization, the cost per token should fall further.
+
+[^Haiku]: [Introducing Claude Haiku 4.5 \ Anthropic](https://www.anthropic.com/news/claude-haiku-4-5) says Haiku 4.5 is 2x faster at 1/3 cost compared to a previous non-low-cost model (Claude Sonnet 4.0).
+
+Finally, LLM tech itself has room to improve.
+Transformer dominates now, but something better could emerge, or efficiency improvements may come without changing the architecture.
+
+The US stock market will tell us the answer within a few years.
+
+</Message>
+
+## Intended audience
+
+- People who want to develop with LLMs
+- People who don't want to use Python
+- People who want to build local AI agents
+- People who want to develop with LLMs for free
+- People comfortable with TypeScript
+
+## Local LLM
+
+LLMs are trendy and many engineers want to try them.
+But for regular engineers like me, paying for APIs with unclear costs to "get a feel" is intimidating.
+If you can't monetize it, using LLMs just costs money, so even for hobby projects it's hard to commit.
+
+There are a few options.
+One is to use a service like [OpenRouter](https://openrouter.ai/) within free credits or free models.
+Another is to run LLMs locally.
+
+Given speed and load, OpenRouter is probably better, but here we'll use local LLMs.
+I'll write about OpenRouter in a later article.
+
+There are a few ways to run local LLMs.
+One is [Ollama](https://ollama.com/), another is [LM Studio](https://lmstudio.ai/).
+
+I'll explain how to install both.
+You can choose either, but later you'll see that mastra doesn't work with Ollama's official steps, so I recommend LM Studio.
+Also, LM Studio gives you a GUI chat UI, which is more approachable.
+
+You might say "What about [Open Web UI](https://openwebui.com/)?" — it didn't work in my environment, so I excluded it.
+
+## Environment
+
+Here is my environment before installation.
+I don't develop on Windows, so the steps are for macOS, but if you are trying LLM development,
+following the official install steps should be easy enough.
+
+<Img src="./images/pc_spec.png" alt="PC specs" width={600} />
+
+Running local LLMs requires decent hardware.
+Typical laptops or mid-spec desktops may be insufficient.
+It depends on the model, but I assume we can run [gpt-oss:20b](https://ollama.com/library/gpt-oss:20b) because I want tool usage.
+"Tool use" is explained later.
+
+- Ollama
+  - [0.12.3](https://github.com/ollama/ollama/releases/tag/v0.12.3)
+- LM Studio
+  - 0.3.30
+- mastra
+  - [2025-10-14](https://github.com/mastra-ai/mastra/releases/tag/%40mastra%2Fcore%400.21.1)
+
+## Ollama
+
+### Overview
+
+Ollama is a tool to easily run LLMs locally.
+You can [search models on the web](https://ollama.com/search),
+then run them by copying the command in the model page's top-right and executing it in the terminal.
+
+<Img src="./images/gpt-oss_detail.png" alt="gpt-oss details" width={600} />
+
+The UI is CLI-only, with no conversation memory, so it can feel less approachable.
+
+<Img src="./images/ollama_cli.png" alt="Ollama CLI" width={800} />
+
+### Installation
+
+If you use [Homebrew](https://brew.sh/), install with:
+
+```shell
+$ brew install ollama
+```
+
+If not, use the method that suits your environment.
+I use [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [Home Manager](https://github.com/nix-community/home-manager), so I use Nix configs.
+
+If you don't use a package manager, download the binary from the official Ollama site and follow the install steps.
+
+### Running
+
+To use Ollama, first start the server:
+
+```shell
+$ ollama serve
+```
+
+Then run a model; it will download the model and start a chat:
+
+```shell
+$ ollama run gpt-oss:20b
+```
+
+<Message variant="warning" title="Hardware warning" defaultOpen={true}>
+
+If your PC lacks enough specs for LLMs, it may freeze.
+Make sure your machine can run `gpt-oss:20b`.
+You likely need a decent GPU and at least 32GB (or 48GB) of RAM.
+
+</Message>
+
+## LM Studio
+
+### Overview
+
+LM Studio is similar to Ollama but provides a GUI app.
+If you switch to Developer mode, it offers an OpenAPI-compatible API, which works well with mastra.
+
+### Installation
+
+If you use Homebrew:
+
+```shell
+$ brew install lm-studio
+```
+
+Otherwise, install using your environment's method.
+If you don't use a package manager, download the binary from the official LM Studio site and follow the steps.
+
+### Using LM Studio
+
+Because we want to use it as an LLM API, switch to Developer mode after launching.
+When LM Studio starts, you see a GUI like this:
+
+<Img src="./images/lm-studio.png" width={800} />
+
+Click the magnifying-glass icon at the bottom-left to search and download models.
+
+<Img src="./images/lm-studio_search-gpt-oss-20b.png" width={800} />
+
+Search for `gpt-oss` and you'll see OpenAI's `gpt-oss 20B`. Click "Download" in the bottom-right.
+The screenshot shows "Use in New Chat" because it's already downloaded.
+
+After the download, click the second icon from the top (terminal icon).
+You should see a screen like this, where you can start a local server for the model.
+
+<Img src="./images/lm-sutdio_development.png" width={800} />
+
+Click "Select a model" and choose "OpenAI's gpt-oss 20B".
+
+<Img src="./images/lm-studio_select-model.png" width={800} />
+
+Loading a model consumes memory even before inference, as shown below.
+
+<Img src="./images/lm-studio_model-load-memory-usage.png" width={800} />
+
+After loading, click the top-left icon to open the chat UI and try a prompt.
+
+<Img src="./images/lm-studio_chat.png" width={800} />
+
+If you get a response, the LLM is working.
+
+Finally, if you're done, eject the model to free memory. Click the Development icon and press "Eject".
+
+<Img src="./images/lm-studio_model-eject.png" width={800} />
+
+## mastra
+
+Now the main topic: mastra.
+
+### Overview
+
+[mastra](https://mastra.ai/) is a framework to build LLM-based AI agents in TypeScript.
+It's roughly like [LangChain](https://www.langchain.com/)/[LangGraph](https://www.langchain.com/langgraph) in Python (I might be wrong as I don't know them deeply).
+
+For web engineers who don't want to learn Python, it's a perfect fit.
+
+This time we will set up mastra and run the sample app using the API server started by LM Studio.
+If you use Ollama, even the tutorial doesn't work. It might work with OpenAPI-compatible mode, but I might run out of energy before that.
+
+### Create a project
+
+Create a mastra project per the [docs](https://mastra.ai/ja/docs/getting-started/installation).
+
+```shell
+$ npm create mastra@latest
+```
+
+The mastra version is important.
+It's under active development; breaking changes and bugs are common.
+It is normal for a version upgrade to crash even if the previous version worked.
+
+The command will ask some questions and generate a directory.
+
+<Img src="./images/mastra_setup.png" />
+
+### Directory structure
+
+Initial structure:
+
+```
+.
+├── .env.example
+├── .gitignore
+├── package-lock.json
+├── package.json
+├── src
+│   └── mastra
+│       ├── agents
+│       │   └── weather-agent.ts
+│       ├── index.ts
+│       ├── tools
+│       │   └── weather-tool.ts
+│       └── workflows
+│           └── weather-workflow.ts
+└── tsconfig.json
+
+6 directories, 10 files
+```
+
+The [official docs](https://mastra.ai/ja/docs/getting-started/project-structure) explain each file.
+
+From the names, the initial project defines an agent that fetches weather info and answers or suggests activities.
+The workflow takes a city name, fetches weather, and proposes activities.
+
+I'll explain agents and workflows in the next article.
+Here, the goal is just to run the sample with a local LLM.
+
+### Changes to use LM Studio
+
+After generating the sample, you must configure the provider for your LLM.
+Here, we configure LM Studio's OpenAI-compatible API server.
+
+The relevant doc is [Model Providers | Getting Started | Mastra docs](https://mastra.ai/ja/docs/getting-started/model-providers#openai-%E4%BA%92%E6%8F%9B%E3%83%97%E3%83%AD%E3%83%90%E3%82%A4%E3%83%80%E3%83%BC).
+
+Now let's install packages and edit code.
+
+#### package.json
+
+First, install `@ai-sdk/openai-compatible` to use the LM Studio API:
+
+```shell
+$ npm install @ai-sdk/openai-compatible
+```
+
+If other packages are outdated, run `npx npm-check-updates -u` to update them.
+In my environment, `package.json` changed like this (I also changed `license` to `MIT`, but it's optional).
+
+```diff package.json
+diff --git a/package.json b/package.json
+index f678078..44e95e6 100644
+--- a/package.json
++++ b/package.json
+@@ -11,22 +11,24 @@
+   },
+   "keywords": [],
+   "author": "",
+-  "license": "ISC",
++  "license": "MIT",
+   "type": "module",
+   "engines": {
+     "node": ">=20.9.0"
+   },
+   "dependencies": {
+-    "@ai-sdk/openai": "^2.0.50",
+-    "@mastra/core": "^0.20.2",
+-    "@mastra/libsql": "^0.15.1",
+-    "@mastra/loggers": "^0.10.15",
+-    "@mastra/memory": "^0.15.6",
+-    "zod": "^3.25.76"
++    "@ai-sdk/openai": "^2.0.52",
++    "@ai-sdk/openai-compatible": "^1.0.22",
++    "@mastra/core": "^0.21.1",
++    "@mastra/libsql": "^0.15.2",
++    "@mastra/loggers": "^0.10.16",
++    "@mastra/memory": "^0.15.7",
++    "zod": "^4.1.12"
+   },
+   "devDependencies": {
+-    "@types/node": "^24.7.2",
+-    "mastra": "^0.15.1",
++    "@types/node": "^24.8.1",
++    "mastra": "^0.17.0",
+     "typescript": "^5.9.3"
+   }
+ }
+```
+
+This diff is just an example; versions will differ if newer releases exist.
+
+#### src/mastra/agents/weather-agent.ts
+
+Next, add settings for LM Studio in `src/mastra/agents/weather-agent.ts`.
+Import `createOpenAICompatible` from `@ai-sdk/openai-compatible`, call it with `name`, `baseURL`, and `apiKey`,
+and bind the result to `lmstudio`.
+`name` and `apiKey` can be anything.
+
+Then, in `weatherAgent`, use `lmstudio` instead of `openai` and pass `openai/gpt-oss-20b` as the model.
+
+```diff src/mastra/agents/weather-agent.ts
+diff --git a/src/mastra/agents/weather-agent.ts b/src/mastra/agents/weather-agent.ts
+index 7299c42..eaedfcb 100644
+--- a/src/mastra/agents/weather-agent.ts
++++ b/src/mastra/agents/weather-agent.ts
+@@ -1,8 +1,14 @@
+-import { openai } from '@ai-sdk/openai';
+ import { Agent } from '@mastra/core/agent';
+ import { Memory } from '@mastra/memory';
+ import { LibSQLStore } from '@mastra/libsql';
+ import { weatherTool } from '../tools/weather-tool';
++import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
++
++const lmstudio = createOpenAICompatible({
++  name: "lmstudio",
++  baseURL: "http://localhost:1234/v1",
++  apiKey: "lm-studio",
++});
+
+ export const weatherAgent = new Agent({
+   name: 'Weather Agent',
+@@ -20,7 +26,7 @@ export const weatherAgent = new Agent({
+
+       Use the weatherTool to fetch current weather data.
+ `,
+-  model: openai('gpt-4o-mini'),
++  model: lmstudio("openai/gpt-oss-20b"),
+   tools: { weatherTool },
+   memory: new Memory({
+     storage: new LibSQLStore({
+```
+
+`openai/gpt-oss-20b` can be found in the LM Studio GUI.
+
+<Img src="./images/lm-studio_model-id.png" width={800} />
+
+#### .env
+
+Finally, LM Studio requires `LMSTUDIO_API_KEY` to be set.
+Create a `.env` file at the project root and set it.
+
+```env .env
+LMSTUDIO_API_KEY=lm-studio
+```
+
+### Finally
+
+Everything is ready. Just run it.
+Running `npm run dev` outputs the following and starts the app on `localhost:4111`.
+
+```
+$ npm run dev
+
+> how-to-use-mastra@1.0.0 dev
+> mastra dev
+
+◐ Preparing development environment...
+✓ Initial bundle complete
+◇ Starting Mastra dev server...
+
+ mastra  0.17.0 ready in 721 ms
+
+│ Playground: http://localhost:4111/
+│ API:        http://localhost:4111/api
+
+◯ watching for file changes...
+```
+
+Open the browser and you should see this.
+
+<Img src="./images/mastra_top.png" width={800} />
+
+Since we just want to verify it works, click `Weather Agent`, open the chat UI, and send a prompt.
+You will get a response (in English), as shown.
+
+<Img src="./images/mastra_weather.png" width={800} />
+
+Now you have a working TypeScript environment for AI agents.
+
+## Summary
+
+This article explained how to install Ollama and LM Studio, start an API server in LM Studio, and run the mastra sample.
+In the next article I will explain Ollama setup and the sample code details.
+
+I want to see how far local LLM-based AI agents can go.
+
+For AI agent development, I plan to follow
+[Practical Introduction to AI Agents for Real-World Use (KS Information Science)](https://amzn.to/4h2sk0R).

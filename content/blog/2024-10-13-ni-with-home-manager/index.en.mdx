@@ -1,0 +1,88 @@
+---
+title: Using the ni Command with home-manager
+date: 2024-10-13
+category: "Nix"
+tags: ["Node", "Nix", "home-manager"]
+---
+
+## Introduction
+
+I got a bit stuck trying to use the [ni](https://github.com/antfu-collective/ni) command with [home-manager](https://github.com/nix-community/home-manager), so I’m writing down the fix.
+
+## TL;DR
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    nodePackages."@antfu/ni"
+  ];
+}
+```
+
+## What is ni?
+
+ni is one of the command wrappers for managing JavaScript packages such as npm, yarn, pnpm, and bun.
+Each command has different subcommands and options, so you usually need to learn each command separately.
+ni provides a unified set of commands for them.
+
+For example, `npm install`, `yarn`, `pnpm install`, and `bun install` can all be run as `ni`.
+It also supports `npm install`, `npm install xxx`, `npm ci`, `npm run`, `npx`, `npm upgrade`, `npm uninstall`, and more.
+
+## Using ni with home-manager
+
+If you want to manage it with home-manager, you might think adding `ni` to `home.packages` is enough,
+but the following does not install the `ni` command.
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    ni
+  ];
+}
+```
+
+As you can see by searching [NixOS Search](https://search.nixos.org/packages?channel=24.05&from=0&size=50&sort=relevance&type=packages&query=ni), `ni` is not registered.
+
+However, you can see in [the GitHub repo](https://github.com/NixOS/nixpkgs/blob/db4fd8f4e35d517264bf5fed5875719d23c6821f/pkgs/development/node-packages/node-packages.json) that it is available in `nodePackages`.
+Since the package name is `@antfu/ni`, you might try the following, but it does not work.
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with nodePackages; [
+    @antfu/ni
+  ];
+}
+```
+
+I’m not sure about the exact syntax rules, but variables starting with `@` are not allowed.
+If you write `@antfu/ni` as a string, i.e. `"@antfu/ni"`, it is treated as a string and still does not work.
+
+In the end, I was able to install the `ni` command by writing it like this without `with nodePackages;`.
+
+```nix
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    nodePackages."@antfu/ni"
+  ];
+}
+```
+
+## Conflict with nushell
+
+Just when I thought that solved it, another issue popped up.
+The `nu` command (equivalent to `npm upgrade`) conflicts with [nushell](https://www.nushell.sh/).
+I don’t use nushell regularly, so I avoided the conflict by not installing nushell.
+
+Another command, `nlx` (equivalent to `npx`), used to be `nix`, but it was renamed because it conflicted with the Nix command
+([see the issue](https://github.com/antfu-collective/ni/issues/143)).
+
+If nushell becomes more popular, the `nu` command may be renamed as well.
+Even if the names get a bit longer, I wish they used names like `ni add` and `ni run` instead of single-letter variants like `ni`, `nu`, and `nr`...

@@ -1,0 +1,277 @@
+---
+title: PLaMo Translation with LM Studio
+date: 2025-11-03
+category: "LLM"
+tags: ["PLaMo", "PNF", "LLM", "AI"]
+thumbnail: images/lm-studio_translate.png
+amazonAssociate: true
+amazonProductIds:
+  - "現場で活用するためのAIエージェント実践入門"
+---
+
+## PLaMo Translation
+
+On 2025/05/27, Preferred Networks (PFN) [released PLaMo Translation](https://tech.preferred.jp/ja/blog/plamo-translate/).
+For details, see the official blog, but briefly, PLaMo Translation is an LLM-based translation model, similar to ChatGPT.
+
+The model is published on [HuggingFace](https://huggingface.co/pfnet/plamo-2-translate) and a [demo page](https://translate.preferredai.jp/) is available.
+Since the model is public on HuggingFace, we can run it on our local PCs.
+PFN also announced a CLI for it: [PLaMo Translation CLI](https://tech.preferred.jp/ja/blog/plamo-translate-cli/).
+
+There are several ways to run the model; here I introduce how to run it with LM Studio.
+
+## LM Studio
+
+[LM Studio](https://lmstudio.ai/) is a GUI app that lets you run LLM models locally.
+Install it by downloading the installer from the [download page](https://lmstudio.ai/download) and running it.
+
+### Download the model
+
+After launching LM Studio, download the model.
+Click the magnifying-glass icon on the left to open the search screen.
+
+<Img src="./images/lm-studio_launch.png" />
+
+Search for "plamo translate" and you will see several models. Select the one published by mmnga and click "Download".
+In the screenshot it says "Use in New Chat" because the model is already downloaded.
+
+<Img src="./images/lm-studio_donwload-model.png" />
+
+### Model settings
+
+After downloading, click the folder icon on the left to open the list of downloaded models.
+Find the model named `plamo-2-translate` and click the gear icon in the Action column.
+
+<Img src="./images/lm-studio_model-list.png" />
+
+This opens the settings to edit the default parameters.
+To use PLaMo Translation in LM Studio, change the **Prompt Template** and **Stop String** under the **Prompt** tab.
+While writing this, I realized changing **Additional Stop Strings** might also work.
+
+<Img src="./images/lm-studio_model-template.png" />
+
+#### Prompt template
+
+Delete all default text (Template/Jinja) and replace it with:
+
+```txt
+<|plamo:op|>dataset
+translation
+{% for message in messages %}
+<|plamo:op|>input lang=English
+{{ message['content'] }}
+<|plamo:op|>output lang=Japanese
+{% endfor %}
+```
+
+This is for English -> Japanese translation.
+For Japanese -> English, use:
+
+```txt
+<|plamo:op|>dataset
+translation
+{% for message in messages %}
+<|plamo:op|>input lang=Japanese
+{{ message['content'] }}
+<|plamo:op|>output lang=English
+{% endfor %}
+```
+
+#### Stop string
+
+Set the stop string to:
+
+```txt
+<|plamo:op|>
+```
+
+<Img src="./images/lm-studio_termination.png" />
+
+After entering it and pressing Enter, you will see tags like in the screenshot.
+
+### Try it
+
+Click the speech-bubble icon on the left to open the chat UI.
+
+<Img src="./images/lm-studio_chat.png" />
+
+Click "Select a model" at the top and choose "Plamo 2 Translate" from the downloaded list.
+
+<Img src="./images/lm-studio_load-model.png" />
+
+You will be prompted with some settings; leave them as default and click "Load Model".
+
+<Img src="./images/lm-studio_model-configuration.png" />
+
+You will see a familiar ChatGPT-like UI. Enter English and press Enter.
+PLaMo Translation returns the Japanese translation.
+In the screenshots, I used a [description](https://etc.usf.edu/lit2go/41/the-merchant-of-venice/) of Shakespeare's *The Merchant of Venice*.
+
+<Img src="./images/lm-studio_translate.png" />
+
+<Img src="./images/google-translate.png" />
+
+Compared to Google Translate, it seems more paraphrased, but the context is preserved,
+so it may be useful when you want to quickly translate large amounts of collected English information.
+I plan to try it for machine translation of this blog and adopt it if the quality is good enough.
+
+### Notes
+
+Since the model is not trained for conversational use, giving translation instructions does not help.
+
+<Img src="./images/lm-studio_plamo_response.png" />
+
+You can configure the translation direction (English -> Japanese or Japanese -> English),
+but it only works correctly when the input language matches that configuration.
+
+### Eject
+
+Finally, either fully stop LM Studio or eject the model so memory is not allocated when unused.
+
+<Img src="./images/lm-studio_eject.png" />
+
+## English translation by PLaMo up to here
+
+I fed the sections above into PLaMo Translation and tried English output as a reference.
+
+It seems it cannot read Markdown as-is (maybe Frontmatter or the `<|plamo:op|>` in the text?),
+so for practical use you may need to parse and pass only Japanese parts,
+or convert to plain text to preserve context.
+If `<|plamo:op|>` is the cause, then it won't be a problem except for articles about PLaMo, but you would still need to escape it.
+
+````markdown
+## PLaMo Translation
+
+On May 27th of this year, Preferred Networks Inc. (PFN) [released PLaMo Translation](https://tech.preferred.jp/ja/blog/plamo-translate/).
+For a detailed introduction to PLaMo Translation, please refer to the official blog, but to briefly summarize, this model is a translation system based on large-scale language models (LLMs), much like the well-known ChatGPT.
+
+The PLaMo Translation model is available on [HuggingFace](https://huggingface.co/pfnet/plamo-2-translate) and comes with a [demo page](https://translate.preferredai.jp/).
+Since the model is publicly available on HuggingFace, it means we can run it on our local PC as well.
+PFN has also announced a [PLaMo Translation CLI tool](https://tech.preferred.jp/ja/blog/plamo-translate-cli/) for command-line use.
+
+While there are multiple methods to run the model, here we'll demonstrate how to execute it using LM Studio.
+
+## LM Studio
+
+[LM Studio](https://lmstudio.ai/) is a graphical user interface (GUI) application that allows you to easily run LLM models in your local environment.
+To install it, simply download the installer from the [downloads page](https://lmstudio.ai/download),
+and execute it to complete the installation process.
+
+### Downloading the Model
+
+After launching LM Studio, proceed to download the model.
+You can access the download screen by clicking on the magnifying glass icon on the left side of the window that appears after launch.
+
+<Img src="./images/lm-studio_launch.png" />
+
+To download the PLaMo Translation model, enter a search term like "plamo translate" in the search field. This will display several matching models; select the one published by the user mmnga and click the "Download" button. In the screenshot above, the text "Use in New Chat" indicates that you have already downloaded this model.
+
+<Img src="./images/lm-studio_donwload-model.png" />
+
+### Model Configuration
+
+After completing the model download, click the folder icon on the left side of the window to open the screen displaying your downloaded models.
+You should find a model with the name `plamo-2-translate` in the list of available models; then click on the gear icon in the "Action" column of that row.
+
+<Img src="./images/lm-studio_model-list.png" />
+
+This will display configuration settings for editing the default parameters of the model.
+To use PLaMo Translation with LM Studio, you need to modify the settings under both the **Prompt** tab's "**Promp Template**" and "**Stop String**" options.
+While writing this article, I noticed that changing the "**Additional Stop String**" instead of "**Stop String**" might also work well.
+
+<Img src="./images/lm-studio_model-template.png" />
+
+#### Prompt Template
+
+Delete all the default template text ("Template (Jinia)"), and replace it with the following template:
+
+```txt
+<|plamo:op|>dataset
+translation
+{% for message in messages %}
+<|plamo:op|>input lang=English
+{{ message['content'] }}
+<|plamo:op|>output lang=Japanese
+{% endfor %}
+```
+
+The current configuration is set up for "English to Japanese translation."
+For "Japanese to English translation," you should configure it as follows:
+
+```txt
+<|plamo:op|>dataset
+translation
+{% for message in messages %}
+<|plamo:op|>input lang=Japanese
+{{ message['content'] }}
+<|plamo:op|>output lang=English
+{% endfor %}
+```
+
+#### Stop String
+
+Next, configure the "Stop String" as follows:
+
+```txt
+<|plamo:op|>
+```
+
+<Img src="./images/lm-studio_termination.png" />
+
+After entering the text in the textarea and pressing Enter, you'll see tag indicators displayed on the screen as shown below.
+
+### Let's Try It Out
+
+After completing the settings, click the speech bubble icon on the left side of the window to display the chat UI interface for using LLM models.
+
+<Img src="./images/lm-studio_chat.png" />
+
+Next, to load your model, click on "Select a Model" at the top of the window.
+This will display the list of downloaded models; select "Plamo 2 Translate."
+
+<Img src="./images/lm-studio_load-model.png" />
+
+You'll then be prompted with some settings, but here we'll leave everything as default and click "Load Model."
+
+<Img src="./images/lm-studio_model-configuration.png" />
+
+This will display the familiar UI similar to ChatGPT, so simply enter some English text and press Enter.
+PLaMo Translation will then provide you with the Japanese translation.
+In these screenshots, I have provided a [description](https://etc.usf.edu/lit2go/41/the-merchant-of-venice/) of Shakespeare's "The Merchant of Venice."
+
+<Img src="./images/lm-studio_translate.png" />
+
+<Img src="./images/google-translate.png" />
+
+Compared to Google Translate, I feel there are many parts that have been paraphrased rather than directly translated,
+but the translation doesn't lose the original context, so it may prove useful when you need to quickly compile and translate large amounts of English information.
+I'll try using it for machine translation of this blog, and if the results are satisfactory, I think I'll adopt it.
+
+### Important Note
+
+As a note, since the model hasn't been trained for conversational usage, providing translation instructions won't be effective.
+
+<Img src="./images/lm-studio_plamo_response.png" />
+
+While the settings allow you to choose whether to translate from English → Japanese or Japanese → English,
+the system will only function correctly when provided with language combinations matching those specific settings.
+
+### Eject
+
+Finally, be sure to either fully stop LM Studio or eject the model to prevent memory allocation when the model is unused.
+
+<Img src="./images/lm-studio_eject.png" />
+````
+
+This should be sufficient for publishing the blog for an English-speaking audience.
+As shown in LM Studio, my environment gets 30–40 token/s, so it doesn't feel slow.
+
+## Conclusion
+
+I introduced how to use PLaMo Translation with LM Studio.
+It's fast enough that using it locally to grasp the gist of English text feels useful.
+API translation services cost money, so being able to do English<->Japanese translation at this quality without extra cost is nice.
+
+I also saw a Zenn article that published a tool to translate Markdown/epub using PLaMo Translation, so I want to build something similar.
+
+- [Built an HTML tool for local multilingual translation with LM Studio](https://zenn.dev/shivase/articles/017-lm-studio-local-translator)

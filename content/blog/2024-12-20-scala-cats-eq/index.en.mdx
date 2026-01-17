@@ -1,0 +1,82 @@
+---
+title: "Eq Type Class"
+date: 2024-12-20
+category: "Programming"
+tags: ["Scala", "Cats", "Functional Programming", "Type Class", "Eq"]
+description: "Learn the Eq type class in Scala Cats. This post explains how Eq provides type-safe equality comparisons and how to use the === operator for safe equality."
+series: "Scala Cats Type Classes"
+seriesOrder: 2
+---
+
+## `Eq`
+
+`Eq` is a type class representing types for which equality is defined.
+
+- [Eq](https://typelevel.org/cats/typeclasses/eq.html)
+- [Eq - cats-docs_2.13 2.12.0 javadoc](https://typelevel.org/cats/typeclasses/eq.html)
+- [cats/kernel/src/main/scala/cats/kernel/Eq.scala at v2.12.0 · typelevel/cats](https://github.com/typelevel/cats/blob/v2.12.0/kernel/src/main/scala/cats/kernel/Eq.scala)
+
+Cats' `Eq` is defined as a trait with an `eqv` method.
+
+```scala
+trait Eq[@sp A] extends Any with Serializable { self =>
+
+  def eqv(x: A, y: A): Boolean
+
+  def neqv(x: A, y: A): Boolean = !eqv(x, y)
+}
+```
+
+`neqv` is defined to return the opposite boolean of `eqv`.
+Therefore, to define an `Eq` instance for a type, you only need to implement `eqv`.
+However, `Eq` can be defined for most data types (those without uncomparable values such as lambdas),
+so you would need to implement an `Eq` instance for each type.
+That is quite tedious, so the official documentation introduces two methods.
+
+One is to use `Eq.fromUniversalEquals`, which is implemented in the official docs.
+The other is to use a library called [kittens](https://github.com/typelevel/kittens) that helps Cats.
+The code looks like this.
+
+<CodeWithTabs>
+
+```scala !!tabs given
+import cats.kernel.Eq
+
+case class Point2D(x: Int, y: Int)
+
+given Eq[Point2D] = Eq.fromUniversalEquals
+```
+
+```scala !!tabs kittens
+import cats.derived.*
+import cats.kernel.Eq
+
+case class Point3D(x: Int, y: Int, z: Int) derives Eq
+```
+
+</CodeWithTabs>
+
+With `kittens`, `derives Eq` is enough.
+Since Scala 3 can do the equivalent of Haskell's `deriving`,
+that feature can automatically derive `Eq` instances.
+
+When you define an `Eq` instance, you can use `===` and `=!=` as aliases for `eqv` and `eqnv` [^CatsSyntax].
+These operators [^ScalaOperators] are different from `equals` because both operands must be the same type.
+In Java-derived `equals`, the method argument is `Any`, so if you compare different types, the compiler will warn but still compile.
+In most cases, comparing different types is a bug.
+Therefore, writing code with `===` and `=!=` from the `Eq` type class makes it safer by turning such cases into compile errors.
+
+[^ScalaOperators]: In Scala, operators are just method syntax sugar (ref: [Operators | Scala Documentation](https://docs.scala-lang.org/ja/tour/operators.html)).
+
+Code using `Eq` can be found in [EqTypeClassTest](https://github.com/SuzumiyaAoba/scala-rebeginning/blob/3d2267ed23f8655fb176db4a69e412f53aa8be1c/src/test/scala/cats/rebeginning/eq/EqTypeClassTest.scala).
+
+### `Eq` syntax
+
+https://github.com/typelevel/cats/blob/v2.12.0/core/src/main/scala/cats/syntax/eq.scala
+
+| Type Class | Syntax        | Description                                         |
+| :--------- | :------------ | :-------------------------------------------------- |
+| `Eq`       | `===` (`eqv`)  | Returns `true` if left and right are equal.         |
+| `Eq`       | `=!=` (`eqnv`) | Returns `true` if left and right are not equal.     |
+
+[^CatsSyntax]: Methods and operators available for type class instances are defined in the [`cats.syntax` package](https://github.com/typelevel/cats/tree/v2.12.0/core/src/main/scala/cats/syntax).

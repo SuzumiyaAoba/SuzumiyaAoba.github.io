@@ -1,0 +1,84 @@
+---
+title: Technical Books on Generative AI
+date: 2025-10-09
+tags: ["Generative AI", "AI", "Books"]
+category: "Books"
+amazonAssociate: true
+---
+
+I have been reading several books for development with generative AI, so here are brief impressions and summaries.
+
+## Finished
+
+- [LLM Prompt Engineering - Building Generative AI Applications by the Creator of GitHub Copilot](https://amzn.to/46Mahsh)
+- [Practical Introduction to AI Agents for Real-World Use (KS Information Science)](https://amzn.to/4h2sk0R)
+
+## Unread
+
+- [Practical LLM Application Development - A Comprehensive Guide Beyond Prototypes](https://amzn.to/46SWIWE)
+- [Intuitive LLM - Hands-on Introduction to Large Language Models](https://amzn.to/4o4uxM9)
+- [Learn by Building! LLM DIY Introduction](https://amzn.to/471JYwX)
+- [Introduction to Large Language Models](https://amzn.to/4q34pCw)
+- [Introduction to Large Language Models II - Implementing and Evaluating Generative LLMs](https://amzn.to/4nTDec4)
+
+## LLM Prompt Engineering - Building Generative AI Applications by the Creator of GitHub Copilot
+
+This book is written by someone who worked on GitHub Copilot.
+After ChatGPT popularized chat-based applications, the most widely adopted LLM service was probably code completion like GitHub Copilot.
+Reading this book reminded me again that LLMs fit well with code generation.
+
+When I reread it to summarize, I noticed it has no table of contents. Maybe because I'm reading the Kindle edition.
+
+Compared to the other book I introduce below, this one focuses less on concrete development of generative AI applications,
+and more on the history of LLMs, techniques discovered so far, and concepts and ways of thinking you should know.
+It touches on application design, but only at a flowchart-level of process flow,
+so it does not teach concrete application development. This is also mentioned in Amazon reviews.
+
+The original is the English book [Prompt Engineering for Llms: The Art and Science of Building Large Language Model-Based Applications](https://amzn.to/48qRxQj).
+The English edition was published on 2024/12/31, while the Japanese translation was published on 2025/5/16, nearly half a year later.
+Considering writing and publication, the content reflects the situation a few months before 2024/12/31.
+For example, Anthropic announced MCP (Model Context Protocol) around November 2024, but it is not mentioned here.
+While the idea of tool use existed before MCP, the book does not cover how the protocol has been standardizing since then,
+so some information is already outdated.
+
+That said, the sections on techniques for getting desired outputs and how LLMs behave are very informative.
+If you want concrete AI agent development, this is not the best fit, but it is a good book for learning about LLMs and surrounding technologies.
+
+## Practical Introduction to AI Agents for Real-World Use (KS Information Science)
+
+This book describes more concrete implementation details than "LLM Prompt Engineering",
+so it is likely to contain the information you want if you are trying to build real LLM applications.
+
+The book is structured in three parts:
+
+- Part 1 covers the technical components of AI agents comprehensively.
+- Part 2 explains the OpenAI API, gives a brief intro to LangGraph used in the book, and presents four concrete use cases with implementations.
+- Part 3 discusses evaluation, error analysis, risk, monitoring, and other topics needed for production.
+
+Part 1 explains topics you should know for AI agent development:
+
+- LLM
+- Profile
+- Tool calling
+- Planning
+- Self-correction
+- Memory
+- Workflow
+
+Part 2 covers design and implementation of RAG and agents in these domains:
+
+- Help desk
+- Data analysis
+- Information gathering
+- Marketing
+
+Part 3 explains evaluation, error analysis, UX, risk, monitoring, and quality improvements needed for deployment.
+
+Overall, it covers the flow and components of AI agent development fairly well.
+It includes code examples using LangGraph, but the code itself is not hard, so it is easy to get a sense of what is needed.
+
+## Summary
+
+If you want to learn concrete AI agent development, read [Practical Introduction to AI Agents for Real-World Use (KS Information Science)](https://amzn.to/4h2sk0R).
+If you want knowledge about LLMs, their history, and techniques for using them, read
+[LLM Prompt Engineering - Building Generative AI Applications by the Creator of GitHub Copilot](https://amzn.to/46I6qfR).

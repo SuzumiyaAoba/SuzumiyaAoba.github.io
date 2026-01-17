@@ -1,0 +1,234 @@
+---
+title: Impressions After Improving My Blog with Cursor
+date: 2025-05-09
+category: Programming
+tags: ["Generative AI", "Programming", "GitHub Copilot"]
+thumbnail: images/pricing.png
+---
+
+<Message title="Note" variant="warning" defaultOpen={true}>
+  This article is based on information **as of 2025/05/01**. Information about LLMs changes daily, so please verify the latest details yourself.
+</Message>
+
+## Introduction
+
+Golden Week is almost over.
+This year I spent most of it testing how far LLMs can take me in coding,
+and I confirmed that the technology has advanced to a more practical level than I expected.
+I need to update my assumptions.
+
+On X (formerly Twitter), I often see people cheering that "XXX was done just by prompting!",
+but honestly, for most programmers what matters is how practical it is for existing code.
+
+Literal greenfield code generation is not what most professional programmers encounter.
+Most of the time, software development is about understanding code that nobody seems to remember who wrote
+(you can check with `git blame`, but still) and changing it to meet project requirements.
+Even if the code you add is new, it must integrate well with existing code.
+And the codebase is not a few thousand or tens of thousands of lines—it must work correctly at the scale of hundreds of thousands of lines.
+
+With that in mind, I used LLMs to improve this blog and wrote down what I learned.
+
+## Features added and improved
+
+This time I used [Cursor](https://www.cursor.com/ja) to develop this blog.
+I built the blog around July last year, and after implementing the bare minimum (list/detail), I barely touched it.
+There were features I knew I should implement, but they were not essential, so I kept postponing them.
+Using Cursor, I managed to add a decent number of features during Golden Week.
+
+Implemented features:
+
+- [Tag list](/tags/)
+- [List of posts with a tag](/tags/プログラミング/)
+- [Keyword search](/search/)
+- Color theme
+- Table of contents
+- Header design improvements
+- Breadcrumbs
+
+I wanted all of these, and I knew what code to write, but I never got around to it.
+
+There are still features I haven't implemented, such as pagination and related posts—things a typical SSG blog has.
+I'll keep working on those.
+
+## Development approach
+
+Cursor mainly offers these three features:
+
+- Smart completion
+- Tab-based predictive edits
+- Natural-language edits
+
+See [Cursor's official features](https://www.cursor.com/ja/features) for details.
+
+This time I primarily used natural-language edits.
+I didn't leave the generated code completely untouched, but I probably changed less than 1%.
+
+## Cursor plans
+
+![Pro Plan](./images/pricing.png)
+
+Currently the plan includes:
+
+- Unlimited completions
+- 500 fast premium requests per month
+- Unlimited slow premium requests
+
+The 500 fast premium requests disappear quickly,
+so the real benefit is "unlimited slow premium requests."
+
+## Code quality
+
+**To be honest, the code quality is not good.**
+Here, "code quality" refers to internal quality characteristics that support maintainability, such as analyzability, modifiability, stability, and testability.
+Generated code often ignores existing implementations and best practices.
+On top of that, it tends to produce code that only satisfies the prompt.
+As a result, it can break existing features or output mediocre code.
+So after generating working code, you must either refactor a bit yourself or ask the LLM to review and improve it.
+
+This is likely partly because I didn't use [Rules](https://docs.cursor.com/context/rules), so there's room to improve.
+However, judging from the current pace, within six months we'll likely see models that surpass `claude-3.7-sonnet`
+and handle code context even more accurately.
+
+## Models
+
+The default available models currently are:
+
+- claude-3.5-sonnet
+- claude-3.7-sonnet
+- gemini-2.5-pro-exp-03-25
+- gemini-2.5-pro
+- o3
+- gpt-4.1
+- gpt-4.0
+- deepseek-r1
+- deepseek-v3
+
+Of course, users can add their own models, but most—including me—probably choose from this list.
+
+## Codebase size
+
+How big is this blog's codebase now?
+Using [tokei](https://github.com/XAMPPRocky/tokei), I got:
+
+```shell
+$ tokei src
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Language              Files        Lines         Code     Comments       Blanks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ CSS                       2          567          446           41           80
+ MDX                      22         5381            0         4108         1273
+ Sass                      3          499          407           10           82
+ SVG                       1         1064         1064            0            0
+ TSX                      93         6981         5963          363          655
+ TypeScript               25         1148          931           66          151
+─────────────────────────────────────────────────────────────────────────────────
+ Markdown                  3          252            0          174           78
+ |- Java                   1            6            6            0            0
+ (Total)                              258            6          174           78
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Total                   149        15898         8817         4762         2319
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+This includes Markdown content, so it is not a clean measure of code size,
+but even if you ignore that noise, it's just under 15k lines.
+Excluding Markdown, it's roughly 10k lines.
+
+Still not much.
+At this size, I didn't run into issues where Cursor couldn't implement correctly due to codebase size.
+But I don't know whether that is because of size, language, framework, or directory structure.
+So going forward, I want to build know-how for using similar services at work (Cursor isn't allowed there)
+on larger codebases and with niche stacks, to get the intended code generation.
+
+## Benefits
+
+The biggest benefit I felt is that I can do other work while Cursor generates code.
+In other words, at this stage, natural-language editing is less about generating high-quality code
+and more like delegating some work to a copilot.
+
+Even now, I'm writing this article while improving the blog.
+Even after I used up the fast requests, the slow requests are still fast enough for me,
+so I keep writing, glance at generated code, and give feedback when it completes.
+
+## Problems
+
+There are problems too.
+
+First, **it sometimes cannot solve problems that a human could fix instantly**.
+When I added color themes to this blog, Cursor's natural-language edits could never make Giscus follow the site theme.
+
+The cause was simple: it should have imported `useTheme` from `next/theme`, but it used a custom `useTheme` I had implemented.
+So the site theme was managed by `next/theme` while Giscus was managed by the custom hook, and the theme never synced.
+A human would notice this quickly, and the actual fix was just a single import line.
+This behavior—trusting existing code (including temporary LLM-generated code) without question and forcing changes to other code to satisfy errors—is common.
+
+I've seen reports of this infinite error loop on Zenn, Qiita, blogs, and social media, but experiencing it is frustrating.
+After all, sometimes you get in minutes what would take 1–2 hours manually,
+so the gap between "works great" and "fails badly" is huge.
+
+Second, **it tries to implement the requested feature at any cost**.
+This likely stems from lack of prompt/rule tuning, but it edits files you don't want touched,
+and throws every possible change at the problem.
+That creates massive diffs, so you end up running `git reset --hard` and rethinking the prompt.
+You can control this by limiting context files, but is it too much to ask for better judgment?
+
+Third, **it doesn't clean up generated code**.
+If it succeeds on the first try, fine. But if you ask it to "make the build pass" or "make tests pass," it will try multiple approaches.
+When it finally succeeds, it reports completion—but leaves behind the failed attempts.
+You have to manually delete the leftovers.
+Worse, when trying a second approach, it sometimes reuses code from the first attempt,
+which can cause it to get lost in its own mess. This happened repeatedly.
+Maybe with better Rules and prompts it can avoid this, but I'd like it to handle that on its own.
+
+## Programming going forward
+
+After experiencing LLM-assisted programming, I feel we're at a point where we must change how we program.
+It's very different from the old GitHub Copilot experience of smart completion and chat-based questions or small edits.
+Especially when the task is not entirely novel but a combination of existing things,
+traditional methods may no longer keep up.
+
+To make this work, I don't think we need something entirely new.
+Rather, we need to take seriously the things that were informally handled by experienced programmers,
+which will raise overall productivity.
+
+What does that mean? Tests, design, documentation, architectural discipline, and best practices like the Single Responsibility Principle.
+Although I say "practice," the actual generation will be done by LLMs, not humans.
+
+As LLMs take over most coding, it becomes crucial to teach them our accumulated know-how and make them practice it.
+Since LLMs understand natural language, documenting the practices that used to be implicit becomes important.
+
+Understanding and practicing maintainable programming is hard.
+Things like DDD (Domain-Driven Design) to move from design to code,
+Clean Architecture at the code level,
+TDD (Test-Driven Development),
+SOLID principles, and so on.
+Even if you hear these, understanding their benefits and practicing them is not easy.
+So adopting them required team-level education.
+But if we document them in a way LLMs can understand, they can scale—and we may get more maintainable programs.
+
+## Programming languages and frameworks
+
+We still don't have programming languages or frameworks specialized for LLM generation,
+but soon some LLM-first languages will likely become mainstream.
+
+- [SudoLang](https://github.com/paralleldrive/sudolang-llm-support)
+- [Vexis](https://medium.com/@DaveThackeray/introducing-the-world-changing-vexis-our-first-ever-ai-programming-language-a90d174387b3)
+- [GenAIScript](https://microsoft.github.io/genaiscript/)
+
+None of the existing ones look especially promising.
+
+Personally, I want a language that can check formal proofs and pre/postconditions (which are hard for humans),
+and allows instructions for LLMs as part of the language—not just comments.
+
+## Conclusion
+
+I used Cursor to improve this blog and reflected on the current state of LLM-assisted coding.
+My impression is that it is both "surprisingly usable" and "still evolving."
+
+LLM-assisted programming has great potential not only for code generation,
+but also for code understanding and improvement.
+For solo developers like me, it's a huge benefit to implement features quickly that I had long postponed.
+
+On the other hand, the quality of generated code still has issues,
+but programmers of the future will need the skill to use LLMs well,
+think at higher levels of abstraction, design, and instruct effectively.

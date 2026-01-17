@@ -1,0 +1,100 @@
+---
+title: Do Local AI Agents Dream of Electric Sheep? (Setup Addendum)
+date: 2025-10-20
+tags: ["Generative AI", "AI Agents", "Local LLM", "mastra", "ollama", "LM Studio", "TypeScript"]
+category: "Generative AI"
+description: "How to configure Ollama + mastra"
+thumbnail: images/mastra_agent.png
+series: "Do Local AI Agents Dream of Electric Sheep?"
+seriesOrder: 2
+amazonAssociate: true
+amazonProductIds:
+  - "現場で活用するためのAIエージェント実践入門"
+---
+
+## Recap
+
+This article is a supplement to [Do Local AI Agents Dream of Electric Sheep? (Environment Setup)](../2025-10-20-local-ai-agent/) covering what I couldn't in the previous post.
+Last time I installed [Ollama](https://ollama.com/) and [LM Studio](https://lmstudio.ai/),
+then ran the [mastra](https://mastra.ai/) sample code using the API server created by LM Studio.
+
+This time I explain how to run the sample using Ollama instead of LM Studio.
+
+## Using Ollama
+
+The [official docs](https://mastra.ai/ja/docs/getting-started/model-providers#%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%97%E3%83%AD%E3%83%90%E3%82%A4%E3%83%80%E3%83%BC) recommend `ollama-ai-provider-v2` for Ollama.
+
+However, there is a bug where agents do not use tools with `ollama-ai-provider-v2`.
+As reported in the issue below, it fails to generate text after tool calls.
+
+- [No text generated when using tools · Issue #40 · nordwestt/ollama-ai-provider-v2](https://github.com/nordwestt/ollama-ai-provider-v2/issues/40)
+
+As noted in the issue, you can avoid this by using `@ai-sdk/openai-compatible` instead.
+
+### src/mastra/agents/weather-agent.ts
+
+Specifically, define an `ollama` variable (name arbitrary) instead of `lmstudio`,
+and set `baseURL` to `localhost` port `11434`, which is Ollama's default.
+If you changed the port, use your own.
+
+```diff src/mastra/agents/weather-agent.ts
+diff --git a/src/mastra/agents/weather-agent.ts b/src/mastra/agents/weather-agent.ts
+index eaedfcb..e22ecb9 100644
+--- a/src/mastra/agents/weather-agent.ts
++++ b/src/mastra/agents/weather-agent.ts
+@@ -10,6 +10,11 @@ const lmstudio = createOpenAICompatible({
+   apiKey: "lm-studio",
+ });
+
++const ollama = createOpenAICompatible({
++  name: "ollama",
++  baseURL: "http://localhost:11434/v1",
++});
++
+ export const weatherAgent = new Agent({
+   name: 'Weather Agent',
+   instructions: `
+@@ -26,7 +31,8 @@ export const weatherAgent = new Agent({
+
+       Use the weatherTool to fetch current weather data.
+ `,
+-  model: lmstudio("openai/gpt-oss-20b"),
++  // model: lmstudio("openai/gpt-oss-20b"),
++  model: ollama("gpt-oss:20b"),
+   tools: { weatherTool },
+   memory: new Memory({
+     storage: new LibSQLStore({
+```
+
+Then use `ollama` for `model` and pass the model name.
+Here I want the `gpt-oss` 20b model, so `gpt-oss:20b`.
+You can check model names with `ollama list`.
+
+```shell
+$ ollama list
+NAME                                ID              SIZE      MODIFIED
+qwen3:8b                            500a1f067a9f    5.2 GB    6 days ago
+llama4:scout                        bf31604e25c2    67 GB     6 days ago
+llama4:latest                       bf31604e25c2    67 GB     6 days ago
+gpt-oss:20b                         aa4295ac10c3    13 GB     12 days ago
+embeddinggemma:latest               85462619ee72    621 MB    13 days ago
+nomic-embed-text:latest             0a109f422b47    274 MB    4 weeks ago
+qwen3:30b-a3b-instruct-2507-fp16    c699578934a3    61 GB     5 weeks ago
+gpt-oss:120b                        f7f8e2f8f4e0    65 GB     6 weeks ago
+Gemma3:27b                          a418f5838eaf    17 GB     5 months ago
+```
+
+### Check it works
+
+Start mastra and enter a prompt.
+
+<Img src="./images/mastra_agent.png" width={800} />
+
+You should get a response. On the right, the model should show as ollama.
+
+## Summary
+
+As a supplement to the previous article, I showed how to run the mastra sample with Ollama instead of LM Studio.
+
+I recommended LM Studio before, but there isn't much difference in practice.
+If the models available on Ollama are sufficient, Ollama is probably fine.

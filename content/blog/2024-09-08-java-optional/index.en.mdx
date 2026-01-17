@@ -1,0 +1,586 @@
+---
+title: About Optional
+date: 2024-09-08
+category: "Programming"
+tags: ["Java", "Programming"]
+---
+
+## Introduction
+
+> Understand the design philosophy! [^seizon]
+
+[^seizon]: ["メディアの違いを理解せよ!" - Nicovideo Encyclopedia](https://dic.nicovideo.jp/a/%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A2%E3%81%AE%E9%81%95%E3%81%84%E3%82%92%E7%90%86%E8%A7%A3%E3%81%9B%E3%82%88%21)
+
+## TL;DR
+
+- Use `Optional` effectively
+- Understand the design philosophy of `Optional`
+- Read this article or [12 recipes for using the Optional class as it is meant to be used](https://blogs.oracle.com/otnjp/post/recipes-for-using-the-optional-class-as-its-meant-to-be-used-ja)
+
+## Optional
+
+[Optional](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html) was introduced to the Java standard library in Java 8.
+`Optional` represents a value that either exists or does not exist.
+In Java, "no value" means `null`.
+Before Java 8, when a variable had no value to assign, you represented that by assigning `null`.
+With `Optional`, the official way is to represent "no value" with an object that represents the absence of a value.
+
+The idea of representing a value that might not exist with a data structure is not new.
+Many languages, starting with [Haskell](https://www.haskell.org/), provide it in their standard libraries.
+I don't know whether it existed as early as [Miranda](https://ja.wikipedia.org/wiki/Miranda), a predecessor of Haskell, but by the 1990s, there were already references to the `Maybe` type constructor.
+In other words, a concept from the 1990s finally made it into Java.
+Haskell itself was released in 1990, before Java (1995).
+
+### `Optional` instances
+
+To create a value wrapped in `Optional`, call one of these static methods:
+
+- [`Optional#ofNullable(T)`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#ofNullable(T))
+- [`Optional#of(T)`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#of(T))
+- [`Optional#empty()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html#empty())
+
+Each has a different purpose, so let's check them one by one.
+
+### `Optional#ofNullable(T)`
+
+```java
+jshell> Optional.ofNullable(null)
+$1 ==> Optional.empty
+```
+
+```java
+jshell> Optional.ofNullable("123")
+$2 ==> Optional[123]
+```
+
+### `Optional#of(T)`
+
+```java
+jshell> Optional.of("123")
+$3 ==> Optional[123]
+```
+
+```java
+jshell> Optional.of(null)
+|  例外java.lang.NullPointerException
+|        at Objects.requireNonNull (Objects.java:209)
+|        at Optional.of (Optional.java:113)
+|        at (#5:1)
+```
+
+### `Optional#empty()`
+
+```java
+jshell> Optional.empty()
+$5 ==> Optional.empty
+```
+
+## How to use `Optional`
+
+## Example using `Optional`
+
+To understand `Optional`, let's consider converting a string to an integer.
+This is a simple example of a computation that can fail.
+If the string is a valid integer format, we expect an `Integer` value.
+
+In Java, it is common to use `Integer#parseInt(String)`.
+
+```java
+jshell> Integer.parseInt("123")
+$6 ==> 123
+```
+
+If the string is not an integer, what happens?
+`Integer#parseInt(String)` throws an unchecked exception `NumberFormatException`.
+
+```java
+jshell> Integer.parseInt("abc")
+|  例外java.lang.NumberFormatException: For input string: "abc"
+|        at NumberFormatException.forInputString (NumberFormatException.java:67)
+|        at Integer.parseInt (Integer.java:668)
+|        at Integer.parseInt (Integer.java:786)
+|        at (#8:1)
+```
+
+So if you want to convert a string that might not be an integer, you end up writing:
+
+```java
+Integer number;
+try {
+  number = Integer.parseInt(str);
+} catch (NumberFormatException e) {
+  // Handle failure
+  number = ...;
+}
+```
+
+Writing this every time is tedious, so you'd want a utility.
+Here we consider two implementations: one without `Optional`, and one with `Optional`.
+
+### Represent failure with `null`
+
+In Java, if a computation fails, it's common to throw an exception or return `null`.
+`Integer#parseInt(String)` throws, but then you must always catch it.
+
+So let's write a utility method that returns `null` instead of throwing.
+
+```java
+jshell> public class NumberUtils {
+   ...>
+   ...>   public static Integer parseInt(String str) {
+   ...>     try {
+   ...>       return Integer.parseInt(str);
+   ...>     } catch (NumberFormatException e) {
+   ...>       return null;
+   ...>     }
+   ...>   }
+   ...> }
+|  次を作成しました: クラス NumberUtils
+```
+
+Try it with integer and non-integer strings.
+
+```java
+jshell> NumberUtils.parseInt("123")
+$9 ==> 123
+```
+
+For non-integer input, it returns `null`.
+
+```java
+jshell> NumberUtils.parseInt("abc")
+$10 ==> null
+```
+
+Now you can write:
+
+```java
+Integer number = NumberUtils.parseInt(str);
+```
+
+This looks nicer than `try`/`catch`.
+But is it really safe?
+
+Let's consider a slightly more complex example: given a tax-excluded price string, compute a tax-included price (10%).
+
+More precisely:
+
+- Price is given in the format `XXX円`
+- If price is unknown, the string `未定` is given
+- If price is known, return the price with 10% tax added
+- If price is unknown, return `未定`
+- If the format is invalid, return something else
+
+Let's define a static method for this.[^static-tax]
+
+[^static-tax]: I can hear the voices saying "You implement tax logic in a static method?".
+
+```java
+public class Price {
+
+  public static String taxIncluded(String price) {
+    // Return price with 10% tax
+  }
+}
+```
+
+Now implement it. To extract the numeric part you could use regex, but here we keep it simple.
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     if (jpPrice == null) {
+   ...>       return null;
+   ...>     }
+   ...>
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return "未定";
+   ...>     }
+   ...>
+   ...>     if (jpPrice.length() > 1 && jpPirce.charAt(jpPrice.length() - 1) == '円') {
+   ...>       String price = jpPrice.substring(0, jpPrice.length() - 1);
+   ...>       Integer priceInt = NumberUtils.parseInt(price);
+   ...>
+   ...>       return ((int) Math.floor(priceInt * 1.1)) + "円";
+   ...>     }
+   ...>
+   ...>     return null;
+   ...>   }
+   ...> }
+|  次を作成しました: クラス Price
+```
+
+We'll round down the tax because we're kind.[^tax-calc]
+If the format is neither `未定` nor `XXX円`, return `null`.
+
+[^tax-calc]: [(Q9) How should we handle rounding when setting tax-included prices?](https://www.mof.go.jp/tax_policy/summary/consumption/a_001.htm#9)
+
+Does it work?
+
+```java
+jshell> Price.taxIncluded("1000円")
+$12 ==> "1100円"
+
+jshell> Price.taxIncluded("未定")
+$13 ==> "未定"
+
+jshell> Price.taxIncluded(null)
+$14 ==> null
+
+jshell> Price.taxIncluded("1,000円")
+|  例外java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because "<local2>" is null
+|        at Price.taxIncluded (#18:15)
+|        at (#20:1)
+```
+
+Oops :dizzy_face:
+
+`NumberUtils#parseInt(String)` returns `null` when conversion fails.
+We forgot to handle that, so fix it.
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     if (jpPrice == null) {
+   ...>       return null;
+   ...>     }
+   ...>
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return "未定";
+   ...>     }
+   ...>
+   ...>     if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+   ...>       String price = jpPrice.substring(0, jpPrice.length() - 1);
+   ...>       Integer priceInt = NumberUtils.parseInt(price);
+   ...>
+   ...>       if (priceInt == null) {
+   ...>         return null;
+   ...>       }
+   ...>
+   ...>       return ((int) Math.floor(priceInt * 1.1)) + "円";
+   ...>     }
+   ...>
+   ...>     return null;
+   ...>   }
+   ...> }
+|  次を変更しました: クラス Price
+```
+
+This is fine now. But the code contains things we don't want to care about in the main logic.
+Specifically:
+
+- When `jpPrice` is `null`
+- When `priceInt` is `null`
+
+Here we intentionally wrote it this way, but we forgot `NumberUtils#parseInt(String)` returns `null` and caused a `NullPointerException`.
+
+Now let's rewrite this using `Optional`.
+
+### Using `Optional`
+
+Finally, the main topic: using `Optional`.
+
+Let's see the code. As with the non-Optional version, start with `NumberUtils`.
+
+```java
+jshell> public class NumberUtils {
+   ...>
+   ...>   public static Optional<Integer> parseIntOptional(String str) {
+   ...>     try {
+   ...>       return Optional.of(Integer.parseInt(str));
+   ...>     } catch (NumberFormatException e) {
+   ...>       return Optional.empty();
+   ...>     }
+   ...>   }
+   ...> }
+|  次を置換しました: クラス NumberUtils
+```
+
+With `Optional`, return `Optional.empty()` instead of `null`, and `Optional.of(T)` on success.
+
+Using `NumberUtils#parseIntOptional(String)`:
+
+```java
+jshell> NumberUtils.parseIntOptional("abc")
+$18 ==> Optional.empty
+
+jshell> NumberUtils.parseIntOptional("123")
+$19 ==> Optional[123]
+```
+
+Now let's write `Price#taxIncluded(String)` using this and `Optional`.
+Different people may write it differently, but here's one approach.
+
+```java
+jshell> public class Price {
+   ...>   public static String taxIncluded(String jpPrice) {
+   ...>     return Optional.ofNullable(jpPrice)
+   ...>         .flatMap(str -> {
+   ...>           if (str.equals("未定")) {
+   ...>             return Optional.of("未定");
+   ...>           }
+   ...>
+   ...>           return Optional.of(str)
+   ...>             .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+   ...>             .map(it -> it.substring(0, it.length() - 1))
+   ...>             .flatMap(NumberUtils::parseIntOptional)
+   ...>             .map(it -> (int) (it * 1.1))
+   ...>             .map(it -> it + "円");
+   ...>         })
+   ...>         .orElse(null);
+   ...>   }
+   ...> }
+|  次を作成しました: クラス Price
+```
+
+Alternatively, you can pull the `未定` logic outside `flatMap`:
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str ->
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"))
+        .orElse(null);
+  }
+}
+```
+
+Test it:
+
+```java
+jshell> Price.taxIncluded("1000円")
+$21 ==> "1100円"
+
+jshell> Price.taxIncluded("未定")
+$22 ==> "未定"
+
+jshell> Price.taxIncluded(null)
+$23 ==> null
+
+jshell> Price.taxIncluded("1,000円")
+$24 ==> null
+```
+
+Now compare the code with and without `Optional`.
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+
+    if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+
+      if (priceInt == null) {
+        return null;
+      }
+
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+```
+
+```java
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str ->
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"))
+        .orElse(null);
+  }
+}
+```
+
+The `Optional` version is shorter in lines, but that's not the point.
+The key is that the `Optional` version focuses on what we want to do (convert string to int and compute tax) without worrying about `null` along the way.
+
+In the non-Optional version, we forgot `NumberUtils#parseInt(String)` can return `null` and got a `NullPointerException`.
+With `Optional`, if conversion fails, `Optional.empty()` is returned, so no `NullPointerException`.
+
+If a computation returns `Optional`, you can flatten it with `flatMap`.
+Then you can write downstream processing in `map`, which only runs on success.
+
+This means you can consider failure only at the end (`Optional#orElse(T)`), not at every step.
+In this requirement, if computation fails, return "something else", so I returned `null`,
+but I was following the non-Optional example. If failure is possible, why not return `Optional` itself?
+
+```java
+jshell> public class Price {
+   ...>   public static Optional<String> taxIncluded(String jpPrice) {
+   ...>     if ("未定".equals(jpPrice)) {
+   ...>       return Optional.of("未定");
+   ...>     }
+   ...>
+   ...>     return Optional.ofNullable(jpPrice)
+   ...>         .flatMap(str ->
+   ...>           Optional.of(str)
+   ...>             .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+   ...>             .map(it -> it.substring(0, it.length() - 1))
+   ...>             .flatMap(NumberUtils::parseIntOptional)
+   ...>             .map(it -> (int) (it * 1.1))
+   ...>             .map(it -> it + "円"));
+   ...>   }
+   ...> }
+|  次を置換しました: クラス Price
+```
+
+If you think, "Returning `null` is fine," you might have forgotten the earlier mistake with `NumberUtils#parseInt(String)`.
+When using that static method, are you confident you will always remember to `null`-check the return value?
+
+## `Optional` represents computations that may fail
+
+We've compared code with and without `Optional`.
+Now let's look at the Javadoc again.
+
+> A container object which may or may not contain a non-null value.
+>
+> ...
+>
+> API Note:
+> Optional is intended primarily for use as a method return type where there is a clear need to represent "no result", and where using null is likely to cause errors. A variable whose type is Optional should never itself be null; it should always point to an Optional instance.
+
+As an object, `Optional` is "a container that may or may not contain a non-null value."
+But if we return `Optional.empty()` on failure and `Optional.of(T)` on success,
+it becomes not just "some value or not", but a way to express success/failure.[^success-failure]
+
+[^success-failure]: In languages without `null`, types like `Optional` (e.g., Haskell's `Maybe`) are often explained as representing success/failure of computations.
+
+With `Optional`, you can write code centered on success, and consider recovery only at the end.
+
+Let's re-examine the tax calculation with that in mind.
+
+```java {7-14}
+public class Price {
+  public static Optional<String> taxIncluded(String jpPrice) {
+    if ("未定".equals(jpPrice)) {
+      return Optional.of("未定");
+    }
+
+    return Optional.ofNullable(jpPrice)
+        .flatMap(str ->
+          Optional.of(str)
+            .filter(it -> it.length() > 1 && it.charAt(it.length() - 1) == '円')
+            .map(it -> it.substring(0, it.length() - 1))
+            .flatMap(NumberUtils::parseIntOptional)
+            .map(it -> (int) (it * 1.1))
+            .map(it -> it + "円"));
+  }
+}
+```
+
+In the `Optional` version, only the success path is highlighted, and failure branches are not explicit.
+You can focus on success without explicit `null` checks.
+
+In contrast, the non-Optional version has failure handling in the main flow, fragmenting the tax logic.
+
+```java {15-17,22}
+public class Price {
+  public static String taxIncluded(String jpPrice) {
+    if (jpPrice == null) {
+      return null;
+    }
+
+    if ("未定".equals(jpPrice)) {
+      return "未定";
+    }
+
+    if (jpPrice.length() > 1 && jpPrice.charAt(jpPrice.length() - 1) == '円') {
+      String price = jpPrice.substring(0, jpPrice.length() - 1);
+      Integer priceInt = NumberUtils.parseInt(price);
+
+      if (priceInt == null) {
+        return null;
+      }
+
+      return ((int) Math.floor(priceInt * 1.1)) + "円";
+    }
+
+    return null;
+  }
+}
+```
+
+This shows that `Optional` lets you keep the intended logic together.
+In this example, failure was only possible for `null` input or invalid formats,
+but even with more possible failures, `Optional` can keep the code focused on the desired processing.
+
+## Benefits of using `Optional`
+
+There are three main benefits:
+
+- Returning `Optional` makes it clear the method may fail
+- Returning `Optional` forces callers to handle the absence of values, improving `null` safety[^real-world]
+- Wrapping with `Optional` allows you to ignore failure paths until the end
+
+[^real-world]: In practice, people unfamiliar with `Optional` often call `Optional#get()` and trigger runtime exceptions :rage:
+
+## Problems with `Optional`
+
+So far I've described the good parts, but `Optional` also has issues.
+
+- It can express success/failure but not the reason for failure
+- Using `Optional`-style code is still not mainstream
+- `Optional` is neither a monad nor a functor
+
+### It expresses success/failure but not the reason
+
+`Optional` can return a value on success, but all failures collapse into `Optional.empty()`.
+So you cannot handle different failure reasons differently.
+
+To express failure reasons, you usually need types like `Either` (`Left`, `Right`) or `Result` (`Ok`, `Err`).
+In `Either`, `Right` holds the success value (right is "correct"), and `Left` holds the failure value.
+Then you can return error values and still use methods like `map` and `filter` that operate on `Right` only.
+
+I hope Java will provide something like this in the standard library one day, but as of Java 21 it does not.
+The most practical option is to use a functional library like [vavr](https://github.com/vavr-io/vavr),
+but introducing such a library in production is hard.
+
+It's partly a skill issue, but minor libraries also carry a [maintenance risk](https://github.com/vavr-io/vavr/issues/2756).
+
+### `Optional`-style code is not mainstream
+
+### `Optional` is neither a monad nor a functor
+
+## Rules when using `Optional`
+
+- [Optional is not Serializable, and usage notes - kishida's Hatena](https://nowokay.hatenablog.com/entry/20150901/1441091495)
+
+## Conclusion
+
+I explained the basic usage and properties of `Optional`.
+
+I hope the world sees at least one fewer `NullPointerException`. I’ll stop here.
+
+## Related articles
+
+- [12 recipes for using the Optional class as it is meant to be used](https://blogs.oracle.com/otnjp/post/recipes-for-using-the-optional-class-as-its-meant-to-be-used-ja)
+- [Team effort! Confronting Null in Java #NULL - Qiita](https://qiita.com/hondaYoshitaka/items/db0aec0e051fdf73e448)

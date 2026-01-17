@@ -1,0 +1,97 @@
+---
+title: Reader Monad
+date: 2025-01-11
+category: Programming
+tags: ["Scala", "Cats", "Programming", "Functional Programming"]
+---
+
+This time I looked at the Reader monad and implemented the sample from the Reader monad page of [All About Monads](https://www.sampou.org/haskell/a-a-monads/html/index.html) using [Cats](https://typelevel.org/cats/).
+I just started using Cats so there may be a better way to write it, but it works for now, so I’ll just post the code.
+
+I think [Cats MTL](https://typelevel.org/cats-mtl/) could make some parts more readable.
+
+```scala
+import cats.Id
+import cats.data.Kleisli.{ask, pure}
+import cats.data.{Reader, ReaderT}
+import cats.syntax.all.*
+
+enum Template {
+  case Text(value: String)
+  case Variable(template: Template)
+  case Quote(template: Template)
+  case Include(template: Template, definitions: List[Definition])
+  case Compound(templates: List[Template])
+}
+
+case class Definition(name: Template, value: Template)
+
+case class Environment(templates: List[(String, Template)], variables: List[(String, String)])
+
+object Template {
+
+  def localVar(name: String, env: Environment): Option[String] =
+    env.variables.find(_._1 == name).map(_._2)
+
+  def lookupTemplate(name: String, env: Environment): Option[Template] =
+    env.templates.find(_._1 == name).map(_._2)
+
+  def addDefs(defs: List[(String, String)], env: Environment): Environment =
+    Environment(env.templates, defs ++ env.variables)
+
+  def resolveDef(definition: Definition): Reader[Environment, (String, String)] =
+    for {
+      name <- resolve(definition.name)
+      value <- resolve(definition.value)
+    } yield (name, value)
+
+  def resolve(template: Template): Reader[Environment, String] =
+    template match {
+      case Text(value) => pure(value)
+      case Variable(template) =>
+        for {
+          varName <- resolve(template)
+          varValue <- ask[Id, Environment].map(localVar(varName, _))
+        } yield varValue.getOrElse("")
+      case Quote(template) =>
+        for {
+          tmplName <- resolve(template)
+          body <- ask[Id, Environment].map(lookupTemplate(tmplName, _))
+        } yield body.map(_.toString).getOrElse("")
+      case Include(template, definitions) =>
+        for {
+          tmplName <- resolve(template)
+          body <- ask[Id, Environment].map(lookupTemplate(tmplName, _))
+          rendered <- body match {
+            case Some(bodyTmpl) => for {
+              defs <- definitions.traverse(resolveDef)
+              rendered <- ReaderT.local(addDefs(defs, _))(resolve(bodyTmpl))
+            } yield rendered
+            case None => ReaderT.pure[Id, Environment, String]("")
+          }
+        } yield rendered
+      case Compound(templates) =>
+        for {
+          resolved <- templates.traverse(resolve)
+        } yield resolved.mkString
+    }
+}
+```
+
+Compared to the Haskell code, the following points were different.
+
+- Haskell's `asks` corresponds to `ReaderT.ask[Id, _].map(...)` in Scala
+  - There is no equivalent to `asks` (maybe?)
+- Haskell's `mapM` corresponds to `traverse` in Scala
+  - [Prelude](https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:mapM)
+    ```haskell
+    mapM :: (Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)
+    ```
+  - [Traverse - cats-docs_2.13 2.12.0 javadoc](https://www.javadoc.io/doc/org.typelevel/cats-docs_2.13/latest/cats/Traverse.html)
+    ```scala
+    def traverse[G[_], A, B](fa: F[A])(f: (A) => G[B])(implicit arg0: Applicative[G]): G[F[B]]
+    ```
+- Type inference doesn't work as well as in Haskell (maybe my style is not great) :cry:
+
+Since I rarely write this kind of code after starting work, I can’t help but think that procedural code might be clearer.
+So I plan to implement the same logic without the Reader monad and compare.

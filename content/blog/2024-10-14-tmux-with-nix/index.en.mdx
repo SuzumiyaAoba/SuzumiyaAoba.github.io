@@ -1,0 +1,48 @@
+---
+title: tmux Default Shell Became sh
+date: 2024-10-14
+category: "Nix"
+tags: ["tmux", "Nix", "home-manager"]
+---
+
+## Introduction
+
+After updating the flake.lock file with Nix, tmux's default shell became `sh`, so I’m writing down the fix.
+
+## tmux 3.5a
+
+There is an issue in home-manager, so if you want primary sources, see the link below.
+
+- [bug: tmux with 'sensibleOnTop' option no longer uses the correct shell · Issue #5952 · nix-community/home-manager](https://github.com/nix-community/home-manager/issues/5952)
+
+When tmux in nixpkgs was updated to 3.5a, `/bin/sh` started being used for new panes ([CHANGELOG](https://github.com/tmux/tmux/blob/tmux-3.5a/CHANGES#L7)).
+
+## Workaround
+
+I don’t know how to change the default shell in tmux 3.5a, so for now I fixed it by pinning tmux to 3.5 as below.
+
+```nix
+{ pkgs, ... }:
+
+{
+  programs.tmux = {
+    enable = true;
+    # see: https://github.com/nix-community/home-manager/issues/5952
+    package = pkgs.tmux.overrideAttrs (old: rec {
+      version = "3.5";
+      src = pkgs.fetchFromGitHub {
+        owner = "tmux";
+        repo = "tmux";
+        rev = version;
+        hash = "sha256-8CRZj7UyBhuB5QO27Y+tHG62S/eGxPOHWrwvh1aBqq0=";
+      };
+    });
+  };
+}
+```
+
+This pins tmux's version under Nix.
+It is nice that with Nix you can easily roll back or pin versions, and it’s easy to reproduce across environments.
+
+I’ll update the article if I find another solution besides pinning.
+I hope this is fixed before 3.6.
