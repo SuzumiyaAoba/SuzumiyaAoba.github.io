@@ -34,7 +34,7 @@ I regularly run `git pull --prune` to clean up merged local branches, so it is i
 
 When using Create a merge commit, I set the following alias in `~/.config/git/config` and delete merged branches with `git delete-merged-branch`.
 
-```
+```text
 [alias]
 	delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|main|master'|xargs git branch -d; git fetch --prune; };f"
 ```

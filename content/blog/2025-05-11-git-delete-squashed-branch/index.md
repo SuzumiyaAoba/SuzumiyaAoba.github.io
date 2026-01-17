@@ -32,7 +32,7 @@ Squash and merge した後にコンフリクトが発生する問題について
 
 Create a merge commit でマージしたときは次の alias を `~/.config/git/config` に設定しているので `git delete-merged-branch` コマンドでマージ済みブランチを削除している。
 
-```
+```toml
 [alias]
 	delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|main|master'|xargs git branch -d; git fetch --prune; };f"
 ```

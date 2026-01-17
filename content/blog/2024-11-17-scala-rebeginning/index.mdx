@@ -49,7 +49,7 @@ Scala でも `var` を使えば再代入はできるけど多くの場面では 
 昔は `sbt` だけ入れればよかったが現在では [Coursier](https://get-coursier.io/) というツールを使うのが一般的なようだ。
 インストール後に `cs list` を実行するとわかるが、これらのコマンド管理が行なえるらしい。
 
-```
+```bash
 $ cs list
 amm
 coursier
@@ -123,7 +123,7 @@ Template applied in /private/tmp/./sample
 
 ディレクトリ構造は以下のようになっている。
 
-```
+```text
 tree sample
 sample
 ├── README.md
@@ -159,7 +159,7 @@ $ cat sample/src/main/scala/Main.scala
 さっそく実行してみよう。
 `sample` ディレクトリに移動して `sbt run` を実行する。
 
-```
+```bash
 $ cd sample
 $ sbt run
 [info] welcome to sbt 1.10.5 (Azul Systems, Inc. Java 17.0.13)

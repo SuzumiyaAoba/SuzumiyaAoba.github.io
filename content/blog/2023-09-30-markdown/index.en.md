@@ -128,7 +128,7 @@ Following text
 
 ## Code
 
-```
+```text
 console.log("Hello, World");
 ```
 

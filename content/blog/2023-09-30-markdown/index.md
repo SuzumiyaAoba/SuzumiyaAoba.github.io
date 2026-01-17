@@ -130,7 +130,7 @@ org では `*` もしくは `-` を使った箇条書きが `ul`
 
 ## コード
 
-```
+```text
 console.log("Hello, World");
 ```
 
