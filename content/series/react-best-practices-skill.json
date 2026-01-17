@@ -1,0 +1,11 @@
+{
+  "name": "react-best-practices",
+  "nameEn": "react-best-practices",
+  "slug": "react-best-practices",
+  "description": "Vercel が公開した react-best-practices を読むシリーズ",
+  "descriptionEn": "A series about reading Vercel's react-best-practices",
+  "posts": [
+    "2026-01-16-react-best-practices",
+    "2026-01-17-react-best-practices-bundle-size-optimization"
+  ]
+}
