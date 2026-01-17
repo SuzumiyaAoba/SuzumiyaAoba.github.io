@@ -29,6 +29,24 @@
       "title": "Javaによる関数型プログラミング ―Java 8ラムダ式とStream",
       "imageUrl": "https://m.media-amazon.com/images/I/81rtHTBa6iL._SY522_.jpg",
       "productUrl": "https://amzn.to/4pq0TAP"
+    },
+    {
+      "id": "プロを目指す人のためのTypeScript入門",
+      "title": "プロを目指す人のためのTypeScript入門 安全なコードの書き方から高度な型の使い方まで (Software Design plus)",
+      "imageUrl": "https://m.media-amazon.com/images/I/81DuhehbGJL._SY522_.jpg",
+      "productUrl": "https://amzn.to/3Ze3GSO"
+    },
+    {
+      "id": "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで",
+      "title": "改訂新版 これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで",
+      "imageUrl": "https://m.media-amazon.com/images/I/613wWS4PL9L._SY522_.jpg",
+      "productUrl": "https://amzn.to/3YNOs6S"
+    },
+    {
+      "id": "Reactハンズオンラーニング",
+      "title": "Reactハンズオンラーニング 第2版 ―Webアプリケーション開発のベストプラクティス",
+      "imageUrl": "https://m.media-amazon.com/images/I/71UAHWUafkS._SY522_.jpg",
+      "productUrl": "https://amzn.to/49rMmzR"
     }
   ]
 }

@@ -3,6 +3,11 @@ title: react-best-practices を覗く (Bundle Size Optimization)
 date: 2026-01-17
 category: プログラミング
 tags: ["Skills", "AI", "LLM", "React"]
+amazonAssociate: true
+amazonProductIds:
+  - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
+  - "Reactハンズオンラーニング"
+  - "プロを目指す人のためのTypeScript入門"
 ---
 
 [前回の記事](../2026-01-16-react-best-practices/)に続いて Vercel が公開した [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) の内容を見ていこう。

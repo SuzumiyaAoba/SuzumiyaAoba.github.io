@@ -3,6 +3,11 @@ title: react-best-practices を覗く (Eliminating Waterfalls)
 date: 2026-01-17
 category: プログラミング
 tags: ["Skills", "AI", "LLM", "React"]
+amazonAssociate: true
+amazonProductIds:
+  - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
+  - "Reactハンズオンラーニング"
+  - "プロを目指す人のためのTypeScript入門"
 ---
 
 Vercel が React の Skills として [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) を公開した。
