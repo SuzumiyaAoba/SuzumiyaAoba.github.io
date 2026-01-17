@@ -4,6 +4,7 @@ date: 2023-09-30
 tags: ["Astro", "Programming"]
 category: Programming
 thumbnail: images/how-standards-proliferate.png
+model: GPT-5.2-Codex
 ---
 
 ## Astro v3

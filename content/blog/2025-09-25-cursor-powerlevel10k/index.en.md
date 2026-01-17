@@ -3,6 +3,7 @@ title: Commands Not Running in Cursor
 date: 2025-09-25
 category: "Cursor"
 tags: ["Cursor", "Terminal", "powerlevel10k", "Zellij"]
+model: GPT-5.2-Codex
 ---
 
 While revisiting my terminal setup, I ran into an issue where commands wouldn't run in Cursor, so I’m recording the cause and fix.

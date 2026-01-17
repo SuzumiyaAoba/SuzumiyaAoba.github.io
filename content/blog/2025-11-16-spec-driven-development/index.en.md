@@ -3,6 +3,7 @@ title: Looking into Spec-Driven Development
 date: 2025-11-16
 category: "Programming"
 tags: ["AI", "Claude Code", "Codex", "Kiro", "Spec-Driven Development"]
+model: GPT-5.2-Codex
 ---
 
 I looked into spec-driven development, which I've been seeing on X (formerly Twitter), Qiita, and Zenn for a while.

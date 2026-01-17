@@ -9,3 +9,4 @@ export { Tab } from "./tab";
 export { Tabs } from "./tabs";
 
 export { HoverContainer, MdxLink } from "./codehike-mentions";
+export { Message } from "./message";

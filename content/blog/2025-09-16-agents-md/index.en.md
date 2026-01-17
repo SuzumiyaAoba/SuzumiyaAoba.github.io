@@ -7,6 +7,7 @@ amazonAssociate: true
 amazonProductIds:
   - "実践Claude Code入門"
   - "Claude CodeによるAI駆動開発"
+model: GPT-5.2-Codex
 ---
 
 ## TL;DR

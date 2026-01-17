@@ -4,6 +4,7 @@ date: 2023-09-30
 category: "Test"
 tags: ["Test"]
 draft: true
+model: GPT-5.2-Codex
 ---
 
 ## org-mode

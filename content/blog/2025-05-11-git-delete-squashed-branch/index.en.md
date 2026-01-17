@@ -3,6 +3,7 @@ title: Cleaning Branches After Squash and Merge
 date: 2025-05-11
 category: Programming
 tags: ["Programming", "git"]
+model: GPT-5.2-Codex
 ---
 
 ## Introduction

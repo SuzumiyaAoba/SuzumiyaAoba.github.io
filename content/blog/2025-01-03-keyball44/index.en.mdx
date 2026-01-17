@@ -3,6 +3,7 @@ title: Built a Keyball44
 date: 2025-01-04
 tags: ["Keyball", "Custom Keyboard"]
 category: Custom Keyboard
+model: GPT-5.2-Codex
 ---
 
 ## Introduction
@@ -115,11 +116,11 @@ but for now three layers are enough.
 
 - A general layout that does not deviate much from QWERTY
 - The following keys are on the thumbs:
-  - <kbd>Ctrl</kbd>
-  - <kbd>Backspace</kbd>
-  - <kbd>Cmd</kbd>
-  - <kbd>Enter</kbd>
-  - <kbd>Space</kbd>
+  - `Ctrl`
+  - `Backspace`
+  - `Cmd`
+  - `Enter`
+  - `Space`
 - No automatic mouse layer
 - Right-hand trackball
 - No function keys
@@ -142,47 +143,47 @@ I configure the keymap by editing source code (not using Remap), so I cannot sha
 
 Key points:
 
-- The leftmost column follows the common order: <kbd>ESC</kbd>, <kbd>TAB</kbd>, <kbd>Shift</kbd>
-  - I do not use <kbd>CAPS LOCK</kbd>, so it is not assigned
-- Left thumb keys (right to left): <kbd>Cmd</kbd>, <kbd>Ctrl</kbd>, <kbd>Backspace</kbd>
+- The leftmost column follows the common order: `ESC`, `TAB`, `Shift`
+  - I do not use `CAPS LOCK`, so it is not assigned
+- Left thumb keys (right to left): `Cmd`, `Ctrl`, `Backspace`
 - A key to switch to `Layer 1` sits to the left of those three thumb keys
-- Right thumb keys (left to right): <kbd>Enter</kbd>, <kbd>Space</kbd>
+- Right thumb keys (left to right): `Enter`, `Space`
 - The key to the right of the trackball switches to `Layer 2`
-- <kbd>Alt</kbd> is placed where right shift normally is
+- `Alt` is placed where right shift normally is
 
-Numbers, <kbd>`</kbd>, <kbd>[</kbd>, <kbd>]</kbd>, <kbd>=</kbd>, <kbd>\</kbd> are assigned to `Layer 1` below.
+Numbers, `` ` ``, `[`, `]`, `=`, `\` are assigned to `Layer 1` below.
 
 #### Thumbs
 
 Thumbs are where personal preference shows.
 This layout works well for me.
-I use Emacs often, so assigning <kbd>Ctrl</kbd> to the thumb solves the Emacs pinky problem.
+I use Emacs often, so assigning `Ctrl` to the thumb solves the Emacs pinky problem.
 
-(Even without a split keyboard that supports thumb keys, I assign <kbd>Ctrl</kbd> to <kbd>Caps Lock</kbd> (above left shift),
+(Even without a split keyboard that supports thumb keys, I assign `Ctrl` to `Caps Lock` (above left shift),
 so the pinky load is not that high anyway.)
 
 I always use this layout for the three left-thumb keys and two right-thumb keys,
 but I change the surrounding thumb keys depending on the keyboard.
 For example, on keyboards like [Corne V4 Cherry](https://shop.yushakobo.jp/products/8961) or [Corne Cherry V3](https://shop.yushakobo.jp/products/corne-cherry-v3)
-that allow three right-thumb keys, I assign <kbd>MO(1)</kbd> (which is on the left thumb here) to the third right-thumb key
+that allow three right-thumb keys, I assign `MO(1)` (which is on the left thumb here) to the third right-thumb key
 (the position where the Keyball's ball is).
-On the Keyball66, I assign <kbd>Alt</kbd> to <kbd>MO(1)</kbd> and keep right shift as shift.
+On the Keyball66, I assign `Alt` to `MO(1)` and keep right shift as shift.
 I have gotten used to having shift only on the left hand, so I might adjust the Keyball66 layout too.
 
 #### Escape
 
-On the Keyball44 I put <kbd>ESC</kbd> in the top left.
+On the Keyball44 I put `ESC` in the top left.
 I do the same on the Corne Cherry V3.
 It feels like home.
 
-However, on my daily Keyball66 I put <kbd>ESC</kbd> in the bottom left and press it with my palm.
-Some people press <kbd>Ctrl</kbd> with the palm on a standard JIS layout, and I do the same for <kbd>ESC</kbd>.
-When I use Vim, I prefer <kbd>Ctrl-[</kbd> instead of <kbd>ESC</kbd>, so <kbd>ESC</kbd> isn't used that much.
+However, on my daily Keyball66 I put `ESC` in the bottom left and press it with my palm.
+Some people press `Ctrl` with the palm on a standard JIS layout, and I do the same for `ESC`.
+When I use Vim, I prefer `Ctrl-[` instead of `ESC`, so `ESC` isn't used that much.
 This layout is enough for me.
 
 #### Fifth left-thumb key
 
-The fifth key from the right on the left thumb (left of <kbd>MO(1)</kbd>) is disabled.
+The fifth key from the right on the left thumb (left of `MO(1)`) is disabled.
 This position is hard for me to use on any keyboard.
 Bending the thumb inward that far or trying to press it with the ring finger just never worked for me.
 And I can assign all the keys I need without it, so I have no motivation to use it.
@@ -192,7 +193,7 @@ And I can assign all the keys I need without it, so I have no motivation to use 
 `Layer 2` supplements `Layer 1`.
 With 44 keys, you cannot fit numbers and some symbols into a single layer.
 So the overflow goes into `Layer 1`.
-`Layer 1` is active only while holding the <kbd>MO(1)</kbd> key on the left thumb of `Layer 0`.
+`Layer 1` is active only while holding the `MO(1)` key on the left thumb of `Layer 0`.
 
 ```c
 [1] = LAYOUT_universal(
@@ -203,13 +204,13 @@ So the overflow goes into `Layer 1`.
 ),
 ```
 
-Many people place symbols that normally require <kbd>Shift</kbd> in the empty spaces under or beside the number row.
+Many people place symbols that normally require `Shift` in the empty spaces under or beside the number row.
 I do not like layouts that deviate far from QWERTY, so I keep the number row in the usual order on the next row down.
-I assign <kbd>[</kbd> and <kbd>]</kbd> to the positions of <kbd>b</kbd> and <kbd>n</kbd>.
+I assign `[` and `]` to the positions of `b` and `n`.
 This seems fairly common on low-key keyboards like the Keyball44.
 
-I also place <kbd>`</kbd>, <kbd>=</kbd>, and <kbd>\</kbd> close to their QWERTY positions,
-which reduces the burden of memorizing key locations (except for <kbd>[</kbd> and <kbd>]</kbd>).
+I also place `` ` ``, `=`, and `\` close to their QWERTY positions,
+which reduces the burden of memorizing key locations (except for `[` and `]`).
 
 ### `Layer 3`
 
@@ -234,15 +235,15 @@ Left hand for window control, right hand for mouse and cursor.
 #### Left-hand controls
 
 The left-hand bindings are macOS-specific.
-I mapped window maximize, left, and right to <kbd>e</kbd>, <kbd>s</kbd>, and <kbd>f</kbd>, like WASD.
-Pressing <kbd>c</kbd> centers the window, which is useful when I want three windows on an ultrawide display.
+I mapped window maximize, left, and right to `e`, `s`, and `f`, like WASD.
+Pressing `c` centers the window, which is useful when I want three windows on an ultrawide display.
 
-macOS has workspaces, and I mapped switching left/right to <kbd>a</kbd> and <kbd>g</kbd>.
-The default is <kbd>Ctrl-Left</kbd> and <kbd>Ctrl-Right</kbd>, so you can use it without extra keys,
+macOS has workspaces, and I mapped switching left/right to `a` and `g`.
+The default is `Ctrl-Left` and `Ctrl-Right`, so you can use it without extra keys,
 but it requires three keys at once. For frequent use I prefer easier keypresses,
-so I chose <kbd>a</kbd> and <kbd>g</kbd> as intuitive positions.
+so I chose `a` and `g` as intuitive positions.
 
-I mapped Mission Control and App Expose to <kbd>w</kbd> and <kbd>r</kbd>, respectively.
+I mapped Mission Control and App Expose to `w` and `r`, respectively.
 
 I use these keys for window and workspace control.
 There are still unused keys, so I could map more window actions or Raycast.
@@ -253,14 +254,14 @@ Now that these bindings are familiar, it may be time to add more.
 
 Right-hand controls are simple.
 
-I mapped left click and right click to <kbd>u</kbd> and <kbd>o</kbd>.
-I set scroll mode on <kbd>-</kbd>.
-While holding <kbd>-</kbd>, the trackball scrolls vertically, and with <kbd>Shift</kbd> held it scrolls horizontally.
+I mapped left click and right click to `u` and `o`.
+I set scroll mode on `-`.
+While holding `-`, the trackball scrolls vertically, and with `Shift` held it scrolls horizontally.
 That is the mouse setup.
 Scrolling is a bit special, but the click buttons are placed where the hand naturally rests when using the ball,
 so it should feel natural to most people.
 
-Cursor keys are mapped to <kbd>i</kbd>, <kbd>j</kbd>, <kbd>k</kbd>, <kbd>l</kbd> for up, left, down, right.
+Cursor keys are mapped to `i`, `j`, `k`, `l` for up, left, down, right.
 Some people might prefer Vim bindings.
 
 ## Future plans

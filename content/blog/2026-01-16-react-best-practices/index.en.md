@@ -3,6 +3,7 @@ title: Looking into react-best-practices (Eliminating Waterfalls)
 date: 2026-01-17
 category: Programming
 tags: ["Skills", "AI", "LLM", "React"]
+model: GPT-5.2-Codex
 ---
 
 Vercel published [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) as a React Skill.
@@ -123,7 +124,7 @@ https://github.com/vercel-labs/agent-skills/blob/main/skills/react-best-practice
 > Instead of waiting inside async components, show UI while data is loading by using Suspense boundaries.
 
 This is React-specific.
-With [<Suspense>](https://ja.react.dev/reference/react/Suspense), which became official in React 18,
+With [`<Suspense>`](https://ja.react.dev/reference/react/Suspense), which became official in React 18,
 you can specify a fallback component to show while async work in a component is running.
 When data loading finishes, it automatically renders the async component result.
 Using `<Suspense>` allows the screen to appear without waiting for some component's data.

@@ -4,6 +4,7 @@ date: 2026-01-16
 tags: ["Design", "Vibe Coding", "Poem"]
 category: Programming
 thumbnail: images/renewal.png
+model: GPT-5.2-Codex
 ---
 
 I renewed the site's design.

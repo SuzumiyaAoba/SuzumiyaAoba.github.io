@@ -14,6 +14,7 @@ export type BlogFrontmatter = {
   layout?: string;
   amazonAssociate?: boolean;
   amazonProductIds?: string[];
+  model?: string;
 };
 
 export type BlogPost = {
@@ -137,6 +138,7 @@ function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
           ),
         }
       : {}),
+    ...(typeof data["model"] === "string" ? { model: data["model"] } : {}),
   };
 }
 

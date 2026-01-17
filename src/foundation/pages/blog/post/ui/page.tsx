@@ -17,6 +17,7 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
+import { Message } from "@/shared/ui/mdx";
 import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
@@ -86,6 +87,8 @@ export default async function Page({ params, locale }: PageProps) {
   const primaryContent = isEn ? postEn?.content : postJa?.content;
   const fallbackContent = isEn ? postJa?.content : postEn?.content;
   const contentSource = primaryContent ?? fallbackContent ?? post.content;
+  const translationModel = postEn?.frontmatter.model;
+  const originalPath = toLocalePath(`/blog/post/${slug}`, "ja");
   const scope = primaryContent
     ? await loadMdxScope(primaryContent, slug)
     : fallbackContent
@@ -165,6 +168,12 @@ export default async function Page({ params, locale }: PageProps) {
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
           <div className="flex flex-col w-full min-w-0">
             <article className="prose prose-neutral min-w-0 max-w-none font-sans">
+              {isEn && translationModel ? (
+                <Message title="Notes" variant="info" defaultOpen>
+                  This article was translated by {translationModel}. The original is{" "}
+                  <a href={originalPath}>here</a>.
+                </Message>
+              ) : null}
               <div>{content}</div>
             </article>
             <div>

@@ -3,6 +3,7 @@ title: Aircraft Boarding Strategy
 date: 2025-04-15
 category: Diary
 tags: ["Optimization", "Diary"]
+model: GPT-5.2-Codex
 ---
 
 ## Prologue
