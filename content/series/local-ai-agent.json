@@ -1,7 +1,9 @@
 {
   "name": "ローカル AI エージェントは電気羊の夢を見るのか",
+  "nameEn": "Do Local AI Agents Dream of Electric Sheep?",
   "slug": "local-ai-agent",
   "description": "ローカル環境で動作する AI エージェントの構築と活用について探求するシリーズ",
+  "descriptionEn": "A series exploring how to build and use AI agents that run in a local environment",
   "posts": [
     "2025-10-18-local-ai-agent",
     "2025-10-20-local-ai-agent",

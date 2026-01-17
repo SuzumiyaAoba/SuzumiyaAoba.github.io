@@ -22,7 +22,7 @@ type PageProps = {
 export default async function Page({ params, locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
   const { series: slug } = await params;
-  const series = await getSeriesBySlug(slug);
+  const series = await getSeriesBySlug(slug, resolvedLocale);
 
   if (!series) {
     notFound();

@@ -15,7 +15,7 @@ type PageProps = {
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
-  const seriesList = await getSeriesList();
+  const seriesList = await getSeriesList(resolvedLocale);
   const pagePath = toLocalePath("/series", resolvedLocale);
 
   return (
