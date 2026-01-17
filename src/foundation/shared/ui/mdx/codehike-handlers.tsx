@@ -3,6 +3,8 @@ import { InnerLine } from "codehike/code";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui/collapsible";
+
 export const lineNumbers: AnnotationHandler = {
   name: "line-numbers",
   Line: (props) => {
@@ -112,7 +114,7 @@ export const callout: AnnotationHandler = {
 };
 
 const collapseIcon = (
-  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform group-open:-rotate-180" />
+  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform group-data-[state=open]/collapse:-rotate-180" />
 );
 
 export const collapse: AnnotationHandler = {
@@ -134,22 +136,23 @@ export const collapse: AnnotationHandler = {
       },
     ];
   },
-  Block: ({ annotation, children }) => {
-    return (
-      <details className="group" open={annotation.query !== "collapsed"}>
-        {children}
-      </details>
-    );
-  },
+  Block: ({ annotation, children }) => (
+    <Collapsible
+      className="group/collapse not-prose"
+      defaultOpen={annotation.query !== "collapsed"}
+    >
+      {children}
+    </Collapsible>
+  ),
 };
 
 export const collapseTrigger: AnnotationHandler = {
   name: "CollapseTrigger",
   onlyIfAnnotated: true,
   AnnotatedLine: ({ ...props }) => (
-    <summary className="cursor-pointer list-none">
+    <CollapsibleTrigger className="flex w-full cursor-pointer items-start gap-2 bg-transparent p-0 text-left">
       <InnerLine merge={props} data={{ icon: collapseIcon }} />
-    </summary>
+    </CollapsibleTrigger>
   ),
   Line: (props) => {
     const icon = props.data?.["icon"] as ReactNode;
@@ -164,7 +167,7 @@ export const collapseTrigger: AnnotationHandler = {
 
 export const collapseContent: AnnotationHandler = {
   name: "CollapseContent",
-  Block: ({ children }) => <div className="pl-5">{children}</div>,
+  Block: ({ children }) => <CollapsibleContent className="pl-5">{children}</CollapsibleContent>,
 };
 
 export const tooltip: AnnotationHandler = {
