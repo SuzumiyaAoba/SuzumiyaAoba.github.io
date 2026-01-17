@@ -3,8 +3,6 @@ import { InnerLine } from "codehike/code";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui/collapsible";
-
 export const lineNumbers: AnnotationHandler = {
   name: "line-numbers",
   Line: (props) => {
@@ -114,7 +112,7 @@ export const callout: AnnotationHandler = {
 };
 
 const collapseIcon = (
-  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform group-data-[state=open]/collapse:-rotate-180" />
+  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform group-open:-rotate-180" />
 );
 
 export const collapse: AnnotationHandler = {
@@ -137,23 +135,35 @@ export const collapse: AnnotationHandler = {
     ];
   },
   Block: ({ annotation, children }) => (
-    <Collapsible
-      className="group/collapse not-prose"
-      defaultOpen={annotation.query !== "collapsed"}
+    <details
+      className="group not-prose my-0 rounded-none border-0 bg-transparent px-0 py-0"
+      open={annotation.query !== "collapsed"}
     >
       {children}
-    </Collapsible>
+    </details>
   ),
 };
 
 export const collapseTrigger: AnnotationHandler = {
   name: "CollapseTrigger",
   onlyIfAnnotated: true,
-  AnnotatedLine: ({ ...props }) => (
-    <CollapsibleTrigger className="flex w-full cursor-pointer items-start gap-2 bg-transparent p-0 text-left">
-      <InnerLine merge={props} data={{ icon: collapseIcon }} />
-    </CollapsibleTrigger>
-  ),
+  AnnotatedLine: ({ lineNumber, totalLines, children }) => {
+    const width = (totalLines ?? 1).toString().length + 1;
+    return (
+      <summary className="flex w-full cursor-pointer list-none items-start font-normal [&::-webkit-details-marker]:hidden">
+        <span
+          className="mr-4 select-none text-right text-muted-foreground"
+          style={{ minWidth: `${width}ch` }}
+        >
+          {lineNumber}
+        </span>
+        <span className="inline-flex min-w-0 items-start gap-2">
+          <span className="pt-0.5">{collapseIcon}</span>
+          <span className="min-w-0 flex-1">{children}</span>
+        </span>
+      </summary>
+    );
+  },
   Line: (props) => {
     const icon = props.data?.["icon"] as ReactNode;
     return (
@@ -167,7 +177,7 @@ export const collapseTrigger: AnnotationHandler = {
 
 export const collapseContent: AnnotationHandler = {
   name: "CollapseContent",
-  Block: ({ children }) => <CollapsibleContent className="pl-5">{children}</CollapsibleContent>,
+  Block: ({ children }) => <div className="pl-5">{children}</div>,
 };
 
 export const tooltip: AnnotationHandler = {

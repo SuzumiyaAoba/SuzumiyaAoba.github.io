@@ -33,15 +33,15 @@ export function CustomCodeBlock({
       )}
       handlers={[
         ...handlers,
+        collapse,
+        collapseTrigger,
+        collapseContent,
         lineNumbers,
         hover,
         mark,
         classNameHandler,
         diff,
         callout,
-        collapse,
-        collapseTrigger,
-        collapseContent,
         footnotes,
       ]}
     />
