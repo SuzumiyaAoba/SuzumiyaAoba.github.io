@@ -316,7 +316,7 @@
   }
   .prose th,
   .prose td {
-    @apply border-b border-border/60 py-2 text-left align-top;
+    @apply border-b border-border/60 px-3 py-2 text-left align-top;
   }
   .prose tbody tr:nth-child(even) {
     @apply bg-muted/40;
