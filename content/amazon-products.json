@@ -4,49 +4,64 @@
       "id": "TAPL",
       "title": "型システム入門 プログラミング言語と型の理論 Kindle版",
       "imageUrl": "https://m.media-amazon.com/images/I/81pEdMiseFL._SY522_.jpg",
-      "productUrl": "https://amzn.to/49oHpX7"
+      "productUrl": "https://amzn.to/49oHpX7",
+      "tags": ["型理論"]
     },
     {
       "id": "実践Claude Code入門",
       "title": "実践Claude Code入門―現場で活用するためのAIコーディングの思考法",
       "imageUrl": "https://m.media-amazon.com/images/I/81kh9LnNRIL._SY522_.jpg",
-      "productUrl": "https://amzn.to/4qA1HDW"
+      "productUrl": "https://amzn.to/4qA1HDW",
+      "tags": ["Claude Code"]
     },
     {
       "id": "Claude CodeによるAI駆動開発",
       "title": "Claude CodeによるAI駆動開発入門",
       "imageUrl": "https://m.media-amazon.com/images/I/71lGGWE2CuL._SY522_.jpg",
-      "productUrl": "https://amzn.to/4q7zbKa"
+      "productUrl": "https://amzn.to/4q7zbKa",
+      "tags": ["Claude Code"]
     },
     {
       "id": "現場で活用するためのAIエージェント実践入門",
       "title": "現場で活用するためのAIエージェント実践入門",
       "imageUrl": "https://m.media-amazon.com/images/I/71pMju+I6+L._SY522_.jpg",
-      "productUrl": "https://amzn.to/3YGwjbf"
+      "productUrl": "https://amzn.to/3YGwjbf",
+      "tags": ["AI", "生成AI", "LLM", "AIエージェント"]
+    },
+    {
+      "id": "Effective Java 第3版",
+      "title": "Effective Java 第3版",
+      "imageUrl": "https://m.media-amazon.com/images/I/71pPuo1sYzL._SY522_.jpg",
+      "productUrl": "https://amzn.to/4jOFvE3",
+      "tags": ["Java"]
     },
     {
       "id": "Javaによる関数型プログラミング",
       "title": "Javaによる関数型プログラミング ―Java 8ラムダ式とStream",
       "imageUrl": "https://m.media-amazon.com/images/I/81rtHTBa6iL._SY522_.jpg",
-      "productUrl": "https://amzn.to/4pq0TAP"
+      "productUrl": "https://amzn.to/4pq0TAP",
+      "tags": ["Java"]
     },
     {
       "id": "プロを目指す人のためのTypeScript入門",
       "title": "プロを目指す人のためのTypeScript入門 安全なコードの書き方から高度な型の使い方まで (Software Design plus)",
       "imageUrl": "https://m.media-amazon.com/images/I/81DuhehbGJL._SY522_.jpg",
-      "productUrl": "https://amzn.to/3Ze3GSO"
+      "productUrl": "https://amzn.to/3Ze3GSO",
+      "tags": ["TypeScript"]
     },
     {
       "id": "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで",
       "title": "改訂新版 これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで",
       "imageUrl": "https://m.media-amazon.com/images/I/613wWS4PL9L._SY522_.jpg",
-      "productUrl": "https://amzn.to/3YNOs6S"
+      "productUrl": "https://amzn.to/3YNOs6S",
+      "tags": ["React"]
     },
     {
       "id": "Reactハンズオンラーニング",
       "title": "Reactハンズオンラーニング 第2版 ―Webアプリケーション開発のベストプラクティス",
       "imageUrl": "https://m.media-amazon.com/images/I/71UAHWUafkS._SY522_.jpg",
-      "productUrl": "https://amzn.to/49rMmzR"
+      "productUrl": "https://amzn.to/49rMmzR",
+      "tags": ["React"]
     }
   ]
 }

@@ -9,7 +9,7 @@ import { resolveContentRoot } from "@/shared/lib/content-root";
 import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
-import { getAmazonProductsByIds } from "@/shared/lib/amazon-products";
+import { getAmazonProductsByIds, getAmazonProductsByTags } from "@/shared/lib/amazon-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { getSiteUrl } from "@/shared/lib/site-url";
@@ -93,13 +93,23 @@ export default async function Page({ params, locale }: PageProps) {
     : fallbackContent
       ? await loadMdxScope(fallbackContent, slug)
       : {};
-  const [content, headings, amazonProducts] = await Promise.all([
+  const explicitProductIds = post.frontmatter.amazonProductIds ?? [];
+  const [content, headings, explicitProducts] = await Promise.all([
     renderMdx(contentSource, { basePath: `/contents/blog/${slug}`, scope }),
     getTocHeadings(contentSource),
-    post.frontmatter.amazonProductIds
-      ? getAmazonProductsByIds(post.frontmatter.amazonProductIds)
-      : Promise.resolve([]),
+    explicitProductIds.length > 0 ? getAmazonProductsByIds(explicitProductIds) : Promise.resolve([]),
   ]);
+  const prioritizedProducts = explicitProducts.slice(0, 3);
+  const remainingSlots = 3 - prioritizedProducts.length;
+  const tagProducts =
+    remainingSlots > 0 && tags.length > 0
+      ? await getAmazonProductsByTags(tags, {
+          excludeIds: prioritizedProducts.map((product) => product.id),
+          limit: remainingSlots,
+        })
+      : [];
+  const amazonProducts = [...prioritizedProducts, ...tagProducts];
+  const shouldShowAmazonAssociate = amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -175,7 +185,7 @@ export default async function Page({ params, locale }: PageProps) {
               {amazonProducts.length > 0 ? (
                 <AmazonProductSection products={amazonProducts} className="mt-8" />
               ) : null}
-              {post.frontmatter.amazonAssociate ? (
+              {shouldShowAmazonAssociate ? (
                 <div className="mt-6">
                   <AmazonAssociate />
                 </div>
