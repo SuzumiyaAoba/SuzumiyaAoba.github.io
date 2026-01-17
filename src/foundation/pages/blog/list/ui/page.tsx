@@ -83,16 +83,14 @@ export default async function Page({ locale }: PageProps) {
 
         <ul className="space-y-5">
           {pagePosts.map((variant) => {
-            const post = resolvedLocale === "en" ? variant.en ?? variant.ja : variant.ja ?? variant.en;
+            const post =
+              resolvedLocale === "en" ? (variant.en ?? variant.ja) : (variant.ja ?? variant.en);
             if (!post) return null;
             const title = post.frontmatter.title || variant.slug;
             const tags = post.frontmatter.tags ?? [];
             const category = post.frontmatter.category;
             const altTitle = title;
-            const thumbnail = resolveThumbnail(
-              variant.slug,
-              post.frontmatter.thumbnail,
-            );
+            const thumbnail = resolveThumbnail(variant.slug, post.frontmatter.thumbnail);
             const isFallback = thumbnail === "/icon.svg";
             return (
               <li key={variant.slug}>
@@ -140,7 +138,10 @@ export default async function Page({ locale }: PageProps) {
                             <Tag
                               key={tag}
                               tag={tag}
-                              href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, resolvedLocale)}
+                              href={toLocalePath(
+                                `/tags/${encodeURIComponent(tag)}`,
+                                resolvedLocale,
+                              )}
                               className="bg-muted text-xs font-medium text-muted-foreground"
                             />
                           ))}

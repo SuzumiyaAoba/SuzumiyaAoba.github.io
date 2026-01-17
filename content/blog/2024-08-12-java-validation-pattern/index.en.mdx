@@ -131,7 +131,7 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
   skipPath={4}
 />
 
-Whether validation succeeds is determined by the [`Matcher#matches`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/regex/Matcher.html#matches()) method.
+Whether validation succeeds is determined by the [`Matcher#matches`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/regex/Matcher.html#matches()>) method.
 `Matcher#matches` checks whether the **entire string** matches the regular expression.
 If only part of the string matches, validation fails.
 Therefore, for the `@Pattern` annotation, validation succeeds if the entire string matches the regex even without `^` and `$`.

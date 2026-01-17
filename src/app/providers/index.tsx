@@ -9,9 +9,7 @@ type AppProvidersProps = {
 export function AppProviders({ children }: AppProvidersProps): ReactElement {
   return (
     <ThemeProvider>
-      <NuqsProvider>
-        {children}
-      </NuqsProvider>
+      <NuqsProvider>{children}</NuqsProvider>
     </ThemeProvider>
   );
 }

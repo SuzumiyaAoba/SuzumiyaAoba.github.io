@@ -232,16 +232,16 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
       const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
       // スタックレイアウト
-      const stack = d3
+      const stackGenerator = d3
         .stack<any>()
         .keys(group.metrics)
         .order(d3.stackOrderNone)
         .offset(d3.stackOffsetNone);
 
-      const stackedData = stack(parseData);
+      const stackedData = stackGenerator(parseData);
 
       // エリア生成
-      const area = d3
+      const areaGenerator = d3
         .area<any>()
         .x((d) => x(d.data.year))
         .y0((d) => y(d[0]))
@@ -298,7 +298,7 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
           .attr("fill", `url(#pattern-${patternIndex % patterns.length}-${groupIndex})`)
           .attr("stroke", strokeColor)
           .attr("stroke-width", 1)
-          .attr("d", area);
+          .attr("d", areaGenerator);
       });
 
       // レジェンド

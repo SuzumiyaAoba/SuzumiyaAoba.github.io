@@ -68,10 +68,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
   const [pagefindErrorDetail, setPagefindErrorDetail] = useState("");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const t = useCallback(
-    (ja: string, en: string) => (locale === "en" ? en : ja),
-    [locale],
-  );
+  const t = useCallback((ja: string, en: string) => (locale === "en" ? en : ja), [locale]);
 
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {

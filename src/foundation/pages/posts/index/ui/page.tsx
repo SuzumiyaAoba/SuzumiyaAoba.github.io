@@ -1,4 +1,3 @@
-
 import { getPostSlugs } from "../lib";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 

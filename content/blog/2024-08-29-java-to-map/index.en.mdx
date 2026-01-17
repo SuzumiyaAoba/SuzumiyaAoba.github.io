@@ -8,7 +8,7 @@ model: GPT-5.2-Codex
 
 ## Introduction
 
-This article describes caveats of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)), which is used to convert a `Stream` to a `Map`.
+This article describes caveats of [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)>), which is used to convert a `Stream` to a `Map`.
 Following [the trap of `Stream#toList()`](../2024-08-29-java-to-map), this is another post about how to use `Stream`.
 `Stream` is convenient, but it feels like a tragic monster trapped in Java's fences.
 Compared with libraries in other languages that provide similar functionality, isn't the overall API rather awkward?
@@ -27,7 +27,7 @@ I started writing this article and then looked up existing blog posts, only to f
 
 ### `Collectors#toMap` with two arguments
 
-The signature of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)) with two arguments is as follows.
+The signature of [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)>) with two arguments is as follows.
 
 ```java
 public static <T, K, U> Collector<T, ?, Map<K,U>> toMap(
@@ -98,7 +98,7 @@ but it is very troublesome that unchecked exceptions thrown by standard APIs inc
 
 ## `Collectors#toMap` with three arguments
 
-The signature of [`Collectors#toMap`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator)) with three arguments is as follows.
+The signature of [`Collectors#toMap`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator)>) with three arguments is as follows.
 
 ```java
 public static <T, K, U> Collector<T,?,Map<K,U>> toMap(
@@ -205,7 +205,7 @@ You probably won't use it like this, but you can start with an initialized map a
 
 ## What if I want duplicates as a `List`?
 
-Use [Collectors#groupingBy](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function)).
+Use [Collectors#groupingBy](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function)>).
 
 However, if you've understood `Collectors#toMap` behavior from this article, you'll realize you can implement it with `Collectors#toMap` as well.
 For example, by writing the following for `valueMapper` and `mergeFunction`, you can get the same result.

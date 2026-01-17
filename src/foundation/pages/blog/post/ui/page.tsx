@@ -24,7 +24,6 @@ import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
-
 type PageProps = {
   params: Promise<{ slug: string }>;
   locale?: Locale;
@@ -68,7 +67,7 @@ export default async function Page({ params, locale }: PageProps) {
     getAdjacentPostsVariants(slug),
   ]);
 
-  const post = isEn ? postEn ?? postJa : postJa ?? postEn;
+  const post = isEn ? (postEn ?? postJa) : (postJa ?? postEn);
 
   if (!post) {
     notFound();
@@ -139,12 +138,8 @@ export default async function Page({ params, locale }: PageProps) {
           className="mb-4"
         />
         <header className="mb-10 space-y-3">
-          <p className="text-sm text-muted-foreground">
-            {post.frontmatter.date}
-          </p>
-          <h1 className="text-3xl font-semibold break-all">
-            {postTitle}
-          </h1>
+          <p className="text-sm text-muted-foreground">{post.frontmatter.date}</p>
+          <h1 className="text-3xl font-semibold break-all">{postTitle}</h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {category ? (
               <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
@@ -188,7 +183,12 @@ export default async function Page({ params, locale }: PageProps) {
             </div>
             <div className="flex justify-end gap-2 mt-4">
               <Button asChild variant="outline" size="sm">
-                <a href={shareUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+                <a
+                  href={shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on X"
+                >
                   <Icon icon="simple-icons:x" className="size-3.5" />
                   <I18nText locale={resolvedLocale} ja="ポスト" en="Post" />
                 </a>
@@ -219,7 +219,7 @@ export default async function Page({ params, locale }: PageProps) {
                       <I18nText locale={resolvedLocale} ja="前の記事" en="Previous Post" />
                     </span>
                     <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
-                      {(isEn ? prev.en ?? prev.ja : prev.ja ?? prev.en)?.frontmatter.title ??
+                      {(isEn ? (prev.en ?? prev.ja) : (prev.ja ?? prev.en))?.frontmatter.title ??
                         prev.slug}
                     </span>
                   </a>
@@ -244,7 +244,7 @@ export default async function Page({ params, locale }: PageProps) {
                       <Icon icon="lucide:chevron-right" className="size-3" />
                     </span>
                     <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
-                      {(isEn ? next.en ?? next.ja : next.ja ?? next.en)?.frontmatter.title ??
+                      {(isEn ? (next.en ?? next.ja) : (next.ja ?? next.en))?.frontmatter.title ??
                         next.slug}
                     </span>
                   </a>

@@ -1,4 +1,3 @@
-
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -29,8 +28,12 @@ export default async function Page({ params, locale }: PageProps) {
   }
 
   const [postsJa, postsEn] = await Promise.all([
-    Promise.all(series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "ja", fallback: false }))),
-    Promise.all(series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "en", fallback: false }))),
+    Promise.all(
+      series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "ja", fallback: false })),
+    ),
+    Promise.all(
+      series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "en", fallback: false })),
+    ),
   ]);
   const entriesJa = postsJa
     .filter((post): post is NonNullable<typeof post> => Boolean(post))
@@ -71,7 +74,10 @@ export default async function Page({ params, locale }: PageProps) {
           className="mb-2"
         />
         <section className="space-y-3">
-          <a href={toLocalePath("/series", resolvedLocale)} className="text-xs font-medium text-muted-foreground">
+          <a
+            href={toLocalePath("/series", resolvedLocale)}
+            className="text-xs font-medium text-muted-foreground"
+          >
             <I18nText locale={resolvedLocale} ja="← シリーズ一覧" en="← Back to series" />
           </a>
           <h1 className="text-3xl font-semibold">{series.name}</h1>

@@ -11,7 +11,7 @@ model: GPT-5.2-Codex
 
 ## Introduction
 
-This article notes the caveats of [`Stream#toList()`](https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()).
+This article notes the caveats of [`Stream#toList()`](<https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()>).
 `Stream#toList()` is a new method introduced in Java 16, and like `Stream#collect(Collectors.toList())`, it converts a `Stream` to a `List`.
 However, there is a trap.
 Even so, some articles merely say "replace `Stream#collect(Collectors.toList())` with `Stream#toList()`" and stop there.
@@ -22,8 +22,8 @@ but here I look at more detailed implementations and code with similar behavior.
 
 ## **LITERALLY** TL;DL
 
-- [`Stream#collect()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#collect(java.util.stream.Collector)) performs [mutable reduction](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/package-summary.html#MutableReduction).
-- [`Stream#toList()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#toList()) returns an [unmodifiable view](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#unmodview) of a list.
+- [`Stream#collect()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#collect(java.util.stream.Collector)>) performs [mutable reduction](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/package-summary.html#MutableReduction).
+- [`Stream#toList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#toList()>) returns an [unmodifiable view](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#unmodview) of a list.
 - You should not casually rewrite `Stream#collect(Collectors.toList())` to `Stream#toList()`.
 - Read the [Javadoc](https://docs.oracle.com/javase/jp/21/docs/api/index.html).
 
@@ -77,7 +77,7 @@ jshell> $1.getClass();
 $3 ==> class java.util.ArrayList
 ```
 
-However, [the Javadoc](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()) does not state that it returns an `ArrayList`.
+However, [the Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()>) does not state that it returns an `ArrayList`.
 It also says nothing is guaranteed about mutability.
 But if you check the **OpenJDK** implementation, you can see it returns `ArrayList`.
 
@@ -113,7 +113,7 @@ public class Collectors {
 />
 
 OpenJDK returns `ArrayList`, but you should not write code assuming `Collectors.toList()` returns `ArrayList`.
-According to the standard Javadoc, the behavior of code like `$1.add(8)` is ***undefined***.
+According to the standard Javadoc, the behavior of code like `$1.add(8)` is **_undefined_**.
 Another JDK might not use `ArrayList`.
 
 In reality, code that adds elements to the result of `Stream#collect(Collectors.toList())` is probably being written.
@@ -178,7 +178,7 @@ Java's `Stream#collect()` performs [mutable reduction](https://docs.oracle.com/j
 
 #### `Stream#toList()`
 
-The [Javadoc](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#toList()) says:
+The [Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Stream.html#toList()>) says:
 
 > The returned List is unmodifiable. Calls to mutator methods always throw UnsupportedOperationException.
 
@@ -225,7 +225,7 @@ Looking at the source, `Stream#toArray()` is abstract.
 
 So it depends on how the `Stream` implementation is written.
 The most common implementation used in classes implementing `List` is probably `ArrayList`.
-[`ArrayList`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()) implements `toArray()` in `AbstractCollection`.
+[`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) implements `toArray()` in `AbstractCollection`.
 
 ```java
     /**
@@ -822,11 +822,11 @@ So in code, it looks much faster than the other two.
 
 Summarizing the findings:
 
-| Expression                                         | Mutability      |  Null   | Efficiency |
-| -------------------------------------------------- | :-------------: | :-----: | :--------: |
-| `Stream#collect(Collectors.toList())`              | :-1: Mutable    | :+1: OK | :-1: Bad   |
-| `Stream#collect(Collectors.toUnmodifiableList())`  | :+1: Immutable  | :-1: NG | :-1: Worst |
-| `Stream#toList()`                                  | :+1: Immutable  | :+1: OK | :+1: Best  |
+| Expression                                        |   Mutability   |  Null   | Efficiency |
+| ------------------------------------------------- | :------------: | :-----: | :--------: |
+| `Stream#collect(Collectors.toList())`             |  :-1: Mutable  | :+1: OK |  :-1: Bad  |
+| `Stream#collect(Collectors.toUnmodifiableList())` | :+1: Immutable | :-1: NG | :-1: Worst |
+| `Stream#toList()`                                 | :+1: Immutable | :+1: OK | :+1: Best  |
 
 I did not know this relationship before writing the article.
 
@@ -849,7 +849,7 @@ I haven't traced why `Stream#toList()` was added, but the person who chose the n
 Who is happy about collections being mutable across method/class boundaries today?
 Mutability makes code harder to follow and causes bugs.
 
-To meet that need, Java 10 added [`Collectors#toUnmodifiableList()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()).
+To meet that need, Java 10 added [`Collectors#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>).
 It returns an [unmodifiable List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable).
 
 But looking at its implementation, `Collectors#toUnmodifiableList()` is clearly slower than the other two methods,

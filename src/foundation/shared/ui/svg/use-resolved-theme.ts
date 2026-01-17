@@ -21,4 +21,3 @@ export function useResolvedTheme(): Theme {
 
   return resolvedTheme === "dark" ? "dark" : "light";
 }
-

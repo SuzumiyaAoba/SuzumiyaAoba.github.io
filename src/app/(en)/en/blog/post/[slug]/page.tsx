@@ -14,9 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   const post = await getBlogPost(slug, { locale: "en", fallback: true });
   const title = post?.frontmatter.title || slug;
-  const description = post?.frontmatter.category
-    ? `${post.frontmatter.category} article.`
-    : title;
+  const description = post?.frontmatter.category ? `${post.frontmatter.category} article.` : title;
 
   return {
     title,

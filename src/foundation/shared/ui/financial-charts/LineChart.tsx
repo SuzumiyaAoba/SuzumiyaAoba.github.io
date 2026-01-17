@@ -138,7 +138,7 @@ export const LineChart: React.FC<Props> = ({
       const strokeColor = colors[colorIndex % colors.length] ?? "#000";
       const metricData = parseData.filter((d) => d[metric] !== null);
 
-      const line = d3
+      const lineGenerator = d3
         .line<(typeof parseData)[0] & Record<string, number | null>>()
         .defined((d) => d[metric] !== null)
         .x((d) => x(d.year))
@@ -149,7 +149,7 @@ export const LineChart: React.FC<Props> = ({
         .attr("fill", "none")
         .attr("stroke", strokeColor)
         .attr("stroke-width", 2)
-        .attr("d", line);
+        .attr("d", lineGenerator);
 
       metricData.forEach((d) => {
         g.append("circle")

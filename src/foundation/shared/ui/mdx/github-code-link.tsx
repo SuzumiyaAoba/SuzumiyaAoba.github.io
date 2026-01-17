@@ -1,5 +1,3 @@
-
-
 export type GitHubCodeLinkProps = {
   url: string;
   skipPath?: number;

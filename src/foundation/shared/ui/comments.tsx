@@ -88,13 +88,11 @@ export function Comments({
   useEffect(() => {
     if (!mounted) return;
 
-    const iframe = document.querySelector<HTMLIFrameElement>(
-      "iframe.giscus-frame"
-    );
+    const iframe = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
     if (iframe) {
       iframe.contentWindow?.postMessage(
         { giscus: { setConfig: { theme: giscusTheme } } },
-        "https://giscus.app"
+        "https://giscus.app",
       );
     }
   }, [giscusTheme, mounted]);

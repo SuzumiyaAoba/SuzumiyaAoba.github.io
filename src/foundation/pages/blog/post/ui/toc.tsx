@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-
 import { cn } from "@/shared/lib/utils";
 import { I18nText } from "@/shared/ui/i18n-text";
 import type { TocHeading } from "@/shared/lib/mdx";

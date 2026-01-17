@@ -124,7 +124,10 @@ export default async function Page({ params, locale }: PageProps) {
           className="mb-2"
         />
         <section className="space-y-3">
-          <a href={toLocalePath("/tags", resolvedLocale)} className="text-xs font-medium text-muted-foreground">
+          <a
+            href={toLocalePath("/tags", resolvedLocale)}
+            className="text-xs font-medium text-muted-foreground"
+          >
             <I18nText locale={resolvedLocale} ja="← タグ一覧" en="← Back to tags" />
           </a>
           <div className="flex flex-wrap items-center gap-3">

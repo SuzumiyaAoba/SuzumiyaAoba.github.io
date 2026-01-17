@@ -35,7 +35,11 @@ export default function Page({ locale }: PageProps) {
         <section className="mt-8 space-y-6 text-sm leading-7 text-muted-foreground">
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={resolvedLocale} ja="個人情報の利用目的" en="Purpose of Personal Data Use" />
+              <I18nText
+                locale={resolvedLocale}
+                ja="個人情報の利用目的"
+                en="Purpose of Personal Data Use"
+              />
             </h2>
             {isEn ? (
               <>
@@ -61,9 +65,7 @@ export default function Page({ locale }: PageProps) {
                   <li>お問い合わせへの対応</li>
                   <li>サービス向上のための分析</li>
                 </ul>
-                <p>
-                  取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。
-                </p>
+                <p>取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。</p>
               </>
             )}
           </div>
@@ -75,8 +77,8 @@ export default function Page({ locale }: PageProps) {
             {isEn ? (
               <>
                 <p>
-                  We use third-party advertising services (Google AdSense, A8.net). Cookies are
-                  used to display ads based on user interests. Cookies allow us to recognize your
+                  We use third-party advertising services (Google AdSense, A8.net). Cookies are used
+                  to display ads based on user interests. Cookies allow us to recognize your
                   computer, but they do not identify you personally.
                 </p>
                 <p>
@@ -190,8 +192,8 @@ export default function Page({ locale }: PageProps) {
             {isEn ? (
               <p>
                 We strive for accuracy, but we do not guarantee the reliability or safety of the
-                information on this site. The site operator is not responsible for any actions
-                taken based on the information provided. Use at your own risk.
+                information on this site. The site operator is not responsible for any actions taken
+                based on the information provided. Use at your own risk.
               </p>
             ) : (
               <p>

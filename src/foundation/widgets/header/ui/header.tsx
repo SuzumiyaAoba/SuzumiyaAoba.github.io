@@ -150,16 +150,16 @@ export function Header({ locale, path }: HeaderProps) {
         }`}
       >
         <nav className="flex flex-col gap-3 py-4 text-sm font-medium text-muted-foreground">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={toLocalePath(item.href, locale)}
-                className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <I18nText locale={locale} ja={item.labelJa} en={item.labelEn} />
-              </a>
-            ))}
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={toLocalePath(item.href, locale)}
+              className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <I18nText locale={locale} ja={item.labelJa} en={item.labelEn} />
+            </a>
+          ))}
           <div className="h-px bg-border/60" />
           <a
             href={toLocalePath("/about", locale)}

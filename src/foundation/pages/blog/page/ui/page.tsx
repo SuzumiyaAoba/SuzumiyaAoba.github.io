@@ -114,22 +114,18 @@ export default async function Page({ params, locale }: PageProps) {
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={resolvedLocale} ja="ブログ" en="Blog" />
           </h1>
-          <div className="text-sm text-muted-foreground">
-            {pageLabel}
-          </div>
+          <div className="text-sm text-muted-foreground">{pageLabel}</div>
         </section>
 
         <ul className="space-y-5">
           {pagePosts.map((variant) => {
-            const post = resolvedLocale === "en" ? variant.en ?? variant.ja : variant.ja ?? variant.en;
+            const post =
+              resolvedLocale === "en" ? (variant.en ?? variant.ja) : (variant.ja ?? variant.en);
             if (!post) return null;
             const title = post.frontmatter.title || variant.slug;
             const tags = post.frontmatter.tags ?? [];
             const category = post.frontmatter.category;
-            const thumbnail = resolveThumbnail(
-              variant.slug,
-              post.frontmatter.thumbnail,
-            );
+            const thumbnail = resolveThumbnail(variant.slug, post.frontmatter.thumbnail);
             const isFallback = thumbnail === "/icon.svg";
             return (
               <li key={variant.slug}>
@@ -177,7 +173,10 @@ export default async function Page({ params, locale }: PageProps) {
                             <Tag
                               key={tag}
                               tag={tag}
-                              href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, resolvedLocale)}
+                              href={toLocalePath(
+                                `/tags/${encodeURIComponent(tag)}`,
+                                resolvedLocale,
+                              )}
                               className="bg-muted text-xs font-medium text-muted-foreground"
                             />
                           ))}

@@ -1,4 +1,3 @@
-
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
@@ -27,7 +26,7 @@ function formatDate(date: string, locale: string): string {
 }
 
 function resolvePost(variant: LocalizedBlogPost, locale: Locale) {
-  return locale === "ja" ? variant.ja ?? variant.en : variant.en ?? variant.ja;
+  return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
 }
 
 type PageProps = {

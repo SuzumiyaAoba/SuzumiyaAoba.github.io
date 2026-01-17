@@ -26,16 +26,16 @@ and then combined with formal verification methods—especially in embedded soft
 
 Below is a list of plugins, editors, and services that claim "spec-driven development" as of 2025/11/16.
 
-| Release | Plugin/Editor/Service                                   | Developer                                    |
-| ------- | ------------------------------------------------------- | -------------------------------------------- |
-| 2025/07 | [Kiro](https://kiro.dev/)                               | Amazon.com, Inc.                             |
-| 2025/07 | [cc-sdd](https://github.com/gotalab/cc-sdd)             | [gotlab](https://github.com/gotalab) (solo)  |
-| 2025/07 | [Tsumiki](https://github.com/classmethod/tsumiki)       | Classmethod, Inc.                            |
-| 2025/09 | [Spec Kit](https://github.com/github/spec-kit)          | GitHub, Inc.                                 |
+| Release | Plugin/Editor/Service                                             | Developer                                    |
+| ------- | ----------------------------------------------------------------- | -------------------------------------------- |
+| 2025/07 | [Kiro](https://kiro.dev/)                                         | Amazon.com, Inc.                             |
+| 2025/07 | [cc-sdd](https://github.com/gotalab/cc-sdd)                       | [gotlab](https://github.com/gotalab) (solo)  |
+| 2025/07 | [Tsumiki](https://github.com/classmethod/tsumiki)                 | Classmethod, Inc.                            |
+| 2025/09 | [Spec Kit](https://github.com/github/spec-kit)                    | GitHub, Inc.                                 |
 | 2025/09 | [Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp) | [Pimzino](https://github.com/Pimzino) (solo) |
-| 2025/07 | [CodeBuddy](https://www.codebuddy.ai/)                  | Tencent Holdings Ltd.                        |
-| 2025/09 | [Tessl](https://tessl.io/)                              | Tessl AI Ltd                                 |
-| 2025/04 | [Acsim](https://ai.acsim.app/)                          | ROUTE06                                      |
+| 2025/07 | [CodeBuddy](https://www.codebuddy.ai/)                            | Tencent Holdings Ltd.                        |
+| 2025/09 | [Tessl](https://tessl.io/)                                        | Tessl AI Ltd                                 |
+| 2025/04 | [Acsim](https://ai.acsim.app/)                                    | ROUTE06                                      |
 
 There are other plugins not listed here, but I excluded those with unclear developers or very few GitHub stars.
 

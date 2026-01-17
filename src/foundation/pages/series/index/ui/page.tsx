@@ -1,7 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-
 import { getSeriesList } from "@/entities/series-item";
 import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
@@ -37,7 +36,11 @@ export default async function Page({ locale }: PageProps) {
         {seriesList.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText locale={resolvedLocale} ja="まだシリーズがありません。" en="No series yet." />
+              <I18nText
+                locale={resolvedLocale}
+                ja="まだシリーズがありません。"
+                en="No series yet."
+              />
             </div>
           </Card>
         ) : (

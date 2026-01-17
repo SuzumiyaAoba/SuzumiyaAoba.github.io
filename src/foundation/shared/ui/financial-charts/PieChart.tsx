@@ -36,18 +36,26 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .append("g")
       .attr("transform", `translate(${width / 2},${height / 2})`);
 
-    const pie = d3
+    const pieGenerator = d3
       .pie<PieData>()
       .value((d) => d.value)
       .sort(null);
 
-    const arc = d3.arc<d3.PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
+    const arcGenerator = d3
+      .arc<d3.PieArcDatum<PieData>>()
+      .innerRadius(0)
+      .outerRadius(radius);
 
-    const arcs = g.selectAll(".arc").data(pie(data)).enter().append("g").attr("class", "arc");
+    const arcs = g
+      .selectAll(".arc")
+      .data(pieGenerator(data))
+      .enter()
+      .append("g")
+      .attr("class", "arc");
 
     arcs
       .append("path")
-      .attr("d", arc)
+      .attr("d", arcGenerator)
       .attr("fill", (_d, i) => colors[i % colors.length] ?? "#000")
       .attr("stroke", "var(--card)")
       .attr("stroke-width", 2)
@@ -80,7 +88,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
 
     // リーダー線とラベルを追加
     g.selectAll("polyline")
-      .data(pie(data))
+      .data(pieGenerator(data))
       .enter()
       .append("polyline")
       .attr("stroke", "currentColor")
@@ -115,14 +123,14 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
 
         const finalX = radius * horizontalMultiplier * (midAngle < Math.PI ? 1 : -1);
 
-        const arcPos = arc.centroid(d);
+        const arcPos = arcGenerator.centroid(d);
 
         return [arcPos, [outerX, outerY], [finalX, outerY]].map((p) => p.join(",")).join(" ");
       });
 
     // 外側のラベル
     g.selectAll("text.label")
-      .data(pie(data))
+      .data(pieGenerator(data))
       .enter()
       .append("text")
       .attr("class", "label")

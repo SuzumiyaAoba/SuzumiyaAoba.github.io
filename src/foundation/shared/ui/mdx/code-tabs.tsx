@@ -26,11 +26,7 @@ function CodeTabs({ tabs }: { tabs: RawCode[] }) {
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      const result = await Promise.all(
-        tabs.map((tab) =>
-          highlight(tab, "github-from-css"),
-        ),
-      );
+      const result = await Promise.all(tabs.map((tab) => highlight(tab, "github-from-css")));
       if (!cancelled) {
         setHighlighted(result);
       }

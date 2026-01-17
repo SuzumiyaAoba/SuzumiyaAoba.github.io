@@ -1,4 +1,3 @@
-
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
@@ -84,7 +83,10 @@ export default function Page({ locale }: PageProps) {
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href={toLocalePath("/blog", resolvedLocale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/blog", resolvedLocale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={resolvedLocale} ja="ブログ" en="Blog" />
                 </a>
                 <I18nText
@@ -95,7 +97,10 @@ export default function Page({ locale }: PageProps) {
                 />
               </li>
               <li>
-                <a href={toLocalePath("/series", resolvedLocale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/series", resolvedLocale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={resolvedLocale} ja="シリーズ" en="Series" />
                 </a>
                 <I18nText
@@ -106,7 +111,10 @@ export default function Page({ locale }: PageProps) {
                 />
               </li>
               <li>
-                <a href={toLocalePath("/tools", resolvedLocale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/tools", resolvedLocale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={resolvedLocale} ja="ツール" en="Tools" />
                 </a>
                 <I18nText
@@ -128,7 +136,10 @@ export default function Page({ locale }: PageProps) {
                 ja={
                   <>
                     お問い合わせは
-                    <a href={toLocalePath("/contact", resolvedLocale)} className="font-medium text-foreground">
+                    <a
+                      href={toLocalePath("/contact", resolvedLocale)}
+                      className="font-medium text-foreground"
+                    >
                       Contact
                     </a>
                     ページからお願いします。
@@ -137,7 +148,10 @@ export default function Page({ locale }: PageProps) {
                 en={
                   <>
                     Please use the{" "}
-                    <a href={toLocalePath("/contact", resolvedLocale)} className="font-medium text-foreground">
+                    <a
+                      href={toLocalePath("/contact", resolvedLocale)}
+                      className="font-medium text-foreground"
+                    >
                       Contact
                     </a>{" "}
                     page for inquiries.

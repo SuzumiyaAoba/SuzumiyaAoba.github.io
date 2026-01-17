@@ -98,9 +98,9 @@ public class SortAction extends RecursiveAction {
 Although not explicitly stated in the Javadoc, this sorts by combining merge sort with Java's standard `sort`.
 If the number of elements is less than `1000`, it uses the standard library sort; otherwise it splits the array into two ranges and recursively calls itself (splitting by index; the array is not copied).
 Because sorting performance depends on input size, this simple trick is cost-effective for reducing performance degradation.
-[`Arrays#sort()`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Arrays.html#sort(byte[],int,int)) is implemented with [Dual pivot Quicksort](https://www.geeksforgeeks.org/dual-pivot-quicksort/).
+[`Arrays#sort()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Arrays.html#sort(byte[],int,int)>) is implemented with [Dual pivot Quicksort](https://www.geeksforgeeks.org/dual-pivot-quicksort/).
 
-The two split ranges are passed to the `SortAction` constructor, and the tasks are forked with [`invokeAll`](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinTask.html#invokeAll(java.util.concurrent.ForkJoinTask...)).
+The two split ranges are passed to the `SortAction` constructor, and the tasks are forked with [`invokeAll`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/concurrent/ForkJoinTask.html#invokeAll(java.util.concurrent.ForkJoinTask...)>).
 After both tasks complete, `merge` merges the sorted data into the target array in the same way as merge sort.
 
 ### `RecursiveTask`
@@ -189,12 +189,12 @@ In addition to `SortAction` and `MergeSortTask`, I compare `Stream#sorted()` and
 Before even comparing, I expect the order to be `SortAction` > `Stream#parallelStream()#sorted()` > `MergeSortTask` > `Stream#sort()`,
 but here are the results for arrays/lists with 100,000,000 elements.
 
-| Implementation                       | Time (s)      |
-| :----------------------------------- | :------------ |
-| `Stream#sort()`                      | `36.263888375`|
-| `MergeSortTask`                      | `13.619412583`|
-| `SortAction`                         | `1.5119055`   |
-| `Stream#parallelStream()#sorted()`   | `4.816473459` |
+| Implementation                     | Time (s)       |
+| :--------------------------------- | :------------- |
+| `Stream#sort()`                    | `36.263888375` |
+| `MergeSortTask`                    | `13.619412583` |
+| `SortAction`                       | `1.5119055`    |
+| `Stream#parallelStream()#sorted()` | `4.816473459`  |
 
 The time to generate the data is not included.
 From this, we can see that copying data is extremely expensive, and parallelization is useful for speed.

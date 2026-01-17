@@ -108,13 +108,13 @@ export const StackedBarChart: React.FC<Props> = ({
 
       const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
-      const stack = d3
+      const stackGenerator = d3
         .stack<any>()
         .keys(activeMetrics)
         .order(d3.stackOrderNone)
         .offset(d3.stackOffsetNone);
 
-      const stackedData = stack(parseData);
+      const stackedData = stackGenerator(parseData);
 
       g.append("g")
         .attr("class", "grid")

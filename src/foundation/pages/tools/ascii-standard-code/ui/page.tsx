@@ -1,4 +1,3 @@
-
 import { StandardCode } from "@/shared/ui/svg";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";

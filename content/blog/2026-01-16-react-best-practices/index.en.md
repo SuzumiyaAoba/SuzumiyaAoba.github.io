@@ -16,8 +16,8 @@ There are many rules, so I'll split the article by category.
 
 ## Rule table
 
-| Category (English)       | Category (Japanese)              | Rule (English)                                     | Rule (Japanese)                                  |
-|--------------------------|----------------------------------|---------------------------------------------------|--------------------------------------------------|
+| Category (English)        | Category (Japanese)              | Rule (English)                                    | Rule (Japanese)                                  |
+| ------------------------- | -------------------------------- | ------------------------------------------------- | ------------------------------------------------ |
 | Eliminating Waterfalls    | 非同期ウォーターフォールの解消   | Defer Await Until Needed                          | 必要になるまで await を遅延する                  |
 |                           |                                  | Dependency-Based Parallelization                  | 依存関係に基づいて並列化する                     |
 |                           |                                  | Prevent Waterfall Chains in API Routes            | API ルートでのウォーターフォール連鎖を防ぐ       |

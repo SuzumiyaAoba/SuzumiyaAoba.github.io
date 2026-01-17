@@ -1,9 +1,9 @@
 "use client";
 
-import { axisBottom, axisLeft, format, line, max, scaleLinear, select } from "d3";
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 import { parseAsString, useQueryState } from "nuqs";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import * as d3 from "d3";
 
 import type { Locale } from "@/shared/lib/locale-path";
 
@@ -451,7 +451,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       return;
     }
 
-    const svg = select(svgElement);
+    const svg = d3.select(svgElement);
     svg.selectAll("*").remove();
 
     if (scenarioData.length === 0 || !selectedScenario) {
@@ -463,15 +463,15 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
     const innerHeight = height - margin.top - margin.bottom;
 
     const lastMonth = selectedScenario.schedule[selectedScenario.schedule.length - 1]?.month ?? 1;
-    const maxValue = max(scenarioData, (scenario) =>
-      max(scenario.schedule, (row) => Math.max(row.balance, row.principal, row.gain)),
+    const maxValue = d3.max(scenarioData, (scenario) =>
+      d3.max(scenario.schedule, (row) => Math.max(row.balance, row.principal, row.gain)),
     );
-    const maxDiff = max(tableRows, (row) => row.gainDiff);
+    const maxDiff = d3.max(tableRows, (row) => row.gainDiff);
     const yMax = maxValue ? maxValue * 1.05 : 0;
     const yMaxWithDiff = maxDiff && maxDiff > yMax ? maxDiff * 1.05 : yMax;
 
-    const xScale = scaleLinear().domain([1, lastMonth]).range([0, innerWidth]);
-    const yScale = scaleLinear().domain([0, yMaxWithDiff]).range([innerHeight, 0]);
+    const xScale = d3.scaleLinear().domain([1, lastMonth]).range([0, innerWidth]);
+    const yScale = d3.scaleLinear().domain([0, yMaxWithDiff]).range([innerHeight, 0]);
 
     const tickValues = (() => {
       if (lastMonth <= 12) {
@@ -501,7 +501,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const gridAxis = axisLeft(yScale)
+    const gridAxis = d3.axisLeft(yScale)
       .ticks(5)
       .tickSize(-innerWidth)
       .tickFormat(() => "");
@@ -510,7 +510,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
     gridGroup.selectAll("line").attr("stroke", colors.grid).attr("stroke-opacity", 0.6);
     gridGroup.selectAll(".domain").remove();
 
-    const xAxis = axisBottom(xScale)
+    const xAxis = d3.axisBottom(xScale)
       .tickValues(tickValues)
       .tickFormat((value) => {
         const monthValue = value as number;
@@ -520,12 +520,12 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         return locale === "en" ? `${monthValue} mo` : `${monthValue}ヶ月`;
       });
 
-    const yAxis = axisLeft(yScale)
+    const yAxis = d3.axisLeft(yScale)
       .ticks(5)
       .tickFormat((value) =>
         locale === "en"
-          ? `¥${format(",")((value as number) / 10000)} x10k`
-          : `${format(",")((value as number) / 10000)}万円`,
+          ? `¥${d3.format(",")((value as number) / 10000)} x10k`
+          : `${d3.format(",")((value as number) / 10000)}万円`,
       );
 
     const xAxisGroup = chartGroup
@@ -665,7 +665,9 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
 
   return (
     <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-      <h1 className="mb-6 text-3xl">{t("資産形成シミュレーション", "Asset Formation Simulator")}</h1>
+      <h1 className="mb-6 text-3xl">
+        {t("資産形成シミュレーション", "Asset Formation Simulator")}
+      </h1>
       <p className="mb-4 text-sm text-foreground/80">
         {t(
           "毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。",
@@ -775,7 +777,9 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
                 />
               </label>
               <label className="flex flex-col gap-2">
-                <span className="text-xs">{t("毎月の積立て金額（円）", "Monthly contribution (JPY)")}</span>
+                <span className="text-xs">
+                  {t("毎月の積立て金額（円）", "Monthly contribution (JPY)")}
+                </span>
                 <input
                   type="number"
                   inputMode="numeric"
@@ -797,7 +801,9 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
                 />
               </label>
               <label className="flex flex-col gap-2">
-                <span className="text-xs">{t("年平均利回り（%）", "Average annual return (%)")}</span>
+                <span className="text-xs">
+                  {t("年平均利回り（%）", "Average annual return (%)")}
+                </span>
                 <input
                   type="number"
                   inputMode="decimal"
@@ -1066,11 +1072,11 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
           <thead>
             <tr className="bg-foreground/5">
               <th className="border px-3 py-2 text-left">{t("年数", "Years")}</th>
-              <th className="border px-3 py-2 text-right">{t("元本（累計）", "Principal (total)")}</th>
-              <th className="border px-3 py-2 text-right">{t("運用益", "Gain")}</th>
               <th className="border px-3 py-2 text-right">
-                {t("前年差（運用益）", "YoY gain")}
+                {t("元本（累計）", "Principal (total)")}
               </th>
+              <th className="border px-3 py-2 text-right">{t("運用益", "Gain")}</th>
+              <th className="border px-3 py-2 text-right">{t("前年差（運用益）", "YoY gain")}</th>
               <th className="border px-3 py-2 text-right">{t("評価額", "Balance")}</th>
             </tr>
           </thead>
