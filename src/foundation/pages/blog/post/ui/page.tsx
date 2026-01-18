@@ -11,10 +11,10 @@ import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
 import {
-  getAmazonProductsByIds,
-  getAmazonProductsByTags,
-  type AmazonProduct,
-} from "@/shared/lib/amazon-products";
+  getAffiliateProductsByIds,
+  getAffiliateProductsByTags,
+  type AffiliateProduct,
+} from "@/shared/lib/affiliate-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { getSiteUrl } from "@/shared/lib/site-url";
@@ -126,12 +126,14 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] amazon explicit:${slug}`);
   }
-  const explicitPromise: Promise<AmazonProduct[]> =
-    explicitProductIds.length > 0 ? getAmazonProductsByIds(explicitProductIds) : Promise.resolve([]);
+  const explicitPromise: Promise<AffiliateProduct[]> =
+    explicitProductIds.length > 0
+      ? getAffiliateProductsByIds(explicitProductIds)
+      : Promise.resolve([]);
   const [content, headings, explicitProducts]: [
     ReactElement,
     Awaited<ReturnType<typeof getTocHeadings>>,
-    AmazonProduct[],
+    AffiliateProduct[],
   ] =
     await Promise.all([
       contentPromise,
@@ -150,7 +152,7 @@ export default async function Page({ params, locale }: PageProps) {
   }
   const tagProducts =
     remainingSlots > 0 && tags.length > 0
-      ? await getAmazonProductsByTags(tags, {
+      ? await getAffiliateProductsByTags(tags, {
           excludeIds: prioritizedProducts.map((product) => product.id),
           limit: remainingSlots,
         })
