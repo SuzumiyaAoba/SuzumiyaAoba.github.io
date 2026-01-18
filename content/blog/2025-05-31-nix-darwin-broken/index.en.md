@@ -3,6 +3,7 @@ title: My Computer Broke Without Me Doing Anything
 date: 2025-05-31
 category: "Nix"
 tags: ["Nix"]
+thumbnail: iconify:skill-icons:nix-light
 model: GPT-5.2-Codex
 ---
 

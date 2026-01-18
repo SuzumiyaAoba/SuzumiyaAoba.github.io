@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Icon } from "@iconify/react";
 
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
@@ -13,6 +14,7 @@ import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 const POSTS_PER_PAGE = 10;
 
@@ -29,30 +31,6 @@ function formatDate(date: string, locale: string): string {
     month: "short",
     day: "numeric",
   });
-}
-
-function resolveThumbnail(slug: string, thumbnail?: string): string {
-  if (!thumbnail) {
-    return "/icon.svg";
-  }
-
-  let resolvedPath: string;
-  if (
-    thumbnail.startsWith("http://") ||
-    thumbnail.startsWith("https://") ||
-    thumbnail.startsWith("/")
-  ) {
-    resolvedPath = thumbnail;
-  } else {
-    resolvedPath = `/contents/blog/${slug}/${thumbnail}`;
-  }
-
-  // Convert supported image formats to webp
-  if (/\.(png|jpe?g)$/i.test(resolvedPath)) {
-    return resolvedPath.replace(/\.(png|jpe?g)$/i, ".webp");
-  }
-
-  return resolvedPath;
 }
 
 function getPageCount(total: number): number {
@@ -126,7 +104,7 @@ export default async function Page({ params, locale }: PageProps) {
             const tags = post.frontmatter.tags ?? [];
             const category = post.frontmatter.category;
             const thumbnail = resolveThumbnail(variant.slug, post.frontmatter.thumbnail);
-            const isFallback = thumbnail === "/icon.svg";
+            const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
             return (
               <li key={variant.slug}>
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
@@ -135,17 +113,28 @@ export default async function Page({ params, locale }: PageProps) {
                       href={toLocalePath(`/blog/post/${variant.slug}`, resolvedLocale)}
                       className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44"
                     >
-                      <Image
-                        src={thumbnail}
-                        alt={isFallback ? "Site icon" : title}
-                        fill
-                        sizes="(min-width: 768px) 176px, 100vw"
-                        className={
-                          isFallback
-                            ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
-                            : "object-cover"
-                        }
-                      />
+                      {thumbnail.type === "image" ? (
+                        <Image
+                          src={thumbnail.src}
+                          alt={isFallback ? "Site icon" : title}
+                          fill
+                          sizes="(min-width: 768px) 176px, 100vw"
+                          className={
+                            isFallback
+                              ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
+                              : "object-cover"
+                          }
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <Icon
+                            icon={thumbnail.icon}
+                            className="size-10 text-muted-foreground/70 dark:text-muted-foreground/80"
+                            aria-hidden
+                          />
+                          <span className="sr-only">{title}</span>
+                        </div>
+                      )}
                     </a>
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">

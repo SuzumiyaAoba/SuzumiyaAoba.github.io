@@ -3,6 +3,7 @@ title: Commands Not Running in Cursor
 date: 2025-09-25
 category: "Cursor"
 tags: ["Cursor", "Terminal", "powerlevel10k", "Zellij"]
+thumbnail: iconify:vscode-icons:file-type-cursorrules
 model: GPT-5.2-Codex
 ---
 

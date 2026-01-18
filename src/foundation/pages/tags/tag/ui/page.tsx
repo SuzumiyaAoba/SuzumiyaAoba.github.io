@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Icon } from "@iconify/react";
 
 import { notFound } from "next/navigation";
 import { Header } from "@/widgets/header";
@@ -13,6 +14,7 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 type PageProps = {
   params: Promise<{ tag: string }>;
@@ -40,30 +42,6 @@ function formatDate(date: string, locale: string): string {
     month: "short",
     day: "numeric",
   });
-}
-
-function resolveThumbnail(slug: string, thumbnail?: string): string {
-  if (!thumbnail) {
-    return "/icon.svg";
-  }
-
-  let resolvedPath: string;
-  if (
-    thumbnail.startsWith("http://") ||
-    thumbnail.startsWith("https://") ||
-    thumbnail.startsWith("/")
-  ) {
-    resolvedPath = thumbnail;
-  } else {
-    resolvedPath = `/contents/blog/${slug}/${thumbnail}`;
-  }
-
-  // Convert supported image formats to webp
-  if (/\.(png|jpe?g)$/i.test(resolvedPath)) {
-    return resolvedPath.replace(/\.(png|jpe?g)$/i, ".webp");
-  }
-
-  return resolvedPath;
 }
 
 export default async function Page({ params, locale }: PageProps) {
@@ -148,7 +126,7 @@ export default async function Page({ params, locale }: PageProps) {
         <ul className="space-y-5">
           {entries.map((post) => {
             const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
-            const isFallback = thumbnail === "/icon.svg";
+            const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
             return (
               <li key={`${resolvedLocale}-${post.slug}`}>
                 <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
@@ -157,17 +135,28 @@ export default async function Page({ params, locale }: PageProps) {
                     className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
-                      <Image
-                        src={thumbnail}
-                        alt={isFallback ? "Site icon" : post.title}
-                        fill
-                        sizes="(min-width: 768px) 176px, 100vw"
-                        className={
-                          isFallback
-                            ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
-                            : "object-cover"
-                        }
-                      />
+                      {thumbnail.type === "image" ? (
+                        <Image
+                          src={thumbnail.src}
+                          alt={isFallback ? "Site icon" : post.title}
+                          fill
+                          sizes="(min-width: 768px) 176px, 100vw"
+                          className={
+                            isFallback
+                              ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
+                              : "object-cover"
+                          }
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <Icon
+                            icon={thumbnail.icon}
+                            className="size-10 text-muted-foreground/70 dark:text-muted-foreground/80"
+                            aria-hidden
+                          />
+                          <span className="sr-only">{post.title}</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 flex flex-col gap-2 py-2">
                       <div className="space-y-2">

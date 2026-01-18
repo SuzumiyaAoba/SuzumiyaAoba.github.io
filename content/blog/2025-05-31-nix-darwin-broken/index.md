@@ -3,6 +3,7 @@ title: 何もしていないのにパソコンが壊れた
 date: 2025-05-31
 category: "Nix"
 tags: ["Nix"]
+thumbnail: iconify:skill-icons:nix-light
 ---
 
 何もしていないのにパソコンが壊れた。

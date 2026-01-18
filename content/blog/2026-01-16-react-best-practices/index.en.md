@@ -3,6 +3,7 @@ title: Looking into react-best-practices (Eliminating Waterfalls)
 date: 2026-01-17
 category: Programming
 tags: ["Skills", "AI", "LLM", "React"]
+thumbnail: iconify:devicon:react
 model: GPT-5.2-Codex
 ---
 

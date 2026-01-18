@@ -3,6 +3,7 @@ title: Squash and merge した後のブランチを掃除する
 date: 2025-05-11
 category: プログラミング
 tags: ["プログラミング", "git"]
+thumbnail: iconify:devicon:git
 ---
 
 ## はじめに

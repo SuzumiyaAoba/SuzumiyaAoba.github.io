@@ -3,6 +3,7 @@ title: A Look at react-best-practices (Bundle Size Optimization)
 date: 2026-01-17
 category: Programming
 tags: ["Skills", "AI", "LLM", "React"]
+thumbnail: iconify:devicon:react
 ---
 
 Following on from [the previous article](../2026-01-16-react-best-practices/), let's look at the contents of Vercel's [react-best-practices](https://vercel.com/blog/introducing-react-best-practices).

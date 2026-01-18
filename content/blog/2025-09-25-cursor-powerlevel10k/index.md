@@ -3,6 +3,7 @@ title: Cursor でコマンド実行されない現象
 date: 2025-09-25
 category: "Cursor"
 tags: ["Cursor", "Terminal", "powerlevel10k", "Zellij"]
+thumbnail: iconify:vscode-icons:file-type-cursorrules
 ---
 
 ターミナル環境を見直していたところ Cursor でコマンド実行されない現象に遭遇したので原因と解決策を遺しておく。

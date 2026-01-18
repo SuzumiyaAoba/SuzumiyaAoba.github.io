@@ -8,6 +8,7 @@ const TAG_ICON_MAP: Record<string, string> = {
   java: "skill-icons:java-light",
   scala: "devicon:scala",
   node: "fa-brands:node",
+  react: "devicon:react",
   astro: "skill-icons:astro",
   "next.js": "devicon:nextjs",
   nix: "skill-icons:nix-light",

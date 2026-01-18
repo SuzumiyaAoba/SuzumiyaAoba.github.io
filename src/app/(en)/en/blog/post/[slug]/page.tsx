@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getBlogPost, getBlogSlugs } from "@/entities/blog";
+import { getBlogPostVariants, getBlogSlugs } from "@/entities/blog";
+import { toLocalePath } from "@/shared/lib/locale-path";
 import BlogPostPage from "@/pages/blog/post";
 
 type PageProps = {
@@ -12,13 +13,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!slug) {
     return { title: "Blog" };
   }
-  const post = await getBlogPost(slug, { locale: "en", fallback: true });
+  const { ja: postJa, en: postEn } = await getBlogPostVariants(slug);
+  const post = postEn ?? postJa;
+  if (!post) {
+    return { title: "Blog" };
+  }
   const title = post?.frontmatter.title || slug;
   const description = post?.frontmatter.category ? `${post.frontmatter.category} article.` : title;
+  const canonicalPath = postEn
+    ? toLocalePath(`/blog/post/${slug}`, "en")
+    : toLocalePath(`/blog/post/${slug}`, "ja");
 
   return {
     title,
     description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title,
       description,
