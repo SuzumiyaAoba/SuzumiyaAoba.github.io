@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
+import { cache } from "react";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
@@ -21,6 +22,11 @@ export type BlogPost = {
   slug: string;
   content: string;
   format: "md" | "mdx";
+  frontmatter: BlogFrontmatter;
+};
+
+export type BlogPostSummary = {
+  slug: string;
   frontmatter: BlogFrontmatter;
 };
 
@@ -77,7 +83,7 @@ async function readContentFile(
   return readContentFileForLocale(slug, "ja");
 }
 
-export async function getBlogSlugs(): Promise<string[]> {
+export const getBlogSlugs = cache(async (): Promise<string[]> => {
   const root = await resolveContentRoot();
   const blogRoot = path.join(root, "blog");
   const entries = await fs.readdir(blogRoot, { withFileTypes: true });
@@ -86,12 +92,12 @@ export async function getBlogSlugs(): Promise<string[]> {
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
-}
+});
 
-export async function getBlogPost(
+export const getBlogPost = cache(async (
   slug: string,
   options?: ReadContentOptions,
-): Promise<BlogPost | null> {
+): Promise<BlogPost | null> => {
   const file = await readContentFile(slug, options);
   if (!file) {
     return null;
@@ -106,7 +112,25 @@ export async function getBlogPost(
     format: file.format,
     frontmatter,
   };
-}
+});
+
+export const getBlogPostSummary = cache(async (
+  slug: string,
+  options?: ReadContentOptions,
+): Promise<BlogPostSummary | null> => {
+  const file = await readContentFile(slug, options);
+  if (!file) {
+    return null;
+  }
+
+  const { data } = matter(file.raw);
+  const frontmatter = normalizeFrontmatter(data);
+
+  return {
+    slug,
+    frontmatter,
+  };
+});
 
 function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
   const title = typeof data["title"] === "string" ? data["title"] : "";
@@ -142,18 +166,18 @@ function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
   };
 }
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
+export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
   const slugs = await getBlogSlugs();
   const posts = await Promise.all(slugs.map((slug) => getBlogPost(slug)));
   return posts
     .filter((post): post is BlogPost => Boolean(post))
     .filter((post) => !post.frontmatter.draft)
     .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1));
-}
+});
 
-export async function getAdjacentPosts(
+export const getAdjacentPosts = cache(async (
   slug: string,
-): Promise<{ prev: BlogPost | null; next: BlogPost | null }> {
+): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
   const posts = await getBlogPosts();
   const index = posts.findIndex((post) => post.slug === slug);
 
@@ -167,7 +191,7 @@ export async function getAdjacentPosts(
     prev: posts[index + 1] ?? null,
     next: posts[index - 1] ?? null,
   };
-}
+});
 
 export type LocalizedBlogPost = {
   slug: string;
@@ -175,16 +199,24 @@ export type LocalizedBlogPost = {
   en: BlogPost | null;
 };
 
-export async function getBlogPostVariants(slug: string): Promise<LocalizedBlogPost> {
+export type LocalizedBlogPostSummary = {
+  slug: string;
+  ja: BlogPostSummary | null;
+  en: BlogPostSummary | null;
+};
+
+export const getBlogPostVariants = cache(async (
+  slug: string,
+): Promise<LocalizedBlogPost> => {
   const [ja, en] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
     getBlogPost(slug, { locale: "en", fallback: false }),
   ]);
 
   return { slug, ja, en };
-}
+});
 
-export async function getBlogPostsVariants(): Promise<LocalizedBlogPost[]> {
+export const getBlogPostsVariants = cache(async (): Promise<LocalizedBlogPost[]> => {
   const slugs = await getBlogSlugs();
   const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
 
@@ -201,11 +233,43 @@ export async function getBlogPostsVariants(): Promise<LocalizedBlogPost[]> {
       const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
       return dateA < dateB ? 1 : -1;
     });
-}
+});
 
-export async function getAdjacentPostsVariants(
+export const getBlogPostSummaryVariants = cache(async (
   slug: string,
-): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> {
+): Promise<LocalizedBlogPostSummary> => {
+  const [ja, en] = await Promise.all([
+    getBlogPostSummary(slug, { locale: "ja", fallback: false }),
+    getBlogPostSummary(slug, { locale: "en", fallback: false }),
+  ]);
+
+  return { slug, ja, en };
+});
+
+export const getBlogPostSummariesVariants = cache(async (): Promise<
+  LocalizedBlogPostSummary[]
+> => {
+  const slugs = await getBlogSlugs();
+  const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
+
+  return posts
+    .filter((post) => {
+      const reference = post.ja ?? post.en;
+      if (!reference) {
+        return false;
+      }
+      return !reference.frontmatter.draft;
+    })
+    .sort((a, b) => {
+      const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+      const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+      return dateA < dateB ? 1 : -1;
+    });
+});
+
+export const getAdjacentPostsVariants = cache(async (
+  slug: string,
+): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> => {
   const posts = await getBlogPostsVariants();
   const index = posts.findIndex((post) => post.slug === slug);
 
@@ -217,4 +281,20 @@ export async function getAdjacentPostsVariants(
     prev: posts[index + 1] ?? null,
     next: posts[index - 1] ?? null,
   };
-}
+});
+
+export const getAdjacentPostSummariesVariants = cache(async (
+  slug: string,
+): Promise<{ prev: LocalizedBlogPostSummary | null; next: LocalizedBlogPostSummary | null }> => {
+  const posts = await getBlogPostSummariesVariants();
+  const index = posts.findIndex((post) => post.slug === slug);
+
+  if (index === -1) {
+    return { prev: null, next: null };
+  }
+
+  return {
+    prev: posts[index + 1] ?? null,
+    next: posts[index - 1] ?? null,
+  };
+});

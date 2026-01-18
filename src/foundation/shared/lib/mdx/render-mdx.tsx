@@ -1,4 +1,5 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactElement } from "react";
+import { cache } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -64,14 +65,27 @@ function remarkMermaid() {
   };
 }
 
-export async function renderMdx(
+const devRenderCache = new Map<string, ReactElement>();
+
+export const renderMdx = cache(async (
   source: string,
   {
     basePath,
     scope,
     idPrefix,
   }: { basePath?: string; scope?: Record<string, unknown>; idPrefix?: string } = {},
-) {
+) => {
+  const useDevCache = process.env["NODE_ENV"] === "development";
+  let cacheKey = "";
+  if (useDevCache) {
+    const scopeKey = scope ? JSON.stringify(scope) : "";
+    cacheKey = `${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
+    const cached = devRenderCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
     syntaxHighlighting: {
@@ -121,5 +135,9 @@ export async function renderMdx(
     },
   });
 
-  return <>{content}</>;
-}
+  const rendered = <>{content}</>;
+  if (useDevCache) {
+    devRenderCache.set(cacheKey, rendered);
+  }
+  return rendered;
+});

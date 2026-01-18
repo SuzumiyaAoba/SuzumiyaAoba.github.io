@@ -4,6 +4,7 @@ import remarkEmoji from "remark-emoji";
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
 import { remark } from "remark";
+import { cache } from "react";
 
 export type TocHeading = {
   id: string;
@@ -33,10 +34,10 @@ function walk(node: MdastNode, handler: (node: MdastNode) => void) {
   node.children?.forEach((child) => walk(child, handler));
 }
 
-export async function getTocHeadings(
+export const getTocHeadings = cache(async (
   source: string,
   options?: { idPrefix?: string },
-): Promise<TocHeading[]> {
+): Promise<TocHeading[]> => {
   const processor = remark()
     .use(remarkGfm)
     .use(remarkEmoji)
@@ -67,4 +68,4 @@ export async function getTocHeadings(
   });
 
   return headings;
-}
+});

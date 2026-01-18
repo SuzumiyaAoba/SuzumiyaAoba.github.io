@@ -15,18 +15,54 @@ type AmazonProductSource = {
   products?: AmazonProduct[];
 };
 
-async function getAmazonProducts(): Promise<AmazonProduct[]> {
+type AmazonProductIndex = {
+  products: AmazonProduct[];
+  byId: Map<string, AmazonProduct>;
+  byTag: Map<string, AmazonProduct[]>;
+  mtimeMs?: number;
+};
+
+let cachedIndex: AmazonProductIndex | null = null;
+
+async function loadAmazonProducts(): Promise<AmazonProductIndex> {
   const root = await resolveContentRoot();
   const filePath = path.join(root, "amazon-products.json");
+  const isDev = process.env["NODE_ENV"] === "development";
+
+  if (cachedIndex && !isDev) {
+    return cachedIndex;
+  }
 
   try {
+    let mtimeMs: number | undefined = undefined;
+    if (isDev) {
+      try {
+        const stat = await fs.stat(filePath);
+        mtimeMs = stat.mtimeMs;
+        if (cachedIndex && cachedIndex.mtimeMs === mtimeMs) {
+          return cachedIndex;
+        }
+      } catch {
+        // fall through to read/parse
+      }
+    }
+
     const raw = await fs.readFile(filePath, "utf8");
     const parsed = JSON.parse(raw) as AmazonProductSource;
     if (!parsed.products || !Array.isArray(parsed.products)) {
-      return [];
+      const emptyIndex: AmazonProductIndex = {
+        products: [],
+        byId: new Map(),
+        byTag: new Map(),
+      };
+      if (typeof mtimeMs === "number") {
+        emptyIndex.mtimeMs = mtimeMs;
+      }
+      cachedIndex = emptyIndex;
+      return emptyIndex;
     }
 
-    return parsed.products
+    const products = parsed.products
       .filter((product): product is AmazonProduct => {
         return Boolean(product?.id && product?.title && product?.imageUrl && product?.productUrl);
       })
@@ -39,15 +75,45 @@ async function getAmazonProducts(): Promise<AmazonProduct[]> {
           ...(tags ? { tags } : {}),
         };
       });
+    const byId = new Map<string, AmazonProduct>();
+    const byTag = new Map<string, AmazonProduct[]>();
+    for (const product of products) {
+      byId.set(product.id, product);
+      const tags = product.tags ?? [];
+      for (const tag of tags) {
+        const key = tag.trim();
+        if (!key) {
+          continue;
+        }
+        const existing = byTag.get(key);
+        if (existing) {
+          existing.push(product);
+        } else {
+          byTag.set(key, [product]);
+        }
+      }
+    }
+
+    const index: AmazonProductIndex = { products, byId, byTag };
+    if (typeof mtimeMs === "number") {
+      index.mtimeMs = mtimeMs;
+    }
+    cachedIndex = index;
+    return index;
   } catch {
-    return [];
+    const emptyIndex: AmazonProductIndex = {
+      products: [],
+      byId: new Map(),
+      byTag: new Map(),
+    };
+    cachedIndex = emptyIndex;
+    return emptyIndex;
   }
 }
 
 export async function getAmazonProductsByIds(ids: string[]): Promise<AmazonProduct[]> {
-  const products = await getAmazonProducts();
-  const map = new Map(products.map((product) => [product.id, product]));
-  return ids.map((id) => map.get(id)).filter((item): item is AmazonProduct => Boolean(item));
+  const index = await loadAmazonProducts();
+  return ids.map((id) => index.byId.get(id)).filter((item): item is AmazonProduct => Boolean(item));
 }
 
 type AmazonProductTagOptions = {
@@ -63,18 +129,24 @@ export async function getAmazonProductsByTags(
     return [];
   }
 
-  const products = await getAmazonProducts();
+  const index = await loadAmazonProducts();
   const normalizedTags = new Set(tags.map((tag) => tag.trim()).filter(Boolean));
   const excluded = new Set(options?.excludeIds ?? []);
-  const matches = products.filter((product) => {
-    if (excluded.has(product.id)) {
-      return false;
+  const matches: AmazonProduct[] = [];
+  const seen = new Set<string>();
+  for (const tag of normalizedTags) {
+    const tagged = index.byTag.get(tag);
+    if (!tagged) {
+      continue;
     }
-    if (!product.tags || product.tags.length === 0) {
-      return false;
+    for (const product of tagged) {
+      if (excluded.has(product.id) || seen.has(product.id)) {
+        continue;
+      }
+      seen.add(product.id);
+      matches.push(product);
     }
-    return product.tags.some((tag) => normalizedTags.has(tag));
-  });
+  }
 
   const limit = options?.limit;
   if (typeof limit === "number") {

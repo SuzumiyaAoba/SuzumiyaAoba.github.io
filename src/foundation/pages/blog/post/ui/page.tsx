@@ -1,15 +1,20 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { notFound } from "next/navigation";
+import type { ReactElement } from "react";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getAdjacentPostsVariants, getBlogPost } from "@/entities/blog";
+import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
 import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
 import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
-import { getAmazonProductsByIds, getAmazonProductsByTags } from "@/shared/lib/amazon-products";
+import {
+  getAmazonProductsByIds,
+  getAmazonProductsByTags,
+  type AmazonProduct,
+} from "@/shared/lib/amazon-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { getSiteUrl } from "@/shared/lib/site-url";
@@ -58,14 +63,24 @@ async function loadMdxScope(source: string, slug: string): Promise<Record<string
 }
 
 export default async function Page({ params, locale }: PageProps) {
+  const shouldLogPerf = process.env["NEXT_DEBUG_PERF"] === "1";
+  if (shouldLogPerf) {
+    console.time(`[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`);
+  }
   const resolvedLocale: Locale = locale ?? "ja";
   const isEn = resolvedLocale === "en";
   const { slug } = await params;
+  if (shouldLogPerf) {
+    console.time(`[blog] load posts:${slug}`);
+  }
   const [postJa, postEn, { prev, next }] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
     getBlogPost(slug, { locale: "en", fallback: false }),
-    getAdjacentPostsVariants(slug),
+    getAdjacentPostSummariesVariants(slug),
   ]);
+  if (shouldLogPerf) {
+    console.timeEnd(`[blog] load posts:${slug}`);
+  }
 
   const post = isEn ? (postEn ?? postJa) : (postJa ?? postEn);
 
@@ -88,19 +103,51 @@ export default async function Page({ params, locale }: PageProps) {
   const contentSource = primaryContent ?? fallbackContent ?? post.content;
   const translationModel = postEn?.frontmatter.model;
   const originalPath = toLocalePath(`/blog/post/${slug}`, "ja");
+  if (shouldLogPerf) {
+    console.time(`[blog] mdx scope:${slug}`);
+  }
   const scope = primaryContent
     ? await loadMdxScope(primaryContent, slug)
     : fallbackContent
       ? await loadMdxScope(fallbackContent, slug)
       : {};
+  if (shouldLogPerf) {
+    console.timeEnd(`[blog] mdx scope:${slug}`);
+  }
   const explicitProductIds = post.frontmatter.amazonProductIds ?? [];
-  const [content, headings, explicitProducts] = await Promise.all([
-    renderMdx(contentSource, { basePath: `/contents/blog/${slug}`, scope }),
-    getTocHeadings(contentSource),
-    explicitProductIds.length > 0 ? getAmazonProductsByIds(explicitProductIds) : Promise.resolve([]),
+  if (shouldLogPerf) {
+    console.time(`[blog] mdx render:${slug}`);
+  }
+  const contentPromise = renderMdx(contentSource, { basePath: `/contents/blog/${slug}`, scope });
+  if (shouldLogPerf) {
+    console.time(`[blog] toc:${slug}`);
+  }
+  const tocPromise = getTocHeadings(contentSource);
+  if (shouldLogPerf) {
+    console.time(`[blog] amazon explicit:${slug}`);
+  }
+  const explicitPromise: Promise<AmazonProduct[]> =
+    explicitProductIds.length > 0 ? getAmazonProductsByIds(explicitProductIds) : Promise.resolve([]);
+  const [content, headings, explicitProducts]: [
+    ReactElement,
+    Awaited<ReturnType<typeof getTocHeadings>>,
+    AmazonProduct[],
+  ] =
+    await Promise.all([
+      contentPromise,
+      tocPromise,
+      explicitPromise,
   ]);
+  if (shouldLogPerf) {
+    console.timeEnd(`[blog] mdx render:${slug}`);
+    console.timeEnd(`[blog] toc:${slug}`);
+    console.timeEnd(`[blog] amazon explicit:${slug}`);
+  }
   const prioritizedProducts = explicitProducts.slice(0, 3);
   const remainingSlots = 3 - prioritizedProducts.length;
+  if (shouldLogPerf) {
+    console.time(`[blog] tag products:${slug}`);
+  }
   const tagProducts =
     remainingSlots > 0 && tags.length > 0
       ? await getAmazonProductsByTags(tags, {
@@ -108,6 +155,10 @@ export default async function Page({ params, locale }: PageProps) {
           limit: remainingSlots,
         })
       : [];
+  if (shouldLogPerf) {
+    console.timeEnd(`[blog] tag products:${slug}`);
+    console.timeEnd(`[blog] ${resolvedLocale}:${slug}`);
+  }
   const amazonProducts = [...prioritizedProducts, ...tagProducts];
   const shouldShowAmazonAssociate = amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
 
