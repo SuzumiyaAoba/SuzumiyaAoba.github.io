@@ -1,33 +1,14 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getBlogPostsVariants, type LocalizedBlogPost } from "@/entities/blog";
-import { Badge } from "@/shared/ui/badge";
+import { getBlogPostsVariants } from "@/entities/blog";
 import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
-import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
-
-function formatDate(date: string, locale: string): string {
-  if (!date) {
-    return locale.startsWith("ja") ? "不明な日付" : "Unknown date";
-  }
-  const parsed = new Date(date);
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-  return parsed.toLocaleDateString(locale, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function resolvePost(variant: LocalizedBlogPost, locale: Locale) {
-  return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
-}
+import { BlogPostList } from "@/entities/blog";
+import { PostActivityHeatmap } from "./post-activity-heatmap";
 
 type PageProps = {
   locale?: Locale;
@@ -38,7 +19,6 @@ export default async function Page({ locale }: PageProps) {
   const posts = await getBlogPostsVariants();
   const latestPosts = posts.slice(0, 3);
   const pagePath = toLocalePath("/", resolvedLocale);
-  const dateLocale = resolvedLocale === "en" ? "en-US" : "ja-JP";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -93,6 +73,27 @@ export default async function Page({ locale }: PageProps) {
         </section>
 
         <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold">
+                <I18nText locale={resolvedLocale} ja="投稿カレンダー" en="Post Calendar" />
+              </h2>
+            </div>
+            <a
+              href={toLocalePath("/blog", resolvedLocale)}
+              className="text-sm font-medium text-muted-foreground"
+            >
+              <I18nText locale={resolvedLocale} ja="ブログへ →" en="Go to blog →" />
+            </a>
+          </div>
+          <Card className="border-transparent bg-card/40 shadow-none">
+            <div className="px-5 py-5">
+              <PostActivityHeatmap posts={posts} locale={resolvedLocale} />
+            </div>
+          </Card>
+        </section>
+
+        <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-xl font-semibold">
               <I18nText locale={resolvedLocale} ja="最新のブログ" en="Latest Posts" />
@@ -104,60 +105,12 @@ export default async function Page({ locale }: PageProps) {
               <I18nText locale={resolvedLocale} ja="すべて見る →" en="View all →" />
             </a>
           </div>
-          {latestPosts.length === 0 ? (
-            <Card className="border-transparent bg-card/40 shadow-none">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText locale={resolvedLocale} ja="まだ記事がありません。" en="No posts yet." />
-              </div>
-            </Card>
-          ) : (
-            <ul className="space-y-4">
-              {latestPosts.map((variant) => {
-                const post = resolvePost(variant, resolvedLocale);
-                if (!post) return null;
-                const postSlug = variant.slug;
-
-                return (
-                  <li key={postSlug}>
-                    <Card className="border-transparent bg-card/40 shadow-none">
-                      <a
-                        href={toLocalePath(`/blog/post/${postSlug}`, resolvedLocale)}
-                        className="flex flex-col gap-3 px-5 py-5"
-                      >
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span>{formatDate(post.frontmatter.date ?? "", dateLocale)}</span>
-                          {post.frontmatter.category ? (
-                            <Badge
-                              variant="secondary"
-                              className="bg-muted/70 text-[11px] text-muted-foreground"
-                            >
-                              {post.frontmatter.category}
-                            </Badge>
-                          ) : null}
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-base font-semibold text-foreground">
-                            {post.frontmatter.title || postSlug}
-                          </p>
-                          {post.frontmatter.tags?.length ? (
-                            <div className="flex flex-wrap gap-2">
-                              {post.frontmatter.tags.slice(0, 3).map((tag) => (
-                                <Tag
-                                  key={tag}
-                                  tag={tag}
-                                  className="bg-muted text-[11px] font-medium text-muted-foreground"
-                                />
-                              ))}
-                            </div>
-                          ) : null}
-                        </div>
-                      </a>
-                    </Card>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <BlogPostList
+            posts={latestPosts}
+            locale={resolvedLocale}
+            emptyMessage={{ ja: "まだ記事がありません。", en: "No posts yet." }}
+            variant="detailed"
+          />
         </section>
       </main>
       <Footer locale={resolvedLocale} />
