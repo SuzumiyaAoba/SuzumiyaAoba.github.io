@@ -7,6 +7,7 @@ export { InlineCode } from "./inline-code";
 export { Mermaid } from "./mermaid";
 export { Tab } from "./tab";
 export { Tabs } from "./tabs";
+export { MdxLabel } from "./label";
 
 export { HoverContainer, MdxLink } from "./codehike-mentions";
 export { Message } from "./message";

@@ -10,6 +10,14 @@ export type MdxImgProps = ImgHTMLAttributes<HTMLImageElement> & {
   basePath?: string;
 };
 
+const toNumber = (value?: number | string): number | undefined => {
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+  return value;
+};
+
 export function Img({ basePath, src, width, height, className, ...props }: MdxImgProps) {
   const resolvedSrc =
     typeof src === "string"
@@ -17,8 +25,8 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
         ? `${basePath}/${src.replace(/^\.\//, "").replace(/\.(png|jpg|jpeg)$/i, ".webp")}`
         : src
       : "";
-  const resolvedWidth = typeof width === "number" ? width : 1200;
-  const resolvedHeight = typeof height === "number" ? height : 675;
+  const resolvedWidth = toNumber(width) ?? 1200;
+  const resolvedHeight = toNumber(height) ?? 675;
 
   return (
     <span className="my-4 block">
