@@ -18,6 +18,22 @@ export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
   const posts = await getBlogPostsVariants();
   const latestPosts = posts.slice(0, 3);
+  const activityPosts = posts
+    .map((variant) => {
+      const post =
+        resolvedLocale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
+      if (!post) {
+        return null;
+      }
+      return {
+        slug: variant.slug,
+        title: post.frontmatter.title || variant.slug,
+        date: post.frontmatter.date ?? "",
+        tags: post.frontmatter.tags ?? [],
+        ...(post.frontmatter.category ? { category: post.frontmatter.category } : {}),
+      };
+    })
+    .filter((post): post is NonNullable<typeof post> => Boolean(post));
   const pagePath = toLocalePath("/", resolvedLocale);
 
   return (
@@ -88,7 +104,7 @@ export default async function Page({ locale }: PageProps) {
           </div>
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-5">
-              <PostActivityHeatmap posts={posts} locale={resolvedLocale} />
+              <PostActivityHeatmap posts={activityPosts} locale={resolvedLocale} />
             </div>
           </Card>
         </section>

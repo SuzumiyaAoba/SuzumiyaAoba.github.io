@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
-import type { BlogPost, LocalizedBlogPost } from "@/entities/blog/@x/post-activity-heatmap";
 import type { Locale } from "@/shared/lib/locale-path";
-import { BlogPostList } from "@/entities/blog/@x/post-activity-heatmap";
+import { toLocalePath } from "@/shared/lib/locale-path";
+import { Tag } from "@/shared/ui/tag";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -30,21 +30,23 @@ function normalizeDateString(raw: string): string | null {
   return toDateKey(parsed);
 }
 
-type PostActivityIndex = Map<string, LocalizedBlogPost[]>;
+type PostActivityPost = {
+  slug: string;
+  title: string;
+  date: string;
+  tags: string[];
+  category?: string;
+};
 
-function resolvePost(variant: LocalizedBlogPost, locale: Locale) {
-  return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
-}
+type PostActivityIndex = Map<string, PostActivityPost[]>;
 
-function buildPostIndex(posts: LocalizedBlogPost[]): PostActivityIndex {
-  const index = new Map<string, LocalizedBlogPost[]>();
-  for (const variant of posts) {
-    const reference = variant.ja ?? variant.en;
-    if (!reference) continue;
-    const dateKey = normalizeDateString(reference.frontmatter.date ?? "");
+function buildPostIndex(posts: PostActivityPost[]): PostActivityIndex {
+  const index = new Map<string, PostActivityPost[]>();
+  for (const post of posts) {
+    const dateKey = normalizeDateString(post.date ?? "");
     if (!dateKey) continue;
     const items = index.get(dateKey) ?? [];
-    items.push(variant);
+    items.push(post);
     index.set(dateKey, items);
   }
   return index;
@@ -68,7 +70,7 @@ type HeatmapData = {
   index: PostActivityIndex;
 };
 
-function buildHeatmapData(posts: LocalizedBlogPost[]): HeatmapData {
+function buildHeatmapData(posts: PostActivityPost[]): HeatmapData {
   const index = buildPostIndex(posts);
   const rangeEnd = new Date();
   rangeEnd.setHours(0, 0, 0, 0);
@@ -134,7 +136,7 @@ const LEVEL_CLASSES = [
 ];
 
 type PostActivityHeatmapProps = {
-  posts: LocalizedBlogPost[];
+  posts: PostActivityPost[];
   locale: Locale;
   className?: string;
 };
@@ -209,9 +211,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
                   const isHovered = hoveredDateKey === day.dateKey;
                   const items = day.inRange ? index.get(day.dateKey) ?? [] : [];
                   const titles = items
-                    .map((item) => resolvePost(item, locale))
-                    .filter((item): item is BlogPost => Boolean(item))
-                    .map((item) => item.frontmatter.title || item.slug)
+                    .map((item) => item.title || item.slug)
                     .join(isJa ? "、" : ", ");
                   const title = isJa
                     ? `${day.dateKey}：${day.count}件${titles ? `\n${titles}` : ""}`
@@ -284,15 +284,36 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
           onMouseLeave={scheduleHoverClear}
         >
           <div className="text-xs text-muted-foreground">{activeDateLabel}</div>
-          <BlogPostList
-            posts={activePosts}
-            locale={locale}
-            emptyMessage={{
-              ja: "この日の記事はありません。",
-              en: "No posts on this day.",
-            }}
-            showThumbnail
-          />
+          {activePosts.length > 0 ? (
+            <ul className="space-y-2">
+              {activePosts.map((post) => (
+                <li key={post.slug} className="rounded-md border border-border/60 bg-muted/10 px-3 py-2">
+                  <a
+                    href={toLocalePath(`/blog/post/${post.slug}`, locale)}
+                    className="text-sm font-medium text-foreground hover:text-foreground/80"
+                  >
+                    {post.title || post.slug}
+                  </a>
+                  {post.tags.length > 0 ? (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {post.tags.map((tag) => (
+                        <Tag
+                          key={tag}
+                          tag={tag}
+                          href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)}
+                          className="bg-muted text-[11px] font-medium text-muted-foreground"
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-xs text-muted-foreground">
+              {isJa ? "この日の記事はありません。" : "No posts on this day."}
+            </div>
+          )}
         </div>
       ) : null}
     </div>
