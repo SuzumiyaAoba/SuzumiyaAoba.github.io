@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
-import type { BlogPost, LocalizedBlogPost } from "@/entities/blog";
+import type { BlogPost, LocalizedBlogPost } from "@/entities/blog/@x/client";
 import type { Locale } from "@/shared/lib/locale-path";
-import { BlogPostList } from "@/entities/blog";
+import { BlogPostList } from "@/entities/blog/@x/client";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

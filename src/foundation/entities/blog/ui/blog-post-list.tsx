@@ -7,7 +7,7 @@ import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 import { cn } from "@/shared/lib/utils";
-import type { LocalizedBlogPost } from "@/entities/blog";
+import type { LocalizedBlogPost } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 function formatDate(date: string, locale: string): string {
@@ -140,11 +140,9 @@ export function BlogPostList({
                           <Tag
                             key={tag}
                             tag={tag}
-                            href={
-                              withTagLinks
-                                ? toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)
-                                : undefined
-                            }
+                            {...(withTagLinks
+                              ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
+                              : {})}
                             className="bg-muted text-xs font-medium text-muted-foreground"
                           />
                         ))}
@@ -213,11 +211,9 @@ export function BlogPostList({
                           <Tag
                             key={tag}
                             tag={tag}
-                            href={
-                              withTagLinks
-                                ? toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)
-                                : undefined
-                            }
+                            {...(withTagLinks
+                              ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
+                              : {})}
                             className="bg-muted text-[11px] font-medium text-muted-foreground"
                           />
                         ))}
