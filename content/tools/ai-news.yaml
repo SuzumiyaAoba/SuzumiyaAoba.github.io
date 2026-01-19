@@ -1,0 +1,189 @@
+version: 1
+updated: "2026-01"
+events:
+  - year: 2025
+    date: 2025-12-18
+    title_ja: "GPT-5.2-Codex"
+    summary_ja: |
+      [GPT-5.2-Codex が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-2-codex/)
+    tags: ["OpenAI", "GPT", "Codex", "New LLM Model"]
+  - year: 2025
+    date: 2025-12-11
+    title_ja: "GPT-5.2 (Instant, Thinking, Pro)"
+    summary_ja: |
+      [GPT-5.2 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-2/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-11-25
+    title_ja: "Claude Opus 4.5"
+    summary_ja: |
+      [Introducing Claude Opus 4.5 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-5)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-11-19
+    title_ja: "GPT-5.1-Codex"
+    summary_ja: |
+      [GPT-5.1-Codex-Max で広がる可能性 | OpenAI](https://openai.com/ja-JP/index/gpt-5-1-codex-max/)
+    tags: ["OpenAI", "GPT", "Codex", "New LLM Model"]
+  - year: 2025
+    date: 2025-11-12
+    title_ja: "GPT-5.1 (Instant, Thinking)"
+    summary_ja: |
+      [GPT-5.1：さらに賢く、より会話的になった ChatGPT | OpenAI](https://openai.com/ja-JP/index/gpt-5-1/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-10-29
+    title_ja: "gpt-oss-safeguard (20b, 120b)"
+    summary_ja: |
+      [gpt-oss-safeguard が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss-safeguard/)
+    tags: ["OpenAI", "gpt", "Open Weight Model", "New LLM Model"]
+  - year: 2025
+    date: 2025-10-16
+    title_ja: "Claude Haiku 4.5"
+    summary_ja: |
+      [Introducing Claude Haiku 4.5 \ Anthropic](https://www.anthropic.com/news/claude-haiku-4-5)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-09-30
+    title_ja: "Claude Sonnet 4.5"
+    summary_ja: |
+      [Introducing Claude Sonnet 4.5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-5)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-08-06
+    title_ja: "Claude Opus 4.1"
+    summary_ja: |
+      [Claude Opus 4.1 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-1)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-08-07
+    title_ja: "GPT-5 (thinking, Pro)"
+    summary_ja: |
+      [GPT-5 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-08-05
+    title_ja: "gpt-oss (20b, 120b)"
+    summary_ja: |
+      [gpt-oss が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss/)
+    tags: ["OpenAI", "gpt", "Open Weight Model", "New LLM Model"]
+  - year: 2025
+    date: 2025-05-23
+    title_ja: "Claude Code (GA)"
+    summary_ja: |
+      [Release Claude Code 1.0.0 with general availability · anthropics/claude-code@6f27711](https://github.com/anthropics/claude-code/pull/1227)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-05-23
+    title_ja: "Claude Opus 4"
+    summary_ja: |
+      [Introducing Claude 4 \ Anthropic](https://www.anthropic.com/news/claude-4)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-05-23
+    title_ja: "Claude Sonnet 4"
+    summary_ja: |
+      [Introducing Claude 4 \ Anthropic](https://www.anthropic.com/news/claude-4)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-05-16
+    title_ja: "Codex"
+    summary_ja: |
+      [Codex が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-codex/)
+    tags: ["OpenAI", "GPT", "Agent"]
+  - year: 2025
+    date: 2025-04-16
+    title_ja: "OpenAI o3, OpenAI o4-mini"
+    summary_ja: |
+      [OpenAI o3 と o4-mini が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-o3-and-o4-mini/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-02-27
+    title_ja: "GPT-4.5"
+    summary_ja: |
+      [GPT-4.5が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-4-5/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-02-25
+    title_ja: "Claude Sonnet 3.7"
+    summary_ja: |
+      [Claude 3.7 Sonnet and Claude Code \ Anthropic](https://www.anthropic.com/news/claude-3-7-sonnet)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2025
+    date: 2025-02-25
+    title_ja: "Claude Code (Research Preview)"
+    summary_ja: |
+      [Claude 3.7 Sonnet and Claude Code \ Anthropic](https://www.anthropic.com/news/claude-3-7-sonnet)
+    tags: ["Ahthropic", "Claude Code", "Agent"]
+  - year: 2025
+    date: 2025-01-31
+    title_ja: "OpenAI o3-mini"
+    summary_ja: |
+      [OpenAI o3-mini | OpenAI](https://openai.com/ja-JP/index/openai-o3-mini/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2025
+    date: 2025-01-20
+    title_ja: "DeepSeek R1"
+    summary_ja: |
+      [DeepSeek-R1 Release | DeepSeek API Docs](https://api-docs.deepseek.com/news/news250120)
+    tags: ["DeepSeek", "Open Weight Model", "New LLM Model"]
+  - year: 2024
+    date: 2024-09-12
+    title_ja: "OpenAI o1-mini"
+    summary_ja: |
+      [OpenAI o1-mini | OpenAI](https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2024
+    date: 2024-07-18
+    title_ja: "GPT-4o mini"
+    summary_ja: |
+      [GPT-4o mini：費用効率の高いインテリジェンスの推進 | OpenAI](https://openai.com/ja-JP/index/gpt-4o-mini-advancing-cost-efficient-intelligence/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2024
+    date: 2024-06-21
+    title_ja: "Claude Sonnet 3.5"
+    summary_ja: |
+      [Introducing Claude 3.5 Sonnet \ Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2024
+    date: 2024-03-14
+    title_ja: "Claude Sonnet 3 Haiku"
+    summary_ja: |
+      [Claude 3 Haiku: our fastest model yet \ Anthropic](https://www.anthropic.com/news/claude-3-haiku)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2023
+    date: 2023-11-21
+    title_ja: "Claude 2.1"
+    summary_ja: |
+      [Introducing Claude 2.1 \ Anthropic](https://www.anthropic.com/news/claude-2-1)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2023
+    date: 2023-08-09
+    title_ja: "Claude Instant 1.2"
+    summary_ja: |
+      [Releasing Claude Instant 1.2 \ Anthropic](https://www.anthropic.com/news/releasing-claude-instant-1-2)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2023
+    date: 2023-07-11
+    title_ja: "Claude 2"
+    summary_ja: |
+      [Claude 2 \ Anthropic](https://www.anthropic.com/news/claude-2)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2023
+    date: 2023-03-14
+    title_ja: "Claude"
+    summary_ja: |
+      [Introducing Claude \ Anthropic](https://www.anthropic.com/news/introducing-claude)
+    tags: ["Ahthropic", "Claude", "Claude Opus", "New LLM Model"]
+  - year: 2021
+    date: 2021-03-25
+    title_ja: "GPT-3"
+    summary_ja: |
+      [GPT-3 powers the next generation of apps | OpenAI](https://openai.com/index/gpt-3-apps/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]
+  - year: 2019
+    date: 2019-11-05
+    title_ja: "GPT-2"
+    summary_ja: |
+      [GPT-2: 1.5B release | OpenAI](https://openai.com/index/gpt-2-1-5b-release/)
+    tags: ["OpenAI", "GPT", "New LLM Model"]

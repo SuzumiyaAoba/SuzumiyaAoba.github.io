@@ -50,6 +50,16 @@ export default function Page({ locale }: PageProps) {
                 />
               </a>
             </li>
+            {resolvedLocale === "ja" ? (
+              <li>
+                <a
+                  href={toLocalePath("/tools/ai-news/", resolvedLocale)}
+                  className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
+                >
+                  <I18nText locale={resolvedLocale} ja="AIニュース" en="AI News" />
+                </a>
+              </li>
+            ) : null}
           </ul>
         </section>
       </main>
