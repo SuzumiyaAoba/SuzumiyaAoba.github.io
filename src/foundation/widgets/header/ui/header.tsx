@@ -12,6 +12,7 @@ const navItems = [
   { href: "/blog", labelJa: "ブログ", labelEn: "Blog" },
   { href: "/series", labelJa: "シリーズ", labelEn: "Series" },
   { href: "/tags", labelJa: "タグ", labelEn: "Tags" },
+  { href: "/archive", labelJa: "アーカイブ", labelEn: "Archive" },
   { href: "/tools", labelJa: "ツール", labelEn: "Tools" },
 ];
 

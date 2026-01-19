@@ -4,4 +4,4 @@ export const metadata: Metadata = {
   title: "AIニュース",
 };
 
-export { default } from "@/pages/tools/ai-news";
+export { default } from "@/pages/archive/ai-news";

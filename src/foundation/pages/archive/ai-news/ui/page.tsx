@@ -14,8 +14,9 @@ type PageProps = {
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
-  const pagePath = toLocalePath("/tools/ai-news", resolvedLocale);
+  const pagePath = toLocalePath("/archive/ai-news", resolvedLocale);
   const pageName = resolvedLocale === "en" ? "AI News" : "AIニュース";
+  const archiveName = resolvedLocale === "en" ? "Archive" : "アーカイブ";
   const [entries, updated] = await Promise.all([
     getAiNewsEntries(),
     getAiNewsUpdated(),
@@ -41,7 +42,7 @@ export default async function Page({ locale }: PageProps) {
       <JsonLd
         data={buildBreadcrumbList([
           { name: "Home", path: toLocalePath("/", resolvedLocale) },
-          { name: "Tools", path: toLocalePath("/tools", resolvedLocale) },
+          { name: archiveName, path: toLocalePath("/archive", resolvedLocale) },
           { name: pageName, path: pagePath },
         ])}
       />
@@ -49,7 +50,7 @@ export default async function Page({ locale }: PageProps) {
         <Breadcrumbs
           items={[
             { name: "Home", path: toLocalePath("/", resolvedLocale) },
-            { name: "Tools", path: toLocalePath("/tools", resolvedLocale) },
+            { name: archiveName, path: toLocalePath("/archive", resolvedLocale) },
             { name: pageName, path: pagePath },
           ]}
           className="mb-4"
@@ -80,7 +81,7 @@ export default async function Page({ locale }: PageProps) {
                   dateParts.length >= 2
                     ? `${dateParts[1]}${dateParts[2] ? `.${dateParts[2]}` : ""}`
                     : "";
-                const previousYear = index > 0 ? renderedEntries[index - 1].entry.year : null;
+                const previousYear = renderedEntries[index - 1]?.entry.year ?? null;
                 const showYear = previousYear !== entry.year;
                 return (
                   <div key={`${entry.year}-${title}`} className="space-y-4">

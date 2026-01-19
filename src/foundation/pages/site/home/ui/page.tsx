@@ -41,7 +41,7 @@ export default async function Page({ locale }: PageProps) {
       <Header locale={resolvedLocale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList([{ name: "Home", path: pagePath }])} />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-12 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 md:grid-cols-4">
           {[
             {
               titleJa: "ブログ",
@@ -56,6 +56,13 @@ export default async function Page({ locale }: PageProps) {
               descriptionJa: "テーマごとの連載記事をまとめて閲覧。",
               descriptionEn: "Explore curated series grouped by theme.",
               href: "/series",
+            },
+            {
+              titleJa: "アーカイブ",
+              titleEn: "Archive",
+              descriptionJa: "テーマ別に蓄積した資料や年表の一覧。",
+              descriptionEn: "A collection of archived notes and timelines.",
+              href: "/archive",
             },
             {
               titleJa: "ツール",
