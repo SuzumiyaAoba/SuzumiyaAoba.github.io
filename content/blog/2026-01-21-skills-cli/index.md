@@ -21,7 +21,7 @@ Claude Code へ Skills をインストールするには、次のようなコマ
 /plugin install document-skills@anthropic-agent-skills
 ```
 
-しかし、この方法が有効なのか Claude Code だけであり、オープンスタンダードとなった後に対応が発表された
+しかし、この方法が有効なのは Claude Code だけであり、オープンスタンダードとなった後に対応が発表された
 GitHub Copilot ([2025/12/18](https://github.blog/changelog/2025-12-18-github-copilot-now-supports-agent-skills/)),
 [Codex]([2025/12/05](https://github.com/openai/codex/releases/tag/rust-v0.65.0), [2025/12/20](https://x.com/OpenAIDevs/status/2002099762536010235?s=20))
 では異なる方法で Skills をインストールしなければならない。
