@@ -3,6 +3,7 @@ title: Skills コマンド
 date: 2026-01-21
 category: プログラミング
 tags: ["コーディングエージェント", "CLI", "Claude Code", "Codex", "GitHub Copilot"]
+thumbnail: iconify:material-icon-theme:claude
 ---
 
 Anthropic が 2025/10/16 に [Skills を発表](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)し、
