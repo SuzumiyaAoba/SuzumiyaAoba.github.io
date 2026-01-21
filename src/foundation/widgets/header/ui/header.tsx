@@ -9,11 +9,11 @@ import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
 const navItems = [
-  { href: "/blog", labelJa: "ブログ", labelEn: "Blog" },
-  { href: "/series", labelJa: "シリーズ", labelEn: "Series" },
-  { href: "/tags", labelJa: "タグ", labelEn: "Tags" },
-  { href: "/archive", labelJa: "アーカイブ", labelEn: "Archive" },
-  { href: "/tools", labelJa: "ツール", labelEn: "Tools" },
+  { href: "/blog", labelJa: "Blog", labelEn: "Blog" },
+  { href: "/series", labelJa: "Series", labelEn: "Series" },
+  { href: "/tags", labelJa: "Tags", labelEn: "Tags" },
+  { href: "/archive", labelJa: "Archive", labelEn: "Archive" },
+  { href: "/tools", labelJa: "Tools", labelEn: "Tools" },
 ];
 
 type HeaderProps = {
@@ -94,7 +94,7 @@ export function Header({ locale, path }: HeaderProps) {
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
               <a href={toLocalePath("/about", locale)}>
-                <I18nText locale={locale} ja="概要" en="About" />
+                <I18nText locale={locale} ja="About" en="About" />
               </a>
             </Button>
             <span className="text-border/70">/</span>
@@ -105,7 +105,7 @@ export function Header({ locale, path }: HeaderProps) {
               className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
             >
               <a href={toLocalePath("/search", locale)}>
-                <I18nText locale={locale} ja="検索" en="Search" />
+                <I18nText locale={locale} ja="Search" en="Search" />
               </a>
             </Button>
             <span className="text-border/70">/</span>
@@ -118,7 +118,7 @@ export function Header({ locale, path }: HeaderProps) {
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors"
-              aria-label={locale === "en" ? "Open menu" : "メニューを開く"}
+              aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               onClick={() => setIsMenuOpen((open) => !open)}
@@ -167,22 +167,22 @@ export function Header({ locale, path }: HeaderProps) {
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            <I18nText locale={locale} ja="概要" en="About" />
+            <I18nText locale={locale} ja="About" en="About" />
           </a>
           <a
             href={toLocalePath("/search", locale)}
             className="rounded-lg px-3 py-2 transition-colors hover:bg-background hover:text-foreground"
             onClick={() => setIsMenuOpen(false)}
           >
-            <I18nText locale={locale} ja="検索" en="Search" />
+            <I18nText locale={locale} ja="Search" en="Search" />
           </a>
           <div className="h-px bg-border/60" />
           <div className="flex items-center gap-2 px-3 py-2">
-            <I18nText locale={locale} as="span" ja="テーマ" en="Theme" className="text-sm" />
+            <I18nText locale={locale} as="span" ja="Theme" en="Theme" className="text-sm" />
             <ThemeToggle />
           </div>
           <div className="flex items-center gap-2 px-3 py-2">
-            <I18nText locale={locale} as="span" ja="言語" en="Language" className="text-sm" />
+            <I18nText locale={locale} as="span" ja="Language" en="Language" className="text-sm" />
             <LanguageToggle locale={locale} path={path} />
           </div>
         </nav>
