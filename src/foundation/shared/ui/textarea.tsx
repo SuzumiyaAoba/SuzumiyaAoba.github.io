@@ -2,6 +2,10 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * テキストエリアコンポーネント
+ * @param props 標準的な textarea 要素のプロップス
+ */
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea

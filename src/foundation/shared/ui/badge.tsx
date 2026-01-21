@@ -2,6 +2,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * バッジのバリアント設定
+ */
 const badgeVariants = cva(
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
   {
@@ -18,6 +21,11 @@ const badgeVariants = cva(
     },
   },
 );
+
+/**
+ * バッジコンポーネント
+ * @param props バリアント、その他のプロップス
+ */
 
 function Badge({
   className,

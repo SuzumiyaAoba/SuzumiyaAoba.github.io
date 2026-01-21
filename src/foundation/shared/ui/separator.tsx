@@ -3,6 +3,10 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * セパレーター（区切り線）コンポーネント
+ * @param props 向き（水平/垂直）、装飾目的かどうか、その他のプロップス
+ */
 function Separator({
   className,
   orientation = "horizontal",

@@ -3,6 +3,9 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * アバターコンポーネントのルート
+ */
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
   return (
     <AvatarPrimitive.Root
@@ -13,6 +16,9 @@ function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimi
   );
 }
 
+/**
+ * アバターの画像部分
+ */
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
     <AvatarPrimitive.Image
@@ -23,6 +29,9 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
   );
 }
 
+/**
+ * 画像が読み込めない場合のフォールバック表示
+ */
 function AvatarFallback({
   className,
   ...props

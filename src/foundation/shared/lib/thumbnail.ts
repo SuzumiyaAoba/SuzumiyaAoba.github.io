@@ -1,16 +1,33 @@
+/**
+ * 解決されたサムネイル情報の型定義
+ */
 export type ResolvedThumbnail =
   | {
+      /** 画像タイプ */
       type: "image";
+      /** 画像のソースパス */
       src: string;
+      /** フォールバック画像（デフォルト画像）かどうか */
       isFallback: boolean;
     }
   | {
+      /** アイコンタイプ */
       type: "icon";
+      /** アイコン名 (Iconify形式など) */
       icon: string;
     };
 
+/**
+ * アイコンとして扱う接頭辞のリスト
+ */
 const ICON_PREFIXES = ["icon:", "iconify:"] as const;
 
+/**
+ * 記事のスラッグとサムネイル文字列から、実際に表示可能なサムネイル情報を解決する
+ * @param slug 記事のスラッグ
+ * @param thumbnail 設定されているサムネイル文字列（パスまたはアイコン名）
+ * @returns 解決されたサムネイル情報
+ */
 export function resolveThumbnail(slug: string, thumbnail?: string): ResolvedThumbnail {
   if (!thumbnail) {
     return { type: "image", src: "/icon.svg", isFallback: true };

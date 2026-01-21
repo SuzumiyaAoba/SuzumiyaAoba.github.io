@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import { getBlogPost, getBlogSlugs } from "@/entities/blog";
 
+/**
+ * ページコンポーネントのプロップス
+ */
 type PageProps = {
+  /** ルートパラメータ */
   params?: { slug?: string } | Promise<{ slug?: string }>;
 };
 
+/**
+ * ページのメタデータを生成する
+ * @param props ページプロップス
+ * @returns メタデータオブジェクト
+ */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const slug = resolvedParams?.slug;
@@ -33,6 +42,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+/**
+ * 静的生成のためのパスパラメータを生成する
+ * @returns スラッグを含むオブジェクトの配列
+ */
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const slugs = await getBlogSlugs();
   return slugs.map((slug) => ({ slug }));

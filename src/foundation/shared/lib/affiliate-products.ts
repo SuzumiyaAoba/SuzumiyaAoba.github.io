@@ -3,28 +3,54 @@ import path from "node:path";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
+/**
+ * アフィリエイト商品情報の型定義
+ */
 export type AffiliateProduct = {
+  /** ユニークID */
   id: string;
+  /** 商品名/タイトル */
   title: string;
+  /** 商品画像のURL */
   imageUrl: string;
+  /** 商品詳細ページ（Amazon等）のURL */
   productUrl: string;
+  /** Yahoo!ショッピング用のURL（オプション） */
   yahooShoppingUrl?: string;
+  /** 関連するタグのリスト */
   tags?: string[];
 };
 
+/**
+ * ソースファイル（JSON）の構造
+ */
 type AffiliateProductSource = {
   products?: AffiliateProduct[];
 };
 
+/**
+ * 読み込まれた商品データのインデックス情報
+ */
 type AffiliateProductIndex = {
   products: AffiliateProduct[];
+  /** ID をキーとした商品マップ */
   byId: Map<string, AffiliateProduct>;
+  /** タグをキーとした商品配列マップ */
   byTag: Map<string, AffiliateProduct[]>;
+  /** ファイルの最終更新日時(ms) */
   mtimeMs?: number;
 };
 
+/**
+ * 商品データのキャッシュ
+ */
 let cachedIndex: AffiliateProductIndex | null = null;
 
+/**
+ * アフィリエイト商品データをファイルから読み込み、インデックスを作成する
+ * 開発環境では変更を検知してリロードする
+ * @returns 商品データのインデックス情報
+ */
 async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
   const root = await resolveContentRoot();
   const filePath = path.join(root, "affiliate-products.json");
@@ -115,6 +141,11 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
   }
 }
 
+/**
+ * 指定された ID リストに合致する商品を一括取得する
+ * @param ids 商品 ID の配列
+ * @returns 商品データの配列。存在しない ID は除外される
+ */
 export async function getAffiliateProductsByIds(ids: string[]): Promise<AffiliateProduct[]> {
   const index = await loadAffiliateProducts();
   return ids
@@ -122,11 +153,23 @@ export async function getAffiliateProductsByIds(ids: string[]): Promise<Affiliat
     .filter((item): item is AffiliateProduct => Boolean(item));
 }
 
+/**
+ * タグ検索時のオプション
+ */
 type AffiliateProductTagOptions = {
+  /** 結果から除外する ID のリスト（現在表示中の商品など） */
   excludeIds?: string[];
+  /** 最大取得件数 */
   limit?: number;
 };
 
+/**
+ * いずれかのタグに合致する商品を一括取得する
+ * 重複して合致した商品はユニーク化される
+ * @param tags タグ名の配列
+ * @param options 除外設定や件数制限
+ * @returns 商品データの配列
+ */
 export async function getAffiliateProductsByTags(
   tags: string[],
   options?: AffiliateProductTagOptions,

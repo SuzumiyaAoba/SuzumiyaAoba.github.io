@@ -2,6 +2,10 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * インプットコンポーネント
+ * @param props 標準的な input 要素のプロップス
+ */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input

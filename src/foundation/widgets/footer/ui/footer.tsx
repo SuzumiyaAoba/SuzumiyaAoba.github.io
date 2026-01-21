@@ -1,10 +1,18 @@
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
+/**
+ * Footer コンポーネントのプロップス
+ */
 type FooterProps = {
+  /** 現在のロケール */
   locale: Locale;
 };
 
+/**
+ * サイトのフッターを表示するコンポーネント
+ * @param props ロケール情報
+ */
 export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
 

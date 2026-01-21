@@ -3,11 +3,20 @@
 import { Button } from "@/shared/ui/button";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
+/**
+ * LanguageToggle コンポーネントのプロップス
+ */
 type LanguageToggleProps = {
+  /** 現在のロケール */
   locale: Locale;
+  /** 切り替え後の遷移先ベースパス */
   path: string;
 };
 
+/**
+ * サイトの表示言語を切り替えるコンポーネント
+ * @param props ロケールと遷移パス
+ */
 export function LanguageToggle({ locale, path }: LanguageToggleProps) {
   const jaPath = toLocalePath(path, "ja");
   const enPath = toLocalePath(path, "en");

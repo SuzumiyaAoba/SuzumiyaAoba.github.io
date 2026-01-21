@@ -8,6 +8,9 @@ import { LanguageToggle } from "@/shared/ui/language-toggle";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 
+/**
+ * ナビゲーション項目の定義
+ */
 const navItems = [
   { href: "/blog", labelJa: "Blog", labelEn: "Blog" },
   { href: "/series", labelJa: "Series", labelEn: "Series" },
@@ -16,11 +19,21 @@ const navItems = [
   { href: "/tools", labelJa: "Tools", labelEn: "Tools" },
 ];
 
+/**
+ * Header コンポーネントのプロップス
+ */
 type HeaderProps = {
+  /** 現在のロケール */
   locale: Locale;
+  /** 現在のパス（言語切り替え用） */
   path: string;
 };
 
+/**
+ * サイトのヘッダーを表示するコンポーネント
+ * スクロール進捗バー、ナビゲーション、言語/テーマ切り替えを含む
+ * @param props ロケールとパス情報
+ */
 export function Header({ locale, path }: HeaderProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -8,6 +8,10 @@ const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
 );
 
+/**
+ * ラベルコンポーネント
+ * @param props 標準的な label 要素のプロップス
+ */
 function Label({
   className,
   ...props

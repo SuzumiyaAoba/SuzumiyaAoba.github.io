@@ -2,6 +2,9 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * カードコンポーネントのルート
+ */
 function Card({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -14,6 +17,9 @@ function Card({ className, children, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/**
+ * カードのヘッダー部分
+ */
 function CardHeader({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div data-slot="card-header" className={cn("flex flex-col gap-1.5 p-6", className)} {...props}>
@@ -22,6 +28,9 @@ function CardHeader({ className, children, ...props }: React.ComponentProps<"div
   );
 }
 
+/**
+ * カードのタイトル
+ */
 function CardTitle({ className, children, ...props }: React.ComponentProps<"h3">) {
   return (
     <h3
@@ -34,6 +43,9 @@ function CardTitle({ className, children, ...props }: React.ComponentProps<"h3">
   );
 }
 
+/**
+ * カードの説明文
+ */
 function CardDescription({ className, children, ...props }: React.ComponentProps<"p">) {
   return (
     <p
@@ -46,6 +58,9 @@ function CardDescription({ className, children, ...props }: React.ComponentProps
   );
 }
 
+/**
+ * カードのメインコンテンツ部分
+ */
 function CardContent({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div data-slot="card-content" className={cn("p-6 pt-0", className)} {...props}>
@@ -54,6 +69,9 @@ function CardContent({ className, children, ...props }: React.ComponentProps<"di
   );
 }
 
+/**
+ * カードのフッター部分
+ */
 function CardFooter({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div data-slot="card-footer" className={cn("flex items-center p-6 pt-0", className)} {...props}>

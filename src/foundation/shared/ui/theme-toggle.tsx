@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/shared/ui/button";
 
+/**
+ * ダークモードとライトモードを切り替えるコンポーネント
+ */
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
