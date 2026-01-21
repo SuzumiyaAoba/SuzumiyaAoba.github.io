@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ArchivePage from "@/pages/archive/index";
 
 export const metadata: Metadata = {
-  title: "アーカイブ",
+  title: "Archive",
 };
 
 export default function Page() {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "資産形成シミュレーション",
+  title: "Asset Formation Simulator",
 };
 
 export { default } from "@/pages/tools/asset-formation-simulator";

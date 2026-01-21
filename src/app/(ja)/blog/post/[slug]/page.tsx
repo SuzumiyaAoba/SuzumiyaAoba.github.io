@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = post?.frontmatter.title || slug;
   // Use category or default description if available, otherwise fallback to title
   const description = post?.frontmatter.category
-    ? `${post.frontmatter.category}に関する記事です。`
+    ? `Articles about ${post.frontmatter.category}.`
     : title;
 
   return {
