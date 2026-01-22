@@ -2,6 +2,7 @@
   "name": "react-best-practices",
   "nameEn": "react-best-practices",
   "slug": "react-best-practices",
+  "thumbnail": "iconify:logos:react",
   "description": "Vercel が公開した react-best-practices を読むシリーズ",
   "descriptionEn": "A series about reading Vercel's react-best-practices",
   "posts": [

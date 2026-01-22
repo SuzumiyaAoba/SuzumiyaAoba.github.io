@@ -14,6 +14,8 @@ export type SeriesDefinition = {
   name: string;
   /** スラッグ */
   slug: string;
+  /** サムネイル（オプション） */
+  thumbnail?: string;
   /** 説明文（オプション） */
   description?: string;
   /** シリーズに含まれる記事のスラッグ配列 */
@@ -34,6 +36,10 @@ const SeriesDefinitionRawSchema = z.object({
   description: z.string().optional(),
   /** 英語の説明文 */
   descriptionEn: z.string().optional(),
+  /** サムネイル（オプション） */
+  thumbnail: z.string().optional(),
+  /** 英語のサムネイル */
+  thumbnailEn: z.string().optional(),
   /** シリーズに含まれる記事のスラッグ配列 */
   posts: z.array(z.string()).default([]),
 });
@@ -55,9 +61,11 @@ function resolveSeriesDefinition(
 ): SeriesDefinition {
   if (locale === "en") {
     const description = definition.descriptionEn ?? definition.description;
+    const thumbnail = definition.thumbnailEn ?? definition.thumbnail;
     return {
       name: definition.nameEn ?? definition.name,
       slug: definition.slug,
+      ...(thumbnail !== undefined ? { thumbnail } : {}),
       posts: definition.posts,
       ...(description !== undefined ? { description } : {}),
     };
@@ -66,6 +74,7 @@ function resolveSeriesDefinition(
   return {
     name: definition.name,
     slug: definition.slug,
+    ...(definition.thumbnail !== undefined ? { thumbnail: definition.thumbnail } : {}),
     posts: definition.posts,
     ...(definition.description !== undefined ? { description: definition.description } : {}),
   };

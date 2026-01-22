@@ -28,7 +28,15 @@ const ICON_PREFIXES = ["icon:", "iconify:"] as const;
  * @param thumbnail 設定されているサムネイル文字列（パスまたはアイコン名）
  * @returns 解決されたサムネイル情報
  */
-export function resolveThumbnail(slug: string, thumbnail?: string): ResolvedThumbnail {
+type ResolveThumbnailOptions = {
+  basePath?: string;
+};
+
+export function resolveThumbnail(
+  slug: string,
+  thumbnail?: string,
+  options: ResolveThumbnailOptions = {},
+): ResolvedThumbnail {
   if (!thumbnail) {
     return { type: "image", src: "/icon.svg", isFallback: true };
   }
@@ -41,6 +49,7 @@ export function resolveThumbnail(slug: string, thumbnail?: string): ResolvedThum
     }
   }
 
+  const basePath = (options.basePath ?? `/contents/blog/${slug}`).replace(/\/$/, "");
   let resolvedPath: string;
   if (
     normalized.startsWith("http://") ||
@@ -49,7 +58,7 @@ export function resolveThumbnail(slug: string, thumbnail?: string): ResolvedThum
   ) {
     resolvedPath = normalized;
   } else {
-    resolvedPath = `/contents/blog/${slug}/${normalized}`;
+    resolvedPath = `${basePath}/${normalized}`;
   }
 
   // Convert supported image formats to webp
