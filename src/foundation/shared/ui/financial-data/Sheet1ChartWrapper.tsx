@@ -1,11 +1,11 @@
 "use client";
 
-import { LineChart } from "@/shared/ui/financial-charts";
-import type { MetricGroup, SheetData } from "@/shared/ui/financial-charts";
+import { LineChart, SheetDataSchema, type MetricGroup } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet1ChartWrapper: React.FC = () => {
-  const sheet1Data = assetsData.sheets["1"] as SheetData;
+  const result = SheetDataSchema.safeParse(assetsData.sheets["1"]);
+  const sheet1Data = result.success ? result.data : null;
 
   if (!sheet1Data) {
     return <div>データが見つかりません</div>;

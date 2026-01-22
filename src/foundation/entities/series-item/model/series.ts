@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { z } from "zod";
+
 import { resolveContentRoot } from "@/shared/lib/content-root";
 import type { Locale } from "@/shared/lib/locale-path";
 
@@ -19,14 +21,27 @@ export type SeriesDefinition = {
 };
 
 /**
+ * 翻訳用データを含むシリーズ定義の Zod スキーマ
+ */
+const SeriesDefinitionRawSchema = z.object({
+  /** シリーズ名 */
+  name: z.string().min(1),
+  /** 英語のシリーズ名 */
+  nameEn: z.string().optional(),
+  /** スラッグ */
+  slug: z.string().min(1),
+  /** 説明文（オプション） */
+  description: z.string().optional(),
+  /** 英語の説明文 */
+  descriptionEn: z.string().optional(),
+  /** シリーズに含まれる記事のスラッグ配列 */
+  posts: z.array(z.string()).default([]),
+});
+
+/**
  * 翻訳用データを含むシリーズ定義の内部型
  */
-type SeriesDefinitionRaw = SeriesDefinition & {
-  /** 英語のシリーズ名 */
-  nameEn?: string;
-  /** 英語の説明文 */
-  descriptionEn?: string;
-};
+type SeriesDefinitionRaw = z.infer<typeof SeriesDefinitionRawSchema>;
 
 /**
  * ロケールに応じてシリーズ定義を解決（翻訳を選択）する
@@ -71,28 +86,23 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
     const results = await Promise.all(
       files.map(async (entry) => {
         const filePath = path.join(seriesRoot, entry.name);
-        const raw = await fs.readFile(filePath, "utf8");
-        const data = JSON.parse(raw) as Record<string, unknown>;
-        const name = typeof data["name"] === "string" ? data["name"] : "";
-        const nameEn = typeof data["nameEn"] === "string" ? data["nameEn"] : undefined;
-        const slug = typeof data["slug"] === "string" ? data["slug"] : "";
-        const description =
-          typeof data["description"] === "string" ? data["description"] : undefined;
-        const descriptionEn =
-          typeof data["descriptionEn"] === "string" ? data["descriptionEn"] : undefined;
-        const posts = Array.isArray(data["posts"])
-          ? data["posts"].filter((item): item is string => typeof item === "string")
-          : [];
+        try {
+          const raw = await fs.readFile(filePath, "utf8");
+          const data = JSON.parse(raw);
+          const parsed = SeriesDefinitionRawSchema.safeParse(data);
 
-        if (!name || !slug) {
+          if (!parsed.success) {
+            return null;
+          }
+
+          return parsed.data;
+        } catch {
           return null;
         }
-
-        return { name, nameEn, slug, description, descriptionEn, posts };
       }),
     );
 
-    return results.filter((item) => item !== null) as SeriesDefinitionRaw[];
+    return results.filter((item): item is SeriesDefinitionRaw => item !== null);
   } catch {
     return [];
   }

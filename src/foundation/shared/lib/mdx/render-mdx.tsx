@@ -67,77 +67,79 @@ function remarkMermaid() {
 
 const devRenderCache = new Map<string, ReactElement>();
 
-export const renderMdx = cache(async (
-  source: string,
-  {
-    basePath,
-    scope,
-    idPrefix,
-  }: { basePath?: string; scope?: Record<string, unknown>; idPrefix?: string } = {},
-) => {
-  const useDevCache = process.env["NODE_ENV"] === "development";
-  let cacheKey = "";
-  if (useDevCache) {
-    const scopeKey = scope ? JSON.stringify(scope) : "";
-    cacheKey = `${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
-    const cached = devRenderCache.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-  }
-
-  const codeHikeConfig: CodeHikeConfig = {
-    components: { code: "Code", inlineCode: "InlineCode" },
-    syntaxHighlighting: {
-      theme: "github-from-css",
-    },
-  };
-
-  const components = basePath
-    ? {
-        ...mdxComponents,
-        Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
-        img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+export const renderMdx = cache(
+  async (
+    source: string,
+    {
+      basePath,
+      scope,
+      idPrefix,
+    }: { basePath?: string; scope?: Record<string, unknown>; idPrefix?: string } = {},
+  ) => {
+    const useDevCache = process.env["NODE_ENV"] === "development";
+    let cacheKey = "";
+    if (useDevCache) {
+      const scopeKey = scope ? JSON.stringify(scope) : "";
+      cacheKey = `${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
+      const cached = devRenderCache.get(cacheKey);
+      if (cached) {
+        return cached;
       }
-    : mdxComponents;
+    }
 
-  const { content } = await compileMDX({
-    source,
-    components,
-    options: {
-      ...(scope ? { scope } : {}),
-      mdxOptions: {
-        remarkPlugins: [
-          remarkGfm,
-          remarkEmoji,
-          remarkJoinCjkLines,
-          remarkMath,
-          remarkMermaid,
-          [remarkCodeHike, codeHikeConfig],
-        ],
-        recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
-        rehypePlugins: [
-          rehypeSlug,
-          ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
-          [rehypeAutolinkHeadings, { behavior: "append" }],
-          [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-          [
-            rehypeKatex,
-            {
-              output: "mathml",
-              throwOnError: false,
-              errorColor: "#cc0000",
-              trust: true,
-            },
-          ],
-        ],
+    const codeHikeConfig: CodeHikeConfig = {
+      components: { code: "Code", inlineCode: "InlineCode" },
+      syntaxHighlighting: {
+        theme: "github-from-css",
       },
-    },
-  });
+    };
 
-  const rendered = <>{content}</>;
-  if (useDevCache) {
-    devRenderCache.set(cacheKey, rendered);
-  }
-  return rendered;
-});
+    const components = basePath
+      ? {
+          ...mdxComponents,
+          Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+          img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+        }
+      : mdxComponents;
+
+    const { content } = await compileMDX({
+      source,
+      components,
+      options: {
+        ...(scope ? { scope } : {}),
+        mdxOptions: {
+          remarkPlugins: [
+            remarkGfm,
+            remarkEmoji,
+            remarkJoinCjkLines,
+            remarkMath,
+            remarkMermaid,
+            [remarkCodeHike, codeHikeConfig],
+          ],
+          recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
+          rehypePlugins: [
+            rehypeSlug,
+            ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
+            [rehypeAutolinkHeadings, { behavior: "append" }],
+            [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
+            [
+              rehypeKatex,
+              {
+                output: "mathml",
+                throwOnError: false,
+                errorColor: "#cc0000",
+                trust: true,
+              },
+            ],
+          ],
+        },
+      },
+    });
+
+    const rendered = <>{content}</>;
+    if (useDevCache) {
+      devRenderCache.set(cacheKey, rendered);
+    }
+    return rendered;
+  },
+);

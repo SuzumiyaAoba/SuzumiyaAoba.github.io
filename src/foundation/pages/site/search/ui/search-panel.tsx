@@ -49,6 +49,8 @@ function formatUrl(url: string): string {
   }
 }
 
+type PagefindErrorEvent = CustomEvent<{ error?: string }>;
+
 type SearchPanelProps = {
   locale: Locale;
 };
@@ -107,8 +109,8 @@ export function SearchPanel({ locale }: SearchPanelProps) {
       }
     }
 
-    function handlePagefindError(event: CustomEvent) {
-      const detail = event.detail as { error?: string } | undefined;
+    function handlePagefindError(event: Event) {
+      const detail = (event as PagefindErrorEvent).detail;
       setPagefindErrorKey("loadFailed");
       setPagefindErrorDetail(detail?.error ?? "");
     }

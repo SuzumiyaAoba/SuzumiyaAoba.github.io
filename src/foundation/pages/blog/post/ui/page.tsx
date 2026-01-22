@@ -134,12 +134,7 @@ export default async function Page({ params, locale }: PageProps) {
     ReactElement,
     Awaited<ReturnType<typeof getTocHeadings>>,
     AffiliateProduct[],
-  ] =
-    await Promise.all([
-      contentPromise,
-      tocPromise,
-      explicitPromise,
-  ]);
+  ] = await Promise.all([contentPromise, tocPromise, explicitPromise]);
   if (shouldLogPerf) {
     console.timeEnd(`[blog] mdx render:${slug}`);
     console.timeEnd(`[blog] toc:${slug}`);

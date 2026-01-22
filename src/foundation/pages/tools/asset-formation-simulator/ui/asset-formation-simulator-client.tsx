@@ -501,7 +501,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const gridAxis = d3.axisLeft(yScale)
+    const gridAxis = d3
+      .axisLeft(yScale)
       .ticks(5)
       .tickSize(-innerWidth)
       .tickFormat(() => "");
@@ -510,7 +511,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
     gridGroup.selectAll("line").attr("stroke", colors.grid).attr("stroke-opacity", 0.6);
     gridGroup.selectAll(".domain").remove();
 
-    const xAxis = d3.axisBottom(xScale)
+    const xAxis = d3
+      .axisBottom(xScale)
       .tickValues(tickValues)
       .tickFormat((value) => {
         const monthValue = value as number;
@@ -520,7 +522,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         return locale === "en" ? `${monthValue} mo` : `${monthValue}ヶ月`;
       });
 
-    const yAxis = d3.axisLeft(yScale)
+    const yAxis = d3
+      .axisLeft(yScale)
       .ticks(5)
       .tickFormat((value) =>
         locale === "en"
@@ -545,7 +548,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       if (!visibleSeries[`${scenario.id}:balance`]) {
         return;
       }
-      const balanceLine = d3.line<Row>()
+      const balanceLine = d3
+        .line<Row>()
         .x((row) => xScale(row.month))
         .y((row) => yScale(row.balance));
 
@@ -562,7 +566,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       const highlight = scenario.id === selectedScenario.id;
 
       if (visibleSeries[`${scenario.id}:principal`]) {
-        const principalLine = d3.line<Row>()
+        const principalLine = d3
+          .line<Row>()
           .x((row) => xScale(row.month))
           .y((row) => yScale(row.principal));
 
@@ -578,7 +583,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       }
 
       if (visibleSeries[`${scenario.id}:gain`]) {
-        const gainLine = d3.line<Row>()
+        const gainLine = d3
+          .line<Row>()
           .x((row) => xScale(row.month))
           .y((row) => yScale(row.gain));
 
@@ -594,7 +600,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
       }
 
       if (visibleSeries[`${scenario.id}:gainDiff`]) {
-        const gainDiffLine = d3.line<TableRow>()
+        const gainDiffLine = d3
+          .line<TableRow>()
           .x((row) => xScale(row.month))
           .y((row) => yScale(row.gainDiff));
 

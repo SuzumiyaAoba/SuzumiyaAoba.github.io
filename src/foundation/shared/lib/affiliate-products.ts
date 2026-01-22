@@ -1,32 +1,39 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { z } from "zod";
+
 import { resolveContentRoot } from "@/shared/lib/content-root";
+
+/**
+ * アフィリエイト商品情報の Zod スキーマ
+ */
+export const AffiliateProductSchema = z.object({
+  /** ユニークID */
+  id: z.string().min(1),
+  /** 商品名/タイトル */
+  title: z.string().min(1),
+  /** 商品画像のURL */
+  imageUrl: z.string().url(),
+  /** 商品詳細ページ（Amazon等）のURL */
+  productUrl: z.string().url(),
+  /** Yahoo!ショッピング用のURL（オプション） */
+  yahooShoppingUrl: z.string().url().optional(),
+  /** 関連するタグのリスト */
+  tags: z.array(z.string()).optional(),
+});
 
 /**
  * アフィリエイト商品情報の型定義
  */
-export type AffiliateProduct = {
-  /** ユニークID */
-  id: string;
-  /** 商品名/タイトル */
-  title: string;
-  /** 商品画像のURL */
-  imageUrl: string;
-  /** 商品詳細ページ（Amazon等）のURL */
-  productUrl: string;
-  /** Yahoo!ショッピング用のURL（オプション） */
-  yahooShoppingUrl?: string;
-  /** 関連するタグのリスト */
-  tags?: string[];
-};
+export type AffiliateProduct = z.infer<typeof AffiliateProductSchema>;
 
 /**
- * ソースファイル（JSON）の構造
+ * ソースファイル（JSON）の構造の Zod スキーマ
  */
-type AffiliateProductSource = {
-  products?: AffiliateProduct[];
-};
+const AffiliateProductSourceSchema = z.object({
+  products: z.array(AffiliateProductSchema).optional(),
+});
 
 /**
  * 読み込まれた商品データのインデックス情報
@@ -75,8 +82,10 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
     }
 
     const raw = await fs.readFile(filePath, "utf8");
-    const parsed = JSON.parse(raw) as AffiliateProductSource;
-    if (!parsed.products || !Array.isArray(parsed.products)) {
+    const data = JSON.parse(raw);
+    const parsed = AffiliateProductSourceSchema.safeParse(data);
+
+    if (!parsed.success || !parsed.data.products) {
       const emptyIndex: AffiliateProductIndex = {
         products: [],
         byId: new Map(),
@@ -89,22 +98,7 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
       return emptyIndex;
     }
 
-    const products = parsed.products
-      .filter((product): product is AffiliateProduct => {
-        return Boolean(product?.id && product?.title && product?.imageUrl && product?.productUrl);
-      })
-      .map((product) => {
-        const tags = Array.isArray(product.tags)
-          ? product.tags.filter((tag): tag is string => typeof tag === "string")
-          : undefined;
-        const yahooShoppingUrl =
-          typeof product.yahooShoppingUrl === "string" ? product.yahooShoppingUrl : undefined;
-        return {
-          ...product,
-          ...(yahooShoppingUrl ? { yahooShoppingUrl } : {}),
-          ...(tags ? { tags } : {}),
-        };
-      });
+    const products = parsed.data.products;
     const byId = new Map<string, AffiliateProduct>();
     const byTag = new Map<string, AffiliateProduct[]>();
     for (const product of products) {

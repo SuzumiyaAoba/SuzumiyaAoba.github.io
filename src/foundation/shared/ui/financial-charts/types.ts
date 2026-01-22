@@ -1,16 +1,22 @@
-export type SeriesData = {
-  year: string;
-  values: Record<string, number | null>;
-};
+import { z } from "zod";
 
-export type SheetData = {
-  metadata: {
-    title: string;
-    toc_title?: string;
-  };
-  headers: string[];
-  series: SeriesData[];
-};
+export const SeriesDataSchema = z.object({
+  year: z.string(),
+  values: z.record(z.string(), z.number().nullable()),
+});
+
+export type SeriesData = z.infer<typeof SeriesDataSchema>;
+
+export const SheetDataSchema = z.object({
+  metadata: z.object({
+    title: z.string(),
+    toc_title: z.string().optional(),
+  }),
+  headers: z.array(z.string()),
+  series: z.array(SeriesDataSchema),
+});
+
+export type SheetData = z.infer<typeof SheetDataSchema>;
 
 export type MetricGroup = {
   name: string;

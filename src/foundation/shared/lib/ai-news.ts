@@ -2,38 +2,52 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { parse } from "yaml";
+import { z } from "zod";
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
 /**
- * AIニュースのエントリ（出来事）の型定義
+ * AIニュースのエントリ（出来事）の Zod スキーマ
+ */
+export const AiNewsEntrySchema = z.object({
+  /** 発生した年 */
+  year: z.coerce.number(),
+  /** 発生した日付（任意） */
+  date: z.string().optional(),
+  /** タイトル（多言語） */
+  title_ja: z.string().min(1),
+  title_en: z.string().optional(),
+  /** 要約（多言語） */
+  summary_ja: z.string().min(1),
+  summary_en: z.string().optional(),
+  /** 関連するタグのリスト */
+  tags: z.array(z.string()).optional(),
+});
+
+/**
+ * 送出用の AIニュースエントリの型定義
  */
 export type AiNewsEntry = {
-  /** 発生した年 */
   year: number;
-  /** 発生した日付（任意） */
   date?: string;
-  /** タイトル（多言語） */
   title: {
     ja: string;
     en?: string;
   };
-  /** 要約（多言語） */
   summary: {
     ja: string;
     en?: string;
   };
-  /** 関連するタグのリスト */
   tags?: string[];
 };
 
 /**
- * AIニュースのソースファイル（YAML）の構造
+ * AIニュースのソースファイル（YAML）の Zod スキーマ
  */
-type AiNewsSource = {
-  version?: number;
-  updated?: string;
-  events?: unknown;
-};
+const AiNewsSourceSchema = z.object({
+  version: z.number().optional(),
+  updated: z.string().optional(),
+  events: z.array(z.unknown()).optional(),
+});
 
 /**
  * 読み込まれたAIニュースのインデックス情報
@@ -55,43 +69,24 @@ let cachedIndex: AiNewsIndex | null = null;
  * @returns 正規化されたエントリ。不完全な場合は null
  */
 function normalizeEntry(raw: unknown): AiNewsEntry | null {
-  if (!raw || typeof raw !== "object") {
+  const result = AiNewsEntrySchema.safeParse(raw);
+  if (!result.success) {
     return null;
   }
 
-  const value = raw as Record<string, unknown>;
-  const yearValue = value["year"];
-  const year = typeof yearValue === "number" ? yearValue : Number(yearValue);
-  if (!Number.isFinite(year)) {
-    return null;
-  }
-
-  const titleJa = typeof value["title_ja"] === "string" ? value["title_ja"] : null;
-  const titleEn = typeof value["title_en"] === "string" ? value["title_en"] : undefined;
-  const summaryJa = typeof value["summary_ja"] === "string" ? value["summary_ja"] : null;
-  const summaryEn = typeof value["summary_en"] === "string" ? value["summary_en"] : undefined;
-
-  if (titleJa === null || summaryJa === null) {
-    return null;
-  }
-
-  const date = typeof value["date"] === "string" ? value["date"] : undefined;
-  const tags = Array.isArray(value["tags"])
-    ? value["tags"].filter((tag): tag is string => typeof tag === "string")
-    : undefined;
-
+  const { data } = result;
   return {
-    year,
-    ...(date ? { date } : {}),
+    year: data.year,
+    ...(data.date ? { date: data.date } : {}),
     title: {
-      ja: titleJa,
-      ...(titleEn ? { en: titleEn } : {}),
+      ja: data.title_ja,
+      ...(data.title_en ? { en: data.title_en } : {}),
     },
     summary: {
-      ja: summaryJa,
-      ...(summaryEn ? { en: summaryEn } : {}),
+      ja: data.summary_ja,
+      ...(data.summary_en ? { en: data.summary_en } : {}),
     },
-    ...(tags && tags.length > 0 ? { tags } : {}),
+    ...(data.tags && data.tags.length > 0 ? { tags: data.tags } : {}),
   };
 }
 
@@ -147,8 +142,15 @@ async function loadAiNews(): Promise<AiNewsIndex> {
     }
 
     const raw = await fs.readFile(filePath, "utf8");
-    const parsed = parse(raw) as AiNewsSource;
-    const events = Array.isArray(parsed?.events) ? parsed.events : [];
+    const data = parse(raw);
+    const result = AiNewsSourceSchema.safeParse(data);
+
+    if (!result.success) {
+      throw new Error("Invalid AI news source format");
+    }
+
+    const parsed = result.data;
+    const events = parsed.events ?? [];
     const entries = events.map(normalizeEntry).filter((entry): entry is AiNewsEntry => {
       return Boolean(entry);
     });

@@ -17,16 +17,12 @@ export default async function Page({ locale }: PageProps) {
   const pagePath = toLocalePath("/archive/ai-news", resolvedLocale);
   const pageName = resolvedLocale === "en" ? "AI News" : "AIニュース";
   const archiveName = resolvedLocale === "en" ? "Archive" : "アーカイブ";
-  const [entries, updated] = await Promise.all([
-    getAiNewsEntries(),
-    getAiNewsUpdated(),
-  ]);
+  const [entries, updated] = await Promise.all([getAiNewsEntries(), getAiNewsUpdated()]);
   const renderedEntries = await Promise.all(
     entries.map(async (entry) => {
-      const title =
-        resolvedLocale === "en" ? entry.title.en ?? entry.title.ja : entry.title.ja;
+      const title = resolvedLocale === "en" ? (entry.title.en ?? entry.title.ja) : entry.title.ja;
       const summary =
-        resolvedLocale === "en" ? entry.summary.en ?? entry.summary.ja : entry.summary.ja;
+        resolvedLocale === "en" ? (entry.summary.en ?? entry.summary.ja) : entry.summary.ja;
       const content = await renderMdx(summary);
       return {
         entry,

@@ -1,11 +1,11 @@
 "use client";
 
-import { LineChart } from "@/shared/ui/financial-charts";
-import type { SheetData } from "@/shared/ui/financial-charts";
+import { LineChart, SheetDataSchema } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet3AmountChartWrapper: React.FC = () => {
-  const sheet3Data = assetsData.sheets["3"] as SheetData;
+  const result = SheetDataSchema.safeParse(assetsData.sheets["3"]);
+  const sheet3Data = result.success ? result.data : null;
 
   if (!sheet3Data) {
     return <div>データが見つかりません</div>;
@@ -24,7 +24,7 @@ export const Sheet3AmountChartWrapper: React.FC = () => {
 
   // Y軸の最大値を計算
   const maxValue = Math.max(
-    ...sheet3Data.series.flatMap((s) => amountMetrics.map((m) => (s.values[m] as number) || 0)),
+    ...sheet3Data.series.flatMap((s) => amountMetrics.map((m) => (s.values[m] ?? 0) || 0)),
   );
   const yAxisMax = Math.ceil(maxValue / 500) * 500; // 500の倍数に切り上げ
 

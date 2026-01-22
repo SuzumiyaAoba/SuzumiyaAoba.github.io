@@ -3,19 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 
-type SeriesData = {
-  year: string;
-  values: Record<string, number | null>;
-};
-
-type SheetData = {
-  metadata: {
-    title: string;
-    toc_title?: string;
-  };
-  headers: string[];
-  series: SeriesData[];
-};
+import { type SheetData } from "@/shared/ui/financial-charts";
 
 type Props = {
   data: SheetData;

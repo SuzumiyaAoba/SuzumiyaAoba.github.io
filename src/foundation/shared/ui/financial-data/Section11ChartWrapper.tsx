@@ -1,7 +1,6 @@
 "use client";
 
-import { LineChart } from "@/shared/ui/financial-charts";
-import type { MetricGroup } from "@/shared/ui/financial-charts/types";
+import { LineChart, type MetricGroup } from "@/shared/ui/financial-charts";
 import section11Data from "@/content/blog/2026-01-01-kakekin/data/section11.json";
 
 export const Section11ChartWrapper: React.FC = () => {

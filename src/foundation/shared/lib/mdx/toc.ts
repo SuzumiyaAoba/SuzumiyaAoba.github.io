@@ -34,38 +34,37 @@ function walk(node: MdastNode, handler: (node: MdastNode) => void) {
   node.children?.forEach((child) => walk(child, handler));
 }
 
-export const getTocHeadings = cache(async (
-  source: string,
-  options?: { idPrefix?: string },
-): Promise<TocHeading[]> => {
-  const processor = remark()
-    .use(remarkGfm)
-    .use(remarkEmoji)
-    .use(remarkJoinCjkLines)
-    .use(remarkMath);
-  const tree = processor.runSync(processor.parse(source)) as MdastNode;
-  const slugger = new GithubSlugger();
-  const headings: TocHeading[] = [];
+export const getTocHeadings = cache(
+  async (source: string, options?: { idPrefix?: string }): Promise<TocHeading[]> => {
+    const processor = remark()
+      .use(remarkGfm)
+      .use(remarkEmoji)
+      .use(remarkJoinCjkLines)
+      .use(remarkMath);
+    const tree = processor.runSync(processor.parse(source)) as MdastNode;
+    const slugger = new GithubSlugger();
+    const headings: TocHeading[] = [];
 
-  walk(tree, (node) => {
-    if (node.type !== "heading") {
-      return;
-    }
-    const level = node.depth;
-    if (level !== 2 && level !== 3) {
-      return;
-    }
-    const text = extractText(node).trim();
-    if (!text) {
-      return;
-    }
-    const id = slugger.slug(text);
-    headings.push({
-      id: options?.idPrefix ? `${options.idPrefix}${id}` : id,
-      text,
-      level,
+    walk(tree, (node) => {
+      if (node.type !== "heading") {
+        return;
+      }
+      const level = node.depth;
+      if (level !== 2 && level !== 3) {
+        return;
+      }
+      const text = extractText(node).trim();
+      if (!text) {
+        return;
+      }
+      const id = slugger.slug(text);
+      headings.push({
+        id: options?.idPrefix ? `${options.idPrefix}${id}` : id,
+        text,
+        level,
+      });
     });
-  });
 
-  return headings;
-});
+    return headings;
+  },
+);

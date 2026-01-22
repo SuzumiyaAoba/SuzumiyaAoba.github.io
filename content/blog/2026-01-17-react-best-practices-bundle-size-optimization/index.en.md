@@ -9,13 +9,13 @@ thumbnail: iconify:devicon:react
 Following on from [the previous article](../2026-01-16-react-best-practices/), let's look at the contents of Vercel's [react-best-practices](https://vercel.com/blog/introducing-react-best-practices).
 This time, we read the rules in the Bundle Size Optimization category.
 
-| Category (English)       | Category (Japanese) | Rule (English)                          | Rule (Japanese)                                  |
-| ------------------------ | ------------------- | --------------------------------------- | ------------------------------------------------ |
-| Bundle Size Optimization | バンドルサイズ最適化 | Avoid Barrel File Imports               | バレルファイルのインポートを避ける               |
-|                          |                     | Conditional Module Loading              | 条件付きでモジュールを読み込む                   |
-|                          |                     | Defer Non-Critical Third-Party Libraries | 非クリティカルな外部ライブラリは後回しに読み込む |
-|                          |                     | Dynamic Imports for Heavy Components    | 重いコンポーネントは動的インポートする           |
-|                          |                     | Preload Based on User Intent            | ユーザー意図に基づいてプリロードする             |
+| Category (English)       | Category (Japanese)  | Rule (English)                           | Rule (Japanese)                                  |
+| ------------------------ | -------------------- | ---------------------------------------- | ------------------------------------------------ |
+| Bundle Size Optimization | バンドルサイズ最適化 | Avoid Barrel File Imports                | バレルファイルのインポートを避ける               |
+|                          |                      | Conditional Module Loading               | 条件付きでモジュールを読み込む                   |
+|                          |                      | Defer Non-Critical Third-Party Libraries | 非クリティカルな外部ライブラリは後回しに読み込む |
+|                          |                      | Dynamic Imports for Heavy Components     | 重いコンポーネントは動的インポートする           |
+|                          |                      | Preload Based on User Intent             | ユーザー意図に基づいてプリロードする             |
 
 ## Avoid Barrel File Imports
 

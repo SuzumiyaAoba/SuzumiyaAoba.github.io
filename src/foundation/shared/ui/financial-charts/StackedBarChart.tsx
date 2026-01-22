@@ -93,23 +93,23 @@ export const StackedBarChart: React.FC<Props> = ({
       if (activeMetrics.length === 0) return;
 
       const parseData = data.series.map((d) => {
-        const yearData: any = { year: Number.parseInt(d.year) };
+        const yearData: Record<string, number> = { year: Number.parseInt(d.year) };
         activeMetrics.forEach((metric) => {
-          yearData[metric] = d.values[metric] || 0;
+          yearData[metric] = d.values[metric] ?? 0;
         });
         return yearData;
       });
 
       if (parseData.length === 0) return;
 
-      const years = parseData.map((d) => d.year);
+      const years = parseData.map((d) => d["year"]);
 
       const x = d3.scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
 
       const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
       const stackGenerator = d3
-        .stack<any>()
+        .stack<Record<string, number>>()
         .keys(activeMetrics)
         .order(d3.stackOrderNone)
         .offset(d3.stackOffsetNone);
@@ -168,7 +168,7 @@ export const StackedBarChart: React.FC<Props> = ({
           .enter()
           .append("rect")
           .attr("class", `bar-${metricIndex}`)
-          .attr("x", (d) => x(String(d.data.year)) || 0)
+          .attr("x", (d) => x(String(d.data["year"])) || 0)
           .attr("y", (d) => y(d[1]))
           .attr("height", (d) => y(d[0]) - y(d[1]))
           .attr("width", x.bandwidth())

@@ -41,10 +41,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .value((d) => d.value)
       .sort(null);
 
-    const arcGenerator = d3
-      .arc<d3.PieArcDatum<PieData>>()
-      .innerRadius(0)
-      .outerRadius(radius);
+    const arcGenerator = d3.arc<d3.PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
 
     const arcs = g
       .selectAll(".arc")

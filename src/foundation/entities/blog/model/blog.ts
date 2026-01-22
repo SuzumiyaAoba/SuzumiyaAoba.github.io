@@ -149,25 +149,24 @@ export const getBlogSlugs = cache(async (): Promise<string[]> => {
  * @param options 読み込みオプション
  * @returns 記事データ。存在しない場合は null
  */
-export const getBlogPost = cache(async (
-  slug: string,
-  options?: ReadContentOptions,
-): Promise<BlogPost | null> => {
-  const file = await readContentFile(slug, options);
-  if (!file) {
-    return null;
-  }
+export const getBlogPost = cache(
+  async (slug: string, options?: ReadContentOptions): Promise<BlogPost | null> => {
+    const file = await readContentFile(slug, options);
+    if (!file) {
+      return null;
+    }
 
-  const { content, data } = matter(file.raw);
-  const frontmatter = normalizeFrontmatter(data);
+    const { content, data } = matter(file.raw);
+    const frontmatter = normalizeFrontmatter(data);
 
-  return {
-    slug,
-    content,
-    format: file.format,
-    frontmatter,
-  };
-});
+    return {
+      slug,
+      content,
+      format: file.format,
+      frontmatter,
+    };
+  },
+);
 
 /**
  * 指定したスラッグの記事サマリーを取得する
@@ -175,23 +174,22 @@ export const getBlogPost = cache(async (
  * @param options 読み込みオプション
  * @returns 記事サマリー。存在しない場合は null
  */
-export const getBlogPostSummary = cache(async (
-  slug: string,
-  options?: ReadContentOptions,
-): Promise<BlogPostSummary | null> => {
-  const file = await readContentFile(slug, options);
-  if (!file) {
-    return null;
-  }
+export const getBlogPostSummary = cache(
+  async (slug: string, options?: ReadContentOptions): Promise<BlogPostSummary | null> => {
+    const file = await readContentFile(slug, options);
+    if (!file) {
+      return null;
+    }
 
-  const { data } = matter(file.raw);
-  const frontmatter = normalizeFrontmatter(data);
+    const { data } = matter(file.raw);
+    const frontmatter = normalizeFrontmatter(data);
 
-  return {
-    slug,
-    frontmatter,
-  };
-});
+    return {
+      slug,
+      frontmatter,
+    };
+  },
+);
 
 /**
  * フロントマターのデータを正規化する
@@ -250,23 +248,23 @@ export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
  * @param slug 基準となる記事のスラッグ
  * @returns 前後の記事。存在しない場合は null
  */
-export const getAdjacentPosts = cache(async (
-  slug: string,
-): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
-  const posts = await getBlogPosts();
-  const index = posts.findIndex((post) => post.slug === slug);
+export const getAdjacentPosts = cache(
+  async (slug: string): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
+    const posts = await getBlogPosts();
+    const index = posts.findIndex((post) => post.slug === slug);
 
-  if (index === -1) {
-    return { prev: null, next: null };
-  }
+    if (index === -1) {
+      return { prev: null, next: null };
+    }
 
-  // posts are sorted by date desc (newest first)
-  // next is newer (index - 1), prev is older (index + 1)
-  return {
-    prev: posts[index + 1] ?? null,
-    next: posts[index - 1] ?? null,
-  };
-});
+    // posts are sorted by date desc (newest first)
+    // next is newer (index - 1), prev is older (index + 1)
+    return {
+      prev: posts[index + 1] ?? null,
+      next: posts[index - 1] ?? null,
+    };
+  },
+);
 
 /**
  * 多言語対応した記事データの型定義
@@ -297,9 +295,7 @@ export type LocalizedBlogPostSummary = {
  * @param slug 記事のスラッグ
  * @returns 多言語対応した記事データ
  */
-export const getBlogPostVariants = cache(async (
-  slug: string,
-): Promise<LocalizedBlogPost> => {
+export const getBlogPostVariants = cache(async (slug: string): Promise<LocalizedBlogPost> => {
   const [ja, en] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
     getBlogPost(slug, { locale: "en", fallback: false }),
@@ -336,24 +332,22 @@ export const getBlogPostsVariants = cache(async (): Promise<LocalizedBlogPost[]>
  * @param slug 記事のスラッグ
  * @returns 多言語対応した記事サマリー
  */
-export const getBlogPostSummaryVariants = cache(async (
-  slug: string,
- ): Promise<LocalizedBlogPostSummary> => {
-  const [ja, en] = await Promise.all([
-    getBlogPostSummary(slug, { locale: "ja", fallback: false }),
-    getBlogPostSummary(slug, { locale: "en", fallback: false }),
-  ]);
+export const getBlogPostSummaryVariants = cache(
+  async (slug: string): Promise<LocalizedBlogPostSummary> => {
+    const [ja, en] = await Promise.all([
+      getBlogPostSummary(slug, { locale: "ja", fallback: false }),
+      getBlogPostSummary(slug, { locale: "en", fallback: false }),
+    ]);
 
-  return { slug, ja, en };
-});
+    return { slug, ja, en };
+  },
+);
 
 /**
  * すべての多言語対応記事サマリーを取得する（日付順降順、下書きを除く）
  * @returns 多言語対応記事サマリーの配列
  */
-export const getBlogPostSummariesVariants = cache(async (): Promise<
-  LocalizedBlogPostSummary[]
-> => {
+export const getBlogPostSummariesVariants = cache(async (): Promise<LocalizedBlogPostSummary[]> => {
   const slugs = await getBlogSlugs();
   const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
 
@@ -377,40 +371,43 @@ export const getBlogPostSummariesVariants = cache(async (): Promise<
  * @param slug 基準となる記事のスラッグ
  * @returns 多言語対応した前後の記事
  */
-export const getAdjacentPostsVariants = cache(async (
-  slug: string,
-): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> => {
-  const posts = await getBlogPostsVariants();
-  const index = posts.findIndex((post) => post.slug === slug);
+export const getAdjacentPostsVariants = cache(
+  async (
+    slug: string,
+  ): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> => {
+    const posts = await getBlogPostsVariants();
+    const index = posts.findIndex((post) => post.slug === slug);
 
-  if (index === -1) {
-    return { prev: null, next: null };
-  }
+    if (index === -1) {
+      return { prev: null, next: null };
+    }
 
-  return {
-    prev: posts[index + 1] ?? null,
-    next: posts[index - 1] ?? null,
-  };
-});
+    return {
+      prev: posts[index + 1] ?? null,
+      next: posts[index - 1] ?? null,
+    };
+  },
+);
 
 /**
  * 多言語対応した記事サマリーの前後記事を取得する
  * @param slug 基準となる記事のスラッグ
  * @returns 多言語対応した前後のサマリー
  */
-export const getAdjacentPostSummariesVariants = cache(async (
-  slug: string,
-): Promise<{ prev: LocalizedBlogPostSummary | null; next: LocalizedBlogPostSummary | null }> => {
-  const posts = await getBlogPostSummariesVariants();
-  const index = posts.findIndex((post) => post.slug === slug);
+export const getAdjacentPostSummariesVariants = cache(
+  async (
+    slug: string,
+  ): Promise<{ prev: LocalizedBlogPostSummary | null; next: LocalizedBlogPostSummary | null }> => {
+    const posts = await getBlogPostSummariesVariants();
+    const index = posts.findIndex((post) => post.slug === slug);
 
-  if (index === -1) {
-    return { prev: null, next: null };
-  }
+    if (index === -1) {
+      return { prev: null, next: null };
+    }
 
-  return {
-    prev: posts[index + 1] ?? null,
-    next: posts[index - 1] ?? null,
-  };
-});
-
+    return {
+      prev: posts[index + 1] ?? null,
+      next: posts[index - 1] ?? null,
+    };
+  },
+);

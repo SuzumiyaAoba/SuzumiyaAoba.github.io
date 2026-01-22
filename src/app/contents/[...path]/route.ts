@@ -18,6 +18,14 @@ const contentTypeMap: Record<string, string> = {
   ".json": "application/json",
 };
 
+/**
+ * 外部ファイルを読み込むためのヘルパー
+ * Turbopack の過剰なディレクトリ解析を避けるためにラップする
+ */
+async function readFileHelper(filePath: string): Promise<Buffer> {
+  return await fs.readFile(filePath);
+}
+
 async function collectFilePaths(root: string, current: string): Promise<string[]> {
   const entries = await fs.readdir(current, { withFileTypes: true });
   const files: string[] = [];
@@ -59,11 +67,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
   try {
     // Check if the file exists directly
     try {
-      const file = await fs.readFile(filePath);
+      const file = await readFileHelper(filePath);
       const ext = path.extname(filePath).toLowerCase();
       const contentType = contentTypeMap[ext] ?? "application/octet-stream";
 
-      return new NextResponse(file, {
+      return new NextResponse(file as unknown as BodyInit, {
         headers: {
           "Content-Type": contentType,
           "Cache-Control": "public, max-age=31536000, immutable",
@@ -91,7 +99,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
         }
 
         if (sourcePath) {
-          const source = await fs.readFile(sourcePath);
+          const source = await readFileHelper(sourcePath);
           const webp = await sharp(source).webp().toBuffer();
 
           return new NextResponse(webp as unknown as BodyInit, {

@@ -1,11 +1,11 @@
 "use client";
 
-import { StackedBarChart } from "@/shared/ui/financial-charts";
-import type { SheetData } from "@/shared/ui/financial-charts";
+import { SheetDataSchema, StackedBarChart } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet4BarChartWrapper: React.FC = () => {
-  const sheet4Data = assetsData.sheets["4"] as SheetData;
+  const result = SheetDataSchema.safeParse(assetsData.sheets["4"]);
+  const sheet4Data = result.success ? result.data : null;
 
   if (!sheet4Data) {
     return <div>データが見つかりません</div>;

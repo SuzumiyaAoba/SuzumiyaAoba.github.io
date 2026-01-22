@@ -73,21 +73,16 @@ export const LineChart: React.FC<Props> = ({
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    type ParsedDatum = { year: number } & Record<string, number | null>;
+    interface ParsedDatum {
+      year: number;
+      [key: string]: number | null | string;
+    }
     const parseData: ParsedDatum[] = data.series
+      .filter((d) => selectedMetrics.some((m) => d.values[m] !== null))
       .map((d) => ({
         year: Number.parseInt(d.year),
-        ...selectedMetrics.reduce(
-          (acc, metric) => {
-            acc[metric] = d.values[metric] ?? null;
-            return acc;
-          },
-          {} as Record<string, number | null>,
-        ),
-      }))
-      .filter((d): d is ParsedDatum =>
-        selectedMetrics.some((m) => (d as Record<string, number | null>)[m] !== null),
-      );
+        ...d.values,
+      }));
 
     if (parseData.length === 0) return;
 
@@ -139,10 +134,13 @@ export const LineChart: React.FC<Props> = ({
       const metricData = parseData.filter((d) => d[metric] !== null);
 
       const lineGenerator = d3
-        .line<(typeof parseData)[0] & Record<string, number | null>>()
+        .line<(typeof parseData)[0]>()
         .defined((d) => d[metric] !== null)
         .x((d) => x(d.year))
-        .y((d) => y((d[metric] as number) || 0));
+        .y((d) => {
+          const val = d[metric];
+          return y(typeof val === "number" ? val : 0);
+        });
 
       g.append("path")
         .datum(parseData)
@@ -154,7 +152,10 @@ export const LineChart: React.FC<Props> = ({
       metricData.forEach((d) => {
         g.append("circle")
           .attr("cx", x(d.year))
-          .attr("cy", y((d[metric] as number) || 0))
+          .attr("cy", () => {
+            const val = d[metric];
+            return y(typeof val === "number" ? val : 0);
+          })
           .attr("r", 4)
           .attr("fill", strokeColor)
           .on("mouseover", function (event) {

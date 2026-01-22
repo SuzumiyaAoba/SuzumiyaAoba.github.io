@@ -157,7 +157,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
 
   const legendLabel = isJa ? "少ない" : "Less";
   const legendLabelMax = isJa ? "多い" : "More";
-  const activePosts = activeDateKey ? index.get(activeDateKey) ?? [] : [];
+  const activePosts = activeDateKey ? (index.get(activeDateKey) ?? []) : [];
   const activeDateLabel = activeDateKey
     ? new Date(activeDateKey).toLocaleDateString(dateLocale)
     : null;
@@ -194,7 +194,8 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
           {rangeStart.toLocaleDateString(dateLocale)} - {rangeEnd.toLocaleDateString(dateLocale)}
         </span>
         <span>
-          {isJa ? "合計" : "Total"}: {totalCount}{isJa ? "件" : " posts"}
+          {isJa ? "合計" : "Total"}: {totalCount}
+          {isJa ? "件" : " posts"}
         </span>
       </div>
       <div className="overflow-x-auto" ref={scrollContainerRef}>
@@ -209,7 +210,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
                   const level = day.inRange ? getIntensity(day.count, maxCount) : 0;
                   const isPinned = pinnedDateKey === day.dateKey;
                   const isHovered = hoveredDateKey === day.dateKey;
-                  const items = day.inRange ? index.get(day.dateKey) ?? [] : [];
+                  const items = day.inRange ? (index.get(day.dateKey) ?? []) : [];
                   const titles = items
                     .map((item) => item.title || item.slug)
                     .join(isJa ? "、" : ", ");
@@ -287,7 +288,10 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
           {activePosts.length > 0 ? (
             <ul className="space-y-2">
               {activePosts.map((post) => (
-                <li key={post.slug} className="rounded-md border border-border/60 bg-muted/10 px-3 py-2">
+                <li
+                  key={post.slug}
+                  className="rounded-md border border-border/60 bg-muted/10 px-3 py-2"
+                >
                   <a
                     href={toLocalePath(`/blog/post/${post.slug}`, locale)}
                     className="text-sm font-medium text-foreground hover:text-foreground/80"

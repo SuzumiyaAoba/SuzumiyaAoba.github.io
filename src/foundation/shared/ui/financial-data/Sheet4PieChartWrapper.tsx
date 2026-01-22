@@ -1,11 +1,13 @@
 "use client";
 
+import { SheetDataSchema } from "@/shared/ui/financial-charts";
 import { PieChart } from "@/shared/ui/financial-charts/PieChart";
+
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
-import type { SheetData } from "@/shared/ui/financial-charts";
 
 export const Sheet4PieChartWrapper: React.FC = () => {
-  const sheet4Data = assetsData.sheets["4"] as SheetData;
+  const result = SheetDataSchema.safeParse(assetsData.sheets["4"]);
+  const sheet4Data = result.success ? result.data : null;
 
   if (!sheet4Data) {
     return <div>データが見つかりません</div>;
@@ -53,21 +55,21 @@ export const Sheet4PieChartWrapper: React.FC = () => {
     .filter((metric) => year2023Data.values[metric] !== null)
     .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2023Data.values[metric] as number,
+      value: year2023Data.values[metric] ?? 0,
     }));
 
   const pieData2024 = percentageMetrics
     .filter((metric) => year2024Data.values[metric] !== null)
     .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2024Data.values[metric] as number,
+      value: year2024Data.values[metric] ?? 0,
     }));
 
   const pieData2025 = percentageMetrics
     .filter((metric) => year2025Data.values[metric] !== null)
     .map((metric) => ({
       label: labelMap[metric] || metric,
-      value: year2025Data.values[metric] as number,
+      value: year2025Data.values[metric] ?? 0,
     }));
 
   return (
