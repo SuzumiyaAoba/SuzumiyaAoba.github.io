@@ -83,8 +83,12 @@ export function BlogPostList({
         if (variant === "detailed") {
           return (
             <li key={postSlug}>
-              <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
+              <Card className="group relative border-transparent bg-card/50 shadow-none transition-colors hover:bg-muted/30">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/40 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+                />
+                <div className="relative z-10 flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6">
                   {withThumbnail ? (
                     <a
                       href={toLocalePath(`/blog/post/${postSlug}`, locale)}
@@ -157,11 +161,15 @@ export function BlogPostList({
 
         return (
           <li key={postSlug}>
-            <Card className="border-transparent bg-card/40 shadow-none">
+            <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+              />
               <a
                 href={toLocalePath(`/blog/post/${postSlug}`, locale)}
                 className={cn(
-                  "flex gap-3 px-5 py-5",
+                  "relative z-10 flex gap-3 px-5 py-5",
                   withThumbnail ? "flex-row items-start" : "flex-col",
                 )}
               >

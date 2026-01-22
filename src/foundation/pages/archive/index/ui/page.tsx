@@ -70,11 +70,15 @@ export default function Page({ locale }: PageProps) {
                 const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
                 return (
                   <li key={archive.slug}>
-                    <Card className="group border-transparent bg-card/50 shadow-none transition-colors hover:bg-card/70">
-                      <a
-                        href={toLocalePath(`/archive/${archive.slug}/`, resolvedLocale)}
-                        className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
-                      >
+                  <Card className="group relative border-transparent bg-card/50 shadow-none transition-colors hover:bg-muted/30">
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/40 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+                    />
+                    <a
+                      href={toLocalePath(`/archive/${archive.slug}/`, resolvedLocale)}
+                      className="relative z-10 flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
+                    >
                         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
                           {thumbnail.type === "image" ? (
                             <Image

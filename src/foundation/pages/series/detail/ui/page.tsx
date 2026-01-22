@@ -96,10 +96,14 @@ export default async function Page({ params, locale }: PageProps) {
           <ul className="space-y-4">
             {entries.map((post) => (
               <li key={`${resolvedLocale}-${post.slug}`}>
-                <Card className="border-transparent bg-card/40 shadow-none">
+                <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+                  />
                   <a
                     href={toLocalePath(`/blog/post/${post.slug}`, resolvedLocale)}
-                    className="flex flex-col gap-3 px-5 py-5"
+                    className="relative z-10 flex flex-col gap-3 px-5 py-5"
                   >
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{post.date}</span>
