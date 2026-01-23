@@ -5,8 +5,8 @@ import "@/app/styles/globals.css";
 import "katex/dist/katex.min.css";
 import { AppProviders } from "@/app/providers";
 import { GoogleAdsenseScript } from "@/shared/ui/google-adsense-script";
-import { getSiteConfig } from "@/shared/lib/site-config";
-import { SITE_TITLE } from "@/shared/lib/site-title";
+import { getSiteConfig } from "@/shared/lib/site/site-config";
+import { SITE_TITLE } from "@/shared/lib/site/site-title";
 
 const sourceCodePro = Source_Code_Pro({
   variable: "--font-source-code-pro",

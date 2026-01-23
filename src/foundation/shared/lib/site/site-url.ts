@@ -1,4 +1,4 @@
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "./site-config";
 
 /**
  * サイトのベースURLを取得する

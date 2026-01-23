@@ -1,4 +1,4 @@
-import { getSiteUrl } from "@/shared/lib/site-url";
+import { getSiteUrl } from "@/shared/lib/site/site-url";
 
 /**
  * パンくずリストの項目

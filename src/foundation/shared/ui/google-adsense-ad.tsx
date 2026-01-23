@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/site/site-config";
 
 export interface GoogleAdsenseAdProps {
   slot: string;

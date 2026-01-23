@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
-import { SITE_TITLE } from "@/shared/lib/site-title";
+import { SITE_TITLE } from "@/shared/lib/site/site-title";
 
 export const size = {
   width: 1200,

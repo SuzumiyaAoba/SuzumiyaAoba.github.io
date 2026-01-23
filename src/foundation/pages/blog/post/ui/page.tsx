@@ -16,8 +16,8 @@ import {
   type AffiliateProduct,
 } from "@/shared/lib/affiliate-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
-import { getSiteUrl } from "@/shared/lib/site-url";
+import { buildBreadcrumbList } from "@/shared/lib/routing";
+import { getSiteUrl } from "@/shared/lib/site";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";

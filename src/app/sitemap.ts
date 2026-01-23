@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBlogPostsVariants } from "@/entities/blog";
 import { getSeriesSlugs } from "@/entities/series-item/model/series";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/site/site-config";
 
 export const dynamic = "force-static";
 
