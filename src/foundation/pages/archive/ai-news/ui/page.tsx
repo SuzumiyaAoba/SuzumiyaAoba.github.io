@@ -26,6 +26,12 @@ function resolveTimelineIcon(tags?: string[]): string | null {
   if (normalized.includes("anthropic") || normalized.includes("ahthropic")) {
     return "material-icon-theme:claude";
   }
+  if (normalized.includes("deepseek")) {
+    return "ri:deepseek-fill";
+  }
+  if (normalized.includes("gemini")) {
+    return "ri:gemini-fill";
+  }
   return null;
 }
 

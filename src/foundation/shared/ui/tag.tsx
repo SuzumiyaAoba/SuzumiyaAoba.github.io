@@ -29,10 +29,11 @@ const TAG_ICON_MAP: Record<string, string> = {
   git: "devicon:git",
   "claude code": "material-icon-theme:claude",
   anthropic: "material-icon-theme:claude",
-  gemini: "material-icon-theme:gemini-ai",
+  gemini: "ri:gemini-fill",
   chatgpt: "logos:openai-icon",
   openai: "logos:openai-icon",
   cursor: "vscode-icons:file-type-cursorrules",
+  deepseek: "ri:deepseek-fill",
 };
 
 /** デフォルトのタグアイコン */
