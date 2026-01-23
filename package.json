@@ -20,7 +20,8 @@
     "prepare": "husky",
     "precommit": "npm run lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",

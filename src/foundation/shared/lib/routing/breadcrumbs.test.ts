@@ -43,9 +43,9 @@ describe("buildBreadcrumbList", () => {
     const result = buildBreadcrumbList(items);
 
     expect(result.itemListElement).toHaveLength(3);
-    expect(result.itemListElement[0].position).toBe(1);
-    expect(result.itemListElement[1].position).toBe(2);
-    expect(result.itemListElement[2].position).toBe(3);
+    expect(result.itemListElement[0]!.position).toBe(1);
+    expect(result.itemListElement[1]!.position).toBe(2);
+    expect(result.itemListElement[2]!.position).toBe(3);
   });
 
   it("サイトURLとパスを正しく結合する", () => {
@@ -56,8 +56,8 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags");
-    expect(result.itemListElement[1].item).toBe("https://suzumiyaaoba.com/tags/programming");
+    expect(result.itemListElement[0]!.item).toBe("https://suzumiyaaoba.com/tags");
+    expect(result.itemListElement[1]!.item).toBe("https://suzumiyaaoba.com/tags/programming");
   });
 
   it("空の配列で空のitemListElementを返す", () => {
@@ -77,7 +77,7 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result.itemListElement[0].name).toBe("タグ一覧");
-    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags/日本語");
+    expect(result.itemListElement[0]!.name).toBe("タグ一覧");
+    expect(result.itemListElement[0]!.item).toBe("https://suzumiyaaoba.com/tags/日本語");
   });
 });
