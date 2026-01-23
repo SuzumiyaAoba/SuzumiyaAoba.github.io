@@ -115,8 +115,8 @@ export default async function Page({ locale }: PageProps) {
                     ) : null}
                     <article className="relative">
                       {timelineIcon ? (
-                        <span className="absolute -left-[34px] top-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-background text-muted-foreground">
-                          <Icon icon={timelineIcon} className="h-3.5 w-3.5" aria-hidden />
+                        <span className="absolute -left-[40px] top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background text-muted-foreground">
+                          <Icon icon={timelineIcon} className="h-5 w-5" aria-hidden />
                         </span>
                       ) : (
                         <span className="absolute -left-[28.5px] top-5 h-2 w-2 rounded-full bg-muted-foreground/40" />
