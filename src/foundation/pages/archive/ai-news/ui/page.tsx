@@ -92,7 +92,8 @@ export default async function Page({ locale }: PageProps) {
               <I18nText locale={resolvedLocale} ja="ニュースデータがありません。" en="No data." />
             </p>
           ) : (
-            <div className="space-y-10 border-l border-muted-foreground/20 pl-6">
+            <div className="relative space-y-10">
+              <span className="pointer-events-none absolute left-[9.5rem] top-0 hidden h-full w-px bg-muted-foreground/20 sm:block" />
               {renderedEntries.map(({ entry, title, summary }, index) => {
                 const dateParts = entry.date ? entry.date.split("-") : [];
                 const yearLabel = dateParts[0] ?? String(entry.year);
@@ -106,26 +107,28 @@ export default async function Page({ locale }: PageProps) {
                 return (
                   <div key={`${entry.year}-${title}`} className="space-y-4">
                     {showYear ? (
-                      <div className="relative">
-                        <div className="h-px w-full bg-gradient-to-r from-transparent via-muted-foreground/30 to-transparent" />
-                        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-0.5 text-xs font-semibold tracking-[0.28em] text-muted-foreground">
+                      <div className="relative py-4">
+                        <div className="h-px w-full bg-gradient-to-r from-transparent via-muted-foreground/70 to-transparent" />
+                        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-muted-foreground/50 bg-background px-5 py-1.5 text-sm font-semibold tracking-[0.36em] text-foreground shadow-sm">
                           {yearLabel}
                         </div>
                       </div>
                     ) : null}
-                    <article className="relative">
-                      {timelineIcon ? (
-                        <span className="absolute -left-[40px] top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background text-muted-foreground">
-                          <Icon icon={timelineIcon} className="h-5 w-5" aria-hidden />
-                        </span>
-                      ) : (
-                        <span className="absolute -left-[28.5px] top-5 h-2 w-2 rounded-full bg-muted-foreground/40" />
-                      )}
-                      <div className="grid gap-4 sm:grid-cols-[7.5rem_1fr] sm:items-start">
+                    <article>
+                      <div className="grid gap-4 sm:grid-cols-[7.5rem_2rem_1fr] sm:items-start">
                         <div className="px-1 py-2 text-right">
                           <p className="text-lg font-semibold tracking-[0.2em] text-muted-foreground">
                             {monthDayLabel || "--.--"}
                           </p>
+                        </div>
+                        <div className="relative flex items-start justify-center self-stretch">
+                          {timelineIcon ? (
+                            <span className="relative z-10 mt-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background text-muted-foreground">
+                              <Icon icon={timelineIcon} className="h-5 w-5" aria-hidden />
+                            </span>
+                          ) : (
+                            <span className="relative z-10 mt-4 h-2 w-2 rounded-full bg-muted-foreground/40" />
+                          )}
                         </div>
                         <div className="space-y-2">
                           <h2 className="text-base font-semibold text-foreground">{title}</h2>
