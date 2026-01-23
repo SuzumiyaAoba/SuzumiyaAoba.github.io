@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 /**
  * ナビゲーション項目の定義

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getBlogPostVariants, getBlogSlugs } from "@/entities/blog";
-import { toLocalePath } from "@/shared/lib/locale-path";
+import { toLocalePath } from "@/shared/lib/routing";
 import BlogPostPage from "@/pages/blog/post";
 
 type PageProps = {

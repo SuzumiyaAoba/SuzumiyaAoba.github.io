@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import { I18nText } from "@/shared/ui/i18n-text";
 import type { TocHeading } from "@/shared/lib/mdx";
-import type { Locale } from "@/shared/lib/locale-path";
+import type { Locale } from "@/shared/lib/routing";
 
 type TocProps = {
   headings: TocHeading[];

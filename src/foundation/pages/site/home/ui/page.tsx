@@ -3,10 +3,10 @@ import { Footer } from "@/widgets/footer";
 
 import { getBlogPostsVariants } from "@/entities/blog";
 import { Card } from "@/shared/ui/card";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 import { PostActivityHeatmap } from "./post-activity-heatmap";
 

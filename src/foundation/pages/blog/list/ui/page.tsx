@@ -2,10 +2,10 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
 import { getBlogPostsVariants } from "@/entities/blog";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 
 type PageProps = {

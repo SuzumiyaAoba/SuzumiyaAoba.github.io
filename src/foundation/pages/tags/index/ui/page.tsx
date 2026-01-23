@@ -3,11 +3,11 @@ import { Footer } from "@/widgets/footer";
 
 import { getBlogPostsVariants, type BlogPost } from "@/entities/blog";
 import { Card } from "@/shared/ui/card";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type TagEntry = {
   name: string;

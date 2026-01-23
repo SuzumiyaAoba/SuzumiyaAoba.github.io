@@ -27,7 +27,7 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   params: Promise<{ slug: string }>;

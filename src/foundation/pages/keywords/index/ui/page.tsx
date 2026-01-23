@@ -1,7 +1,7 @@
 import { EmptyPage } from "@/shared/ui/empty-page";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;

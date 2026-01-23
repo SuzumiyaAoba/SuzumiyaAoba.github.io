@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
-import type { Locale } from "@/shared/lib/locale-path";
-import { toLocalePath } from "@/shared/lib/locale-path";
+
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { Tag } from "@/shared/ui/tag";
 
 const DAY_MS = 24 * 60 * 60 * 1000;

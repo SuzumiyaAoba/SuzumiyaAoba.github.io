@@ -1,10 +1,10 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { getAiNewsEntries, getAiNewsUpdated } from "@/shared/lib/ai-news";
 import { renderMdx } from "@/shared/lib/mdx";
 import { Tag } from "@/shared/ui/tag";

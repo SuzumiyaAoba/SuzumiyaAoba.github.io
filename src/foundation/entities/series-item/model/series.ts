@@ -4,7 +4,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
-import type { Locale } from "@/shared/lib/locale-path";
+import type { Locale } from "@/shared/lib/routing";
 
 /**
  * シリーズ記事の定義（メタデータ）の型定義

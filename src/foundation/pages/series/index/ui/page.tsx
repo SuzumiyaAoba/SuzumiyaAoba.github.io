@@ -6,10 +6,10 @@ import { Footer } from "@/widgets/footer";
 
 import { getSeriesList } from "@/entities/series-item";
 import { Card } from "@/shared/ui/card";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 type PageProps = {

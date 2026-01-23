@@ -5,7 +5,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 
-import type { Locale } from "@/shared/lib/locale-path";
+import type { Locale } from "@/shared/lib/routing";
 
 type Row = {
   month: number;

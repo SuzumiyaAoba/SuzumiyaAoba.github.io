@@ -1,9 +1,9 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;

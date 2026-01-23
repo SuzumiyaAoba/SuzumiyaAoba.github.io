@@ -1,5 +1,5 @@
 import { getPostSlugs } from "../lib";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;

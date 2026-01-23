@@ -2,7 +2,7 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 type NotFoundPageProps = {
   locale?: Locale;

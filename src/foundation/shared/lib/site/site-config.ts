@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import packageJson from "../../../../package.json";
+import packageJson from "../../../../../package.json";
 
 /**
  * サイト設定の Zod スキーマ

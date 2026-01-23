@@ -8,12 +8,12 @@ import { Footer } from "@/widgets/footer";
 import { getBlogPostsVariants, type BlogPost } from "@/entities/blog";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
-import { buildBreadcrumbList } from "@/shared/lib/breadcrumbs";
+import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 type PageProps = {

@@ -1,5 +1,5 @@
 import type { ElementType, ReactNode } from "react";
-import type { Locale } from "@/shared/lib/locale-path";
+import type { Locale } from "@/shared/lib/routing";
 
 /**
  * I18nText コンポーネントのプロップス

@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
-import type { Locale } from "@/shared/lib/locale-path";
+import type { Locale } from "@/shared/lib/routing";
 
 type CommentsProps = {
   className?: string;

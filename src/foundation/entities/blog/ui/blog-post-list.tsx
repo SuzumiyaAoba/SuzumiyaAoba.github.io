@@ -5,7 +5,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import type { LocalizedBlogPost } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
