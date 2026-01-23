@@ -7,10 +7,27 @@ import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/locale-path";
 import { getAiNewsEntries, getAiNewsUpdated } from "@/shared/lib/ai-news";
 import { renderMdx } from "@/shared/lib/mdx";
+import { Tag } from "@/shared/ui/tag";
+import { Icon } from "@iconify/react";
 
 type PageProps = {
   locale?: Locale;
 };
+
+function resolveTimelineIcon(tags?: string[]): string | null {
+  if (!tags || tags.length === 0) {
+    return null;
+  }
+
+  const normalized = tags.map((tag) => tag.toLowerCase());
+  if (normalized.includes("openai")) {
+    return "logos:openai-icon";
+  }
+  if (normalized.includes("anthropic") || normalized.includes("ahthropic")) {
+    return "material-icon-theme:claude";
+  }
+  return null;
+}
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
@@ -79,6 +96,7 @@ export default async function Page({ locale }: PageProps) {
                     : "";
                 const previousYear = renderedEntries[index - 1]?.entry.year ?? null;
                 const showYear = previousYear !== entry.year;
+                const timelineIcon = resolveTimelineIcon(entry.tags);
                 return (
                   <div key={`${entry.year}-${title}`} className="space-y-4">
                     {showYear ? (
@@ -90,7 +108,13 @@ export default async function Page({ locale }: PageProps) {
                       </div>
                     ) : null}
                     <article className="relative">
-                      <span className="absolute -left-[28.5px] top-5 h-2 w-2 rounded-full bg-muted-foreground/40" />
+                      {timelineIcon ? (
+                        <span className="absolute -left-[34px] top-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-background text-muted-foreground">
+                          <Icon icon={timelineIcon} className="h-3.5 w-3.5" aria-hidden />
+                        </span>
+                      ) : (
+                        <span className="absolute -left-[28.5px] top-5 h-2 w-2 rounded-full bg-muted-foreground/40" />
+                      )}
                       <div className="grid gap-4 sm:grid-cols-[7.5rem_1fr] sm:items-start">
                         <div className="px-1 py-2 text-right">
                           <p className="text-lg font-semibold tracking-[0.2em] text-muted-foreground">
@@ -105,12 +129,13 @@ export default async function Page({ locale }: PageProps) {
                           {entry.tags && entry.tags.length > 0 ? (
                             <div className="mt-2 flex flex-wrap gap-2">
                               {entry.tags.map((tag) => (
-                                <span
+                                <Tag
                                   key={tag}
-                                  className="rounded-full border border-muted-foreground/20 px-2 py-0.5 text-[11px] text-muted-foreground"
-                                >
-                                  {tag}
-                                </span>
+                                  tag={tag}
+                                  variant="outline"
+                                  className="border-muted-foreground/20 bg-transparent text-[11px] text-muted-foreground"
+                                  iconClassName="text-muted-foreground"
+                                />
                               ))}
                             </div>
                           ) : null}
