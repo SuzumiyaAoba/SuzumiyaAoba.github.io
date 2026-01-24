@@ -1,6 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { z } from "zod";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
@@ -59,6 +56,9 @@ let cachedIndex: AffiliateProductIndex | null = null;
  * @returns 商品データのインデックス情報
  */
 async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
+  const path = await import("node:path");
+  const fs = await import("node:fs/promises");
+
   const root = await resolveContentRoot();
   const filePath = path.join(root, "affiliate-products.json");
   const isDev = process.env["NODE_ENV"] === "development";

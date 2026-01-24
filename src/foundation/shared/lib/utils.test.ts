@@ -21,11 +21,13 @@ describe("cn", () => {
 
   describe("条件付きクラス", () => {
     it("真の条件でクラスを含める", () => {
+      // eslint-disable-next-line no-constant-binary-expression
       const result = cn("base", true && "active");
       expect(result).toBe("base active");
     });
 
     it("偽の条件でクラスを除外する", () => {
+      // eslint-disable-next-line no-constant-binary-expression
       const result = cn("base", false && "hidden");
       expect(result).toBe("base");
     });

@@ -9,15 +9,18 @@ type PageProps = {
   locale?: Locale;
 };
 
-export default function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
-  const pagePath = toLocalePath("/about", resolvedLocale);
+export type AboutPageContentProps = {
+  locale: Locale;
+};
+
+export function AboutPageContent({ locale }: AboutPageContentProps) {
+  const pagePath = toLocalePath("/about", locale);
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header locale={resolvedLocale} path={pagePath} />
+      <Header locale={locale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Home", path: toLocalePath("/", locale) },
           { name: "About", path: pagePath },
         ])}
       />
@@ -25,13 +28,13 @@ export default function Page({ locale }: PageProps) {
         <section className="space-y-4">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              <I18nText locale={resolvedLocale} ja="概要" en="About" />
+              <I18nText locale={locale} ja="概要" en="About" />
             </p>
             <h1 className="text-3xl font-semibold tracking-tight">SuzumiyaAoba</h1>
           </div>
           <p className="max-w-2xl text-base leading-7 text-muted-foreground">
             <I18nText
-              locale={resolvedLocale}
+              locale={locale}
               ja="開発・読書・ツールづくりの記録をまとめる場所です。記事の整理と公開を続けながら、学習の過程や試行錯誤をログとして残しています。"
               en="A place to collect notes on development, reading, and tool building. I keep publishing posts while logging what I learned and the experiments along the way."
             />
@@ -67,10 +70,10 @@ export default function Page({ locale }: PageProps) {
               className="rounded-2xl bg-card/40 px-5 py-6 text-sm text-muted-foreground shadow-none"
             >
               <div className="text-base font-semibold text-foreground">
-                <I18nText locale={resolvedLocale} ja={item.title.ja} en={item.title.en} />
+                <I18nText locale={locale} ja={item.title.ja} en={item.title.en} />
               </div>
               <p className="mt-2 leading-6">
-                <I18nText locale={resolvedLocale} ja={item.body.ja} en={item.body.en} />
+                <I18nText locale={locale} ja={item.body.ja} en={item.body.en} />
               </p>
             </div>
           ))}
@@ -79,18 +82,18 @@ export default function Page({ locale }: PageProps) {
         <section className="grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl bg-card/40 px-5 py-6 shadow-none">
             <h2 className="text-lg font-semibold">
-              <I18nText locale={resolvedLocale} ja="コンテンツ" en="Contents" />
+              <I18nText locale={locale} ja="コンテンツ" en="Contents" />
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>
                 <a
-                  href={toLocalePath("/blog", resolvedLocale)}
+                  href={toLocalePath("/blog", locale)}
                   className="font-medium text-foreground"
                 >
-                  <I18nText locale={resolvedLocale} ja="ブログ" en="Blog" />
+                  <I18nText locale={locale} ja="ブログ" en="Blog" />
                 </a>
                 <I18nText
-                  locale={resolvedLocale}
+                  locale={locale}
                   as="span"
                   ja="：技術メモと更新履歴"
                   en=": Technical notes and updates"
@@ -98,13 +101,13 @@ export default function Page({ locale }: PageProps) {
               </li>
               <li>
                 <a
-                  href={toLocalePath("/series", resolvedLocale)}
+                  href={toLocalePath("/series", locale)}
                   className="font-medium text-foreground"
                 >
-                  <I18nText locale={resolvedLocale} ja="シリーズ" en="Series" />
+                  <I18nText locale={locale} ja="シリーズ" en="Series" />
                 </a>
                 <I18nText
-                  locale={resolvedLocale}
+                  locale={locale}
                   as="span"
                   ja="：テーマ別の連載まとめ"
                   en=": Curated series by theme"
@@ -112,13 +115,13 @@ export default function Page({ locale }: PageProps) {
               </li>
               <li>
                 <a
-                  href={toLocalePath("/tools", resolvedLocale)}
+                  href={toLocalePath("/tools", locale)}
                   className="font-medium text-foreground"
                 >
-                  <I18nText locale={resolvedLocale} ja="ツール" en="Tools" />
+                  <I18nText locale={locale} ja="ツール" en="Tools" />
                 </a>
                 <I18nText
-                  locale={resolvedLocale}
+                  locale={locale}
                   as="span"
                   ja="：小さなプロダクトの公開"
                   en=": Small product releases"
@@ -128,16 +131,16 @@ export default function Page({ locale }: PageProps) {
           </div>
           <div className="rounded-2xl bg-card/40 px-5 py-6 shadow-none">
             <h2 className="text-lg font-semibold">
-              <I18nText locale={resolvedLocale} ja="お問い合わせ" en="Contact" />
+              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               <I18nText
-                locale={resolvedLocale}
+                locale={locale}
                 ja={
                   <>
                     お問い合わせは
                     <a
-                      href={toLocalePath("/contact", resolvedLocale)}
+                      href={toLocalePath("/contact", locale)}
                       className="font-medium text-foreground"
                     >
                       Contact
@@ -149,7 +152,7 @@ export default function Page({ locale }: PageProps) {
                   <>
                     Please use the{" "}
                     <a
-                      href={toLocalePath("/contact", resolvedLocale)}
+                      href={toLocalePath("/contact", locale)}
                       className="font-medium text-foreground"
                     >
                       Contact
@@ -162,7 +165,12 @@ export default function Page({ locale }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer locale={resolvedLocale} />
+      <Footer locale={locale} />
     </div>
   );
+}
+
+export default function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
+  return <AboutPageContent locale={resolvedLocale} />;
 }

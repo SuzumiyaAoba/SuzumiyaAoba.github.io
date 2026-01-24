@@ -1,6 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { z } from "zod";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
@@ -85,6 +82,9 @@ function resolveSeriesDefinition(
  * @returns 未解決のシリーズ定義の配列
  */
 async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+
   const root = await resolveContentRoot();
   const seriesRoot = path.join(root, "series");
 

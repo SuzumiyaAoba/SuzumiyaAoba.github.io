@@ -1,6 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { parse } from "yaml";
 import { z } from "zod";
 import { resolveContentRoot } from "@/shared/lib/content-root";
@@ -119,6 +116,9 @@ function sortEntries(entries: AiNewsEntry[]): AiNewsEntry[] {
  * @returns ニュース全体のインデックス情報
  */
 async function loadAiNews(): Promise<AiNewsIndex> {
+  const path = await import("node:path");
+  const fs = await import("node:fs/promises");
+
   const root = await resolveContentRoot();
   const filePath = path.join(root, "tools", "ai-news.yaml");
   const isDev = process.env["NODE_ENV"] === "development";

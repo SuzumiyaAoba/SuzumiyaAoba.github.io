@@ -1,5 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import matter from "gray-matter";
 import { cache } from "react";
 
@@ -80,6 +78,9 @@ async function readContentFileForLocale(
   slug: string,
   locale: BlogLocale,
 ): Promise<{ raw: string; format: "md" | "mdx" } | null> {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+
   const root = await resolveContentRoot();
   const baseDir = path.join(root, "blog", slug);
 
@@ -133,6 +134,9 @@ async function readContentFile(
  * @returns スラッグの配列
  */
 export const getBlogSlugs = cache(async (): Promise<string[]> => {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+
   const root = await resolveContentRoot();
   const blogRoot = path.join(root, "blog");
   const entries = await fs.readdir(blogRoot, { withFileTypes: true });

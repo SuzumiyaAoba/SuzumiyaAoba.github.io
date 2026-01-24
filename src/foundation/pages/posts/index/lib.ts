@@ -1,9 +1,8 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
-const postsDirectory = path.join(process.cwd(), "content", "posts");
-
 export async function getPostSlugs(): Promise<string[]> {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+  const postsDirectory = path.join(process.cwd(), "content", "posts");
+
   try {
     const entries = await fs.readdir(postsDirectory, { withFileTypes: true });
     return entries

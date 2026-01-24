@@ -9,26 +9,29 @@ type PageProps = {
   locale?: Locale;
 };
 
-export default function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
-  const isEn = resolvedLocale === "en";
-  const pagePath = toLocalePath("/privacy-policy", resolvedLocale);
+export type PrivacyPolicyPageContentProps = {
+  locale: Locale;
+};
+
+export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentProps) {
+  const isEn = locale === "en";
+  const pagePath = toLocalePath("/privacy-policy", locale);
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header locale={resolvedLocale} path={pagePath} />
+      <Header locale={locale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", resolvedLocale) },
+          { name: "Home", path: toLocalePath("/", locale) },
           { name: "Privacy", path: pagePath },
         ])}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText locale={resolvedLocale} ja="プライバシー" en="Privacy Policy" />
+            <I18nText locale={locale} ja="プライバシー" en="Privacy Policy" />
           </p>
           <h1 className="text-3xl font-semibold tracking-tight">
-            <I18nText locale={resolvedLocale} ja="プライバシーポリシー" en="Privacy Policy" />
+            <I18nText locale={locale} ja="プライバシーポリシー" en="Privacy Policy" />
           </h1>
         </section>
 
@@ -36,7 +39,7 @@ export default function Page({ locale }: PageProps) {
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
               <I18nText
-                locale={resolvedLocale}
+                locale={locale}
                 ja="個人情報の利用目的"
                 en="Purpose of Personal Data Use"
               />
@@ -72,7 +75,7 @@ export default function Page({ locale }: PageProps) {
 
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={resolvedLocale} ja="広告について" en="Advertising" />
+              <I18nText locale={locale} ja="広告について" en="Advertising" />
             </h2>
             {isEn ? (
               <>
@@ -120,7 +123,7 @@ export default function Page({ locale }: PageProps) {
 
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={resolvedLocale} ja="アクセス解析ツールについて" en="Analytics" />
+              <I18nText locale={locale} ja="アクセス解析ツールについて" en="Analytics" />
             </h2>
             {isEn ? (
               <>
@@ -187,7 +190,7 @@ export default function Page({ locale }: PageProps) {
 
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={resolvedLocale} ja="免責事項" en="Disclaimer" />
+              <I18nText locale={locale} ja="免責事項" en="Disclaimer" />
             </h2>
             {isEn ? (
               <p>
@@ -205,7 +208,12 @@ export default function Page({ locale }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer locale={resolvedLocale} />
+      <Footer locale={locale} />
     </div>
   );
+}
+
+export default function Page({ locale }: PageProps) {
+  const resolvedLocale: Locale = locale ?? "ja";
+  return <PrivacyPolicyPageContent locale={resolvedLocale} />;
 }

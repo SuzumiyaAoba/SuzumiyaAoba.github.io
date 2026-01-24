@@ -15,5 +15,25 @@ const config: StorybookConfig = {
   },
   framework: "@storybook/nextjs-vite",
   staticDirs: ["../public"],
+  async viteFinal(config) {
+    if (config.build) {
+      config.build.chunkSizeWarningLimit = 5000;
+    }
+    return {
+      ...config,
+      build: {
+        ...config.build,
+        rollupOptions: {
+          ...config.build?.rollupOptions,
+          onwarn(warning, warn) {
+            if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+              return;
+            }
+            warn(warning);
+          },
+        },
+      },
+    };
+  },
 };
 export default config;
