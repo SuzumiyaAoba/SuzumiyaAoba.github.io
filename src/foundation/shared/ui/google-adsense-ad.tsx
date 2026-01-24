@@ -53,7 +53,7 @@ export function GoogleAdsenseAd({
   }
 
   return (
-    <div className={className}>
+    <div className={className} style={{ minHeight: style.height ?? "280px" }}>
       <ins
         className="adsbygoogle"
         style={style}
