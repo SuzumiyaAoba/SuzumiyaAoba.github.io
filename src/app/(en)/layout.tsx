@@ -26,6 +26,9 @@ const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
 });
 
+/**
+ * 英語版の基本メタデータ設定
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteConfig().siteUrl || "http://localhost:3000"),
   title: {
@@ -53,6 +56,10 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * 英語版のルートレイアウトコンポーネント。
+ * フォントの設定、プロバイダーのラップ、およびアナリティクススクリプトの挿入を行います。
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -10,6 +10,7 @@ import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
 /**
  * ナビゲーション項目の定義
+ * サイトのメインナビゲーションに表示される項目のリストです。
  */
 const navItems = [
   { href: "/blog", labelJa: "Blog", labelEn: "Blog" },

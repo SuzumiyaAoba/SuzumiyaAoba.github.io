@@ -58,10 +58,7 @@ export function BlogPaginationPageContent({
         <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
           {pageNumber > 1 ? (
             <a
-              href={toLocalePath(
-                pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`,
-                locale,
-              )}
+              href={toLocalePath(pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`, locale)}
               className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
             >
               <I18nText locale={locale} ja="← 前のページ" en="← Previous page" />

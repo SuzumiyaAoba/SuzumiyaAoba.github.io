@@ -4,11 +4,19 @@ import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * MDX 内で使用されるラベルコンポーネントのプロパティ
+ */
 export type MdxLabelProps = PropsWithChildren<{
+  /** ラベルの種類（スタイルとアイコンに影響します） */
   variant?: "info" | "success" | "warning" | "error" | "note";
+  /** 追加のスタイルクラス */
   className?: string;
 }>;
 
+/**
+ * 種別ごとのスタイル定義
+ */
 const variantStyles: Record<NonNullable<MdxLabelProps["variant"]>, string> = {
   info: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900/50 dark:bg-sky-950 dark:text-sky-200",
   success:
@@ -20,6 +28,9 @@ const variantStyles: Record<NonNullable<MdxLabelProps["variant"]>, string> = {
   note: "border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200",
 };
 
+/**
+ * 種別ごとのアイコン定義
+ */
 const variantIcons: Record<NonNullable<MdxLabelProps["variant"]>, string> = {
   info: "lucide:info",
   success: "lucide:check-circle-2",
@@ -28,6 +39,9 @@ const variantIcons: Record<NonNullable<MdxLabelProps["variant"]>, string> = {
   note: "lucide:info",
 };
 
+/**
+ * MDX コンテンツ内で強調表示や状態を示すためのラベルコンポーネント。
+ */
 export function MdxLabel({ children, variant = "note", className }: MdxLabelProps) {
   return (
     <span

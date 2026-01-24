@@ -48,8 +48,8 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
                     className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
                   >
                     RFC 20
-                  </a>
-                  {" "}の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
+                  </a>{" "}
+                  の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
                   進数への変換表。
                 </>
               }

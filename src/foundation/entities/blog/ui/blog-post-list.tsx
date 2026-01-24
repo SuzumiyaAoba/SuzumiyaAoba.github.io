@@ -10,6 +10,12 @@ import { cn } from "@/shared/lib/utils";
 import type { LocalizedBlogPost } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
+/**
+ * 日付文字列を指定されたロケールの形式にフォーマットする
+ * @param date 日付文字列 (YYYY-MM-DD)
+ * @param locale ロケール識別子
+ * @returns フォーマットされた日付文字列
+ */
 function formatDate(date: string, locale: string): string {
   if (!date) {
     return locale.startsWith("ja") ? "不明な日付" : "Unknown date";
@@ -25,25 +31,50 @@ function formatDate(date: string, locale: string): string {
   });
 }
 
+/**
+ * 指定されたロケールに最適な記事データを取得する（存在しない場合は別言語でフォールバック）
+ * @param variant 多言語対応した記事データ
+ * @param locale 表示したいロケール
+ * @returns 解決された単一言語の記事データ
+ */
 function resolvePost(variant: LocalizedBlogPost, locale: Locale) {
   return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
 }
 
+/**
+ * 記事が空の場合に表示するメッセージの多言語定義
+ */
 type EmptyMessage = {
+  /** 日本語のメッセージ */
   ja: string;
+  /** 英語のメッセージ */
   en: string;
 };
 
+/**
+ * BlogPostList コンポーネントのプロパティ
+ */
 type BlogPostListProps = {
+  /** 表示する記事のリスト（多言語バリアント） */
   posts: LocalizedBlogPost[];
+  /** 現在の表示ロケール */
   locale: Locale;
+  /** 追加のスタイルクラス */
   className?: string;
+  /** 記事が空の場合のメッセージ（指定しない場合は何も表示しない） */
   emptyMessage?: EmptyMessage;
+  /** サムネイルを表示するかどうか */
   showThumbnail?: boolean;
+  /** 表示バリアント（コンパクトまたは詳細） */
   variant?: "compact" | "detailed";
+  /** タグをクリックした際にリンクとして機能させるかどうか */
   enableTagLinks?: boolean;
 };
 
+/**
+ * ブログ記事のリストを表示するコンポーネント。
+ * コンパクトな一覧表示と、詳細なカード表示の2つのバリアントをサポートします。
+ */
 export function BlogPostList({
   posts,
   locale,

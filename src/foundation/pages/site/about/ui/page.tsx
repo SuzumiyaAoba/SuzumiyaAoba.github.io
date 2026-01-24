@@ -5,14 +5,25 @@ import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 
+/**
+ * About ページのページコンポーネント用プロパティ
+ */
 type PageProps = {
+  /** 描画ロケール */
   locale?: Locale;
 };
 
+/**
+ * About ページの表示内容を構成するコンポーネントのプロパティ
+ */
 export type AboutPageContentProps = {
+  /** 描画ロケール */
   locale: Locale;
 };
 
+/**
+ * About ページの表示内容を構成するコンポーネント。
+ */
 export function AboutPageContent({ locale }: AboutPageContentProps) {
   const pagePath = toLocalePath("/about", locale);
   return (
@@ -86,10 +97,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>
-                <a
-                  href={toLocalePath("/blog", locale)}
-                  className="font-medium text-foreground"
-                >
+                <a href={toLocalePath("/blog", locale)} className="font-medium text-foreground">
                   <I18nText locale={locale} ja="ブログ" en="Blog" />
                 </a>
                 <I18nText
@@ -100,10 +108,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
                 />
               </li>
               <li>
-                <a
-                  href={toLocalePath("/series", locale)}
-                  className="font-medium text-foreground"
-                >
+                <a href={toLocalePath("/series", locale)} className="font-medium text-foreground">
                   <I18nText locale={locale} ja="シリーズ" en="Series" />
                 </a>
                 <I18nText
@@ -114,10 +119,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
                 />
               </li>
               <li>
-                <a
-                  href={toLocalePath("/tools", locale)}
-                  className="font-medium text-foreground"
-                >
+                <a href={toLocalePath("/tools", locale)} className="font-medium text-foreground">
                   <I18nText locale={locale} ja="ツール" en="Tools" />
                 </a>
                 <I18nText
@@ -170,6 +172,9 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
   );
 }
 
+/**
+ * About ページを表示するサーバーサイドコンポーネント。
+ */
 export default function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
   return <AboutPageContent locale={resolvedLocale} />;

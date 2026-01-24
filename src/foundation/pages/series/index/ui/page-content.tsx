@@ -38,11 +38,7 @@ export function SeriesListPageContent({ locale, seriesList }: SeriesListPageCont
         {seriesList.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText
-                locale={locale}
-                ja="まだシリーズがありません。"
-                en="No series yet."
-              />
+              <I18nText locale={locale} ja="まだシリーズがありません。" en="No series yet." />
             </div>
           </Card>
         ) : (

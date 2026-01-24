@@ -10,7 +10,9 @@ export type AssetFormationSimulatorPageContentProps = {
   locale: Locale;
 };
 
-export function AssetFormationSimulatorPageContent({ locale }: AssetFormationSimulatorPageContentProps) {
+export function AssetFormationSimulatorPageContent({
+  locale,
+}: AssetFormationSimulatorPageContentProps) {
   const pagePath = toLocalePath("/tools/asset-formation-simulator", locale);
   const pageName = locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション";
   return (

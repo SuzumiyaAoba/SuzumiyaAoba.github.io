@@ -1,3 +1,7 @@
+/**
+ * ブログ記事（Blog）に関するエンティティとデータ取得・表示機能を提供する
+ */
+
 export {
   getAdjacentPosts,
   getAdjacentPostSummariesVariants,

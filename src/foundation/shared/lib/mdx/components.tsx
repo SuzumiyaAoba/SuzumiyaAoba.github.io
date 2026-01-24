@@ -23,6 +23,9 @@ import { YouTubeEmbed } from "@/shared/ui/mdx/youtube-embed";
 import { createPlaceholder } from "@/shared/ui/mdx/placeholders";
 import * as FinancialData from "@/shared/ui/financial-data";
 
+/**
+ * プレースホルダーコンポーネントを生成するための名前リスト
+ */
 const placeholderNames = [
   "AGENTS",
   "DependencyInjectionPrinciplesPracticesAndPatterns",
@@ -43,10 +46,20 @@ const placeholderNames = [
   "Pattern",
 ];
 
+/**
+ * 動的に生成されたプレースホルダーコンポーネントのマップ
+ */
 const placeholders = Object.fromEntries(
   placeholderNames.map((name) => [name, createPlaceholder(name)]),
 );
 
+/**
+ * MDX コンテンツで使用可能な React コンポーネントの定義
+ *
+ * Markdown 内で標準的な HTML タグ（a, img, h2 など）の代わりに
+ * 独自にスタイリングされたコンポーネントを使用するために定義します。
+ * また、カスタムコンポーネント（Code, Mermaid, YouTubeEmbed など）も提供します。
+ */
 export const mdxComponents: MDXComponents = {
   CodeWithTabs,
   CodeSwitcher,

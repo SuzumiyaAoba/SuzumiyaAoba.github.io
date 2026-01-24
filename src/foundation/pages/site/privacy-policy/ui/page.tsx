@@ -38,11 +38,7 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
         <section className="mt-8 space-y-6 text-sm leading-7 text-muted-foreground">
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText
-                locale={locale}
-                ja="個人情報の利用目的"
-                en="Purpose of Personal Data Use"
-              />
+              <I18nText locale={locale} ja="個人情報の利用目的" en="Purpose of Personal Data Use" />
             </h2>
             {isEn ? (
               <>

@@ -23,15 +23,20 @@ export type ResolvedThumbnail =
 const ICON_PREFIXES = ["icon:", "iconify:"] as const;
 
 /**
- * 記事のスラッグとサムネイル文字列から、実際に表示可能なサムネイル情報を解決する
- * @param slug 記事のスラッグ
- * @param thumbnail 設定されているサムネイル文字列（パスまたはアイコン名）
- * @returns 解決されたサムネイル情報
+ * サムネイル解決時のオプション
  */
 type ResolveThumbnailOptions = {
+  /** 解決時のベースとなるパス */
   basePath?: string;
 };
 
+/**
+ * 記事のスラッグとサムネイル文字列から、実際に表示可能なサムネイル情報を解決する
+ * @param slug 記事のスラッグ
+ * @param thumbnail 設定されているサムネイル文字列（パスまたはアイコン名）
+ * @param options 解決時のオプション
+ * @returns 解決されたサムネイル情報
+ */
 export function resolveThumbnail(
   slug: string,
   thumbnail?: string,

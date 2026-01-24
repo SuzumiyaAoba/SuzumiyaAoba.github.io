@@ -6,13 +6,23 @@ import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 
+/**
+ * ブログ記事一覧ページの表示用コンポーネントのプロパティ
+ */
 export type BlogListPageContentProps = {
+  /** 描画ロケール */
   locale: Locale;
+  /** 表示する記事のリスト */
   posts: React.ComponentProps<typeof BlogPostList>["posts"];
+  /** 全記事数 */
   totalCount: number;
+  /** 現在のページ番号 */
   currentPage: number;
 };
 
+/**
+ * ブログ記事一覧ページの表示内容を構成するコンポーネント。
+ */
 export function BlogListPageContent({
   locale,
   posts,

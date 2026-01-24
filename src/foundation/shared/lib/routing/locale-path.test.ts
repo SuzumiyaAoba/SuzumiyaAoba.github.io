@@ -23,9 +23,7 @@ describe("toLocalePath", () => {
 
     it("/contents パスはそのまま返す", () => {
       expect(toLocalePath("/contents/blog/test", locale)).toBe("/contents/blog/test");
-      expect(toLocalePath("/contents/images/photo.jpg", locale)).toBe(
-        "/contents/images/photo.jpg",
-      );
+      expect(toLocalePath("/contents/images/photo.jpg", locale)).toBe("/contents/images/photo.jpg");
     });
 
     it("相対パスはそのまま返す", () => {

@@ -71,11 +71,7 @@ export function HomePageContent({ locale, latestPosts, activityPosts }: HomePage
                   <I18nText locale={locale} ja={item.titleJa} en={item.titleEn} />
                 </div>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  <I18nText
-                    locale={locale}
-                    ja={item.descriptionJa}
-                    en={item.descriptionEn}
-                  />
+                  <I18nText locale={locale} ja={item.descriptionJa} en={item.descriptionEn} />
                 </p>
                 <span className="text-xs font-medium text-muted-foreground">
                   <I18nText locale={locale} ja="詳しく見る →" en="Learn more →" />

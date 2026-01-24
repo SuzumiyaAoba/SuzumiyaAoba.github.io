@@ -19,31 +19,53 @@ import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 
+/**
+ * ブログ記事詳細ページの表示用コンポーネントのプロパティ
+ */
 export type BlogPostPageContentProps = {
+  /** 描画ロケール */
   locale: Locale;
+  /** 記事のタイトル */
   postTitle: string;
+  /** 投稿日 */
   postDate: string;
+  /** カテゴリ名 */
   category?: string | undefined;
+  /** タグ名の配列 */
   tags: string[];
+  /** 記事のロケールパス */
   postPath: string;
+  /** SNS（X）シェア用の URL */
   shareUrl: string;
+  /** 英語表示かどうか */
   isEn: boolean;
+  /** 翻訳に使用した AI モデル名（翻訳済みの場合） */
   translationModel?: string | undefined;
+  /** オリジナル記事（日本語版）へのパス */
   originalPath: string;
+  /** レンダリング済みの MDX コンテンツ */
   content: ReactElement;
+  /** 関連するアフィリエイト商品のリスト */
   amazonProducts: AffiliateProduct[];
+  /** Amazon アソシエイトの免責事項を表示するかどうか */
   shouldShowAmazonAssociate: boolean;
-  headings: { id: string; text: string; level: 2 | 3 }[]; // Use specific levels
+  /** 目次（TOC）用の見出しリスト */
+  headings: { id: string; text: string; level: 2 | 3 }[];
+  /** 前の記事の情報 */
   prev: {
     slug: string;
     title: string;
   } | null;
+  /** 次の記事の情報 */
   next: {
     slug: string;
     title: string;
   } | null;
 };
 
+/**
+ * ブログ記事詳細ページの表示内容を構成するコンポーネント。
+ */
 export function BlogPostPageContent({
   locale,
   postTitle,

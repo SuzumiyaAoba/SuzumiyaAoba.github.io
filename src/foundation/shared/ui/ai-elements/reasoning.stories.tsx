@@ -36,9 +36,7 @@ export const CustomTrigger: Story = {
     children: (
       <>
         <ReasoningTrigger>Custom Trigger Text</ReasoningTrigger>
-        <ReasoningContent>
-          Content here.
-        </ReasoningContent>
+        <ReasoningContent>Content here.</ReasoningContent>
       </>
     ),
   },

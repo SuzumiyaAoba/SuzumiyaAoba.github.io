@@ -1,3 +1,7 @@
+/**
+ * MDX コンテンツで使用するための基本的な UI コンポーネント群をエクスポートする。
+ */
+
 export { CodeSwitcher } from "./code-switcher";
 export { CodeWithTabs } from "./code-tabs";
 export { CodeWithTooltips } from "./code-with-tooltips";

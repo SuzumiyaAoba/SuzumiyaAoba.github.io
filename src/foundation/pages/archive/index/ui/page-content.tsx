@@ -58,7 +58,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
             <ul className="space-y-4">
               {archives.map((archive) => {
                 const title = locale === "en" ? archive.title.en : archive.title.ja;
-                const description = locale === "en" ? archive.description.en : archive.description.ja;
+                const description =
+                  locale === "en" ? archive.description.en : archive.description.ja;
                 const thumbnail = resolveThumbnail(archive.slug, archive.thumbnail, {
                   basePath: `/contents/archive/${archive.slug}`,
                 });
@@ -101,9 +102,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
                         <div className="flex flex-1 flex-col gap-2 py-2">
                           <div className="space-y-2">
                             <div className="text-lg font-semibold text-foreground">{title}</div>
-                            <p className="text-sm leading-6 text-muted-foreground">
-                              {description}
-                            </p>
+                            <p className="text-sm leading-6 text-muted-foreground">{description}</p>
                           </div>
                           <span className="text-xs font-medium text-muted-foreground md:mt-auto">
                             <I18nText locale={locale} ja="開く →" en="Open →" />

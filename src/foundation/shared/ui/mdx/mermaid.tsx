@@ -4,11 +4,20 @@ import { useTheme } from "next-themes";
 import { useEffect, useId, useState } from "react";
 import mermaid from "mermaid";
 
+/**
+ * Mermaid.js の図を描画するためのプロパティ
+ */
 type MermaidProps = {
+  /** Mermaid.js の記法で記述されたコード */
   code: string;
+  /** 追加のスタイルクラス */
   className?: string;
 };
 
+/**
+ * Mermaid.js の図をクライアントサイドでレンダリングするコンポーネント。
+ * テーマ（ライト/ダーク）に応じて描画スタイルを自動的に切り替えます。
+ */
 export function Mermaid({ code, className }: MermaidProps) {
   const { resolvedTheme } = useTheme();
   const [svg, setSvg] = useState<string | null>(null);

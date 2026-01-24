@@ -15,11 +15,22 @@ import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { getSiteUrl } from "@/shared/lib/site";
 import { BlogPostPageContent } from "./page-content";
 
+/**
+ * ブログ記事詳細ページのプロパティ
+ */
 type PageProps = {
+  /** ルートパラメータ（Promiseとして渡される） */
   params: Promise<{ slug: string }>;
+  /** 描画ロケール */
   locale?: Locale;
 };
 
+/**
+ * MDX ファイル内でインポートされている JSON ファイルを読み込み、MDX の scope として提供する
+ * @param source MDX のソースコード
+ * @param slug 記事のスラッグ
+ * @returns 解決された JSON データのマップ
+ */
 async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
   const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;
   const matches = [...source.matchAll(importRegex)];
@@ -48,6 +59,10 @@ async function loadMdxScope(source: string, slug: string): Promise<Record<string
   return scope;
 }
 
+/**
+ * ブログ記事詳細ページを表示するサーバーサイドコンポーネント。
+ * 指定されたスラッグに対応する Markdown/MDX ファイルを読み込み、レンダリングします。
+ */
 export default async function Page({ params, locale }: PageProps) {
   const shouldLogPerf = process.env["NEXT_DEBUG_PERF"] === "1";
   if (shouldLogPerf) {
@@ -146,10 +161,10 @@ export default async function Page({ params, locale }: PageProps) {
   const shouldShowAmazonAssociate = amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
 
   const prevTitle = prev
-    ? (isEn ? (prev.en ?? prev.ja) : (prev.ja ?? prev.en))?.frontmatter.title ?? prev.slug
+    ? ((isEn ? (prev.en ?? prev.ja) : (prev.ja ?? prev.en))?.frontmatter.title ?? prev.slug)
     : "";
   const nextTitle = next
-    ? (isEn ? (next.en ?? next.ja) : (next.ja ?? next.en))?.frontmatter.title ?? next.slug
+    ? ((isEn ? (next.en ?? next.ja) : (next.ja ?? next.en))?.frontmatter.title ?? next.slug)
     : "";
 
   return (

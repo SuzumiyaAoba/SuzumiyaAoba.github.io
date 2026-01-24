@@ -41,7 +41,11 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
                 href={toLocalePath("/tools/asset-formation-simulator/", locale)}
                 className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
               >
-                <I18nText locale={locale} ja="資産形成シミュレーション" en="Asset Formation Simulator" />
+                <I18nText
+                  locale={locale}
+                  ja="資産形成シミュレーション"
+                  en="Asset Formation Simulator"
+                />
               </a>
             </li>
           </ul>

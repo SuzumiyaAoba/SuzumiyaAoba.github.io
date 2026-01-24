@@ -1,6 +1,9 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+/**
+ * 解決されたテーマの種類
+ */
 type Theme = "light" | "dark";
 
 /**
