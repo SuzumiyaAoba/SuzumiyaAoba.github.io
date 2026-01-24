@@ -7,6 +7,7 @@
   "descriptionEn": "A series about reading Vercel's react-best-practices",
   "posts": [
     "2026-01-16-react-best-practices",
-    "2026-01-17-react-best-practices-bundle-size-optimization"
+    "2026-01-17-react-best-practices-bundle-size-optimization",
+    "2026-01-24-react-best-practices-server-side-performance"
   ]
 }
