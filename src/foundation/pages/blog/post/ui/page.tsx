@@ -32,7 +32,7 @@ function extractAmazonProductIdsFromMdx(source: string): string[] {
   const results: string[] = [];
   const seen = new Set<string>();
   const componentRegex = /<AmazonProductSection\b[\s\S]*?>/g;
-  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|\"[^\"]*\"|'[^']*')/;
+  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|"[^"]*"|'[^']*')/;
 
   for (const match of source.matchAll(componentRegex)) {
     const tag = match[0];
@@ -44,7 +44,7 @@ function extractAmazonProductIdsFromMdx(source: string): string[] {
     let candidates: string[] = [];
     if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
       const inner = rawValue.slice(1, -1);
-      const quoted = [...inner.matchAll(/\"([^\"]+)\"|'([^']+)'/g)];
+      const quoted = [...inner.matchAll(/"([^"]+)"|'([^']+)'/g)];
       candidates = quoted
         .map((q) => q[1] ?? q[2])
         .filter((value): value is string => Boolean(value));
