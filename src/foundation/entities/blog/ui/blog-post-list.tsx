@@ -141,7 +141,7 @@ export function BlogPostList({
                         <div className="flex h-full w-full items-center justify-center">
                           <Icon
                             icon={thumbnail.icon}
-                            className="size-10 text-muted-foreground/70 dark:text-muted-foreground/80"
+                            className="size-24 sm:size-10 text-muted-foreground/70 dark:text-muted-foreground/80"
                             aria-hidden
                           />
                           <span className="sr-only">{title}</span>
@@ -222,7 +222,7 @@ export function BlogPostList({
                       <span className="flex h-full w-full items-center justify-center">
                         <Icon
                           icon={thumbnail.icon}
-                          className="size-6 text-muted-foreground/70 dark:text-muted-foreground/80"
+                          className="size-16 sm:size-6 text-muted-foreground/70 dark:text-muted-foreground/80"
                           aria-hidden
                         />
                         <span className="sr-only">{title}</span>
