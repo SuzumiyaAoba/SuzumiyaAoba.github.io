@@ -82,4 +82,3 @@ https://github.com/vercel-labs/agent-skills/blob/main/skills/react-best-practice
 react-best-practices の Server-Side Performance カテゴリーのルールを読んだ。
 今回は Server-Side Performance ということもあり、一般的なプラクティスというよりは Next.js、React に特化したルールが多かった。
 まだ 3 つ目なので残りの 5 つのカテゴリについてもこの調子で確認していく。
-

@@ -49,7 +49,7 @@ function extractAmazonProductIdsFromMdx(source: string): string[] {
         .map((q) => q[1] ?? q[2])
         .filter((value): value is string => Boolean(value));
     } else if (
-      (rawValue.startsWith("\"") && rawValue.endsWith("\"")) ||
+      (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
       (rawValue.startsWith("'") && rawValue.endsWith("'"))
     ) {
       candidates = [rawValue.slice(1, -1)];
@@ -197,10 +197,7 @@ export default async function Page({ params, locale }: PageProps) {
   const tagProducts =
     remainingSlots > 0 && tags.length > 0
       ? await getAffiliateProductsByTags(tags, {
-          excludeIds: [
-            ...prioritizedProducts.map((product) => product.id),
-            ...productIdsInContent,
-          ],
+          excludeIds: [...prioritizedProducts.map((product) => product.id), ...productIdsInContent],
           limit: remainingSlots,
         })
       : [];

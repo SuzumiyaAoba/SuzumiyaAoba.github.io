@@ -27,6 +27,9 @@ export function Footer({ locale }: FooterProps) {
           <a href={toLocalePath("/privacy-policy", locale)} className="hover:text-foreground">
             <I18nText locale={locale} ja="プライバシー" en="Privacy" />
           </a>
+          <a href={toLocalePath("/rss.xml", locale)} className="hover:text-foreground">
+            RSS
+          </a>
         </nav>
       </div>
     </footer>

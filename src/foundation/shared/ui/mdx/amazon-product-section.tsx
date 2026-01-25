@@ -6,8 +6,7 @@ import { AmazonProductSection as AmazonProductSectionUI } from "@/shared/ui/amaz
 export type MdxAmazonProductSectionProps = {
   /** affiliate-products.json の id を並べる */
   ids: string[] | string;
-} &
-  Omit<ComponentProps<typeof AmazonProductSectionUI>, "products">;
+} & Omit<ComponentProps<typeof AmazonProductSectionUI>, "products">;
 
 /**
  * MDX から Amazon 商品カードを表示するためのラッパー
