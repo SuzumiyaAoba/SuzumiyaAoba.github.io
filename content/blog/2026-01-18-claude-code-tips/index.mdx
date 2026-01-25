@@ -13,6 +13,18 @@ Claude Code について学んだ Tips をまとめる。随時更新する。
   <MdxLabel variant="warning">未検証</MdxLabel> を表示しています。
 </Message>
 
+## ベストプラクティス
+
+- [Best Practices for Claude Code - Claude Code Docs](https://code.claude.com/docs/en/best-practices)
+
+## Skills についてのドキュメント
+
+| ドキュメント                                                                                                                                                                               | 説明                  |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
+| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills)                                                                                              | Anthropic 公式 Skills |
+| [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills) | Awesome リポジトリ    |
+| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills)                                              | Awesome リポジトリ    |
+
 ## 言語設定
 
 Claude Code の言語設定を日本語にするには `/config` コマンドを実行し、`Language` で `Japanese` や `日本語` と設定する。
@@ -62,7 +74,7 @@ Claude Code を起動し、`/config` と入力し、<kbd>Enter</kbd>を押す。
 
 </details>
 
-### 起動時に表示されるアカウント情報を隠す
+## 起動時に表示されるアカウント情報を隠す
 
 Claude Code を起動するとメールアドレスやセッションの履歴などの情報が表示される。
 これらの情報が表示されると困る場合は、環境変数 `CLAUDE_CODE_HIDE_ACCOUNT_INFO` に `1` を設定すると表示を抑制できる。
@@ -77,7 +89,7 @@ Claude Code を起動するとメールアドレスやセッションの履歴�
 
 特定のリポジトリでのみ抑制すればよい場合は、`.claude/settings.json` に上記の設定をすればよい。
 
-### タスク完了時に通知音を鳴らす
+## タスク完了時に通知音を鳴らす
 
 タスクが完了したことを検知するため、Hooks で通知音を鳴らす設定を入れる。
 `~/.claude/settings.json` に次のような設定を追加する。
@@ -132,7 +144,7 @@ $ ls -la /System/Library/Sounds/
 .rw-r--r--@ 163k root 22 11月  2025 ♫ Tink.aiff
 ```
 
-### Plan モードの計画を保存するディレクトリを指定 <MdxLabel variant="warning">未検証</MdxLabel>
+## Plan モードの計画を保存するディレクトリを指定 <MdxLabel variant="warning">未検証</MdxLabel>
 
 Plan モードでは、デフォルト設定だと生成した計画が `~/.claude/plans/` ディレクトリに保存される。
 
@@ -163,3 +175,8 @@ $ tree ~/.claude/plans/
 ディレクトリごとに置く `.claude/settings.json` で設定し、PR のレビューに含めるようにすると
 Claude Code の使い方（計画の詰めが甘い状態で実装をさせてしまっている問題）についてもレビューできて便利だし、
 知見を共有する機会として PR を活用できるようになる。
+
+## 話題になった Skills
+
+- [Introducing: React Best Practices - Vercel](https://vercel.com/blog/introducing-react-best-practices)
+- [UI Skills - A set of skills to polish interfaces built by agents](https://www.ui-skills.com/)
