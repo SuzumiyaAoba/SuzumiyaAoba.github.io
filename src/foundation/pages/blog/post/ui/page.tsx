@@ -26,6 +26,47 @@ type PageProps = {
 };
 
 /**
+ * MDX 内にある Amazon 商品カードの ids を抽出する
+ */
+function extractAmazonProductIdsFromMdx(source: string): string[] {
+  const results: string[] = [];
+  const seen = new Set<string>();
+  const componentRegex = /<AmazonProductSection\b[\s\S]*?>/g;
+  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|\"[^\"]*\"|'[^']*')/;
+
+  for (const match of source.matchAll(componentRegex)) {
+    const tag = match[0];
+    const idsMatch = tag.match(idsPropRegex);
+    if (!idsMatch) {
+      continue;
+    }
+    const rawValue = idsMatch[1]?.trim() ?? "";
+    let candidates: string[] = [];
+    if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
+      const inner = rawValue.slice(1, -1);
+      const quoted = [...inner.matchAll(/\"([^\"]+)\"|'([^']+)'/g)];
+      candidates = quoted.map((q) => q[1] ?? q[2]).filter(Boolean);
+    } else if (
+      (rawValue.startsWith("\"") && rawValue.endsWith("\"")) ||
+      (rawValue.startsWith("'") && rawValue.endsWith("'"))
+    ) {
+      candidates = [rawValue.slice(1, -1)];
+    }
+
+    for (const candidate of candidates) {
+      const normalized = candidate.trim();
+      if (!normalized || seen.has(normalized)) {
+        continue;
+      }
+      seen.add(normalized);
+      results.push(normalized);
+    }
+  }
+
+  return results;
+}
+
+/**
  * MDX ファイル内でインポートされている JSON ファイルを読み込み、MDX の scope として提供する
  * @param source MDX のソースコード
  * @param slug 記事のスラッグ
@@ -102,6 +143,7 @@ export default async function Page({ params, locale }: PageProps) {
   const primaryContent = isEn ? postEn?.content : postJa?.content;
   const fallbackContent = isEn ? postJa?.content : postEn?.content;
   const contentSource = primaryContent ?? fallbackContent ?? post.content;
+  const productIdsInContent = extractAmazonProductIdsFromMdx(contentSource);
   const translationModel = postEn?.frontmatter.model;
   const originalPath = toLocalePath(`/blog/post/${slug}`, "ja");
   if (shouldLogPerf) {
@@ -116,6 +158,10 @@ export default async function Page({ params, locale }: PageProps) {
     console.timeEnd(`[blog] mdx scope:${slug}`);
   }
   const explicitProductIds = post.frontmatter.amazonProductIds ?? [];
+  const excludedIdsInContent = new Set(productIdsInContent);
+  const explicitProductIdsForFooter = explicitProductIds.filter(
+    (id) => !excludedIdsInContent.has(id),
+  );
   if (shouldLogPerf) {
     console.time(`[blog] mdx render:${slug}`);
   }
@@ -128,8 +174,8 @@ export default async function Page({ params, locale }: PageProps) {
     console.time(`[blog] amazon explicit:${slug}`);
   }
   const explicitPromise: Promise<AffiliateProduct[]> =
-    explicitProductIds.length > 0
-      ? getAffiliateProductsByIds(explicitProductIds)
+    explicitProductIdsForFooter.length > 0
+      ? getAffiliateProductsByIds(explicitProductIdsForFooter)
       : Promise.resolve([]);
   const [content, headings, explicitProducts]: [
     ReactElement,
@@ -149,7 +195,10 @@ export default async function Page({ params, locale }: PageProps) {
   const tagProducts =
     remainingSlots > 0 && tags.length > 0
       ? await getAffiliateProductsByTags(tags, {
-          excludeIds: prioritizedProducts.map((product) => product.id),
+          excludeIds: [
+            ...prioritizedProducts.map((product) => product.id),
+            ...productIdsInContent,
+          ],
           limit: remainingSlots,
         })
       : [];

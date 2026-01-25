@@ -62,6 +62,20 @@
       "imageUrl": "https://m.media-amazon.com/images/I/71UAHWUafkS._SY522_.jpg",
       "productUrl": "https://amzn.to/49rMmzR",
       "tags": ["React"]
+    },
+    {
+      "id": "人月の神話",
+      "title": "人月の神話【新装版】",
+      "imageUrl": "https://m.media-amazon.com/images/I/71F+Duf3ZIL._SY522_.jpg",
+      "productUrl": "https://amzn.to/4k1Vgrk",
+      "tags": ["見積り"]
+    },
+    {
+      "id": "ソフトウェア見積り",
+      "title": "ソフトウェア見積り　人月の暗黙知を解き明かす",
+      "imageUrl": "https://m.media-amazon.com/images/I/91PlMBCsePL._SY522_.jpg",
+      "productUrl": "https://amzn.to/3YXTnCo",
+      "tags": ["見積り"]
     }
   ]
 }
