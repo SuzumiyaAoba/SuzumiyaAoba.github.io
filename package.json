@@ -7,7 +7,7 @@
     "dev:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next dev --webpack",
     "build": "run-s build:next build:pagefind",
     "build:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next build",
-    "build:pagefind": "node scripts/patch-pagefind-lang.mjs && pagefind --site .next/server/app --output-path public/pagefind --glob \"**/*.html\"",
+    "build:pagefind": "node scripts/patch-pagefind-lang.mjs && pagefind --site out --output-path out/pagefind --glob \"**/*.html\"",
     "pagefind:dev": "run-s build:next build:pagefind",
     "start": "next start",
     "lint": "run-s lint:oxlint lint:fsd",

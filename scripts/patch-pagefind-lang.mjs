@@ -1,8 +1,10 @@
 import fs from "node:fs/promises";
 
 const targets = [
-  ".next/server/app/_not-found.html",
-  ".next/server/app/_global-error.html",
+  "out/404.html",
+  "out/404/index.html",
+  "out/_not-found/index.html",
+  "out/500.html",
 ];
 
 async function patchFile(filePath) {
@@ -24,3 +26,15 @@ async function patchFile(filePath) {
 }
 
 await Promise.all(targets.map((target) => patchFile(target)));
+
+const googleVerificationPath = "out/google19f820ba5c9c10b8.html";
+try {
+  const raw = await fs.readFile(googleVerificationPath, "utf8");
+  if (!raw.includes("<html")) {
+    const token = raw.trim();
+    const wrapped = `<!doctype html><html lang="ja"><head><meta charset="utf-8"></head><body>${token}</body></html>`;
+    await fs.writeFile(googleVerificationPath, wrapped, "utf8");
+  }
+} catch {
+  // ignore missing file
+}
