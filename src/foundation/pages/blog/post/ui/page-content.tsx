@@ -12,7 +12,7 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
-import { Message } from "@/shared/ui/mdx";
+import { Message, TwitterWidgets } from "@/shared/ui/mdx";
 import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
@@ -153,6 +153,7 @@ export function BlogPostPageContent({
                 </Message>
               ) : null}
               <div>{content}</div>
+              <TwitterWidgets />
             </article>
             <div>
               {amazonProducts.length > 0 ? (
