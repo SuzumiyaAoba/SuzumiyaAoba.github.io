@@ -45,7 +45,9 @@ function extractAmazonProductIdsFromMdx(source: string): string[] {
     if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
       const inner = rawValue.slice(1, -1);
       const quoted = [...inner.matchAll(/\"([^\"]+)\"|'([^']+)'/g)];
-      candidates = quoted.map((q) => q[1] ?? q[2]).filter(Boolean);
+      candidates = quoted
+        .map((q) => q[1] ?? q[2])
+        .filter((value): value is string => Boolean(value));
     } else if (
       (rawValue.startsWith("\"") && rawValue.endsWith("\"")) ||
       (rawValue.startsWith("'") && rawValue.endsWith("'"))
