@@ -28,12 +28,20 @@ const TAG_ICON_MAP: Record<string, string> = {
   日記: "mingcute:diary-line",
   git: "devicon:git",
   "claude code": "material-icon-theme:claude",
+  claude: "material-icon-theme:claude",
+  "claude opus": "material-icon-theme:claude",
+  "claude sonnet": "material-icon-theme:claude",
+  "claude hike": "material-icon-theme:claude",
   anthropic: "material-icon-theme:claude",
-  gemini: "ri:gemini-fill",
+  codex: "logos:openai-icon",
+  gpt: "logos:openai-icon",
+  google: "logos:google-icon",
+  gemini: "material-icon-theme:gemini-ai",
   chatgpt: "logos:openai-icon",
   openai: "logos:openai-icon",
   cursor: "vscode-icons:file-type-cursorrules",
   deepseek: "ri:deepseek-fill",
+  "nano banana": "lucide:banana",
 };
 
 /** デフォルトのタグアイコン */

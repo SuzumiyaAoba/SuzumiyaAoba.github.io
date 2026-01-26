@@ -16,17 +16,27 @@ function resolveTimelineIcon(tags?: string[]): string | null {
   }
 
   const normalized = tags.map((tag) => tag.toLowerCase());
-  if (normalized.includes("openai")) {
+  if (normalized.includes("openai") || normalized.includes("codex") || normalized.includes("gpt")) {
     return "logos:openai-icon";
   }
-  if (normalized.includes("anthropic") || normalized.includes("ahthropic")) {
+  if (
+    normalized.includes("anthropic") ||
+    normalized.includes("ahthropic") ||
+    normalized.includes("claude") ||
+    normalized.includes("claude opus") ||
+    normalized.includes("claude sonnet") ||
+    normalized.includes("claude hike")
+  ) {
     return "material-icon-theme:claude";
   }
   if (normalized.includes("deepseek")) {
     return "ri:deepseek-fill";
   }
   if (normalized.includes("gemini")) {
-    return "ri:gemini-fill";
+    return "material-icon-theme:gemini-ai";
+  }
+  if (normalized.includes("nano banana") || normalized.includes("nao banana")) {
+    return "lucide:banana";
   }
   return null;
 }
