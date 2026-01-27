@@ -1,0 +1,200 @@
+---
+title: Weekly Report (1)
+date: 2026-01-25
+category: Weekly Report
+tags: ["AI", "Coding Agents", "Claude Code", "Codex", "Estimates", "Programming"]
+thumbnail: iconify:iwwa:week
+series: "Weekly Report"
+seriesOrder: 1
+amazonAssociate: true
+model: GPT-5.2-Codex
+---
+
+Starting this week, I'm trying a new experiment: a weekly report every Wednesday.
+The content will cover the following, but it may change depending on my interests at the time.
+
+- **Notable** personal events from the last week
+  - These are usually written as standalone posts, so they rarely show up in the weekly report
+- Topics that trended on X (formerly Twitter), mainly about programming
+- AI-related news
+
+On X, there are AI updates every day, which are hard to keep up with and get consumed quickly.
+After just a week, they already feel like old news.
+So I want to leave at least the day-to-day events I saw online, in the spirit of old personal blogs.
+
+## Programming
+
+### [Engineers resonate with an article calling estimates a “polite lie” / X](https://x.com/i/trending/2015249200720806391?s=20)
+
+<MdxDateLabel date="2025-01-25" />
+
+It seems the buzz on X started from the overseas article [How I estimate work as a staff software engineer](https://www.seangoedecke.com/how-i-estimate-work/).
+Summarized in Japanese via ChatGPT 5.2 Thinking, it argues roughly the following:
+
+> - The industry has a “polite fiction” that skilled teams can accurately estimate timelines if they work hard, but the author says this is basically wrong. As a result, rules of thumb like T‑shirt sizing or “double the initial estimate and add 20%” are common and borderline defeatist.
+> - Estimation is hard because most development time is spent on investigating and exploring the unknown and understanding the impact. You can estimate the known work, but you can’t pre‑estimate the unknown that dominates a project. Trying to eliminate unknowns in planning meetings just shifts the “unestimable” work into meetings and isn’t realistic.
+> - Estimates often function less as productivity tools and more as political tools for organizational decisions (budgeting, prioritization, cancellation). In top‑down projects, pressure can push estimates toward “desired numbers.”
+> - The framing is reversed: it’s not “there is work and we estimate the duration.” In practice, a timebox comes first, and the solution, scope, quality, and risk are adjusted to fit it. The same requirement leads to very different designs depending on whether the deadline is six months or a day.
+> - The author’s estimation approach as a staff engineer:
+>   - Gather political context before looking at code (how strong the request is, whether the deadline is absolute, what range management expects).
+>   - Ask “what approach fits within one week (or the given period)?” instead of “how long will this take?”
+>   - Focus on unknowns over knowns; the more “dark forest” territory there is, the more conservative the estimate (or available approaches) should be.
+>   - Return a risk assessment, not a fixed date, and present multiple options (best‑practice but high risk, a shortcut to hit the deadline, extra support from another team, etc.), leaving trade‑offs to management.
+> - In response to objections: refusing to estimate until unknowns are resolved can lead to “someone less technical estimating on your behalf” with worse accuracy. Collaborating with management to find realistic compromises is part of the job.
+> - Summary: accurate schedules are inherently hard. A good estimate centers unknowns, presents feasible plans and risks within the required range, and enables decision‑making.
+
+These points remind me of two books:
+
+<AmazonProductSection ids={["人月の神話", "ソフトウェア見積り"]} />
+
+If you haven't read them, please do.
+The Mythical Man‑Month is famous for being less read than its name recognition suggests.
+
+Back to the article: I agree with the author.
+And honestly, even if estimates only served decision‑making, that would still be better than reality.
+In practice, feasible estimates are ignored, schedules are set, and development begins.
+Then, as the author says, everything gets adjusted to “fit the timebox.”
+The time that would have gone to the initial estimate gets consumed by damage control once the schedule tightens.
+It's truly unproductive.
+
+## AI
+
+### Bug where Skills don’t work in Codex
+
+<MdxDateLabel date="2025-01-25" />
+
+In Codex v0.89.0, REPO‑scoped skills (`$CWD/.codex/skills`) are not loaded.
+
+- [cannot detect skill in `<repo>`/.codex/skills · Issue #9816 · openai/codex](https://github.com/openai/codex/issues/9816)
+
+The issue was reported on GitHub and appears to be fixed in [v0.90.0-alpha.5](https://github.com/openai/codex/releases/tag/rust-v0.90.0-alpha.5), so it should land within a day or two.
+
+### [Claude Code Todos evolved into Tasks, enabling autonomous management for large projects / X](https://x.com/i/trending/2014489409870045677)
+
+<MdxDateLabel date="2025-01-25" />
+
+Claude Code’s Todos feature was upgraded to Tasks.
+Todos were a simple TODO list, but Tasks consider dependencies and are written to `~/.claude/tasks`, allowing multiple agents to share them.
+Many people were already doing this via Skills or planning to; it's great to see it as an official feature.
+
+### [Claude Code best practices and Japanese resources spreading in the developer community / X](https://x.com/i/trending/2014954629335834889)
+
+<MdxDateLabel date="2025-01-25" />
+
+After Anthropic published Claude Code best practices (mentioned below), many Japanese resources were shared for learning in Japanese.
+
+### [Yann LeCun explains why he left Meta: criticism of “LLM‑only focus” / X](https://x.com/i/trending/2014990721041023047)
+
+This claim has come up several times.
+It seems R&D has leaned too far into LLMs, leaving little room for truly new methods.
+But the chicken race has already started, so until the big tech companies either finish the race or drop out, I don’t think this trend will change.
+
+### [Claude Code is suddenly everywhere inside Microsoft | The Verge](https://www.theverge.com/tech/865689/microsoft-claude-code-anthropic-partnership-notepad)
+
+<MdxDateLabel date="2025-01-23" />
+
+An article reported that Microsoft has rolled out Anthropic's “Claude Code” widely inside the company, not just for teams like Windows and Microsoft 365, but also for non‑engineers such as designers and PMs to prototype.
+Claude's visibility among engineers has been rising since Claude Code launched, but recently, since “Claude Cowork” was released, it feels like Claude’s usefulness has spread beyond engineers as well.
+
+Someone built a [site](https://claude-code-best-practices.pages.dev/) to make the best practices easier to learn. If reading the official docs in English is a hassle, that’s a good place to start.
+
+### [Clawdbot, a personal AI agent PC you can control from your phone, is trending / X](https://x.com/i/trending/2014664151054856494)
+
+<MdxDateLabel date="2025-01-23" />
+
+An AI agent called [Clawdbot](https://clawd.bot/) was trending.
+It seems you can assign tasks to an AI agent via chat apps like Slack or Discord.
+Maybe it's the democratization of what coding agents can do, similar to Claude Cowork.
+
+I'm interested, but I can’t justify spending enough on GenAI to fund a setup like this.
+I burn through Claude and ChatGPT Pro plans instantly, and even Antigravity’s free tier disappears in a day.
+
+If you aren't using Claude Code or Codex, you should try them.
+
+### [Anthropic CEO: “Engineers won’t write code anymore; AI will, and humans will just edit” / X](https://x.com/i/trending/2013939337428451425)
+
+<MdxDateLabel date="2025-01-23" />
+
+Many famous programmers have said similar things recently.
+Linus Torvalds, known for creating Linux, has said that AI‑generated code is garbage, but he still uses coding agents for non‑core tools.
+
+- [Even Linus Torvalds is vibe coding now | ZDNET](https://www.zdnet.com/article/linus-torvalds-vibe-coding-ai/)
+
+Ryan Dahl, the creator of Node.js, also said, “the era of humans writing code is over.”
+
+<blockquote className="twitter-tweet" lang="en" dir="ltr">
+  This has been said a thousand times before, but allow me to add my own voice: the era of humans
+  writing code is over. Disturbing for those of us who identify as SWEs, but no less true.
+  That&#39;s not to say SWEs don&#39;t have work to do, but writing syntax directly is not it.
+  &mdash; Ryan Dahl (@rough__sea){" "}
+  <a href="https://twitter.com/rough__sea/status/2013280952370573666?ref_src=twsrc%5Etfw">
+    January 19, 2026
+  </a>
+</blockquote>
+
+I remember other famous programmers saying similar things, but I lost those links.
+This weekly report was supposed to prevent that...。
+
+These statements are partly positional talk, but I do think the era of humans writing code is over.
+Some argue about coding standards and quality, but if you curate Agent Skills, you can get code that reflects an architect's intent better than a human might. You can also tune the quality of first‑pass code. That assumes you are using at least Claude Opus 4.5.
+
+So the skills programmers need now are not just coding, but things like:
+
+- Abstract judgment to translate domain knowledge into code
+- Architecture at the code level
+- Applying principles that improve maintainability, such as single responsibility and high cohesion/low coupling
+
+These are **capabilities that coding agents do not have by default right now**.
+LLMs often output ad‑hoc code on the first pass.
+That means we still need to correct course and steer the code toward better quality.
+Some might disagree, but in my experience, if you skip this work, things become uncontrollable.
+People who deny this are either literally practicing Vibe Coding or unconsciously writing prompts that already encode these constraints.
+
+I mostly agree that the era of humans writing code is over.
+I also mentioned this in the “poem” section of my recent post “[Renewal](../2026-01-14-renewal/).”
+Still, I think people only truly believe coding is “just a task” after they've written enough code to say so.
+How can someone who never wrote code learn to judge good from bad code?
+It feels similar to asking how a new graduate who became a consultant can actually consult.
+Maybe consultants can learn by watching seniors, but in programming, the outputs are no longer made by humans.
+I'm not sure we can learn the craft without writing code ourselves.
+Maybe that's just an old way of thinking.
+
+This is getting long, so I'll stop here.
+
+### [Official Claude Code best practices released and trending among developers / X](https://x.com/i/trending/2014258902712602892)
+
+<MdxDateLabel date="2025-01-22" />
+
+Claude Code published official best practices.
+There isn't much that's novel; it's more like an official consolidation of practices already discussed in blogs, docs, and on X.
+For people who use coding agents daily, many of these were already learned through experience.
+The upside is that it is now clearly documented, which makes it easier to share as knowledge with others.
+
+### [Strong backlash from the community against the Digital Agency’s definition of open source / X](https://x.com/i/trending/2013609321632866391)
+
+<MdxDateLabel date="2025-01-22" />
+
+The Digital Agency seems to be at it again.
+Why does Japan keep giving existing words the wrong meaning?
+
+[Story history / X](https://x.com/i/trending/2013609321632866391/history)
+
+### [OOP vs FP debate reignites; heated discussions among developers / X](https://x.com/i/trending/2013187396167160249)
+
+<MdxDateLabel date="2025-01-20" />
+
+The OOP vs FP debate was hot again. How many times has this surfaced on X?
+Doesn’t it happen three or four times every year?
+
+Too many people fail to distinguish language vs paradigm, syntax vs semantics.
+Please acquire a meta‑language and a mental model.
+Then we can talk.
+
+### [Google Gemini scores 839 points on the university entrance exam in free mode / X](https://x.com/i/trending/2012721210602209515)
+
+<MdxDateLabel date="2025-01-18" />
+
+The X headline was about Gemini, but reports say GPT‑5.2 Thinking scored perfect marks in 9 out of 15 subjects.
+Because these are multiple‑choice questions, LLMs have a natural advantage, but now LLMs can outperform most Japanese test‑takers on the Center Exam level.
+As someone who codes with LLMs daily, it doesn't feel strange that they can score that high.
+In fact, it's unsurprising that we've reached that point.

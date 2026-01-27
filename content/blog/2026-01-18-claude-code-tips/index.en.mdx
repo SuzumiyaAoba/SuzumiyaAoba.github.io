@@ -1,0 +1,179 @@
+---
+title: Claude Code Tips
+date: 2026-01-18
+category: Programming
+tags: ["Claude Code"]
+thumbnail: iconify:material-icon-theme:claude
+model: GPT-5.2-Codex
+---
+
+A collection of tips I've learned about Claude Code. This will be updated over time.
+
+<Message title="Note" variant="warning" defaultOpen>
+  Some features are listed but unverified because I hit Claude Code rate limits.
+  Unverified items are marked with <MdxLabel variant="warning">Unverified</MdxLabel>.
+</Message>
+
+## Best practices
+
+- [Best Practices for Claude Code - Claude Code Docs](https://code.claude.com/docs/en/best-practices)
+
+## Documentation about Skills
+
+| Document                                                                                                                                                                                 | Description        |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills)                                                                                              | Official Skills    |
+| [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills) | Awesome repository |
+| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills)                                              | Awesome repository |
+
+## Language settings
+
+To set Claude Code to Japanese, run `/config` and set `Language` to `Japanese` or `日本語`.
+You can also use `Language` to set a tone in addition to the language.
+
+This only changes the language Claude uses; the config UI itself stays in English.
+
+> Added `language` setting to configure Claude's response language (e.g., language: "japanese")
+
+This is supported since [2.1.0](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#210).
+
+<details>
+<summary>Setup steps</summary>
+
+### Configure inside Claude Code
+
+Launch Claude Code, type `/config`, and press <kbd>Enter</kbd>.
+
+<Img
+  src="./images/claude-code_config-command.png"
+  alt="Run the config command in Claude Code"
+  width="600"
+/>
+
+When the settings screen appears, move the cursor to `Language` with <kbd>↓</kbd> and press <kbd>Enter</kbd>.
+
+<Img src="./images/claude-code_config.png" alt="Claude Code settings screen" width="600" />
+
+An input field appears. Enter `Japanese` or `日本語` and press <kbd>Enter</kbd>.
+
+<Img src="./images/claude-code_language.png" alt="Claude Code language settings" width="600" />
+
+Now the default language for Claude Code is Japanese.
+Press <kbd>Esc</kbd> to exit the settings screen.
+
+### ~/.claude/settings.json
+
+Alternatively, add the following to `~/.claude/settings.json`.
+
+```json ~/.claude/settings.json
+{
+  "language": "日本語"
+}
+```
+
+This has the same effect as setting it via `/config`.
+
+</details>
+
+## Hide account info shown at startup
+
+When Claude Code starts, it shows your email address and session history.
+If you want to hide that, set the environment variable `CLAUDE_CODE_HIDE_ACCOUNT_INFO` to `1`.
+
+```json ~/.claude/settings.json
+{
+  "env": {
+    "CLAUDE_CODE_HIDE_ACCOUNT_INFO": "1"
+  }
+}
+```
+
+If you only want to hide it for a specific repository, add the same setting to `.claude/settings.json` inside that repo.
+
+## Play a notification sound when tasks finish
+
+To detect when a task finishes, add a hook to play a sound.
+Add the following to `~/.claude/settings.json` (macOS example).
+
+```json ~/.claude/settings.json
+{
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Tink.aiff"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Tink.aiff"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+On macOS, pick any file from `/System/Library/Sounds/` and update the path after `afplay`.
+If you use both Codex and Claude Code, it might be nice to set different sounds for each.
+
+```shell
+$ ls -la /System/Library/Sounds/
+.rw-r--r--@ 221k root 22 11月  2025 ♫ Basso.aiff
+.rw-r--r--  404k root 22 11月  2025 ♫ Blow.aiff
+.rw-r--r--  223k root 22 11月  2025 ♫ Bottle.aiff
+.rw-r--r--@ 207k root 22 11月  2025 ♫ Frog.aiff
+.rw-r--r--@ 623k root 22 11月  2025 ♫ Funk.aiff
+.rw-r--r--@ 475k root 22 11月  2025 ♫ Glass.aiff
+.rw-r--r--  304k root 22 11月  2025 ♫ Hero.aiff
+.rw-r--r--@ 203k root 22 11月  2025 ♫ Morse.aiff
+.rw-r--r--@ 432k root 22 11月  2025 ♫ Ping.aiff
+.rw-r--r--@ 469k root 22 11月  2025 ♫ Pop.aiff
+.rw-r--r--@ 218k root 22 11月  2025 ♫ Purr.aiff
+.rw-r--r--@ 443k root 22 11月  2025 ♫ Sosumi.aiff
+.rw-r--r--@ 430k root 22 11月  2025 ♫ Submarine.aiff
+.rw-r--r--@ 163k root 22 11月  2025 ♫ Tink.aiff
+```
+
+## Choose the directory for Plan mode output <MdxLabel variant="warning">Unverified</MdxLabel>
+
+In Plan mode, generated plans are saved under `~/.claude/plans/` by default.
+
+```shell
+$ tree ~/.claude/plans/
+~/.claude/plans/
+├── elegant-questing-lamport.md
+├── gleaming-drifting-anchor.md
+├── misty-mixing-reddy.md
+└── virtual-sprouting-moler.md
+
+1 directory, 4 files
+```
+
+You can change the destination via `plansDirectory` in `settings.json`.
+
+> Added `plansDirectory` setting to customize where plan files are stored
+
+[2.1.9 - CHANGELOG.md](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#219)
+
+```json ~/.claude/settings.json
+{
+  "plansDirectory": "./plans"
+}
+```
+
+If your team uses Claude Code and you want to review how others planned their implementation, you can set this per repo in `.claude/settings.json` and include the plans in PR reviews. That makes it easier to spot weak planning and also a good way to share knowledge.
+
+## Skills that got attention
+
+- [Introducing: React Best Practices - Vercel](https://vercel.com/blog/introducing-react-best-practices)
+- [UI Skills - A set of skills to polish interfaces built by agents](https://www.ui-skills.com/)
