@@ -54,6 +54,9 @@ export const metadata: Metadata = {
     },
     description: SITE_TITLE,
   },
+  verification: {
+    google: "google19f820ba5c9c10b8",
+  },
 };
 
 /**
