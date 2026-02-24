@@ -1,0 +1,103 @@
+---
+title: 週報 (5)
+date: 2026-02-25
+category: 週報
+tags: ["プログラミング", "AI"]
+thumbnail: iconify:iwwa:week
+series: "週報"
+seriesOrder: 5
+amazonAssociate: true
+---
+
+今週も半分が過ぎてしまったけど[前回](../2026-02-15-weekly/)に続いて週報を書いていく。
+今週から毎週水曜日に週報を書くことにする。
+
+最近は、X (旧 Twitter) 上やネット記事を見かけてもメモするのを忘れていることが増えてきたので改めて見落せない話題は忘れずにメモしていきたい。
+ここのところネット上の AI 関係の話題がループしており、その情報は先週、先々週も話していたというのが増えてきた。
+それだけ新規参入者が増えてきたということだろう。
+
+## AI
+
+### 
+
+<MdxDateLabel date="2025-02-25" />
+
+### Qwen 3.5 Medium Model Series リリース
+
+<MdxDateLabel date="2025-02-25" />
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">🚀 Introducing the Qwen 3.5 Medium Model Series<br/>Qwen3.5-Flash · Qwen3.5-35B-A3B · Qwen3.5-122B-A10B · Qwen3.5-27B<br/><br/>✨ More intelligence, less compute.<br/>• Qwen3.5-35B-A3B now surpasses Qwen3-235B-A22B-2507 and Qwen3-VL-235B-A22B — a reminder that better architecture, data quality,… <a href="https://t.co/ZWPibMn6at">pic.twitter.com/ZWPibMn6at</a></p>&mdash; Qwen (@Alibaba_Qwen) <a href="https://twitter.com/Alibaba_Qwen/status/2026339351530188939?ref_src=twsrc%5Etfw">February 24, 2026</a></blockquote>
+
+アリババが Qwen の新しいモデルをリリースした。
+35B くらいだとローカルのそこまでスペックの高くない PC でも動作させることができるので触ってどのくらい小型のローカルモデルが改善されているか確認しようと思う。
+Qwen は推論をして精度を挙げてくれるが推論がループしてしまうことが多いように感じてしまい、ローカルでは gpt-oss-20b を使っている。
+
+### [DeepSeek V4リークで米株先物とソフトバンク株下落 / X](https://x.com/i/trending/2023565659649581238)
+
+<MdxDateLabel date="2025-02-17" />
+
+まだリリースされていないが DeepSeek V4 がリリースされるという噂がある。
+
+Anthropic が DeepSeek, Moonshot, MiniMax が蒸留目的で Claude を利用しているという[記事](https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks)を公開していた。
+調査期間が明らかにされていないが、DeepSeek の次期モデルは Claude Opus 4.1、4.5 を含む OpenAI、Google、Anthropic の最新モデルの一つ前くらいのモデルを対象に蒸留したモデルとなるのではないだろうか。
+
+### [AIヘビーユーザーが「頭がおかしくなった」と告白 共感の声広がる / X](https://x.com/i/trending/2025474520941818028?s=20)
+
+<MdxDateLabel date="2025-02-22" />
+
+AI の使いすぎで頭がおかしくなったという記事が話題になっていた。
+私は Pro プランなので頭がおかしくなる前に利用制限の方が先に来てしまう :smile:
+
+しかし、業務では中々上限に到達しないレートリミットの中で可能な限り並列に開発を進めるようになってきているので似たような状況だ。
+
+### [ChatGPT、ドル建てユーザーも円建て料金に切り替え可能　Proで月4000円お得 / X](https://x.com/i/trending/2026264269394784729?s=20)
+
+<MdxDateLabel date="2025-02-24" />
+
+ChatGPT の料金が円建てで固定された。少し前からドル建てから円建てに切り替えられるようになっていたと思うが、強制的に全ユーザーが対象となった？ようだ。
+
+### [Making frontier cybersecurity capabilities available to defenders \ Anthropic](https://www.anthropic.com/news/claude-code-security)
+
+<MdxDateLabel date="2025-02-20" />
+
+Anthropic が Claude Code Security を発表し、セキュリティ関連企業の株価が下落していた。
+Claude Legal Plugin に続いて今度はセキュリティだ。
+AI (LLM) によってホワイトカラーの業務が完全に代替されることはないと思うが、
+それでも多くの分野において一部、もしくは大部分が AI によって置き換えられ始めている。
+
+### [Introducing Sonnet 4.6 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-6)
+
+<MdxDateLabel date="2025-02-18" />
+
+Anthropic が Claude Sonnet 4.6 を発表した。
+Claude Opus 4.6 はとんでもないトークン喰らいなので Sonnet のリリースは助かる。
+
+しかし、最近の Claude Code は実装に入る前の事前調査に割かれる割合が大きいのか、これまでであればそこまでトークンを消費しないでできていたであろう軽量なコード変更でも入念にコードベースを調査してから実装に入るようになっている。
+これはコーディングエージェントを使うときのベストプラクティスに強制的に従うものの、これまで使う側が判断していた部分を LLM 自身が行うことで、トークンを無駄に消費しているような印象もある。
+今の Claude Code は雑にプロンプトを投げてもそれを対応するために必要な情報を漏れなく収集しようとし、不足部分があれば `AskUserQuestion` ツールを使って確認を求める。
+
+これは確かに理想的な動作ではあるものの、Claude Code を使い慣れているユーザーは実装がヘビーな場合や情報収集が不十分になる可能性のある作業をさせる場合はプロンプトを疑問文にしたり、調査ということを明示的に指示することで作業に入る前の理想的なコンテキストを構築するということを意識的もしくは無意識的に行なっていたのではないだろうか？
+ここ最近の Claude Code はこの作業を自律的にやってくれるようになったものの、Pro プランで使っているとトークン消費量 (利用可能枠の消費) に見合っていないように感じる。
+この感覚は Claude Opus だけではなく、Claude Sonnet を使っているときでも同様だ。
+
+Claude Haiku の性能も上がってきているので、これまでの Claude Sonnet で行えていたようなタスクは意図的に Haiku に切り替えて推論があえて浅くなるようにする、といったモデルスイッチをした方がいいのかもしれない。
+
+### [Gemini 3.1 Pro: Announcing our latest Gemini AI model](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/)
+
+<MdxDateLabel date="2025-02-19" />
+
+Gemini 3.1 Pro が公開された。
+Google One に AI に関する特典が展開されたので Pro を使ってみたがそこまでの向上は感じなかった。
+新しいモデルがリリースされる度に形式言語に関する未解決問題の証明をさせようとしているが、Gemini 3.1 Pro の印象としては誤魔化しがこれまで以上に多くなっているように感じた。
+それに誤魔化し方が巧妙で一見すると正しいことを言っているように見せて理論的な矛盾や意図的に無視していると思われるところを指摘すると、指摘が正しく自身の理論が誤っていることを認めるような動作をする。
+これまでのモデルであれば、わからないところはわからないの一点張りをするか、理論的な道筋だけを示すような回答に留まっていた。
+しかし、Gemini 3.1 Pro では厳密な証明を求めるとそれらしい話をし始めるが中身は全くもって出鱈目で指摘されるまでその誤りに気がつかない。
+
+Gemini に限った話ではないが、これまでも役に立たないと言われていた各種ベンチマークが最近は益々役に立たなくなっているように感じる。
+OpenAI が SWE-bench Verified は役に立たなくなっており、SWE-bench Pro なる新しいベンチマークを使うということを[発表](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)していたが、他の各種ベンチマークも LLM の能力に対する適切なベンチマークにはなっていないのではないかと思う。
+
+## おわりに
+
+今週も色々なことがあったが、Claude Code Security の発表が一番だろうか。
+また、ポートフォリオがダメージを受けてしまうよ。
+OpenAI じゃなくて Anthropic が上場してくれないかな…。
