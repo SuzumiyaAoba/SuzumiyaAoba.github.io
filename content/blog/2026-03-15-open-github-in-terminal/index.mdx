@@ -1,0 +1,134 @@
+---
+title: ターミナルから GitHub リポジトリをブラウザで開く
+date: 2026-03-15
+category: プログラミング
+tags: ["プログラミング", "GitHub", "git"]
+thumbnail: iconify:devicon:git
+---
+
+## TL;DL
+
+[GitHub CLI][GitHub CLI] を使うと以下のコマンドで GitHub リポジトリの URL を開ける。
+
+```shell
+$ gh browse
+```
+
+## GitHub リポジトリの URL をターミナルから開く
+
+ターミナル上で作業していると GitHub の URL を直ぐに開きたいことがある。
+そのような時は、**GitHub** であれば `gh` コマンド ([GitHub CLI][Github CLI]) を使うことで直接ブラウザで URL を開ける。
+
+```shell
+$ gh browse
+```
+
+これが機能する条件は、リモートリポジトリを設定していることだ。
+GitHub をリモートリポジトとして使っているのであれば、基本的には以下のコマンドをリポジトリを作成したときに実行しているか、
+
+```shell
+$ git remote add origin {リモートリポジトリ}
+```
+
+先に GitHub 上でリポジトリを作成し、クローンしてきていると思うので設定されているだろう。
+リモートリポジトリが設定されているかは次のコマンドで確認できる。
+
+```shell
+$ git remote -v
+```
+
+## 何故この記事を書いたか
+
+`gh` コマンドで GitHub リポジトリが開けたはずだけどサブコマンドは何だったかな？と思ってそれらしいキーワードでググってみたところ、一番シンプルな解決方法がヒットしなかった。
+
+- [git github ブラウザで開く - Google 検索](https://www.google.com/search?q=git+github+%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%81%A7%E9%96%8B%E3%81%8F)
+- [git ターミナル Github 開く - Google 検索](https://www.google.com/search?q=git+%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB+Github+%E9%96%8B%E3%81%8F)
+
+`gh browse` 以外の方法として、
+
+- git コマンドのエイリアス
+- bash/zsh のエイリアス
+- `hub` コマンドの `hub browse`
+- `gh` コマンドの `repo` サブコマンドを使った `gh repo view --web`
+
+あたりがヒットする。
+昔は `gh repo view --web` 以外に方法がなかったのかもしれないが、現在は `gh browse` でリポジトリに限らず、
+GitHub の様々なページをターミナル上から開ける。
+
+そんなわけで、ターミナルから GitHub を開く方法を調べた人の知識のアップデートになればと思い記事に残しておく。
+
+## `gh browse`
+
+```
+$ gh browse --help
+Transition from the terminal to the web browser to view and interact with:
+
+- Issues
+- Pull requests
+- Repository content
+- Repository home page
+- Repository settings
+
+
+USAGE
+  gh browse [<number> | <path> | <commit-sha>] [flags]
+
+FLAGS
+  -a, --actions                  Open repository actions
+  -b, --branch string            Select another branch by passing in the branch name
+  -c, --commit string[="last"]   Select another commit by passing in the commit SHA, default is the last commit
+  -n, --no-browser               Print destination URL instead of opening the browser
+  -p, --projects                 Open repository projects
+  -r, --releases                 Open repository releases
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+  -s, --settings                 Open repository settings
+  -w, --wiki                     Open repository wiki
+
+INHERITED FLAGS
+  --help   Show help for command
+
+ARGUMENTS
+  A browser location can be specified using arguments in the following format:
+  - by number for issue or pull request, e.g. "123"; or
+  - by path for opening folders and files, e.g. "cmd/gh/main.go"; or
+  - by commit SHA
+
+EXAMPLES
+  # Open the home page of the current repository
+  $ gh browse
+
+  # Open the script directory of the current repository
+  $ gh browse script/
+
+  # Open issue or pull request 217
+  $ gh browse 217
+
+  # Open commit page
+  $ gh browse 77507cd94ccafcf568f8560cfecde965fcfa63
+
+  # Open repository settings
+  $ gh browse --settings
+
+  # Open main.go at line 312
+  $ gh browse main.go:312
+
+  # Open main.go with the repository at head of bug-fix branch
+  $ gh browse main.go --branch bug-fix
+
+  # Open main.go with the repository at commit 775007cd
+  $ gh browse main.go --commit=77507cd94ccafcf568f8560cfecde965fcfa63
+
+ENVIRONMENT VARIABLES
+  To configure a web browser other than the default, use the BROWSER environment variable.
+
+LEARN MORE
+  Use `gh <command> <subcommand> --help` for more information about a command.
+  Read the manual at https://cli.github.com/manual
+  Learn about exit codes using `gh help exit-codes`
+  Learn about accessibility experiences using `gh help accessibility`
+```
+
+{/* リンク */}
+
+[GitHub CLI]: https://docs.github.com/ja/github-cli/github-cli/about-github-cli
+

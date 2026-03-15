@@ -1,6 +1,12 @@
 {
   "products": [
     {
+      "id": "Git Pocket Reference",
+      "title": "【改訂新版】Gitポケットリファレンス",
+      "productUrl": "https://amzn.to/4bZl3hO",
+      "tags": ["git"]
+    },
+    {
       "id": "TAPL",
       "title": "型システム入門 プログラミング言語と型の理論 Kindle版",
       "imageUrl": "https://m.media-amazon.com/images/I/81pEdMiseFL._SY522_.jpg",
