@@ -1,0 +1,125 @@
+---
+title: Weekly Report (4)
+date: 2026-02-15
+category: Weekly Report
+tags: ["Programming", "AI"]
+thumbnail: iconify:iwwa:week
+series: "Weekly Report"
+seriesOrder: 4
+amazonAssociate: true
+model: GPT-5.4
+---
+
+Following on from [last time](../2026-02-08-weekly/), here is this week's weekly report.
+
+## Daily Life
+
+### LDP landslide
+
+<MdxDateLabel date="2025-02-08" />
+
+By Monday, once all the vote counts from last Sunday were in, the Liberal Democratic Party's landslide victory was confirmed.
+By securing a two-thirds majority on its own in the House of Representatives, it became able to enact legislation without approval from the House of Councillors by passing bills again in the lower house, which is one aspect of the lower house's supremacy.
+That is a very strong power, but creating laws without support from the chamber made up of representatives elected by the public in the House of Councillors election would likely have a major impact on public sentiment, the management of future Diet sessions, and the next election, so it cannot be exercised recklessly.
+
+I think the broad reaction to this election is that people expected the LDP to win big, but even so, it won too much.
+
+## AI
+
+### [Transformers.js v4 Preview: Now Available on NPM!](https://huggingface.co/blog/transformersjs-v4)
+
+<MdxDateLabel date="2025-02-09" />
+
+Hugging Face published the Transformers.js v4 Preview.
+It seems this makes it possible to run gpt-oss 20b directly in the browser.
+The memo app I am building assumed an OpenAI-compatible API hosted locally via LM Studio or Ollama, so I am already trying to switch it over to running gpt-oss 20b with Transformers.js v4.
+
+### [DeNA successfully migrates 6,000 lines of Perl to Go in one month with AI agents / X](https://x.com/i/trending/2021145080573112518)
+
+<MdxDateLabel date="2025-02-10" />
+
+DeNA disclosed that it migrated code written in Perl using AI agents.
+Recently, it feels like many companies have been announcing that they wrote code with AI.
+Eventually this will just become normal, and no one will bother making announcements about it anymore.
+
+On X, many people reacted by saying that 6,000 lines is not much.
+Relative to larger codebases, 6,000 lines is indeed small, but I think it depends on what kind of code it was.
+Given that this was a system still running in Perl in the present day, despite a desire to migrate it to another language, it suggests that the specification and impact surface of what that code did had not been fully grasped,
+and that there was no one available who could accurately translate Perl into Go.
+I also cannot help wondering whether the Perl code was full of classic one-liner-style tricks.
+Perl code can easily become the kind of thing where only the person who wrote it can quickly understand what is happening.
+
+> The server asset management API was originally built in Perl in 2018 to manage the server fleet used by the company's various customer-facing services. It handles information such as server names, purposes, and IP addresses, and the number of managed servers reaches into the thousands.
+>
+> Although the Perl-based system did not suffer from major defects, "considering the future viability of the programming language and maintainability, we needed to switch to a modern language at some point," said Deputy General Manager Koike. However, "it was obvious that the migration would require a lot of work, and because of prioritization issues we could never fully address it," he added.
+>
+> So DeNA turned to AI. In February 2025, chairperson Tomoko Namba declared an "AI all-in" policy, stating that the company would thoroughly use AI to improve productivity and build a system in which existing businesses could be run with half the current staff. As part of that effort, the modernization of the server asset management API was taken on as one of its AI pilot projects.
+
+Source: [DeNA migrates 6,000 lines of Perl to Go in one month by leveraging AI agents with different strengths | Nikkei xTECH](https://xtech.nikkei.com/atcl/nxt/column/18/00001/11469/?n_cid=nbpnxt_twbn)
+
+Looking at the excerpt above, if you see it as a pilot project, it actually feels like a fairly aggressive decision.
+
+### [Introducing GPT-5.3-Codex-Spark | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-3-codex-spark/)
+
+OpenAI announced GPT-5.3-Codex-Spark.
+It is a smaller variant of GPT-5.3-Codex specialized for generation speed.
+I have not tried it yet, so I want to explore how useful it actually is.
+
+### [Elon Musk predicts AI will generate binaries directly by year-end, stirring debate among engineers / X](https://x.com/i/trending/2022663100751585467?s=20)
+
+<MdxDateLabel date="2025-02-14" />
+
+There was a claim a little while ago that AI would generate binaries directly, and now Elon Musk seems to be saying the same thing.
+
+My guess is that things will go in the opposite direction.
+There are several programming-language features that are ideal in theory but difficult for all programmers to write, and they often result in much longer code.
+For LLMs, however, using those features well is not a problem, and increased code volume is not a problem either.
+That means we may be able to embed more information in source code than we do now.
+
+Rather than the history of programming languages reversing, I hope the existing direction accelerates instead.
+
+### [SSH support is added to the desktop version of Claude Code / X](https://x.com/i/trending/2022513462551753171?s=20)
+
+<MdxDateLabel date="2025-02-14" />
+
+The desktop version of Claude Code added a feature that lets you operate a Claude Code instance installed on a remote PC over SSH.
+At the moment, it seems the remote side probably has to be Linux.
+
+### [Debate heats up around Claude Code and Antigravity's AI coding tools / X](https://x.com/i/trending/2022917496404426800)
+
+<MdxDateLabel date="2025-02-15" />
+
+Antigravity seemed to be drawing attention.
+It feels like there is a four-to-six-month gap between what programmers are feeling and how non-programmers on X react.
+There also seems to be a similar time lag between what investors are feeling and what programmers are feeling.
+The market reaction to Anthropic's Claude Cowork and Claude Code is far too slow.
+At this rate, I would not be surprised if Figma's already-falling stock price drops even further two or three months from now.
+
+### [The dark side of security and billing caused by non-engineers building AI tools / X](https://x.com/i/trending/2022647881669267815)
+
+<MdxDateLabel date="2025-02-15" />
+
+Cloud bankruptcy is often a running joke among engineers, but as more non-engineers start using cloud services such as AWS and GCP,
+I think we will see more cases where people suddenly get huge bills without realizing it,
+or build systems with architectures that make no effort to control cost and end up paying absurd amounts :smile:.
+
+## Software
+
+### [Obsidian 1.12 early access adds CLI support, enabling terminal operations / X](https://x.com/i/trending/2021264307116191820?s=20)
+
+<MdxDateLabel date="2025-02-10" />
+
+Obsidian CLI was released.
+I do not use Obsidian, but I am building something like a degraded version of Obsidian, so the idea of providing a CLI feels appealing.
+By offering a CLI, it may become easier to automate non-deterministic workflows efficiently in combination with Agent Skills.
+
+### [Log Design Guidelines | Future Corporation](https://future-architect.github.io/arch-guidelines/documents/forLog/log_guidelines.html)
+
+<MdxDateLabel date="2025-02-10" />
+
+Future Corporation published log design guidelines.
+The world keeps talking about AI, but this is the kind of information engineers in the field actually want...
+
+## Conclusion
+
+I do not think many new models will appear for a while, so maybe the next four or five months will be a relatively quiet period without dramatic news.

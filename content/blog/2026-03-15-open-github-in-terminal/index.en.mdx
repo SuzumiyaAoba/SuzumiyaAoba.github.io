@@ -1,0 +1,133 @@
+---
+title: Open a GitHub Repository in the Browser from the Terminal
+date: 2026-03-15
+category: Programming
+tags: ["Programming", "GitHub", "git"]
+thumbnail: iconify:devicon:git
+model: GPT-5.4
+---
+
+## TL;DR
+
+With [GitHub CLI][GitHub CLI], you can open the URL of the current GitHub repository with this command:
+
+```shell
+$ gh browse
+```
+
+## Open a GitHub repository URL from the terminal
+
+When working in the terminal, there are times when you want to open a GitHub URL immediately.
+In that case, if the repository is on **GitHub**, you can use the `gh` command ([GitHub CLI][GitHub CLI]) to open the URL directly in your browser.
+
+```shell
+$ gh browse
+```
+
+This works as long as a remote repository is configured.
+If you use GitHub as the remote repository, you have probably either run the following command when creating the repository,
+
+```shell
+$ git remote add origin {remote repository}
+```
+
+or you created the repository on GitHub first and then cloned it locally, so it should already be set up.
+You can check whether a remote repository is configured with this command:
+
+```shell
+$ git remote -v
+```
+
+## Why I wrote this article
+
+I remembered that I could open a GitHub repository with the `gh` command, but I forgot which subcommand it was.
+So I searched with some likely keywords, but the simplest solution did not show up at the top.
+
+- [git github browser open - Google Search](https://www.google.com/search?q=git+github+%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%81%A7%E9%96%8B%E3%81%8F)
+- [git terminal Github open - Google Search](https://www.google.com/search?q=git+%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB+Github+%E9%96%8B%E3%81%8F)
+
+Other methods besides `gh browse` that show up include:
+
+- a git alias
+- a bash/zsh alias
+- `hub browse` from the `hub` command
+- `gh repo view --web` using the `repo` subcommand of `gh`
+
+Maybe `gh repo view --web` used to be the only way, but now `gh browse` can open not only repositories but many kinds of GitHub pages directly from the terminal.
+
+That is why I wanted to leave this note for anyone searching for how to open GitHub from the terminal.
+
+## `gh browse`
+
+```shell
+$ gh browse --help
+Transition from the terminal to the web browser to view and interact with:
+
+- Issues
+- Pull requests
+- Repository content
+- Repository home page
+- Repository settings
+
+
+USAGE
+  gh browse [<number> | <path> | <commit-sha>] [flags]
+
+FLAGS
+  -a, --actions                  Open repository actions
+  -b, --branch string            Select another branch by passing in the branch name
+  -c, --commit string[="last"]   Select another commit by passing in the commit SHA, default is the last commit
+  -n, --no-browser               Print destination URL instead of opening the browser
+  -p, --projects                 Open repository projects
+  -r, --releases                 Open repository releases
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+  -s, --settings                 Open repository settings
+  -w, --wiki                     Open repository wiki
+
+INHERITED FLAGS
+  --help   Show help for command
+
+ARGUMENTS
+  A browser location can be specified using arguments in the following format:
+  - by number for issue or pull request, e.g. "123"; or
+  - by path for opening folders and files, e.g. "cmd/gh/main.go"; or
+  - by commit SHA
+
+EXAMPLES
+  # Open the home page of the current repository
+  $ gh browse
+
+  # Open the script directory of the current repository
+  $ gh browse script/
+
+  # Open issue or pull request 217
+  $ gh browse 217
+
+  # Open commit page
+  $ gh browse 77507cd94ccafcf568f8560cfecde965fcfa63
+
+  # Open repository settings
+  $ gh browse --settings
+
+  # Open main.go at line 312
+  $ gh browse main.go:312
+
+  # Open main.go with the repository at head of bug-fix branch
+  $ gh browse main.go --branch bug-fix
+
+  # Open main.go with the repository at commit 775007cd
+  $ gh browse main.go --commit=77507cd94ccafcf568f8560cfecde965fcfa63
+
+ENVIRONMENT VARIABLES
+  To configure a web browser other than the default, use the BROWSER environment variable.
+
+LEARN MORE
+  Use `gh <command> <subcommand> --help` for more information about a command.
+  Read the manual at https://cli.github.com/manual
+  Learn about exit codes using `gh help exit-codes`
+  Learn about accessibility experiences using `gh help accessibility`
+```
+
+{/* Links */}
+
+[GitHub CLI]: https://docs.github.com/ja/github-cli/github-cli/about-github-cli

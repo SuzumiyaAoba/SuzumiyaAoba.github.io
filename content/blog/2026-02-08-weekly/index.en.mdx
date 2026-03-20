@@ -1,0 +1,102 @@
+---
+title: Weekly Report (3)
+date: 2026-02-08
+category: Weekly Report
+tags: ["Programming", "AI"]
+thumbnail: iconify:iwwa:week
+series: "Weekly Report"
+seriesOrder: 3
+amazonAssociate: true
+model: GPT-5.4
+---
+
+Following on from [last time](../2026-02-01-weekly/), here is this week's weekly report.
+I did not have much time to check X trends, so there are fewer items than usual, but it was a week with a lot of major events.
+Unusually, there are also some non-technical topics.
+
+## Daily Life
+
+### Election
+
+<MdxDateLabel date="2025-02-08" />
+
+This week, the House of Representatives election was held today, February 8.
+I am writing this article at 20:00, so the vote count is literally still in progress.
+
+The biggest mystery of this election was probably the existence of the "Centrist Reform Coalition."
+From the objective standpoint of an ordinary citizen, it does not seem to benefit the Constitutional Democratic Party at all, but for some reason a new party was formed only in the House of Representatives.
+The result is still to come, but I expect the former Constitutional Democratic Party camp to lose a significant number of seats.
+This could get long, and I do not particularly want to talk about politics, so I will stop there.
+
+Where I live, there are so few candidates that there are basically no real choices, which is just depressing.
+I wish more single-seat districts across the country had candidates from multiple parties.
+
+## AI
+
+### [ByteDance's open-source AI agent "UI-TARS-desktop" draws attention for PC automation / X](https://x.com/i/trending/2018953085784150391)
+
+<MdxDateLabel date="2025-02-04" />
+
+UI-TARS-desktop, an AI agent from ByteDance, the company behind TikTok, was getting attention as something you can run with a local LLM.
+
+- [bytedance/UI-TARS-desktop: The Open-Source Multimodal AI Agent Stack: Connecting Cutting-Edge AI Models and Agent Infra](https://github.com/bytedance/UI-TARS-desktop)
+
+Looking at the repository, it seems to have been released quite a while ago.
+Why did it suddenly become a topic this week?
+
+X has gotten so flooded with bot posts and trend manipulation lately that I suspect something like that.
+
+### [Claude Opus 4.6 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-6)
+
+<MdxDateLabel date="2025-02-05" />
+
+Anthropic announced Claude Opus 4.6.
+To be honest, by the time Opus 4.5 came out, it already felt better at coding than most programmers, myself included, so I feel we are reaching a point where it is hard to even notice the gains from further improvements.
+The main battlefield is starting to shift away from raw model ability and toward task continuity, response speed, and improvements in efficiency and accuracy through related tools and prompting.
+
+They handed out $50 in credits, but I burned through them with only two prompts, which was depressing.
+From here on, I hope competition moves toward reducing cost while maintaining performance.
+
+### [Introducing GPT-5.3-Codex | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-3-codex/)
+
+<MdxDateLabel date="2025-02-05" />
+
+OpenAI also released a new coding model, GPT-5.3-Codex.
+Why do companies so often release new models on the same day? I wonder if they have some kind of agreement behind the scenes.
+
+I use Codex regularly these days, so this is helpful.
+In terms of cost performance, Codex feels better to me than Claude Code.
+
+### [Claude Code adds a new "Agent Teams" feature for AI team collaboration / X](https://x.com/i/trending/2019618670096302350)
+
+<MdxDateLabel date="2025-02-06" />
+
+Claude Code added a new feature called [Agent Teams](https://code.claude.com/docs/ja/agent-teams).
+Until now, it could use multiple agents in the form of sub-agents, but those agents did not exchange information directly.
+Instead, the main agent prepared the initial context for each sub-agent and then received the results after they finished.
+With Agent Teams, however, agents can communicate with one another and collaborate in the true sense while carrying out a task.
+The tradeoff seems to be extremely heavy context consumption.
+
+With a Pro plan, the usage limits are too tight for me to seriously explore how to test or use it right now.
+
+### [Claude Code's new Agent Teams feature sparks buzz after an AI team builds a C compiler in two weeks / X](https://x.com/i/trending/2020377583368696047?s=20)
+
+<MdxDateLabel date="2025-02-06" />
+
+This was another topic about Claude Code's Agent Teams.
+Anthropic announced that it used Agent Teams in Rust to build a C compiler in two weeks.
+From what Claude Opus 4.6 feels like to use, I cannot help thinking that running it for two weeks would cost several million yen at retail prices...
+I just burned $50 with only two prompts.
+Since Agent Teams runs multiple agents with that kind of cost profile at the same time, it feels like you could burn through more than 100,000 yen in an hour.
+
+I can feel that as task persistence and self-resolution ability improve, AI agents keep working without stopping, and the credits keep disappearing in proportion.
+
+## Conclusion
+
+The biggest events this week were Anthropic and OpenAI announcing new models.
+It takes time for proper evaluations to settle after a new model is released, so maybe by next month opinions on Claude Opus 4.6 will have stabilized.
+Claude Opus performs well, but with a Pro plan it is not really usable in practice because you hit the limit after only a couple of prompts, so I think the world changes if something with Opus-level performance arrives at around Sonnet-level cost.
+
+As the vote count progresses, it really is turning into a dominant LDP victory after all.
+I still do not understand why the Constitutional Democratic Party aligned with Komeito.
+It remains a mystery.

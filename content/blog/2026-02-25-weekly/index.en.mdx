@@ -1,0 +1,105 @@
+---
+title: Weekly Report (5)
+date: 2026-02-25
+category: Weekly Report
+tags: ["Programming", "AI"]
+thumbnail: iconify:iwwa:week
+series: "Weekly Report"
+seriesOrder: 5
+amazonAssociate: true
+model: GPT-5.4
+---
+
+Half of this week is already gone, but following on from [last time](../2026-02-15-weekly/), here is this week's weekly report.
+Starting this week, I am going to write the weekly report every Wednesday.
+
+Lately I have been forgetting to jot things down even when I notice them on X (formerly Twitter) or in articles online, so I want to make a point of recording topics I should not miss.
+Recently, AI-related topics on the internet have been looping over and over, and I keep seeing things that were already being discussed last week or the week before.
+That probably just means the number of newcomers is increasing.
+
+## AI
+
+### 
+
+<MdxDateLabel date="2025-02-25" />
+
+### Release of the Qwen 3.5 Medium Model Series
+
+<MdxDateLabel date="2025-02-25" />
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">🚀 Introducing the Qwen 3.5 Medium Model Series<br/>Qwen3.5-Flash · Qwen3.5-35B-A3B · Qwen3.5-122B-A10B · Qwen3.5-27B<br/><br/>✨ More intelligence, less compute.<br/>• Qwen3.5-35B-A3B now surpasses Qwen3-235B-A22B-2507 and Qwen3-VL-235B-A22B — a reminder that better architecture, data quality,… <a href="https://t.co/ZWPibMn6at">pic.twitter.com/ZWPibMn6at</a></p>&mdash; Qwen (@Alibaba_Qwen) <a href="https://twitter.com/Alibaba_Qwen/status/2026339351530188939?ref_src=twsrc%5Etfw">February 24, 2026</a></blockquote>
+
+Alibaba released a new Qwen model.
+At around 35B, it should still be possible to run it even on a local PC that is not especially high-spec, so I want to try it and see how much small local models have improved.
+Qwen boosts accuracy by doing reasoning, but I often feel that its reasoning loops too easily, so locally I still use gpt-oss-20b.
+
+### [US stock futures and SoftBank shares fall on a DeepSeek V4 leak / X](https://x.com/i/trending/2023565659649581238)
+
+<MdxDateLabel date="2025-02-17" />
+
+It has not been released yet, but there are rumors that DeepSeek V4 is coming.
+
+Anthropic published an [article](https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks) saying that DeepSeek, Moonshot, and MiniMax were using Claude for distillation.
+The investigation period was not disclosed, but I suspect DeepSeek's next model may be a distilled model trained against the previous generation of the latest models from OpenAI, Google, and Anthropic, including Claude Opus 4.1 and 4.5.
+
+### [Heavy AI users confess that they are "losing their minds," and many people relate / X](https://x.com/i/trending/2025474520941818028?s=20)
+
+<MdxDateLabel date="2025-02-22" />
+
+An article about people losing their minds from overusing AI was getting attention.
+Since I am on a Pro plan, the usage cap hits me before I go crazy :smile:
+
+That said, at work I have been pushing development in parallel as much as possible within rate limits that are hard to hit, so in that sense it is not entirely unrelated.
+
+### [ChatGPT users billed in USD can now switch to yen pricing too, saving 4,000 yen per month on Pro / X](https://x.com/i/trending/2026264269394784729?s=20)
+
+<MdxDateLabel date="2025-02-24" />
+
+ChatGPT pricing was fixed in yen.
+I think users had already been able to switch from USD billing to yen billing for a little while, but has this now become mandatory for everyone?
+
+### [Making frontier cybersecurity capabilities available to defenders \ Anthropic](https://www.anthropic.com/news/claude-code-security)
+
+<MdxDateLabel date="2025-02-20" />
+
+Anthropic announced Claude Code Security, and the stock prices of security-related companies fell.
+Following Claude Legal Plugin, now it is security.
+I do not think AI (LLMs) will completely replace white-collar work, but even so, in many fields at least part, and sometimes a large part, of the work is already starting to be replaced by AI.
+
+### [Introducing Sonnet 4.6 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-6)
+
+<MdxDateLabel date="2025-02-18" />
+
+Anthropic announced Claude Sonnet 4.6.
+Claude Opus 4.6 is an absurd token eater, so a new Sonnet release is welcome.
+
+Lately, though, it feels as if Claude Code spends a growing share of its effort on pre-implementation investigation.
+Even lightweight code changes that previously could have been done without consuming many tokens now involve a careful codebase investigation before implementation starts.
+This forces best practices when using coding agents, but it also gives me the impression that the LLM is spending tokens wastefully by doing work that the user previously decided how to handle.
+Current Claude Code tries to gather all the information it needs even if you give it a rough prompt, and if something is missing it asks for confirmation through the `AskUserQuestion` tool.
+
+That behavior is certainly ideal in one sense, but users who are used to Claude Code probably used to shape a better context before implementation, consciously or unconsciously, by phrasing prompts as questions or explicitly instructing it to investigate whenever the implementation was heavy or information gathering might be insufficient.
+Recently Claude Code has started doing that work autonomously, but when I use it with a Pro plan it does not feel worth the amount of token consumption.
+I feel this not only with Claude Opus but also when using Claude Sonnet.
+
+Claude Haiku has also been getting better, so maybe it is time to intentionally switch some tasks that I used to give to Claude Sonnet over to Haiku so that the reasoning stays deliberately shallow.
+
+### [Gemini 3.1 Pro: Announcing our latest Gemini AI model](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/)
+
+<MdxDateLabel date="2025-02-19" />
+
+Gemini 3.1 Pro was released.
+Google One started bundling AI-related perks, so I tried Pro, but I did not feel much improvement.
+Every time a new model comes out, I try making it prove open problems related to formal languages, and my impression of Gemini 3.1 Pro is that it resorts to bluffing even more than before.
+The bluffing is also more sophisticated: it says things that look correct at first glance, but when you point out a theoretical contradiction or a place where it seems to be intentionally ignoring something, it acknowledges that your objection is correct and that its own theory was wrong.
+With previous models, if they did not know something they would either just keep insisting that they did not know, or they would stop at outlining a plausible theoretical path.
+Gemini 3.1 Pro, however, starts telling a convincing-looking story when asked for a rigorous proof, but the content is complete nonsense, and it does not notice the error until you point it out.
+
+This is not limited to Gemini, but it also feels to me as though the various benchmarks that had already been criticized as unhelpful are becoming even less useful recently.
+OpenAI announced that SWE-bench Verified is no longer useful and that it will use a new benchmark called [SWE-bench Pro](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/), but I suspect many other benchmarks are no longer appropriate measures of LLM capability either.
+
+## Conclusion
+
+A lot happened again this week, but the Claude Code Security announcement was probably the biggest one for me.
+My portfolio is going to take another hit.
+Could Anthropic go public instead of OpenAI...?
