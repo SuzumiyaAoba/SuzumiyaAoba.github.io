@@ -280,6 +280,15 @@
   .prose blockquote {
     @apply my-6 border-l-2 border-border pl-4 text-muted-foreground;
   }
+  .prose blockquote.twitter-tweet {
+    @apply mx-auto my-10;
+  }
+  .prose .twitter-tweet.twitter-tweet-rendered {
+    margin-top: 2.5rem !important;
+    margin-right: auto !important;
+    margin-bottom: 2.5rem !important;
+    margin-left: auto !important;
+  }
   .prose hr {
     @apply my-8 border-border/60;
   }

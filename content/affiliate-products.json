@@ -1,6 +1,13 @@
 {
   "products": [
     {
+      "id": "Clean Architecture",
+      "title": "Clean Architecture 達人に学ぶソフトウェアの構造と設計",
+      "imageUrl": "https://m.media-amazon.com/images/I/91TJotanDbL._SY522_.jpg",
+      "productUrl": "https://amzn.to/4uWdHCM",
+      "tags": "Clean Architecture"
+    },
+    {
       "id": "Git Pocket Reference",
       "title": "【改訂新版】Gitポケットリファレンス",
       "imageUrl": "https://m.media-amazon.com/images/I/61ySehUGVZL._SL1000_.jpg",

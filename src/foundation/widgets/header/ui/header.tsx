@@ -14,6 +14,7 @@ import { toLocalePath, type Locale } from "@/shared/lib/routing";
  */
 const navItems = [
   { href: "/blog", labelJa: "Blog", labelEn: "Blog" },
+  { href: "/notes", labelJa: "Notes", labelEn: "Notes" },
   { href: "/series", labelJa: "Series", labelEn: "Series" },
   { href: "/tags", labelJa: "Tags", labelEn: "Tags" },
   { href: "/archive", labelJa: "Archive", labelEn: "Archive" },
@@ -81,14 +82,14 @@ export function Header({ locale, path }: HeaderProps) {
             style={{ transform: `scaleX(${scrollProgress})` }}
           />
         </div>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 md:border-b-0">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 lg:border-b-0">
           <a href={toLocalePath("/", locale)} className="flex items-center gap-4">
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-wide text-foreground">NO SEA. I SEE.</p>
             </div>
           </a>
 
-          <nav className="hidden items-center gap-1 rounded-full p-1 text-sm font-medium text-muted-foreground md:flex">
+          <nav className="hidden items-center gap-1 rounded-full p-1 text-sm font-medium text-muted-foreground lg:flex">
             {navItems.map((item) => (
               <a
                 key={item.href}
@@ -100,7 +101,7 @@ export function Header({ locale, path }: HeaderProps) {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-4 text-sm text-muted-foreground md:flex">
+          <div className="hidden items-center gap-4 text-sm text-muted-foreground lg:flex">
             <Button
               asChild
               size="sm"
@@ -128,7 +129,7 @@ export function Header({ locale, path }: HeaderProps) {
             <ThemeToggle />
           </div>
 
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center lg:hidden">
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors"
@@ -160,7 +161,7 @@ export function Header({ locale, path }: HeaderProps) {
       </div>
       <div
         id="mobile-nav"
-        className={`mx-auto block max-w-6xl overflow-hidden px-6 transition-[max-height,opacity] duration-300 md:hidden ${
+        className={`mx-auto block max-w-6xl overflow-hidden px-6 transition-[max-height,opacity] duration-300 lg:hidden ${
           isMenuOpen ? "max-h-96 opacity-100 pb-4" : "max-h-0 opacity-0 pb-0"
         }`}
       >
