@@ -28,6 +28,7 @@ export type NotesIndexPageContentProps = {
 
 export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentProps) {
   const pagePath = toLocalePath("/notes", locale);
+  const shouldShowAmazonAssociate = notes.some((note) => note.shouldShowAmazonAssociate);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -69,75 +70,81 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
 
         {notes.length > 0 ? (
           <div className="space-y-6">
-            {notes.map((note) => (
-              <Card
-                key={note.slug}
-                id={note.slug}
-                className="scroll-mt-24 border-transparent bg-card/50 shadow-none"
-              >
-                <article className="px-5 py-6 sm:px-6 sm:py-7">
-                  <header className="mb-6 space-y-3">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-2">
-                        {note.date ? (
-                          <p className="text-xs text-muted-foreground">{note.date}</p>
-                        ) : null}
-                        <h2 className="text-2xl font-semibold break-words">
-                          <a
-                            href={`#${note.slug}`}
-                            className="transition-colors hover:text-foreground/80"
-                          >
-                            {note.title}
-                          </a>
-                        </h2>
+            {notes.map((note, index) => (
+              <div key={note.slug} className="space-y-6">
+                <Card
+                  id={note.slug}
+                  className="scroll-mt-24 border-transparent bg-card/50 shadow-none"
+                >
+                  <article className="px-5 py-6 sm:px-6 sm:py-7">
+                    <header className="mb-6 space-y-3">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="space-y-2">
+                          {note.date ? (
+                            <p className="text-xs text-muted-foreground">{note.date}</p>
+                          ) : null}
+                          <h2 className="text-2xl font-semibold break-words">
+                            <a
+                              href={`#${note.slug}`}
+                              className="transition-colors hover:text-foreground/80"
+                            >
+                              {note.title}
+                            </a>
+                          </h2>
+                        </div>
+                        <a
+                          href={`#${note.slug}`}
+                          className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                          aria-label={`${note.title} anchor`}
+                        >
+                          #{note.slug}
+                        </a>
                       </div>
-                      <a
-                        href={`#${note.slug}`}
-                        className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        aria-label={`${note.title} anchor`}
-                      >
-                        #{note.slug}
-                      </a>
+
+                      {note.category || note.tags.length > 0 ? (
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          {note.category ? (
+                            <span className="rounded-full border border-border/40 px-2.5 py-1 text-[11px] font-medium">
+                              {note.category}
+                            </span>
+                          ) : null}
+                          {note.tags.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {note.tags.map((tag) => (
+                                <Tag
+                                  key={tag}
+                                  tag={tag}
+                                  href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)}
+                                  className="bg-muted text-[11px] font-medium text-muted-foreground"
+                                />
+                              ))}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </header>
+
+                    <div className="prose prose-neutral max-w-none min-w-0 font-sans">
+                      {note.content}
                     </div>
 
-                    {note.category || note.tags.length > 0 ? (
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        {note.category ? (
-                          <span className="rounded-full border border-border/40 px-2.5 py-1 text-[11px] font-medium">
-                            {note.category}
-                          </span>
-                        ) : null}
-                        {note.tags.length > 0 ? (
-                          <div className="flex flex-wrap gap-2">
-                            {note.tags.map((tag) => (
-                              <Tag
-                                key={tag}
-                                tag={tag}
-                                href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)}
-                                className="bg-muted text-[11px] font-medium text-muted-foreground"
-                              />
-                            ))}
-                          </div>
-                        ) : null}
+                    {note.amazonProducts.length > 0 ? (
+                      <div className="mt-8">
+                        <AmazonProductSection products={note.amazonProducts} />
                       </div>
                     ) : null}
-                  </header>
+                  </article>
+                </Card>
 
-                  <div className="prose prose-neutral max-w-none min-w-0 font-sans">
-                    {note.content}
-                  </div>
-
-                  {note.amazonProducts.length > 0 || note.shouldShowAmazonAssociate ? (
-                    <div className="mt-8 space-y-6">
-                      {note.amazonProducts.length > 0 ? (
-                        <AmazonProductSection products={note.amazonProducts} />
-                      ) : null}
-                      {note.shouldShowAmazonAssociate ? <AmazonAssociate /> : null}
-                    </div>
-                  ) : null}
-                </article>
-              </Card>
+                {index < notes.length - 1 ? <hr className="border-border/40" /> : null}
+              </div>
             ))}
+
+            {shouldShowAmazonAssociate ? (
+              <div className="pt-2">
+                <AmazonAssociate />
+              </div>
+            ) : null}
           </div>
         ) : (
           <Card className="border-transparent bg-card/40 shadow-none">
