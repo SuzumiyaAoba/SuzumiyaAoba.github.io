@@ -17,7 +17,10 @@ export const AffiliateProductSchema = z.object({
   /** Yahoo!ショッピング用のURL（オプション） */
   yahooShoppingUrl: z.string().url().optional(),
   /** 関連するタグのリスト */
-  tags: z.array(z.string()).optional(),
+  tags: z
+    .union([z.array(z.string()), z.string()])
+    .transform((value) => (typeof value === "string" ? [value] : value))
+    .optional(),
 });
 
 /**

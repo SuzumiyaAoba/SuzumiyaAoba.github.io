@@ -121,7 +121,9 @@ export default async function Page({ locale }: PageProps) {
           content,
           amazonProducts,
           shouldShowAmazonAssociate:
-            amazonProducts.length > 0 || Boolean(note.frontmatter.amazonAssociate),
+            productIdsInContent.length > 0 ||
+            amazonProducts.length > 0 ||
+            Boolean(note.frontmatter.amazonAssociate),
           ...(note.frontmatter.date ? { date: note.frontmatter.date } : {}),
           ...(note.frontmatter.category ? { category: note.frontmatter.category } : {}),
         };

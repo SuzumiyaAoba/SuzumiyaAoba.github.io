@@ -125,6 +125,22 @@ describe("AffiliateProductSchema", () => {
   });
 
   describe("tags フィールド", () => {
+    it("文字列の tags を 1 要素の配列として扱う", () => {
+      const data = {
+        id: "product-1",
+        title: "テスト商品",
+        imageUrl: "https://example.com/image.jpg",
+        productUrl: "https://example.com/product",
+        tags: "programming",
+      };
+
+      const result = AffiliateProductSchema.safeParse(data);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.tags).toEqual(["programming"]);
+      }
+    });
+
     it("空の配列を許可する", () => {
       const data = {
         id: "product-1",
