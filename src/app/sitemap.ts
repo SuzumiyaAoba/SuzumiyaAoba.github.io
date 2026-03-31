@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getBlogPostsVariants } from "@/entities/blog";
+import { getNoteSummariesVariants } from "@/entities/note";
 import { getSeriesSlugs } from "@/entities/series-item/model/series";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
 
@@ -121,6 +122,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const notes = await getNoteSummariesVariants();
+  const notePages: MetadataRoute.Sitemap = notes.map((note) => ({
+    url: `${siteUrl}/notes/${note.slug}/`,
+    lastModified: (note.ja ?? note.en)?.frontmatter.date
+      ? new Date((note.ja ?? note.en)?.frontmatter.date ?? new Date())
+      : new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+  const notePagesEn: MetadataRoute.Sitemap = notes.map((note) => ({
+    url: `${siteUrl}/en/notes/${note.slug}/`,
+    lastModified: (note.en ?? note.ja)?.frontmatter.date
+      ? new Date((note.en ?? note.ja)?.frontmatter.date ?? new Date())
+      : new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   const seriesSlugs = await getSeriesSlugs();
   const seriesPages: MetadataRoute.Sitemap = seriesSlugs.map((slug) => ({
     url: `${siteUrl}/series/${slug}/`,
@@ -161,6 +180,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...blogPages,
     ...blogPagesEn,
+    ...notePages,
+    ...notePagesEn,
     ...seriesPages,
     ...seriesPagesEn,
     ...tagPages,

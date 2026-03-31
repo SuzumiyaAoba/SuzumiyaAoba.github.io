@@ -31,56 +31,6 @@ export function HomePageContent({ locale, latestPosts, activityPosts }: HomePage
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList([{ name: "Home", path: pagePath }])} />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-12 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <section className="grid gap-4 md:grid-cols-4">
-          {[
-            {
-              titleJa: "ブログ",
-              titleEn: "Blog",
-              descriptionJa: "新しい記事と開発メモを時系列で整理。",
-              descriptionEn: "Browse new posts and development notes in chronological order.",
-              href: "/blog",
-            },
-            {
-              titleJa: "シリーズ",
-              titleEn: "Series",
-              descriptionJa: "テーマごとの連載記事をまとめて閲覧。",
-              descriptionEn: "Explore curated series grouped by theme.",
-              href: "/series",
-            },
-            {
-              titleJa: "アーカイブ",
-              titleEn: "Archive",
-              descriptionJa: "テーマ別に蓄積した資料や年表の一覧。",
-              descriptionEn: "A collection of archived notes and timelines.",
-              href: "/archive",
-            },
-            {
-              titleJa: "ツール",
-              titleEn: "Tools",
-              descriptionJa: "小さなツールやジェネレーターの公開場所。",
-              descriptionEn: "A collection of small tools and generators.",
-              href: "/tools",
-            },
-          ].map((item) => (
-            <Card key={item.href} className="border-transparent bg-card/40 shadow-none">
-              <a
-                href={toLocalePath(item.href, locale)}
-                className="flex h-full flex-col gap-3 px-5 py-6"
-              >
-                <div className="text-lg font-semibold">
-                  <I18nText locale={locale} ja={item.titleJa} en={item.titleEn} />
-                </div>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  <I18nText locale={locale} ja={item.descriptionJa} en={item.descriptionEn} />
-                </p>
-                <span className="text-xs font-medium text-muted-foreground">
-                  <I18nText locale={locale} ja="詳しく見る →" en="Learn more →" />
-                </span>
-              </a>
-            </Card>
-          ))}
-        </section>
-
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
