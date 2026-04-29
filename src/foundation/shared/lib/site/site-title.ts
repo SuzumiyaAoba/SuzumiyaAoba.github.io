@@ -1,4 +1,4 @@
 /**
  * サイトのメインタイトル
  */
-export const SITE_TITLE = "NO SEA. I SEE.";
+export const SITE_TITLE = "Ex falso sequitur quodlibet";

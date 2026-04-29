@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { SITE_TITLE } from "@/shared/lib/site";
 
 /**
  * ナビゲーション項目の定義
@@ -85,7 +86,7 @@ export function Header({ locale, path }: HeaderProps) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 lg:border-b-0">
           <a href={toLocalePath("/", locale)} className="flex items-center gap-4">
             <div className="leading-tight">
-              <p className="text-sm font-semibold tracking-wide text-foreground">NO SEA. I SEE.</p>
+              <p className="text-sm font-semibold tracking-wide text-foreground">{SITE_TITLE}</p>
             </div>
           </a>
 
