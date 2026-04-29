@@ -1,0 +1,92 @@
+---
+title: Clean Architecture と The Clean Architecture
+date: 2026-03-22
+category: プログラミング
+tags: ["プログラミング", "アーキテクチャ", "Clean Architecture"]
+amazonAssociate: true
+---
+
+## TL;DL
+
+- Clean Architecture と **The** Clean Architecture は違う
+  - **The** Clean Architecture ⊂ Clean Architecture
+- 同心円の図は The Clean Architecture ⊂ Clean Architecture
+- 重要なのは Clean Architecture の思想
+- 日本語にすると Clean Architecture も **The** Clean Architecture もクリーンアーキテクチャ
+- この記事は**整理を目的**としており、Clean Architecture や The Clean Architecture の方法論については書かれていない
+
+## はじめに
+
+タイトルにもあるように『Clean Architecture』と『**The** Clean Architecture』は違うという話をしたい。
+この話題自体は、n 番煎であり、既に多くの方がブログや X (旧 Twitter) で発言している。
+
+- [(The) Clean Architecture と clean architecture を区別する · mochieer.tech](https://mochieer.tech/posts/2021/09/04/distinguish-between-the-clean-architecture-and-clean-architecture/)
+- [世界一わかりやすいClean Architecture - 技術レイヤー分割より大切なモノ | ドクセル](https://www.docswell.com/s/nuits_jp/5DNXE9-easiest-clean-architecture#p1)
+- [The Clean ArchitectureがWebフロントエンドでしっくりこないのは何故か / Why The Clean Architecture does not fit with Web Frontend - Speaker Deck](https://speakerdeck.com/twada/why-the-clean-architecture-does-not-fit-with-web-frontend?slide=53)
+
+<blockquote className="twitter-tweet"><p lang="ja" dir="ltr">クリーン・アーキテクチャという形式的なアーキテクチャパターンがあるわけではなくクリーンなアーキテクチャを実現する原則や観点をまとめたものが「クリーン・アーキテクチャ」。ボブおじさんが例示したHowを無根拠になぞることがクリーン・アーキテクチャではない、という理解でいいと思う</p>&mdash; 加藤潤一(かとじゅん) (@j5ik2o) <a href="https://twitter.com/j5ik2o/status/1387233048844902401?ref_src=twsrc%5Etfw">April 28, 2021</a></blockquote>
+
+<blockquote className="twitter-tweet"><p lang="ja" dir="ltr">『Clean Architecture』の話をするとき「Clean Architectureというアーキテクチャは無いと考えてください」という話をして「！？」という反応になるのだけど、実際は原則の実践例の１つとしてあのドーナツが、しかも &quot;The Clean Architecture&quot; という名前で存在してしまっていて混乱に拍車をかけている</p>&mdash; Takuto Wada (@t_wada) <a href="https://twitter.com/t_wada/status/1387240303833206787?ref_src=twsrc%5Etfw">April 28, 2021</a></blockquote>
+
+しかし、『Clean Architecture』と『**The** Clean Architecture』を混同しているような記事が Qiita や Zenn で投稿され続けているのではないだろうか。
+
+- [「Clean Architecture」の検索結果 - Qiita](https://qiita.com/search?q=Clean%20Architecture&sort=created)
+- [検索 | Zenn](https://zenn.dev/search?q=Clean%2520Architecture&order=latest)
+
+これから Clean Architecture を学ぶ人にとってノイズにしなからないため、改めて [Clean Architecture 達人に学ぶソフトウェアの構造と設計](https://amzn.to/4uOMXEk) が何を言っているのかについて書いていこう。
+
+## 諸悪の根源
+
+英語では Clean Architecture と **The** Clean Architecture で **The** の有無によって何を指しているのか区別されているのに対して、
+日本語では Clean Architecture も **The** Clean Architecture も『クリーンアーキテクチャ』となる。
+両者は似て非なるものにもかかわらず、日本語話者にとってはその区別が英語表記されない限り難しい。
+
+## Clean シリーズ
+
+Clean Architecture は Clean シリーズと呼ばれている [Robert C. Martin が執筆した書籍](https://amzn.to/40MCSdi) のうちの一つだ。
+
+- [Clean Code アジャイルソフトウェア達人の技](https://amzn.to/4boZtCO)
+- [Clean Coder プロフェッショナルプログラマへの道](https://amzn.to/3PqXVj1)
+- [Clean Architecture 達人に学ぶソフトウェアの構造と設計](https://amzn.to/4uORTsQ)
+- [Clean Agile 基本に立ち戻れ](https://amzn.to/4suJIjM)
+- [Clean Craftsmanship 規律、基準、倫理](https://amzn.to/4cZ2UBn)
+
+**Clean** をシリーズとして冠しており、そのうちのアーキテクチャについて書かれた本で紹介されたアーキテクチャのため **Clean** Architecture となっている、と思っている。
+この命名については、[クリーンアーキテクチャの功罪](https://zenn.dev/adwd/articles/5d4a89262f4fc5)でも触れられているように Clean Architecture という名前は誤解を招く。
+
+## Clean Architecture
+
+### Clean Architecture を振り返る
+
+Clean Architecture はあまりにも同心円の図で表現された **The** Clean Architecture が有名だが、
+そこに至るまでにソフトウェア開発においてよく知られた一般的なプラクティスやプログラミングの技法についての説明がされている。
+
+第1部では、設計とアーキテクチャがソフトウェア開発に与える影響や価値について。
+第2部では、構造化プログラミング、オブジェクト指向プログラミング、関数型プログラミングについて。
+第3部では、頭文字を取って SOLID と呼ばれる 5 つの設計の原則について。
+第4部では、コンポーネントの原則について。
+そして、第5部で Clean Architecture と有名な The Clean Architecture に至る解説がなされている。
+
+この中で第1部から第4部までは、Clean Architecture とは関係無く、**保守可能なソフトウェアを開発する上で一般常識**にあたる内容となっている。
+また、第2部を読めば特定の XXX 指向を語るプログラミング言語の機能を持ってプログラミングパラダイムを批判することが如何に意味がないことが理解できるだろう。
+少し前に書いた記事で触れたように Java の言語機能を持ち出してオブジェクト指向は〜という発想にはならないし、
+カプセル化、継承、ポリモーフィズムをもってしてオブジェクト指向という主張に惑わされることもないのではないだろうか。
+
+### The Clean Architecture
+
+Clean な Architecture の一例としての The Clean Architecture について見てみよう。
+
+> ![The Clean Architecture](./images/CleanArchitecture.jpg)
+> 
+> ref: [Clean Coder Blog](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+### Clean Architecture から学べること
+
+「Clean Architecture を振り返る」のセクションでも書いたが、[Clean Architecture 達人に学ぶソフトウェアの構造と設計](https://amzn.to/4uORTsQ) には当たり前のことしか書かれていない。
+しかし、書かれている内容が基本的な知識となっている人にとってはあえてこの本を読んで学ぶようなものではなく、
+個々のトピックについてより詳しく解説された本が存在することを知っているため、そちらを読んだ方がよいという判断をするのではないだろうか。
+実際に、私がこの本を読んだのは 2019 年か 2020 年頃だったと思うが、7 年ほどエンジニアとして働いて思ったことは、
+世のコーダーは Clean Architecture に書かれていることを知った上でコーディングをして欲しいというとだ。
+Clean Architecture に書かれていることを実践するべきかどうかはその組織やシステムに依存するが、
+Clean Architecture で述べられている基本的なこと (The Clean Architecture に至るまでに書かれていること) は前提知識として共有されていて欲しい。
+

@@ -6,9 +6,9 @@ describe("toLocalePath", () => {
     const locale: Locale = "ja";
 
     it("通常のパスをそのまま返す", () => {
-      expect(toLocalePath("/blog", locale)).toBe("/blog");
-      expect(toLocalePath("/about", locale)).toBe("/about");
-      expect(toLocalePath("/tags/programming", locale)).toBe("/tags/programming");
+      expect(toLocalePath("/blog", locale)).toBe("/blog/");
+      expect(toLocalePath("/about", locale)).toBe("/about/");
+      expect(toLocalePath("/tags/programming", locale)).toBe("/tags/programming/");
     });
 
     it("ルートパスをそのまま返す", () => {
@@ -17,13 +17,23 @@ describe("toLocalePath", () => {
 
     it("/en パスからプレフィックスを削除する", () => {
       expect(toLocalePath("/en", locale)).toBe("/");
-      expect(toLocalePath("/en/blog", locale)).toBe("/blog");
-      expect(toLocalePath("/en/about", locale)).toBe("/about");
+      expect(toLocalePath("/en/blog", locale)).toBe("/blog/");
+      expect(toLocalePath("/en/about", locale)).toBe("/about/");
     });
 
     it("/contents パスはそのまま返す", () => {
       expect(toLocalePath("/contents/blog/test", locale)).toBe("/contents/blog/test");
       expect(toLocalePath("/contents/images/photo.jpg", locale)).toBe("/contents/images/photo.jpg");
+    });
+
+    it("クエリとハッシュを維持したまま末尾スラッシュを補う", () => {
+      expect(toLocalePath("/search?q=scala", locale)).toBe("/search/?q=scala");
+      expect(toLocalePath("/search#results", locale)).toBe("/search/#results");
+    });
+
+    it("ファイルパスには末尾スラッシュを付与しない", () => {
+      expect(toLocalePath("/rss.xml", locale)).toBe("/rss.xml");
+      expect(toLocalePath("/en/rss.xml", locale)).toBe("/rss.xml");
     });
 
     it("相対パスはそのまま返す", () => {
@@ -36,23 +46,33 @@ describe("toLocalePath", () => {
     const locale: Locale = "en";
 
     it("通常のパスに /en プレフィックスを追加する", () => {
-      expect(toLocalePath("/blog", locale)).toBe("/en/blog");
-      expect(toLocalePath("/about", locale)).toBe("/en/about");
-      expect(toLocalePath("/tags/programming", locale)).toBe("/en/tags/programming");
+      expect(toLocalePath("/blog", locale)).toBe("/en/blog/");
+      expect(toLocalePath("/about", locale)).toBe("/en/about/");
+      expect(toLocalePath("/tags/programming", locale)).toBe("/en/tags/programming/");
     });
 
     it("ルートパスを /en に変換する", () => {
-      expect(toLocalePath("/", locale)).toBe("/en");
+      expect(toLocalePath("/", locale)).toBe("/en/");
     });
 
     it("既に /en で始まるパスはそのまま返す", () => {
-      expect(toLocalePath("/en", locale)).toBe("/en");
-      expect(toLocalePath("/en/blog", locale)).toBe("/en/blog");
-      expect(toLocalePath("/en/about", locale)).toBe("/en/about");
+      expect(toLocalePath("/en", locale)).toBe("/en/");
+      expect(toLocalePath("/en/blog", locale)).toBe("/en/blog/");
+      expect(toLocalePath("/en/about", locale)).toBe("/en/about/");
     });
 
     it("/contents パスはそのまま返す", () => {
       expect(toLocalePath("/contents/blog/test", locale)).toBe("/contents/blog/test");
+    });
+
+    it("クエリとハッシュを維持したまま末尾スラッシュを補う", () => {
+      expect(toLocalePath("/search?q=scala", locale)).toBe("/en/search/?q=scala");
+      expect(toLocalePath("/search#results", locale)).toBe("/en/search/#results");
+    });
+
+    it("ファイルパスには末尾スラッシュを付与しない", () => {
+      expect(toLocalePath("/rss.xml", locale)).toBe("/en/rss.xml");
+      expect(toLocalePath("/en/rss.xml", locale)).toBe("/en/rss.xml");
     });
 
     it("相対パスはそのまま返す", () => {

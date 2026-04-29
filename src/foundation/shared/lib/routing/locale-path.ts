@@ -3,6 +3,29 @@
  */
 export type Locale = "ja" | "en";
 
+const pathsWithoutTrailingSlash = new Set(["/rss.xml", "/en/rss.xml"]);
+
+function normalizeTrailingSlash(path: string): string {
+  const match = path.match(/^([^?#]*)(\?[^#]*)?(#.*)?$/);
+
+  if (!match) {
+    return path;
+  }
+
+  const [, pathname = "", search = "", hash = ""] = match;
+
+  if (
+    !pathname ||
+    pathname === "/" ||
+    pathname.endsWith("/") ||
+    pathsWithoutTrailingSlash.has(pathname)
+  ) {
+    return path;
+  }
+
+  return `${pathname}/${search}${hash}`;
+}
+
 /**
  * パスを指定したロケールのパスに変換する
  * @param path オリジナルのパス
@@ -16,17 +39,20 @@ export function toLocalePath(path: string, locale: Locale): string {
   if (path.startsWith("/contents")) {
     return path;
   }
+
+  let localizedPath = path;
+
   if (locale === "en") {
     if (path === "/en" || path.startsWith("/en/")) {
-      return path;
+      localizedPath = path;
+    } else {
+      localizedPath = path === "/" ? "/en" : `/en${path}`;
     }
-    return path === "/" ? "/en" : `/en${path}`;
+  } else if (path === "/en") {
+    localizedPath = "/";
+  } else if (path.startsWith("/en/")) {
+    localizedPath = path.replace(/^\/en/, "");
   }
-  if (path === "/en") {
-    return "/";
-  }
-  if (path.startsWith("/en/")) {
-    return path.replace(/^\/en/, "");
-  }
-  return path;
+
+  return normalizeTrailingSlash(localizedPath);
 }
