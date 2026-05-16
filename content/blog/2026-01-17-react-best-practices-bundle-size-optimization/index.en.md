@@ -4,6 +4,11 @@ date: 2026-01-17
 category: Programming
 tags: ["Skills", "AI", "LLM", "React"]
 thumbnail: iconify:devicon:react
+amazonAssociate: true
+amazonProductIds:
+  - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
+  - "Reactハンズオンラーニング"
+  - "プロを目指す人のためのTypeScript入門"
 ---
 
 Following on from [the previous article](../2026-01-16-react-best-practices/), let's look at the contents of Vercel's [react-best-practices](https://vercel.com/blog/introducing-react-best-practices).
