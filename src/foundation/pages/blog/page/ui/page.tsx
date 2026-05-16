@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBlogPostsVariants } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { type Locale } from "@/shared/lib/routing";
 import { BlogPaginationPageContent } from "./page-content";
 
@@ -23,7 +23,7 @@ export default async function Page({ params, locale }: PageProps) {
     notFound();
   }
 
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   const pageCount = getPageCount(posts.length);
 
   if (pageNumber > pageCount) {

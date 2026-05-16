@@ -1,4 +1,4 @@
-import { getBlogPostsVariants } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { type Locale } from "@/shared/lib/routing";
 import { BlogListPageContent } from "./page-content";
 
@@ -15,7 +15,7 @@ type PageProps = {
  */
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   const pagePosts = posts.slice(0, 10);
 
   return (

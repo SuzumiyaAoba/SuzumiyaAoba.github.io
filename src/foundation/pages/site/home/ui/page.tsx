@@ -1,7 +1,7 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
-import { getBlogPostsVariants } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
@@ -79,7 +79,7 @@ export function HomePageContent({ locale, latestPosts, activityPosts }: HomePage
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   const latestPosts = posts.slice(0, 3);
   const activityPosts = posts
     .map((variant) => {

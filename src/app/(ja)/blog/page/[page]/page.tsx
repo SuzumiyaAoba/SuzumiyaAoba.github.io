@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getBlogPosts } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 
 type PageProps = {
   params?: { page?: string } | Promise<{ page?: string }>;
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams(): Promise<Array<{ page: string }>> {
-  const posts = await getBlogPosts();
+  const posts = await getBlogPostSummariesVariants();
   const pageCount = getPageCount(posts.length);
   return Array.from({ length: pageCount }, (_, index) => ({
     page: String(index + 1),

@@ -1,11 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { notFound } from "next/navigation";
-import type { ReactElement } from "react";
 
 import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
-import { getTocHeadings, renderMdx } from "@/shared/lib/mdx";
+import { renderMdxWithToc } from "@/shared/lib/mdx";
 import {
   getAffiliateProductsByIds,
   getAffiliateProductsByTags,
@@ -167,11 +166,7 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] mdx render:${slug}`);
   }
-  const contentPromise = renderMdx(contentSource, { basePath: `/contents/blog/${slug}`, scope });
-  if (shouldLogPerf) {
-    console.time(`[blog] toc:${slug}`);
-  }
-  const tocPromise = getTocHeadings(contentSource);
+  const mdxPromise = renderMdxWithToc(contentSource, { basePath: `/contents/blog/${slug}`, scope });
   if (shouldLogPerf) {
     console.time(`[blog] amazon explicit:${slug}`);
   }
@@ -179,14 +174,12 @@ export default async function Page({ params, locale }: PageProps) {
     explicitProductIdsForFooter.length > 0
       ? getAffiliateProductsByIds(explicitProductIdsForFooter)
       : Promise.resolve([]);
-  const [content, headings, explicitProducts]: [
-    ReactElement,
-    Awaited<ReturnType<typeof getTocHeadings>>,
+  const [{ content, headings }, explicitProducts]: [
+    Awaited<ReturnType<typeof renderMdxWithToc>>,
     AffiliateProduct[],
-  ] = await Promise.all([contentPromise, tocPromise, explicitPromise]);
+  ] = await Promise.all([mdxPromise, explicitPromise]);
   if (shouldLogPerf) {
     console.timeEnd(`[blog] mdx render:${slug}`);
-    console.timeEnd(`[blog] toc:${slug}`);
     console.timeEnd(`[blog] amazon explicit:${slug}`);
   }
   const prioritizedProducts = explicitProducts.slice(0, 3);

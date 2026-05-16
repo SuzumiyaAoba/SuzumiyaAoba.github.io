@@ -11,9 +11,46 @@ import remarkGfm from "remark-gfm";
 import remarkEmoji from "remark-emoji";
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
+import GithubSlugger from "github-slugger";
 
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
+import type { TocHeading } from "./toc";
+
+type MdastNode = {
+  type?: string;
+  value?: string;
+  depth?: number;
+  children?: MdastNode[];
+};
+
+function extractTextFromNode(node: MdastNode): string {
+  if (node.type === "text" || node.type === "inlineCode") {
+    return node.value ?? "";
+  }
+  if (!node.children) return "";
+  return node.children.map(extractTextFromNode).join("");
+}
+
+function remarkCollectHeadings(headings: TocHeading[], idPrefix?: string) {
+  const slugger = new GithubSlugger();
+  return () => (tree: MdastNode) => {
+    const walk = (node: MdastNode) => {
+      if (node.type === "heading") {
+        const level = node.depth;
+        if (level === 2 || level === 3) {
+          const text = extractTextFromNode(node).trim();
+          if (text) {
+            const id = slugger.slug(text);
+            headings.push({ id: idPrefix ? `${idPrefix}${id}` : id, text, level });
+          }
+        }
+      }
+      node.children?.forEach(walk);
+    };
+    walk(tree);
+  };
+}
 
 function rehypeHeadingIdPrefix(prefix: string) {
   return (tree: any) => {
@@ -65,81 +102,110 @@ function remarkMermaid() {
   };
 }
 
+type RenderOptions = {
+  basePath?: string;
+  scope?: Record<string, unknown>;
+  idPrefix?: string;
+};
+
 const devRenderCache = new Map<string, ReactElement>();
+const devRenderWithTocCache = new Map<string, { content: ReactElement; headings: TocHeading[] }>();
+
+function buildCompileOptions(
+  source: string,
+  { basePath, scope, idPrefix }: RenderOptions,
+  extraRemarkPlugins: any[] = [],
+) {
+  const codeHikeConfig: CodeHikeConfig = {
+    components: { code: "Code", inlineCode: "InlineCode" },
+    syntaxHighlighting: { theme: "github-from-css" },
+  };
+
+  const components = basePath
+    ? {
+        ...mdxComponents,
+        Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+        img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+      }
+    : mdxComponents;
+
+  return {
+    source,
+    components,
+    options: {
+      ...(scope ? { scope } : {}),
+      mdxOptions: {
+        remarkPlugins: [
+          remarkGfm,
+          remarkEmoji,
+          remarkJoinCjkLines,
+          remarkMath,
+          ...extraRemarkPlugins,
+          remarkMermaid,
+          [remarkCodeHike, codeHikeConfig],
+        ],
+        recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
+        rehypePlugins: [
+          rehypeSlug,
+          ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
+          [rehypeAutolinkHeadings, { behavior: "append" }],
+          [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
+          [
+            rehypeKatex,
+            { output: "mathml", throwOnError: false, errorColor: "#cc0000", trust: true },
+          ],
+        ],
+      },
+    },
+  } as Parameters<typeof compileMDX>[0];
+}
 
 export const renderMdx = cache(
-  async (
-    source: string,
-    {
-      basePath,
-      scope,
-      idPrefix,
-    }: { basePath?: string; scope?: Record<string, unknown>; idPrefix?: string } = {},
-  ) => {
+  async (source: string, options: RenderOptions = {}) => {
+    const { scope, idPrefix, basePath } = options;
     const useDevCache = process.env["NODE_ENV"] === "development";
     let cacheKey = "";
     if (useDevCache) {
       const scopeKey = scope ? JSON.stringify(scope) : "";
       cacheKey = `${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
       const cached = devRenderCache.get(cacheKey);
-      if (cached) {
-        return cached;
-      }
+      if (cached) return cached;
     }
 
-    const codeHikeConfig: CodeHikeConfig = {
-      components: { code: "Code", inlineCode: "InlineCode" },
-      syntaxHighlighting: {
-        theme: "github-from-css",
-      },
-    };
-
-    const components = basePath
-      ? {
-          ...mdxComponents,
-          Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
-          img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
-        }
-      : mdxComponents;
-
-    const { content } = await compileMDX({
-      source,
-      components,
-      options: {
-        ...(scope ? { scope } : {}),
-        mdxOptions: {
-          remarkPlugins: [
-            remarkGfm,
-            remarkEmoji,
-            remarkJoinCjkLines,
-            remarkMath,
-            remarkMermaid,
-            [remarkCodeHike, codeHikeConfig],
-          ],
-          recmaPlugins: [[recmaCodeHike, codeHikeConfig]],
-          rehypePlugins: [
-            rehypeSlug,
-            ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
-            [rehypeAutolinkHeadings, { behavior: "append" }],
-            [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-            [
-              rehypeKatex,
-              {
-                output: "mathml",
-                throwOnError: false,
-                errorColor: "#cc0000",
-                trust: true,
-              },
-            ],
-          ],
-        },
-      },
-    });
+    const { content } = await compileMDX(buildCompileOptions(source, options));
 
     const rendered = <>{content}</>;
-    if (useDevCache) {
-      devRenderCache.set(cacheKey, rendered);
-    }
+    if (useDevCache) devRenderCache.set(cacheKey, rendered);
     return rendered;
+  },
+);
+
+/**
+ * MDX をコンパイルしながら同一パスで TOC 見出しを抽出する。
+ * renderMdx + getTocHeadings を別々に呼ぶより remark パースが1回で済む。
+ */
+export const renderMdxWithToc = cache(
+  async (
+    source: string,
+    options: RenderOptions = {},
+  ): Promise<{ content: ReactElement; headings: TocHeading[] }> => {
+    const { scope, idPrefix, basePath } = options;
+    const useDevCache = process.env["NODE_ENV"] === "development";
+    let cacheKey = "";
+    if (useDevCache) {
+      const scopeKey = scope ? JSON.stringify(scope) : "";
+      cacheKey = `toc::${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
+      const cached = devRenderWithTocCache.get(cacheKey);
+      if (cached) return cached;
+    }
+
+    const headings: TocHeading[] = [];
+    const { content } = await compileMDX(
+      buildCompileOptions(source, options, [remarkCollectHeadings(headings, idPrefix)]),
+    );
+
+    const result = { content: <>{content}</>, headings };
+    if (useDevCache) devRenderWithTocCache.set(cacheKey, result);
+    return result;
   },
 );

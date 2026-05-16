@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Suspense } from "react";
+import { NuqsAdapter } from "nuqs/adapters/react";
 import { AssetFormationSimulatorPageContent } from "./ui/page-content";
 
 const meta = {
@@ -10,9 +11,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <Suspense fallback={<div>Loading (Storybook Suspense)...</div>}>
-        <Story />
-      </Suspense>
+      <NuqsAdapter>
+        <Suspense fallback={<div>Loading (Storybook Suspense)...</div>}>
+          <Story />
+        </Suspense>
+      </NuqsAdapter>
     ),
   ],
 } satisfies Meta<typeof AssetFormationSimulatorPageContent>;
