@@ -7,6 +7,12 @@ const meta: Meta<typeof SearchPageContent> = {
   component: SearchPageContent,
   parameters: {
     layout: "fullscreen",
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: "/search",
+      },
+    },
   },
   args: {
     locale: "ja",
