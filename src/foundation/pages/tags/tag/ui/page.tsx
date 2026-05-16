@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getBlogPostsVariants, type BlogPost } from "@/entities/blog";
+import { getBlogPostSummariesVariants, type BlogPostSummary } from "@/entities/blog";
 import { type Locale } from "@/shared/lib/routing";
 import { TagDetailPageContent } from "./page-content";
 
@@ -20,9 +20,9 @@ export default async function Page({ params, locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
   const { tag } = await params;
   const decodedTag = normalizeTagParam(tag);
-  const posts = await getBlogPostsVariants();
-  const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPost[];
-  const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPost[];
+  const posts = await getBlogPostSummariesVariants();
+  const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPostSummary[];
+  const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPostSummary[];
   const entriesJa = postsJa
     .filter((post) => (post.frontmatter.tags ?? []).includes(decodedTag))
     .map((post) => ({

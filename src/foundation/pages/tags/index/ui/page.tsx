@@ -1,8 +1,8 @@
-import { getBlogPostsVariants, type BlogPost } from "@/entities/blog";
+import { getBlogPostSummariesVariants, type BlogPostSummary } from "@/entities/blog";
 import { type Locale } from "@/shared/lib/routing";
 import { TagsListPageContent, type TagEntry } from "./page-content";
 
-function buildTagList(posts: BlogPost[], locale: Locale): TagEntry[] {
+function buildTagList(posts: BlogPostSummary[], locale: Locale): TagEntry[] {
   const tagMap = new Map<string, TagEntry>();
 
   for (const post of posts) {
@@ -29,9 +29,9 @@ type PageProps = {
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
-  const posts = await getBlogPostsVariants();
-  const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPost[];
-  const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPost[];
+  const posts = await getBlogPostSummariesVariants();
+  const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPostSummary[];
+  const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPostSummary[];
   const tagsJa = buildTagList(postsJa, "ja");
   const tagsEn = buildTagList(postsEn, "en");
   const tags = resolvedLocale === "en" ? tagsEn : tagsJa;

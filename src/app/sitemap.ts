@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBlogPostsVariants } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
 import { getSeriesSlugs } from "@/entities/series-item/model/series";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
@@ -103,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages = [...staticPagesBase, ...staticPagesEn];
 
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   const postsForDates = posts.map((post) => post.ja ?? post.en).filter(Boolean);
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${siteUrl}/blog/post/${post.slug}/`,

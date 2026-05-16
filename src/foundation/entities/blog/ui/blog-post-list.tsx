@@ -7,7 +7,7 @@ import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
-import type { LocalizedBlogPost } from "@/entities/blog/model/blog";
+import type { LocalizedBlogPostSummary } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 /**
@@ -37,7 +37,7 @@ function formatDate(date: string, locale: string): string {
  * @param locale 表示したいロケール
  * @returns 解決された単一言語の記事データ
  */
-function resolvePost(variant: LocalizedBlogPost, locale: Locale) {
+function resolvePost(variant: LocalizedBlogPostSummary, locale: Locale) {
   return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
 }
 
@@ -56,7 +56,7 @@ type EmptyMessage = {
  */
 type BlogPostListProps = {
   /** 表示する記事のリスト（多言語バリアント） */
-  posts: LocalizedBlogPost[];
+  posts: LocalizedBlogPostSummary[];
   /** 現在の表示ロケール */
   locale: Locale;
   /** 追加のスタイルクラス */

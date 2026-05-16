@@ -1,5 +1,6 @@
 import matter from "gray-matter";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 
 import { resolveContentRoot } from "@/shared/lib/content-root";
 
@@ -69,6 +70,23 @@ type ReadContentOptions = {
 };
 
 /**
+ * 記事ディレクトリのファイル一覧をキャッシュ付きで取得する。
+ * try/catch で逐次ファイルを試すより readdir 1回で済む。
+ */
+const getArticleFiles = cache(async (slug: string): Promise<Set<string>> => {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+  const root = await resolveContentRoot();
+  const dir = path.join(root, "blog", slug);
+  try {
+    const entries = await fs.readdir(dir);
+    return new Set(entries);
+  } catch {
+    return new Set();
+  }
+});
+
+/**
  * 特定のロケールのコンテンツファイルを読み込む
  * @param slug 記事のスラッグ
  * @param locale 言語
@@ -83,22 +101,22 @@ async function readContentFileForLocale(
 
   const root = await resolveContentRoot();
   const baseDir = path.join(root, "blog", slug);
-
   const baseName = locale === "en" ? "index.en" : "index";
-  const mdPath = path.join(baseDir, `${baseName}.md`);
-  const mdxPath = path.join(baseDir, `${baseName}.mdx`);
 
-  try {
-    const raw = await fs.readFile(mdPath, "utf8");
+  const files = await getArticleFiles(slug);
+
+  const mdFile = `${baseName}.md`;
+  const mdxFile = `${baseName}.mdx`;
+
+  if (files.has(mdFile)) {
+    const raw = await fs.readFile(path.join(baseDir, mdFile), "utf8");
     return { raw, format: "md" };
-  } catch {
-    try {
-      const raw = await fs.readFile(mdxPath, "utf8");
-      return { raw, format: "mdx" };
-    } catch {
-      return null;
-    }
   }
+  if (files.has(mdxFile)) {
+    const raw = await fs.readFile(path.join(baseDir, mdxFile), "utf8");
+    return { raw, format: "mdx" };
+  }
+  return null;
 }
 
 /**
@@ -133,19 +151,24 @@ async function readContentFile(
  * すべてのブログ記事のスラッグを取得する
  * @returns スラッグの配列
  */
-export const getBlogSlugs = cache(async (): Promise<string[]> => {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+export const getBlogSlugs = cache(
+  unstable_cache(
+    async (): Promise<string[]> => {
+      const fs = await import("node:fs/promises");
+      const path = await import("node:path");
 
-  const root = await resolveContentRoot();
-  const blogRoot = path.join(root, "blog");
-  const entries = await fs.readdir(blogRoot, { withFileTypes: true });
+      const root = await resolveContentRoot();
+      const blogRoot = path.join(root, "blog");
+      const entries = await fs.readdir(blogRoot, { withFileTypes: true });
 
-  return entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-});
+      return entries
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .sort();
+    },
+    ["blog-slugs"],
+  ),
+);
 
 /**
  * 指定したスラッグの記事を取得する
@@ -312,24 +335,29 @@ export const getBlogPostVariants = cache(async (slug: string): Promise<Localized
  * すべての多言語対応記事を取得する（日付順降順、下書きを除く）
  * @returns 多言語対応記事の配列
  */
-export const getBlogPostsVariants = cache(async (): Promise<LocalizedBlogPost[]> => {
-  const slugs = await getBlogSlugs();
-  const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
+export const getBlogPostsVariants = cache(
+  unstable_cache(
+    async (): Promise<LocalizedBlogPost[]> => {
+      const slugs = await getBlogSlugs();
+      const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
 
-  return posts
-    .filter((post) => {
-      const reference = post.ja ?? post.en;
-      if (!reference) {
-        return false;
-      }
-      return !reference.frontmatter.draft;
-    })
-    .sort((a, b) => {
-      const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-      const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-      return dateA < dateB ? 1 : -1;
-    });
-});
+      return posts
+        .filter((post) => {
+          const reference = post.ja ?? post.en;
+          if (!reference) {
+            return false;
+          }
+          return !reference.frontmatter.draft;
+        })
+        .sort((a, b) => {
+          const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+          const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+          return dateA < dateB ? 1 : -1;
+        });
+    },
+    ["blog-posts-variants"],
+  ),
+);
 
 /**
  * 指定したスラッグの多言語サマリーを取得する
@@ -351,24 +379,29 @@ export const getBlogPostSummaryVariants = cache(
  * すべての多言語対応記事サマリーを取得する（日付順降順、下書きを除く）
  * @returns 多言語対応記事サマリーの配列
  */
-export const getBlogPostSummariesVariants = cache(async (): Promise<LocalizedBlogPostSummary[]> => {
-  const slugs = await getBlogSlugs();
-  const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
+export const getBlogPostSummariesVariants = cache(
+  unstable_cache(
+    async (): Promise<LocalizedBlogPostSummary[]> => {
+      const slugs = await getBlogSlugs();
+      const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
 
-  return posts
-    .filter((post) => {
-      const reference = post.ja ?? post.en;
-      if (!reference) {
-        return false;
-      }
-      return !reference.frontmatter.draft;
-    })
-    .sort((a, b) => {
-      const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-      const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-      return dateA < dateB ? 1 : -1;
-    });
-});
+      return posts
+        .filter((post) => {
+          const reference = post.ja ?? post.en;
+          if (!reference) {
+            return false;
+          }
+          return !reference.frontmatter.draft;
+        })
+        .sort((a, b) => {
+          const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+          const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+          return dateA < dateB ? 1 : -1;
+        });
+    },
+    ["blog-post-summaries-variants"],
+  ),
+);
 
 /**
  * 多言語対応した記事の前後記事を取得する

@@ -1,4 +1,4 @@
-import { getBlogPostsVariants, type BlogLocale } from "@/entities/blog";
+import { getBlogPostSummariesVariants, type BlogLocale } from "@/entities/blog";
 import { getSiteConfig, SITE_TITLE } from "@/shared/lib/site";
 
 function escapeXml(value: string): string {
@@ -29,7 +29,7 @@ export async function buildRssXml(locale: BlogLocale): Promise<string> {
   const blogLink = `${siteUrl}${basePath}/blog/`;
   const feedLink = `${siteUrl}${basePath}/rss.xml`;
 
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   const localizedPosts = posts
     .map((post) => (locale === "en" ? post.en : post.ja))
     .filter((post): post is NonNullable<typeof post> => Boolean(post))
