@@ -305,7 +305,7 @@ function SimpleTOCItem({ item }: { item: TOCItemType }) {
     <TOCItem
       href={item.url}
       className={cn(
-        "prose py-1.5 text-sm text-muted-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary hover:text-accent-foreground",
+        "prose leading-snug py-1.5 text-sm text-muted-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary hover:text-accent-foreground",
         item.depth <= 2 && "ps-3",
         item.depth === 3 && "ps-6",
         item.depth >= 4 && "ps-8",
@@ -442,7 +442,7 @@ function ClerkTOCItemElement({
       style={{
         paddingInlineStart: getItemOffset(item.depth),
       }}
-      className="prose relative py-1.5 text-sm text-muted-foreground hover:text-accent-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary"
+      className="prose leading-snug relative py-1.5 text-sm text-muted-foreground hover:text-accent-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary"
     >
       {offset !== upperOffset ? (
         <svg
