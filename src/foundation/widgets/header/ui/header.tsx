@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
@@ -38,17 +38,18 @@ type HeaderProps = {
  * @param props ロケールとパス情報
  */
 export function Header({ locale, path }: HeaderProps) {
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     let frame = 0;
 
     const update = () => {
+      if (!progressBarRef.current) return;
       const scrollTop = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const progress = maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) : 0;
-      setScrollProgress(progress);
+      progressBarRef.current.style.transform = `scaleX(${progress})`;
     };
 
     const onScroll = () => {
@@ -63,7 +64,7 @@ export function Header({ locale, path }: HeaderProps) {
 
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
       if (frame) {
@@ -79,8 +80,9 @@ export function Header({ locale, path }: HeaderProps) {
       <div className="relative">
         <div className="absolute inset-x-0 top-0 h-1">
           <div
+            ref={progressBarRef}
             className="h-full origin-left bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-500 transition-transform duration-300 ease-out"
-            style={{ transform: `scaleX(${scrollProgress})` }}
+            style={{ transform: "scaleX(0)" }}
           />
         </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 lg:border-b-0">

@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as d3 from "d3";
+import { axisBottom, axisLeft } from "d3-axis";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { scaleBand, scaleLinear } from "d3-scale";
+import { select } from "d3-selection";
+import { stack, stackOrderNone, stackOffsetNone } from "d3-shape";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 
 type Props = {
@@ -19,7 +23,7 @@ export const StackedBarChart: React.FC<Props> = ({
 }) => {
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
-  const colors = config.colors || d3.schemeCategory10;
+  const colors = config.colors || schemeCategory10;
 
   const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", labelMap = {} } = config;
 
@@ -53,29 +57,22 @@ export const StackedBarChart: React.FC<Props> = ({
   }, [availableMetrics, selectedMetrics.length]);
 
   const handleLegendClick = (metric: string) => {
-    const isActive = selectedMetrics.includes(metric);
-    if (isActive) {
-      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
-    } else {
-      setSelectedMetrics([...selectedMetrics, metric]);
-    }
+    setSelectedMetrics((prev) =>
+      prev.includes(metric) ? prev.filter((m) => m !== metric) : [...prev, metric],
+    );
   };
 
   const handleGroupClick = (groupMetrics: string[]) => {
-    const allSelected = groupMetrics.every((m) => selectedMetrics.includes(m));
-
-    if (allSelected) {
-      const newSelected = selectedMetrics.filter((m) => !groupMetrics.includes(m));
-      setSelectedMetrics(newSelected);
-    } else {
-      const newSelected = [...new Set([...selectedMetrics, ...groupMetrics])];
-      setSelectedMetrics(newSelected);
-    }
+    setSelectedMetrics((prev) => {
+      const allSelected = groupMetrics.every((m) => prev.includes(m));
+      if (allSelected) return prev.filter((m) => !groupMetrics.includes(m));
+      return [...new Set([...prev, ...groupMetrics])];
+    });
   };
 
   const renderBarChart = useCallback(
     (svgElement: SVGSVGElement, group: MetricGroup) => {
-      const svg = d3.select(svgElement);
+      const svg = select(svgElement);
       svg.selectAll("*").remove();
 
       const margin = { top: 20, right: 20, bottom: 60, left: 80 };
@@ -104,15 +101,14 @@ export const StackedBarChart: React.FC<Props> = ({
 
       const years = parseData.map((d) => d["year"]);
 
-      const x = d3.scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
+      const x = scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
 
-      const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
+      const y = scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
-      const stackGenerator = d3
-        .stack<Record<string, number>>()
+      const stackGenerator = stack<Record<string, number>>()
         .keys(activeMetrics)
-        .order(d3.stackOrderNone)
-        .offset(d3.stackOffsetNone);
+        .order(stackOrderNone)
+        .offset(stackOffsetNone);
 
       const stackedData = stackGenerator(parseData);
 
@@ -120,8 +116,7 @@ export const StackedBarChart: React.FC<Props> = ({
         .attr("class", "grid")
         .attr("transform", `translate(0,${height})`)
         .call(
-          d3
-            .axisBottom(x)
+          axisBottom(x)
             .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
             .tickSize(-height)
             .tickFormat(() => ""),
@@ -134,8 +129,7 @@ export const StackedBarChart: React.FC<Props> = ({
       g.append("g")
         .attr("transform", `translate(0,${height})`)
         .call(
-          d3
-            .axisBottom(x)
+          axisBottom(x)
             .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
             .tickFormat((d) => `${d}年`),
         )
@@ -146,8 +140,7 @@ export const StackedBarChart: React.FC<Props> = ({
       g.append("g")
         .attr("class", "grid")
         .call(
-          d3
-            .axisLeft(y)
+          axisLeft(y)
             .tickSize(-width)
             .tickFormat(() => ""),
         )
@@ -156,7 +149,7 @@ export const StackedBarChart: React.FC<Props> = ({
           g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
         );
 
-      g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
+      g.append("g").call(axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
 
       stackedData.forEach((layer) => {
         const metricIndex = availableMetrics.indexOf(layer.key);

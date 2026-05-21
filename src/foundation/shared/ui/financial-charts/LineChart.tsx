@@ -1,7 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { max } from "d3-array";
+import { axisBottom, axisLeft } from "d3-axis";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { scaleLinear } from "d3-scale";
+import { select, selectAll } from "d3-selection";
+import { line } from "d3-shape";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 
 type Props = {
@@ -19,7 +24,7 @@ export const LineChart: React.FC<Props> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
-  const colors = config.colors || d3.schemeCategory10;
+  const colors = config.colors || schemeCategory10;
 
   const {
     yAxisMin = 0,
@@ -45,11 +50,20 @@ export const LineChart: React.FC<Props> = ({
     [labelMap],
   );
 
-  const availableMetrics = data.headers.filter((header) => {
-    return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
-  });
+  const availableMetrics = useMemo(
+    () =>
+      data.headers.filter(
+        (header) =>
+          !excludeHeaders.includes(header) &&
+          data.series.some((s) => s.values[header] !== null),
+      ),
+    [data.headers, data.series, excludeHeaders],
+  );
 
-  const effectiveGroups = groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }];
+  const effectiveGroups = useMemo(
+    () => (groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }]),
+    [groups, availableMetrics],
+  );
 
   useEffect(() => {
     if (selectedMetrics.length === 0 && availableMetrics.length > 0) {
@@ -60,7 +74,7 @@ export const LineChart: React.FC<Props> = ({
   useEffect(() => {
     if (!svgRef.current || selectedMetrics.length === 0) return;
 
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     svg.selectAll("*").remove();
 
     const margin = { top: 20, right: 20, bottom: 60, left: 80 };
@@ -86,17 +100,16 @@ export const LineChart: React.FC<Props> = ({
 
     if (parseData.length === 0) return;
 
-    const maxYear = d3.max(parseData, (d) => d.year) || 2025;
-    const x = d3.scaleLinear().domain([startYear, maxYear]).range([0, width]);
+    const maxYear = max(parseData, (d) => d.year) || 2025;
+    const x = scaleLinear().domain([startYear, maxYear]).range([0, width]);
 
-    const y = d3.scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
+    const y = scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
     g.append("g")
       .attr("class", "grid")
       .attr("transform", `translate(0,${height})`)
       .call(
-        d3
-          .axisBottom(x)
+        axisBottom(x)
           .tickSize(-height)
           .tickFormat(() => ""),
       )
@@ -107,7 +120,7 @@ export const LineChart: React.FC<Props> = ({
 
     g.append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).tickFormat((d) => `${d}年`))
+      .call(axisBottom(x).tickFormat((d) => `${d}年`))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
       .style("text-anchor", "end");
@@ -115,8 +128,7 @@ export const LineChart: React.FC<Props> = ({
     g.append("g")
       .attr("class", "grid")
       .call(
-        d3
-          .axisLeft(y)
+        axisLeft(y)
           .tickSize(-width)
           .tickFormat(() => ""),
       )
@@ -125,7 +137,7 @@ export const LineChart: React.FC<Props> = ({
         g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
       );
 
-    g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
+    g.append("g").call(axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
 
     selectedMetrics.forEach((metric) => {
       const metricIndex = availableMetrics.indexOf(metric);
@@ -133,8 +145,7 @@ export const LineChart: React.FC<Props> = ({
       const strokeColor = colors[colorIndex % colors.length] ?? "#000";
       const metricData = parseData.filter((d) => d[metric] !== null);
 
-      const lineGenerator = d3
-        .line<(typeof parseData)[0]>()
+      const lineGenerator = line<(typeof parseData)[0]>()
         .defined((d) => d[metric] !== null)
         .x((d) => x(d.year))
         .y((d) => {
@@ -159,8 +170,7 @@ export const LineChart: React.FC<Props> = ({
           .attr("r", 4)
           .attr("fill", strokeColor)
           .on("mouseover", function (event) {
-            const tooltip = d3
-              .select("body")
+            const tooltip = select("body")
               .append("div")
               .attr("class", "tooltip")
               .style("position", "absolute")
@@ -178,11 +188,11 @@ export const LineChart: React.FC<Props> = ({
               .style("left", `${event.pageX + 10}px`)
               .style("top", `${event.pageY - 28}px`);
 
-            d3.select(this).attr("r", 6);
+            select(this as SVGCircleElement).attr("r", 6);
           })
           .on("mouseout", function () {
-            d3.selectAll(".tooltip").remove();
-            d3.select(this).attr("r", 4);
+            selectAll(".tooltip").remove();
+            select(this as SVGCircleElement).attr("r", 4);
           });
       });
     });
@@ -200,24 +210,17 @@ export const LineChart: React.FC<Props> = ({
   ]);
 
   const handleLegendClick = (metric: string) => {
-    const isActive = selectedMetrics.includes(metric);
-    if (isActive) {
-      setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
-    } else {
-      setSelectedMetrics([...selectedMetrics, metric]);
-    }
+    setSelectedMetrics((prev) =>
+      prev.includes(metric) ? prev.filter((m) => m !== metric) : [...prev, metric],
+    );
   };
 
   const handleGroupClick = (groupMetrics: string[]) => {
-    const allSelected = groupMetrics.every((m) => selectedMetrics.includes(m));
-
-    if (allSelected) {
-      const newSelected = selectedMetrics.filter((m) => !groupMetrics.includes(m));
-      setSelectedMetrics(newSelected);
-    } else {
-      const newSelected = [...new Set([...selectedMetrics, ...groupMetrics])];
-      setSelectedMetrics(newSelected);
-    }
+    setSelectedMetrics((prev) => {
+      const allSelected = groupMetrics.every((m) => prev.includes(m));
+      if (allSelected) return prev.filter((m) => !groupMetrics.includes(m));
+      return [...new Set([...prev, ...groupMetrics])];
+    });
   };
 
   return (
