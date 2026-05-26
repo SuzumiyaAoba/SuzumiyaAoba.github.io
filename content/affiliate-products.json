@@ -90,6 +90,13 @@
       "imageUrl": "https://m.media-amazon.com/images/I/91PlMBCsePL._SY522_.jpg",
       "productUrl": "https://amzn.to/4u0KDbH",
       "tags": ["見積り"]
+    },
+    {
+      "id": "Java言語で学ぶデザインパターン入門",
+      "title": "増補改訂版 Java言語で学ぶデザインパターン入門 Kindle版",
+      "imageUrl": "https://m.media-amazon.com/images/I/81h4V4c6kGL._SL1500_.jpg",
+      "productUrl": "https://amzn.to/4tREpdX",
+      "tags": ["デザインパターン", "GoF"]
     }
   ]
 }
