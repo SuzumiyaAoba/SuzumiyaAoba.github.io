@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 210" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="lts-title lts-desc">
+  <title id="lts-title">これまでの LTS（長期サポート版）の歩み</title>
+  <desc id="lts-desc">LTS は Java 8（2014年）、11（2018年）、17（2021年）、21（2023年）、25（2025年）の順に公開されてきた。Java 17 以降は 2 年ごとに公開されている。間には半年ごとのフィーチャーリリースがある。</desc>
+
+  <!-- 軸 -->
+  <line x1="40" y1="132" x2="800" y2="132" stroke="#cbd5e1" stroke-width="3"/>
+
+  <!-- 目盛り（LTS）への引き出し線 -->
+  <line x1="60"  y1="102" x2="60"  y2="132" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="325" y1="102" x2="325" y2="132" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="524" y1="102" x2="524" y2="132" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="657" y1="102" x2="657" y2="132" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="790" y1="102" x2="790" y2="132" stroke="#94a3b8" stroke-width="2"/>
+
+  <!-- LTS ボックス -->
+  <g>
+    <rect x="17" y="46" width="86" height="56" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="60" y="74" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Java 8</text>
+    <text x="60" y="93" text-anchor="middle" font-size="12" fill="#475569">2014年</text>
+  </g>
+  <g>
+    <rect x="282" y="46" width="86" height="56" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="325" y="74" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Java 11</text>
+    <text x="325" y="93" text-anchor="middle" font-size="12" fill="#475569">2018年</text>
+  </g>
+  <g>
+    <rect x="481" y="46" width="86" height="56" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="524" y="74" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Java 17</text>
+    <text x="524" y="93" text-anchor="middle" font-size="12" fill="#475569">2021年</text>
+  </g>
+  <g>
+    <rect x="614" y="46" width="86" height="56" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="657" y="74" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Java 21</text>
+    <text x="657" y="93" text-anchor="middle" font-size="12" fill="#475569">2023年</text>
+  </g>
+  <g>
+    <rect x="747" y="46" width="86" height="56" rx="9" fill="#bbf7d0" stroke="#16a34a" stroke-width="2.5"/>
+    <text x="790" y="74" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">Java 25</text>
+    <text x="790" y="93" text-anchor="middle" font-size="12" fill="#475569">2025年</text>
+  </g>
+
+  <!-- 間隔の注記 -->
+  <text x="424" y="160" text-anchor="middle" font-size="13" fill="#64748b">約 3 年</text>
+  <text x="590" y="160" text-anchor="middle" font-size="13" fill="#64748b">2 年</text>
+  <text x="723" y="160" text-anchor="middle" font-size="13" fill="#64748b">2 年</text>
+
+  <text x="420" y="194" text-anchor="middle" font-size="13" fill="#94a3b8">緑のバージョンが LTS。間には半年ごとのフィーチャーリリースがある（本書の対象は Java 25）</text>
+</svg>

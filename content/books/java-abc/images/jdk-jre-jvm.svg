@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="jjj-title jjj-desc">
+  <title id="jjj-title">JDK・JRE・JVM の入れ子の関係</title>
+  <desc id="jjj-desc">いちばん内側に JVM があり、それを JRE が、さらに JDK が包んでいる。JRE は JVM に標準ライブラリを加えたもの、JDK は JRE にコンパイラなどの開発ツールを加えたもの。</desc>
+
+  <!-- JDK（外側） -->
+  <rect x="20" y="20" width="600" height="380" rx="14" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="320" y="52" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">JDK ― Java 開発キット</text>
+  <text x="320" y="76" text-anchor="middle" font-size="14" fill="#475569">JRE ＋ コンパイラ（javac）などの開発ツール</text>
+
+  <!-- JRE（中間） -->
+  <rect x="80" y="96" width="480" height="268" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="320" y="128" text-anchor="middle" font-size="19" font-weight="bold" fill="#1e293b">JRE ― Java 実行環境</text>
+  <text x="320" y="151" text-anchor="middle" font-size="14" fill="#475569">JVM ＋ 標準ライブラリ など</text>
+
+  <!-- JVM（内側） -->
+  <rect x="150" y="178" width="340" height="158" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="320" y="244" text-anchor="middle" font-size="26" font-weight="bold" fill="#1e293b">JVM</text>
+  <text x="320" y="276" text-anchor="middle" font-size="14" fill="#475569">バイトコードを読み込んで実行する係</text>
+
+  <!-- これから学ぶ人はJDKを入れる、の注記 -->
+  <text x="320" y="392" text-anchor="middle" font-size="13" fill="#94a3b8">これから学ぶ人は、いちばん外側の JDK をインストールすればよい</text>
+</svg>

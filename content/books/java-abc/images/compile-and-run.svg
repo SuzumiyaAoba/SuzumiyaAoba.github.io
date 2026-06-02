@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 190" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="car-title car-desc">
+  <title id="car-title">コンパイルから実行までの流れ</title>
+  <desc id="car-desc">人間が書いた Hello.java を、コンパイルして Hello.class（バイトコード）に変換し、JVM がその環境の機械語に変換しながら実行する。</desc>
+  <defs>
+    <marker id="car-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ソースコード -->
+  <rect x="20" y="55" width="200" height="80" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="120" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">Hello.java</text>
+  <text x="120" y="114" text-anchor="middle" font-size="13" fill="#475569">人間が書くソースコード</text>
+
+  <!-- 矢印1 -->
+  <line x1="225" y1="95" x2="305" y2="95" stroke="#64748b" stroke-width="3" marker-end="url(#car-arrow)"/>
+  <text x="265" y="80" text-anchor="middle" font-size="13" fill="#334155">① コンパイル</text>
+
+  <!-- バイトコード -->
+  <rect x="310" y="55" width="200" height="80" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="410" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">Hello.class</text>
+  <text x="410" y="114" text-anchor="middle" font-size="13" fill="#475569">バイトコード（共通）</text>
+
+  <!-- 矢印2 -->
+  <line x1="515" y1="95" x2="595" y2="95" stroke="#64748b" stroke-width="3" marker-end="url(#car-arrow)"/>
+  <text x="555" y="80" text-anchor="middle" font-size="13" fill="#334155">② JVM が実行</text>
+
+  <!-- 機械語 -->
+  <rect x="600" y="55" width="220" height="80" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="710" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">機械語 → 実行</text>
+  <text x="710" y="114" text-anchor="middle" font-size="13" fill="#475569">環境ごとに JVM が変換</text>
+
+  <text x="420" y="170" text-anchor="middle" font-size="13" fill="#94a3b8">①は javac（コンパイラ）、②は JVM が担当する</text>
+</svg>
