@@ -164,7 +164,7 @@ zsh: command not found: java
 
 ### 症状
 
-`javac Main.java` を実行すると、英語のエラーメッセージが出て、`Main.class` ができない。
+`javac Main.java` を実行すると、エラーメッセージが出て、`Main.class` ができない。
 
 ### よくある原因と対処
 
@@ -200,8 +200,15 @@ IDE（IntelliJ IDEA）を使っている場合は、間違っている場所に*
 `java Main` を実行すると、次のようなメッセージが出る。
 
 ```text
-Error: Could not find or load main class Main
+エラー: メイン・クラスMainを検出およびロードできませんでした
+原因: java.lang.ClassNotFoundException: Main
 ```
+
+> 英語環境では、次のように表示されます（内容は同じです）。
+>
+> ```text
+> Error: Could not find or load main class Main
+> ```
 
 （「Main というクラスが見つからない、または読み込めない」という意味です。）
 
