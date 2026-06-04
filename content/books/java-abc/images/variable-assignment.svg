@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="va-title va-desc">
+  <title id="va-title">代入は、右の値を左の箱に入れること</title>
+  <desc id="va-desc">age = 20 では、右側の値 20 が、左側の age という箱に入る。= は「等しい」ではなく「入れる」という意味である。</desc>
+  <defs>
+    <marker id="va-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 名前ラベル -->
+  <rect x="80" y="78" width="150" height="36" rx="8" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="155" y="103" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">age</text>
+  <!-- 箱本体 -->
+  <rect x="80" y="114" width="150" height="86" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="155" y="172" text-anchor="middle" font-size="40" font-weight="bold" fill="#1e293b">20</text>
+
+  <!-- = 記号 -->
+  <text x="300" y="170" text-anchor="middle" font-size="48" font-weight="bold" fill="#475569">=</text>
+
+  <!-- 右の値（リテラル） -->
+  <text x="410" y="172" text-anchor="middle" font-size="40" font-weight="bold" fill="#1e293b">20</text>
+  <text x="410" y="205" text-anchor="middle" font-size="14" fill="#64748b">入れる値</text>
+
+  <!-- 弧矢印: 右の値 → 箱 -->
+  <path d="M 398 150 Q 280 70 168 96" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#va-arrow)"/>
+  <text x="285" y="72" text-anchor="middle" font-size="16" font-weight="bold" fill="#64748b">入れる</text>
+
+  <!-- キャプション -->
+  <text x="300" y="228" text-anchor="middle" font-size="15" fill="#64748b">「age = 20;」は、20 を age に入れる、と読む（= は「等しい」ではない）</text>
+</svg>

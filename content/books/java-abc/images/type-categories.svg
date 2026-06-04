@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="tc-title tc-desc">
+  <title id="tc-title">Java の型の分類</title>
+  <desc id="tc-desc">Java の型は、大きく基本データ型（プリミティブ型）と参照型に分かれる。基本データ型には int・double・boolean・char などがあり、参照型には String などがある。</desc>
+
+  <!-- 接続線 -->
+  <line x1="360" y1="72" x2="200" y2="118" stroke="#64748b" stroke-width="2"/>
+  <line x1="360" y1="72" x2="540" y2="118" stroke="#64748b" stroke-width="2"/>
+  <line x1="200" y1="178" x2="86" y2="208" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="200" y1="178" x2="162" y2="208" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="200" y1="178" x2="238" y2="208" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="200" y1="178" x2="314" y2="208" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="540" y1="178" x2="540" y2="208" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- トップ: データ型 -->
+  <rect x="290" y="22" width="140" height="50" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="360" y="53" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">データ型</text>
+
+  <!-- 第2層: 基本データ型 -->
+  <rect x="80" y="118" width="240" height="60" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="200" y="144" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">基本データ型</text>
+  <text x="200" y="166" text-anchor="middle" font-size="13" fill="#475569">（プリミティブ型）</text>
+
+  <!-- 第2層: 参照型 -->
+  <rect x="440" y="118" width="200" height="60" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="540" y="155" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">参照型</text>
+
+  <!-- 第3層: 基本データ型の例 -->
+  <rect x="54" y="208" width="64" height="46" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="86" y="237" text-anchor="middle" font-size="16" fill="#1e293b">int</text>
+  <rect x="130" y="208" width="64" height="46" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="162" y="237" text-anchor="middle" font-size="15" fill="#1e293b">double</text>
+  <rect x="206" y="208" width="64" height="46" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="238" y="236" text-anchor="middle" font-size="13" fill="#1e293b">boolean</text>
+  <rect x="282" y="208" width="64" height="46" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="314" y="237" text-anchor="middle" font-size="16" fill="#1e293b">char</text>
+
+  <!-- 第3層: 参照型の例 -->
+  <rect x="480" y="208" width="120" height="46" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="540" y="237" text-anchor="middle" font-size="15" fill="#1e293b">String など</text>
+
+  <!-- キャプション -->
+  <text x="360" y="300" text-anchor="middle" font-size="15" fill="#64748b">Java の型は、大きく「基本データ型」と「参照型」に分かれる</text>
+  <text x="360" y="324" text-anchor="middle" font-size="13" fill="#94a3b8">（基本データ型は8種類。代表が int・double・boolean・char）</text>
+</svg>

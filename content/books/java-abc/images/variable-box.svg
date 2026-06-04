@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 250" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="vb-title vb-desc">
+  <title id="vb-title">変数は、名前をつけた箱</title>
+  <desc id="vb-desc">monthlyPrice という名前の箱に、値 100 が入っている様子。変数は、値に名前をつけて保存する仕組みである。</desc>
+  <defs>
+    <marker id="vb-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 名前ラベル（名札） -->
+  <rect x="180" y="52" width="200" height="40" rx="8" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="280" y="79" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">monthlyPrice</text>
+
+  <!-- 箱本体 -->
+  <rect x="180" y="92" width="200" height="112" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="280" y="165" text-anchor="middle" font-size="46" font-weight="bold" fill="#1e293b">100</text>
+
+  <!-- 注釈: 名前 -->
+  <text x="92" y="76" text-anchor="middle" font-size="15" fill="#64748b">名前</text>
+  <line x1="118" y1="72" x2="176" y2="72" stroke="#64748b" stroke-width="2" marker-end="url(#vb-arrow)"/>
+
+  <!-- 注釈: 中身（値） -->
+  <text x="470" y="152" text-anchor="middle" font-size="15" fill="#64748b">中身（値）</text>
+  <line x1="430" y1="150" x2="384" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#vb-arrow)"/>
+
+  <!-- キャプション -->
+  <text x="280" y="234" text-anchor="middle" font-size="15" fill="#64748b">変数は、名前をつけた箱。名前を書くと、中の値を取り出せる</text>
+</svg>
