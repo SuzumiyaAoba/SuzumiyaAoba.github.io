@@ -15,6 +15,8 @@ import GithubSlugger from "github-slugger";
 
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
+import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
+import { createRehypeAffiliateLinks } from "./rehype-affiliate-links";
 import type { TocHeading } from "./toc";
 
 type MdastNode = {
@@ -69,6 +71,40 @@ function rehypeHeadingIdPrefix(prefix: string) {
   };
 }
 
+/**
+ * 画像のみを含む段落タグを剥がすプラグイン。
+ * MDX は ![alt](src) を <p><img/></p> に変換するが、Img コンポーネントが
+ * <div>（Zoom）を描画するため <p> 内に <div> が入り HTML が不正になる。
+ */
+function remarkUnwrapImages() {
+  return (tree: any) => {
+    const visit = (parent: any) => {
+      if (!parent || !Array.isArray(parent.children)) return;
+
+      parent.children = parent.children.flatMap((node: any) => {
+        if (
+          node.type === "paragraph" &&
+          Array.isArray(node.children) &&
+          node.children.length > 0 &&
+          node.children.every(
+            (child: any) =>
+              child.type === "image" ||
+              (child.type === "text" && /^\s*$/.test(child.value ?? "")),
+          )
+        ) {
+          return node.children.filter((child: any) => child.type === "image");
+        }
+        return [node];
+      });
+
+      for (const child of parent.children) {
+        visit(child);
+      }
+    };
+    visit(tree);
+  };
+}
+
 function remarkMermaid() {
   return (tree: any) => {
     const visit = (node: any) => {
@@ -115,6 +151,7 @@ function buildCompileOptions(
   source: string,
   { basePath, scope, idPrefix }: RenderOptions,
   extraRemarkPlugins: any[] = [],
+  affiliateById: Map<string, string> = new Map(),
 ) {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
@@ -141,6 +178,7 @@ function buildCompileOptions(
           remarkJoinCjkLines,
           remarkMath,
           ...extraRemarkPlugins,
+          remarkUnwrapImages,
           remarkMermaid,
           [remarkCodeHike, codeHikeConfig],
         ],
@@ -149,6 +187,7 @@ function buildCompileOptions(
           rehypeSlug,
           ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
           [rehypeAutolinkHeadings, { behavior: "append" }],
+          createRehypeAffiliateLinks(affiliateById),
           [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
           [
             rehypeKatex,
@@ -172,7 +211,8 @@ export const renderMdx = cache(
       if (cached) return cached;
     }
 
-    const { content } = await compileMDX(buildCompileOptions(source, options));
+    const affiliateById = await getAffiliateProductUrlById();
+    const { content } = await compileMDX(buildCompileOptions(source, options, [], affiliateById));
 
     const rendered = <>{content}</>;
     if (useDevCache) devRenderCache.set(cacheKey, rendered);
@@ -199,9 +239,15 @@ export const renderMdxWithToc = cache(
       if (cached) return cached;
     }
 
+    const affiliateById = await getAffiliateProductUrlById();
     const headings: TocHeading[] = [];
     const { content } = await compileMDX(
-      buildCompileOptions(source, options, [remarkCollectHeadings(headings, idPrefix)]),
+      buildCompileOptions(
+        source,
+        options,
+        [remarkCollectHeadings(headings, idPrefix)],
+        affiliateById,
+      ),
     );
 
     const result = { content: <>{content}</>, headings };
