@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="path-title path-desc">
+  <title id="path-title">PATH のしくみ</title>
+  <desc id="path-desc">ターミナルで java と入力すると、コンピュータは PATH に登録されたフォルダを上から順に探す。java の本体があるフォルダ（JDK の bin）が見つかると、java を実行する。PATH に JDK のフォルダがあれば、どこからでも java を実行できる。</desc>
+  <defs>
+    <marker id="pm-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 入力 -->
+  <rect x="190" y="16" width="220" height="46" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="300" y="44" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">ターミナルで java と入力</text>
+
+  <!-- 矢印 -->
+  <line x1="300" y1="62" x2="300" y2="84" stroke="#64748b" stroke-width="2.5" marker-end="url(#pm-arrow)"/>
+
+  <!-- PATH 枠 -->
+  <rect x="150" y="88" width="340" height="170" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="320" y="110" text-anchor="middle" font-size="13" fill="#64748b">PATH ＝ 探しに行くフォルダの一覧（上から順に探す）</text>
+
+  <rect x="215" y="120" width="240" height="34" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="335" y="142" text-anchor="middle" font-size="14" fill="#1e293b">/usr/bin</text>
+
+  <rect x="215" y="160" width="240" height="34" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="335" y="182" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">…/jdk-25/bin（java はここ！）</text>
+
+  <rect x="215" y="200" width="240" height="34" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="335" y="222" text-anchor="middle" font-size="14" fill="#1e293b">/usr/local/bin</text>
+
+  <!-- 上から順に探す 矢印 -->
+  <line x1="180" y1="122" x2="180" y2="232" stroke="#64748b" stroke-width="2.5" marker-end="url(#pm-arrow)"/>
+
+  <!-- 見つかった -->
+  <line x1="300" y1="258" x2="300" y2="280" stroke="#64748b" stroke-width="2.5" marker-end="url(#pm-arrow)"/>
+  <text x="345" y="274" text-anchor="middle" font-size="12" font-weight="bold" fill="#22c55e">見つかった</text>
+
+  <!-- 実行 -->
+  <rect x="190" y="282" width="220" height="46" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="300" y="310" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">java を実行する</text>
+
+  <!-- キャプション -->
+  <text x="300" y="350" text-anchor="middle" font-size="13" fill="#64748b">PATH に JDK のフォルダがあれば、どこからでも java を実行できる</text>
+</svg>

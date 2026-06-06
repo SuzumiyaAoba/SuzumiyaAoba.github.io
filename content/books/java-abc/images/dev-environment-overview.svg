@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 330" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="dev-title dev-desc">
+  <title id="dev-title">開発環境の全体像 ― JDK と IDE</title>
+  <desc id="dev-desc">開発環境は、Java を動かすエンジンである JDK（必須。javac・java・jshell・標準ライブラリを含む）と、書く作業を助ける運転席である IDE（あると便利。入力補完・文法チェックなど）からなる。IDE だけでは動かず、JDK が必要。</desc>
+
+  <!-- JDK -->
+  <rect x="28" y="54" width="266" height="212" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="161" y="84" text-anchor="middle" font-size="19" font-weight="bold" fill="#1e293b">JDK（必須）</text>
+  <text x="161" y="106" text-anchor="middle" font-size="13" fill="#475569">Java を動かすエンジン</text>
+  <rect x="48" y="120" width="226" height="30" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="161" y="140" text-anchor="middle" font-size="13" fill="#1e293b">javac ― コンパイラ</text>
+  <rect x="48" y="156" width="226" height="30" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="161" y="176" text-anchor="middle" font-size="13" fill="#1e293b">java ― 実行コマンド</text>
+  <rect x="48" y="192" width="226" height="30" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="161" y="212" text-anchor="middle" font-size="13" fill="#1e293b">jshell ― 対話実行</text>
+  <rect x="48" y="228" width="226" height="30" rx="6" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="161" y="248" text-anchor="middle" font-size="13" fill="#1e293b">標準ライブラリ</text>
+
+  <!-- IDE -->
+  <rect x="326" y="54" width="266" height="212" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="459" y="84" text-anchor="middle" font-size="19" font-weight="bold" fill="#1e293b">IDE（あると便利）</text>
+  <text x="459" y="106" text-anchor="middle" font-size="13" fill="#475569">書く作業を助ける運転席</text>
+  <rect x="346" y="120" width="226" height="30" rx="6" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="459" y="140" text-anchor="middle" font-size="13" fill="#1e293b">入力補完</text>
+  <rect x="346" y="156" width="226" height="30" rx="6" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="459" y="176" text-anchor="middle" font-size="13" fill="#1e293b">文法チェック</text>
+  <rect x="346" y="192" width="226" height="30" rx="6" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="459" y="212" text-anchor="middle" font-size="13" fill="#1e293b">ワンクリック実行</text>
+  <rect x="346" y="228" width="226" height="30" rx="6" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="459" y="248" text-anchor="middle" font-size="13" fill="#1e293b">自動整形</text>
+
+  <!-- キャプション -->
+  <text x="310" y="298" text-anchor="middle" font-size="14" fill="#64748b">JDK がエンジン（必須）、IDE は運転席（あると便利）。IDE だけでは動かない</text>
+</svg>
