@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 210" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="mf-title mf-desc">
+  <title id="mf-title">メソッドは「入力 → 処理 → 出力」の部品</title>
+  <desc id="mf-desc">メソッドは、引数（入力）を受け取り、処理をして、戻り値（出力）を返す部品。add メソッドに 3 と 5 を渡すと、a + b を計算して 8 を返す。</desc>
+  <defs>
+    <marker id="mf-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 引数（入力） -->
+  <rect x="24" y="64" width="140" height="64" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="94" y="104" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">3, 5</text>
+  <text x="94" y="150" text-anchor="middle" font-size="13" fill="#3b82f6">引数（入力）</text>
+
+  <!-- 矢印 -->
+  <line x1="166" y1="96" x2="210" y2="96" stroke="#64748b" stroke-width="2.5" marker-end="url(#mf-arrow)"/>
+  <text x="188" y="82" text-anchor="middle" font-size="12" fill="#334155">渡す</text>
+
+  <!-- メソッド（処理） -->
+  <rect x="214" y="48" width="192" height="100" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="310" y="88" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">add メソッド</text>
+  <text x="310" y="114" text-anchor="middle" font-size="13" fill="#475569">a + b を計算する</text>
+
+  <!-- 矢印 -->
+  <line x1="408" y1="96" x2="452" y2="96" stroke="#64748b" stroke-width="2.5" marker-end="url(#mf-arrow)"/>
+  <text x="430" y="82" text-anchor="middle" font-size="12" fill="#334155">返す</text>
+
+  <!-- 戻り値（出力） -->
+  <rect x="456" y="64" width="140" height="64" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="526" y="104" text-anchor="middle" font-size="22" font-weight="bold" fill="#1e293b">8</text>
+  <text x="526" y="150" text-anchor="middle" font-size="13" fill="#f97316">戻り値（出力）</text>
+
+  <!-- キャプション -->
+  <text x="310" y="190" text-anchor="middle" font-size="14" fill="#64748b">引数（入力）を受け取り、処理して、戻り値（出力）を返す ― add(3, 5) は 8 を返す</text>
+</svg>
