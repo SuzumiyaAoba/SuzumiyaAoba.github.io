@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 400" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="ff-title ff-desc">
+  <title id="ff-title">for 文の実行順序</title>
+  <desc id="ff-desc">初期化は最初の1回だけ実行する。その後、条件の判定 → 本体の処理 → 更新、を条件が false になるまで繰り返す。条件が false になったらループを終了する。</desc>
+  <defs>
+    <marker id="ff-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ① 初期化 -->
+  <rect x="200" y="18" width="160" height="44" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="280" y="45" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">① 初期化　int i = 1</text>
+
+  <!-- 矢印 初期化→条件 -->
+  <line x1="280" y1="62" x2="280" y2="86" stroke="#64748b" stroke-width="2.5" marker-end="url(#ff-arrow)"/>
+
+  <!-- ② 条件（ひし形） -->
+  <polygon points="280,88 412,131 280,174 148,131" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="280" y="127" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">② 条件</text>
+  <text x="280" y="146" text-anchor="middle" font-size="14" fill="#1e293b">i &lt;= 3 ?</text>
+
+  <!-- false → 終了 -->
+  <line x1="412" y1="131" x2="462" y2="131" stroke="#64748b" stroke-width="2.5" marker-end="url(#ff-arrow)"/>
+  <text x="437" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#f97316">false</text>
+  <rect x="466" y="109" width="98" height="44" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="515" y="136" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">終了</text>
+
+  <!-- true → 本体 -->
+  <line x1="280" y1="174" x2="280" y2="206" stroke="#64748b" stroke-width="2.5" marker-end="url(#ff-arrow)"/>
+  <text x="300" y="194" text-anchor="middle" font-size="12" font-weight="bold" fill="#22c55e">true</text>
+
+  <!-- ③ 本体 -->
+  <rect x="200" y="208" width="160" height="44" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="280" y="235" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">③ 本体（処理）</text>
+
+  <!-- 矢印 本体→更新 -->
+  <line x1="280" y1="252" x2="280" y2="284" stroke="#64748b" stroke-width="2.5" marker-end="url(#ff-arrow)"/>
+
+  <!-- ④ 更新 -->
+  <rect x="200" y="286" width="160" height="44" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="280" y="313" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">④ 更新　i++</text>
+
+  <!-- 戻り矢印 更新→条件 -->
+  <polyline points="200,308 78,308 78,131 146,131" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#ff-arrow)"/>
+  <text x="78" y="225" text-anchor="middle" font-size="13" fill="#64748b">② へ戻る</text>
+
+  <!-- キャプション -->
+  <text x="290" y="378" text-anchor="middle" font-size="14" fill="#64748b">初期化は最初の1回だけ。条件 → 本体 → 更新 を、条件が false になるまで繰り返す</text>
+</svg>
