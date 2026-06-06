@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 230" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="ter-title ter-desc">
+  <title id="ter-title">三項演算子の構造</title>
+  <desc id="ter-desc">「条件 ? Aの値 : Bの値」という三項演算子の形。条件が true なら ? の右の値、false なら : の右の値が選ばれる。例として score &gt;= 60 ? 合格 : 不合格 を分解して示す。</desc>
+
+  <!-- 条件 -->
+  <rect x="28" y="40" width="168" height="48" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="112" y="70" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">score &gt;= 60</text>
+  <text x="112" y="112" text-anchor="middle" font-size="13" fill="#3b82f6">条件（boolean）</text>
+
+  <!-- ? -->
+  <text x="214" y="73" text-anchor="middle" font-size="26" font-weight="bold" fill="#64748b">?</text>
+
+  <!-- true の値 -->
+  <rect x="236" y="40" width="120" height="48" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="296" y="70" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">"合格"</text>
+  <text x="296" y="112" text-anchor="middle" font-size="13" fill="#22c55e">true のときの値</text>
+
+  <!-- : -->
+  <text x="374" y="71" text-anchor="middle" font-size="26" font-weight="bold" fill="#64748b">:</text>
+
+  <!-- false の値 -->
+  <rect x="392" y="40" width="148" height="48" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="466" y="70" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">"不合格"</text>
+  <text x="466" y="112" text-anchor="middle" font-size="13" fill="#f97316">false のときの値</text>
+
+  <!-- 例 -->
+  <text x="290" y="160" text-anchor="middle" font-size="15" fill="#1e293b">例: score が 80 のとき、条件は true → 「合格」が選ばれる</text>
+
+  <!-- キャプション -->
+  <text x="290" y="200" text-anchor="middle" font-size="14" fill="#64748b">条件が true なら「?」の右、false なら「:」の右の値になる</text>
+</svg>

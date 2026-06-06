@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 360" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="eif-title eif-desc">
+  <title id="eif-title">else if の多分岐 ― 上から順に判定する</title>
+  <desc id="eif-desc">点数を「優・良・可」に分ける流れ。n &gt;= 80 なら優。違えば n &gt;= 70 を調べ、true なら良。どちらも違えば可。上から順に調べ、最初に true になった枝だけを実行する。</desc>
+  <defs>
+    <marker id="eif-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 条件1 -->
+  <polygon points="150,18 250,55 150,92 50,55" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="150" y="60" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">n &gt;= 80 ?</text>
+  <line x1="250" y1="55" x2="332" y2="55" stroke="#64748b" stroke-width="2.5" marker-end="url(#eif-arrow)"/>
+  <text x="291" y="44" text-anchor="middle" font-size="12" font-weight="bold" fill="#22c55e">true</text>
+  <rect x="336" y="30" width="120" height="50" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="396" y="61" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">優</text>
+
+  <!-- false 下へ -->
+  <line x1="150" y1="92" x2="150" y2="123" stroke="#64748b" stroke-width="2.5" marker-end="url(#eif-arrow)"/>
+  <text x="172" y="112" text-anchor="middle" font-size="12" font-weight="bold" fill="#f97316">false</text>
+
+  <!-- 条件2 -->
+  <polygon points="150,125 250,162 150,199 50,162" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="150" y="167" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e293b">n &gt;= 70 ?</text>
+  <line x1="250" y1="162" x2="332" y2="162" stroke="#64748b" stroke-width="2.5" marker-end="url(#eif-arrow)"/>
+  <text x="291" y="151" text-anchor="middle" font-size="12" font-weight="bold" fill="#22c55e">true</text>
+  <rect x="336" y="137" width="120" height="50" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="396" y="168" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">良</text>
+
+  <!-- false 下へ -->
+  <line x1="150" y1="199" x2="150" y2="230" stroke="#64748b" stroke-width="2.5" marker-end="url(#eif-arrow)"/>
+  <text x="172" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#f97316">false</text>
+
+  <!-- else -->
+  <rect x="90" y="232" width="120" height="50" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="150" y="263" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">可</text>
+  <text x="150" y="305" text-anchor="middle" font-size="13" fill="#64748b">（else ＝ どれにも当てはまらないとき）</text>
+
+  <!-- キャプション -->
+  <text x="250" y="338" text-anchor="middle" font-size="14" fill="#64748b">上から順に調べ、最初に true になった枝だけを実行する</text>
+</svg>
