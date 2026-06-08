@@ -51,6 +51,8 @@ class Rectangle implements Shape {  // Shape を実装する
 `Circle` も `Rectangle` も、`implements Shape` と宣言し、それぞれの `area()` を実装しています。
 円は「半径 × 半径 × 円周率」、長方形は「幅 × 高さ」と、計算方法は違いますが、どちらも「`area()` で面積を返す」という約束は守っています。
 
+![インターフェースの実装。Shape インターフェースは area() という約束だけを定め、Circle と Rectangle が implements でそれを実装する。Circle は半径×半径×3.14、Rectangle は幅×高さで面積を計算する。両者は継承関係になくても、同じ Shape として扱える。](./images/interface-implements.svg)
+
 > **補足: 実装するメソッドは `public` にする**
 >
 > インターフェースのメソッドは `public` の約束なので、実装する側のメソッドも **`public`** にする必要があります。

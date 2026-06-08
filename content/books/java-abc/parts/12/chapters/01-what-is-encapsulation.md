@@ -63,6 +63,8 @@ class BankAccount {
 外からは `acc.balance = -5000;` と書けなくなり、入金は `acc.deposit(1000)` のように、メソッドを通すしかなくなります。
 入口を1か所にしぼることで、そこに**見張り（チェック）**を置けるようになるのです。
 
+![カプセル化のしくみ。BankAccount の中で、private な balance は隠され、公開メソッド deposit・withdraw・getBalance を通してのみ操作できる。外部コードはメソッド経由なら操作できるが、balance への直接アクセスは禁止される。](./images/encapsulation.svg)
+
 ---
 
 ## カプセル化の3つの利点

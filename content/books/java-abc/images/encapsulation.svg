@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="100%" role="img" aria-labelledby="enc-title enc-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="enc-title">カプセル化のしくみ</title>
+  <desc id="enc-desc">BankAccount クラスの中で、データ private balance は隠され、公開メソッド deposit・withdraw・getBalance を通してのみ操作できる。外部コードは、メソッド経由なら操作できるが、balance への直接アクセスは禁止される。</desc>
+
+  <!-- BankAccount カプセル -->
+  <rect x="250" y="40" width="430" height="280" rx="20" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+  <text x="465" y="70" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e3a8a">BankAccount</text>
+
+  <!-- 公開メソッド（入口・緑） -->
+  <rect x="285" y="92" width="360" height="58" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="465" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="#166534">公開メソッド（public）＝ 入口</text>
+  <text x="465" y="137" text-anchor="middle" font-size="12" fill="#166534">deposit()・withdraw()・getBalance()</text>
+
+  <!-- private データ（守られた中心・青、鍵） -->
+  <rect x="335" y="188" width="260" height="92" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="465" y="214" text-anchor="middle" font-size="22">&#128274;</text>
+  <text x="465" y="244" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a8a">private balance</text>
+  <text x="465" y="266" text-anchor="middle" font-size="11" fill="#64748b">隠されたデータ（外から直接さわれない）</text>
+
+  <!-- 外部コード -->
+  <rect x="30" y="120" width="150" height="120" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="105" y="170" text-anchor="middle" font-size="14" font-weight="bold" fill="#475569">外部コード</text>
+  <text x="105" y="196" text-anchor="middle" font-size="11" fill="#64748b">acc.deposit(...)</text>
+
+  <!-- 許可: 外部 → メソッド -->
+  <line x1="182" y1="135" x2="283" y2="120" stroke="#22c55e" stroke-width="2.5" marker-end="url(#enc-ok)"/>
+  <text x="232" y="112" text-anchor="middle" font-size="12" fill="#166534">&#9711; メソッド経由はOK</text>
+
+  <!-- メソッド → balance（内部からはアクセス可） -->
+  <line x1="465" y1="152" x2="465" y2="186" stroke="#94a3b8" stroke-width="2" marker-end="url(#enc-gray)"/>
+
+  <!-- 禁止: 外部 → balance 直接 -->
+  <line x1="182" y1="225" x2="333" y2="234" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#enc-ng)"/>
+  <text x="250" y="262" text-anchor="middle" font-size="12" fill="#b91c1c">&#10005; 直接アクセスは禁止</text>
+
+  <text x="360" y="346" text-anchor="middle" font-size="12" fill="#475569">データは隠し、決められた入口（メソッド）を通してのみ操作させる</text>
+
+  <defs>
+    <marker id="enc-ok" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#22c55e"/></marker>
+    <marker id="enc-gray" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker>
+    <marker id="enc-ng" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ef4444"/></marker>
+  </defs>
+</svg>

@@ -104,6 +104,8 @@ Box<String>         … クラスに「型」を渡す
 `Box<String>` は「`String` という型引数を渡した `Box`」、`Box<Integer>` は「`Integer` を渡した `Box`」です。
 1つの `Box` の定義から、`String` 用・`Integer` 用…と、型ごとの安全な箱を作れるのです。
 
+![ジェネリクスのしくみ。Box&lt;T&gt; という1つの定義から、型引数に String を当てれば String 専用の箱、Integer を当てれば Integer 専用の箱ができる。それぞれ型が決まっているのでキャスト不要で安全。](./images/generics-box.svg)
+
 ---
 
 ## まとめ

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="100%" role="img" aria-labelledby="en-title en-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="en-title">列挙型は、取りうる値を限定する</title>
+  <desc id="en-desc">enum Signal は、RED・YELLOW・GREEN の3つの値だけを取りうる。Signal 型の変数には、この3つのいずれかしか入れられず、PURPLE のような定義外の値はコンパイルエラーになる。</desc>
+
+  <!-- Signal 型 -->
+  <rect x="220" y="30" width="280" height="46" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="360" y="59" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">enum Signal</text>
+
+  <line x1="360" y1="76" x2="360" y2="100" stroke="#94a3b8" stroke-width="2" marker-end="url(#en-a)"/>
+  <text x="470" y="94" text-anchor="middle" font-size="11" fill="#64748b">取りうる値は、この3つだけ</text>
+
+  <!-- 3つの許可値 -->
+  <g>
+    <rect x="70" y="106" width="180" height="64" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <circle cx="100" cy="138" r="12" fill="#ef4444"/>
+    <text x="170" y="143" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">RED</text>
+  </g>
+  <g>
+    <rect x="270" y="106" width="180" height="64" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <circle cx="300" cy="138" r="12" fill="#f59e0b"/>
+    <text x="372" y="143" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">YELLOW</text>
+  </g>
+  <g>
+    <rect x="470" y="106" width="180" height="64" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <circle cx="500" cy="138" r="12" fill="#22c55e"/>
+    <text x="572" y="143" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">GREEN</text>
+  </g>
+
+  <!-- 拒否される値 -->
+  <rect x="220" y="200" width="280" height="50" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="360" y="222" text-anchor="middle" font-size="14" font-weight="bold" fill="#b91c1c">&#10005; PURPLE / "あか" / 5</text>
+  <text x="360" y="241" text-anchor="middle" font-size="11" fill="#b91c1c">定義外の値はコンパイルエラー</text>
+
+  <text x="360" y="282" text-anchor="middle" font-size="12" fill="#475569">「ありえない値」が入る余地をなくし、安全にする</text>
+
+  <defs>
+    <marker id="en-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker>
+  </defs>
+</svg>

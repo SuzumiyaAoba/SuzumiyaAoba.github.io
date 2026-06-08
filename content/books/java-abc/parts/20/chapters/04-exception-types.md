@@ -33,6 +33,8 @@ Throwable（すべての例外の先祖）
 
 この「`RuntimeException` の仲間かどうか」が、2種類を分ける境界です。
 
+![例外の家系図。すべての例外の先祖は Throwable。その下に Error（深刻な問題、扱わない）と Exception があり、Exception はさらに RuntimeException の仲間（非チェック例外、処理は任意、多くはプログラムの誤り）と、それ以外（チェック例外、処理は必須、多くは外部の事情）に分かれる。](./images/exception-hierarchy.svg)
+
 ---
 
 ## 非チェック例外 ― 処理を強制されない
