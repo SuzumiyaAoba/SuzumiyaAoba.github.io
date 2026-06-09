@@ -101,13 +101,13 @@ $ java Main.java
 
 ```java
 // このメソッドは InterruptedException（チェック例外）を投げるかもしれない、と宣言
-static void wait1秒() throws InterruptedException {
+static void waitOneSecond() throws InterruptedException {
     Thread.sleep(1000);   // catch しない代わりに、throws で宣言
 }
 ```
 
 `throws InterruptedException` と宣言することで、`Thread.sleep` のチェック例外を、このメソッドの中で `catch` せずにすみます。
-そのかわり、`wait1秒()` を**呼ぶ側**が、その例外を処理する責任を負います（catch するか、さらに `throws` で上へ伝えるか）。
+そのかわり、`waitOneSecond()` を**呼ぶ側**が、その例外を処理する責任を負います（catch するか、さらに `throws` で上へ伝えるか）。
 
 「例外を、**ここで処理する**（try-catch）」か、「**呼び出し元に任せる**（throws）」か ―― チェック例外には、この2つの選択肢があるのです。
 
