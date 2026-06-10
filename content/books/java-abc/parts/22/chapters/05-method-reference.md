@@ -77,12 +77,18 @@ names.forEach(IO::println);
 
 | パターン | 書き方 | ラムダ式での同等 |
 |---|---|---|
-| 静的メソッド | `Integer::parseInt` | `s -> Integer.parseInt(s)` |
+| 静的メソッド | `Integer::parseInt`・`IO::println` | `s -> Integer.parseInt(s)` |
 | インスタンスメソッド（型から） | `String::length` | `s -> s.length()` |
-| 特定オブジェクトのメソッド | `IO::println` | `s -> IO.println(s)` |
+| 特定オブジェクトのメソッド | `System.out::println` | `s -> System.out.println(s)` |
 | コンストラクタ | `ArrayList::new` | `() -> new ArrayList<>()` |
 
 いずれも、共通点は「**`型やオブジェクト :: 名前` で、メソッド（やコンストラクタ）をそのまま指す**」ことです。
+
+> **補足: `IO::println` と `System.out::println`**
+>
+> `IO.println(...)` は、`IO` クラスの**静的メソッド**です。そのため `IO::println` は、`Integer::parseInt` と同じ「静的メソッドの参照」になります。
+> 一方、第3章で学んだ `System.out.println(...)` は、「`System.out` という**特定のオブジェクト**」のメソッドを呼んでいます。そのため `System.out::println` は、「特定オブジェクトのメソッド参照」になります。
+> 書き方はどちらも `〜::println` で同じなので、いまは区別を覚え込む必要はありません。
 ラムダ式が「`x -> 何かのメソッド(x)`」のように、受け取った値をそのまま渡すだけなら、メソッド参照に書きかえられる、と考えてください。
 
 ---

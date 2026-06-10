@@ -53,7 +53,7 @@ names.stream()
 ```
 
 「表示する」「保存する」のように、**結果を集めるのではなく、1つずつ何かしたい**ときに使います。
-（なお、ただ全要素を処理するだけなら、第6章で学んだ for-each 文（`for (String name : names)`）でも同じことができます。ストリームの中間操作と組み合わせるときに、`forEach` が活きてきます。）
+（なお、ただ全要素を処理するだけなら、第8章で学んだ for-each 文（`for (String name : names)`）でも同じことができます。ストリームの中間操作と組み合わせるときに、`forEach` が活きてきます。）
 
 ---
 
@@ -111,7 +111,7 @@ IO.println(avg);
 ```
 
 - `sum()` … 合計（`int`）を返す
-- `average()` … 平均を返す（ただし「要素が0個」のこともあるので、第24章で学ぶ `Optional` で返ります。`orElse(0)` で「空なら0」とします）
+- `average()` … 平均を返す（ただし「要素が0個」のこともあるので、第24章で学ぶ `Optional` の数値版 `OptionalDouble` で返ります。`orElse(0)` で「空なら0」とします）
 
 「点数の合計」「平均年齢」のような集計が、ループなしで書けます。
 （`max()`・`min()` で、最大値・最小値も求められます。）
@@ -151,7 +151,7 @@ true
 | `toList()` | リストにまとめる | `List` |
 | `forEach(...)` | 各要素に処理する | なし |
 | `count()` | 個数を数える | `long` |
-| `sum()` / `average()` | 合計 / 平均（`IntStream` で） | `int` / 平均 |
+| `sum()` / `average()` | 合計 / 平均（`IntStream` で） | `int` / `OptionalDouble` |
 | `max()` / `min()` | 最大 / 最小 | `Optional` |
 | `anyMatch` / `allMatch` / `noneMatch` | 条件判定 | `boolean` |
 

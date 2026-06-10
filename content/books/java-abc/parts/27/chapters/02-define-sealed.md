@@ -106,8 +106,14 @@ record Circle(double radius) implements Shape {}
 record Rectangle(double w, double h) implements Shape {}
 ```
 
-本書のように、1つのファイルにまとめて書く場合は、この省略形が便利です。
+`.java` ファイルに親子をまとめて書く場合は、この省略形が便利です。
 （クラスを別々のファイルに分ける場合は、`permits` で明示的に許可します。）
+
+> **注意: jshell では permits を省略できない**
+>
+> jshell は、入力した宣言を1つずつ**別々のコンパイル単位**として扱います。
+> そのため、この省略形を jshell に貼ると、「シール・クラスにはサブクラスを含める必要があります」というエラーになります。
+> **jshell で試すときは、`permits` を明示的に書いてください**（この章のほかのサンプルは、すべて `permits` 付きなので、そのまま試せます）。
 
 ---
 

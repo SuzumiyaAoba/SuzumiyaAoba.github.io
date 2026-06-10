@@ -19,7 +19,6 @@ String f(Object o) {
     return switch (o) {
         case Object obj -> "なんでも";   // ✕ これが全部を拾ってしまう
         case String s   -> "文字列";     // ここには絶対たどり着けない
-        default         -> "その他";
     };
 }
 ```

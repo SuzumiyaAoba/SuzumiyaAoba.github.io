@@ -20,7 +20,7 @@ llm: true
 | `final` | ― | 子クラスを「これ以上継承させない」 |
 | `non-sealed` | ノンシールド | 子クラスの継承制限を解除する |
 
-子クラス（ふつうのクラス）は `final`・`sealed`・`non-sealed` のどれかが必須。レコードは自動的に `final`。同じファイルなら `permits` 省略可。
+子クラス（ふつうのクラス）は `final`・`sealed`・`non-sealed` のどれかが必須。レコードは自動的に `final`。同じファイルなら `permits` 省略可（jshell では省略不可）。
 
 ---
 

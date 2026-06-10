@@ -35,7 +35,7 @@ llm: true
 
 ## この章で学ぶこと
 
-第25章は、次の8つの節で構成されています。
+第25章は、次の7つの節で構成されています。
 
 | 節 | タイトル | 内容 |
 |---|---|---|
@@ -65,6 +65,7 @@ llm: true
 >
 > `java.time` のクラスは、`java.time` パッケージ（と、整形用の `java.time.format` パッケージ）にあります。
 > `.java` ファイルに書くときは、`import java.time.*;`、整形を使うなら `import java.time.format.DateTimeFormatter;` が必要です。
-> この章のサンプルは jshell で試せます（jshell では `java.time` を自動で import します）。
+> この章のサンプルは jshell で試せます（jshell では `java.time` パッケージを自動で import します）。
+> ただし `java.time.format` パッケージは jshell でも自動 import **されない**ので、第4節のサンプルにある `import` 行も、一緒に貼って実行してください。
 
 それでは、最初の節「なぜ java.time か」から始めましょう。
