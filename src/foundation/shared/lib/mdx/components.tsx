@@ -29,7 +29,14 @@ import { createPlaceholder } from "@/shared/ui/mdx/placeholders";
  * 重いコンポーネントを遅延読み込みする
  */
 const Mermaid = dynamic(() => import("@/shared/ui/mdx/mermaid").then((mod) => mod.Mermaid));
-const FinancialData = {
+
+/**
+ * financial-data 系チャートのコンポーネントマップ。
+ * 利用するページ（content/blog/2026-01-01-kakekin など）でのみ `extraComponents`
+ * として渡して注入する。MDX 共通マップに常時注入するとブログ記事を編集した瞬間に
+ * 100 件以上の dynamic import が HMR 対象になり、Chrome のレンダラーが OOM する。
+ */
+export const financialDataComponents = {
   Section10ChartWrapper: dynamic(() =>
     import("@/shared/ui/financial-data/Section10ChartWrapper").then((mod) => mod.Section10ChartWrapper),
   ),
@@ -285,7 +292,7 @@ const FinancialData = {
   Sheet4PieChartWrapper: dynamic(() =>
     import("@/shared/ui/financial-data/Sheet4PieChartWrapper").then((mod) => mod.Sheet4PieChartWrapper),
   ),
-};
+} satisfies MDXComponents;
 
 /**
  * プレースホルダーコンポーネントを生成するための名前リスト
@@ -350,6 +357,5 @@ export const mdxComponents: MDXComponents = {
   MdxDateLabel,
   YouTubeEmbed,
   ChatHistory,
-  ...FinancialData,
   ...placeholders,
 };

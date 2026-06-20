@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type { HighlightedCode } from "codehike/code";
 
+import { cn } from "@/shared/lib/utils";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
 
@@ -7,7 +11,18 @@ type CodeProps = {
   codeblock: HighlightedCode;
 };
 
+/**
+ * シンタックスハイライト済みコードブロックは Code Hike が大量のトークン span を
+ * 出力するため、ブログ記事のように 1 ページに数十個入る場合は初期 DOM が肥大して
+ * ブラウザのレンダラープロセスを OOM させることがある。SSR 側ではプレースホルダー
+ * のみを返し、クライアントマウント後に本体を描画して初期 DOM を軽量に保つ。
+ */
 export function Code({ codeblock }: CodeProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const notes = codeblock.annotations
     .filter(({ name }) => name === "ref")
     .map(({ query }) => query);
@@ -29,6 +44,9 @@ export function Code({ codeblock }: CodeProps) {
     annotations,
   };
 
+  const lineCount = codeblock.code ? codeblock.code.split("\n").length : 1;
+  const placeholderHeight = Math.min(Math.max(lineCount, 1), 24) * 1.5;
+
   return (
     <div className="my-6">
       {codeblock.meta ? (
@@ -37,10 +55,21 @@ export function Code({ codeblock }: CodeProps) {
           <span className="text-[10px] uppercase tracking-[0.12em]">{codeblock.lang}</span>
         </div>
       ) : null}
-      <CustomCodeBlock
-        code={normalizedCodeblock}
-        {...(normalizedCodeblock.meta ? { className: "rounded-t-none mt-0" } : {})}
-      />
+      {mounted ? (
+        <CustomCodeBlock
+          code={normalizedCodeblock}
+          {...(normalizedCodeblock.meta ? { className: "rounded-t-none mt-0" } : {})}
+        />
+      ) : (
+        <div
+          aria-hidden
+          className={cn(
+            "my-4 rounded-lg bg-muted",
+            normalizedCodeblock.meta ? "rounded-t-none mt-0" : undefined,
+          )}
+          style={{ height: `${placeholderHeight}rem` }}
+        />
+      )}
       {notes.length > 0 ? (
         <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
           {notes.map((note, index) => (

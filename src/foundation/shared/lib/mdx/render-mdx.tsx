@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 import { cache } from "react";
+import type { MDXComponents } from "mdx/types";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -142,6 +143,8 @@ type RenderOptions = {
   basePath?: string;
   scope?: Record<string, unknown>;
   idPrefix?: string;
+  /** MDX 共通コンポーネントに追加注入するマップ（financial-data など、特定ページでのみ要る重いコンポーネント用） */
+  extraComponents?: MDXComponents;
 };
 
 const devRenderCache = new Map<string, ReactElement>();
@@ -149,7 +152,7 @@ const devRenderWithTocCache = new Map<string, { content: ReactElement; headings:
 
 function buildCompileOptions(
   source: string,
-  { basePath, scope, idPrefix }: RenderOptions,
+  { basePath, scope, idPrefix, extraComponents }: RenderOptions,
   extraRemarkPlugins: any[] = [],
   affiliateById: Map<string, string> = new Map(),
 ) {
@@ -158,13 +161,16 @@ function buildCompileOptions(
     syntaxHighlighting: { theme: "github-from-css" },
   };
 
+  const baseComponents = extraComponents
+    ? { ...mdxComponents, ...extraComponents }
+    : mdxComponents;
   const components = basePath
     ? {
-        ...mdxComponents,
+        ...baseComponents,
         Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
         img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
       }
-    : mdxComponents;
+    : baseComponents;
 
   return {
     source,
