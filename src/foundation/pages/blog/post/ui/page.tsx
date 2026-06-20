@@ -4,7 +4,14 @@ import { notFound } from "next/navigation";
 
 import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
 import { resolveContentRoot } from "@/shared/lib/content-root";
-import { renderMdxWithToc } from "@/shared/lib/mdx";
+import { financialDataComponents, renderMdxWithToc } from "@/shared/lib/mdx";
+
+/**
+ * 本文中で financial-data の Chart/Sheet ラッパーが使われているかを判定する。
+ * 該当した場合のみ重い dynamic 群を MDX components マップに注入する。
+ */
+const FINANCIAL_DATA_USAGE_RE =
+  /\b(?:Section\d+ChartWrapper|Sheet\d+(?:Bar|Stacked|Amount|Pie|Line)?ChartWrapper)\b/;
 import {
   getAffiliateProductsByIds,
   getAffiliateProductsByTags,
@@ -166,7 +173,12 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] mdx render:${slug}`);
   }
-  const mdxPromise = renderMdxWithToc(contentSource, { basePath: `/contents/blog/${slug}`, scope });
+  const needsFinancialData = FINANCIAL_DATA_USAGE_RE.test(contentSource);
+  const mdxPromise = renderMdxWithToc(contentSource, {
+    basePath: `/contents/blog/${slug}`,
+    scope,
+    ...(needsFinancialData ? { extraComponents: financialDataComponents } : {}),
+  });
   if (shouldLogPerf) {
     console.time(`[blog] amazon explicit:${slug}`);
   }
