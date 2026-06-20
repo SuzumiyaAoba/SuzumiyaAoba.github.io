@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="hs-title hs-desc">
+  <title id="hs-title">Hello, World! の入れ子構造</title>
+  <desc id="hs-desc">Hello World プログラムは3つの部品の入れ子になっている。いちばん外側がクラス（public class Main）、その中に入口の main メソッド、さらにその中に命令 System.out.println が入っている。</desc>
+
+  <!-- ① クラス（外枠） -->
+  <rect x="28" y="34" width="564" height="232" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="48" y="60" font-size="14" font-weight="bold" fill="#1e293b">① クラス（外枠）　public class Main { … }</text>
+
+  <!-- ② 入口（main） -->
+  <rect x="64" y="74" width="492" height="178" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="84" y="100" font-size="13" font-weight="bold" fill="#1e293b">② 入口　public static void main(String[] args) { … }</text>
+
+  <!-- ③ 命令 -->
+  <rect x="100" y="116" width="420" height="118" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="120" y="146" font-size="13" font-weight="bold" fill="#1e293b">③ 命令（やりたいこと）</text>
+  <text x="120" y="178" font-size="15" fill="#1e293b">System.out.println("Hello, World!");</text>
+  <text x="120" y="208" font-size="12" fill="#475569">→ 画面に Hello, World! と表示する</text>
+
+  <!-- キャプション -->
+  <text x="310" y="288" text-anchor="middle" font-size="14" fill="#64748b">クラスの中に入口、入口の中に命令 ―― 入れ子（ネスト）になっている</text>
+</svg>

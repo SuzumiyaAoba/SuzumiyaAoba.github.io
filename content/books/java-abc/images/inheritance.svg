@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="100%" role="img" aria-labelledby="inh-title inh-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="inh-title">継承のクラス階層</title>
+  <desc id="inh-desc">親クラス Animal（name フィールドと eat() メソッドを持つ）から、子クラス Dog（cry: ワン）と Cat（cry: ニャー）が継承している。Dog と Cat は Animal の name と eat() を受け継ぎ、それぞれの cry() を追加している。矢印は子から親へ向かう。</desc>
+
+  <!-- 親クラス Animal -->
+  <rect x="270" y="24" width="180" height="96" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="360" y="48" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">Animal（親）</text>
+  <line x1="270" y1="58" x2="450" y2="58" stroke="#3b82f6" stroke-width="1"/>
+  <text x="284" y="78" font-size="13" fill="#1e3a8a">name</text>
+  <line x1="270" y1="88" x2="450" y2="88" stroke="#93c5fd" stroke-width="1"/>
+  <text x="284" y="108" font-size="13" fill="#1e3a8a">eat()</text>
+
+  <!-- 矢印（子→親）：白抜き三角の継承記号風 -->
+  <line x1="170" y1="240" x2="320" y2="124" stroke="#64748b" stroke-width="2" marker-end="url(#inh-tri)"/>
+  <line x1="550" y1="240" x2="400" y2="124" stroke="#64748b" stroke-width="2" marker-end="url(#inh-tri)"/>
+  <text x="232" y="190" text-anchor="middle" font-size="12" fill="#64748b">extends</text>
+  <text x="488" y="190" text-anchor="middle" font-size="12" fill="#64748b">extends</text>
+
+  <!-- 子クラス Dog -->
+  <rect x="80" y="244" width="180" height="96" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="170" y="268" text-anchor="middle" font-size="16" font-weight="bold" fill="#166534">Dog（子）</text>
+  <line x1="80" y1="278" x2="260" y2="278" stroke="#22c55e" stroke-width="1"/>
+  <text x="94" y="298" font-size="12" fill="#64748b">name, eat()（継承）</text>
+  <line x1="80" y1="308" x2="260" y2="308" stroke="#86efac" stroke-width="1"/>
+  <text x="94" y="328" font-size="13" fill="#166534">cry(): ワン</text>
+
+  <!-- 子クラス Cat -->
+  <rect x="460" y="244" width="180" height="96" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="550" y="268" text-anchor="middle" font-size="16" font-weight="bold" fill="#166534">Cat（子）</text>
+  <line x1="460" y1="278" x2="640" y2="278" stroke="#22c55e" stroke-width="1"/>
+  <text x="474" y="298" font-size="12" fill="#64748b">name, eat()（継承）</text>
+  <line x1="460" y1="308" x2="640" y2="308" stroke="#86efac" stroke-width="1"/>
+  <text x="474" y="328" font-size="13" fill="#166534">cry(): ニャー</text>
+
+  <text x="360" y="356" text-anchor="middle" font-size="12" fill="#475569">共通部分は親 Animal にまとめ、違う部分（cry）だけを子に書く</text>
+
+  <defs>
+    <marker id="inh-tri" markerWidth="14" markerHeight="14" refX="11" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1,1 L12,6 L1,11 Z" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+</svg>

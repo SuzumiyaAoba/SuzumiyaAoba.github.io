@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="100%" role="img" aria-labelledby="if-title if-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="if-title">インターフェースの実装</title>
+  <desc id="if-desc">インターフェース Shape は area() という約束だけを定める。Circle と Rectangle が implements でその約束を実装し、それぞれの方法で area() を計算する。Circle と Rectangle は継承関係になくても、同じ Shape として扱える。</desc>
+
+  <!-- インターフェース Shape -->
+  <rect x="270" y="28" width="180" height="80" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="360" y="50" text-anchor="middle" font-size="13" font-style="italic" fill="#92400e">&#171;interface&#187;</text>
+  <text x="360" y="72" text-anchor="middle" font-size="16" font-weight="bold" fill="#92400e">Shape</text>
+  <line x1="270" y1="82" x2="450" y2="82" stroke="#f59e0b" stroke-width="1"/>
+  <text x="360" y="100" text-anchor="middle" font-size="13" fill="#92400e">area()　← 約束だけ</text>
+
+  <!-- 実装線（点線＋白抜き三角） -->
+  <line x1="180" y1="220" x2="320" y2="112" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#if-tri)"/>
+  <line x1="540" y1="220" x2="400" y2="112" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#if-tri)"/>
+  <text x="225" y="165" text-anchor="middle" font-size="12" fill="#64748b">implements</text>
+  <text x="495" y="165" text-anchor="middle" font-size="12" fill="#64748b">implements</text>
+
+  <!-- Circle -->
+  <rect x="70" y="224" width="220" height="80" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="180" y="248" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Circle</text>
+  <line x1="70" y1="258" x2="290" y2="258" stroke="#22c55e" stroke-width="1"/>
+  <text x="180" y="278" text-anchor="middle" font-size="12" fill="#166534">area() → 半径×半径×3.14</text>
+
+  <!-- Rectangle -->
+  <rect x="430" y="224" width="220" height="80" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="540" y="248" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Rectangle</text>
+  <line x1="430" y1="258" x2="650" y2="258" stroke="#22c55e" stroke-width="1"/>
+  <text x="540" y="278" text-anchor="middle" font-size="12" fill="#166534">area() → 幅×高さ</text>
+
+  <text x="360" y="328" text-anchor="middle" font-size="12" fill="#475569">継承関係になくても、同じ約束（Shape）を実装すれば、まとめて扱える</text>
+
+  <defs>
+    <marker id="if-tri" markerWidth="14" markerHeight="14" refX="11" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1,1 L12,6 L1,11 Z" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+</svg>

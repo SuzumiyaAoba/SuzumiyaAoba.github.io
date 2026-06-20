@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 import { cache } from "react";
+import type { MDXComponents } from "mdx/types";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
@@ -15,6 +16,8 @@ import GithubSlugger from "github-slugger";
 
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
+import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
+import { createRehypeAffiliateLinks } from "./rehype-affiliate-links";
 import type { TocHeading } from "./toc";
 
 type MdastNode = {
@@ -69,6 +72,40 @@ function rehypeHeadingIdPrefix(prefix: string) {
   };
 }
 
+/**
+ * 画像のみを含む段落タグを剥がすプラグイン。
+ * MDX は ![alt](src) を <p><img/></p> に変換するが、Img コンポーネントが
+ * <div>（Zoom）を描画するため <p> 内に <div> が入り HTML が不正になる。
+ */
+function remarkUnwrapImages() {
+  return (tree: any) => {
+    const visit = (parent: any) => {
+      if (!parent || !Array.isArray(parent.children)) return;
+
+      parent.children = parent.children.flatMap((node: any) => {
+        if (
+          node.type === "paragraph" &&
+          Array.isArray(node.children) &&
+          node.children.length > 0 &&
+          node.children.every(
+            (child: any) =>
+              child.type === "image" ||
+              (child.type === "text" && /^\s*$/.test(child.value ?? "")),
+          )
+        ) {
+          return node.children.filter((child: any) => child.type === "image");
+        }
+        return [node];
+      });
+
+      for (const child of parent.children) {
+        visit(child);
+      }
+    };
+    visit(tree);
+  };
+}
+
 function remarkMermaid() {
   return (tree: any) => {
     const visit = (node: any) => {
@@ -106,6 +143,8 @@ type RenderOptions = {
   basePath?: string;
   scope?: Record<string, unknown>;
   idPrefix?: string;
+  /** MDX 共通コンポーネントに追加注入するマップ（financial-data など、特定ページでのみ要る重いコンポーネント用） */
+  extraComponents?: MDXComponents;
 };
 
 const devRenderCache = new Map<string, ReactElement>();
@@ -113,21 +152,25 @@ const devRenderWithTocCache = new Map<string, { content: ReactElement; headings:
 
 function buildCompileOptions(
   source: string,
-  { basePath, scope, idPrefix }: RenderOptions,
+  { basePath, scope, idPrefix, extraComponents }: RenderOptions,
   extraRemarkPlugins: any[] = [],
+  affiliateById: Map<string, string> = new Map(),
 ) {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
     syntaxHighlighting: { theme: "github-from-css" },
   };
 
+  const baseComponents = extraComponents
+    ? { ...mdxComponents, ...extraComponents }
+    : mdxComponents;
   const components = basePath
     ? {
-        ...mdxComponents,
+        ...baseComponents,
         Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
         img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
       }
-    : mdxComponents;
+    : baseComponents;
 
   return {
     source,
@@ -141,6 +184,7 @@ function buildCompileOptions(
           remarkJoinCjkLines,
           remarkMath,
           ...extraRemarkPlugins,
+          remarkUnwrapImages,
           remarkMermaid,
           [remarkCodeHike, codeHikeConfig],
         ],
@@ -149,6 +193,7 @@ function buildCompileOptions(
           rehypeSlug,
           ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
           [rehypeAutolinkHeadings, { behavior: "append" }],
+          createRehypeAffiliateLinks(affiliateById),
           [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
           [
             rehypeKatex,
@@ -172,7 +217,8 @@ export const renderMdx = cache(
       if (cached) return cached;
     }
 
-    const { content } = await compileMDX(buildCompileOptions(source, options));
+    const affiliateById = await getAffiliateProductUrlById();
+    const { content } = await compileMDX(buildCompileOptions(source, options, [], affiliateById));
 
     const rendered = <>{content}</>;
     if (useDevCache) devRenderCache.set(cacheKey, rendered);
@@ -199,9 +245,15 @@ export const renderMdxWithToc = cache(
       if (cached) return cached;
     }
 
+    const affiliateById = await getAffiliateProductUrlById();
     const headings: TocHeading[] = [];
     const { content } = await compileMDX(
-      buildCompileOptions(source, options, [remarkCollectHeadings(headings, idPrefix)]),
+      buildCompileOptions(
+        source,
+        options,
+        [remarkCollectHeadings(headings, idPrefix)],
+        affiliateById,
+      ),
     );
 
     const result = { content: <>{content}</>, headings };

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="100%" role="img" aria-labelledby="rec-title rec-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="rec-title">レコードが自動生成するもの</title>
+  <desc id="rec-desc">record Point(int x, int y) {} という1行から、Java が自動で、コンストラクタ・アクセサ x() y()・toString・equals と hashCode を生成する。</desc>
+
+  <!-- 定義 1行 -->
+  <rect x="160" y="32" width="400" height="50" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="360" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a8a">record Point(int x, int y) {}</text>
+  <text x="360" y="73" text-anchor="middle" font-size="11" fill="#64748b">この1行を書くだけで…</text>
+
+  <line x1="360" y1="82" x2="360" y2="108" stroke="#f97316" stroke-width="2.5" marker-end="url(#rc-arrow)"/>
+  <text x="430" y="100" text-anchor="middle" font-size="12" font-weight="bold" fill="#f97316">自動生成</text>
+
+  <!-- 生成される4つ -->
+  <g>
+    <rect x="60" y="120" width="280" height="60" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="200" y="144" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">コンストラクタ</text>
+    <text x="200" y="166" text-anchor="middle" font-size="12" fill="#166534">new Point(3, 4)</text>
+  </g>
+  <g>
+    <rect x="380" y="120" width="280" height="60" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="520" y="144" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">アクセサ</text>
+    <text x="520" y="166" text-anchor="middle" font-size="12" fill="#166534">p.x()・p.y()</text>
+  </g>
+  <g>
+    <rect x="60" y="194" width="280" height="60" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="200" y="218" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">toString</text>
+    <text x="200" y="240" text-anchor="middle" font-size="12" fill="#166534">Point[x=3, y=4]</text>
+  </g>
+  <g>
+    <rect x="380" y="194" width="280" height="60" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="520" y="218" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">equals・hashCode</text>
+    <text x="520" y="240" text-anchor="middle" font-size="12" fill="#166534">中身が同じなら等しい</text>
+  </g>
+
+  <text x="360" y="290" text-anchor="middle" font-size="12" fill="#475569">手書きすると何十行にもなる決まり文句が、1行に凝縮される（しかも不変）</text>
+
+  <defs>
+    <marker id="rc-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#f97316"/></marker>
+  </defs>
+</svg>

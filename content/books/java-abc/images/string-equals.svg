@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="se-title se-desc">
+  <title id="se-title">== と equals の違い</title>
+  <desc id="se-desc">変数 x と y は、どちらも内容が hello だが、メモリ上の別々の場所にある。x == y は「場所が同じか」を見るので false。x.equals(y) は「中身が同じか」を見るので true。文字列の比較は equals を使う。</desc>
+  <defs>
+    <marker id="se-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- x と 箱A -->
+  <text x="42" y="58" font-size="16" font-weight="bold" fill="#1e293b">x</text>
+  <line x1="56" y1="53" x2="86" y2="53" stroke="#64748b" stroke-width="2.5" marker-end="url(#se-arrow)"/>
+  <rect x="90" y="31" width="130" height="46" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="155" y="61" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">"hello"</text>
+  <text x="155" y="96" text-anchor="middle" font-size="12" fill="#64748b">場所①</text>
+
+  <!-- y と 箱B -->
+  <text x="332" y="58" font-size="16" font-weight="bold" fill="#1e293b">y</text>
+  <line x1="346" y1="53" x2="376" y2="53" stroke="#64748b" stroke-width="2.5" marker-end="url(#se-arrow)"/>
+  <rect x="380" y="31" width="130" height="46" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="445" y="61" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">"hello"</text>
+  <text x="445" y="96" text-anchor="middle" font-size="12" fill="#64748b">場所②</text>
+
+  <text x="300" y="124" text-anchor="middle" font-size="13" fill="#475569">内容は同じ "hello" でも、置かれている場所は別々</text>
+  <line x1="40" y1="140" x2="560" y2="140" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- == 行 -->
+  <text x="40" y="184" font-size="14" fill="#1e293b">x == y は「場所が同じか」を見る</text>
+  <line x1="372" y1="179" x2="450" y2="179" stroke="#64748b" stroke-width="2.5" marker-end="url(#se-arrow)"/>
+  <rect x="454" y="157" width="112" height="44" rx="8" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="510" y="185" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">false</text>
+
+  <!-- equals 行 -->
+  <text x="40" y="246" font-size="14" fill="#1e293b">x.equals(y) は「中身が同じか」を見る</text>
+  <line x1="372" y1="241" x2="450" y2="241" stroke="#64748b" stroke-width="2.5" marker-end="url(#se-arrow)"/>
+  <rect x="454" y="219" width="112" height="44" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="510" y="247" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">true</text>
+
+  <!-- キャプション -->
+  <text x="300" y="290" text-anchor="middle" font-size="13" fill="#64748b">文字列の比較は equals。== は場所の比較なので、内容が同じでも false になりうる</text>
+</svg>

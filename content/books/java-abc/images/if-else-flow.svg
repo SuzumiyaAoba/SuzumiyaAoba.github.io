@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="ife-title ife-desc">
+  <title id="ife-title">if / else の分かれ道</title>
+  <desc id="ife-desc">条件「score &gt;= 60」が true なら「合格」を、false なら「不合格」を実行する。条件によって、必ずどちらか一方の道へ進む。</desc>
+  <defs>
+    <marker id="ife-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- 条件（ひし形） -->
+  <polygon points="260,26 372,76 260,126 148,76" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="260" y="71" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">score &gt;= 60 ?</text>
+  <text x="260" y="91" text-anchor="middle" font-size="13" fill="#475569">条件（boolean）</text>
+
+  <!-- 左の道（false） -->
+  <line x1="220" y1="104" x2="150" y2="186" stroke="#64748b" stroke-width="2.5" marker-end="url(#ife-arrow)"/>
+  <text x="150" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#f97316">false（偽）</text>
+  <rect x="68" y="188" width="164" height="58" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="150" y="223" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">不合格</text>
+
+  <!-- 右の道（true） -->
+  <line x1="300" y1="104" x2="370" y2="186" stroke="#64748b" stroke-width="2.5" marker-end="url(#ife-arrow)"/>
+  <text x="372" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#22c55e">true（真）</text>
+  <rect x="288" y="188" width="164" height="58" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="370" y="223" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">合格</text>
+
+  <!-- キャプション -->
+  <text x="260" y="278" text-anchor="middle" font-size="14" fill="#64748b">条件によって、必ずどちらか一方の道だけを通る</text>
+</svg>

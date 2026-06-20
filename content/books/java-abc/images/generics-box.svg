@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="100%" role="img" aria-labelledby="gen-title gen-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="gen-title">ジェネリクス ― 型を後から決める</title>
+  <desc id="gen-desc">Box&lt;T&gt; という1つの定義から、型引数に String を当てれば String 専用の箱、Integer を当てれば Integer 専用の箱ができる。それぞれ型が決まっているので、キャスト不要で安全。</desc>
+
+  <!-- Box<T> 定義（型引数 T は空欄） -->
+  <rect x="270" y="28" width="180" height="70" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="360" y="56" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e3a8a">Box&lt;T&gt;</text>
+  <text x="360" y="80" text-anchor="middle" font-size="11" fill="#64748b">T は「型の空欄」</text>
+
+  <!-- 分岐 -->
+  <line x1="360" y1="98" x2="190" y2="150" stroke="#f97316" stroke-width="2" marker-end="url(#gn-a)"/>
+  <line x1="360" y1="98" x2="530" y2="150" stroke="#f97316" stroke-width="2" marker-end="url(#gn-a)"/>
+  <text x="235" y="128" text-anchor="middle" font-size="12" fill="#9a3412">T = String</text>
+  <text x="490" y="128" text-anchor="middle" font-size="12" fill="#9a3412">T = Integer</text>
+
+  <!-- Box<String> -->
+  <rect x="60" y="154" width="260" height="92" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="190" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Box&lt;String&gt;</text>
+  <text x="190" y="204" text-anchor="middle" font-size="12" fill="#166534">"こんにちは" を入れられる</text>
+  <text x="190" y="226" text-anchor="middle" font-size="11" fill="#64748b">取り出すと String（キャスト不要）</text>
+
+  <!-- Box<Integer> -->
+  <rect x="400" y="154" width="260" height="92" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="530" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Box&lt;Integer&gt;</text>
+  <text x="530" y="204" text-anchor="middle" font-size="12" fill="#166534">123 を入れられる</text>
+  <text x="530" y="226" text-anchor="middle" font-size="11" fill="#64748b">取り出すと Integer（キャスト不要）</text>
+
+  <text x="360" y="280" text-anchor="middle" font-size="12" fill="#475569">1つの定義から、型ごとの安全な箱を作れる（柔軟さ＋型の安全性）</text>
+
+  <defs>
+    <marker id="gn-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#f97316"/></marker>
+  </defs>
+</svg>

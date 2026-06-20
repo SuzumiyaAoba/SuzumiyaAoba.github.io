@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="100%" height="auto" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif" role="img" aria-labelledby="tcv-title tcv-desc">
+  <title id="tcv-title">自動変換とキャスト</title>
+  <desc id="tcv-desc">int から double のような広い型への変換は自動で行われる。double から int のような狭い型への変換はキャストが必要で、小数点以下が切り捨てられる。</desc>
+  <defs>
+    <marker id="tcv-green" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#22c55e"/>
+    </marker>
+    <marker id="tcv-orange" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- 上段: int -> double（自動変換） -->
+  <rect x="80" y="44" width="140" height="66" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="150" y="78" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">int</text>
+  <text x="150" y="100" text-anchor="middle" font-size="15" fill="#475569">10</text>
+
+  <rect x="480" y="44" width="140" height="66" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="550" y="78" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">double</text>
+  <text x="550" y="100" text-anchor="middle" font-size="15" fill="#475569">10.0</text>
+
+  <line x1="228" y1="77" x2="472" y2="77" stroke="#22c55e" stroke-width="3" marker-end="url(#tcv-green)"/>
+  <text x="350" y="66" text-anchor="middle" font-size="16" font-weight="bold" fill="#16a34a">自動変換</text>
+  <text x="350" y="98" text-anchor="middle" font-size="13" fill="#64748b">情報は失われない（狭い → 広い）</text>
+
+  <!-- 下段: double -> int（キャスト） -->
+  <rect x="80" y="180" width="140" height="66" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="150" y="214" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">double</text>
+  <text x="150" y="236" text-anchor="middle" font-size="15" fill="#475569">3.9</text>
+
+  <rect x="480" y="180" width="140" height="66" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="550" y="214" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">int</text>
+  <text x="550" y="236" text-anchor="middle" font-size="15" fill="#475569">3</text>
+
+  <line x1="228" y1="213" x2="472" y2="213" stroke="#f59e0b" stroke-width="3" marker-end="url(#tcv-orange)"/>
+  <text x="350" y="202" text-anchor="middle" font-size="16" font-weight="bold" fill="#d97706">(int) キャスト</text>
+  <text x="350" y="234" text-anchor="middle" font-size="13" fill="#64748b">小数点以下が切り捨て（3.9 → 3）</text>
+
+  <!-- キャプション -->
+  <text x="350" y="284" text-anchor="middle" font-size="15" fill="#64748b">広い型へは自動。狭い型へはキャストが必要で、情報が失われる</text>
+</svg>

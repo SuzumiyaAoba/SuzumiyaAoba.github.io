@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="100%" role="img" aria-labelledby="exh-title exh-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="exh-title">例外の家系図</title>
+  <desc id="exh-desc">すべての例外の先祖は Throwable。その下に Error（深刻なシステムの問題、扱わない）と Exception がある。Exception はさらに、RuntimeException の仲間（非チェック例外）と、それ以外（チェック例外）に分かれる。</desc>
+
+  <!-- Throwable -->
+  <rect x="280" y="20" width="160" height="44" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="360" y="47" text-anchor="middle" font-size="15" font-weight="bold" fill="#475569">Throwable</text>
+
+  <line x1="360" y1="64" x2="200" y2="96" stroke="#94a3b8" stroke-width="2" marker-end="url(#ex-a)"/>
+  <line x1="360" y1="64" x2="520" y2="96" stroke="#94a3b8" stroke-width="2" marker-end="url(#ex-a)"/>
+
+  <!-- Error -->
+  <rect x="100" y="100" width="200" height="64" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="200" y="126" text-anchor="middle" font-size="15" font-weight="bold" fill="#475569">Error</text>
+  <text x="200" y="148" text-anchor="middle" font-size="11" fill="#64748b">深刻な問題。扱わない</text>
+
+  <!-- Exception -->
+  <rect x="420" y="100" width="200" height="64" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="520" y="126" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">Exception</text>
+  <text x="520" y="148" text-anchor="middle" font-size="11" fill="#64748b">対応すべき例外</text>
+
+  <line x1="520" y1="164" x2="350" y2="206" stroke="#3b82f6" stroke-width="2" marker-end="url(#ex-b)"/>
+  <line x1="520" y1="164" x2="610" y2="206" stroke="#3b82f6" stroke-width="2" marker-end="url(#ex-b)"/>
+
+  <!-- RuntimeException（非チェック） -->
+  <rect x="60" y="210" width="290" height="92" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="205" y="234" text-anchor="middle" font-size="14" font-weight="bold" fill="#9a3412">RuntimeException の仲間</text>
+  <text x="205" y="254" text-anchor="middle" font-size="12" fill="#9a3412">＝ 非チェック例外（処理は任意）</text>
+  <text x="205" y="276" text-anchor="middle" font-size="11" fill="#64748b">NullPointerException など</text>
+  <text x="205" y="293" text-anchor="middle" font-size="11" fill="#64748b">多くはプログラムの誤り → 直す</text>
+
+  <!-- その他 Exception（チェック） -->
+  <rect x="408" y="210" width="252" height="92" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="534" y="234" text-anchor="middle" font-size="14" font-weight="bold" fill="#92400e">その他の Exception</text>
+  <text x="534" y="254" text-anchor="middle" font-size="12" fill="#92400e">＝ チェック例外（処理は必須）</text>
+  <text x="534" y="276" text-anchor="middle" font-size="11" fill="#64748b">IOException など</text>
+  <text x="534" y="293" text-anchor="middle" font-size="11" fill="#64748b">多くは外部の事情 → 備える</text>
+
+  <text x="360" y="338" text-anchor="middle" font-size="12" fill="#475569">RuntimeException の仲間かどうかが、非チェック／チェックの境界</text>
+
+  <defs>
+    <marker id="ex-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker>
+    <marker id="ex-b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3b82f6"/></marker>
+  </defs>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="100%" role="img" aria-labelledby="poly-title poly-desc" font-family="'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif">
+  <title id="poly-title">ポリモーフィズム（動的束縛）</title>
+  <desc id="poly-desc">Animal 型の変数に Dog や Cat を入れて、同じ a.cry() を呼ぶと、中身（実行時の型）に応じて、Dog なら「ワン」、Cat なら「ニャー」と、それぞれのメソッドが実行される。呼ぶ側は1通り、ふるまいは中身しだい。</desc>
+
+  <!-- 同じ呼び出し -->
+  <rect x="270" y="28" width="180" height="46" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+  <text x="360" y="50" text-anchor="middle" font-size="14" font-weight="bold" fill="#9a3412">a.cry()</text>
+  <text x="360" y="67" text-anchor="middle" font-size="11" fill="#9a3412">同じ呼び出し（a は Animal 型）</text>
+
+  <!-- 分岐線 -->
+  <line x1="360" y1="74" x2="175" y2="150" stroke="#94a3b8" stroke-width="2" marker-end="url(#pl-a)"/>
+  <line x1="360" y1="74" x2="545" y2="150" stroke="#94a3b8" stroke-width="2" marker-end="url(#pl-a)"/>
+  <text x="245" y="118" text-anchor="middle" font-size="11" fill="#64748b">中身が Dog なら</text>
+  <text x="475" y="118" text-anchor="middle" font-size="11" fill="#64748b">中身が Cat なら</text>
+
+  <!-- Dog -->
+  <rect x="70" y="152" width="210" height="70" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="175" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Dog の cry()</text>
+  <text x="175" y="204" text-anchor="middle" font-size="13" fill="#166534">&#128054; 「ワン」</text>
+
+  <!-- Cat -->
+  <rect x="440" y="152" width="210" height="70" rx="12" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="545" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">Cat の cry()</text>
+  <text x="545" y="204" text-anchor="middle" font-size="13" fill="#166534">&#128049; 「ニャー」</text>
+
+  <!-- 説明帯 -->
+  <rect x="120" y="258" width="480" height="58" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="360" y="282" text-anchor="middle" font-size="13" fill="#1e3a8a">呼べるメソッドは「変数の型（Animal）」で決まる</text>
+  <text x="360" y="303" text-anchor="middle" font-size="13" fill="#1e3a8a">実際に動くメソッドは「中身の型（Dog / Cat）」で決まる＝動的束縛</text>
+
+  <text x="360" y="344" text-anchor="middle" font-size="12" fill="#475569">同じ呼び出しでも、中身に応じて違うふるまいが起こる</text>
+
+  <defs>
+    <marker id="pl-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker>
+  </defs>
+</svg>
