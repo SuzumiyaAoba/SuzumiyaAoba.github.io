@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next dev --webpack",
     "build": "run-s build:next build:pagefind",
-    "build:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next build",
+    "build:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next build --webpack",
     "build:pagefind": "node scripts/patch-pagefind-lang.mjs && pagefind --site out --output-path out/pagefind --glob \"**/*.html\"",
     "pagefind:dev": "node scripts/pagefind-dev.mjs",
     "pagefind:dev:force": "node scripts/pagefind-dev.mjs --force",

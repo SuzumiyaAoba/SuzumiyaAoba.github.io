@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import TagPage from "@/pages/tags/tag";
 
 function decodeTag(tag: string): string {
   try {
@@ -10,7 +11,7 @@ function decodeTag(tag: string): string {
 }
 
 type PageProps = {
-  params?: { tag?: string } | Promise<{ tag?: string }>;
+  params: Promise<{ tag?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -42,4 +43,10 @@ export async function generateStaticParams(): Promise<Array<{ tag: string }>> {
     });
 }
 
-export { default } from "@/pages/tags/tag";
+type PageComponentProps = {
+  params: Promise<{ tag: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <TagPage {...props} locale="ja" />;
+}

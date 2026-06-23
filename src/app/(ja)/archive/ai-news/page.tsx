@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import AiNewsPage from "@/pages/archive/ai-news";
 
 export const metadata: Metadata = {
   title: "AI News",
 };
 
-export { default } from "@/pages/archive/ai-news";
+export default function Page() {
+  return <AiNewsPage locale="ja" />;
+}

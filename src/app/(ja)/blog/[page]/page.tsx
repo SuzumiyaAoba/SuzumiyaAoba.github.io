@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import BlogPage from "@/pages/blog/page";
 
 type PageProps = {
-  params?: { page?: string } | Promise<{ page?: string }>;
+  params: Promise<{ page?: string }>;
 };
 
 const POSTS_PER_PAGE = 10;
@@ -26,4 +27,10 @@ export async function generateStaticParams(): Promise<Array<{ page: string }>> {
   }));
 }
 
-export { default } from "@/pages/blog/page";
+type PageComponentProps = {
+  params: Promise<{ page: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <BlogPage {...props} locale="ja" />;
+}

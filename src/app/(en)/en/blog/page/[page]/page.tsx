@@ -3,7 +3,7 @@ import { getBlogPostSummariesVariants } from "@/entities/blog";
 import BlogPage from "@/pages/blog/page";
 
 type PageProps = {
-  params?: { page?: string } | Promise<{ page?: string }>;
+  params: Promise<{ page?: string }>;
 };
 
 const POSTS_PER_PAGE = 10;

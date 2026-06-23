@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
+import SeriesDetailPage from "@/pages/series/detail";
 
 type PageProps = {
-  params?: { series?: string } | Promise<{ series?: string }>;
+  params: Promise<{ series?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -21,4 +22,10 @@ export async function generateStaticParams(): Promise<Array<{ series: string }>>
   return slugs.map((series) => ({ series }));
 }
 
-export { default } from "@/pages/series/detail";
+type PageComponentProps = {
+  params: Promise<{ series: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <SeriesDetailPage {...props} locale="ja" />;
+}

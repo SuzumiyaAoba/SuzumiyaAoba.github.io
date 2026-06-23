@@ -11,7 +11,7 @@ function decodeTag(tag: string): string {
 }
 
 type PageProps = {
-  params?: { tag?: string } | Promise<{ tag?: string }>;
+  params: Promise<{ tag?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

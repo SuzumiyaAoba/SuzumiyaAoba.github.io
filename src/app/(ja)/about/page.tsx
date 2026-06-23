@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import AboutPage from "@/pages/site/about";
 
 export const metadata: Metadata = {
   title: "About",
 };
 
-export { default } from "@/pages/site/about";
+export default function Page() {
+  return <AboutPage locale="ja" />;
+}

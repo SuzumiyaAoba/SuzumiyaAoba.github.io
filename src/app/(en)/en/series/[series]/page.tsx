@@ -3,7 +3,7 @@ import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
 import SeriesDetailPage from "@/pages/series/detail";
 
 type PageProps = {
-  params?: { series?: string } | Promise<{ series?: string }>;
+  params: Promise<{ series?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
