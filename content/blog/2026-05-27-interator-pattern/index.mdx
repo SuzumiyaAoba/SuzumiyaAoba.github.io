@@ -333,6 +333,40 @@ public interface Aggregate<T> {
 Java の標準ライブラリでは [`Iterable`](https://docs.oracle.com/javase/jp/25/docs/api/java.base/java/lang/Iterable.html) が Aggregate に対応する。
 Iterable を使うと Java の拡張 for 文が利用できるといったメリットも存在するが、最初は Iterator パターンにおける Aggregate 相当という理解で問題ないだろう。
 
+`Aggregate` と `Iterator` の二つのインターフェースと、それらを実装する具象クラス（インスタンス）の関係を整理すると次のようになる。
+
+```mermaid
+classDiagram
+  direction LR
+  class Aggregate~T~ {
+    <<interface>>
+    +iterator() Iterator~T~
+  }
+  class Iterator~T~ {
+    <<interface>>
+    +hasNext() boolean
+    +next() T
+  }
+  class ConcreteAggregate~T~ {
+    +iterator() Iterator~T~
+  }
+  class ConcreteIterator~T~ {
+    -cursor
+    +hasNext() boolean
+    +next() T
+  }
+
+  Aggregate <|.. ConcreteAggregate : implements
+  Iterator <|.. ConcreteIterator : implements
+  ConcreteAggregate ..> ConcreteIterator : creates
+  ConcreteIterator --> ConcreteAggregate : reads elements
+```
+
+`ConcreteAggregate` が `Aggregate#iterator()` の呼び出しを受けて `ConcreteIterator` のインスタンスを生成し、
+生成された `ConcreteIterator` のインスタンスが内部状態（`cursor`）と元の `ConcreteAggregate` のデータを参照しながら `hasNext` / `next` で要素を一つずつ返していく、という関係になっている。
+
+利用側からはあくまで `Aggregate` / `Iterator` という抽象に対してのみ呼び出すため、`ConcreteAggregate` が配列だろうが二分木だろうが Web API のページネーションだろうが、データへのアクセス方法は変わらない。
+
 ## Iterator の使い方
 
 Iterator の基本的な使い方は次のようになる。
