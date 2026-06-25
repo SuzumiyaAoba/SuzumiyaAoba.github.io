@@ -7,6 +7,7 @@ import { Separator } from "@/shared/ui/separator";
 import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Icon } from "@iconify/react";
+import { Message } from "@/shared/ui/mdx";
 import type { BookChapter, SectionRef } from "@/entities/book";
 import type { TocHeading } from "@/shared/lib/mdx";
 import { BookNav } from "./book-nav";
@@ -28,6 +29,10 @@ export type BookSectionPageContentProps = {
   currentSection: string;
   prev: SectionRef | null;
   next: SectionRef | null;
+  /** LLM を使って執筆した節かどうか。true のとき本文上部に注記を表示する。 */
+  llm: boolean;
+  /** 執筆に使った LLM モデル名。注記内に列挙する。 */
+  coAuthors: string[];
 };
 
 export function BookSectionPageContent({
@@ -46,6 +51,8 @@ export function BookSectionPageContent({
   currentSection,
   prev,
   next,
+  llm,
+  coAuthors,
 }: BookSectionPageContentProps) {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -93,6 +100,21 @@ export function BookSectionPageContent({
           </header>
 
           <article className="prose prose-neutral max-w-none font-sans">
+            {llm ? (
+              <Message variant="info" title="この節は LLM を活用して執筆しています">
+                <p>
+                  本節の本文は LLM（大規模言語モデル）を活用して執筆しています。
+                  技術的な内容は執筆者が検証していますが、誤りに気付かれた際は
+                  リポジトリの Issue やプルリクエストでご指摘いただけると助かります。
+                </p>
+                {coAuthors.length > 0 ? (
+                  <p>
+                    <strong>執筆に使用したモデル:</strong>{" "}
+                    {coAuthors.join(" / ")}
+                  </p>
+                ) : null}
+              </Message>
+            ) : null}
             {content}
           </article>
 

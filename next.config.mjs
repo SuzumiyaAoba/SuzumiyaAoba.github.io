@@ -7,7 +7,7 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.watchOptions = {
-      ...(config.watchOptions ?? {}),
+      ...config.watchOptions,
       ignored: [
         "**/node_modules/**",
         "**/.git/**",
