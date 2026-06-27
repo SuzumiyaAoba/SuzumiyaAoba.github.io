@@ -1,6 +1,7 @@
 ---
 title: 引数マッチャー
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 引数マッチャー

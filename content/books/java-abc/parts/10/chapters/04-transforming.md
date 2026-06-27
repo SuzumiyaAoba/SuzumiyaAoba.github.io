@@ -1,6 +1,7 @@
 ---
 title: 文字列を加工する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列を加工する

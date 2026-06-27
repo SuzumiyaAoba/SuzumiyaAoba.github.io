@@ -1,6 +1,7 @@
 ---
 title: implements で実装する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## implements で実装する

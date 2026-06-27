@@ -1,6 +1,7 @@
 ---
 title: なぜ java.time か ― 古い API の問題
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## なぜ java.time か ― 古い API の問題
@@ -41,7 +42,7 @@ Java には、古くから **`java.util.Date`** と **`java.util.Calendar`** と
 
 ## java.time の設計 ― 問題を解決する
 
-**Java 8** で導入された `java.time` は、これらの問題を、すべて解決するように設計されています。
+**Java 8** で導入された `java.time` は、これらの問題を、すべて解決するように設計されています[^jsr310]。
 
 | 古い API の問題 | java.time の解決 |
 |---|---|
@@ -96,3 +97,5 @@ IO.println(d);
 - 目的別に、**`LocalDate`**（日付）・**`LocalTime`**（時刻）・**`LocalDateTime`**（両方）が分かれている
 
 次の節では、これらの基本クラスを、実際に作って使ってみます。
+
+[^jsr310]: JSR 310: Date and Time API, <https://jcp.org/en/jsr/detail?id=310>。Java SE 8（2014年）で導入。Joda-Time の設計思想を取り入れた新しい日時 API で、ISO 8601 ベースの不変クラス群（`LocalDate`、`LocalTime`、`LocalDateTime`、`ZonedDateTime`、`Instant`、`Duration`、`Period` など）を提供する。詳細は Java SE 25 API（<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html>）参照。

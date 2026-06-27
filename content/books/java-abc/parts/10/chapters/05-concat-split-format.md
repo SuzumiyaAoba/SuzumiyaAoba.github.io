@@ -1,6 +1,7 @@
 ---
 title: 連結・分割・整形
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 連結・分割・整形

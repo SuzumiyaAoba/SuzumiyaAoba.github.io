@@ -1,6 +1,7 @@
 ---
 title: 行単位の読み書き
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 行単位の読み書き

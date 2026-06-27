@@ -1,6 +1,7 @@
 ---
 title: アサーション
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## アサーション

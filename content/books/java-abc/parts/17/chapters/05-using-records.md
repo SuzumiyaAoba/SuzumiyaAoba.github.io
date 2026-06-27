@@ -1,6 +1,7 @@
 ---
 title: レコードの使いどころ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## レコードの使いどころ

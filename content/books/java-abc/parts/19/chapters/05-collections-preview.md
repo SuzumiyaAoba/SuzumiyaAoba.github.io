@@ -1,6 +1,7 @@
 ---
 title: コレクションとジェネリクス ― List を読む
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コレクションとジェネリクス ― List を読む

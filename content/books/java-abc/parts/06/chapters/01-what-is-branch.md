@@ -1,6 +1,7 @@
 ---
 title: 条件分岐とは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 条件分岐とは

@@ -1,6 +1,7 @@
 ---
 title: はじめに ― この章で学ぶこと
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## はじめに ― この章で学ぶこと

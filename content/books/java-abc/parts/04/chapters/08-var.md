@@ -1,6 +1,7 @@
 ---
 title: var ― 型を推論してもらう
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## var ― 型を推論してもらう
@@ -12,7 +13,7 @@ llm: true
 
 そこで使えるのが、**`var`**（バー）です。
 型のかわりに `var` と書くと、**Java が右側の値から型を判断してくれます**。
-このしくみを、**型推論**（Type Inference）と呼びます。
+このしくみを、**型推論**（Type Inference）と呼びます[^jep286-var]。
 
 ---
 
@@ -99,7 +100,7 @@ jshell> var y;
 
 ## まとめ
 
-このセクションでは、型推論の `var` を学びました。
+この節では、型推論の `var` を学びました。
 
 - **`var`** と書くと、Java が右側の値から型を判断してくれる（**型推論**）
 - `var` を使っても型がなくなるわけではない。`var v1 = 20;` は `int v1 = 20;` と同じ
@@ -108,3 +109,5 @@ jshell> var y;
 - 注意点: (1) 初期値が必要、(2) メソッドの中でしか使えない、(3) 使いすぎると読みにくくなる
 
 次の節では、書き換えたくない値を守る **`final`** と、変数にわかりやすい名前をつけるためのルールを学びます。
+
+[^jep286-var]: JEP 286: Local-Variable Type Inference, <https://openjdk.org/jeps/286>。Java 10（2018年3月）で導入された機能。ローカル変数宣言にのみ `var` を使え、フィールド・メソッド戻り値・引数には使えない。詳細は *JLS §14.4*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.4>）を参照。

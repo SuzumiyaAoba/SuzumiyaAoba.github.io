@@ -1,6 +1,7 @@
 ---
 title: 配列と繰り返し
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 配列と繰り返し

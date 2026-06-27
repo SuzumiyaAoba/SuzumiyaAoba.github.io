@@ -1,14 +1,15 @@
 ---
 title: 基本データ型 ― 整数・小数・真偽・文字
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 基本データ型 ― 整数・小数・真偽・文字
 
 前の節で、型には**基本データ型（プリミティブ型）**と**参照型**の2種類があると学びました。
-このセクションでは、よく使う**基本データ型**を、一つずつ見ていきます。
+この節では、よく使う**基本データ型**を、一つずつ見ていきます。
 
-基本データ型は全部で8種類ありますが、最初からすべてを覚える必要はありません。
+基本データ型は全部で8種類ありますが[^jls-primitive-types]、最初からすべてを覚える必要はありません。
 まずは、次の4つをおさえれば十分です。
 
 - 整数を表す `int`
@@ -30,7 +31,7 @@ jshell> int i = 100;
 i ==> 100
 ```
 
-`int` で扱えるのは、およそ **-21 億から 21 億まで**の整数です。
+`int` で扱えるのは、およそ **-21 億から 21 億まで**の整数です（厳密には `−2³¹` 〜 `2³¹−1`）[^jls-int-range]。
 日常で使う整数なら、ほとんどこの範囲に収まります。
 
 ですが、それを超える大きな数を扱いたいときは、`long`（ロング）を使います。
@@ -42,7 +43,7 @@ big ==> 10000000000
 
 ここで、値の末尾に付いている **`L`** に注目してください。
 `10000000000`（100 億）は `int` の範囲を超えているため、そのまま書くとエラーになります。
-末尾に `L` を付けて「これは `long` の値ですよ」と Java に伝える必要があるのです。
+末尾に `L` を付けて「これは `long` の値ですよ」と Java に伝える必要があるのです[^jls-long-literal]。
 
 > **補足: なぜ範囲があるのか**
 >
@@ -125,7 +126,7 @@ initial ==> 'A'
 
 ## まとめ
 
-このセクションでは、基本データ型を学びました。
+この節では、基本データ型を学びました。
 
 - 整数は **`int`**（大きな数は `long`、末尾に `L`）
 - 小数は **`double`**
@@ -135,3 +136,9 @@ initial ==> 'A'
 - 基本データ型の名前は、すべて小文字で始まる
 
 次の節では、文字のまとまりを扱う**文字列型 String** を、くわしく見ていきます。
+
+[^jls-primitive-types]: *The Java® Language Specification, Java SE 25 Edition*, §4.2 "Primitive Types and Values," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2>。8つの基本型 `boolean`／`byte`／`short`／`int`／`long`／`char`／`float`／`double` の定義と値域が規定されている。
+
+[^jls-int-range]: *The Java® Language Specification, Java SE 25 Edition*, §4.2.1 "Integral Types and Values," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.1>。`int` は32ビット符号付き2の補数表現で、値域は `−2^31`（−2,147,483,648）から `2^31 − 1`（2,147,483,647）。`long` は64ビット符号付きで、値域は `−2^63` から `2^63 − 1`。
+
+[^jls-long-literal]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.1 "Integer Literals," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1>。末尾に `L` または `l` が付いた整数リテラルは `long` 型として扱われ、付かないものは `int` 型として扱われる（`int` の範囲を超えるとコンパイルエラー）。

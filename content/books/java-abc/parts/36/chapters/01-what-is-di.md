@@ -1,6 +1,7 @@
 ---
 title: DI とは何か
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## DI とは何か

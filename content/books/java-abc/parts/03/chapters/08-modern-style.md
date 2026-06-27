@@ -1,6 +1,7 @@
 ---
 title: Java 25 のシンプルな書き方 ― コンパクトソースファイルとインスタンス main
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Java 25 のシンプルな書き方 ― コンパクトソースファイルとインスタンス main
@@ -14,8 +15,8 @@ llm: true
 その感覚は、とても自然なものです。
 実は、Java を作っている人たちも、同じように「初心者には、この枠組みのハードルが高い」と考えていました。
 
-そこで **Java 25** では、この枠組みを**大幅に省略できる、新しい書き方**が正式に導入されました。
-第2章でも2度ほど予告した、その書き方を、いよいよこのセクションで紹介します。
+そこで **Java 25** では、この枠組みを**大幅に省略できる、新しい書き方**が正式に導入されました[^jep512-final]。
+第2章でも2度ほど予告した、その書き方を、いよいよこの節で紹介します。
 
 ---
 
@@ -81,7 +82,7 @@ void main() {
 ### IO による、短い入出力
 
 `System.out.println` も、`IO.println` という短い形で書けるようになりました。
-`IO`（アイ・オー）は、画面への表示や、キーボードからの入力をまとめた、初心者にやさしい道具です。
+`IO`（アイ・オー）は、画面への表示や、キーボードからの入力をまとめた、初心者にやさしい道具です[^java-lang-io]。
 
 | 新しい書き方 | はたらき |
 |---|---|
@@ -149,8 +150,8 @@ Hello, World!
 
 > **注意: 新しい書き方が使えるのは Java 25 以降**
 >
-> この短い書き方が、追加の設定なしにそのまま使えるのは、**Java 25 以降**です。
-> Java 21 から 24 では「プレビュー機能」という試験的な扱いで、実行するには特別な指定が必要でした。
+> この短い書き方が、追加の設定なしにそのまま使えるのは、**Java 25 以降**です[^jep512-final]。
+> Java 21 から 24 では「プレビュー機能」という試験的な扱いで、実行するには特別な指定が必要でした[^jep-preview-history]。
 > さらに古いバージョンの Java では、そもそもこの書き方は使えません。
 >
 > もし、新しい形のプログラムがうまく動かないときは、第2章で確認したとおり、`java --version` で **Java 25 以上**が入っているかを確かめてみましょう。
@@ -160,7 +161,7 @@ Hello, World!
 
 ## まとめ
 
-このセクションでは、Java 25 で正式に導入された、シンプルな書き方を学びました。
+この節では、Java 25 で正式に導入された、シンプルな書き方を学びました。
 
 - Java 25 では、`public class` の宣言や `public static` を省略して、プログラムを短く書ける
 - クラスの宣言を省ける書き方を**コンパクトソースファイル**、`public static` を付けない `main` を**インスタンス main メソッド**と呼ぶ
@@ -170,4 +171,10 @@ Hello, World!
 - この書き方がそのまま使えるのは **Java 25 以降**
 
 これで、第3章「はじめてのプログラム」の本編は終わりです。
-次のセクションでは、この章で登場した言葉を、用語集としてまとめます。
+次の節では、この章で登場した言葉を、用語集としてまとめます。
+
+[^jep512-final]: JEP 512: Compact Source Files and Instance Main Methods, <https://openjdk.org/jeps/512>。Java 25 で正式機能（permanent feature）として導入された。
+
+[^java-lang-io]: Java SE 25 API Specification, `java.lang.IO`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html>。`println(Object)`／`print(Object)`／`readln(String)` などのシンプルな入出力メソッドを提供する。JEP 512 と同時に追加された。
+
+[^jep-preview-history]: JEP 445: Unnamed Classes and Instance Main Methods (Preview), <https://openjdk.org/jeps/445>（JDK 21）、JEP 463: Implicitly Declared Classes and Instance Main Methods (Second Preview), <https://openjdk.org/jeps/463>（JDK 22）、JEP 477: Implicitly Declared Classes and Instance Main Methods (Third Preview), <https://openjdk.org/jeps/477>（JDK 23）、JEP 495: Simple Source Files and Instance Main Methods (Fourth Preview), <https://openjdk.org/jeps/495>（JDK 24）。Java 21〜24 ではプレビュー段階で `--enable-preview --source N` 指定が必要だった。

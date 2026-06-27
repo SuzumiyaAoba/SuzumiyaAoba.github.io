@@ -1,6 +1,7 @@
 ---
 title: Collectors とグループ化
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Collectors とグループ化

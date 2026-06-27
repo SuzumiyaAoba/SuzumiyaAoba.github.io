@@ -1,6 +1,7 @@
 ---
 title: enum を定義する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## enum を定義する

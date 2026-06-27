@@ -1,6 +1,7 @@
 ---
 title: switch のパターンマッチング
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## switch のパターンマッチング

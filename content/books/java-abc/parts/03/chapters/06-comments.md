@@ -1,6 +1,7 @@
 ---
 title: コメント ― コードにメモを残す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コメント ― コードにメモを残す
@@ -14,13 +15,13 @@ llm: true
 Java は、コメントの部分を読み飛ばします。
 そのため、コメントに何を書いても、プログラムの動きには影響しません。
 
-このセクションでは、コメントの書き方と、上手な使い方を学びます。
+この節では、コメントの書き方と、上手な使い方を学びます。
 
 ---
 
 ## 2種類のコメント
 
-Java のコメントには、おもに2つの書き方があります。
+Java のコメントには、おもに2つの書き方があります[^jls-comments]。
 
 ### 1. 行コメント `//`
 
@@ -66,7 +67,7 @@ System.out.println("Hello, World!");
 > **補足: もう一つの `/** */`（Javadoc）**
 >
 > `/**` で始まるコメントは、**Javadoc**（ジャバドック）と呼ばれ、クラスやメソッドの説明を書くために使われます。
-> これをもとに、説明書（ドキュメント）を自動で生成できる、という特別な役割を持っています。
+> これをもとに、説明書（ドキュメント）を自動で生成できる、という特別な役割を持っています[^javadoc-tool]。
 > いまは「そういうコメントもある」と知っておくだけで十分です。くわしくは、メソッドを学ぶ第9章などで触れます。
 
 ---
@@ -149,7 +150,7 @@ System.out.println("3行目");
 
 ## まとめ
 
-このセクションでは、コードにメモを残す「コメント」について学びました。
+この節では、コードにメモを残す「コメント」について学びました。
 
 - **コメント**は、コードの中に書ける、人間のためのメモ。**実行はされない**（Java が読み飛ばす）
 - `//` …… その行の `//` 以降がコメントになる（**行コメント**）
@@ -159,4 +160,8 @@ System.out.println("3行目");
 - 行頭に `//` を付けてコードを一時的に実行から外すことを、**コメントアウト**と呼ぶ
 
 ここまでで、Java のプログラムを「読み解く」ための知識が、ひととおりそろいました。
-次のセクションでは、書いたコードがうまく動かないとき ―― **エラー**と向き合う方法を学びます。
+次の節では、書いたコードがうまく動かないとき ―― **エラー**と向き合う方法を学びます。
+
+[^jls-comments]: *The Java® Language Specification, Java SE 25 Edition*, §3.7 "Comments," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.7>。"There are two kinds of comments: A *traditional comment*: all the text from the ASCII characters `/*` to the ASCII characters `*/` ... An *end-of-line comment*: all the text from the ASCII characters `//` to the end of the line." と規定されている。
+
+[^javadoc-tool]: Oracle, "javadoc — Generate HTML pages of API documentation from Java source files," <https://docs.oracle.com/en/java/javase/25/docs/specs/man/javadoc.html>。`/** ... */` 形式のドキュメンテーションコメントから API ドキュメントを生成するツールで、JDK に標準同梱される。

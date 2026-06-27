@@ -12,6 +12,10 @@ export type BookFrontmatter = {
   date?: string;
   category?: string;
   tags?: string[];
+  /** その節を LLM を使って執筆したかどうか。書籍別 frontmatter `llm` をそのまま反映する。 */
+  llm?: boolean;
+  /** 執筆に使った LLM のモデル名（複数可）。frontmatter の `co-author` を反映する。 */
+  coAuthors?: string[];
 };
 
 /** 書籍のトップ情報（概要 + frontmatter）。 */
@@ -47,6 +51,10 @@ export type BookSection = SectionRef & {
   /** 節の本文（Markdown / MDX ソース） */
   content: string;
   format: "md" | "mdx";
+  /** LLM を使って執筆した節かどうか（frontmatter `llm`）。 */
+  llm?: boolean;
+  /** 執筆に使った LLM モデル名（frontmatter `co-author`）。 */
+  coAuthors?: string[];
 };
 
 // ---------------------------------------------------------------------------
@@ -63,6 +71,14 @@ function normalizeFrontmatter(data: Record<string, unknown>): BookFrontmatter {
         ? dateValue
         : undefined;
 
+  // co-author は YAML の文字列配列。書籍ルールでは `["Claude Opus 4.7"]` のように複数可。
+  const rawCoAuthors = data["co-author"];
+  const coAuthors = Array.isArray(rawCoAuthors)
+    ? rawCoAuthors.filter((v): v is string => typeof v === "string")
+    : typeof rawCoAuthors === "string"
+      ? [rawCoAuthors]
+      : undefined;
+
   return {
     title,
     ...(date ? { date } : {}),
@@ -70,6 +86,8 @@ function normalizeFrontmatter(data: Record<string, unknown>): BookFrontmatter {
     ...(Array.isArray(data["tags"])
       ? { tags: data["tags"].filter((tag): tag is string => typeof tag === "string") }
       : {}),
+    ...(typeof data["llm"] === "boolean" ? { llm: data["llm"] } : {}),
+    ...(coAuthors && coAuthors.length > 0 ? { coAuthors } : {}),
   };
 }
 
@@ -265,6 +283,8 @@ export const getBookSection = cache(
         title: fm.title || targetFile.name,
         content,
         format,
+        ...(typeof fm.llm === "boolean" ? { llm: fm.llm } : {}),
+        ...(fm.coAuthors && fm.coAuthors.length > 0 ? { coAuthors: fm.coAuthors } : {}),
       };
     } catch {
       return null;

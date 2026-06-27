@@ -1,6 +1,7 @@
 ---
 title: 入出力と例外 ― IOException と try-with-resources
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 入出力と例外 ― IOException と try-with-resources

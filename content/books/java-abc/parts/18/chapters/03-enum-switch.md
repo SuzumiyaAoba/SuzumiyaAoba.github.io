@@ -1,6 +1,7 @@
 ---
 title: switch と enum
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## switch と enum

@@ -1,6 +1,7 @@
 ---
 title: 日付の計算 ― plus・minus・差を求める
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 日付の計算 ― plus・minus・差を求める

@@ -1,6 +1,7 @@
 ---
 title: Maven 入門
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Maven 入門

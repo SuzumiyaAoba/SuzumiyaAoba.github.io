@@ -1,6 +1,7 @@
 ---
 title: メソッド参照 ― ラムダ式をさらに短く
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## メソッド参照 ― ラムダ式をさらに短く

@@ -1,6 +1,7 @@
 ---
 title: 文字列を組み立てる ― String.join・StringBuilder
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列を組み立てる ― String.join・StringBuilder

@@ -1,6 +1,7 @@
 ---
 title: 引数の渡され方 ― 値渡しと参照
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 引数の渡され方 ― 値渡しと参照
@@ -88,7 +89,7 @@ nums ==> int[3] { 2, 4, 6 }
 
 > **補足: Java は「常に値渡し」**
 >
-> 正確にいうと、Java は基本型も参照型も、つねに「値のコピー」を渡します（**常に値渡し**）。
+> 正確にいうと、Java は基本型も参照型も、つねに「値のコピー」を渡します（**常に値渡し**）[^jls-method-invocation]。
 > ただし参照型では、コピーされる「値」が「配列の場所を指す情報」なので、コピーしても**同じ配列**を指します。その結果、中身の書き換えが共有されるのです。
 > 初心者のうちは、「**基本型はコピー（元は変わらない）／配列などは中身を共有（書き換えると元も変わる）**」と覚えておけば十分です。
 
@@ -113,3 +114,5 @@ nums ==> int[3] { 2, 4, 6 }
 - 初心者は「基本型はコピー、配列などは中身を共有」と覚えておけばよい
 
 次の節では、メソッドでつまずきやすいポイントを、まとめて確認します。
+
+[^jls-method-invocation]: *The Java® Language Specification, Java SE 25 Edition*, §15.12.4 "Run-Time Evaluation of Method Invocation," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.12.4>。"The values of the argument expressions become the values of newly created parameter variables." Java のメソッド呼び出しは常に値渡し（参照そのものは値）であり、C++ のような参照渡し（reference passing）の機構は存在しない。

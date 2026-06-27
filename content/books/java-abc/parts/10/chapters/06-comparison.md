@@ -1,6 +1,7 @@
 ---
 title: 文字列の比較（==と equals）
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列の比較（==と equals）
@@ -81,7 +82,7 @@ jshell> a == b
 $3 ==> true
 ```
 
-これは、Java が「同じ内容の文字列リテラルは、1つを使い回す」という工夫（**文字列プール**と呼びます）をしているため、`a` と `b` がたまたま同じものを指すからです。
+これは、Java が「同じ内容の文字列リテラルは、1つを使い回す」という工夫（**文字列プール**と呼びます）をしているため、`a` と `b` がたまたま同じものを指すからです[^string-pool]。
 
 ここに罠があります。
 リテラルで試すと `==` でも動いてしまうので、「文字列は `==` で比べられる」と勘違いしがちです。
@@ -135,3 +136,5 @@ $2 ==> 0
 - 大文字・小文字を無視するなら `equalsIgnoreCase`、辞書順を比べるなら `compareTo`
 
 次の節では、文字列でつまずきやすいポイントを、まとめて確認します。
+
+[^string-pool]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.5 "String Literals," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.5>。"Moreover, a string literal always refers to the same instance of class String." 同一内容の文字列リテラルは、`String.intern()` の仕組み（*Java SE API* <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#intern()>）により JVM のストリングプールから1つのインスタンスが共有される。

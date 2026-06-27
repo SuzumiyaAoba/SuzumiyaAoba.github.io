@@ -1,6 +1,7 @@
 ---
 title: 長さと1文字の取り出し
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 長さと1文字の取り出し

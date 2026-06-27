@@ -1,6 +1,7 @@
 ---
 title: 配列とは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 配列とは

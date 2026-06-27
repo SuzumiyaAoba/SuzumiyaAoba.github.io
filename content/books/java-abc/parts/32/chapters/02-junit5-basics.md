@@ -1,13 +1,14 @@
 ---
 title: JUnit 5 の基本
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## JUnit 5 の基本
 
 それでは、実際に **JUnit 5** でテストを書いてみます。
 
-JUnit 5 の正式名称は **JUnit Jupiter**（ジュピター）です。
+JUnit 5 の正式名称は **JUnit Jupiter**（ジュピター）です[^junit5]。
 依存に書くときの ArtifactId が `junit-jupiter` なのも、このためです。
 本書では、慣習に合わせて「JUnit 5」と呼びます。
 
@@ -253,3 +254,5 @@ class CalculatorTest {
 - テストは**一度わざと失敗させてみる**のが、入門段階の鉄則です
 
 次の節では、`assertEquals` のほかにどんなアサーションがあるかを、まとめて学びます。
+
+[^junit5]: JUnit 5 公式サイト, "JUnit 5 User Guide," <https://junit.org/junit5/docs/current/user-guide/>。JUnit 5 は JUnit Platform、JUnit Jupiter（新しいテスト API）、JUnit Vintage（JUnit 3/4 互換）の3つのサブプロジェクトから構成される。2017年初版リリース。

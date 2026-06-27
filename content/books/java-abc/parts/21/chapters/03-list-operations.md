@@ -1,6 +1,7 @@
 ---
 title: List の操作 ― 取得・変更・削除・検索
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## List の操作 ― 取得・変更・削除・検索

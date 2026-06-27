@@ -1,6 +1,7 @@
 ---
 title: なぜログが必要か
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## なぜログが必要か

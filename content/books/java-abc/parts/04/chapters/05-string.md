@@ -1,12 +1,13 @@
 ---
 title: 文字列型 String ― 文字のまとまりを扱う
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列型 String ― 文字のまとまりを扱う
 
 第3章から、`"Hello, World!"` のような文字のまとまりを、何度も使ってきました。
-このような**文字のまとまり**を扱う型が、**文字列型 String**（ストリング）です。
+このような**文字のまとまり**を扱う型が、**文字列型 String**（ストリング）です[^java-string-class]。
 
 前の節で学んだ `char` が「1文字」だったのに対し、`String` は「**何文字でもよい、文字のまとまり**」を扱えます。
 
@@ -39,7 +40,7 @@ Hello
 
 ## 文字列をつなげる ― `+` による連結
 
-文字列は、**`+`** を使ってつなげることができます。これを**連結**（れんけつ）と呼びます。
+文字列は、**`+`** を使ってつなげることができます。これを**連結**（れんけつ）と呼びます[^jls-string-concat]。
 
 ```text
 jshell> String combined = hello + ", World";
@@ -115,7 +116,7 @@ $1 ==> 5
 
 ## まとめ
 
-このセクションでは、文字列型 String を学びました。
+この節では、文字列型 String を学びました。
 
 - **String** は、文字のまとまりを扱う型。ダブルクォート `"` で囲む
 - `String` は基本データ型ではなく、**参照型**の仲間（だから先頭が大文字）
@@ -124,3 +125,7 @@ $1 ==> 5
 - `'A'` は1文字（`char`）、`"A"` は文字列（`String`）。囲む記号で型が変わる
 
 次の節では、ここまで何気なく書いてきた `100` や `"Hello"`、`'A'` のような「コードに直接書いた値」＝**リテラル**を、整理して学びます。
+
+[^java-string-class]: Java SE 25 API Specification, `java.lang.String`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html>。`String` は不変（immutable）クラスで、`length()`、`charAt(int)`、`substring(int,int)`、`equals(Object)` などのメソッドを持つ。
+
+[^jls-string-concat]: *The Java® Language Specification, Java SE 25 Edition*, §15.18.1 "String Concatenation Operator +," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.1>。オペランドのいずれかが `String` 型のとき `+` は文字列連結となり、もう一方は文字列変換（§5.1.11）される。

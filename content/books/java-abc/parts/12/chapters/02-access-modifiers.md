@@ -1,6 +1,7 @@
 ---
 title: アクセス修飾子 ― 公開範囲を決める
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## アクセス修飾子 ― 公開範囲を決める

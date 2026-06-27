@@ -1,6 +1,7 @@
 ---
 title: オブジェクトを生成する ― new とインスタンス
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## オブジェクトを生成する ― new とインスタンス

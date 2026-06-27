@@ -1,6 +1,7 @@
 ---
 title: リポジトリ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## リポジトリ

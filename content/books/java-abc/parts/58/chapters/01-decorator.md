@@ -117,7 +117,7 @@ System.out.println(v2.render());
 
 ## `java.io` と Decorator
 
-Java の `java.io` パッケージは、Decorator の典型例です。
+Java の `java.io` パッケージは、Decorator の典型例です[^java-io-decorator]。
 
 ```java
 Reader reader = new BufferedReader(             // バッファリング機能を追加
@@ -181,3 +181,5 @@ System.out.println(boxedBold.apply("Hello"));
 - 関数なら、**`Function#andThen`** で同じ発想が書ける
 
 次の章では、**Proxy** ―― **代理人**を立てるパターンを見ます。
+
+[^java-io-decorator]: Java SE 25 API, `java.io` package, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/package-summary.html>。`FilterInputStream`／`FilterOutputStream`／`FilterReader`／`FilterWriter` は明示的な Decorator 基底クラスで、`BufferedReader`、`InputStreamReader`、`DataInputStream` などはこれを継承して機能を重ねる。

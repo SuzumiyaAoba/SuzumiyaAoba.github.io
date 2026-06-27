@@ -1,6 +1,7 @@
 ---
 title: SOLID を実践する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## SOLID を実践する
@@ -174,7 +175,7 @@ public class BankTransferPayment implements PaymentStrategy {
 }
 ```
 
-利用側は、決済方法を**インタフェースで受け取る**。
+利用側は、決済方法を**インターフェースで受け取る**。
 
 ```java
 public class OrderService {

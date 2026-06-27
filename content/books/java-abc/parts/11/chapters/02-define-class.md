@@ -1,6 +1,7 @@
 ---
 title: クラスを定義する ― フィールド
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## クラスを定義する ― フィールド

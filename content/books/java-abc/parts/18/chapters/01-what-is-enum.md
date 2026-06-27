@@ -1,11 +1,12 @@
 ---
 title: 列挙型とは ― 決まった選択肢を表す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 列挙型とは ― 決まった選択肢を表す
 
-**列挙型**（Enum）は、「**取りうる値が、あらかじめ決まっている**」データを表す型です。
+**列挙型**（Enum）は、「**取りうる値が、あらかじめ決まっている**」データを表す型です[^jls-enums]。
 この節では、なぜ列挙型が、文字列や数値よりも優れているのかを学びます。
 
 ---
@@ -93,3 +94,5 @@ Signal signal = Signal.PURPLE;  // ✕ そんな値はない → コンパイル
 - 「選択肢が決まっているもの」は、列挙型で表すのが定石
 
 次の節では、列挙型を実際に定義して、使ってみます。
+
+[^jls-enums]: *The Java® Language Specification, Java SE 25 Edition*, §8.9 "Enum Classes," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.9>。`enum` は Java 5（2004年、JSR 201）で導入された機能。`java.lang.Enum` を暗黙的に継承するため、`values()`／`valueOf(String)` などのメソッドがコンパイラによって自動生成される。

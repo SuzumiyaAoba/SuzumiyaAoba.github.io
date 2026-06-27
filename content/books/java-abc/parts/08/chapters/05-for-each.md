@@ -1,13 +1,14 @@
 ---
 title: 拡張 for 文（for-each）
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 拡張 for 文（for-each）
 
 前節では、`for (int i = 0; i < scores.length; i++)` のように、インデックス `i` を使って配列をたどりました。
 しかし「全要素を、順に取り出すだけ」なら、もっと簡潔に書ける専用の構文があります。
-それが**拡張 for 文**（Enhanced for statement）、通称 **for-each**（フォーイーチ）です。
+それが**拡張 for 文**（Enhanced for statement）、通称 **for-each**（フォーイーチ）です[^jls-enhanced-for]。
 
 ---
 
@@ -134,3 +135,5 @@ nums ==> int[3] { 2, 4, 6 }   // こちらは書き換わる
 - 番号を使う・書き換えるなら、通常の for を使う
 
 次の節では、配列の中に配列を入れた**多次元配列**で、表やマス目を扱う方法を学びます。
+
+[^jls-enhanced-for]: *The Java® Language Specification, Java SE 25 Edition*, §14.14.2 "The enhanced for Statement," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.14.2>。`for (Type Var : Expression) Statement` の形式で、`Expression` が配列型のときは添字、`Iterable<T>` のときは `Iterator` を内部的に使って各要素を `Var` に代入する。Java 5（JSR 201）で導入された。

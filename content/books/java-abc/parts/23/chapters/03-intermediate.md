@@ -1,6 +1,7 @@
 ---
 title: 中間操作 ― filter・map・sorted
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 中間操作 ― filter・map・sorted

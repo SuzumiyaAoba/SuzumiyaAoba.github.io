@@ -1,6 +1,7 @@
 ---
 title: シールドクラスとパターンマッチング
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## シールドクラスとパターンマッチング

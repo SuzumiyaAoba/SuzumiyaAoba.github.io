@@ -1,6 +1,7 @@
 ---
 title: ストリームの実践 ― 操作を組み合わせる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ストリームの実践 ― 操作を組み合わせる

@@ -1,6 +1,7 @@
 ---
 title: フィールドを private にする ― データを守る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## フィールドを private にする ― データを守る

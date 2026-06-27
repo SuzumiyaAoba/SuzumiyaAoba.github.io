@@ -1,6 +1,7 @@
 ---
 title: 用語集 ― この章で学んだ言葉
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 用語集 ― この章で学んだ言葉
@@ -20,7 +21,7 @@ llm: true
 | HTTP メソッド | ― | GET / POST / PUT / PATCH / DELETE |
 | ステータスコード | ― | 200 / 201 / 204 / 400 / 401 / 403 / 404 / 409 / 422 / 500 |
 | ステートレス | stateless | サーバーが状態を覚えない設計 |
-| 統一インタフェース | uniform interface | すべての API が同じパターン |
+| 統一インターフェース | uniform interface | すべての API が同じパターン |
 | JSON | ― | リクエスト/レスポンスの事実上の標準形式 |
 
 ---

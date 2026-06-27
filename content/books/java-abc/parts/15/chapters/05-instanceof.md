@@ -1,6 +1,7 @@
 ---
 title: instanceof とダウンキャスト ― 型を調べ、元に戻す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## instanceof とダウンキャスト ― 型を調べ、元に戻す
@@ -96,7 +97,7 @@ if (a instanceof Dog) {
 
 そこで、新しい Java では、これを**1つにまとめて**書けます。
 `instanceof` の直後に変数名を書くと、**確認とダウンキャストを同時に**行えるのです。
-これを **instanceof のパターンマッチング**（Pattern Matching for instanceof）と呼びます（Java 16 で正式に導入されました）。
+これを **instanceof のパターンマッチング**（Pattern Matching for instanceof）と呼びます（Java 16 で正式に導入されました）[^jep394-instanceof]。
 
 ```java
 if (a instanceof Dog dog) {   // 中身が Dog なら、dog という変数に入れてくれる
@@ -158,3 +159,5 @@ $ java Main.java
 - `instanceof` の使いすぎは避け、まずは**オーバーライド**で解決できないか考える
 
 次の節では、ポリモーフィズムでつまずきやすいポイントを、まとめて確認します。
+
+[^jep394-instanceof]: JEP 394: Pattern Matching for instanceof, <https://openjdk.org/jeps/394>。Java 16（2021年3月）で正式機能（permanent feature）となった。`if (obj instanceof String s) { ... }` のように、型チェックとバインディング変数の宣言を一度に行える。プレビュー段階は JEP 305（JDK 14）、JEP 375（JDK 15）。

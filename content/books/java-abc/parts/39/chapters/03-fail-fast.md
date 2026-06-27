@@ -1,6 +1,7 @@
 ---
 title: 早期失敗（Fail-Fast）
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 早期失敗（Fail-Fast）

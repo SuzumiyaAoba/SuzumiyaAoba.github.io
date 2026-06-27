@@ -1,6 +1,7 @@
 ---
 title: 要素とインデックス
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 要素とインデックス

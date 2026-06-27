@@ -1,6 +1,7 @@
 ---
 title: finally と後始末 ― 必ず実行する処理
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## finally と後始末 ― 必ず実行する処理
@@ -77,7 +78,7 @@ $ java Main.java
 ## try-with-resources ― 自動で閉じる
 
 「使ったら閉じる」は、とてもよくあるパターンなので、Java には、それを**自動でやってくれる**しくみがあります。
-それが **try-with-resources**（トライ・ウィズ・リソーシズ）です。
+それが **try-with-resources**（トライ・ウィズ・リソーシズ）です[^jep213-twr]。
 
 `try` のうしろの **`( )`** の中で、リソースを用意（生成）します。
 すると、`try` ブロックを抜けるときに、そのリソースが**自動的に閉じられます**（例外が起きても、です）。
@@ -133,3 +134,5 @@ $ java Main.java
 - 閉じ忘れを防げるので、ファイルなどを扱うときは try-with-resources が基本（第30章で活躍）
 
 次の節では、例外の「種類」 ―― チェック例外と非チェック例外の違いを学びます。
+
+[^jep213-twr]: try-with-resources は Java 7（JSR 334, Project Coin）で導入され、JEP 213 (Java 9) で実質的 final 変数も対象にできるよう拡張された（<https://openjdk.org/jeps/213>）。詳細は *JLS §14.20.3*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.20.3>）参照。`AutoCloseable` インターフェース（<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/AutoCloseable.html>）を実装したリソースが自動的にクローズされる。

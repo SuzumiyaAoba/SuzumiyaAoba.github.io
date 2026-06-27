@@ -1,6 +1,7 @@
 ---
 title: final と不変オブジェクト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## final と不変オブジェクト

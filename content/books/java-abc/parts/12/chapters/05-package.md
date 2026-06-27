@@ -1,6 +1,7 @@
 ---
 title: パッケージと import ― クラスを整理する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## パッケージと import ― クラスを整理する

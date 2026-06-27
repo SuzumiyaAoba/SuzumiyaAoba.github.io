@@ -1,6 +1,7 @@
 ---
 title: 抽象クラスとは ― 実体を作れないクラス
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 抽象クラスとは ― 実体を作れないクラス

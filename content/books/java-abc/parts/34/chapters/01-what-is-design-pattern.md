@@ -1,13 +1,14 @@
 ---
 title: デザインパターンとは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## デザインパターンとは
 
 デザインパターンを、次のように定義しておきましょう。
 
-> **「同じ問題に何度も出会ううちに、自然と落ち着いた解き方」を、名前付きで整理したもの**
+> **「同じ問題に何度も出会ううちに、自然と落ち着いた解き方」を、名前付きで整理したもの**[^gof-book]
 
 「自然と落ち着いた解き方」というのが、とても大事です。
 パターンは、誰かが机上で考案したものではなく、**現場で繰り返し使われた解決法を、あとから名前で呼べるようにした**もの。
@@ -107,7 +108,7 @@ GoF パターンの中には、いまの Java では**言語機能で十分**に
 
 | GoF パターン | 現代の Java で素直に書く方法 |
 |---|---|
-| Strategy | **ラムダ式・関数型インタフェース**（第22章） |
+| Strategy | **ラムダ式・関数型インターフェース**（第22章） |
 | Iterator | **拡張 for 文**（第8章）と `Iterable` |
 | Observer | **`Flow.Publisher` / `Flow.Subscriber`**（標準ライブラリ） |
 | Command | **`Runnable` / `Consumer`** などのラムダ |
@@ -144,3 +145,5 @@ GoF パターンの中には、いまの Java では**言語機能で十分**に
 
 次の節からは、代表的なパターンを 5 つ、書き方とともに見ていきます。
 まずは、**Strategy** パターンからです。
+
+[^gof-book]: Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides, *Design Patterns: Elements of Reusable Object-Oriented Software*（Addison-Wesley, 1994, ISBN 0-201-63361-2）。著者4名が "Gang of Four"（GoF）と呼ばれ、Singleton／Factory／Strategy／Observer など23のパターンを生成系・構造系・振る舞い系に分類して整理した。本書「第6部 デザインパターン」もこの分類に従う。

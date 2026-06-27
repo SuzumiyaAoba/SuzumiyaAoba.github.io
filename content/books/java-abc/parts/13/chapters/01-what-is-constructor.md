@@ -1,6 +1,7 @@
 ---
 title: コンストラクタとは ― new の正体
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コンストラクタとは ― new の正体

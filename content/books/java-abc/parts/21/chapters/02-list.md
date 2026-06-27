@@ -1,6 +1,7 @@
 ---
 title: List ― 順序のある並び
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## List ― 順序のある並び
@@ -96,7 +97,7 @@ IO.println(votes);
 
 ## 最初から要素を入れて作る ― List.of
 
-「最初から中身が決まっている」リストは、**`List.of(...)`** で、ひといきに作れます。
+「最初から中身が決まっている」リストは、**`List.of(...)`** で、ひといきに作れます[^jep269-collections]。
 
 ```java
 List<String> colors = List.of("赤", "緑", "青");
@@ -138,3 +139,5 @@ Exception in thread "main" java.lang.UnsupportedOperationException
 - **`List.of(...)`** で、中身の決まったリストを一度に作れる（ただし**変更不可**）
 
 次の節では、List の要素を**取得・変更・削除・検索**する、さまざまな操作を学びます。
+
+[^jep269-collections]: JEP 269: Convenience Factory Methods for Collections, <https://openjdk.org/jeps/269>。Java 9（2017年）で導入された。`List.of(...)`／`Set.of(...)`／`Map.of(...)` は不変（immutable）のコレクションを返し、要素の追加・削除・変更を試みると `UnsupportedOperationException` が投げられる。

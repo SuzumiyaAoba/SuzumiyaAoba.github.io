@@ -1,6 +1,7 @@
 ---
 title: 戻り値 ― メソッドから値を返す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 戻り値 ― メソッドから値を返す

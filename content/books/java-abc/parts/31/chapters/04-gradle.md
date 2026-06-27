@@ -1,6 +1,7 @@
 ---
 title: Gradle 入門
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Gradle 入門

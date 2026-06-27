@@ -1,6 +1,7 @@
 ---
 title: テキストの読み書き ― readString・writeString
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## テキストの読み書き ― readString・writeString

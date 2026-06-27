@@ -1,6 +1,7 @@
 ---
 title: 用語集 ― この章で学んだ言葉
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 用語集 ― この章で学んだ言葉
@@ -18,7 +19,7 @@ llm: true
 | スタブ | stub | 「呼ばれたらこれを返す」と決め打ちする身代わり |
 | フェイク | fake | 本物に近い軽量実装（インメモリ DB など） |
 | Mockito | ― | Java で広く使われるモックライブラリ |
-| `mockito-junit-jupiter` | ― | Mockito と JUnit 5 を連携させるアダプタ |
+| `mockito-junit-jupiter` | ― | Mockito と JUnit 5 を連携させるアダプター |
 | `mock(クラス.class)` | ― | モックインスタンスを作る |
 | `@ExtendWith(MockitoExtension.class)` | ― | JUnit 5 に Mockito を有効化する |
 | `@Mock` | ― | フィールドをモックにする |

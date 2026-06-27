@@ -1,12 +1,13 @@
 ---
 title: Object クラス ― すべてのクラスの先祖
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Object クラス ― すべてのクラスの先祖
 
 Java には、**すべてのクラスが、必ず継承している**、特別なクラスがあります。
-それが **`Object`**（オブジェクト）クラスです。
+それが **`Object`**（オブジェクト）クラスです[^java-object-class]。
 この節では、`Object` の役割と、よく使う `toString` のオーバーライドを学びます。
 
 ---
@@ -133,3 +134,5 @@ Animal{name=ポチ, age=3}
 - `Object` には `equals()`・`hashCode()` もある（中身での比較に使う。第17章のレコードが自動で用意してくれる）
 
 次の節では、継承でつまずきやすいポイントを、まとめて確認します。
+
+[^java-object-class]: Java SE 25 API Specification, `java.lang.Object`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html>。"Class `Object` is the root of the class hierarchy. Every class has `Object` as a superclass." `equals(Object)`／`hashCode()`／`toString()`／`getClass()`／`wait`／`notify` などの基本メソッドを提供する（*JLS §4.3.2*）。

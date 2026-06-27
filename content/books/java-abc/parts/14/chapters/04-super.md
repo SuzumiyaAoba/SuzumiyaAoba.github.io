@@ -1,6 +1,7 @@
 ---
 title: super ― 親を呼ぶ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## super ― 親を呼ぶ

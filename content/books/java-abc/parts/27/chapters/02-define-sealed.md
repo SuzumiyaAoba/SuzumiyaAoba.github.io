@@ -1,6 +1,7 @@
 ---
 title: sealed と permits
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## sealed と permits

@@ -1,6 +1,7 @@
 ---
 title: 日付と時刻の基本クラス
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 日付と時刻の基本クラス

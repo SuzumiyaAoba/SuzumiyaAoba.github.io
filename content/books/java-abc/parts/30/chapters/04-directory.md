@@ -1,6 +1,7 @@
 ---
 title: ディレクトリの操作
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ディレクトリの操作

@@ -1,6 +1,7 @@
 ---
 title: while 文 ― 条件が成り立つ間
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## while 文 ― 条件が成り立つ間

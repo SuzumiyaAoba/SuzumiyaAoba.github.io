@@ -1,6 +1,7 @@
 ---
 title: 共有データの問題 ― 競合状態
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 共有データの問題 ― 競合状態

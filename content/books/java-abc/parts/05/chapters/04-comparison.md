@@ -1,6 +1,7 @@
 ---
 title: 比較演算子 ― 値を比べる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 比較演算子 ― 値を比べる
@@ -50,7 +51,7 @@ boolean b = x == 5;    // 比較: x が 5 と等しいか（true）
 
 ## 注意: 文字列の比較は == を使わない
 
-第4章でも予告したとおり、**文字列（`String`）が同じ内容かを比べるときは、`==` を使いません**。
+第4章でも予告したとおり、**文字列（`String`）が同じ内容かを比べるときは、`==` を使いません**[^string-equals]。
 文字列の比較には、`equals` を使います。
 
 ```java
@@ -64,10 +65,12 @@ name.equals("太郎")   // 文字列の比較は、こちらを使う
 
 ## まとめ
 
-このセクションでは、比較演算子を学びました。
+この節では、比較演算子を学びました。
 
 - 比較演算子（`==` `!=` `>` `<` `>=` `<=`）は、2つの値を比べ、結果は `boolean`（`true` / `false`）
 - `=`（代入）と `==`（比較）は別物。「入れる」か「比べる」かで使い分ける
 - 文字列が同じ内容かを比べるときは、`==` ではなく `equals` を使う
 
 次の節では、複数の条件を組み合わせる**論理演算子**を学びます。
+
+[^string-equals]: Java SE 25 API Specification, `java.lang.String#equals(Object)`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#equals(java.lang.Object)>。`==` は参照型では「同一オブジェクト参照か」を比較する（*JLS §15.21.3*）のに対し、`String#equals` は文字単位の内容比較を行う。

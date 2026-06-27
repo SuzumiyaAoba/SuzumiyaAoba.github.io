@@ -1,6 +1,7 @@
 ---
 title: Map ― キーと値の対応
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Map ― キーと値の対応

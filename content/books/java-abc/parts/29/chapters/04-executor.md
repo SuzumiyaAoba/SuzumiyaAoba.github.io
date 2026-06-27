@@ -1,6 +1,7 @@
 ---
 title: ExecutorService ― スレッドを管理する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ExecutorService ― スレッドを管理する

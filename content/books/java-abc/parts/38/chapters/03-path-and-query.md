@@ -1,6 +1,7 @@
 ---
 title: パス変数とクエリパラメータ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## パス変数とクエリパラメータ

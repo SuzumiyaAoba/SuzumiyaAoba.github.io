@@ -1,6 +1,7 @@
 ---
 title: 継承とは ― is-a の関係
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 継承とは ― is-a の関係

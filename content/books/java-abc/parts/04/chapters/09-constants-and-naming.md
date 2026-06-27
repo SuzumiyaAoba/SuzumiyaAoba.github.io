@@ -1,11 +1,12 @@
 ---
 title: 定数 final と、わかりやすい名前のつけ方
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 定数 final と、わかりやすい名前のつけ方
 
-この章も、終わりが近づいてきました。このセクションでは、2つのことを学びます。
+この章も、終わりが近づいてきました。この節では、2つのことを学びます。
 
 - 書き換えたくない値を守る **`final`**
 - 変数に、わかりやすい名前をつけるためのルール
@@ -22,7 +23,7 @@ llm: true
 - ゲームの満点や、制限時間
 
 こうした値は、うっかり書き換えてしまうと、プログラムがおかしくなります。
-そこで、変数の宣言に **`final`**（ファイナル）を付けると、**あとから書き換えられない変数**になります。
+そこで、変数の宣言に **`final`**（ファイナル）を付けると、**あとから書き換えられない変数**になります[^jls-final-variable]。
 
 ```text
 jshell> final int MAX = 100;
@@ -77,8 +78,8 @@ final double TAX_RATE = 0.1;
 
 ### 必ず守るルール（破るとエラー）
 
-- 使えるのは、英字・数字・`_`・`$`。ただし、**数字では始められない**（`1age` のような名前はエラー）
-- Java があらかじめ使っている言葉（**予約語**。`int`・`class`・`if` など）は、名前に使えない
+- 使えるのは、英字・数字・`_`・`$`。ただし、**数字では始められない**（`1age` のような名前はエラー）[^jls-identifiers]
+- Java があらかじめ使っている言葉（**予約語**。`int`・`class`・`if` など）は、名前に使えない[^jls-keywords]
 - **大文字・小文字は区別される**（`age` と `Age` は別の変数）
 
 ### 守るべき慣習（守らなくても動くが、守るべき）
@@ -93,19 +94,21 @@ final double TAX_RATE = 0.1;
 > 変数名の「キャメルケース」は、先頭だけ小文字にする点が違います（`helloWorld`）。
 > 「クラス名は大文字始まり、変数名は小文字始まり」と覚えておくと、コードがぐっと読みやすくなります。
 
-> **コラム: 良い名前は、未来の自分への贈り物**
->
-> `int a = 20;` と書いても、プログラムは動きます。
-> ですが、しばらく経ってから見返すと、「この `a` は何の値だったかな？」と悩むことになります。
->
-> `int age = 20;` と書いておけば、誰が見ても、未来の自分が見ても、ひと目で意味がわかります。
-> 名前を考えるのは少し手間ですが、それは後で読む人（多くは自分自身）への、ちょっとした贈り物なのです。
+<Column title="良い名前は、未来の自分への贈り物">
+
+`int a = 20;` と書いても、プログラムは動きます。
+ですが、しばらく経ってから見返すと、「この `a` は何の値だったかな？」と悩むことになります。
+
+`int age = 20;` と書いておけば、誰が見ても、未来の自分が見ても、ひと目で意味がわかります。
+名前を考えるのは少し手間ですが、それは後で読む人（多くは自分自身）への、ちょっとした贈り物なのです。
+
+</Column>
 
 ---
 
 ## まとめ
 
-このセクションでは、`final` と命名のルールを学びました。
+この節では、`final` と命名のルールを学びました。
 
 - **`final`** を付けると、書き換えられない変数（**定数**）になる
 - jshell では `final` の書き換えが通ってしまうが、ファイルではコンパイルエラーになる
@@ -114,3 +117,9 @@ final double TAX_RATE = 0.1;
 - 慣習: **キャメルケース**（`userAge`）で、意味のわかる名前をつける
 
 次の節では、この章で学んだ変数とデータ型で、初心者がつまずきやすいポイントを、まとめて確認します。
+
+[^jls-final-variable]: *The Java® Language Specification, Java SE 25 Edition*, §4.12.4 "final Variables," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.4>。"A final variable may only be assigned to once." 一度初期化された後の再代入はコンパイルエラーとなる。
+
+[^jls-identifiers]: *The Java® Language Specification, Java SE 25 Edition*, §3.8 "Identifiers," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.8>。識別子は Java letter（英字、`$`、`_`、Unicode文字）で始まり、Java letter または digit で続く文字列で、予約語と一致してはならない。
+
+[^jls-keywords]: *The Java® Language Specification, Java SE 25 Edition*, §3.9 "Keywords," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.9>。`abstract`／`class`／`if`／`int` など50以上の予約語が定義されている。

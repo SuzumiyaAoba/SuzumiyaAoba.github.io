@@ -1,6 +1,7 @@
 ---
 title: エラーレスポンスの設計
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## エラーレスポンスの設計

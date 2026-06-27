@@ -1,6 +1,7 @@
 ---
 title: フィールドとメソッドを持つ enum
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## フィールドとメソッドを持つ enum

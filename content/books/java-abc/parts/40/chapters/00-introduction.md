@@ -1,6 +1,7 @@
 ---
 title: はじめに ― この章で学ぶこと
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## はじめに ― この章で学ぶこと
@@ -67,7 +68,7 @@ Logback         ← 実装。Spring Boot のデフォルト
 | 節 | タイトル | 内容 |
 |---|---|---|
 | 1 | なぜログが必要か | `System.out.println` を卒業する |
-| 2 | SLF4J と Logback | インタフェースと実装の関係 |
+| 2 | SLF4J と Logback | インターフェースと実装の関係 |
 | 3 | ログレベル | TRACE / DEBUG / INFO / WARN / ERROR |
 | 4 | 構造化ログ | JSON で書く、機械が読めるログ |
 | 5 | MDC でリクエスト追跡 | リクエスト ID で 1 リクエストを追う |

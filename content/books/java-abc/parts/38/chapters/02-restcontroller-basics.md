@@ -1,6 +1,7 @@
 ---
 title: `@RestController` の基本
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## `@RestController` の基本

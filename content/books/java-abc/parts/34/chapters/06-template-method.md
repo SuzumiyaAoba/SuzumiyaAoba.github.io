@@ -1,6 +1,7 @@
 ---
 title: Template Method パターン
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Template Method パターン

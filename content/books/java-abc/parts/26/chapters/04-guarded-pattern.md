@@ -1,6 +1,7 @@
 ---
 title: when ガードと網羅性
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## when ガードと網羅性

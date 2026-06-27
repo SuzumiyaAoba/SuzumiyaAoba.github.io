@@ -1,6 +1,7 @@
 ---
 title: try-catch で捕まえる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## try-catch で捕まえる

@@ -1,11 +1,12 @@
 ---
 title: REST とは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## REST とは
 
-**REST**（Representational State Transfer）は、HTTP の上で**リソースを操作する**ように設計された API のスタイルです。
+**REST**（Representational State Transfer）は、HTTP の上で**リソースを操作する**ように設計された API のスタイルです[^rest-fielding]。
 ひとことで言うと、
 
 > 「**URL でリソースを示し、HTTP メソッドで操作の意味を表す**」
@@ -62,7 +63,7 @@ URL を見ただけで、何が起きるか想像できる ―― これが REST
 
 ## HTTP ステータスコード ― 結果を 3 桁の数字で
 
-REST API は、結果も**標準的な 3 桁の数字**で返します。
+REST API は、結果も**標準的な 3 桁の数字**で返します[^rfc9110]。
 
 | コード | 名前 | 意味 |
 |---|---|---|
@@ -193,8 +194,12 @@ HTTP メソッド + リソース URL で十分です。
 - REST は **URL でリソース**、**HTTP メソッドで操作**を表す API スタイル
 - 5 つの HTTP メソッド（GET・POST・PUT・PATCH・DELETE）
 - 結果は **3 桁のステータスコード**で表現
-- リソース指向・ステートレス・統一インタフェースが基本
+- リソース指向・ステートレス・統一インターフェースが基本
 - リクエスト/レスポンスは **JSON** が事実上の標準
 - URL は**名詞の複数形**、ID はパスに、検索はクエリに
 
 次の節では、**`@RestController`** で、いちばん小さな API を書いていきます。
+
+[^rest-fielding]: Roy T. Fielding, *Architectural Styles and the Design of Network-based Software Architectures*（PhD dissertation, UC Irvine, 2000）, <https://ics.uci.edu/~fielding/pubs/dissertation/top.htm>。REST（Representational State Transfer）は Fielding が博士論文の第5章で提唱したアーキテクチャスタイル。クライアント・サーバ、ステートレス、キャッシュ可能、統一インタフェース、階層化システム、コードオンデマンドの6つの制約からなる。
+
+[^rfc9110]: IETF RFC 9110: HTTP Semantics, <https://www.rfc-editor.org/rfc/rfc9110>。HTTP のメッセージ、メソッド（GET、POST など）、ステータスコード（200、404、500 など）、ヘッダの意味論を規定する。RFC 7230〜7235、RFC 5789（PATCH）等を統合・改訂した最新仕様（2022年公開）。

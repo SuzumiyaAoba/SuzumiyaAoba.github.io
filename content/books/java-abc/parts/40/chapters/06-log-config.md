@@ -1,6 +1,7 @@
 ---
 title: 設定とローテーション
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 設定とローテーション

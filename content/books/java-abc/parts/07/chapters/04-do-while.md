@@ -1,6 +1,7 @@
 ---
 title: do-while 文 ― 先に1回実行する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## do-while 文 ― 先に1回実行する

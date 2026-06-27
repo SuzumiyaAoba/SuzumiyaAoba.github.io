@@ -1,6 +1,7 @@
 ---
 title: 標準の関数型インターフェース
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 標準の関数型インターフェース

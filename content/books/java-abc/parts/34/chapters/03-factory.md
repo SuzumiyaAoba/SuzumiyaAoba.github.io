@@ -1,6 +1,7 @@
 ---
 title: Factory パターン
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Factory パターン

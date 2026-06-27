@@ -1,6 +1,7 @@
 ---
 title: break と continue ― 抜ける・とばす
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## break と continue ― 抜ける・とばす

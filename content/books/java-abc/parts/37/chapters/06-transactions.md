@@ -1,6 +1,7 @@
 ---
 title: トランザクション
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## トランザクション

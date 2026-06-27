@@ -1,6 +1,7 @@
 ---
 title: 値を取り出す ― orElse・ifPresent
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 値を取り出す ― orElse・ifPresent

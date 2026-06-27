@@ -1,6 +1,7 @@
 ---
 title: よくあるつまずき
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## よくあるつまずき

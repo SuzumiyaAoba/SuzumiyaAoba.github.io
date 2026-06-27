@@ -1,6 +1,7 @@
 ---
 title: パラメータ化テスト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## パラメータ化テスト

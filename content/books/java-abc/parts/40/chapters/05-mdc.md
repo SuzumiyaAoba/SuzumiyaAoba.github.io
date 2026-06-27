@@ -1,6 +1,7 @@
 ---
 title: MDC でリクエスト追跡
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## MDC でリクエスト追跡

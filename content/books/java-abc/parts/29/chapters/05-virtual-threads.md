@@ -1,11 +1,12 @@
 ---
 title: 仮想スレッド ― Java 21 の画期的な新機能
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 仮想スレッド ― Java 21 の画期的な新機能
 
-**仮想スレッド**（Virtual Threads）は、**Java 21** で正式導入された、並行処理の常識を変える画期的な機能です。
+**仮想スレッド**（Virtual Threads）は、**Java 21** で正式導入された、並行処理の常識を変える画期的な機能です[^jep444-vt]。
 「**とても軽い、大量に作れるスレッド**」だと考えてください。
 この節では、仮想スレッドが、なぜすごいのかを学びます。
 
@@ -120,3 +121,5 @@ try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
 - 待ち時間の多い処理（通信・I/O）に向く（重い計算には従来のスレッド）
 
 次の節では、並行処理でつまずきやすいポイントを、まとめて確認します。
+
+[^jep444-vt]: JEP 444: Virtual Threads, <https://openjdk.org/jeps/444>。Java 21（2023年9月）で正式機能となった。JVM が管理する軽量スレッドで、ブロッキング I/O 中も OS スレッド（carrier thread）を占有しないため、何百万単位の同時実行が可能。プレビュー段階は JEP 425（JDK 19）、JEP 436（JDK 20）。

@@ -1,6 +1,7 @@
 ---
 title: 単一責任原則（SRP）
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 単一責任原則（SRP）
@@ -9,7 +10,7 @@ llm: true
 
 > **「1 つのクラス（または、モジュール）は、1 つの理由でしか変更されないようにする」**
 
-という原則です。
+という原則です[^solid-srp]。
 
 「1つのことだけする」と訳されることが多いですが、より正確には**「変更の理由が 1 つだけ」**という意味です。
 理由が複数あるクラスは、それぞれの理由ごとに**分けるべき**、というのが SRP の考え方です。
@@ -199,3 +200,5 @@ SRP を意識して書くと、次のような効果が出ます。
 - 効果は、**読みやすさ・テスト容易性・変更に強い・再利用性**
 
 次の節は、**OCP** ― 拡張に開き、修正に閉じる原則です。
+
+[^solid-srp]: Robert C. Martin, "The Single Responsibility Principle," Clean Coder Blog, <https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html>。SOLID 原則の "S" を担う原則で、Martin による著書 *Agile Software Development: Principles, Patterns, and Practices*（2002）で広く知られた。後に Martin 自身が "A class should have only one reason to change" の意味を「アクター（変更を要求する関係者）が1つ」と言い換えている。

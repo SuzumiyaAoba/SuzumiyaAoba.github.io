@@ -1,6 +1,7 @@
 ---
 title: 文字列を調べる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列を調べる

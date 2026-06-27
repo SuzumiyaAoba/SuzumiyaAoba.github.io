@@ -1,6 +1,7 @@
 ---
 title: メソッドとは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## メソッドとは

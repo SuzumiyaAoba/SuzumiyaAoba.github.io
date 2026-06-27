@@ -1,6 +1,7 @@
 ---
 title: Strategy パターン
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Strategy パターン
@@ -48,7 +49,7 @@ Strategy パターンは、
 > 「**取り替え可能なアルゴリズム**を、それぞれ別のクラスに切り出す」
 
 というアイデアです。
-インタフェース 1 つを切って、**各アルゴリズムを実装クラスにする**わけです。
+インターフェース 1 つを切って、**各アルゴリズムを実装クラスにする**わけです。
 
 ```text
 PaymentService ──→ PaymentStrategy（interface）
@@ -69,7 +70,7 @@ PaymentService ──→ PaymentStrategy（interface）
 
 ## 古典的な書き方
 
-まず、インタフェースを切ります。
+まず、インターフェースを切ります。
 
 ```java
 public interface PaymentStrategy {
@@ -102,7 +103,7 @@ public class PointPayment implements PaymentStrategy {
 }
 ```
 
-呼び出し側は、**インタフェース型**で受け取って、`pay` を呼ぶだけ。
+呼び出し側は、**インターフェース型**で受け取って、`pay` を呼ぶだけ。
 
 ```java
 public class PaymentService {
@@ -131,9 +132,9 @@ service.checkout(1000);
 
 ---
 
-## 現代風の書き方 ― ラムダ式と関数型インタフェース
+## 現代風の書き方 ― ラムダ式と関数型インターフェース
 
-`PaymentStrategy` は、メソッドが 1 つだけの**関数型インタフェース**（第22章）です。
+`PaymentStrategy` は、メソッドが 1 つだけの**関数型インターフェース**（第22章）です。
 ということは、実装クラスを 3 つも書かずに、**ラムダ式で直接渡せる**のです。
 
 ```java
@@ -166,7 +167,7 @@ public class PaymentService {
 }
 ```
 
-標準の関数型インタフェース（`Function`・`Consumer`・`Supplier`・`Predicate` ほか）でカバーできる場合は、わざわざ専用の `interface` を作らなくてもよいことが多いです。
+標準の関数型インターフェース（`Function`・`Consumer`・`Supplier`・`Predicate` ほか）でカバーできる場合は、わざわざ専用の `interface` を作らなくてもよいことが多いです。
 
 ---
 
@@ -211,8 +212,8 @@ strategy.pay(amount);
 ## まとめ
 
 - **Strategy** は、振る舞いを**取り替え可能な部品**として切り出すパターン
-- インタフェースを切り、それぞれの振る舞いを**実装クラス**にする
-- 現代の Java では、メソッド 1 つの関数型インタフェースなら **ラムダ式で済む**
+- インターフェースを切り、それぞれの振る舞いを**実装クラス**にする
+- 現代の Java では、メソッド 1 つの関数型インターフェースなら **ラムダ式で済む**
 - 状態を持つ・長い・テストしたい場合は、クラスとして書く
 - **`if-else` で振る舞いを切り替えている**コードは、Strategy 化の候補
 

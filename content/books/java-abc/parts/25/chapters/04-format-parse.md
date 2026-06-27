@@ -1,6 +1,7 @@
 ---
 title: 整形と解析 ― DateTimeFormatter
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 整形と解析 ― DateTimeFormatter

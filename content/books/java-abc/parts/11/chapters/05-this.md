@@ -1,6 +1,7 @@
 ---
 title: this ― 自分自身への参照
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## this ― 自分自身への参照

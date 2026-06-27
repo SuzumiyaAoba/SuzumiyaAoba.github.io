@@ -1,6 +1,7 @@
 ---
 title: コレクションとは ― 配列の限界を超える
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コレクションとは ― 配列の限界を超える

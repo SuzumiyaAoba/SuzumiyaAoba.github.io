@@ -1,6 +1,7 @@
 ---
 title: テキストブロックの細かいルール
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## テキストブロックの細かいルール

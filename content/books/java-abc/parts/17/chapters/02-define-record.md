@@ -1,6 +1,7 @@
 ---
 title: レコードを定義する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## レコードを定義する

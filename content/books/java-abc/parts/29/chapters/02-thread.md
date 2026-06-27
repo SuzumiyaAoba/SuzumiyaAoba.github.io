@@ -1,6 +1,7 @@
 ---
 title: スレッドを作る ― Thread と Runnable
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## スレッドを作る ― Thread と Runnable

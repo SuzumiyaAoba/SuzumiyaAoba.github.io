@@ -1,6 +1,7 @@
 ---
 title: コンポーネントスキャン
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コンポーネントスキャン

@@ -1,6 +1,7 @@
 ---
 title: 呼び出しを検証する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 呼び出しを検証する

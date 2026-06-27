@@ -1,6 +1,7 @@
 ---
 title: ドメイン例外を設計する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ドメイン例外を設計する

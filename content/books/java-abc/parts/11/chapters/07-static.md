@@ -1,6 +1,7 @@
 ---
 title: static ― クラスに属するメンバ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## static ― クラスに属するメンバ
@@ -40,7 +41,7 @@ class Car {
     String name;            // オブジェクトごと
 
     void register() {
-        count++;            // 共有のカウンタを増やす
+        count++;            // 共有のカウンターを増やす
     }
 }
 

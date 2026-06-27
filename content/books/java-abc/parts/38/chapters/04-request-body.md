@@ -1,6 +1,7 @@
 ---
 title: リクエストボディ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## リクエストボディ

@@ -1,11 +1,12 @@
 ---
 title: ラムダ式とは ― 処理を値として渡す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ラムダ式とは ― 処理を値として渡す
 
-**ラムダ式**（Lambda Expression）は、「**処理（ふるまい）を、値のように受け渡す**」ための、簡潔な書き方です。
+**ラムダ式**（Lambda Expression）は、「**処理（ふるまい）を、値のように受け渡す**」ための、簡潔な書き方です[^jsr335-lambda]。
 この節では、ラムダ式が「なぜ生まれたのか」を、昔の書き方と比べながら理解します。
 
 ---
@@ -139,3 +140,5 @@ Runnable task = () -> IO.println("実行されました");
 - ラムダ式は1つの**値**として、変数に代入したり、引数に渡したりできる
 
 次の節では、ラムダ式が代入できる「型」 ―― **関数型インターフェース**の正体を学びます。
+
+[^jsr335-lambda]: JSR 335: Lambda Expressions for the Java Programming Language, <https://jcp.org/en/jsr/detail?id=335> および JEP 126: Lambda Expressions & Virtual Extension Methods, <https://openjdk.org/jeps/126>。Java SE 8（2014年）で導入された。詳細は *JLS §15.27*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.27>）参照。

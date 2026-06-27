@@ -1,6 +1,7 @@
 ---
 title: 引数 ― メソッドに値を渡す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 引数 ― メソッドに値を渡す

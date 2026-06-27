@@ -1,6 +1,7 @@
 ---
 title: まとめて扱う ― 配列とメソッド引数
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## まとめて扱う ― 配列とメソッド引数

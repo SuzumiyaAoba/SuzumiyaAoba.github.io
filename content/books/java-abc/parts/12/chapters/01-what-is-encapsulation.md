@@ -1,6 +1,7 @@
 ---
 title: カプセル化とは ― なぜデータを隠すのか
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## カプセル化とは ― なぜデータを隠すのか

@@ -1,6 +1,7 @@
 ---
 title: 境界での集約とログ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 境界での集約とログ

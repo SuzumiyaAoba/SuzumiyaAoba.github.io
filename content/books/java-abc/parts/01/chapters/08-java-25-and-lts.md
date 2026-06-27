@@ -1,6 +1,7 @@
 ---
 title: Java 25 について ― LTS とリリースサイクル
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Java 25 について ― LTS とリリースサイクル
@@ -30,7 +31,7 @@ llm: true
 
 Java のバージョンアップには、現在、決まったリズムがあります。
 
-**2017年に公開された Java 9 以降、Java は半年ごと（3月と9月）に新しいバージョンを公開する**ようになりました。
+**2017年に公開された Java 9 以降、Java は半年ごと（3月と9月）に新しいバージョンを公開する**ようになりました[^jep322-cycle]。
 
 この「どのくらいの間隔で新しいバージョンを出すか」というリズムのことを、**リリースサイクル**（Release Cycle）と呼びます。
 
@@ -85,7 +86,7 @@ LTS には、次のような利点があります。
 
 ## これまでの LTS と、その間隔
 
-これまでに LTS として選ばれてきた主なバージョンは、次のとおりです。
+これまでに LTS として選ばれてきた主なバージョンは、次のとおりです[^java-lts-roadmap]。
 
 | バージョン | 公開時期 | 備考 |
 |---|---|---|
@@ -102,7 +103,7 @@ LTS には、次のような利点があります。
 LTS が公開される間隔も、少しずつ見直されてきました。
 
 当初、LTS はおよそ3年ごとに公開される予定でした（Java 11 から Java 17 までが約3年です）。
-その後、3年は長すぎるという声を受けて、**Java 17 以降は2年ごと**に見直されました。
+その後、3年は長すぎるという声を受けて、**Java 17 以降は2年ごと**に見直されました[^lts-cadence-2year]。
 そのため、Java 17（2021年）→ Java 21（2023年）→ Java 25（2025年）と、2年おきに LTS が公開されています。
 
 このペースが続けば、次の LTS は2027年ごろに公開される見込みです。
@@ -117,14 +118,14 @@ LTS が公開される間隔も、少しずつ見直されてきました。
 - **長く使えるから** ： LTS なので、これから何年も使い続けられる。学んだ知識が長持ちする
 - **新しい機能を学べるから** ： 最新版なので、これまでに積み重ねられた便利な機能をすべて学べる
 
-実際、Java 25 は2025年9月16日に正式公開された LTS であり、長期にわたるサポートが予定されています。
+実際、Java 25 は2025年9月16日に正式公開された LTS であり、長期にわたるサポートが予定されています[^jdk25-release-date]。
 これから Java を学び始めるなら、長く使えて、かつ最新の機能まで学べる Java 25 は、最適な選択肢のひとつです。
 
 > **補足: 新機能のまとまり「JEP」**
 >
 > Java の新しいバージョンには、たくさんの改善が盛り込まれます。
-> こうした改善は、**JEP**（Java Enhancement Proposal、Java 改善提案）という単位で提案・検討されます。
-> Java 25 には、18件の JEP が取り入れられました。
+> こうした改善は、**JEP**（Java Enhancement Proposal、Java 改善提案）という単位で提案・検討されます[^jep-process]。
+> Java 25 には、18件の JEP が取り入れられました[^jdk25-jeps]。
 > JEP という言葉は、これから Java の情報を調べるときに目にすることがあるので、頭の片隅に置いておくとよいでしょう。
 
 ---
@@ -157,7 +158,7 @@ void main() {
 ずいぶんすっきりしました。
 `class` を書く必要がなくなり、`public` や `static`、`String[]` といった言葉も省けるようになっています。
 
-このしくみは、**コンパクトソースファイル**と**インスタンスメインメソッド**と呼ばれる、Java 25 で正式に導入された新しい機能によるものです（先ほど触れた JEP のひとつ、JEP 512 にあたります）。
+このしくみは、**コンパクトソースファイル**と**インスタンスメインメソッド**と呼ばれる、Java 25 で正式に導入された新しい機能によるものです（先ほど触れた JEP のひとつ、JEP 512 にあたります）[^jep512]。
 プログラミングを学び始めたばかりの人が、最初から多くの決まり文句に戸惑わずにすむように、という配慮から生まれた機能です。
 
 > **補足: `IO.println` の `IO.` は省略できません**
@@ -205,3 +206,17 @@ java --version
 ここまでで、プログラムとは何か、コンピュータの仕組み、Java の歴史・特徴・用途、そして Java が動く仕組みと必要な道具について学びました。
 いよいよ次の第2章では、実際に Java を使う準備 ―― **環境構築**に取りかかります。
 自分のコンピュータに JDK をインストールし、最初のプログラムを動かす準備を整えていきましょう。
+
+[^jep322-cycle]: JEP 322: Time-Based Release Versioning, <https://openjdk.org/jeps/322>。Java 10 以降の6か月リリースサイクルとバージョン番号付け規則を定めた JEP。
+
+[^java-lts-roadmap]: Oracle, "Java SE Support Roadmap," <https://www.oracle.com/java/technologies/java-se-support-roadmap.html>。Oracle が LTS（Long-Term Support）と短期サポートのバージョンを公式に区別している。
+
+[^lts-cadence-2year]: Oracle, "Moving the JDK to a Two-Year LTS Cadence" (Georges Saab, 2021年9月), <https://blogs.oracle.com/java/post/moving-the-jdk-to-a-two-year-lts-cadence>。Oracle は LTS の間隔を3年から2年に短縮することを公式表明した。
+
+[^jdk25-release-date]: Oracle, "Oracle Releases Java 25"（プレスリリース, 2025年9月16日）, <https://www.oracle.com/news/announcement/oracle-releases-java-25-2025-09-16/> および <https://openjdk.org/projects/jdk/25/>。
+
+[^jep-process]: JEP 1: JEP Process, <https://openjdk.org/jeps/1>。OpenJDK での新機能提案・検討プロセスを定めた JEP。
+
+[^jdk25-jeps]: OpenJDK, "JDK 25," <https://openjdk.org/projects/jdk/25/>。JDK 25 に取り込まれた全 JEP（18件）が一覧として公開されている。
+
+[^jep512]: JEP 512: Compact Source Files and Instance Main Methods, <https://openjdk.org/jeps/512>。Java 25 で正式機能（permanent feature）となった。簡略な main の書き方と `java.lang.IO` ユーティリティが導入された。

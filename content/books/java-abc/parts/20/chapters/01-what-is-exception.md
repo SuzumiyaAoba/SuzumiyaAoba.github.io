@@ -1,6 +1,7 @@
 ---
 title: 例外とは ― 実行中に起きる問題
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 例外とは ― 実行中に起きる問題

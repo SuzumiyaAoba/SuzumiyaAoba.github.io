@@ -1,6 +1,7 @@
 ---
 title: 依存関係とリポジトリ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 依存関係とリポジトリ

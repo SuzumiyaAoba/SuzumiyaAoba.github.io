@@ -1,6 +1,7 @@
 ---
 title: メソッドを組み合わせる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## メソッドを組み合わせる

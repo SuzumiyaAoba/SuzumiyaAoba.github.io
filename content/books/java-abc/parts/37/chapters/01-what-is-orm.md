@@ -1,6 +1,7 @@
 ---
 title: ORM とは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ORM とは
@@ -152,19 +153,19 @@ ORM は、銀の弾丸ではありません。
 
 ### JPA（Jakarta Persistence API）
 
-- **Java 標準の ORM 仕様**
-- インタフェースやアノテーションが定義されている
+- **Java 標準の ORM 仕様**[^jpa-spec]
+- インターフェースやアノテーションが定義されている
 - 「JPA」は API の名前で、自分では SQL を実行できない
 
 ### Hibernate
 
-- **JPA の代表的な実装**
+- **JPA の代表的な実装**[^hibernate]
 - 実際に SQL を組み立てて DB に投げる
 - 業界で広く使われている
 
 ### Spring Data JPA
 
-- JPA を使うときの、**Spring 流のお膳立て**を提供
+- JPA を使うときの、**Spring 流のお膳立て**を提供[^spring-data-jpa]
 - リポジトリのメソッド名から SQL を自動生成
 - ふつうの Spring Boot プロジェクトで使うのは、これ
 
@@ -216,7 +217,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 }
 ```
 
-**そのエンティティを操作するためのインタフェース**です。
+**そのエンティティを操作するためのインターフェース**です。
 `JpaRepository` を継承するだけで、CRUD のメソッドが全部使えるようになります。
 
 この 2 つの組み合わせが、JPA の基本パターンです。
@@ -233,3 +234,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 - 単純な CRUD は楽、複雑なクエリは別途検討、というのが ORM の特性
 
 次の節では、Spring Boot で JPA を使うための**プロジェクトのセットアップ**を学びます。
+
+[^jpa-spec]: Jakarta EE, "Jakarta Persistence Specification," <https://jakarta.ee/specifications/persistence/>。元は JSR 220（Java EE 5, 2006年）として導入された Java Persistence API（JPA）が、Eclipse Foundation 移管後に Jakarta Persistence と改称された。現行の最新版は Jakarta Persistence 3.2。
+
+[^hibernate]: Red Hat, "Hibernate ORM," <https://hibernate.org/orm/>。Gavin King らが2001年に開発を始めた Java の代表的 ORM 実装で、JPA の参照実装（reference implementation）級の地位にある。Spring Boot のデフォルト JPA プロバイダ。
+
+[^spring-data-jpa]: Spring Data JPA Reference, <https://docs.spring.io/spring-data/jpa/reference/>。Spring チームが提供する JPA 用 Repository 抽象。メソッド名から JPQL クエリを自動生成する Derived Query 機能や、`@Query` アノテーションによる手動クエリ指定に対応する。

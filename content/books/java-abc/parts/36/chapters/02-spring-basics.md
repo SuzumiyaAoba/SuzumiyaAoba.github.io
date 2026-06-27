@@ -1,14 +1,15 @@
 ---
 title: Spring の基本
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Spring の基本
 
-Spring は、Java の世界でもっとも広く使われているフレームワークです。
+Spring は、Java の世界でもっとも広く使われているフレームワークです[^spring-doc]。
 **Spring Framework**（中核ライブラリ）と、その上に乗る数多くのモジュール（Spring Web、Spring Data、Spring Security、...）の集合体です。
 
-そして、それらを**設定不要で動かせる**ようにまとめたのが、**Spring Boot** です。
+そして、それらを**設定不要で動かせる**ようにまとめたのが、**Spring Boot** です[^spring-boot]。
 本書では、基本的に Spring Boot を使って学んでいきます。
 
 ---
@@ -183,3 +184,7 @@ com.example.other             ← スキャンされない
 - Spring Boot は、`@SpringBootApplication` クラス**以下**を自動でスキャンします
 
 次の節では、実際に Spring Boot プロジェクトを作って、動かしてみます。
+
+[^spring-doc]: Spring Framework 公式ドキュメント, <https://docs.spring.io/spring-framework/reference/>。VMware（旧 Pivotal）が開発するエンタープライズ Java フレームワーク。Rod Johnson が2003年にリリースした Spring 1.0 を起点に、DI コンテナを中核として発展した。
+
+[^spring-boot]: Spring Boot 公式ドキュメント, <https://docs.spring.io/spring-boot/index.html>。Spring Framework に「Convention over Configuration」と自動設定（auto-configuration）を組み合わせ、最小限の設定で本番稼働可能なアプリを構築できるようにしたフレームワーク。2014年に1.0がリリースされた。

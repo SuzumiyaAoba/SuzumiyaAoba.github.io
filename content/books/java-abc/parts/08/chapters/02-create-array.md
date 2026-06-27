@@ -1,6 +1,7 @@
 ---
 title: 配列を作る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 配列を作る

@@ -1,6 +1,7 @@
 ---
 title: 構造化ログ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 構造化ログ

@@ -1,11 +1,12 @@
 ---
 title: テキストブロックとは ― 複数行の文字列
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## テキストブロックとは ― 複数行の文字列
 
-**テキストブロック**（Text Block）は、`"""`（ダブルクォート3つ）で囲んで、**複数行の文字列を、見たままに書ける**しくみです。
+**テキストブロック**（Text Block）は、`"""`（ダブルクォート3つ）で囲んで、**複数行の文字列を、見たままに書ける**しくみです[^jep378-textblocks]。
 この節では、その基本を学びます。
 
 ---
@@ -130,3 +131,5 @@ String sql = """
 - HTML・JSON・SQL・長いメッセージなどに最適
 
 次の節では、テキストブロックの、もう少し細かいルール（インデント・改行の制御）を学びます。
+
+[^jep378-textblocks]: JEP 378: Text Blocks, <https://openjdk.org/jeps/378>。Java 15（2020年9月）で正式機能となった。`"""` で囲む複数行文字列リテラルで、共通インデントの自動除去（incidental whitespace stripping）が行われる。プレビューは JEP 355（JDK 13）、JEP 368（JDK 14）。詳細は *JLS §3.10.6*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.6>）参照。

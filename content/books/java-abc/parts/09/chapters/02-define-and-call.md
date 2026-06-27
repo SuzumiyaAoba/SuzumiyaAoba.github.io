@@ -1,6 +1,7 @@
 ---
 title: メソッドを定義して呼び出す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## メソッドを定義して呼び出す

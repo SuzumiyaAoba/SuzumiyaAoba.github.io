@@ -1,6 +1,7 @@
 ---
 title: タイムゾーンと Instant ― 世界の時刻
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## タイムゾーンと Instant ― 世界の時刻

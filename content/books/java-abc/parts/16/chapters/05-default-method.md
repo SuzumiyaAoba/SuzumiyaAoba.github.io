@@ -1,13 +1,14 @@
 ---
 title: デフォルトメソッド ― インターフェースに実装を持たせる
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## デフォルトメソッド ― インターフェースに実装を持たせる
 
 これまで、インターフェースのメソッドは「中身のない約束」だけでした。
 ですが、Java 8 以降、インターフェースにも**中身のあるメソッド**を持たせられるようになりました。
-それが **デフォルトメソッド**（Default Method）です。
+それが **デフォルトメソッド**（Default Method）です[^jep126-default-methods]。
 
 ---
 
@@ -126,3 +127,5 @@ class Rectangle implements Shape {
 - 目的は、「**既存の実装を壊さずに、インターフェースにメソッドを追加する**」こと
 
 次の節では、抽象クラスとインターフェースを、どう使い分けるかを整理します。
+
+[^jep126-default-methods]: JEP 126: Lambda Expressions & Virtual Extension Methods, <https://openjdk.org/jeps/126>。Java 8（2014年3月）でラムダ式と共に導入された機能で、インターフェースの後方互換的な拡張を可能にする。詳細は *JLS §9.4*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-9.html#jls-9.4>）参照。

@@ -1,6 +1,7 @@
 ---
 title: 並行処理とは ― スレッドの考え方
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 並行処理とは ― スレッドの考え方

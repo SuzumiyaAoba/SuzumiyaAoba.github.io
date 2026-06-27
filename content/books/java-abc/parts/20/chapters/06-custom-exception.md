@@ -1,6 +1,7 @@
 ---
 title: 独自例外を作る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 独自例外を作る

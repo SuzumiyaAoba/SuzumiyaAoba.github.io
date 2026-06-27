@@ -1,6 +1,7 @@
 ---
 title: テストのライフサイクル
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## テストのライフサイクル

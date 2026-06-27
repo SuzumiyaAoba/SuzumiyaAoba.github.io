@@ -14,7 +14,7 @@ co-author: ["Claude Opus 4.7"]
 
 ## 解きたい問題: テレスコープコンストラクタ
 
-オプション項目が増えると、コンストラクタを**重ねていく**ことになりがちです。
+オプション項目が増えると、コンストラクタを**重ねていく**ことになりがちです[^effective-java-builder]。
 
 ```java
 public class Pizza {
@@ -151,7 +151,7 @@ public record Pizza(int size, String crust, boolean cheese, boolean tomato) {
 
 ## Lombok の `@Builder`
 
-実務では、**Lombok**（第47章）の `@Builder` を使うことも多いです。
+実務では、**Lombok**（第47章）の `@Builder` を使うことも多いです[^lombok-builder]。
 アノテーション 1 つで、上のような Builder クラスを**自動生成**してくれます。
 
 ```java
@@ -201,3 +201,7 @@ Pizza pizza = Pizza.builder()
 - 「**読みやすさのため**」がいちばんの目的
 
 次の章では、生成パターンの最後 ―― **Prototype**（コピーで作る）を見ます。
+
+[^effective-java-builder]: Joshua Bloch, *Effective Java*, 3rd Edition, Item 2 "Consider a builder when faced with many constructor parameters"。テレスコープコンストラクタや JavaBeans パターン（セッター方式）の問題点と、Builder パターンによる解決が論じられている。
+
+[^lombok-builder]: Project Lombok, "@Builder," <https://projectlombok.org/features/Builder>。アノテーションプロセッサで Builder クラスを自動生成する Lombok の機能。`@Builder.Default` でデフォルト値を指定できる。

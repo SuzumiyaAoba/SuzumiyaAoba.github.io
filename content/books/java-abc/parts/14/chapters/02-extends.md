@@ -1,6 +1,7 @@
 ---
 title: extends でクラスを継承する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## extends でクラスを継承する

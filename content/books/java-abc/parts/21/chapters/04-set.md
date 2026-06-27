@@ -1,6 +1,7 @@
 ---
 title: Set ― 重複のない集まり
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Set ― 重複のない集まり

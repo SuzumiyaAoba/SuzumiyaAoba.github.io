@@ -1,6 +1,7 @@
 ---
 title: 親の型で子を扱う ― アップキャスト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 親の型で子を扱う ― アップキャスト

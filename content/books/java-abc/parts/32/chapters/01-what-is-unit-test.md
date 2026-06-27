@@ -1,6 +1,7 @@
 ---
 title: ユニットテストとは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ユニットテストとは

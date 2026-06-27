@@ -1,6 +1,7 @@
 ---
 title: 抽象メソッド ― 実装を強制する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 抽象メソッド ― 実装を強制する

@@ -1,6 +1,7 @@
 ---
 title: 文字列の整形 ― formatted・String.format
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 文字列の整形 ― formatted・String.format

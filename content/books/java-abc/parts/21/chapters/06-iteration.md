@@ -1,6 +1,7 @@
 ---
 title: コレクションの繰り返し処理
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コレクションの繰り返し処理

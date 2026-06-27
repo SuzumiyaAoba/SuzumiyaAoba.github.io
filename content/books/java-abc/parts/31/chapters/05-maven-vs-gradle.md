@@ -1,6 +1,7 @@
 ---
 title: Maven と Gradle の使い分け
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Maven と Gradle の使い分け

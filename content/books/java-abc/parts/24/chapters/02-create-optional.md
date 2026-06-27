@@ -1,6 +1,7 @@
 ---
 title: Optional を作る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Optional を作る

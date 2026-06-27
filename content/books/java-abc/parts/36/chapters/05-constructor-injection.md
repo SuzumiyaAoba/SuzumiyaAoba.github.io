@@ -1,6 +1,7 @@
 ---
 title: コンストラクタ注入
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コンストラクタ注入

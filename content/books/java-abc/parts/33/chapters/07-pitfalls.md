@@ -1,6 +1,7 @@
 ---
 title: よくあるつまずき
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## よくあるつまずき
@@ -122,7 +123,7 @@ Mockito cannot mock/spy because :
 
 ### 対処
 
-- できれば、final を解除するのではなく、**インタフェースを切る**設計に変える
+- できれば、final を解除するのではなく、**インターフェースを切る**設計に変える
 - どうしても必要なら、Mockito 公式ドキュメントの inline mock maker の設定を確認
 
 ---

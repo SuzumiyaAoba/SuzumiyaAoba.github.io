@@ -1,6 +1,7 @@
 ---
 title: throw と throws ― 例外を投げる・宣言する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## throw と throws ― 例外を投げる・宣言する

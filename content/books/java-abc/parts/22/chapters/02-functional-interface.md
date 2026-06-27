@@ -1,6 +1,7 @@
 ---
 title: 関数型インターフェース ― ラムダ式の型
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 関数型インターフェース ― ラムダ式の型

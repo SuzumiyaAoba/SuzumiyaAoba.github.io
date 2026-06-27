@@ -1,6 +1,7 @@
 ---
 title: ジェネリックメソッド
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ジェネリックメソッド

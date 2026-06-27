@@ -1,6 +1,7 @@
 ---
 title: 関連を扱う
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 関連を扱う

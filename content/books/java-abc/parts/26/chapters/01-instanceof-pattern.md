@@ -1,6 +1,7 @@
 ---
 title: instanceof パターン ― おさらいと発展
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## instanceof パターン ― おさらいと発展

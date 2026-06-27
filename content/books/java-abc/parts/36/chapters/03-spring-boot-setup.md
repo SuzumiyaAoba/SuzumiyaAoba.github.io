@@ -1,6 +1,7 @@
 ---
 title: Spring Boot プロジェクト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Spring Boot プロジェクト

@@ -1,6 +1,7 @@
 ---
 title: 型変換 ― 自動変換とキャスト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 型変換 ― 自動変換とキャスト
@@ -25,7 +26,7 @@ d ==> 10.0
 整数の `10` を入れたのに、`10.0` という小数になりました。
 `int` から `double` への変換が、**自動的に**行われたのです。
 
-このように、**より広い範囲を扱える型へ**の変換は、Java が自動で行ってくれます。
+このように、**より広い範囲を扱える型へ**の変換は、Java が自動で行ってくれます[^jls-widening-conversion]。
 `int`（整数）から `double`（小数）へは、情報が失われる心配がないため、安全に自動変換できるのです。
 
 ---
@@ -36,7 +37,7 @@ d ==> 10.0
 この場合は、小数点以下が**失われてしまう**ため、Java は自動では変換してくれません。
 
 そこで、「情報が失われてもいいので、変換してください」と、自分で指示します。
-これを**キャスト**（Cast、型キャスト）と呼び、`(int)` のように、変換したい型をかっこで囲んで書きます。
+これを**キャスト**（Cast、型キャスト）と呼び、`(int)` のように、変換したい型をかっこで囲んで書きます[^jls-narrowing-conversion]。
 
 ```text
 jshell> int i = (int) 3.9;
@@ -103,7 +104,7 @@ over ==> -2147483648
 
 `2147483647` は `int` の最大値です。それに `1` を足したら、もっと大きい数になる…と思いきや、結果は**いちばん小さい数（マイナス）**になってしまいました。
 
-このように、型の範囲を超えて値があふれることを、**桁あふれ**（オーバーフロー、Overflow）と呼びます。
+このように、型の範囲を超えて値があふれることを、**桁あふれ**（オーバーフロー、Overflow）と呼びます[^jls-integer-overflow]。
 メーターが一周して戻ってしまうようなイメージです。
 
 大きな数を扱うとわかっているときは、`int` ではなく `long` を使う、といった対策が必要です。
@@ -125,7 +126,7 @@ s ==> "53"
 `8` ではなく、`"53"` という文字列になりました。
 `"5"` はあくまで**文字**であって、数値の `5` とは別物だからです。`+` は「足し算」ではなく「連結」として働きます。
 
-文字列を数値として計算したいときは、`Integer.parseInt(...)` を使って、文字列を整数に変換します。
+文字列を数値として計算したいときは、`Integer.parseInt(...)` を使って、文字列を整数に変換します[^java-integer-parseInt]。
 
 ```text
 jshell> int n = Integer.parseInt("5") + 3;
@@ -143,7 +144,7 @@ n ==> 8
 
 ## まとめ
 
-このセクションでは、型変換を学びました。
+この節では、型変換を学びました。
 
 - **型変換**には、自動で行われるものと、自分で指示する**キャスト**がある
 - `int` → `double` のような**広い型へ**の変換は、自動で行われる
@@ -153,3 +154,11 @@ n ==> 8
 - 文字列と数値は別物。`"5" + 3` は `"53"`（連結）。数値にするには `Integer.parseInt(...)` を使う
 
 次の節では、型を自分で書くかわりに Java に推論してもらう、便利な書き方 **var** を学びます。
+
+[^jls-widening-conversion]: *The Java® Language Specification, Java SE 25 Edition*, §5.1.2 "Widening Primitive Conversion," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html#jls-5.1.2>。`byte → short → int → long → float → double` などの拡大変換は暗黙に行われ、`char → int → ...` も含まれる。
+
+[^jls-narrowing-conversion]: *The Java® Language Specification, Java SE 25 Edition*, §5.1.3 "Narrowing Primitive Conversion," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html#jls-5.1.3>。縮小変換（`double → int` など）は明示的キャストが必要で、浮動小数点から整数への変換では小数部が切り捨てられる（§5.1.3 表）。
+
+[^jls-integer-overflow]: *The Java® Language Specification, Java SE 25 Edition*, §15.18.2 "Additive Operators (+ and -) for Numeric Types," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.2>。"If an integer addition overflows, then the result is the low-order bits of the true mathematical sum as represented in some sufficiently large two's-complement format." と規定されている（オーバーフロー時は例外を投げず、2の補数表現で巻き戻る）。
+
+[^java-integer-parseInt]: Java SE 25 API Specification, `java.lang.Integer#parseInt(String)`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html#parseInt(java.lang.String)>。"Parses the string argument as a signed decimal integer." 解析できない場合は `NumberFormatException` を投げる。

@@ -1,6 +1,7 @@
 ---
 title: スタブを設定する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## スタブを設定する

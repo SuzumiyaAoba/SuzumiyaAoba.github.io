@@ -1,6 +1,7 @@
 ---
 title: 例外とタイムアウトのテスト
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 例外とタイムアウトのテスト

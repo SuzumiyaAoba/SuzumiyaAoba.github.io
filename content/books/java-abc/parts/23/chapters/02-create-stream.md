@@ -1,6 +1,7 @@
 ---
 title: ストリームを作る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ストリームを作る

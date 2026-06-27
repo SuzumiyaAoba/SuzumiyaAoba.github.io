@@ -1,6 +1,7 @@
 ---
 title: 繰り返しとは
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 繰り返しとは

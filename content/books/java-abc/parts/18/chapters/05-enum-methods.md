@@ -1,6 +1,7 @@
 ---
 title: enum の便利なメソッド
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## enum の便利なメソッド

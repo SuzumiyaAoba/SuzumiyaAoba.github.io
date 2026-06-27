@@ -1,6 +1,7 @@
 ---
 title: else if で多分岐
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## else if で多分岐

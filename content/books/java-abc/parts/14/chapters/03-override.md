@@ -1,6 +1,7 @@
 ---
 title: オーバーライド ― メソッドを作り直す
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## オーバーライド ― メソッドを作り直す

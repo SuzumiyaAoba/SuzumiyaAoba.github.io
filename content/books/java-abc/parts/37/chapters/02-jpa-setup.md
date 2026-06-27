@@ -1,6 +1,7 @@
 ---
 title: Spring Data JPA のセットアップ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Spring Data JPA のセットアップ

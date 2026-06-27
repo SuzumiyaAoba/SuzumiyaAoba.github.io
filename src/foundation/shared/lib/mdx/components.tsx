@@ -21,6 +21,7 @@ import { MdxH2, MdxH3, MdxH4, MdxH5 } from "@/shared/ui/mdx/heading";
 import { Img } from "@/shared/ui/mdx/img";
 import { MdxTable } from "@/shared/ui/mdx/table";
 import { ChatHistory } from "@/shared/ui/mdx/chat-history";
+import { Column } from "@/shared/ui/mdx/column";
 import { Message } from "@/shared/ui/mdx/message";
 import { YouTubeEmbed } from "@/shared/ui/mdx/youtube-embed";
 import { createPlaceholder } from "@/shared/ui/mdx/placeholders";
@@ -351,6 +352,7 @@ export const mdxComponents: MDXComponents = {
   h5: MdxH5,
   table: MdxTable,
   Message,
+  Column,
   Tab,
   Tabs,
   MdxLabel,

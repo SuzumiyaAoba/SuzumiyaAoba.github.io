@@ -1,6 +1,7 @@
 ---
 title: オーバーロードと this() ― 複数のコンストラクタ
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## オーバーロードと this() ― 複数のコンストラクタ

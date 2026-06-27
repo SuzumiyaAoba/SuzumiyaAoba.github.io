@@ -1,6 +1,7 @@
 ---
 title: 自動で用意されるもの
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 自動で用意されるもの

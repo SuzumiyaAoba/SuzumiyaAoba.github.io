@@ -1,6 +1,7 @@
 ---
 title: ラムダ式の書き方 ― 省略のルール
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ラムダ式の書き方 ― 省略のルール

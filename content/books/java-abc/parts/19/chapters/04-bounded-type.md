@@ -1,6 +1,7 @@
 ---
 title: 型引数の境界 ― 型を制限する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 型引数の境界 ― 型を制限する

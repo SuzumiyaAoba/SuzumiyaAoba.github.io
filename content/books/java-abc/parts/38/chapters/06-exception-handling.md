@@ -1,6 +1,7 @@
 ---
 title: 例外ハンドリング
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 例外ハンドリング
@@ -179,12 +180,12 @@ Content-Type: application/json
 
 ---
 
-## ProblemDetail（RFC 7807）― 標準形式に従う
+## ProblemDetail（RFC 9457）― 標準形式に従う
 
 エラーレスポンスの形式を、**業界標準**に合わせるという選択もあります。
-**RFC 7807** で定められた **Problem Details for HTTP APIs** という JSON 形式です。
+**RFC 9457** で定められた **Problem Details for HTTP APIs** という JSON 形式です（旧 RFC 7807 を改訂・置き換えたもの）[^rfc9457]。
 
-Spring 6 / Spring Boot 3 からは、これが**標準でサポート**されています。
+Spring 6 / Spring Boot 3 からは、これが**標準でサポート**されています[^spring-problemdetail]。
 `application.yml` に、
 
 ```yaml
@@ -196,8 +197,44 @@ spring:
 
 を追加するだけで、エラーレスポンスが ProblemDetail 形式（`type`・`title`・`detail`・`status`・`instance`）になります。
 
+```json
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Book not found: 999",
+  "instance": "/api/books/999"
+}
+```
+
+各フィールドの意味は次のとおりです。
+
+| フィールド | 意味 |
+|---|---|
+| `type` | エラー種別を識別する URI（既定値は `about:blank`） |
+| `title` | 人間向けの短い要約 |
+| `status` | HTTP ステータスコード |
+| `detail` | 人間向けの詳しい説明 |
+| `instance` | エラーが起きた具体的なリソースを示す URI |
+
+自前で `ProblemDetail.forStatusAndDetail(...)` を組み立てることもできます。
+
+```java
+@ExceptionHandler(BookNotFoundException.class)
+public ProblemDetail handleNotFound(BookNotFoundException e) {
+    ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+    pd.setType(URI.create("https://example.com/probs/book-not-found"));
+    pd.setProperty("bookId", e.getBookId());   // 独自フィールドも追加可
+    return pd;
+}
+```
+
 新しいプロジェクトでは、ProblemDetail を採用するのもよい選択です。
 本書では、自前のシンプルな Map 形式で説明しましたが、業務で「業界標準に合わせよう」となったら、ProblemDetail を覚えてください。
+
+[^rfc9457]: IETF RFC 9457: Problem Details for HTTP APIs, <https://www.rfc-editor.org/rfc/rfc9457>。2023年7月公開。RFC 7807（2016年）を改訂・置き換えた現行仕様。HTTP API のエラーを構造化された JSON／XML で返すためのフォーマットを規定する。
+
+[^spring-problemdetail]: Spring Framework Reference, "ProblemDetail," <https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html>。Spring Framework 6.0 / Spring Boot 3.0 から `org.springframework.http.ProblemDetail` クラスとして組み込み実装が提供される。
 
 ---
 

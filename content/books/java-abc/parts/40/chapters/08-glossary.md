@@ -1,6 +1,7 @@
 ---
 title: 用語集 ― この章で学んだ言葉 と おわりに
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 用語集 ― この章で学んだ言葉
@@ -25,7 +26,7 @@ llm: true
 
 | 用語 | 意味 |
 |---|---|
-| SLF4J | Simple Logging Facade for Java。ロギングの共通インタフェース |
+| SLF4J | Simple Logging Facade for Java。ロギングの共通インターフェース |
 | Logback | SLF4J の標準実装。Spring Boot のデフォルト |
 | Log4j 2 | Logback と並ぶ実装の選択肢 |
 | `LoggerFactory.getLogger(クラス.class)` | クラス用ロガーの取得 |

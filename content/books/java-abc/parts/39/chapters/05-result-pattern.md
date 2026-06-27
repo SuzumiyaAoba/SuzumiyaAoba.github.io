@@ -1,6 +1,7 @@
 ---
 title: Result 型と Optional
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Result 型と Optional

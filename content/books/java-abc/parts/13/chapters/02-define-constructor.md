@@ -1,6 +1,7 @@
 ---
 title: コンストラクタを定義する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コンストラクタを定義する

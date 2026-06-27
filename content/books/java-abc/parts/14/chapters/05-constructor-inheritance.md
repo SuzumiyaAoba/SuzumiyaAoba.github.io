@@ -1,6 +1,7 @@
 ---
 title: コンストラクタと継承 ― super(...) で親を初期化する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## コンストラクタと継承 ― super(...) で親を初期化する

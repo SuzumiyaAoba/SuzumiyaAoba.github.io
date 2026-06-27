@@ -68,6 +68,8 @@ export default async function Page({ params, locale = "ja" }: PageProps) {
       currentSection={section}
       prev={adjacent.prev}
       next={adjacent.next}
+      llm={sectionData.llm ?? false}
+      coAuthors={sectionData.coAuthors ?? []}
     />
   );
 }

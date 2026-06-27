@@ -1,11 +1,12 @@
 ---
 title: Optional とは ― 値の有無を表す箱
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## Optional とは ― 値の有無を表す箱
 
-**`Optional`**（オプショナル）は、「**値があるかもしれないし、ないかもしれない**」を表す箱です。
+**`Optional`**（オプショナル）は、「**値があるかもしれないし、ないかもしれない**」を表す箱です[^java-optional]。
 この節では、`null` の問題をふり返り、`Optional` がそれをどう解決するのかを学びます。
 
 ---
@@ -118,3 +119,5 @@ true
 - ストリームの `max`・`average` などが `Optional` を返すのは「結果がないかも」だから
 
 次の節では、`Optional` を**作る**方法（`of`・`ofNullable`・`empty`）を学びます。
+
+[^java-optional]: Java SE 25 API Specification, `java.util.Optional`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html>。Java SE 8 で導入。"A container object which may or may not contain a non-null value." API ノートでは "Optional is primarily intended for use as a method return type" と推奨され、フィールドや引数での濫用は避けるよう注意喚起されている。

@@ -1,6 +1,7 @@
 ---
 title: `@Configuration` と `@Bean`
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## `@Configuration` と `@Bean`

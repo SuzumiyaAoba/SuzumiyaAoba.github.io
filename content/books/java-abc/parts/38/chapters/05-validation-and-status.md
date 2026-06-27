@@ -1,6 +1,7 @@
 ---
 title: バリデーションとステータス
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## バリデーションとステータス

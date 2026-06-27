@@ -1,6 +1,7 @@
 ---
 title: 用語集 ― この章で学んだ言葉
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 用語集 ― この章で学んだ言葉

@@ -1,6 +1,7 @@
 ---
 title: map と filter ― 箱に入れたまま処理する
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## map と filter ― 箱に入れたまま処理する

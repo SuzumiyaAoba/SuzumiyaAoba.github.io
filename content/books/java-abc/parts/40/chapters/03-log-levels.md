@@ -1,6 +1,7 @@
 ---
 title: ログレベル
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## ログレベル

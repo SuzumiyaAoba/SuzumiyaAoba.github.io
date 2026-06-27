@@ -87,7 +87,7 @@ img.display();   // 2 回目はロードされない
 
 ## 動的プロキシ（`java.lang.reflect.Proxy`）
 
-Java には、**インターフェースを動的に実装する**仕組みがあります。
+Java には、**インターフェースを動的に実装する**仕組みがあります[^java-reflect-proxy]。
 
 ```java
 import java.lang.reflect.Proxy;
@@ -168,3 +168,5 @@ Proxy と Decorator は、構造的にとてもよく似ています（同じイ
 - Spring の AOP は、Proxy 生成の典型的な実用例
 
 次の章では、**Composite** ―― **木構造**を扱うパターンを見ます。
+
+[^java-reflect-proxy]: Java SE 25 API, `java.lang.reflect.Proxy`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/reflect/Proxy.html>。Java 1.3（2000年）で導入された動的プロキシ機構。`Proxy.newProxyInstance(ClassLoader, Class[], InvocationHandler)` でインターフェースの動的実装を生成する。Spring AOP のデフォルト実装の一つでもある。

@@ -1,6 +1,7 @@
 ---
 title: 多次元配列
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 多次元配列

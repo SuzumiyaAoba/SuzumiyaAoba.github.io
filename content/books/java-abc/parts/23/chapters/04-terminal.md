@@ -1,6 +1,7 @@
 ---
 title: 終端操作 ― 結果を得る
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 終端操作 ― 結果を得る

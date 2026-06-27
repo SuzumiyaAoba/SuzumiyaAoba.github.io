@@ -1,6 +1,7 @@
 ---
 title: SLF4J と Logback
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## SLF4J と Logback
@@ -23,9 +24,9 @@ Java の世界には、たくさんのロギングライブラリがあります
 
 **SLF4J**（Simple Logging Facade for Java、エスエルフォージェイ）は、
 
-> 「**ロギング呼び出しのための、共通のインタフェース**」
+> 「**ロギング呼び出しのための、共通のインターフェース**」
 
-を提供します。
+を提供します[^slf4j]。
 `Facade`（ファサード、見せかけの正面）という言葉が表すとおり、SLF4J 自身はログを出しません。
 その**裏側に実装**（Logback など）を差し込んで使います。
 
@@ -44,7 +45,7 @@ Logback / Log4j 2 / java.util.logging  ← どれかを実装として使う
 
 ## Logback ― SLF4J の実装
 
-**Logback**（ログバック）は、SLF4J を作った人（Ceki Gülcü）が開発した、SLF4J の**標準的な実装**です。
+**Logback**（ログバック）は、SLF4J を作った人（Ceki Gülcü）が開発した、SLF4J の**標準的な実装**です[^logback]。
 
 - 高速
 - 安定
@@ -231,7 +232,7 @@ log.info("注文受付")
 
 ## まとめ
 
-- **SLF4J** は、ロギングの**共通インタフェース**
+- **SLF4J** は、ロギングの**共通インターフェース**
 - **Logback** は SLF4J の**標準実装**で、Spring Boot のデフォルト
 - ロガーは、`LoggerFactory.getLogger(クラス.class)` で取得
 - メッセージは、**`{}` プレースホルダ + 引数**で書く
@@ -241,3 +242,7 @@ log.info("注文受付")
 - 出力先は、Logback の**設定ファイル**で決める
 
 次の節は、**ログレベル**の使い分けを、現場感のある視点で整理します。
+
+[^slf4j]: SLF4J 公式サイト, <https://www.slf4j.org/>。"Simple Logging Facade for Java" の略称。さまざまなロギング実装（Logback、Log4j 2、java.util.logging など）の前に共通 API を提供するファサードライブラリで、ライブラリ作者がログ実装を選ばずにログ出力を書ける。
+
+[^logback]: Logback 公式サイト, <https://logback.qos.ch/>。SLF4J の作者 Ceki Gülcü による SLF4J 標準実装で、Log4j の後継として設計された。Spring Boot のデフォルトロギング実装としてバンドルされる（<https://docs.spring.io/spring-boot/reference/features/logging.html>）。

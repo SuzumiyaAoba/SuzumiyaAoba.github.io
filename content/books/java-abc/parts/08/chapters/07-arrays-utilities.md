@@ -1,12 +1,13 @@
 ---
 title: 配列の便利な道具（Arrays）
 llm: true
+co-author: ["Claude Opus 4.7"]
 ---
 
 ## 配列の便利な道具（Arrays）
 
 配列を扱っていると、「中身をまとめて表示したい」「並べ替えたい」といった、定番の処理が出てきます。
-これらを、自分で繰り返しを書かなくても済むように、Java は **`Arrays`**（アレイズ）という便利な道具をあらかじめ用意しています。
+これらを、自分で繰り返しを書かなくても済むように、Java は **`Arrays`**（アレイズ）という便利な道具をあらかじめ用意しています[^java-arrays-class]。
 
 `Arrays` は `java.util` というパッケージにあります。
 ファイルに書くときは、先頭で **`import java.util.Arrays;`** が必要です（jshell では、すでに使える状態になっているので import は不要です）。
@@ -110,3 +111,5 @@ $ java Args.java りんご みかん ぶどう
 - `main(String[] args)` の `args` は、**コマンドライン引数**を受け取る配列
 
 次の節では、配列でつまずきやすいポイントを、まとめて確認します。
+
+[^java-arrays-class]: Java SE 25 API Specification, `java.util.Arrays`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html>。配列の表示（`toString`）、ソート（`sort`、Dual-Pivot Quicksort）、検索（`binarySearch`）、コピー（`copyOf`）、`Stream` 変換（`stream`）など多数のユーティリティを提供する。
