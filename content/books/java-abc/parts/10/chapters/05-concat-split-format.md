@@ -54,7 +54,7 @@ jshell> fruits
 fruits ==> String[3] { "りんご", "みかん", "ぶどう" }
 
 jshell> fruits.length
-$3 ==> 3
+$4 ==> 3
 ```
 
 `","` で区切られて、3つの要素を持つ `String` の配列になりました。

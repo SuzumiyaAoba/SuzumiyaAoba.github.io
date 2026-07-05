@@ -36,13 +36,13 @@ double add(double a, double b) {
 
 ```text
 jshell> add(1, 2)
-$1 ==> 3
+$4 ==> 3
 
 jshell> add(1, 2, 3)
-$2 ==> 6
+$5 ==> 6
 
 jshell> add(1.5, 2.5)
-$3 ==> 4.0
+$6 ==> 4.0
 ```
 
 - `add(1, 2)` → 引数は `int` 2つ → 1つめのメソッドが呼ばれる
@@ -102,13 +102,13 @@ int sum(int... nums) {
 
 ```text
 jshell> sum(1, 2, 3, 4)
-$1 ==> 10
+$2 ==> 10
 
 jshell> sum(10, 20)
-$2 ==> 30
+$3 ==> 30
 
 jshell> sum()
-$3 ==> 0
+$4 ==> 0
 ```
 
 `sum(1, 2, 3, 4)` でも `sum(10, 20)` でも、同じ `sum` で受けられました。

@@ -70,10 +70,10 @@ boolean isEven(int n) {
 
 ```text
 jshell> average(3, 4)
-$1 ==> 3.5
+$3 ==> 3.5
 
 jshell> isEven(4)
-$2 ==> true
+$4 ==> true
 ```
 
 - `average` は `double` を返すので、小数の平均（`3.5`）が得られます
@@ -129,13 +129,13 @@ String grade(int score) {
 
 ```text
 jshell> grade(95)
-$1 ==> "A"
+$2 ==> "A"
 
 jshell> grade(70)
-$2 ==> "B"
+$3 ==> "B"
 
 jshell> grade(40)
-$3 ==> "C"
+$4 ==> "C"
 ```
 
 `score` が 95 なら最初の `return "A";` で終わり、それ以降は実行されません。
