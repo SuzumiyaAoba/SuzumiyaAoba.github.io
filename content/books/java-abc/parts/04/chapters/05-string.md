@@ -126,6 +126,6 @@ $1 ==> 5
 
 次の節では、ここまで何気なく書いてきた `100` や `"Hello"`、`'A'` のような「コードに直接書いた値」＝**リテラル**を、整理して学びます。
 
-[^java-string-class]: Java SE 25 API Specification, `java.lang.String`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html>。`String` は不変（immutable）クラスで、`length()`、`charAt(int)`、`substring(int,int)`、`equals(Object)` などのメソッドを持つ。
+[^java-string-class]: Java SE 25 API Specification, `java.lang.String`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html>)。`String` は不変（immutable）クラスで、`length()`、`charAt(int)`、`substring(int,int)`、`equals(Object)` などのメソッドを持つ。
 
-[^jls-string-concat]: *The Java® Language Specification, Java SE 25 Edition*, §15.18.1 "String Concatenation Operator +," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.1>。オペランドのいずれかが `String` 型のとき `+` は文字列連結となり、もう一方は文字列変換（§5.1.11）される。
+[^jls-string-concat]: *The Java® Language Specification, Java SE 25 Edition*, §15.18.1 "String Concatenation Operator +," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.1](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.18.1>)。オペランドのいずれかが `String` 型のとき `+` は文字列連結となり、もう一方は文字列変換（§5.1.11）される。

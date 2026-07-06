@@ -255,4 +255,4 @@ class CalculatorTest {
 
 次の節では、`assertEquals` のほかにどんなアサーションがあるかを、まとめて学びます。
 
-[^junit5]: JUnit 5 公式サイト, "JUnit 5 User Guide," <https://junit.org/junit5/docs/current/user-guide/>。JUnit 5 は JUnit Platform、JUnit Jupiter（新しいテスト API）、JUnit Vintage（JUnit 3/4 互換）の3つのサブプロジェクトから構成される。2017年初版リリース。
+[^junit5]: JUnit 5 公式サイト, "JUnit 5 User Guide," [https://junit.org/junit5/docs/current/user-guide/](<https://junit.org/junit5/docs/current/user-guide/>)。JUnit 5 は JUnit Platform、JUnit Jupiter（新しいテスト API）、JUnit Vintage（JUnit 3/4 互換）の3つのサブプロジェクトから構成される。2017年初版リリース。

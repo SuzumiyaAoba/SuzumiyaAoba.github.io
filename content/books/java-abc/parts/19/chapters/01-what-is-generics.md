@@ -119,4 +119,4 @@ Box<String>         … クラスに「型」を渡す
 
 次の節では、`Box<T>` のような、ジェネリッククラスの**定義のしかた**を学びます。
 
-[^jls-generics]: *The Java® Language Specification, Java SE 25 Edition*, §4.4 "Type Variables," §4.5 "Parameterized Types," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.4>。ジェネリクスは Java 5（JSR 14, 2004年）で導入された。型消去（type erasure, *JLS §4.6*）により実行時には型引数情報が失われる点に注意。
+[^jls-generics]: *The Java® Language Specification, Java SE 25 Edition*, §4.4 "Type Variables," §4.5 "Parameterized Types," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.4>)。ジェネリクスは Java 5（JSR 14, 2004年）で導入された。型消去（type erasure, *JLS §4.6*）により実行時には型引数情報が失われる点に注意。

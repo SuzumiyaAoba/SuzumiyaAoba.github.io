@@ -201,4 +201,4 @@ SRP を意識して書くと、次のような効果が出ます。
 
 次の節は、**OCP** ― 拡張に開き、修正に閉じる原則です。
 
-[^solid-srp]: Robert C. Martin, "The Single Responsibility Principle," Clean Coder Blog, <https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html>。SOLID 原則の "S" を担う原則で、Martin による著書 *Agile Software Development: Principles, Patterns, and Practices*（2002）で広く知られた。後に Martin 自身が "A class should have only one reason to change" の意味を「アクター（変更を要求する関係者）が1つ」と言い換えている。
+[^solid-srp]: Robert C. Martin, "The Single Responsibility Principle," Clean Coder Blog, [https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html](<https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html>)。SOLID 原則の "S" を担う原則で、Martin による著書 *Agile Software Development: Principles, Patterns, and Practices*（2002）で広く知られた。後に Martin 自身が "A class should have only one reason to change" の意味を「アクター（変更を要求する関係者）が1つ」と言い換えている。

@@ -170,4 +170,4 @@ e.commit();   // ここで終了時刻も自動的に記録
 
 次の節では、実機で `.jfr` を取得し、内容を `jfr` コマンドで覗くまでを順を追って見ていきます。
 
-[^jep328-jfr]: JEP 328: Flight Recorder, <https://openjdk.org/jeps/328>。Java 11（2018年9月）で Oracle JDK から OpenJDK に寄贈・オープンソース化された。Oracle, "Java Flight Recorder User Guide," <https://docs.oracle.com/en/java/javase/25/jfapi/> も参照。
+[^jep328-jfr]: JEP 328: Flight Recorder, [https://openjdk.org/jeps/328](<https://openjdk.org/jeps/328>)。Java 11（2018年9月）で Oracle JDK から OpenJDK に寄贈・オープンソース化された。Oracle, "Java Flight Recorder User Guide," [https://docs.oracle.com/en/java/javase/25/jfapi/](<https://docs.oracle.com/en/java/javase/25/jfapi/>) も参照。

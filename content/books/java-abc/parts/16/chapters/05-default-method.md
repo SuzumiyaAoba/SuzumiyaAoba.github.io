@@ -128,4 +128,4 @@ class Rectangle implements Shape {
 
 次の節では、抽象クラスとインターフェースを、どう使い分けるかを整理します。
 
-[^jep126-default-methods]: JEP 126: Lambda Expressions & Virtual Extension Methods, <https://openjdk.org/jeps/126>。Java 8（2014年3月）でラムダ式と共に導入された機能で、インターフェースの後方互換的な拡張を可能にする。詳細は *JLS §9.4*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-9.html#jls-9.4>）参照。
+[^jep126-default-methods]: JEP 126: Lambda Expressions & Virtual Extension Methods, [https://openjdk.org/jeps/126](<https://openjdk.org/jeps/126>)。Java 8（2014年3月）でラムダ式と共に導入された機能で、インターフェースの後方互換的な拡張を可能にする。詳細は *JLS §9.4*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-9.html#jls-9.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-9.html#jls-9.4>)）参照。

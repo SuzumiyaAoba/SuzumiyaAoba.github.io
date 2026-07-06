@@ -94,4 +94,4 @@ if (shape instanceof Circle c) {
 
 次の節では、`sealed` と `permits` を使った、シールドクラスの**書き方**を学びます。
 
-[^jep409-sealed]: JEP 409: Sealed Classes, <https://openjdk.org/jeps/409>。Java 17（2021年9月）で正式機能（permanent feature）となった。`sealed`／`non-sealed`／`permits` キーワードで継承可能なサブクラスを明示する。詳細は *JLS §8.1.1.2*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.1.1.2>）参照。
+[^jep409-sealed]: JEP 409: Sealed Classes, [https://openjdk.org/jeps/409](<https://openjdk.org/jeps/409>)。Java 17（2021年9月）で正式機能（permanent feature）となった。`sealed`／`non-sealed`／`permits` キーワードで継承可能なサブクラスを明示する。詳細は *JLS §8.1.1.2*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.1.1.2](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.1.1.2>)）参照。

@@ -166,4 +166,4 @@ IDE は「書きやすくする道具」であって、JDK の代わりにはな
 
 次の節では、いよいよ IntelliJ IDEA で最初のプロジェクトを作り、画面に「Hello, World!」と表示します。
 
-[^intellij-unified-2025-3]: JetBrains, "IntelliJ IDEA 2025.3: Unification of Community and Ultimate," <https://blog.jetbrains.com/idea/2025/10/intellij-idea-2025-3/>。JetBrains は2025年版 2025.3 において Community Edition と Ultimate Edition を統合し、基本機能を無償、追加機能を有償サブスクリプションで提供する単一バイナリ配布へ移行した。
+[^intellij-unified-2025-3]: JetBrains, "IntelliJ IDEA 2025.3: Unification of Community and Ultimate," [https://blog.jetbrains.com/idea/2025/10/intellij-idea-2025-3/](<https://blog.jetbrains.com/idea/2025/10/intellij-idea-2025-3/>)。JetBrains は2025年版 2025.3 において Community Edition と Ultimate Edition を統合し、基本機能を無償、追加機能を有償サブスクリプションで提供する単一バイナリ配布へ移行した。

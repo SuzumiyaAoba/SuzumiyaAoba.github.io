@@ -229,4 +229,4 @@ int r = (int) add10.invokeExact(5);   // 15
 
 次の節では、ここまでのリフレクション全般の**落とし穴**を、改めて整理します。
 
-[^jsr292-invokedynamic]: JSR 292: Supporting Dynamically Typed Languages on the Java Platform, <https://jcp.org/en/jsr/detail?id=292>。Java SE 7（2011年）で導入された `invokedynamic` バイトコード命令と `java.lang.invoke` API（`MethodHandle`／`MethodType`／`CallSite`）を規定。Lambda 式（Java 8）の実装基盤としても利用されている。
+[^jsr292-invokedynamic]: JSR 292: Supporting Dynamically Typed Languages on the Java Platform, [https://jcp.org/en/jsr/detail?id=292](<https://jcp.org/en/jsr/detail?id=292>)。Java SE 7（2011年）で導入された `invokedynamic` バイトコード命令と `java.lang.invoke` API（`MethodHandle`／`MethodType`／`CallSite`）を規定。Lambda 式（Java 8）の実装基盤としても利用されている。

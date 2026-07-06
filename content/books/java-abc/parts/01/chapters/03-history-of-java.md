@@ -155,30 +155,30 @@ Java を学ぶことは、長く役立つ知識を身につけることにつな
 
 次の節では、この特徴をはじめとする、Java という言語が持つ具体的な特徴を見ていきます。
 
-[^java-1991-green]: Oracle, "About the Java Technology — The History of Java Technology," <https://www.oracle.com/java/technologies/javase/codenames.html> および Oracle, "Java Technology: The Early Years," <https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html>。Sun Microsystems の "Green Project"（1991年開始）が Java の起源とされる。
+[^java-1991-green]: Oracle, "About the Java Technology — The History of Java Technology," [https://www.oracle.com/java/technologies/javase/codenames.html](<https://www.oracle.com/java/technologies/javase/codenames.html>) および Oracle, "Java Technology: The Early Years," [https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html](<https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html>)。Sun Microsystems の "Green Project"（1991年開始）が Java の起源とされる。
 
-[^gosling-bio]: Oracle, "James Gosling — The Father of Java," <https://www.oracle.com/java/moved-by-java/james-gosling/>。James Gosling は Sun Microsystems で Green Project を率い、後に Java の設計者として知られた。
+[^gosling-bio]: Oracle, "James Gosling — The Father of Java," [https://www.oracle.com/java/moved-by-java/james-gosling/](<https://www.oracle.com/java/moved-by-java/james-gosling/>)。James Gosling は Sun Microsystems で Green Project を率い、後に Java の設計者として知られた。
 
-[^oak-naming]: Byte Magazine, "The Birth of Java" (1995) ほか複数の一次資料で、当初の言語名 "Oak" がゴスリングのオフィス窓外の樫の木にちなむと記録されている。James Gosling の oral history（Computer History Museum 所蔵）も参照: <https://www.computerhistory.org/collections/catalog/102702199>。
+[^oak-naming]: Byte Magazine, "The Birth of Java" (1995) ほか複数の一次資料で、当初の言語名 "Oak" がゴスリングのオフィス窓外の樫の木にちなむと記録されている。James Gosling の oral history（Computer History Museum 所蔵）も参照: [https://www.computerhistory.org/collections/catalog/102702199](<https://www.computerhistory.org/collections/catalog/102702199>)。
 
-[^java-naming]: Oracle, "The Story of Java — Codename," <https://www.oracle.com/java/technologies/javase/codenames.html>。"Oak" が商標上の理由で使えず、最終的に "Java"（コーヒーにちなむ）が選ばれた経緯が記載されている。
+[^java-naming]: Oracle, "The Story of Java — Codename," [https://www.oracle.com/java/technologies/javase/codenames.html](<https://www.oracle.com/java/technologies/javase/codenames.html>)。"Oak" が商標上の理由で使えず、最終的に "Java"（コーヒーにちなむ）が選ばれた経緯が記載されている。
 
-[^java-1995-release]: Sun Microsystems プレスリリース（1995年5月23日 SunWorld での発表）。Oracle, "Java Technology: The Early Years," <https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html> に当時の経緯が要約されている。
+[^java-1995-release]: Sun Microsystems プレスリリース（1995年5月23日 SunWorld での発表）。Oracle, "Java Technology: The Early Years," [https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html](<https://www.oracle.com/technical-resources/articles/java/javahistory-timeline.html>) に当時の経緯が要約されている。
 
-[^jdk-1-release]: Oracle, "JDK Release Notes — JDK 1.0," <https://www.oracle.com/java/technologies/javase/release-notes.html>。JDK 1.0 は1996年1月23日に公開された。
+[^jdk-1-release]: Oracle, "JDK Release Notes — JDK 1.0," [https://www.oracle.com/java/technologies/javase/release-notes.html](<https://www.oracle.com/java/technologies/javase/release-notes.html>)。JDK 1.0 は1996年1月23日に公開された。
 
-[^openjdk-launch]: OpenJDK Project, "About," <https://openjdk.org/>。Sun は2006年に Java SE をオープンソース化することを発表し、2007年に OpenJDK プロジェクトを GPL v2 ライセンスで公開した。
+[^openjdk-launch]: OpenJDK Project, "About," [https://openjdk.org/](<https://openjdk.org/>)。Sun は2006年に Java SE をオープンソース化することを発表し、2007年に OpenJDK プロジェクトを GPL v2 ライセンスで公開した。
 
-[^oracle-sun-acquisition]: Oracle, "Oracle Buys Sun," <https://www.oracle.com/corporate/pressrelease/oracle-buys-sun-042009.html>（2009年4月20日発表）。買収は2010年1月27日に完了した（Oracle 2010年第3四半期決算発表）。
+[^oracle-sun-acquisition]: Oracle, "Oracle Buys Sun," [https://www.oracle.com/corporate/pressrelease/oracle-buys-sun-042009.html](<https://www.oracle.com/corporate/pressrelease/oracle-buys-sun-042009.html>)（2009年4月20日発表）。買収は2010年1月27日に完了した（Oracle 2010年第3四半期決算発表）。
 
-[^java-version-history]: Oracle, "Java Version History," <https://www.java.com/releases/> および <https://www.oracle.com/java/technologies/java-se-support-roadmap.html>。各バージョンのリリース日と主要機能が公式にまとめられている。
+[^java-version-history]: Oracle, "Java Version History," [https://www.java.com/releases/](<https://www.java.com/releases/>) および [https://www.oracle.com/java/technologies/java-se-support-roadmap.html](<https://www.oracle.com/java/technologies/java-se-support-roadmap.html>)。各バージョンのリリース日と主要機能が公式にまとめられている。
 
-[^java5-generics]: Oracle, "Java SE 5.0 (Tiger) — New Features and Enhancements," <https://docs.oracle.com/javase/1.5.0/docs/relnotes/features.html>。Java SE 5.0 では Generics、Enum、autoboxing、enhanced for などが導入された。
+[^java5-generics]: Oracle, "Java SE 5.0 (Tiger) — New Features and Enhancements," [https://docs.oracle.com/javase/1.5.0/docs/relnotes/features.html](<https://docs.oracle.com/javase/1.5.0/docs/relnotes/features.html>)。Java SE 5.0 では Generics、Enum、autoboxing、enhanced for などが導入された。
 
-[^java8-lambda]: Oracle, "Java SE 8 — Features and Enhancements," <https://www.oracle.com/java/technologies/javase/8-whats-new.html> および JSR 335 (Lambda Expressions), <https://jcp.org/en/jsr/detail?id=335>。Java SE 8（2014年3月）で Lambda 式と Stream API が導入された。
+[^java8-lambda]: Oracle, "Java SE 8 — Features and Enhancements," [https://www.oracle.com/java/technologies/javase/8-whats-new.html](<https://www.oracle.com/java/technologies/javase/8-whats-new.html>) および JSR 335 (Lambda Expressions), [https://jcp.org/en/jsr/detail?id=335](<https://jcp.org/en/jsr/detail?id=335>)。Java SE 8（2014年3月）で Lambda 式と Stream API が導入された。
 
-[^jep322]: JEP 322: Time-Based Release Versioning, <https://openjdk.org/jeps/322>。Java 9（2017年）以降、半年ごとのフィーチャーリリース方式が採用された。
+[^jep322]: JEP 322: Time-Based Release Versioning, [https://openjdk.org/jeps/322](<https://openjdk.org/jeps/322>)。Java 9（2017年）以降、半年ごとのフィーチャーリリース方式が採用された。
 
-[^jep444-vthreads]: JEP 444: Virtual Threads, <https://openjdk.org/jeps/444>。仮想スレッドは Java 21（2023年9月）で標準機能として確定した（プレビュー段階の JEP 425, JEP 436 を経て）。
+[^jep444-vthreads]: JEP 444: Virtual Threads, [https://openjdk.org/jeps/444](<https://openjdk.org/jeps/444>)。仮想スレッドは Java 21（2023年9月）で標準機能として確定した（プレビュー段階の JEP 425, JEP 436 を経て）。
 
-[^jdk25-release]: Oracle, "JDK 25 Release Notes," <https://www.oracle.com/java/technologies/javase/25-relnotes.html>。Java 25 は2025年9月16日に LTS としてリリースされた。
+[^jdk25-release]: Oracle, "JDK 25 Release Notes," [https://www.oracle.com/java/technologies/javase/25-relnotes.html](<https://www.oracle.com/java/technologies/javase/25-relnotes.html>)。Java 25 は2025年9月16日に LTS としてリリースされた。

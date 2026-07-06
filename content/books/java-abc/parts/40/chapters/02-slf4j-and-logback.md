@@ -243,6 +243,6 @@ log.info("注文受付")
 
 次の節は、**ログレベル**の使い分けを、現場感のある視点で整理します。
 
-[^slf4j]: SLF4J 公式サイト, <https://www.slf4j.org/>。"Simple Logging Facade for Java" の略称。さまざまなロギング実装（Logback、Log4j 2、java.util.logging など）の前に共通 API を提供するファサードライブラリで、ライブラリ作者がログ実装を選ばずにログ出力を書ける。
+[^slf4j]: SLF4J 公式サイト, [https://www.slf4j.org/](<https://www.slf4j.org/>)。"Simple Logging Facade for Java" の略称。さまざまなロギング実装（Logback、Log4j 2、java.util.logging など）の前に共通 API を提供するファサードライブラリで、ライブラリ作者がログ実装を選ばずにログ出力を書ける。
 
-[^logback]: Logback 公式サイト, <https://logback.qos.ch/>。SLF4J の作者 Ceki Gülcü による SLF4J 標準実装で、Log4j の後継として設計された。Spring Boot のデフォルトロギング実装としてバンドルされる（<https://docs.spring.io/spring-boot/reference/features/logging.html>）。
+[^logback]: Logback 公式サイト, [https://logback.qos.ch/](<https://logback.qos.ch/>)。SLF4J の作者 Ceki Gülcü による SLF4J 標準実装で、Log4j の後継として設計された。Spring Boot のデフォルトロギング実装としてバンドルされる（[https://docs.spring.io/spring-boot/reference/features/logging.html](<https://docs.spring.io/spring-boot/reference/features/logging.html>)）。

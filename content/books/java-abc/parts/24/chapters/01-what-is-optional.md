@@ -120,4 +120,4 @@ true
 
 次の節では、`Optional` を**作る**方法（`of`・`ofNullable`・`empty`）を学びます。
 
-[^java-optional]: Java SE 25 API Specification, `java.util.Optional`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html>。Java SE 8 で導入。"A container object which may or may not contain a non-null value." API ノートでは "Optional is primarily intended for use as a method return type" と推奨され、フィールドや引数での濫用は避けるよう注意喚起されている。
+[^java-optional]: Java SE 25 API Specification, `java.util.Optional`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html>)。Java SE 8 で導入。"A container object which may or may not contain a non-null value." API ノートでは "Optional is primarily intended for use as a method return type" と推奨され、フィールドや引数での濫用は避けるよう注意喚起されている。

@@ -122,4 +122,4 @@ try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 次の節では、並行処理でつまずきやすいポイントを、まとめて確認します。
 
-[^jep444-vt]: JEP 444: Virtual Threads, <https://openjdk.org/jeps/444>。Java 21（2023年9月）で正式機能となった。JVM が管理する軽量スレッドで、ブロッキング I/O 中も OS スレッド（carrier thread）を占有しないため、何百万単位の同時実行が可能。プレビュー段階は JEP 425（JDK 19）、JEP 436（JDK 20）。
+[^jep444-vt]: JEP 444: Virtual Threads, [https://openjdk.org/jeps/444](<https://openjdk.org/jeps/444>)。Java 21（2023年9月）で正式機能となった。JVM が管理する軽量スレッドで、ブロッキング I/O 中も OS スレッド（carrier thread）を占有しないため、何百万単位の同時実行が可能。プレビュー段階は JEP 425（JDK 19）、JEP 436（JDK 20）。

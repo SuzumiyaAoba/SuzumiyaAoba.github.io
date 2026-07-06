@@ -255,7 +255,7 @@ void main() {
 いまは「Java 25 には、もっと簡単に書ける方法もあるらしい」と、頭の片隅に置いておくだけで十分です。
 そして、こうした初心者にやさしい新機能が用意されている点も、本書が最新の **Java 25** を選んだ理由の一つです。
 
-[^kr-hello-world]: Brian W. Kernighan and Dennis M. Ritchie, *The C Programming Language* (Prentice Hall, 1978)。"hello, world" の例題プログラムは本書で広く知られるようになった。前身の社内資料 Brian W. Kernighan, "Programming in C: A Tutorial," Bell Labs（1974年頃, <https://www.bell-labs.com/usr/dmr/www/ctut.pdf>）にも同様の例題が記載されている。
+[^kr-hello-world]: Brian W. Kernighan and Dennis M. Ritchie, *The C Programming Language* (Prentice Hall, 1978)。"hello, world" の例題プログラムは本書で広く知られるようになった。前身の社内資料 Brian W. Kernighan, "Programming in C: A Tutorial," Bell Labs（1974年頃, [https://www.bell-labs.com/usr/dmr/www/ctut.pdf](<https://www.bell-labs.com/usr/dmr/www/ctut.pdf>)）にも同様の例題が記載されている。
 
 ---
 

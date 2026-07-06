@@ -212,6 +212,6 @@ Apple Silicon の Mac で、あえて Intel 用（x64）を選ぶ必要はあり
 
 次の節では、いよいよ実際に JDK をインストールしていきます。
 
-[^oracle-jdk-license-2019]: Oracle, "Java Client Roadmap Update" および "Oracle JDK Releases for Java 11 and Later"（2018年9月）, <https://www.oracle.com/java/technologies/javase/jdk-relnotes-index.html>。Oracle は Java SE 11（2018年9月）以降、公開更新版（Public Updates）の方針を変更し、商用利用には Oracle Java SE Subscription または OpenJDK ビルドの利用を案内するようになった。2021年9月には Oracle JDK 17 から無償商用利用が可能な NFTC（Oracle No-Fee Terms and Conditions）ライセンスが導入された。
+[^oracle-jdk-license-2019]: Oracle, "Java Client Roadmap Update" および "Oracle JDK Releases for Java 11 and Later"（2018年9月）, [https://www.oracle.com/java/technologies/javase/jdk-relnotes-index.html](<https://www.oracle.com/java/technologies/javase/jdk-relnotes-index.html>)。Oracle は Java SE 11（2018年9月）以降、公開更新版（Public Updates）の方針を変更し、商用利用には Oracle Java SE Subscription または OpenJDK ビルドの利用を案内するようになった。2021年9月には Oracle JDK 17 から無償商用利用が可能な NFTC（Oracle No-Fee Terms and Conditions）ライセンスが導入された。
 
-[^adoptium-rename]: Eclipse Foundation, "AdoptOpenJDK becomes Adoptium" および <https://blog.adoptium.net/2021/03/announcing-adoptium/>（2021年3月発表）。AdoptOpenJDK は Eclipse Foundation に移管され、プロジェクト名が Adoptium、ビルド製品名が Eclipse Temurin に改称された。
+[^adoptium-rename]: Eclipse Foundation, "AdoptOpenJDK becomes Adoptium" および [https://blog.adoptium.net/2021/03/announcing-adoptium/](<https://blog.adoptium.net/2021/03/announcing-adoptium/>)（2021年3月発表）。AdoptOpenJDK は Eclipse Foundation に移管され、プロジェクト名が Adoptium、ビルド製品名が Eclipse Temurin に改称された。

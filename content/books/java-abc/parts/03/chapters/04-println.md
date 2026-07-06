@@ -233,6 +233,6 @@ System.out.println(1 + 2);     // ← 囲まないと、計算した結果が表
 これで、Hello, World! の3つの部品 ―― クラス・main・println ―― を、すべて読み解けました。
 次の節では、ここまでに何度か登場した `;` や `{ }` といった、**文法の骨組み**を、あらためて整理します。
 
-[^java-system-out]: Java SE 25 API Specification, `java.lang.System#out`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/System.html#out>。`System.out` は標準出力ストリーム（`PrintStream`）を指す `public static final` フィールドで、`println(String)`／`print(String)` などのメソッドが提供される（<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/PrintStream.html>）。
+[^java-system-out]: Java SE 25 API Specification, `java.lang.System#out`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/System.html#out](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/System.html#out>)。`System.out` は標準出力ストリーム（`PrintStream`）を指す `public static final` フィールドで、`println(String)`／`print(String)` などのメソッドが提供される（[https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/PrintStream.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/PrintStream.html>)）。
 
-[^jls-literals]: *The Java® Language Specification, Java SE 25 Edition*, §3.10 "Literals," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10>。文字リテラル（§3.10.4, `'a'`）は `char` 型の単一文字、文字列リテラル（§3.10.5, `"abc"`）は `java.lang.String` 型の文字列を表す。
+[^jls-literals]: *The Java® Language Specification, Java SE 25 Edition*, §3.10 "Literals," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10>)。文字リテラル（§3.10.4, `'a'`）は `char` 型の単一文字、文字列リテラル（§3.10.5, `"abc"`）は `java.lang.String` 型の文字列を表す。

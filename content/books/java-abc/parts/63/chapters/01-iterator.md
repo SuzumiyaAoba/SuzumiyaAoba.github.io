@@ -163,4 +163,4 @@ names.stream().map(String::toUpperCase).toList();  // データ加工
 
 次の章では、**Strategy** ―― アルゴリズムを**部品として差し替える**振る舞いパターンを見ます。
 
-[^java-iterable]: Java SE 25 API, `java.lang.Iterable<T>`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html> および `java.util.Iterator<T>`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Iterator.html>。`Iterable` を実装するクラスは Java の拡張 for 文（*JLS §14.14.2*）の対象になる。
+[^java-iterable]: Java SE 25 API, `java.lang.Iterable<T>`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html>) および `java.util.Iterator<T>`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Iterator.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Iterator.html>)。`Iterable` を実装するクラスは Java の拡張 for 文（*JLS §14.14.2*）の対象になる。

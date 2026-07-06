@@ -145,6 +145,6 @@ Java は、社会のさまざまな仕組みを、目に見えないところで
 次の節では、いよいよ Java の核心に踏み込みます。
 「一度書けば、どこでも動く」を実現している、Java が動く仕組みを見ていきましょう。
 
-[^spring-framework]: Spring, "Spring Framework," <https://spring.io/projects/spring-framework>。Spring は VMware（旧 Pivotal）が開発するエンタープライズ Java の代表的フレームワークで、Spring Boot を含むエコシステムが Java サーバサイド開発で広く採用されている。
+[^spring-framework]: Spring, "Spring Framework," [https://spring.io/projects/spring-framework](<https://spring.io/projects/spring-framework>)。Spring は VMware（旧 Pivotal）が開発するエンタープライズ Java の代表的フレームワークで、Spring Boot を含むエコシステムが Java サーバサイド開発で広く採用されている。
 
-[^android-kotlin-first]: Google Developers, "Android's commitment to Kotlin"（2019年 Google I/O での発表）, <https://developer.android.com/kotlin/first>。Google は2019年に「Android 開発は Kotlin ファースト」と公式表明し、以降の Android Jetpack API は Kotlin を優先的にサポートしている。
+[^android-kotlin-first]: Google Developers, "Android's commitment to Kotlin"（2019年 Google I/O での発表）, [https://developer.android.com/kotlin/first](<https://developer.android.com/kotlin/first>)。Google は2019年に「Android 開発は Kotlin ファースト」と公式表明し、以降の Android Jetpack API は Kotlin を優先的にサポートしている。

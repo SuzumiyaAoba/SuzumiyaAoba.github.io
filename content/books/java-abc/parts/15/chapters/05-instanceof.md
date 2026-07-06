@@ -160,4 +160,4 @@ $ java Main.java
 
 次の節では、ポリモーフィズムでつまずきやすいポイントを、まとめて確認します。
 
-[^jep394-instanceof]: JEP 394: Pattern Matching for instanceof, <https://openjdk.org/jeps/394>。Java 16（2021年3月）で正式機能（permanent feature）となった。`if (obj instanceof String s) { ... }` のように、型チェックとバインディング変数の宣言を一度に行える。プレビュー段階は JEP 305（JDK 14）、JEP 375（JDK 15）。
+[^jep394-instanceof]: JEP 394: Pattern Matching for instanceof, [https://openjdk.org/jeps/394](<https://openjdk.org/jeps/394>)。Java 16（2021年3月）で正式機能（permanent feature）となった。`if (obj instanceof String s) { ... }` のように、型チェックとバインディング変数の宣言を一度に行える。プレビュー段階は JEP 305（JDK 14）、JEP 375（JDK 15）。

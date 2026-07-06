@@ -137,8 +137,8 @@ initial ==> 'A'
 
 次の節では、文字のまとまりを扱う**文字列型 String** を、くわしく見ていきます。
 
-[^jls-primitive-types]: *The Java® Language Specification, Java SE 25 Edition*, §4.2 "Primitive Types and Values," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2>。8つの基本型 `boolean`／`byte`／`short`／`int`／`long`／`char`／`float`／`double` の定義と値域が規定されている。
+[^jls-primitive-types]: *The Java® Language Specification, Java SE 25 Edition*, §4.2 "Primitive Types and Values," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2>)。8つの基本型 `boolean`／`byte`／`short`／`int`／`long`／`char`／`float`／`double` の定義と値域が規定されている。
 
-[^jls-int-range]: *The Java® Language Specification, Java SE 25 Edition*, §4.2.1 "Integral Types and Values," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.1>。`int` は32ビット符号付き2の補数表現で、値域は `−2^31`（−2,147,483,648）から `2^31 − 1`（2,147,483,647）。`long` は64ビット符号付きで、値域は `−2^63` から `2^63 − 1`。
+[^jls-int-range]: *The Java® Language Specification, Java SE 25 Edition*, §4.2.1 "Integral Types and Values," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.1](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.1>)。`int` は32ビット符号付き2の補数表現で、値域は `−2^31`（−2,147,483,648）から `2^31 − 1`（2,147,483,647）。`long` は64ビット符号付きで、値域は `−2^63` から `2^63 − 1`。
 
-[^jls-long-literal]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.1 "Integer Literals," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1>。末尾に `L` または `l` が付いた整数リテラルは `long` 型として扱われ、付かないものは `int` 型として扱われる（`int` の範囲を超えるとコンパイルエラー）。
+[^jls-long-literal]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.1 "Integer Literals," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1>)。末尾に `L` または `l` が付いた整数リテラルは `long` 型として扱われ、付かないものは `int` 型として扱われる（`int` の範囲を超えるとコンパイルエラー）。

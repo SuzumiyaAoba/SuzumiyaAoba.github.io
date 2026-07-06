@@ -141,4 +141,4 @@ Runnable task = () -> IO.println("実行されました");
 
 次の節では、ラムダ式が代入できる「型」 ―― **関数型インターフェース**の正体を学びます。
 
-[^jsr335-lambda]: JSR 335: Lambda Expressions for the Java Programming Language, <https://jcp.org/en/jsr/detail?id=335> および JEP 126: Lambda Expressions & Virtual Extension Methods, <https://openjdk.org/jeps/126>。Java SE 8（2014年）で導入された。詳細は *JLS §15.27*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.27>）参照。
+[^jsr335-lambda]: JSR 335: Lambda Expressions for the Java Programming Language, [https://jcp.org/en/jsr/detail?id=335](<https://jcp.org/en/jsr/detail?id=335>) および JEP 126: Lambda Expressions & Virtual Extension Methods, [https://openjdk.org/jeps/126](<https://openjdk.org/jeps/126>)。Java SE 8（2014年）で導入された。詳細は *JLS §15.27*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.27](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.27>)）参照。

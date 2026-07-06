@@ -207,16 +207,16 @@ java --version
 いよいよ次の第2章では、実際に Java を使う準備 ―― **環境構築**に取りかかります。
 自分のコンピュータに JDK をインストールし、最初のプログラムを動かす準備を整えていきましょう。
 
-[^jep322-cycle]: JEP 322: Time-Based Release Versioning, <https://openjdk.org/jeps/322>。Java 10 以降の6か月リリースサイクルとバージョン番号付け規則を定めた JEP。
+[^jep322-cycle]: JEP 322: Time-Based Release Versioning, [https://openjdk.org/jeps/322](<https://openjdk.org/jeps/322>)。Java 10 以降の6か月リリースサイクルとバージョン番号付け規則を定めた JEP。
 
-[^java-lts-roadmap]: Oracle, "Java SE Support Roadmap," <https://www.oracle.com/java/technologies/java-se-support-roadmap.html>。Oracle が LTS（Long-Term Support）と短期サポートのバージョンを公式に区別している。
+[^java-lts-roadmap]: Oracle, "Java SE Support Roadmap," [https://www.oracle.com/java/technologies/java-se-support-roadmap.html](<https://www.oracle.com/java/technologies/java-se-support-roadmap.html>)。Oracle が LTS（Long-Term Support）と短期サポートのバージョンを公式に区別している。
 
-[^lts-cadence-2year]: Oracle, "Moving the JDK to a Two-Year LTS Cadence" (Georges Saab, 2021年9月), <https://blogs.oracle.com/java/post/moving-the-jdk-to-a-two-year-lts-cadence>。Oracle は LTS の間隔を3年から2年に短縮することを公式表明した。
+[^lts-cadence-2year]: Oracle, "Moving the JDK to a Two-Year LTS Cadence" (Georges Saab, 2021年9月), [https://blogs.oracle.com/java/post/moving-the-jdk-to-a-two-year-lts-cadence](<https://blogs.oracle.com/java/post/moving-the-jdk-to-a-two-year-lts-cadence>)。Oracle は LTS の間隔を3年から2年に短縮することを公式表明した。
 
-[^jdk25-release-date]: Oracle, "Oracle Releases Java 25"（プレスリリース, 2025年9月16日）, <https://www.oracle.com/news/announcement/oracle-releases-java-25-2025-09-16/> および <https://openjdk.org/projects/jdk/25/>。
+[^jdk25-release-date]: Oracle, "Oracle Releases Java 25"（プレスリリース, 2025年9月16日）, [https://www.oracle.com/news/announcement/oracle-releases-java-25-2025-09-16/](<https://www.oracle.com/news/announcement/oracle-releases-java-25-2025-09-16/>) および [https://openjdk.org/projects/jdk/25/](<https://openjdk.org/projects/jdk/25/>)。
 
-[^jep-process]: JEP 1: JEP Process, <https://openjdk.org/jeps/1>。OpenJDK での新機能提案・検討プロセスを定めた JEP。
+[^jep-process]: JEP 1: JEP Process, [https://openjdk.org/jeps/1](<https://openjdk.org/jeps/1>)。OpenJDK での新機能提案・検討プロセスを定めた JEP。
 
-[^jdk25-jeps]: OpenJDK, "JDK 25," <https://openjdk.org/projects/jdk/25/>。JDK 25 に取り込まれた全 JEP（18件）が一覧として公開されている。
+[^jdk25-jeps]: OpenJDK, "JDK 25," [https://openjdk.org/projects/jdk/25/](<https://openjdk.org/projects/jdk/25/>)。JDK 25 に取り込まれた全 JEP（18件）が一覧として公開されている。
 
-[^jep512]: JEP 512: Compact Source Files and Instance Main Methods, <https://openjdk.org/jeps/512>。Java 25 で正式機能（permanent feature）となった。簡略な main の書き方と `java.lang.IO` ユーティリティが導入された。
+[^jep512]: JEP 512: Compact Source Files and Instance Main Methods, [https://openjdk.org/jeps/512](<https://openjdk.org/jeps/512>)。Java 25 で正式機能（permanent feature）となった。簡略な main の書き方と `java.lang.IO` ユーティリティが導入された。

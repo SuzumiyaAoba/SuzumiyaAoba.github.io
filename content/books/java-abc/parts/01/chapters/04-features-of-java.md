@@ -174,8 +174,8 @@ Java は後方互換性を重視してきたため、何年も前に書かれた
 
 次の節では、こうした特徴を持つ Java が、実際にどのような場所で使われているのかを見ていきます。
 
-[^java-platform-independence]: Oracle, "About the Java Technology — The Java Platform," <https://docs.oracle.com/javase/tutorial/getStarted/intro/definition.html>。"Write Once, Run Anywhere" は Sun Microsystems が Java のプラットフォーム非依存性を表現するために用いた標語で、Oracle 公式ドキュメントでも一貫してこの設計目標が説明されている。
+[^java-platform-independence]: Oracle, "About the Java Technology — The Java Platform," [https://docs.oracle.com/javase/tutorial/getStarted/intro/definition.html](<https://docs.oracle.com/javase/tutorial/getStarted/intro/definition.html>)。"Write Once, Run Anywhere" は Sun Microsystems が Java のプラットフォーム非依存性を表現するために用いた標語で、Oracle 公式ドキュメントでも一貫してこの設計目標が説明されている。
 
-[^jls-types]: *The Java® Language Specification, Java SE 25 Edition*, Chapter 4 "Types, Values, and Variables," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html>。Java はコンパイル時に型検査を行う静的型付け言語であり、変数・式・メソッドの戻り値などすべての値が静的な型を持つことが §4 に規定されている。
+[^jls-types]: *The Java® Language Specification, Java SE 25 Edition*, Chapter 4 "Types, Values, and Variables," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html>)。Java はコンパイル時に型検査を行う静的型付け言語であり、変数・式・メソッドの戻り値などすべての値が静的な型を持つことが §4 に規定されている。
 
-[^jvms-gc]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, §2.5.3 "Heap," <https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-2.html#jvms-2.5.3>。"The heap is the run-time data area from which memory for all class instances and arrays is allocated... Heap storage for objects is reclaimed by an automatic storage management system (known as a garbage collector)." と明記されている。
+[^jvms-gc]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, §2.5.3 "Heap," [https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-2.html#jvms-2.5.3](<https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-2.html#jvms-2.5.3>)。"The heap is the run-time data area from which memory for all class instances and arrays is allocated... Heap storage for objects is reclaimed by an automatic storage management system (known as a garbage collector)." と明記されている。

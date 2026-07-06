@@ -103,4 +103,4 @@ yes ==> true
 
 次の節では、型の違う値どうしを扱うときに起こる**型変換**と、初心者がつまずきやすい「整数の割り算」などの落とし穴を学びます。
 
-[^jep213-underscores]: JEP 213: Milling Project Coin, <https://openjdk.org/jeps/213>。数値リテラル中のアンダースコアは Java 7（JSR 334, Project Coin）で導入された機能で、Java SE 25 でも引き続き利用できる。詳細は *JLS §3.10.1*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1>）参照。
+[^jep213-underscores]: JEP 213: Milling Project Coin, [https://openjdk.org/jeps/213](<https://openjdk.org/jeps/213>)。数値リテラル中のアンダースコアは Java 7（JSR 334, Project Coin）で導入された機能で、Java SE 25 でも引き続き利用できる。詳細は *JLS §3.10.1*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.1>)）参照。

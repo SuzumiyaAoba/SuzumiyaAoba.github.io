@@ -65,8 +65,10 @@ String s = "abc";       // インデックスは 0・1・2 だけ
 IO.println(s.charAt(5));
 ```
 
+`jshell` で実行すると、次のように表示されます（行頭の `|` は、jshell がエラーなどの説明に付ける印です）。
+
 ```text
-例外java.lang.StringIndexOutOfBoundsException: Index 5 out of bounds for length 3
+|  例外java.lang.StringIndexOutOfBoundsException: Index 5 out of bounds for length 3
 ```
 
 `StringIndexOutOfBoundsException` は、第8章の配列の `ArrayIndexOutOfBoundsException` の、文字列版です。

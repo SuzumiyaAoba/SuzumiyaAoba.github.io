@@ -178,4 +178,4 @@ Spring Boot 3 では、
 
 次の節では、実際に GraalVM をインストールして、ネイティブイメージのビルドを試してみます。
 
-[^graalvm-native]: Oracle, "GraalVM Native Image," <https://www.graalvm.org/latest/reference-manual/native-image/>。AOT コンパイラ Substrate VM ベースで、Java コードをビルド時にネイティブ実行ファイルへ変換する。Spring Boot 3 では `spring-aot` プラグインによる公式サポートが入っている（<https://docs.spring.io/spring-boot/reference/packaging/native-image/index.html>）。
+[^graalvm-native]: Oracle, "GraalVM Native Image," [https://www.graalvm.org/latest/reference-manual/native-image/](<https://www.graalvm.org/latest/reference-manual/native-image/>)。AOT コンパイラ Substrate VM ベースで、Java コードをビルド時にネイティブ実行ファイルへ変換する。Spring Boot 3 では `spring-aot` プラグインによる公式サポートが入っている（[https://docs.spring.io/spring-boot/reference/packaging/native-image/index.html](<https://docs.spring.io/spring-boot/reference/packaging/native-image/index.html>)）。

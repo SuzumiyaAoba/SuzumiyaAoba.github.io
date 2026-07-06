@@ -112,4 +112,4 @@ Path（場所） + Files（操作） = ファイル入出力
 
 次の節では、`Files` を使って、実際にテキストを**読み書き**してみます。
 
-[^java-nio-file]: Java SE 25 API Specification, `java.nio.file` package, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/package-summary.html>。NIO.2 ファイル API（JSR 203, Java 7 で導入）。`Path`／`Files`／`FileSystem` などのクラスからなり、旧 `java.io.File` よりも豊富で安全な操作を提供する。
+[^java-nio-file]: Java SE 25 API Specification, `java.nio.file` package, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/package-summary.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/package-summary.html>)。NIO.2 ファイル API（JSR 203, Java 7 で導入）。`Path`／`Files`／`FileSystem` などのクラスからなり、旧 `java.io.File` よりも豊富で安全な操作を提供する。

@@ -135,4 +135,4 @@ Animal{name=ポチ, age=3}
 
 次の節では、継承でつまずきやすいポイントを、まとめて確認します。
 
-[^java-object-class]: Java SE 25 API Specification, `java.lang.Object`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html>。"Class `Object` is the root of the class hierarchy. Every class has `Object` as a superclass." `equals(Object)`／`hashCode()`／`toString()`／`getClass()`／`wait`／`notify` などの基本メソッドを提供する（*JLS §4.3.2*）。
+[^java-object-class]: Java SE 25 API Specification, `java.lang.Object`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html>)。"Class `Object` is the root of the class hierarchy. Every class has `Object` as a superclass." `equals(Object)`／`hashCode()`／`toString()`／`getClass()`／`wait`／`notify` などの基本メソッドを提供する（*JLS §4.3.2*）。

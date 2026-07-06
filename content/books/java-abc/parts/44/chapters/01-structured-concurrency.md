@@ -196,4 +196,4 @@ User getUserWithOrder(long id) throws Exception {
 
 次の節では、`open` / `fork` / `join` の**基本のリズム**を、もう少し細かく見ていきます。
 
-[^jep505-structured-concurrency]: JEP 505: Structured Concurrency (Fifth Preview), <https://openjdk.org/jeps/505>。Java 25 ではプレビュー段階。`StructuredTaskScope` は仮想スレッド（JEP 444）と組み合わせて使う前提で設計され、過去のインキュベーションは JEP 428、JEP 437、JEP 453、JEP 462、JEP 480、JEP 499 を経た。
+[^jep505-structured-concurrency]: JEP 505: Structured Concurrency (Fifth Preview), [https://openjdk.org/jeps/505](<https://openjdk.org/jeps/505>)。Java 25 ではプレビュー段階。`StructuredTaskScope` は仮想スレッド（JEP 444）と組み合わせて使う前提で設計され、過去のインキュベーションは JEP 428、JEP 437、JEP 453、JEP 462、JEP 480、JEP 499 を経た。

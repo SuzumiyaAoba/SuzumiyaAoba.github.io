@@ -173,8 +173,8 @@ Hello, World!
 これで、第3章「はじめてのプログラム」の本編は終わりです。
 次の節では、この章で登場した言葉を、用語集としてまとめます。
 
-[^jep512-final]: JEP 512: Compact Source Files and Instance Main Methods, <https://openjdk.org/jeps/512>。Java 25 で正式機能（permanent feature）として導入された。
+[^jep512-final]: JEP 512: Compact Source Files and Instance Main Methods, [https://openjdk.org/jeps/512](<https://openjdk.org/jeps/512>)。Java 25 で正式機能（permanent feature）として導入された。
 
-[^java-lang-io]: Java SE 25 API Specification, `java.lang.IO`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html>。`println(Object)`／`print(Object)`／`readln(String)` などのシンプルな入出力メソッドを提供する。JEP 512 と同時に追加された。
+[^java-lang-io]: Java SE 25 API Specification, `java.lang.IO`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IO.html>)。`println(Object)`／`print(Object)`／`readln(String)` などのシンプルな入出力メソッドを提供する。JEP 512 と同時に追加された。
 
-[^jep-preview-history]: JEP 445: Unnamed Classes and Instance Main Methods (Preview), <https://openjdk.org/jeps/445>（JDK 21）、JEP 463: Implicitly Declared Classes and Instance Main Methods (Second Preview), <https://openjdk.org/jeps/463>（JDK 22）、JEP 477: Implicitly Declared Classes and Instance Main Methods (Third Preview), <https://openjdk.org/jeps/477>（JDK 23）、JEP 495: Simple Source Files and Instance Main Methods (Fourth Preview), <https://openjdk.org/jeps/495>（JDK 24）。Java 21〜24 ではプレビュー段階で `--enable-preview --source N` 指定が必要だった。
+[^jep-preview-history]: JEP 445: Unnamed Classes and Instance Main Methods (Preview), [https://openjdk.org/jeps/445](<https://openjdk.org/jeps/445>)（JDK 21）、JEP 463: Implicitly Declared Classes and Instance Main Methods (Second Preview), [https://openjdk.org/jeps/463](<https://openjdk.org/jeps/463>)（JDK 22）、JEP 477: Implicitly Declared Classes and Instance Main Methods (Third Preview), [https://openjdk.org/jeps/477](<https://openjdk.org/jeps/477>)（JDK 23）、JEP 495: Simple Source Files and Instance Main Methods (Fourth Preview), [https://openjdk.org/jeps/495](<https://openjdk.org/jeps/495>)（JDK 24）。Java 21〜24 ではプレビュー段階で `--enable-preview --source N` 指定が必要だった。

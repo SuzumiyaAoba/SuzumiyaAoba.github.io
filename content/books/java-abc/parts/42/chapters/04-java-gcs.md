@@ -198,8 +198,8 @@ Docker や Kubernetes 内で Java を動かすとき、JVM は**コンテナの 
 
 次の節では、これらの GC が実際にどう動いているかを示す **GC ログ**の読み方を見ていきます。
 
-[^jep248-g1]: JEP 248: Make G1 the Default Garbage Collector, <https://openjdk.org/jeps/248>。Java 9（2017年）で G1 が HotSpot のデフォルト GC となった。Oracle, "HotSpot Virtual Machine Garbage Collection Tuning Guide," <https://docs.oracle.com/en/java/javase/25/gctuning/> も参照。
+[^jep248-g1]: JEP 248: Make G1 the Default Garbage Collector, [https://openjdk.org/jeps/248](<https://openjdk.org/jeps/248>)。Java 9（2017年）で G1 が HotSpot のデフォルト GC となった。Oracle, "HotSpot Virtual Machine Garbage Collection Tuning Guide," [https://docs.oracle.com/en/java/javase/25/gctuning/](<https://docs.oracle.com/en/java/javase/25/gctuning/>) も参照。
 
-[^jep377-zgc]: JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production), <https://openjdk.org/jeps/377>。Java 15（2020年）で本番投入可能になった。JEP 333（Java 11）で実験段階として導入された。
+[^jep377-zgc]: JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production), [https://openjdk.org/jeps/377](<https://openjdk.org/jeps/377>)。Java 15（2020年）で本番投入可能になった。JEP 333（Java 11）で実験段階として導入された。
 
-[^jep439-generational-zgc]: JEP 439: Generational ZGC, <https://openjdk.org/jeps/439>。Java 21（2023年）で導入。世代別ヒープによりオーバーヘッドを削減した ZGC のバージョンで、JEP 474（Java 23）でデフォルトとなった。
+[^jep439-generational-zgc]: JEP 439: Generational ZGC, [https://openjdk.org/jeps/439](<https://openjdk.org/jeps/439>)。Java 21（2023年）で導入。世代別ヒープによりオーバーヘッドを削減した ZGC のバージョンで、JEP 474（Java 23）でデフォルトとなった。

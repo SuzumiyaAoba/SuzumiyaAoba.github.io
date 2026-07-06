@@ -243,6 +243,6 @@ OS に合わせて JDK のインストールが終わったら、次は「本当
 
 次の節では、`java --version` というコマンドを使って、インストールが成功したかどうかを確認します。
 
-[^homebrew]: Homebrew, "The Missing Package Manager for macOS (or Linux)," <https://brew.sh/>。Homebrew は macOS／Linux 向けのオープンソースパッケージマネージャで、`brew install --cask` で GUI アプリやランタイムを Cask 形式で管理できる。
+[^homebrew]: Homebrew, "The Missing Package Manager for macOS (or Linux)," [https://brew.sh/](<https://brew.sh/>)。Homebrew は macOS／Linux 向けのオープンソースパッケージマネージャで、`brew install --cask` で GUI アプリやランタイムを Cask 形式で管理できる。
 
-[^sdkman]: SDKMAN!, "The Software Development Kit Manager," <https://sdkman.io/>。SDKMAN! は JDK・Maven・Gradle など JVM 関連 SDK のバージョン管理を行うツールで、`sdk install java 25-tem` のように複数の JDK ディストリビューションを並列導入・切り替えできる。
+[^sdkman]: SDKMAN!, "The Software Development Kit Manager," [https://sdkman.io/](<https://sdkman.io/>)。SDKMAN! は JDK・Maven・Gradle など JVM 関連 SDK のバージョン管理を行うツールで、`sdk install java 25-tem` のように複数の JDK ディストリビューションを並列導入・切り替えできる。

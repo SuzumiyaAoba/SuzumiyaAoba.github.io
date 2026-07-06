@@ -232,9 +232,9 @@ public ProblemDetail handleNotFound(BookNotFoundException e) {
 新しいプロジェクトでは、ProblemDetail を採用するのもよい選択です。
 本書では、自前のシンプルな Map 形式で説明しましたが、業務で「業界標準に合わせよう」となったら、ProblemDetail を覚えてください。
 
-[^rfc9457]: IETF RFC 9457: Problem Details for HTTP APIs, <https://www.rfc-editor.org/rfc/rfc9457>。2023年7月公開。RFC 7807（2016年）を改訂・置き換えた現行仕様。HTTP API のエラーを構造化された JSON／XML で返すためのフォーマットを規定する。
+[^rfc9457]: IETF RFC 9457: Problem Details for HTTP APIs, [https://www.rfc-editor.org/rfc/rfc9457](<https://www.rfc-editor.org/rfc/rfc9457>)。2023年7月公開。RFC 7807（2016年）を改訂・置き換えた現行仕様。HTTP API のエラーを構造化された JSON／XML で返すためのフォーマットを規定する。
 
-[^spring-problemdetail]: Spring Framework Reference, "ProblemDetail," <https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html>。Spring Framework 6.0 / Spring Boot 3.0 から `org.springframework.http.ProblemDetail` クラスとして組み込み実装が提供される。
+[^spring-problemdetail]: Spring Framework Reference, "ProblemDetail," [https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html](<https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html>)。Spring Framework 6.0 / Spring Boot 3.0 から `org.springframework.http.ProblemDetail` クラスとして組み込み実装が提供される。
 
 ---
 

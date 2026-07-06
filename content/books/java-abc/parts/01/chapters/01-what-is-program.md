@@ -338,10 +338,10 @@ System.out.println("こんにちは");
 
 次の節では、プログラムを実行する「コンピュータ」が、どのような仕組みで動いているのかを見ていきます。
 
-[^algorithm-etymology]: Encyclopædia Britannica, "al-Khwārizmī | Biography, Accomplishments, & Facts," <https://www.britannica.com/biography/al-Khwarizmi>。アル・フワーリズミー（およそ西暦780–850年）はバグダードの「知恵の館」で活動した数学者で、「algorithm」の語源となった。
+[^algorithm-etymology]: Encyclopædia Britannica, "al-Khwārizmī | Biography, Accomplishments, & Facts," [https://www.britannica.com/biography/al-Khwarizmi](<https://www.britannica.com/biography/al-Khwarizmi>)。アル・フワーリズミー（およそ西暦780–850年）はバグダードの「知恵の館」で活動した数学者で、「algorithm」の語源となった。
 
-[^algebra-etymology]: Encyclopædia Britannica, "Algebra | History, Definition, & Facts," <https://www.britannica.com/science/algebra>。「algebra」は彼の著書 *Al-Kitāb al-mukhtaṣar fī ḥisāb al-jabr wal-muqābala*（830年頃）の題名にある「al-jabr」に由来する。
+[^algebra-etymology]: Encyclopædia Britannica, "Algebra | History, Definition, & Facts," [https://www.britannica.com/science/algebra](<https://www.britannica.com/science/algebra>)。「algebra」は彼の著書 *Al-Kitāb al-mukhtaṣar fī ḥisāb al-jabr wal-muqābala*（830年頃）の題名にある「al-jabr」に由来する。
 
-[^edison-bug]: Thomas A. Edison Papers (Rutgers University), "Letter from Thomas Alva Edison to Theodore Puskas, November 13, 1878," <https://edison.rutgers.edu/>。エジソンは1878年の手紙の中で機械の不具合を指して「bug」という語を用いている（Hughes, *American Genesis*, 1989 など複数の研究で言及）。
+[^edison-bug]: Thomas A. Edison Papers (Rutgers University), "Letter from Thomas Alva Edison to Theodore Puskas, November 13, 1878," [https://edison.rutgers.edu/](<https://edison.rutgers.edu/>)。エジソンは1878年の手紙の中で機械の不具合を指して「bug」という語を用いている（Hughes, *American Genesis*, 1989 など複数の研究で言及）。
 
-[^moth-1947]: Smithsonian National Museum of American History, "Log Book With Computer Bug," <https://americanhistory.si.edu/collections/object/nmah_334663>。1947年9月9日、Harvard Mark II の中継器に挟まっていた蛾が技術者によって作業日誌（log book）に貼り付けられ、"First actual case of bug being found" と記された。日誌は同博物館に所蔵されている。
+[^moth-1947]: Smithsonian National Museum of American History, "Log Book With Computer Bug," [https://americanhistory.si.edu/collections/object/nmah_334663](<https://americanhistory.si.edu/collections/object/nmah_334663>)。1947年9月9日、Harvard Mark II の中継器に挟まっていた蛾が技術者によって作業日誌（log book）に貼り付けられ、"First actual case of bug being found" と記された。日誌は同博物館に所蔵されている。

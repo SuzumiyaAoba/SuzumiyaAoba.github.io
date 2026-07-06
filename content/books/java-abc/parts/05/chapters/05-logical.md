@@ -111,4 +111,4 @@ safe ==> false
 
 次の節では、複数の演算子が混ざったときの計算順序 ―― **演算子の優先順位**を学びます。
 
-[^short-circuit]: *The Java® Language Specification, Java SE 25 Edition*, §15.23 "Conditional-And Operator &&," §15.24 "Conditional-Or Operator ||," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23>。`&&` と `||` は短絡評価を行い、右オペランドは左オペランドの結果が決定できない場合のみ評価される。`&`／`|` は評価を短絡しない論理演算子。
+[^short-circuit]: *The Java® Language Specification, Java SE 25 Edition*, §15.23 "Conditional-And Operator &&," §15.24 "Conditional-Or Operator ||," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23>)。`&&` と `||` は短絡評価を行い、右オペランドは左オペランドの結果が決定できない場合のみ評価される。`&`／`|` は評価を短絡しない論理演算子。

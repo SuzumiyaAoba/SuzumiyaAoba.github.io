@@ -22,10 +22,10 @@ int[] nums = {10, 20, 30};
 IO.println(nums[5]);   // 5 番は存在しない！
 ```
 
-実行すると、次のようなエラー（**例外**）が出ます。
+`jshell` で実行すると、次のようなエラー（**例外**）が表示されます（行頭の `|` は、jshell がエラーなどの説明に付ける印です）。
 
 ```text
-例外java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
+|  例外java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
 ```
 
 `ArrayIndexOutOfBoundsException`（アレイ・インデックス・アウトオブバウンズ・エクセプション）は、「配列の範囲を超えた」という意味です。
@@ -64,10 +64,10 @@ String s = "abc";
 
 ```text
 jshell> nums.length     // 配列はかっこなし
-$2 ==> 3
+$3 ==> 3
 
 jshell> s.length()      // 文字列はかっこあり
-$3 ==> 3
+$4 ==> 3
 ```
 
 | 対象 | 長さの取り方 | かっこ |

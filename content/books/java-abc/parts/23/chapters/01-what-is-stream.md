@@ -129,4 +129,4 @@ IO.println(scores);   // 元のリストは、そのまま
 
 次の節では、3工程の最初 ―― ストリームを**作る**方法を学びます。
 
-[^java-stream-api]: Java SE 25 API Specification, `java.util.stream.Stream`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Stream.html>。Stream API は Java SE 8（2014年）で JSR 335 と共に導入された。"A sequence of elements supporting sequential and parallel aggregate operations" として定義され、遅延評価（lazy evaluation）と終端操作のトリガが規定されている。
+[^java-stream-api]: Java SE 25 API Specification, `java.util.stream.Stream`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Stream.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Stream.html>)。Stream API は Java SE 8（2014年）で JSR 335 と共に導入された。"A sequence of elements supporting sequential and parallel aggregate operations" として定義され、遅延評価（lazy evaluation）と終端操作のトリガが規定されている。

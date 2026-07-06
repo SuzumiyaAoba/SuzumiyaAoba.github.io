@@ -137,4 +137,4 @@ $2 ==> 0
 
 次の節では、文字列でつまずきやすいポイントを、まとめて確認します。
 
-[^string-pool]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.5 "String Literals," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.5>。"Moreover, a string literal always refers to the same instance of class String." 同一内容の文字列リテラルは、`String.intern()` の仕組み（*Java SE API* <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#intern()>）により JVM のストリングプールから1つのインスタンスが共有される。
+[^string-pool]: *The Java® Language Specification, Java SE 25 Edition*, §3.10.5 "String Literals," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.5](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.10.5>)。"Moreover, a string literal always refers to the same instance of class String." 同一内容の文字列リテラルは、`String.intern()` の仕組み（*Java SE API* [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#intern()](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#intern()>)）により JVM のストリングプールから1つのインスタンスが共有される。

@@ -200,6 +200,6 @@ HTTP メソッド + リソース URL で十分です。
 
 次の節では、**`@RestController`** で、いちばん小さな API を書いていきます。
 
-[^rest-fielding]: Roy T. Fielding, *Architectural Styles and the Design of Network-based Software Architectures*（PhD dissertation, UC Irvine, 2000）, <https://ics.uci.edu/~fielding/pubs/dissertation/top.htm>。REST（Representational State Transfer）は Fielding が博士論文の第5章で提唱したアーキテクチャスタイル。クライアント・サーバ、ステートレス、キャッシュ可能、統一インタフェース、階層化システム、コードオンデマンドの6つの制約からなる。
+[^rest-fielding]: Roy T. Fielding, *Architectural Styles and the Design of Network-based Software Architectures*（PhD dissertation, UC Irvine, 2000）, [https://ics.uci.edu/~fielding/pubs/dissertation/top.htm](<https://ics.uci.edu/~fielding/pubs/dissertation/top.htm>)。REST（Representational State Transfer）は Fielding が博士論文の第5章で提唱したアーキテクチャスタイル。クライアント・サーバ、ステートレス、キャッシュ可能、統一インタフェース、階層化システム、コードオンデマンドの6つの制約からなる。
 
-[^rfc9110]: IETF RFC 9110: HTTP Semantics, <https://www.rfc-editor.org/rfc/rfc9110>。HTTP のメッセージ、メソッド（GET、POST など）、ステータスコード（200、404、500 など）、ヘッダの意味論を規定する。RFC 7230〜7235、RFC 5789（PATCH）等を統合・改訂した最新仕様（2022年公開）。
+[^rfc9110]: IETF RFC 9110: HTTP Semantics, [https://www.rfc-editor.org/rfc/rfc9110](<https://www.rfc-editor.org/rfc/rfc9110>)。HTTP のメッセージ、メソッド（GET、POST など）、ステータスコード（200、404、500 など）、ヘッダの意味論を規定する。RFC 7230〜7235、RFC 5789（PATCH）等を統合・改訂した最新仕様（2022年公開）。

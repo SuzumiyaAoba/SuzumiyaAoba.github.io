@@ -95,4 +95,4 @@ Signal signal = Signal.PURPLE;  // ✕ そんな値はない → コンパイル
 
 次の節では、列挙型を実際に定義して、使ってみます。
 
-[^jls-enums]: *The Java® Language Specification, Java SE 25 Edition*, §8.9 "Enum Classes," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.9>。`enum` は Java 5（2004年、JSR 201）で導入された機能。`java.lang.Enum` を暗黙的に継承するため、`values()`／`valueOf(String)` などのメソッドがコンパイラによって自動生成される。
+[^jls-enums]: *The Java® Language Specification, Java SE 25 Edition*, §8.9 "Enum Classes," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.9](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.9>)。`enum` は Java 5（2004年、JSR 201）で導入された機能。`java.lang.Enum` を暗黙的に継承するため、`values()`／`valueOf(String)` などのメソッドがコンパイラによって自動生成される。

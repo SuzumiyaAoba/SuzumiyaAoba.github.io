@@ -227,4 +227,4 @@ I/O は計測対象を**完全に支配**します。意図しないなら入れ
 
 次の節では、計測結果を踏まえて、**ヒープと GC の調整**を実践します。
 
-[^jmh]: OpenJDK, "Java Microbenchmark Harness (JMH)," <https://github.com/openjdk/jmh>。Java の HotSpot 開発チームが提供する公式のマイクロベンチマークフレームワーク。Aleksey Shipilev による。`@Benchmark`、`@Warmup`、`@Measurement`、`@Fork`、`Blackhole` などの仕組みで JIT 由来の測定誤差を抑える。
+[^jmh]: OpenJDK, "Java Microbenchmark Harness (JMH)," [https://github.com/openjdk/jmh](<https://github.com/openjdk/jmh>)。Java の HotSpot 開発チームが提供する公式のマイクロベンチマークフレームワーク。Aleksey Shipilev による。`@Benchmark`、`@Warmup`、`@Measurement`、`@Fork`、`Blackhole` などの仕組みで JIT 由来の測定誤差を抑える。

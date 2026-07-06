@@ -140,4 +140,4 @@ Exception in thread "main" java.lang.UnsupportedOperationException
 
 次の節では、List の要素を**取得・変更・削除・検索**する、さまざまな操作を学びます。
 
-[^jep269-collections]: JEP 269: Convenience Factory Methods for Collections, <https://openjdk.org/jeps/269>。Java 9（2017年）で導入された。`List.of(...)`／`Set.of(...)`／`Map.of(...)` は不変（immutable）のコレクションを返し、要素の追加・削除・変更を試みると `UnsupportedOperationException` が投げられる。
+[^jep269-collections]: JEP 269: Convenience Factory Methods for Collections, [https://openjdk.org/jeps/269](<https://openjdk.org/jeps/269>)。Java 9（2017年）で導入された。`List.of(...)`／`Set.of(...)`／`Map.of(...)` は不変（immutable）のコレクションを返し、要素の追加・削除・変更を試みると `UnsupportedOperationException` が投げられる。

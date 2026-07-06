@@ -135,4 +135,4 @@ $ java Main.java
 
 次の節では、例外の「種類」 ―― チェック例外と非チェック例外の違いを学びます。
 
-[^jep213-twr]: try-with-resources は Java 7（JSR 334, Project Coin）で導入され、JEP 213 (Java 9) で実質的 final 変数も対象にできるよう拡張された（<https://openjdk.org/jeps/213>）。詳細は *JLS §14.20.3*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.20.3>）参照。`AutoCloseable` インターフェース（<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/AutoCloseable.html>）を実装したリソースが自動的にクローズされる。
+[^jep213-twr]: try-with-resources は Java 7（JSR 334, Project Coin）で導入され、JEP 213 (Java 9) で実質的 final 変数も対象にできるよう拡張された（[https://openjdk.org/jeps/213](<https://openjdk.org/jeps/213>)）。詳細は *JLS §14.20.3*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.20.3](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.20.3>)）参照。`AutoCloseable` インターフェース（[https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/AutoCloseable.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/AutoCloseable.html>)）を実装したリソースが自動的にクローズされる。

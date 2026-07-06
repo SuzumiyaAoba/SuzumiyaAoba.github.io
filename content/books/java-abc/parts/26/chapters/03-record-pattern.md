@@ -129,4 +129,4 @@ double area = switch (shape) {
 
 次の節では、条件つきのパターン（`when` ガード）と、網羅性のチェックを学びます。
 
-[^jep440-record-patterns]: JEP 440: Record Patterns, <https://openjdk.org/jeps/440>。Java 21（2023年9月）で正式機能となった。`case Point(int x, int y) ->` のようにレコードのコンポーネントを分解（deconstruct）して取り出せる。プレビューは JEP 405（JDK 19）、JEP 432（JDK 20）。
+[^jep440-record-patterns]: JEP 440: Record Patterns, [https://openjdk.org/jeps/440](<https://openjdk.org/jeps/440>)。Java 21（2023年9月）で正式機能となった。`case Point(int x, int y) ->` のようにレコードのコンポーネントを分解（deconstruct）して取り出せる。プレビューは JEP 405（JDK 19）、JEP 432（JDK 20）。

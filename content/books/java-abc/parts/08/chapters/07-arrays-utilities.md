@@ -112,4 +112,4 @@ $ java Args.java りんご みかん ぶどう
 
 次の節では、配列でつまずきやすいポイントを、まとめて確認します。
 
-[^java-arrays-class]: Java SE 25 API Specification, `java.util.Arrays`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html>。配列の表示（`toString`）、ソート（`sort`、Dual-Pivot Quicksort）、検索（`binarySearch`）、コピー（`copyOf`）、`Stream` 変換（`stream`）など多数のユーティリティを提供する。
+[^java-arrays-class]: Java SE 25 API Specification, `java.util.Arrays`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html>)。配列の表示（`toString`）、ソート（`sort`、Dual-Pivot Quicksort）、検索（`binarySearch`）、コピー（`copyOf`）、`Stream` 変換（`stream`）など多数のユーティリティを提供する。

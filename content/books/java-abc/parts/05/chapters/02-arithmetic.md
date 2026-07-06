@@ -109,4 +109,4 @@ $2 ==> -2147483648
 
 次の節では、変数に値を入れる**代入演算子**と、その便利な書き方（`+=` や `++`）を学びます。
 
-[^ieee754]: IEEE Std 754-2019, "IEEE Standard for Floating-Point Arithmetic," <https://ieeexplore.ieee.org/document/8766229>。Java の `float`／`double` は IEEE 754 binary32／binary64 形式に準拠する（*JLS §4.2.3* <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.3>）。10進数の `0.1` のような有限小数も2進浮動小数点では循環小数となり、表現に誤差が生じる。
+[^ieee754]: IEEE Std 754-2019, "IEEE Standard for Floating-Point Arithmetic," [https://ieeexplore.ieee.org/document/8766229](<https://ieeexplore.ieee.org/document/8766229>)。Java の `float`／`double` は IEEE 754 binary32／binary64 形式に準拠する（*JLS §4.2.3* [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.3](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2.3>)）。10進数の `0.1` のような有限小数も2進浮動小数点では循環小数となり、表現に誤差が生じる。

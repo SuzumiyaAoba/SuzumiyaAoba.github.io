@@ -204,4 +204,4 @@ Pizza pizza = Pizza.builder()
 
 [^effective-java-builder]: Joshua Bloch, *Effective Java*, 3rd Edition, Item 2 "Consider a builder when faced with many constructor parameters"。テレスコープコンストラクタや JavaBeans パターン（セッター方式）の問題点と、Builder パターンによる解決が論じられている。
 
-[^lombok-builder]: Project Lombok, "@Builder," <https://projectlombok.org/features/Builder>。アノテーションプロセッサで Builder クラスを自動生成する Lombok の機能。`@Builder.Default` でデフォルト値を指定できる。
+[^lombok-builder]: Project Lombok, "@Builder," [https://projectlombok.org/features/Builder](<https://projectlombok.org/features/Builder>)。アノテーションプロセッサで Builder クラスを自動生成する Lombok の機能。`@Builder.Default` でデフォルト値を指定できる。

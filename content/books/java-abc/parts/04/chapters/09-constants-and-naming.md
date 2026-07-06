@@ -118,8 +118,8 @@ final double TAX_RATE = 0.1;
 
 次の節では、この章で学んだ変数とデータ型で、初心者がつまずきやすいポイントを、まとめて確認します。
 
-[^jls-final-variable]: *The Java® Language Specification, Java SE 25 Edition*, §4.12.4 "final Variables," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.4>。"A final variable may only be assigned to once." 一度初期化された後の再代入はコンパイルエラーとなる。
+[^jls-final-variable]: *The Java® Language Specification, Java SE 25 Edition*, §4.12.4 "final Variables," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.4>)。"A final variable may only be assigned to once." 一度初期化された後の再代入はコンパイルエラーとなる。
 
-[^jls-identifiers]: *The Java® Language Specification, Java SE 25 Edition*, §3.8 "Identifiers," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.8>。識別子は Java letter（英字、`$`、`_`、Unicode文字）で始まり、Java letter または digit で続く文字列で、予約語と一致してはならない。
+[^jls-identifiers]: *The Java® Language Specification, Java SE 25 Edition*, §3.8 "Identifiers," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.8](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.8>)。識別子は Java letter（英字、`$`、`_`、Unicode文字）で始まり、Java letter または digit で続く文字列で、予約語と一致してはならない。
 
-[^jls-keywords]: *The Java® Language Specification, Java SE 25 Edition*, §3.9 "Keywords," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.9>。`abstract`／`class`／`if`／`int` など50以上の予約語が定義されている。
+[^jls-keywords]: *The Java® Language Specification, Java SE 25 Edition*, §3.9 "Keywords," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.9](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.9>)。`abstract`／`class`／`if`／`int` など50以上の予約語が定義されている。

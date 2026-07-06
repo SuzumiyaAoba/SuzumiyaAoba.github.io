@@ -73,4 +73,4 @@ name.equals("太郎")   // 文字列の比較は、こちらを使う
 
 次の節では、複数の条件を組み合わせる**論理演算子**を学びます。
 
-[^string-equals]: Java SE 25 API Specification, `java.lang.String#equals(Object)`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#equals(java.lang.Object)>。`==` は参照型では「同一オブジェクト参照か」を比較する（*JLS §15.21.3*）のに対し、`String#equals` は文字単位の内容比較を行う。
+[^string-equals]: Java SE 25 API Specification, `java.lang.String#equals(Object)`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#equals(java.lang.Object)](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#equals(java.lang.Object)>)。`==` は参照型では「同一オブジェクト参照か」を比較する（*JLS §15.21.3*）のに対し、`String#equals` は文字単位の内容比較を行う。

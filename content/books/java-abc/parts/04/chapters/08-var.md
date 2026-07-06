@@ -110,4 +110,4 @@ jshell> var y;
 
 次の節では、書き換えたくない値を守る **`final`** と、変数にわかりやすい名前をつけるためのルールを学びます。
 
-[^jep286-var]: JEP 286: Local-Variable Type Inference, <https://openjdk.org/jeps/286>。Java 10（2018年3月）で導入された機能。ローカル変数宣言にのみ `var` を使え、フィールド・メソッド戻り値・引数には使えない。詳細は *JLS §14.4*（<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.4>）を参照。
+[^jep286-var]: JEP 286: Local-Variable Type Inference, [https://openjdk.org/jeps/286](<https://openjdk.org/jeps/286>)。Java 10（2018年3月）で導入された機能。ローカル変数宣言にのみ `var` を使え、フィールド・メソッド戻り値・引数には使えない。詳細は *JLS §14.4*（[https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.4>)）を参照。

@@ -136,4 +136,4 @@ nums ==> int[3] { 2, 4, 6 }   // こちらは書き換わる
 
 次の節では、配列の中に配列を入れた**多次元配列**で、表やマス目を扱う方法を学びます。
 
-[^jls-enhanced-for]: *The Java® Language Specification, Java SE 25 Edition*, §14.14.2 "The enhanced for Statement," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.14.2>。`for (Type Var : Expression) Statement` の形式で、`Expression` が配列型のときは添字、`Iterable<T>` のときは `Iterator` を内部的に使って各要素を `Var` に代入する。Java 5（JSR 201）で導入された。
+[^jls-enhanced-for]: *The Java® Language Specification, Java SE 25 Edition*, §14.14.2 "The enhanced for Statement," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.14.2](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.14.2>)。`for (Type Var : Expression) Statement` の形式で、`Expression` が配列型のときは添字、`Iterable<T>` のときは `Iterator` を内部的に使って各要素を `Var` に代入する。Java 5（JSR 201）で導入された。

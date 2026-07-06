@@ -98,4 +98,4 @@ IO.println(d);
 
 次の節では、これらの基本クラスを、実際に作って使ってみます。
 
-[^jsr310]: JSR 310: Date and Time API, <https://jcp.org/en/jsr/detail?id=310>。Java SE 8（2014年）で導入。Joda-Time の設計思想を取り入れた新しい日時 API で、ISO 8601 ベースの不変クラス群（`LocalDate`、`LocalTime`、`LocalDateTime`、`ZonedDateTime`、`Instant`、`Duration`、`Period` など）を提供する。詳細は Java SE 25 API（<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html>）参照。
+[^jsr310]: JSR 310: Date and Time API, [https://jcp.org/en/jsr/detail?id=310](<https://jcp.org/en/jsr/detail?id=310>)。Java SE 8（2014年）で導入。Joda-Time の設計思想を取り入れた新しい日時 API で、ISO 8601 ベースの不変クラス群（`LocalDate`、`LocalTime`、`LocalDateTime`、`ZonedDateTime`、`Instant`、`Duration`、`Period` など）を提供する。詳細は Java SE 25 API（[https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/package-summary.html>)）参照。

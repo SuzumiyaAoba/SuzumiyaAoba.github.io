@@ -186,8 +186,8 @@ JVM は、単にバイトコードを実行するだけではありません。
 ここまで、JVM という言葉が何度も登場しました。
 次の節では、この JVM と、よく似た言葉である **JRE**・**JDK** の違いを整理し、Java で開発を始めるために何が必要なのかをはっきりさせます。
 
-[^jvms-class-file]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, Chapter 4 "The `class` File Format," <https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-4.html>。`.class` ファイルの構造（マジックナンバ `0xCAFEBABE`、定数プール、メソッド情報など）と、Java バイトコードの形式が公式に規定されている。
+[^jvms-class-file]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, Chapter 4 "The `class` File Format," [https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-4.html](<https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-4.html>)。`.class` ファイルの構造（マジックナンバ `0xCAFEBABE`、定数プール、メソッド情報など）と、Java バイトコードの形式が公式に規定されている。
 
-[^jvms-introduction]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, §1.2 "The Java Virtual Machine," <https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-1.html#jvms-1.2>。"The Java Virtual Machine is the cornerstone of the Java platform... It is responsible for hardware- and operating system-independence, the small size of compiled code, and the ability to protect users from malicious programs." と位置づけられている。
+[^jvms-introduction]: *The Java® Virtual Machine Specification, Java SE 25 Edition*, §1.2 "The Java Virtual Machine," [https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-1.html#jvms-1.2](<https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-1.html#jvms-1.2>)。"The Java Virtual Machine is the cornerstone of the Java platform... It is responsible for hardware- and operating system-independence, the small size of compiled code, and the ability to protect users from malicious programs." と位置づけられている。
 
-[^hotspot-jit]: Oracle, "HotSpot Virtual Machine Garbage Collection Tuning Guide / Java HotSpot VM Options," <https://docs.oracle.com/en/java/javase/25/vm/>。HotSpot JVM は階層的コンパイル（Tiered Compilation）として C1（クライアント）・C2（サーバ）コンパイラを用いて、ホットなメソッドを実行時にネイティブコードへ変換する。
+[^hotspot-jit]: Oracle, "HotSpot Virtual Machine Garbage Collection Tuning Guide / Java HotSpot VM Options," [https://docs.oracle.com/en/java/javase/25/vm/](<https://docs.oracle.com/en/java/javase/25/vm/>)。HotSpot JVM は階層的コンパイル（Tiered Compilation）として C1（クライアント）・C2（サーバ）コンパイラを用いて、ホットなメソッドを実行時にネイティブコードへ変換する。

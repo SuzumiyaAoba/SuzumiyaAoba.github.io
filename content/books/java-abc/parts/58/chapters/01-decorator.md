@@ -182,4 +182,4 @@ System.out.println(boxedBold.apply("Hello"));
 
 次の章では、**Proxy** ―― **代理人**を立てるパターンを見ます。
 
-[^java-io-decorator]: Java SE 25 API, `java.io` package, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/package-summary.html>。`FilterInputStream`／`FilterOutputStream`／`FilterReader`／`FilterWriter` は明示的な Decorator 基底クラスで、`BufferedReader`、`InputStreamReader`、`DataInputStream` などはこれを継承して機能を重ねる。
+[^java-io-decorator]: Java SE 25 API, `java.io` package, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/package-summary.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/package-summary.html>)。`FilterInputStream`／`FilterOutputStream`／`FilterReader`／`FilterWriter` は明示的な Decorator 基底クラスで、`BufferedReader`、`InputStreamReader`、`DataInputStream` などはこれを継承して機能を重ねる。

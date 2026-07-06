@@ -119,4 +119,4 @@ Point p = new Point(3, 4);
 
 次の節では、レコードを実際に定義して、使ってみます。
 
-[^jep395-records]: JEP 395: Records, <https://openjdk.org/jeps/395>。Java 16（2021年3月）で正式機能となった。コンパクトな構文でデータキャリアクラスを定義でき、コンポーネントは暗黙的に `private final`、アクセサ・コンストラクタ・`equals`／`hashCode`／`toString` が自動生成される。詳細は *JLS §8.10* <https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.10> 参照。
+[^jep395-records]: JEP 395: Records, [https://openjdk.org/jeps/395](<https://openjdk.org/jeps/395>)。Java 16（2021年3月）で正式機能となった。コンパクトな構文でデータキャリアクラスを定義でき、コンポーネントは暗黙的に `private final`、アクセサ・コンストラクタ・`equals`／`hashCode`／`toString` が自動生成される。詳細は *JLS §8.10* [https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.10](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html#jls-8.10>) 参照。

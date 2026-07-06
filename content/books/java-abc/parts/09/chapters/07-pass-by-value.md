@@ -115,4 +115,4 @@ nums ==> int[3] { 2, 4, 6 }
 
 次の節では、メソッドでつまずきやすいポイントを、まとめて確認します。
 
-[^jls-method-invocation]: *The Java® Language Specification, Java SE 25 Edition*, §15.12.4 "Run-Time Evaluation of Method Invocation," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.12.4>。"The values of the argument expressions become the values of newly created parameter variables." Java のメソッド呼び出しは常に値渡し（参照そのものは値）であり、C++ のような参照渡し（reference passing）の機構は存在しない。
+[^jls-method-invocation]: *The Java® Language Specification, Java SE 25 Edition*, §15.12.4 "Run-Time Evaluation of Method Invocation," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.12.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.12.4>)。"The values of the argument expressions become the values of newly created parameter variables." Java のメソッド呼び出しは常に値渡し（参照そのものは値）であり、C++ のような参照渡し（reference passing）の機構は存在しない。

@@ -235,8 +235,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 次の節では、Spring Boot で JPA を使うための**プロジェクトのセットアップ**を学びます。
 
-[^jpa-spec]: Jakarta EE, "Jakarta Persistence Specification," <https://jakarta.ee/specifications/persistence/>。元は JSR 220（Java EE 5, 2006年）として導入された Java Persistence API（JPA）が、Eclipse Foundation 移管後に Jakarta Persistence と改称された。現行の最新版は Jakarta Persistence 3.2。
+[^jpa-spec]: Jakarta EE, "Jakarta Persistence Specification," [https://jakarta.ee/specifications/persistence/](<https://jakarta.ee/specifications/persistence/>)。元は JSR 220（Java EE 5, 2006年）として導入された Java Persistence API（JPA）が、Eclipse Foundation 移管後に Jakarta Persistence と改称された。現行の最新版は Jakarta Persistence 3.2。
 
-[^hibernate]: Red Hat, "Hibernate ORM," <https://hibernate.org/orm/>。Gavin King らが2001年に開発を始めた Java の代表的 ORM 実装で、JPA の参照実装（reference implementation）級の地位にある。Spring Boot のデフォルト JPA プロバイダ。
+[^hibernate]: Red Hat, "Hibernate ORM," [https://hibernate.org/orm/](<https://hibernate.org/orm/>)。Gavin King らが2001年に開発を始めた Java の代表的 ORM 実装で、JPA の参照実装（reference implementation）級の地位にある。Spring Boot のデフォルト JPA プロバイダ。
 
-[^spring-data-jpa]: Spring Data JPA Reference, <https://docs.spring.io/spring-data/jpa/reference/>。Spring チームが提供する JPA 用 Repository 抽象。メソッド名から JPQL クエリを自動生成する Derived Query 機能や、`@Query` アノテーションによる手動クエリ指定に対応する。
+[^spring-data-jpa]: Spring Data JPA Reference, [https://docs.spring.io/spring-data/jpa/reference/](<https://docs.spring.io/spring-data/jpa/reference/>)。Spring チームが提供する JPA 用 Repository 抽象。メソッド名から JPQL クエリを自動生成する Derived Query 機能や、`@Query` アノテーションによる手動クエリ指定に対応する。

@@ -162,6 +162,6 @@ System.out.println("3行目");
 ここまでで、Java のプログラムを「読み解く」ための知識が、ひととおりそろいました。
 次の節では、書いたコードがうまく動かないとき ―― **エラー**と向き合う方法を学びます。
 
-[^jls-comments]: *The Java® Language Specification, Java SE 25 Edition*, §3.7 "Comments," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.7>。"There are two kinds of comments: A *traditional comment*: all the text from the ASCII characters `/*` to the ASCII characters `*/` ... An *end-of-line comment*: all the text from the ASCII characters `//` to the end of the line." と規定されている。
+[^jls-comments]: *The Java® Language Specification, Java SE 25 Edition*, §3.7 "Comments," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.7](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-3.html#jls-3.7>)。"There are two kinds of comments: A *traditional comment*: all the text from the ASCII characters `/*` to the ASCII characters `*/` ... An *end-of-line comment*: all the text from the ASCII characters `//` to the end of the line." と規定されている。
 
-[^javadoc-tool]: Oracle, "javadoc — Generate HTML pages of API documentation from Java source files," <https://docs.oracle.com/en/java/javase/25/docs/specs/man/javadoc.html>。`/** ... */` 形式のドキュメンテーションコメントから API ドキュメントを生成するツールで、JDK に標準同梱される。
+[^javadoc-tool]: Oracle, "javadoc — Generate HTML pages of API documentation from Java source files," [https://docs.oracle.com/en/java/javase/25/docs/specs/man/javadoc.html](<https://docs.oracle.com/en/java/javase/25/docs/specs/man/javadoc.html>)。`/** ... */` 形式のドキュメンテーションコメントから API ドキュメントを生成するツールで、JDK に標準同梱される。

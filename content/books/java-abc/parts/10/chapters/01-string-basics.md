@@ -99,4 +99,4 @@ s ==> "hello"
 
 次の節では、文字列の**長さ**を調べ、**1文字ずつ取り出す**方法を学びます。
 
-[^string-immutable]: Java SE 25 API Specification, `java.lang.String`, <https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html>。"Strings are constant; their values cannot be changed after they are created." と明記されている。`String` はクラスとしても `final` 修飾されており、サブクラス化もできない。
+[^string-immutable]: Java SE 25 API Specification, `java.lang.String`, [https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html](<https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html>)。"Strings are constant; their values cannot be changed after they are created." と明記されている。`String` はクラスとしても `final` 修飾されており、サブクラス化もできない。

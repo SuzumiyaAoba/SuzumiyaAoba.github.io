@@ -158,4 +158,4 @@ public static void main(String[] args) {
 
 入口の正体がつかめたら、次の節では、その中で実際に動いている命令 `System.out.println` を、左から読み解いていきます。
 
-[^jls-main-method]: *The Java® Language Specification, Java SE 25 Edition*, §12.1.4 "Invoke a Main Method," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4>。Java の起動時に呼び出される `main` メソッドの要件（戻り値型 `void`、`String[]` を引数に取る `static` メソッド、または引数なしの選択可能な main など）が規定されている。
+[^jls-main-method]: *The Java® Language Specification, Java SE 25 Edition*, §12.1.4 "Invoke a Main Method," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4>)。Java の起動時に呼び出される `main` メソッドの要件（戻り値型 `void`、`String[]` を引数に取る `static` メソッド、または引数なしの選択可能な main など）が規定されている。

@@ -172,10 +172,10 @@ public class Hello {
 
 クラスの正体がわかったところで、次の節では、そのクラスの中にある「プログラムの入口」＝ **main メソッド**を読み解いていきます。
 
-[^simula-67]: Ole-Johan Dahl and Kristen Nygaard, "Simula — An ALGOL-Based Simulation Language," *Communications of the ACM*, Vol. 9, No. 9, 1966。Simula 67 はノルウェー計算センター（NCC, オスロ）で開発され、クラス・オブジェクト・継承の概念を初めて言語機能として導入した。Dahl と Nygaard は2001年に ACM Turing Award を受賞している（<https://amturing.acm.org/award_winners/dahl_4659460.cfm>）。
+[^simula-67]: Ole-Johan Dahl and Kristen Nygaard, "Simula — An ALGOL-Based Simulation Language," *Communications of the ACM*, Vol. 9, No. 9, 1966。Simula 67 はノルウェー計算センター（NCC, オスロ）で開発され、クラス・オブジェクト・継承の概念を初めて言語機能として導入した。Dahl と Nygaard は2001年に ACM Turing Award を受賞している（[https://amturing.acm.org/award_winners/dahl_4659460.cfm](<https://amturing.acm.org/award_winners/dahl_4659460.cfm>)）。
 
-[^smalltalk-kay]: Alan C. Kay, "The Early History of Smalltalk," *ACM SIGPLAN Notices*, Vol. 28, No. 3, 1993, <https://dl.acm.org/doi/10.1145/155360.155364>。Alan Kay は Xerox PARC で1970年代に Smalltalk を開発し、「object-oriented」という用語を広めた当事者として知られる。
+[^smalltalk-kay]: Alan C. Kay, "The Early History of Smalltalk," *ACM SIGPLAN Notices*, Vol. 28, No. 3, 1993, [https://dl.acm.org/doi/10.1145/155360.155364](<https://dl.acm.org/doi/10.1145/155360.155364>)。Alan Kay は Xerox PARC で1970年代に Smalltalk を開発し、「object-oriented」という用語を広めた当事者として知られる。
 
-[^jls-7-6]: *The Java® Language Specification, Java SE 25 Edition*, §7.6 "Top Level Type Declarations," <https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.6>。"If the optionally-qualified type name `T` is declared in a public top level type declaration in a compilation unit named `T.java`, then the implementation may report a compile-time error" と規定されている。
+[^jls-7-6]: *The Java® Language Specification, Java SE 25 Edition*, §7.6 "Top Level Type Declarations," [https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.6](<https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html#jls-7.6>)。"If the optionally-qualified type name `T` is declared in a public top level type declaration in a compilation unit named `T.java`, then the implementation may report a compile-time error" と規定されている。
 
-[^java-naming-convention]: Oracle, "Code Conventions for the Java Programming Language: Naming Conventions," <https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html>。"Class names should be nouns, in mixed case with the first letter of each internal word capitalized." と公式に推奨されている。
+[^java-naming-convention]: Oracle, "Code Conventions for the Java Programming Language: Naming Conventions," [https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html](<https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html>)。"Class names should be nouns, in mixed case with the first letter of each internal word capitalized." と公式に推奨されている。

@@ -185,6 +185,6 @@ com.example.other             ← スキャンされない
 
 次の節では、実際に Spring Boot プロジェクトを作って、動かしてみます。
 
-[^spring-doc]: Spring Framework 公式ドキュメント, <https://docs.spring.io/spring-framework/reference/>。VMware（旧 Pivotal）が開発するエンタープライズ Java フレームワーク。Rod Johnson が2003年にリリースした Spring 1.0 を起点に、DI コンテナを中核として発展した。
+[^spring-doc]: Spring Framework 公式ドキュメント, [https://docs.spring.io/spring-framework/reference/](<https://docs.spring.io/spring-framework/reference/>)。VMware（旧 Pivotal）が開発するエンタープライズ Java フレームワーク。Rod Johnson が2003年にリリースした Spring 1.0 を起点に、DI コンテナを中核として発展した。
 
-[^spring-boot]: Spring Boot 公式ドキュメント, <https://docs.spring.io/spring-boot/index.html>。Spring Framework に「Convention over Configuration」と自動設定（auto-configuration）を組み合わせ、最小限の設定で本番稼働可能なアプリを構築できるようにしたフレームワーク。2014年に1.0がリリースされた。
+[^spring-boot]: Spring Boot 公式ドキュメント, [https://docs.spring.io/spring-boot/index.html](<https://docs.spring.io/spring-boot/index.html>)。Spring Framework に「Convention over Configuration」と自動設定（auto-configuration）を組み合わせ、最小限の設定で本番稼働可能なアプリを構築できるようにしたフレームワーク。2014年に1.0がリリースされた。
