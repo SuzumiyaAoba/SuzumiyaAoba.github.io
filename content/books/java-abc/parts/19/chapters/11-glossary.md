@@ -1,7 +1,7 @@
 ---
 title: 用語集 ― この章で学んだ言葉
 llm: true
-co-author: ["Claude Opus 4.7"]
+co-author: ["Claude Opus 4.7", "Claude Opus 4.8"]
 ---
 
 ## 用語集 ― この章で学んだ言葉
@@ -45,6 +45,23 @@ co-author: ["Claude Opus 4.7"]
 
 ---
 
+## 変性（第6〜9節・発展）
+
+| 用語 | 英語・読み | 意味 |
+|---|---|---|
+| 変性 | Variance | 中身の親子関係が、入れ物どうしの関係にどう伝わるかのルール |
+| 共変 | Covariant | 中身と同じ向きに関係が伝わる（`Cat` が `Animal` の子 → 入れ物`<Cat>` も子）。配列や `? extends`、戻り値 |
+| 反変 | Contravariant | 中身と逆向きに関係が伝わる。`? super` |
+| 不変 | Invariant | 関係が伝わらない（別物）。ジェネリクスの既定。第13章の「不変オブジェクト」とは別物 |
+| ワイルドカード | Wildcard | `?`。「何かの型」を表す型引数 |
+| 上限境界ワイルドカード | Upper Bounded Wildcard | `? extends 型`。共変。読み出す（Producer）側向き。追加は不可 |
+| 下限境界ワイルドカード | Lower Bounded Wildcard | `? super 型`。反変。書き込む（Consumer）側向き。読むと `Object` |
+| PECS | Producer-Extends, Consumer-Super | 取り出す側は `extends`、入れる側は `super`、という使い分けの合言葉 |
+| 戻り値の共変性 | Covariant Return Type | オーバーライドで戻り値をサブ型に狭められるしくみ（Java 5+） |
+| `ArrayStoreException` | ― | 共変な配列に、不適合な型を格納しようとしたときの実行時例外 |
+
+---
+
 ## おわりに ― 第2部の締めくくりが近づいてきました
 
 第19章で、Java の「型」に関する道具立てが、ほぼ出そろいました。
@@ -53,7 +70,7 @@ co-author: ["Claude Opus 4.7"]
 - 継承・ポリモーフィズム（第14〜15章）
 - 抽象クラス・インターフェース（第16章）
 - レコード・列挙型（第17〜18章）
-- ジェネリクス（第19章）
+- ジェネリクスと変性（共変・反変）（第19章）
 
 これらを使えば、安全で、再利用しやすく、変更に強いプログラムを設計できます。
 

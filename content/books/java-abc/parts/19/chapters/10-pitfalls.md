@@ -1,7 +1,7 @@
 ---
 title: よくあるつまずき
 llm: true
-co-author: ["Claude Opus 4.7"]
+co-author: ["Claude Opus 4.7", "Claude Opus 4.8"]
 ---
 
 ## よくあるつまずき
@@ -75,7 +75,40 @@ List<String> list = new ArrayList<>();   // ◯ <> なら左辺に合う
 
 ---
 
-## 4. ジェネリクスは「読めれば、まず十分」
+## 4. `List<Integer>` を `List<Number>` に代入できない（発展）
+
+`Integer` は `Number` の仲間なのに、`List<Integer>` を `List<Number>` に入れようとすると、エラーになります。
+
+```java
+List<Integer> ints = new ArrayList<>();
+List<Number> nums = ints;   // ✕ ジェネリクスは不変
+```
+
+これは間違いではなく、ジェネリクスが**不変**（第7節）だからです。
+「リストから**取り出して使うだけ**」なら、`List<? extends Number>` という**共変**の受け皿を使えば渡せます（第8節）。
+
+```java
+static double sum(List<? extends Number> list) { ... }   // ◯ List<Integer> も渡せる
+```
+
+---
+
+## 5. `? extends` のリストに add しようとする（発展）
+
+`List<? extends Number>` を受け取ったからといって、そこに要素を追加することはできません。
+
+```java
+static void bad(List<? extends Number> list) {
+    list.add(1);   // ✕ 共変なので追加できない
+}
+```
+
+`? extends` は「**読み出す側**」専用です。追加もしたいなら、`? super`（反変）を使います。
+迷ったら **PECS**（Producer-Extends, Consumer-Super）を思い出してください（第8節）。
+
+---
+
+## 6. ジェネリクスは「読めれば、まず十分」
 
 ジェネリクスを、自分でゼロから設計する（`class Box<T>` を作るなど）のは、最初のうちは、それほど多くありません。
 むしろ、`List<String>` や `Map<String, Integer>` のような、**既存のジェネリックな型を使う**場面が、圧倒的に多いです。
@@ -96,6 +129,8 @@ List<String> list = new ArrayList<>();   // ◯ <> なら左辺に合う
 - 型引数に**基本型は使えない**。`int` → `Integer` のように**ラッパークラス**を使う
 - 型を指定しない**生の型**（`List list`）は避け、必ず `List<String>` のように指定する
 - 左辺と右辺の型引数はそろえる。右辺は **`<>`**（ダイヤモンド）で省略するのが安全
+- （発展）`List<Integer>` は `List<Number>` に代入できない（**不変**）。読むだけなら `? extends` を使う
+- （発展）`? extends` のリストには **add できない**。追加したいなら `? super`（**PECS**）
 - まずは「`<>` を**読めて、使える**」ことを目標にすればよい
 
 次は、この章で学んだ言葉を、用語集としてまとめます。
