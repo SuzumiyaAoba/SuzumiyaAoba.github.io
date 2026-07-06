@@ -50,6 +50,7 @@
     "react-medium-image-zoom": "^5.4.0",
     "rehype-katex": "^7.0.1",
     "remark": "^15.0.1",
+    "remark-custom-heading-id": "^2.0.0",
     "remark-emoji": "^5.0.2",
     "remark-join-cjk-lines": "^1.0.14",
     "remark-math": "^6.0.0",

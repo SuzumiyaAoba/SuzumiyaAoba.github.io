@@ -9,6 +9,7 @@ import rehypeExternalLinks from "rehype-external-links";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import remarkCustomHeadingId from "remark-custom-heading-id";
 import remarkEmoji from "remark-emoji";
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
@@ -180,6 +181,7 @@ function buildCompileOptions(
       mdxOptions: {
         remarkPlugins: [
           remarkGfm,
+          remarkCustomHeadingId,
           remarkEmoji,
           remarkJoinCjkLines,
           remarkMath,
