@@ -139,6 +139,19 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
 }
 
 /**
+ * 商品 ID → productUrl のマップを返す
+ * @returns ID をキー、productUrl を値とした Map
+ */
+export async function getAffiliateProductUrlById(): Promise<Map<string, string>> {
+  const index = await loadAffiliateProducts();
+  const urlById = new Map<string, string>();
+  for (const [id, product] of index.byId) {
+    urlById.set(id, product.productUrl);
+  }
+  return urlById;
+}
+
+/**
  * 指定された ID リストに合致する商品を一括取得する
  * @param ids 商品 ID の配列
  * @returns 商品データの配列。存在しない ID は除外される

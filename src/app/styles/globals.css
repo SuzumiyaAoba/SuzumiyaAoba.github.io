@@ -263,7 +263,7 @@
   }
   .prose ul,
   .prose ol {
-    @apply my-5 pl-6;
+    @apply mt-0.5 mb-5 pl-6;
   }
   .prose ul {
     @apply list-disc;
@@ -272,10 +272,10 @@
     @apply list-decimal;
   }
   .prose li {
-    @apply my-2;
+    @apply my-0.5;
   }
   .prose li > p {
-    @apply my-2;
+    @apply my-0.5;
   }
   .prose blockquote {
     @apply my-6 border-l-2 border-border pl-4 text-muted-foreground;

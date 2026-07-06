@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
+import { getBookSlugs, getBookToc } from "@/entities/book";
 import { getSeriesSlugs } from "@/entities/series-item/model/series";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
 
@@ -140,6 +141,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const bookSlugs = await getBookSlugs();
+  const bookIndexPages: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/books/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    ...bookSlugs.map((slug) => ({
+      url: `${siteUrl}/books/${slug}/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+  ];
+  const bookSectionPages: MetadataRoute.Sitemap = [];
+  for (const slug of bookSlugs) {
+    const toc = await getBookToc(slug);
+    for (const ch of toc) {
+      for (const sec of ch.sections) {
+        bookSectionPages.push({
+          url: `${siteUrl}/books/${slug}/${sec.chapter}/${sec.section}/`,
+          lastModified: new Date(),
+          changeFrequency: "monthly",
+          priority: 0.6,
+        });
+      }
+    }
+  }
+
   const seriesSlugs = await getSeriesSlugs();
   const seriesPages: MetadataRoute.Sitemap = seriesSlugs.map((slug) => ({
     url: `${siteUrl}/series/${slug}/`,
@@ -182,6 +213,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogPagesEn,
     ...notePages,
     ...notePagesEn,
+    ...bookIndexPages,
+    ...bookSectionPages,
     ...seriesPages,
     ...seriesPagesEn,
     ...tagPages,
