@@ -4,11 +4,11 @@ import { toLocalePath } from "@/shared/lib/routing";
 import BlogPostPage from "@/pages/blog/post";
 
 type PageProps = {
-  params?: { slug?: string } | Promise<{ slug?: string }>;
+  params: Promise<{ slug?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const slug = resolvedParams?.slug;
   if (!slug) {
     return { title: "Blog" };

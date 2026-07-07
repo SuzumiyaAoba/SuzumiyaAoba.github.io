@@ -10,11 +10,11 @@ function decodeTag(tag: string): string {
 }
 
 type PageProps = {
-  params?: { tag?: string } | Promise<{ tag?: string }>;
+  params: Promise<{ tag?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const tagParam = resolvedParams?.tag;
   if (!tagParam) {
     return { title: "Tags" };

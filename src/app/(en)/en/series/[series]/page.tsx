@@ -3,11 +3,11 @@ import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
 import SeriesDetailPage from "@/pages/series/detail";
 
 type PageProps = {
-  params?: { series?: string } | Promise<{ series?: string }>;
+  params: Promise<{ series?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const slug = resolvedParams?.series;
   if (!slug) {
     return { title: "Series" };

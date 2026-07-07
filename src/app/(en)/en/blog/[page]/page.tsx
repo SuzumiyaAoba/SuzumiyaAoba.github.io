@@ -3,7 +3,7 @@ import { getBlogPostSummariesVariants } from "@/entities/blog";
 import BlogPage from "@/pages/blog/page";
 
 type PageProps = {
-  params?: { page?: string } | Promise<{ page?: string }>;
+  params: Promise<{ page?: string }>;
 };
 
 const POSTS_PER_PAGE = 10;
@@ -13,7 +13,7 @@ function getPageCount(total: number): number {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const pageNumber = Number(resolvedParams?.page);
   const title = Number.isFinite(pageNumber) ? `Blog Page ${pageNumber}` : "Blog";
   return { title };

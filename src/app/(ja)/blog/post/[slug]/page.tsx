@@ -6,7 +6,7 @@ import { getBlogPost, getBlogSlugs } from "@/entities/blog";
  */
 type PageProps = {
   /** ルートパラメータ */
-  params?: { slug?: string } | Promise<{ slug?: string }>;
+  params: Promise<{ slug?: string }>;
 };
 
 /**
@@ -15,7 +15,7 @@ type PageProps = {
  * @returns メタデータオブジェクト
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const slug = resolvedParams?.slug;
   if (!slug) {
     return { title: "Blog" };
