@@ -3,6 +3,7 @@
 import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
 import { useEffect, useMemo, useState } from "react";
 
+import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 
 export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
@@ -41,6 +42,7 @@ export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
   if (!activeCode) {
     return null;
   }
+  const { displayMeta } = parseCodeMeta(activeCode.meta);
 
   return (
     <div className="my-6">
@@ -60,9 +62,9 @@ export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
             </option>
           ))}
         </select>
-        {activeCode?.meta ? (
+        {displayMeta ? (
           <span className="ml-auto truncate text-[10px] uppercase tracking-[0.12em]">
-            {activeCode.meta}
+            {displayMeta}
           </span>
         ) : null}
       </div>

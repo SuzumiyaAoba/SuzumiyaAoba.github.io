@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { HighlightedCode } from "codehike/code";
 
+import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { cn } from "@/shared/lib/utils";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
@@ -38,6 +39,7 @@ export function Code({ codeblock }: CodeProps) {
       data: { ...annotation.data, n: noteIndex },
     };
   });
+  const { displayMeta } = parseCodeMeta(codeblock.meta);
 
   const normalizedCodeblock: HighlightedCode = {
     ...codeblock,
@@ -49,23 +51,23 @@ export function Code({ codeblock }: CodeProps) {
 
   return (
     <div className="my-6">
-      {codeblock.meta ? (
+      {displayMeta ? (
         <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
-          <span className="truncate">{codeblock.meta}</span>
+          <span className="truncate">{displayMeta}</span>
           <span className="text-[10px] uppercase tracking-[0.12em]">{codeblock.lang}</span>
         </div>
       ) : null}
       {mounted ? (
         <CustomCodeBlock
           code={normalizedCodeblock}
-          {...(normalizedCodeblock.meta ? { className: "rounded-t-none mt-0" } : {})}
+          {...(displayMeta ? { className: "rounded-t-none mt-0" } : {})}
         />
       ) : (
         <div
           aria-hidden
           className={cn(
             "my-4 rounded-lg bg-muted",
-            normalizedCodeblock.meta ? "rounded-t-none mt-0" : undefined,
+            displayMeta ? "rounded-t-none mt-0" : undefined,
           )}
           style={{ height: `${placeholderHeight}rem` }}
         />
