@@ -168,8 +168,10 @@ export function Header({ locale, path }: HeaderProps) {
       </div>
       <div
         id="mobile-nav"
-        className={`mx-auto block max-w-6xl overflow-hidden px-6 transition-[max-height,opacity] duration-300 lg:hidden ${
-          isMenuOpen ? "max-h-96 opacity-100 pb-4" : "max-h-0 opacity-0 pb-0"
+        className={`mx-auto block max-w-6xl px-6 transition-[max-height,opacity] duration-300 lg:hidden ${
+          isMenuOpen
+            ? "max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain opacity-100 pb-4"
+            : "max-h-0 overflow-hidden opacity-0 pb-0"
         }`}
       >
         <nav className="flex flex-col gap-3 py-4 text-sm font-medium text-muted-foreground">
