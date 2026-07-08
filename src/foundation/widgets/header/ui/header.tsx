@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "@iconify/react";
 
 import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
@@ -40,6 +41,7 @@ type HeaderProps = {
 export function Header({ locale, path }: HeaderProps) {
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const searchLabel = locale === "ja" ? "検索" : "Search";
 
   useEffect(() => {
     let frame = 0;
@@ -116,20 +118,22 @@ export function Header({ locale, path }: HeaderProps) {
               </a>
             </Button>
             <span className="text-border/70">/</span>
-            <Button
-              asChild
-              size="sm"
-              variant="ghost"
-              className="rounded-none bg-transparent px-0 text-sm font-medium text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground"
-            >
-              <a href={toLocalePath("/search", locale)}>
-                <I18nText locale={locale} ja="Search" en="Search" />
-              </a>
-            </Button>
-            <span className="text-border/70">/</span>
-            <LanguageToggle locale={locale} path={path} />
-            <span className="text-border/70">/</span>
-            <ThemeToggle />
+            <div className="flex items-center gap-1">
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full"
+                aria-label={searchLabel}
+                title={searchLabel}
+              >
+                <a href={toLocalePath("/search", locale)}>
+                  <Icon icon="lucide:search" className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </Button>
+              <LanguageToggle locale={locale} path={path} />
+              <ThemeToggle />
+            </div>
           </div>
 
           <div className="flex items-center lg:hidden">
