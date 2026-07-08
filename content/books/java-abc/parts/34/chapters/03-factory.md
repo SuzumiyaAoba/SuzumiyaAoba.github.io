@@ -54,7 +54,7 @@ public class PaymentService {
 
 「作る」専用のクラス、あるいはメソッドを**別の場所に置く**のが Factory パターンです。
 
-```text
+```text line-numbers=false
 PaymentService ─→ PaymentStrategy
                         ↑
                   PaymentFactory（作る役）

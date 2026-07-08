@@ -45,7 +45,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 処理を始めます
 エラーが起きました
@@ -104,7 +104,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 リソースを開く
 リソースを使う

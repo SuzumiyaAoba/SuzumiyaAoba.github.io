@@ -71,7 +71,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ はごはんを食べる
 ポチ: ワン
@@ -87,7 +87,7 @@ $ java Main.java
 
 継承のイメージは、「**親の機能をすべて持ったうえで、さらに自分の機能を足したもの**」です。
 
-```text
+```text line-numbers=false
 Animal（親）         が持つもの:  name, eat()
 Dog（子）が持つもの:  name, eat()（継承）  +  cry()（独自）
 ```

@@ -25,7 +25,7 @@ int[] nums = {10, 20, 30};
 IO.println(nums);
 ```
 
-```text
+```text line-numbers=false
 [I@1db9742
 ```
 
@@ -39,7 +39,7 @@ int[] nums = {10, 20, 30};
 IO.println(Arrays.toString(nums));
 ```
 
-```text
+```text line-numbers=false
 [10, 20, 30]
 ```
 
@@ -59,7 +59,7 @@ Arrays.sort(data);
 
 並べ替えた結果を確認してみましょう。
 
-```text
+```text line-numbers=false
 jshell> Arrays.toString(data)
 $3 ==> "[1, 1, 3, 4, 5]"
 ```
@@ -88,7 +88,7 @@ void main(String[] args) {
 この `String[] args` は、**コマンドライン引数**（プログラムを起動するときに、外から渡す文字列）を受け取るための配列です。
 たとえば、このプログラムを `Args.java` という名前で保存し、次のように実行すると、
 
-```text
+```text line-numbers=false
 $ java Args.java りんご みかん ぶどう
 引数の数: 3
 りんご

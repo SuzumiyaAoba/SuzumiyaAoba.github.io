@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 String content = Files.readString(Path.of("not_exist.txt"));
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.nio.file.NoSuchFileException: not_exist.txt
 ```
 
@@ -48,7 +48,7 @@ public static void main(String[] args) {   // throws がない
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 例外java.io.IOExceptionは報告されません。スローするには、捕捉または宣言する必要があります
 ```
 

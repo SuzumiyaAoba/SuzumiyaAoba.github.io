@@ -21,7 +21,7 @@ int[] scores = {80, 95, 70, 60, 100};
 
 これを jshell で打つと、次のように表示されます。
 
-```text
+```text line-numbers=false
 jshell> int[] scores = {80, 95, 70, 60, 100};
 scores ==> int[5] { 80, 95, 70, 60, 100 }
 ```
@@ -40,7 +40,7 @@ scores ==> int[5] { 80, 95, 70, 60, 100 }
 String[] names = {"佐藤", "鈴木", "高橋"};
 ```
 
-```text
+```text line-numbers=false
 jshell> String[] names = {"佐藤", "鈴木", "高橋"};
 names ==> String[3] { "佐藤", "鈴木", "高橋" }
 ```
@@ -58,7 +58,7 @@ int[] scores = new int[5];
 `new int[5]` は、「`int` が5個ぶんの入れ物を、新しく用意する」という意味です。
 このとき、各要素には自動的に**初期値**が入ります。
 
-```text
+```text line-numbers=false
 jshell> int[] scores = new int[5];
 scores ==> int[5] { 0, 0, 0, 0, 0 }
 ```

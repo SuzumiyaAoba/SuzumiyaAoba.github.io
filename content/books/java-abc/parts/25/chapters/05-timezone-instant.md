@@ -33,7 +33,7 @@ ZonedDateTime tokyo = ZonedDateTime.of(2026, 6, 9, 14, 30, 0, 0, ZoneId.of("Asia
 IO.println(tokyo);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09T14:30+09:00[Asia/Tokyo]
 ```
 
@@ -56,7 +56,7 @@ Instant now = Instant.now();   // いまこの瞬間（世界共通）
 IO.println(now);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09T05:30:00Z
 ```
 

@@ -41,7 +41,7 @@ b.join();
 IO.println("結果: " + Counter.count);
 ```
 
-```text
+```text line-numbers=false
 （実行の一例 ― 毎回変わる）
 結果: 132495
 ```
@@ -55,7 +55,7 @@ IO.println("結果: " + Counter.count);
 
 `count++` は、一見1つの操作に見えますが、実は**3つのステップ**でできています。
 
-```text
+```text line-numbers=false
 count++ の中身:
   ① count の値を読む（たとえば 100）
   ② 1 を足す（101）
@@ -64,7 +64,7 @@ count++ の中身:
 
 ここで、2つのスレッド A・B が、運悪く同時に動くと、こうなることがあります。
 
-```text
+```text line-numbers=false
 スレッドA: ① count を読む（100）
 スレッドB: ① count を読む（100）  ← A がまだ書き戻す前に、同じ 100 を読んだ！
 スレッドA: ②③ 101 を書き戻す

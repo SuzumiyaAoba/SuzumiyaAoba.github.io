@@ -97,7 +97,7 @@ public class Hello {
 
 このように、単語の先頭をすべて大文字にしてつなげる書き方を、**パスカルケース**（Pascal Case）、または**アッパーキャメルケース**（Upper Camel Case）と呼びます[^java-naming-convention]。
 
-```text
+```text line-numbers=false
 ○  Main / HelloWorld / UserProfile
 ×  main / helloworld / hello_world / こんにちは
 ```
@@ -125,7 +125,7 @@ public class Hello {
 ここで注意したいのが、**大文字・小文字も区別される**という点です。
 `Main.java` と `main.java` は、Java にとっては別の名前です。
 
-```text
+```text line-numbers=false
 ○  public class Main   →  Main.java
 ×  public class Main   →  main.java
 ×  public class Main   →  Hello.java

@@ -30,7 +30,7 @@ class Animal extends Object {
 
 **Java のすべてのクラスは、先祖をたどると必ず `Object` に行き着く** ―― これは、Java の重要な特徴です。
 
-```text
+```text line-numbers=false
 Object（すべての先祖）
   └─ Animal
        └─ Dog
@@ -63,7 +63,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Animal@2f92e0f4
 ```
@@ -99,7 +99,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Animal{name=ポチ, age=3}
 ```

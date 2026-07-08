@@ -30,7 +30,7 @@ int[][] grid = {
 これは「3個の配列が、2つ並んでいる」という構造です。
 表でいうと、**2行3列**のイメージです。
 
-```text
+```text line-numbers=false
         列0  列1  列2
  行0 [   1    2    3  ]
  行1 [   4    5    6  ]
@@ -38,7 +38,7 @@ int[][] grid = {
 
 jshell で確認すると、配列の中に配列が入っているのがわかります。
 
-```text
+```text line-numbers=false
 jshell> int[][] grid = {{1, 2, 3}, {4, 5, 6}};
 grid ==> int[2][] { int[3] { 1, 2, 3 }, int[3] { 4, 5, 6 } }
 ```
@@ -54,7 +54,7 @@ grid ==> int[2][] { int[3] { 1, 2, 3 }, int[3] { 4, 5, 6 } }
 int[][] grid = {{1, 2, 3}, {4, 5, 6}};
 ```
 
-```text
+```text line-numbers=false
 jshell> grid[0][2]
 $2 ==> 3
 
@@ -73,7 +73,7 @@ $3 ==> 4
 
 2次元配列の `length` は、少し注意が必要です。
 
-```text
+```text line-numbers=false
 jshell> grid.length
 $4 ==> 2
 
@@ -103,7 +103,7 @@ for (int i = 0; i < grid.length; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 1 2 3 
 4 5 6 
 ```
@@ -124,7 +124,7 @@ for (int i = 0; i < grid.length; i++) {
 2次元配列も、`new` で「空の入れ物」を先に作れます。
 `new int[2][3]` は、「2行3列ぶんの入れ物」を用意し、すべての要素を初期値（`int` なら `0`）で埋めます。
 
-```text
+```text line-numbers=false
 jshell> int[][] table = new int[2][3];
 table ==> int[2][] { int[3] { 0, 0, 0 }, int[3] { 0, 0, 0 } }
 ```

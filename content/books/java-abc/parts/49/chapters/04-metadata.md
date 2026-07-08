@@ -27,7 +27,7 @@ llm: true
 
 GraalVM 公式の指針に従うと、メタデータは `META-INF/native-image/<group>/<artifact>/` ディレクトリに置きます。
 
-```text
+```text line-numbers=false
 src/main/resources/META-INF/native-image/com.example/my-app/
 ├── reflect-config.json
 ├── resource-config.json
@@ -115,7 +115,7 @@ Spring AOP や JDBC のプロキシは、すべてこの仕組みでネイティ
 これらの設定を**手で書くのは大変**です。
 GraalVM は、それを自動化する**Tracing Agent** という仕組みを提供します。
 
-```text
+```text line-numbers=false
 $ java -agentlib:native-image-agent=config-output-dir=META-INF/native-image/ -jar app.jar
 ```
 
@@ -155,7 +155,7 @@ GraalVM コミュニティが管理する **[Reachability Metadata Repository](h
 
 設定ファイルとは別に、**クラスの初期化を**いつ**やるか**を指定するフラグもあります。
 
-```text
+```text line-numbers=false
 $ native-image --initialize-at-run-time=com.example.MyLogger Hello
 ```
 

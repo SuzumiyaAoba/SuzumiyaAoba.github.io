@@ -33,7 +33,7 @@ IO.println(classify(42));
 IO.println(classify("hello"));
 ```
 
-```text
+```text line-numbers=false
 負の整数: -5
 ゼロ
 正の整数: 42

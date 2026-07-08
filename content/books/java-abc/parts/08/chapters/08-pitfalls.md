@@ -24,7 +24,7 @@ IO.println(nums[5]);   // 5 番は存在しない！
 
 `jshell` で実行すると、次のようなエラー（**例外**）が表示されます（行頭の `|` は、jshell がエラーなどの説明に付ける印です）。
 
-```text
+```text line-numbers=false
 |  例外java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
 ```
 
@@ -62,7 +62,7 @@ int[] nums = {10, 20, 30};
 String s = "abc";
 ```
 
-```text
+```text line-numbers=false
 jshell> nums.length     // 配列はかっこなし
 $3 ==> 3
 

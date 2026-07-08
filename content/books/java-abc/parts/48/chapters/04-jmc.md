@@ -54,7 +54,7 @@ JMC を立ち上げて最初に見る画面は、**Automated Analysis Results** 
 
 Code → Method Profiling ペインを開くと、CPU を多く使ったメソッドが**スタックの逆向きに**集計されて見えます。
 
-```text
+```text line-numbers=false
 85%  com.example.Foo.process()
   60%  com.example.Foo.parse()
     50%  java.util.HashMap.get()

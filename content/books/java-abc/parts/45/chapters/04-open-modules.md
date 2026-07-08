@@ -97,7 +97,7 @@ open module com.example.app {
 
 ソースを変更せずに、起動時に開放する手段もあります。
 
-```text
+```text line-numbers=false
 $ java --add-opens com.example.app/com.example.app.entity=com.fasterxml.jackson.databind \
        --module-path ... --module com.example.app/com.example.app.Main
 ```
@@ -150,7 +150,7 @@ public class Reader {
 対象のパッケージが `opens` されていれば、`setAccessible(true)` 後の `getInt` が動きます。
 されていなければ、
 
-```text
+```text line-numbers=false
 java.lang.reflect.InaccessibleObjectException: Unable to make field private int Foo.x accessible:
 module com.example.target does not "opens com.example.target" to module com.example.reader
 ```

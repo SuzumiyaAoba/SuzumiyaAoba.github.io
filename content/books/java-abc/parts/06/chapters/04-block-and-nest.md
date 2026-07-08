@@ -47,7 +47,7 @@ if (0 <= n && n <= 100) {
 }
 ```
 
-```text
+```text line-numbers=false
 正しい点数です
 ```
 
@@ -63,7 +63,7 @@ if (n < 0 || n > 100) {
 }
 ```
 
-```text
+```text line-numbers=false
 点数の範囲が正しくありません
 ```
 
@@ -91,7 +91,7 @@ if (loggedIn) {
 }
 ```
 
-```text
+```text line-numbers=false
 管理者メニューを表示
 ```
 

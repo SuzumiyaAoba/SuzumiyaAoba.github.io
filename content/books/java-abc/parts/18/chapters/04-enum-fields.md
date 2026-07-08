@@ -75,7 +75,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 赤信号: 止まれ
 ```
@@ -114,7 +114,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 進めます
 ```

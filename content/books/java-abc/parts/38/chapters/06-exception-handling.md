@@ -139,7 +139,7 @@ e.getBindingResult().getFieldErrors().stream()
 
 ### 1. 見つからない ID
 
-```text
+```text line-numbers=false
 $ curl http://localhost:8080/api/books/999 -i
 HTTP/1.1 404
 Content-Type: application/json
@@ -156,7 +156,7 @@ Content-Type: application/json
 
 ### 2. バリデーション NG
 
-```text
+```text line-numbers=false
 $ curl -X POST http://localhost:8080/api/books \
        -H "Content-Type: application/json" \
        -d '{"title":"","author":"","publishedYear":1800}' -i

@@ -56,7 +56,7 @@ IO.println(describe("hello"));
 IO.println(describe(3.14));
 ```
 
-```text
+```text line-numbers=false
 整数: 42
 文字列: hello
 小数: 3.14
@@ -99,7 +99,7 @@ IO.println(describe(null));
 IO.println(describe(42));
 ```
 
-```text
+```text line-numbers=false
 null です
 整数: 42
 ```

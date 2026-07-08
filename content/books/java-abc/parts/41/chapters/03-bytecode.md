@@ -32,7 +32,7 @@ co-author: ["Claude Opus 4.7"]
 
 第1節で見た `Hello.main` をもう一度載せます。
 
-```text
+```text line-numbers=false
 public static void main(java.lang.String[]);
   Code:
        0: iconst_3
@@ -116,7 +116,7 @@ public static int sum(int n) {
 }
 ```
 
-```text
+```text line-numbers=false
 $ javap -c Loop.class
   public static int sum(int);
     Code:

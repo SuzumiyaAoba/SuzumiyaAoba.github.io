@@ -21,7 +21,7 @@ String s = "Hello, World";
 
 ある文字列が**含まれているか**を調べるのが、**`contains`** です。`boolean`（`true` / `false`）を返します。
 
-```text
+```text line-numbers=false
 jshell> s.contains("World")
 $2 ==> true
 
@@ -44,7 +44,7 @@ if (s.contains("World")) {
 
 **`indexOf`** は、指定した文字・文字列が**最初に現れる位置（インデックス）**を返します。
 
-```text
+```text line-numbers=false
 jshell> s.indexOf("o")
 $2 ==> 4
 
@@ -57,7 +57,7 @@ $3 ==> 7
 ここで**とても大事な注意**があります。
 探している文字列が**見つからないときは、`-1` を返します**。
 
-```text
+```text line-numbers=false
 jshell> s.indexOf("z")
 $2 ==> -1
 ```
@@ -67,7 +67,7 @@ $2 ==> -1
 
 また、**最後に現れる位置**を知りたいときは、**`lastIndexOf`** を使います。
 
-```text
+```text line-numbers=false
 jshell> s.lastIndexOf("o")
 $2 ==> 8
 ```
@@ -80,7 +80,7 @@ $2 ==> 8
 
 文字列が、特定の文字列で**始まるか／終わるか**を調べるのが、**`startsWith`** と **`endsWith`** です。どちらも `boolean` を返します。
 
-```text
+```text line-numbers=false
 jshell> s.startsWith("Hello")
 $2 ==> true
 
@@ -104,7 +104,7 @@ $4 ==> false
 | `isEmpty()` | 長さが `0`（空文字列 `""`）か | `"".isEmpty()` → `true` |
 | `isBlank()` | 空、または**空白文字だけ**か | `"   ".isBlank()` → `true` |
 
-```text
+```text line-numbers=false
 jshell> "".isEmpty()
 $1 ==> true
 

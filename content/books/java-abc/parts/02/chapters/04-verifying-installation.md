@@ -58,7 +58,7 @@ co-author: ["Claude Opus 4.7"]
 
 ターミナルに、次の文字を入力して、Enter キーを押します。
 
-```text
+```text line-numbers=false
 java --version
 ```
 
@@ -68,7 +68,7 @@ java --version
 
 正しくインストールできていれば、次のような表示が出ます。
 
-```text
+```text line-numbers=false
 openjdk 25 2025-09-16
 OpenJDK Runtime Environment Temurin-25+36 (build 25+36)
 OpenJDK 64-Bit Server VM Temurin-25+36 (build 25+36, mixed mode, sharing)
@@ -76,7 +76,7 @@ OpenJDK 64-Bit Server VM Temurin-25+36 (build 25+36, mixed mode, sharing)
 
 ここで注目してほしいのは、**1行目**です。
 
-```text
+```text line-numbers=false
 openjdk 25 ...
 ```
 
@@ -110,12 +110,12 @@ openjdk 25 ...
 
 もし、次のようなメッセージが出た場合は、まだ正しく認識されていません。
 
-```text
+```text line-numbers=false
 （Windows の例）
 'java' は、内部コマンドまたは外部コマンド、操作可能なプログラムまたはバッチ ファイルとして認識されていません。
 ```
 
-```text
+```text line-numbers=false
 （macOS の例）
 zsh: command not found: java
 ```
@@ -138,13 +138,13 @@ JDK には、もう一つ大切な命令があります。
 これも入っているか、確認しておきましょう。
 ターミナルに、次のように入力して Enter を押します。
 
-```text
+```text line-numbers=false
 javac --version
 ```
 
 次のように表示されれば成功です。
 
-```text
+```text line-numbers=false
 javac 25
 ```
 
@@ -178,7 +178,7 @@ javac 25
 
 **PATH** とは、コンピュータが命令を探しに行く**フォルダの一覧**のことです。
 
-```text
+```text line-numbers=false
 コンピュータ：「java を実行して」と言われた
    ↓
 PATH に登録されたフォルダを、順番に探していく
@@ -197,7 +197,7 @@ java の本体が見つかった → 実行する
 
 逆に、PATH に登録されていないと、コンピュータは命令を見つけられず、
 
-```text
+```text line-numbers=false
 command not found: java
 ```
 
@@ -214,7 +214,7 @@ command not found: java
 
 **JAVA_HOME** とは、「いま使っている JDK が、どのフォルダに入っているか」をコンピュータに教えておくための設定です。
 
-```text
+```text line-numbers=false
 JAVA_HOME ＝ 「JDK 本体は、この場所にあります」という住所
 ```
 

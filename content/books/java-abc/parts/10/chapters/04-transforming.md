@@ -23,7 +23,7 @@ co-author: ["Claude Opus 4.7"]
 String s = "Hello, World";
 ```
 
-```text
+```text line-numbers=false
 jshell> s.substring(7)
 $2 ==> "World"
 ```
@@ -32,7 +32,7 @@ $2 ==> "World"
 
 **2. `substring(開始位置, 終了位置)`** … 開始位置から、終了位置の**手前**まで
 
-```text
+```text line-numbers=false
 jshell> s.substring(0, 5)
 $2 ==> "Hello"
 ```
@@ -40,7 +40,7 @@ $2 ==> "Hello"
 ここで注意したいのが、**終了位置の文字は含まれない**ことです。
 `substring(0, 5)` は、インデックス `0`・`1`・`2`・`3`・`4` の5文字（`"Hello"`）で、**インデックス `5` は含みません**。
 
-```text
+```text line-numbers=false
 "Hello, World"
  0  1  2  3  4  5
  H  e  l  l  o  ,
@@ -60,7 +60,7 @@ $2 ==> "Hello"
 String s = "Hello, World";
 ```
 
-```text
+```text line-numbers=false
 jshell> s.replace("o", "0")
 $2 ==> "Hell0, W0rld"
 ```
@@ -79,7 +79,7 @@ $2 ==> "Hell0, W0rld"
 String s = "Hello, World";
 ```
 
-```text
+```text line-numbers=false
 jshell> s.toUpperCase()
 $2 ==> "HELLO, WORLD"
 
@@ -96,7 +96,7 @@ $3 ==> "hello, world"
 入力された文字列の前後に、よけいな空白が付いていることがあります。
 それを取り除くのが **`strip()`** です。
 
-```text
+```text line-numbers=false
 jshell> "  hi  ".strip()
 $1 ==> "hi"
 ```

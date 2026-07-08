@@ -78,7 +78,7 @@ class CalculatorTest {
 
 実行すると、
 
-```text
+```text line-numbers=false
 [INFO] Tests run: 4, Failures: 0, Errors: 0
 ```
 

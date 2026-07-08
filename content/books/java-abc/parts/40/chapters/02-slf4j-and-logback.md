@@ -30,7 +30,7 @@ Java の世界には、たくさんのロギングライブラリがあります
 `Facade`（ファサード、見せかけの正面）という言葉が表すとおり、SLF4J 自身はログを出しません。
 その**裏側に実装**（Logback など）を差し込んで使います。
 
-```text
+```text line-numbers=false
 あなたのコード
        ↓
 SLF4J（インタフェース）              ← ここに書く
@@ -111,7 +111,7 @@ log.info("注文受付: userId={}, orderId={}", userId, orderId);
 `{}` がプレースホルダで、**第 2 引数以降**の値が、順番に埋め込まれます。
 出力は、
 
-```text
+```text line-numbers=false
 注文受付: userId=42, orderId=1001
 ```
 
@@ -182,7 +182,7 @@ try {
 
 実機での出力（抜粋）：
 
-```text
+```text line-numbers=false
 ERROR [main] c.e.log.LogDemoApplication - 処理失敗: orderId=1001
 java.lang.RuntimeException: DB接続失敗
         at com.example.log.LogDemoApplication.run(LogDemoApplication.java:25)
@@ -215,7 +215,7 @@ if (log.isDebugEnabled()) {
 ここまでで、ログを「**呼び出す側**」のコードは書けるようになりました。
 ですが、本物の業務システムでは、**どこに出すか**も大事です。
 
-```text
+```text line-numbers=false
 log.info("注文受付")
        ↓
    Logback

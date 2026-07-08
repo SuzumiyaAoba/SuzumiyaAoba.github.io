@@ -20,14 +20,14 @@ String name = "佐藤";
 String message = "こんにちは、" + name + "さん";
 ```
 
-```text
+```text line-numbers=false
 jshell> message
 message ==> "こんにちは、佐藤さん"
 ```
 
 同じ文字列を**繰り返してつなぎたい**ときは、**`repeat(回数)`** が便利です（Java 11 で追加）。
 
-```text
+```text line-numbers=false
 jshell> "ab".repeat(3)
 $1 ==> "ababab"
 
@@ -49,7 +49,7 @@ String csv = "りんご,みかん,ぶどう";
 String[] fruits = csv.split(",");
 ```
 
-```text
+```text line-numbers=false
 jshell> fruits
 fruits ==> String[3] { "りんご", "みかん", "ぶどう" }
 
@@ -66,7 +66,7 @@ for (String fruit : fruits) {
 }
 ```
 
-```text
+```text line-numbers=false
 りんご
 みかん
 ぶどう
@@ -78,7 +78,7 @@ for (String fruit : fruits) {
 
 `split` の逆で、**複数の文字列を、区切り文字をはさんで1つにまとめる**のが **`String.join`** です。
 
-```text
+```text line-numbers=false
 jshell> String.join("-", "2025", "06", "06")
 $1 ==> "2025-06-06"
 ```
@@ -94,7 +94,7 @@ $1 ==> "2025-06-06"
 「`佐藤さんは25歳`」のように、**文字列の中に値を埋め込んで整形**したいことがあります。
 `+` でつなぐこともできますが、数が多いと読みにくくなります。そこで便利なのが **`formatted`** です。
 
-```text
+```text line-numbers=false
 jshell> "%sさんは%d歳".formatted("佐藤", 25)
 $1 ==> "佐藤さんは25歳"
 ```
@@ -109,7 +109,7 @@ $1 ==> "佐藤さんは25歳"
 
 小数は、桁数を指定できます。`%.2f` は「小数点以下2桁」という意味です。
 
-```text
+```text line-numbers=false
 jshell> String.format("%.2f", 3.14159)
 $1 ==> "3.14"
 ```

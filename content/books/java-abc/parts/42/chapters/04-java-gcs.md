@@ -16,7 +16,7 @@ Java 25 の HotSpot JVM には、複数の GC が同梱されています。
 Java 9 以降、HotSpot JVM の**既定 GC は G1**（Garbage-First）です[^jep248-g1]。
 実機で確認してみます。
 
-```text
+```text line-numbers=false
 $ java -XX:+PrintFlagsFinal -version | grep -E "UseG1GC|UseZGC|UseParallelGC|UseSerialGC"
 bool UseG1GC                = true                {product} {ergonomic}
 bool UseParallelGC          = false               {product} {default}

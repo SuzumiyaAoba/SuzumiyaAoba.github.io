@@ -35,7 +35,7 @@ System.out.println("Hello, World!");   // 行の途中からでも書ける
 
 上のコードを実行すると、コメントは読み飛ばされるので、表示されるのは次の1行だけです。
 
-```text
+```text line-numbers=false
 Hello, World!
 ```
 
@@ -135,7 +135,7 @@ System.out.println("3行目");
 
 実行すると、2行目は飛ばされて、次のように表示されます。
 
-```text
+```text line-numbers=false
 1行目
 3行目
 ```

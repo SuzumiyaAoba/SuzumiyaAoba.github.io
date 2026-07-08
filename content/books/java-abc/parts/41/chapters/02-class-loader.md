@@ -35,7 +35,7 @@ JVM の中で、クラスは次の 3 段階を経て「**使える状態**」に
 
 Java の標準クラスローダは、**3 階層**で構成されます。
 
-```text
+```text line-numbers=false
 [Bootstrap Class Loader]        ← java.lang.* など、JDK の中核
         ↑（親）
 [Platform Class Loader]         ← java.sql.* など、プラットフォームライブラリ
@@ -61,7 +61,7 @@ Java の標準クラスローダは、**3 階層**で構成されます。
 それぞれのクラスが、どのクラスローダから読まれたかは、`getClassLoader()` で見えます。
 jshell でそのまま試せます。
 
-```text
+```text line-numbers=false
 jshell> String.class.getClassLoader()
 $1 ==> null
 
@@ -92,7 +92,7 @@ Bootstrap は JVM 本体に組み込まれていて、Java の `ClassLoader` ク
 
 たとえば「`java.lang.String` を読んで」と Application Class Loader に頼んでも、
 
-```text
+```text line-numbers=false
 Application → Platform → Bootstrap
                         （Bootstrap が読める）
                 ←──────────（Bootstrap が読んだ）
@@ -124,7 +124,7 @@ System.out.println("(bootstrap = null)");
 
 jshell に流すと、こう出ます。
 
-```text
+```text line-numbers=false
 jdk.internal.loader.ClassLoaders$AppClassLoader@7a8c5397
 jdk.internal.loader.ClassLoaders$PlatformClassLoader@439f5b3d
 (bootstrap = null)
@@ -160,7 +160,7 @@ class Trigger {
 
 実行すると、次の順で出ます。
 
-```text
+```text line-numbers=false
 main 開始
 Trigger 初期化
 Trigger.hello

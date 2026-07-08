@@ -122,7 +122,7 @@ public class HttpConfiguration {
 
 慣習として、
 
-```text
+```text line-numbers=false
 com.example.shop
 ├── ShopApplication.java
 ├── OrderService.java

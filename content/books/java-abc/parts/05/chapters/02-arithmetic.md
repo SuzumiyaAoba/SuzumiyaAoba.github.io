@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 jshell で試してみます。
 
-```text
+```text line-numbers=false
 jshell> int wa = 7 + 3;
 wa ==> 10
 jshell> int seki = 7 * 3;
@@ -35,7 +35,7 @@ seki ==> 21
 第4章でも学んだ、いちばんの落とし穴を、もう一度確認します。
 **整数どうしのわり算は、結果も整数**になり、小数点以下は切り捨てられます。
 
-```text
+```text line-numbers=false
 jshell> int sho = 7 / 3;
 sho ==> 2
 ```
@@ -43,7 +43,7 @@ sho ==> 2
 `7 ÷ 3 = 2.33…` ですが、整数どうしなので `2` になります。
 小数で計算したいときは、どちらかを小数（`double`）にします。
 
-```text
+```text line-numbers=false
 jshell> double real = 7.0 / 3;
 real ==> 2.3333333333333335
 ```
@@ -61,7 +61,7 @@ real ==> 2.3333333333333335
 
 `%`（パーセント）は、わり算の**余り**を求める演算子で、**剰余演算子**（じょうよえんざんし）と呼びます。
 
-```text
+```text line-numbers=false
 jshell> int amari = 7 % 3;
 amari ==> 1
 ```
@@ -83,7 +83,7 @@ amari ==> 1
 `int` で扱える整数には上限があり、その最大値は `2147483647`（約21億）です。
 この最大値に、さらに 1 を足すと、どうなるでしょうか。
 
-```text
+```text line-numbers=false
 jshell> int max = Integer.MAX_VALUE;
 max ==> 2147483647
 jshell> max + 1

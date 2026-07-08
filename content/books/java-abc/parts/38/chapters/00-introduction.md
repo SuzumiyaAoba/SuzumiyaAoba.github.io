@@ -37,7 +37,7 @@ REST API は、
 
 本書のサンプルは、第37章で作った `library` プロジェクトに、Web 層を**追加するかたち**で進めます。
 
-```text
+```text line-numbers=false
 HTTP リクエスト
        ↓
 @RestController       ← この章の主役

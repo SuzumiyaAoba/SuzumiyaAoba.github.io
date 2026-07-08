@@ -52,7 +52,7 @@ box.set(123);                    // うっかり数値を入れた
 String s = (String) box.get();   // String として取り出す → 実行時にエラー
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.ClassCastException: ...
 ```
 
@@ -96,7 +96,7 @@ box.set(123);   // ✕ String の箱に数値 → コンパイルエラー
 第9章で、メソッドに**値**を渡す「引数」を学びました。`add(3, 5)` の `3` や `5` です。
 ジェネリクスでは、それと似た感覚で、`Box<String>` の `<String>` という形で、**型**を渡します。
 
-```text
+```text line-numbers=false
 add(3, 5)           … メソッドに「値」を渡す
 Box<String>         … クラスに「型」を渡す
 ```

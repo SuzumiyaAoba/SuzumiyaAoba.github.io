@@ -64,7 +64,7 @@ class Person {
 Person p = new Person();   // 引数なしで作ろうとする
 ```
 
-```text
+```text line-numbers=false
 エラー: クラス Personのコンストラクタ Personは指定された型に適用できません。
   期待値: String,int
   検出値:    引数がありません

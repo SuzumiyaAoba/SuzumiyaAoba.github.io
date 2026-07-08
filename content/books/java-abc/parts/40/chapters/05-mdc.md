@@ -8,7 +8,7 @@ co-author: ["Claude Opus 4.7"]
 
 業務システムのログは、しばしば「**1 リクエスト**」の単位で追跡したいことがあります。
 
-```text
+```text line-numbers=false
 INFO  リクエスト受付: /api/orders
 INFO  ユーザー認証成功
 INFO  在庫確認
@@ -43,7 +43,7 @@ MDC.clear();
 
 こうすると、`log.info(...)` の出力に **`traceId`** が自動で付くようになります。
 
-```text
+```text line-numbers=false
 INFO [abc-123-def] - リクエスト受付
 INFO [abc-123-def] - 処理を実行
 ```
@@ -56,7 +56,7 @@ INFO [abc-123-def] - 処理を実行
 
 第40章の章扉で動かしたサンプルでは、こんな実行結果になっていました。
 
-```text
+```text line-numbers=false
 INFO  [abc-123-def] c.e.log.LogDemoApplication - MDC付きログ
 ```
 

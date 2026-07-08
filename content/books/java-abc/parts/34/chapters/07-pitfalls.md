@@ -61,7 +61,7 @@ class UserRepositoryImpl implements UserRepository { ... }
 
 ## 3. パターン名で会話して、中身を共有しない
 
-```text
+```text line-numbers=false
 A: 「ここ、Decorator にしようよ」
 B: 「いいね、Decorator で」
 （しばらく経って）

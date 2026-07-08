@@ -45,7 +45,7 @@ public class RefDemo {
 
 実行すると、
 
-```text
+```text line-numbers=false
 $ javac RefDemo.java && java RefDemo
 Hello, Bob, from Alice
 name=Alice

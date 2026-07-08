@@ -22,7 +22,7 @@ Optional<String> empty = Optional.empty();
 IO.println(empty.get());   // ✕ 空の箱から取り出そうとする
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.util.NoSuchElementException: No value present
 ```
 
@@ -48,7 +48,7 @@ IO.println(present.orElse("名無し"));   // 中身がある → 佐藤
 IO.println(empty.orElse("名無し"));     // 空 → デフォルトの 名無し
 ```
 
-```text
+```text line-numbers=false
 佐藤
 名無し
 ```
@@ -78,7 +78,7 @@ String name = present.orElseGet(() -> {
 IO.println(name);
 ```
 
-```text
+```text line-numbers=false
 佐藤
 ```
 
@@ -100,7 +100,7 @@ present.ifPresent(name -> IO.println("こんにちは、" + name + "さん"));
 empty.ifPresent(name -> IO.println("これは表示されない"));
 ```
 
-```text
+```text line-numbers=false
 こんにちは、佐藤さん
 ```
 

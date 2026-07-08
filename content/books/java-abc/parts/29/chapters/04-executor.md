@@ -43,7 +43,7 @@ try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
 IO.println("すべて完了");
 ```
 
-```text
+```text line-numbers=false
 （実行の一例 ― 順番は変わりうる）
 タスク1
 タスク2
@@ -85,7 +85,7 @@ try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
 }
 ```
 
-```text
+```text line-numbers=false
 計算を依頼しました
 計算結果: 8
 ```
@@ -102,7 +102,7 @@ try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
 
 `ExecutorService` を使う流れを、整理しておきましょう。
 
-```text
+```text line-numbers=false
 1. Executors で実行係（スレッドプール）を作る
 2. submit でタスクを渡す（値を返すなら Future を受け取る）
 3. （必要なら）Future.get() で結果を受け取る

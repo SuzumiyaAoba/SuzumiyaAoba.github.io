@@ -19,7 +19,7 @@ co-author: ["Claude Opus 4.7"]
 
 整数は、そのまま数字で書きます。
 
-```text
+```text line-numbers=false
 jshell> int million = 1_000_000;
 million ==> 1000000
 ```
@@ -36,7 +36,7 @@ million ==> 1000000
 
 小数点を含む数は、そのまま書きます。小数リテラルは `double` 型になります。
 
-```text
+```text line-numbers=false
 jshell> double pi = 3.14;
 pi ==> 3.14
 ```
@@ -47,7 +47,7 @@ pi ==> 3.14
 
 文字と文字列は、囲む記号が違います。第4・第5節でも見たとおりです。
 
-```text
+```text line-numbers=false
 jshell> char grade = 'A';
 grade ==> 'A'
 jshell> String letter = "A";
@@ -63,7 +63,7 @@ letter ==> "A"
 
 真偽を表すリテラルは、`true` と `false` の2つだけです。
 
-```text
+```text line-numbers=false
 jshell> boolean yes = true;
 yes ==> true
 ```

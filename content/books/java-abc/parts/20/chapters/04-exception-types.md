@@ -17,7 +17,7 @@ co-author: ["Claude Opus 4.7"]
 まず、例外の種類が、どう枝分かれしているかを見ておきましょう。
 すべての例外は、`Throwable`（スローアブル）という共通の先祖から、次のように分かれています。
 
-```text
+```text line-numbers=false
 Throwable（すべての例外の先祖）
 ├─ Error            … 深刻なシステムの問題（メモリ不足など）。基本、扱わない
 └─ Exception        … プログラムで対応すべき例外
@@ -76,7 +76,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 例外InterruptedExceptionは報告されません。スローするには、捕捉または宣言する必要があります
 ```
 
@@ -98,7 +98,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 100ミリ秒 待ちました
 ```

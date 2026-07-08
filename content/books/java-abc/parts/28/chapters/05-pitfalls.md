@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 String s = """こんにちは""";   // ✕ """ の直後に文字
 ```
 
-```text
+```text line-numbers=false
 エラー: テキスト・ブロックの開始区切り文字のシーケンスが無効です。行の終了文字がありません
 ```
 
@@ -59,7 +59,7 @@ String s = """
 String s = "%d".formatted("佐藤");   // %d は整数なのに、文字列を渡した
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.util.IllegalFormatConversionException: ...
 ```
 
@@ -81,7 +81,7 @@ Exception in thread "main" java.util.IllegalFormatConversionException: ...
 String s = "%sさんは%d歳".formatted("佐藤");   // %d の分の引数がない
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.util.MissingFormatArgumentException: ...
 ```
 

@@ -23,7 +23,7 @@ String s = name + "さんは" + age + "歳です";
 IO.println(s);
 ```
 
-```text
+```text line-numbers=false
 佐藤さんは25歳です
 ```
 
@@ -43,7 +43,7 @@ String s = "%sさんは%d歳です".formatted(name, age);
 IO.println(s);
 ```
 
-```text
+```text line-numbers=false
 佐藤さんは25歳です
 ```
 
@@ -62,7 +62,7 @@ String s = String.format("%sさんは%d歳です", "佐藤", 25);
 IO.println(s);
 ```
 
-```text
+```text line-numbers=false
 佐藤さんは25歳です
 ```
 
@@ -92,7 +92,7 @@ IO.println("%.2f".formatted(3.14159));   // 小数点以下2桁に
 IO.println("%,d".formatted(1000000));    // 3桁ごとにカンマ
 ```
 
-```text
+```text line-numbers=false
 3.14
 1,000,000
 ```
@@ -114,7 +114,7 @@ IO.println("%5d".formatted(42));    // 5文字幅（右寄せ）
 IO.println("%-5d|".formatted(42));  // 5文字幅（左寄せ）
 ```
 
-```text
+```text line-numbers=false
    42
 42   |
 ```

@@ -27,7 +27,7 @@ Undo / Redo・チェックポイント・履歴管理に使われます。
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Originator                 状態を持つ本人（画像、エディタ）
   ├ createMemento(): Memento
   └ restore(memento)

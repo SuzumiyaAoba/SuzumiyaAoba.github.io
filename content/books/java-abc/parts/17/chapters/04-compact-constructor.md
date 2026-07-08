@@ -58,7 +58,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Point[x=0, y=4]
 ```

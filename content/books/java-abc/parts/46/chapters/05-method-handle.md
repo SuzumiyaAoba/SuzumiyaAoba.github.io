@@ -64,7 +64,7 @@ public class MhDemo {
 
 実行結果:
 
-```text
+```text line-numbers=false
 $ javac MhDemo.java && java MhDemo
 square(7) = 49
 ```

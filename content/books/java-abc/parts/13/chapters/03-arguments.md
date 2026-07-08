@@ -69,7 +69,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 佐藤さん（25歳）
 鈴木さん（30歳）
@@ -94,7 +94,7 @@ $ java Main.java
 Person p = new Person();   // 引数を渡していない → エラー
 ```
 
-```text
+```text line-numbers=false
 エラー: クラス Personのコンストラクタ Personは指定された型に適用できません。
   期待値: String,int
   検出値:    引数がありません
@@ -137,7 +137,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 佐藤 / 0歳
 ```

@@ -48,7 +48,7 @@ REST では、**5 つの HTTP メソッド**を主に使います。
 
 「**URL（リソース）+ HTTP メソッド（操作）= 何をするか**」が、REST の基本構造です。
 
-```text
+```text line-numbers=false
 GET /api/books         → 本の一覧を取得
 GET /api/books/1       → ID=1 の本を取得
 POST /api/books        → 本を 1 つ新規作成
@@ -116,7 +116,7 @@ URL は**リソース（名詞）**を表す。
 REST API では、リクエストもレスポンスも、**JSON**（JavaScript Object Notation）でやり取りするのがほぼ標準です。
 たとえば、
 
-```text
+```text line-numbers=false
 GET /api/books/1
 ```
 

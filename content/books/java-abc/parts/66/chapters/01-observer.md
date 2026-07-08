@@ -30,7 +30,7 @@ co-author: ["Claude Opus 4.7"]
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Subject（観察される側）
   ├ register(Observer)
   ├ unregister(Observer)

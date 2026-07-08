@@ -22,7 +22,7 @@ names.stream()           // ストリームを作る
     .forEach(IO::println);   // （ここでは、各要素を表示）
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 高橋
@@ -46,7 +46,7 @@ Stream.of("赤", "緑", "青")
     .forEach(IO::println);
 ```
 
-```text
+```text line-numbers=false
 赤
 緑
 青
@@ -69,7 +69,7 @@ IntStream.rangeClosed(1, 5)      // 1 から 5 まで（5 を含む）
     .forEach(IO::println);
 ```
 
-```text
+```text line-numbers=false
 1
 2
 3
@@ -89,7 +89,7 @@ List<Integer> nums = IntStream.rangeClosed(1, 5).boxed().toList();
 IO.println(nums);
 ```
 
-```text
+```text line-numbers=false
 [1, 2, 3, 4, 5]
 ```
 

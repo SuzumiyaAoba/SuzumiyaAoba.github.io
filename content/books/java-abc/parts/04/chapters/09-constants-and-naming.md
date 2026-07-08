@@ -25,7 +25,7 @@ co-author: ["Claude Opus 4.7"]
 こうした値は、うっかり書き換えてしまうと、プログラムがおかしくなります。
 そこで、変数の宣言に **`final`**（ファイナル）を付けると、**あとから書き換えられない変数**になります[^jls-final-variable]。
 
-```text
+```text line-numbers=false
 jshell> final int MAX = 100;
 MAX ==> 100
 ```

@@ -45,7 +45,7 @@ static String describe(Object obj) {
 IO.println(describe(new Point(3, 4)));
 ```
 
-```text
+```text line-numbers=false
 点(3, 4)
 ```
 
@@ -77,7 +77,7 @@ static String describe(Object obj) {
 IO.println(describe(new Line(new Point(0, 0), new Point(3, 4))));
 ```
 
-```text
+```text line-numbers=false
 線分: (0,0) → (3,4)
 ```
 

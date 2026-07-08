@@ -45,7 +45,7 @@ co-author: ["Claude Opus 4.7"]
 
 Java の世界で、現代の標準的なロギング構成は次の組み合わせです。
 
-```text
+```text line-numbers=false
 あなたのコード
        ↓
 SLF4J           ← ロギングの「インタフェース」

@@ -122,14 +122,14 @@ public List<Book> list() { ... }
 第36章と同じく、`mvn spring-boot:run` で起動します。
 ログに、Tomcat が 8080 ポートで待機していることが表示されます。
 
-```text
+```text line-numbers=false
 INFO  Tomcat started on port(s): 8080 (http)
 INFO  Started LibraryApplication in 1.234 seconds
 ```
 
 別のターミナルから、`curl` で叩いてみます。
 
-```text
+```text line-numbers=false
 $ curl http://localhost:8080/api/books
 ```
 
@@ -220,7 +220,7 @@ record（第17章）を使うことで、
 
 `@RequestMapping("/api/books")` のように、`/api/...` という階層を切るのは、**REST API のための名前空間**を作るためです。
 
-```text
+```text line-numbers=false
 /api/books       ← REST API
 /admin/users     ← 管理画面
 /static/css/...  ← 静的ファイル

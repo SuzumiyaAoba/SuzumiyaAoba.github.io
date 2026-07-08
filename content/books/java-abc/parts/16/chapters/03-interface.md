@@ -61,7 +61,7 @@ interface Shape {
 Shape s = new Shape();   // ✕ インターフェースは new できない
 ```
 
-```text
+```text line-numbers=false
 エラー: Shapeはabstractです。インスタンスを生成することはできません
 ```
 

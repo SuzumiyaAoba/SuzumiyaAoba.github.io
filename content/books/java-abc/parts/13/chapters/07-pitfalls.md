@@ -92,7 +92,7 @@ class Point {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 変数yは初期化されていない可能性があります
 ```
 

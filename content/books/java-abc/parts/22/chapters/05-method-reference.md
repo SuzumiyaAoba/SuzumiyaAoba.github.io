@@ -40,7 +40,7 @@ Function<String, Integer> length = String::length;
 IO.println(length.apply("hello"));
 ```
 
-```text
+```text line-numbers=false
 5
 ```
 
@@ -60,7 +60,7 @@ names.forEach(name -> IO.println(name));
 names.forEach(IO::println);
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 高橋
@@ -103,7 +103,7 @@ Function<String, Integer> toInt = Integer::parseInt;   // s -> Integer.parseInt(
 IO.println(toInt.apply("123"));
 ```
 
-```text
+```text line-numbers=false
 123
 ```
 

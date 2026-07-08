@@ -15,7 +15,7 @@ co-author: ["Claude Opus 4.7"]
 
 これから作るのは、次のような構成のプロジェクトです。
 
-```text
+```text line-numbers=false
 shop/
 ├── pom.xml
 └── src/
@@ -298,13 +298,13 @@ public class OrderService {
 
 プロジェクトルートで、
 
-```text
+```text line-numbers=false
 $ mvn spring-boot:run
 ```
 
 実機での出力（抜粋）。
 
-```text
+```text line-numbers=false
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \

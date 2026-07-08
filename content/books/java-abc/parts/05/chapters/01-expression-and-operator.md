@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 
 そして、演算子が操作する対象の値を、**被演算子**（ひえんざんし、Operand）と呼びます。
 
-```text
+```text line-numbers=false
    7  +  3
    │  │  │
    │  │  └─ 被演算子
@@ -36,7 +36,7 @@ co-author: ["Claude Opus 4.7"]
 
 式は、評価される（計算される）と、1つの値になります。jshell で確かめてみましょう。
 
-```text
+```text line-numbers=false
 jshell> 7 + 3
 $1 ==> 10
 ```
@@ -46,7 +46,7 @@ $1 ==> 10
 
 式は、変数を使っても作れます。
 
-```text
+```text line-numbers=false
 jshell> int price = 100;
 price ==> 100
 jshell> int total = price * 3;

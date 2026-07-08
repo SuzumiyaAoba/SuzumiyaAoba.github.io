@@ -27,7 +27,7 @@ List<Integer> evens = nums.stream()
 IO.println(evens);
 ```
 
-```text
+```text line-numbers=false
 [2, 4, 6]
 ```
 
@@ -47,7 +47,7 @@ names.stream()
     .forEach(name -> IO.println(name));   // 各要素を表示
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 高橋
@@ -72,7 +72,7 @@ long c = nums.stream()
 IO.println(c);
 ```
 
-```text
+```text line-numbers=false
 3
 ```
 
@@ -94,7 +94,7 @@ int total = nums.stream()
 IO.println(total);
 ```
 
-```text
+```text line-numbers=false
 21
 ```
 
@@ -107,7 +107,7 @@ double avg = nums.stream()
 IO.println(avg);
 ```
 
-```text
+```text line-numbers=false
 3.5
 ```
 
@@ -131,7 +131,7 @@ IO.println(nums.stream().allMatch(n -> n > 0));    // すべて 0より大きい
 IO.println(nums.stream().noneMatch(n -> n > 10));  // 10より大きいものは皆無？
 ```
 
-```text
+```text line-numbers=false
 true
 true
 true

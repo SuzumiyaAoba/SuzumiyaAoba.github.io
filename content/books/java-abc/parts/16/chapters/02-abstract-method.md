@@ -58,7 +58,7 @@ class Dog extends Animal {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: Dogはabstractでなく、Animal内のabstractメソッドcry()をオーバーライドしません
 ```
 
@@ -96,7 +96,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ: ワン
 タマ: ニャー

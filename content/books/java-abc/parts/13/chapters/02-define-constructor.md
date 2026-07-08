@@ -61,7 +61,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 --- new する前 ---
 Person が作られました

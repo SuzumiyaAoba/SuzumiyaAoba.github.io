@@ -34,7 +34,7 @@ System.out.println(sum(List.of(1, 2, 3)));       // List<Integer> を渡せる
 System.out.println(sum(List.of(1.5, 2.5)));      // List<Double> も渡せる
 ```
 
-```text
+```text line-numbers=false
 6.0
 4.0
 ```
@@ -56,7 +56,7 @@ public class ExtendsW {
 }
 ```
 
-```text
+```text line-numbers=false
 $ javac ExtendsW.java
 ExtendsW.java:8: エラー: 不適合な型: intをCAP#1に変換できません:
         nums.add(4);                          // これはできない
@@ -101,7 +101,7 @@ public class SuperW {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java SuperW.java
 [1, 2]
 1
@@ -154,7 +154,7 @@ public class Pecs {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Pecs.java
 [1, 2, 3]
 ```

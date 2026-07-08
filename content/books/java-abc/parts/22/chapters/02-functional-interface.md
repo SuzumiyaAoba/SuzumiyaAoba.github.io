@@ -81,7 +81,7 @@ IO.println(add.calculate(3, 5));
 IO.println(multiply.calculate(3, 5));
 ```
 
-```text
+```text line-numbers=false
 8
 15
 ```
@@ -114,7 +114,7 @@ interface Bad {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 予期しない@FunctionalInterface注釈
   Badは機能インタフェースではありません
     インタフェース Badで複数のオーバーライドしない抽象メソッドが見つかりました

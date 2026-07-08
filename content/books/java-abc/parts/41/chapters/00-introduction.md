@@ -39,7 +39,7 @@ co-author: ["Claude Opus 4.7"]
 
 JVM の全体像は、おおまかに 5 つの仕事に分けられます。
 
-```text
+```text line-numbers=false
 .java
   ↓  javac（コンパイル）
 .class（バイトコード）

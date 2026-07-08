@@ -8,7 +8,7 @@ co-author: ["Claude Opus 4.7"]
 
 ここまでに書いてきたログは、**人間が読みやすい形**でした。
 
-```text
+```text line-numbers=false
 INFO 注文受付: orderId=1001, userId=42, total=12800
 ```
 

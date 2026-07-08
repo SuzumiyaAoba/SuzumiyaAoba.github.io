@@ -15,7 +15,7 @@ co-author: ["Claude Opus 4.7"]
 
 今回作るのは、**書籍管理**のサンプルです。
 
-```text
+```text line-numbers=false
 library/
 ├── pom.xml
 └── src/
@@ -203,13 +203,13 @@ public class LibraryApplication implements CommandLineRunner {
 
 ## ステップ4 ― 動かす
 
-```text
+```text line-numbers=false
 $ mvn spring-boot:run
 ```
 
 実機での出力（抜粋）。
 
-```text
+```text line-numbers=false
 Hibernate:
     insert into books (author, published_year, title, id) values (?, ?, ?, default)
 Hibernate:

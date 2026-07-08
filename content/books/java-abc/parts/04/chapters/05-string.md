@@ -23,7 +23,7 @@ co-author: ["Claude Opus 4.7"]
 
 文字列は、**ダブルクォート `"`** で囲んで書き、`String` 型の変数に入れます。
 
-```text
+```text line-numbers=false
 jshell> String hello = "Hello";
 hello ==> "Hello"
 ```
@@ -31,7 +31,7 @@ hello ==> "Hello"
 `hello ==> "Hello"` のように、文字列は前後に `"` が付いて表示されます。
 これは「これは文字列ですよ」と jshell が示しているためで、`IO.println` で表示すると、`"` は付かずに中身だけが出ます。
 
-```text
+```text line-numbers=false
 jshell> IO.println(hello);
 Hello
 ```
@@ -42,7 +42,7 @@ Hello
 
 文字列は、**`+`** を使ってつなげることができます。これを**連結**（れんけつ）と呼びます[^jls-string-concat]。
 
-```text
+```text line-numbers=false
 jshell> String combined = hello + ", World";
 combined ==> "Hello, World"
 jshell> IO.println(combined);
@@ -53,7 +53,7 @@ Hello, World
 
 文字列には、数値をつなげることもできます。
 
-```text
+```text line-numbers=false
 jshell> String scoreMsg = "得点: " + 80 + "点";
 scoreMsg ==> "得点: 80点"
 jshell> IO.println(scoreMsg);
@@ -82,7 +82,7 @@ jshell> IO.println(scoreMsg);
 `String` には、文字列を便利に扱うための「操作」が、たくさん用意されています。
 たとえば、文字数を数える `length()`（レングス）を使ってみましょう。
 
-```text
+```text line-numbers=false
 jshell> "Hello".length()
 $1 ==> 5
 ```

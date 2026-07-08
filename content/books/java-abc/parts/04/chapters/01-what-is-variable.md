@@ -11,7 +11,7 @@ co-author: ["Claude Opus 4.7"]
 たとえば、月額 100 円のサービスについて、「月額」と「年額（12 か月分）」を表示することを考えてみましょう。
 変数を使わなければ、次のように書くことになります。
 
-```text
+```text line-numbers=false
 jshell> IO.println(100);
 100
 jshell> IO.println(100 * 12);
@@ -38,7 +38,7 @@ jshell> IO.println(100 * 12);
 
 jshell で、実際に箱を 1 つ用意してみましょう。
 
-```text
+```text line-numbers=false
 jshell> int monthlyPrice = 100;
 monthlyPrice ==> 100
 ```
@@ -48,7 +48,7 @@ monthlyPrice ==> 100
 
 あとは、この名前を書くだけで、中の値を何度でも取り出せます。
 
-```text
+```text line-numbers=false
 jshell> IO.println(monthlyPrice);
 100
 jshell> IO.println(monthlyPrice * 12);
@@ -73,7 +73,7 @@ jshell> IO.println(monthlyPrice * 12);
 
 3 つ目を、実際に試してみましょう。変数の中身は、あとから**書き換える**ことができます。
 
-```text
+```text line-numbers=false
 jshell> monthlyPrice = 200;
 monthlyPrice ==> 200
 jshell> IO.println(monthlyPrice * 12);
@@ -96,7 +96,7 @@ jshell> IO.println(monthlyPrice * 12);
 
 変数に入れられるのは、数値だけではありません。文字（文字列）も入れられます。
 
-```text
+```text line-numbers=false
 jshell> String name = "太郎";
 name ==> "太郎"
 jshell> IO.println(name);

@@ -31,7 +31,7 @@ Java のプログラムを実行すると、コンピュータは、まず **`ma
 
 第2章で Hello, World! を動かしたとき、画面に文字が表示されたのは、
 
-```text
+```text line-numbers=false
 プログラムを実行する
    ↓
 main を探して、その中を上から実行する
@@ -131,7 +131,7 @@ public static void main(String[] args) {
 
 このプログラムを実行すると、次のように表示されます。
 
-```text
+```text line-numbers=false
 1行目
 2行目
 3行目

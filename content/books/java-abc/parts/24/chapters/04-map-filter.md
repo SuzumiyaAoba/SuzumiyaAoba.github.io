@@ -23,7 +23,7 @@ Optional<Integer> length = name.map(s -> s.length());   // 中身を「文字数
 IO.println(length.orElse(0));
 ```
 
-```text
+```text line-numbers=false
 2
 ```
 
@@ -38,7 +38,7 @@ Optional<Integer> length = empty.map(s -> s.length());   // 空 → 空のまま
 IO.println(length.isEmpty());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -58,7 +58,7 @@ Optional<Integer> adult = age.filter(a -> a >= 18);   // 18以上か
 IO.println(adult.isPresent());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -71,7 +71,7 @@ Optional<Integer> adult = age.filter(a -> a >= 18);   // 15 は 18未満
 IO.println(adult.isPresent());
 ```
 
-```text
+```text line-numbers=false
 false
 ```
 
@@ -97,7 +97,7 @@ int result = input
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 42
 ```
 

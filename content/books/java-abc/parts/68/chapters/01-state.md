@@ -45,7 +45,7 @@ public class VendingMachine {
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Context（自販機）
   └ state: State
        ↑

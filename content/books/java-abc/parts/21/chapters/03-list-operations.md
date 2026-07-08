@@ -30,7 +30,7 @@ IO.println(names.get(0));   // 0番目
 IO.println(names.get(1));   // 1番目
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 ```
@@ -48,7 +48,7 @@ IO.println(names.get(1));   // 1番目
 IO.println(names.size());
 ```
 
-```text
+```text line-numbers=false
 3
 ```
 
@@ -66,7 +66,7 @@ names.set(1, "田中");   // 1番目を「田中」に変更
 IO.println(names);
 ```
 
-```text
+```text line-numbers=false
 [佐藤, 田中, 高橋]
 ```
 
@@ -84,7 +84,7 @@ names.remove("佐藤");   // 「佐藤」という値を削除
 IO.println(names);
 ```
 
-```text
+```text line-numbers=false
 [田中, 高橋]
 ```
 
@@ -100,7 +100,7 @@ nums.remove(0);          // 0番目を削除
 IO.println(nums);
 ```
 
-```text
+```text line-numbers=false
 [b, c]
 ```
 
@@ -124,7 +124,7 @@ IO.println(names.contains("鈴木"));   // 含まれているか
 IO.println(names.contains("田中"));   // 含まれていないか
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -136,7 +136,7 @@ IO.println(names.indexOf("高橋"));   // 何番目か
 IO.println(names.indexOf("田中"));   // ないときは -1
 ```
 
-```text
+```text line-numbers=false
 2
 -1
 ```

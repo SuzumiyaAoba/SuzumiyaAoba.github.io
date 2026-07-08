@@ -116,7 +116,7 @@ public class AutoToStringProcessor extends AbstractProcessor {
 
 `META-INF/services/javax.annotation.processing.Processor` というファイルに、プロセッサのフル名を書きます。
 
-```text
+```text line-numbers=false
 AutoToStringProcessor
 ```
 
@@ -139,7 +139,7 @@ public class Point {
 
 コンパイルと実行:
 
-```text
+```text line-numbers=false
 $ javac -processor AutoToStringProcessor \
        AutoToString.java AutoToStringProcessor.java Point.java
 $ ls

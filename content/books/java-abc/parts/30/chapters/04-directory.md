@@ -55,7 +55,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 フォルダを作りました: true
 ```
 
@@ -118,7 +118,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 削除後に存在するか: false
 ```
 

@@ -54,7 +54,7 @@ llm: true
 
 `reflect-config.json` などを置く場所は、
 
-```text
+```text line-numbers=false
 src/main/resources/META-INF/native-image/<group-id>/<artifact-id>/
 ```
 
@@ -67,7 +67,7 @@ src/main/resources/META-INF/native-image/<group-id>/<artifact-id>/
 
 `SecureRandom` や `Random` のインスタンスを **`static`** で持っていると、
 
-```text
+```text line-numbers=false
 Error: Detected an instance of Random/SplittableRandom class in the image heap.
 ```
 

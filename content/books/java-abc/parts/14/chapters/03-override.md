@@ -64,7 +64,7 @@ class Dog extends Animal {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: メソッドはスーパータイプのメソッドをオーバーライドまたは実装しません
 ```
 
@@ -108,7 +108,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ: ワン
 タマ: ニャー

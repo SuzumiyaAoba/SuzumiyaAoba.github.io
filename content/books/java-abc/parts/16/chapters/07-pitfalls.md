@@ -19,7 +19,7 @@ Animal a = new Animal();   // ✕ 抽象クラスは new できない
 Shape s = new Shape();     // ✕ インターフェースは new できない
 ```
 
-```text
+```text line-numbers=false
 エラー: Animalはabstractです。インスタンスを生成することはできません
 ```
 
@@ -40,7 +40,7 @@ class Circle implements Shape {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: Circleはabstractでなく、Shape内のabstractメソッドarea()をオーバーライドしません
 ```
 
@@ -63,7 +63,7 @@ class Circle implements Shape {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: Circleのarea()はShapeのarea()を実装できません
   (public)より弱いアクセス権限を割り当てようとしました
 ```

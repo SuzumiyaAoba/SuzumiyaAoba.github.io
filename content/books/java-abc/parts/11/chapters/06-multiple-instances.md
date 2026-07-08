@@ -45,7 +45,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 プリウス の速度: 50 km/h
 ロードスター の速度: 100 km/h
@@ -65,7 +65,7 @@ $ java CarApp.java
 `new Car()` を呼ぶたびに、**フィールドの入れ物が、オブジェクトごとに新しく用意**されます。
 だから `car1.speed` と `car2.speed` は別物で、片方を変えても、もう片方には影響しません。
 
-```text
+```text line-numbers=false
 car1 ──→ ┌────────────────────┐
           │ Car                │
           │ name : プリウス     │
@@ -108,7 +108,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 別名
 ```
@@ -117,7 +117,7 @@ $ java CarApp.java
 これは、`Car b = a;` が**オブジェクトをコピーしたのではなく、同じオブジェクトの場所を `b` にも教えた**だけだからです。
 `a` と `b` は、**同じ1台の車**を指しています。だから、どちらから変更しても、同じ車が変わるのです。
 
-```text
+```text line-numbers=false
 a ──┐
     ├──→ [ Car ]   ← 1台の車を、a と b が共有している
 b ──┘

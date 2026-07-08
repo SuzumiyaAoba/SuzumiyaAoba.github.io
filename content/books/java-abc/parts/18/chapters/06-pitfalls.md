@@ -19,7 +19,7 @@ co-author: ["Claude Opus 4.7"]
 Signal s = new Signal();   // ✕ enum は new できない
 ```
 
-```text
+```text line-numbers=false
 エラー: 列挙クラスはインスタンス化できません
 ```
 
@@ -46,7 +46,7 @@ enum Signal {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: ','、'}'または';'がありません
 ```
 
@@ -71,7 +71,7 @@ enum Signal {
 Signal s = Signal.valueOf("PURPLE");   // 存在しない
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.IllegalArgumentException: No enum constant Signal.PURPLE
 ```
 

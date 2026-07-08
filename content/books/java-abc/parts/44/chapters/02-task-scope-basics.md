@@ -118,7 +118,7 @@ public class ScopeDemo {
 }
 ```
 
-```text
+```text line-numbers=false
 $ javac --enable-preview --release 25 ScopeDemo.java
 $ java --enable-preview ScopeDemo
 AB
@@ -134,7 +134,7 @@ AB
 `scope.join()` が**いつ戻るか**は、スコープの**ポリシー**で決まります。
 何も指定しない `StructuredTaskScope.open()` の既定ポリシーは「**最初の失敗で全停止、それ以外は全完了を待つ**」です（後述の `ShutdownOnFailure` 相当）。
 
-```text
+```text line-numbers=false
 [3 つの fork]
    ┌── stepA() ─────► OK
    ├── stepB() ─► OK
@@ -146,7 +146,7 @@ AB
 
 もし `stepB` がエラーになると、
 
-```text
+```text line-numbers=false
 [3 つの fork]
    ┌── stepA() ─────► OK
    ├── stepB() ─► エラー

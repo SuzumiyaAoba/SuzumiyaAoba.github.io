@@ -23,7 +23,7 @@ Car myCar = new Car();
 
 この1行を分解してみましょう。
 
-```text
+```text line-numbers=false
 Car      myCar    =    new Car();
  │        │       │        │
  │        │       │        └─ Car クラスのオブジェクトを新しく作る
@@ -89,7 +89,7 @@ void main() {
 
 これを `CarApp.java` という名前で保存し、実行します。
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 プリウス / 60 km/h
 ```
@@ -121,7 +121,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 name : null
 speed: 0

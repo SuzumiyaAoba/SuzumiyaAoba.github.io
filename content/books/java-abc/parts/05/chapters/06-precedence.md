@@ -11,7 +11,7 @@ co-author: ["Claude Opus 4.7"]
 
 算数と同じで、かけ算・わり算は、たし算・ひき算より先に計算されます。
 
-```text
+```text line-numbers=false
 jshell> int a = 1 + 2 * 3;
 a ==> 7
 ```
@@ -25,7 +25,7 @@ a ==> 7
 
 先に計算したい部分は、**かっこ `( )`** で囲みます。かっこの中が、最優先で計算されます。
 
-```text
+```text line-numbers=false
 jshell> int b = (1 + 2) * 3;
 b ==> 9
 ```
@@ -61,7 +61,7 @@ b ==> 9
 
 第4章・第5章で見た文字列の `+` も、順番の影響を受けます。
 
-```text
+```text line-numbers=false
 jshell> String m1 = "答え: " + 1 + 2;
 m1 ==> "答え: 12"
 jshell> String m2 = "答え: " + (1 + 2);

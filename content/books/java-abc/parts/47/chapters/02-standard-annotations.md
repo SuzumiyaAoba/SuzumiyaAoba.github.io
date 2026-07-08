@@ -54,7 +54,7 @@ public void veryOldMethod() { ... }
 
 これを呼ぶと、
 
-```text
+```text line-numbers=false
 warning: oldMethod() in MyClass has been deprecated
 ```
 

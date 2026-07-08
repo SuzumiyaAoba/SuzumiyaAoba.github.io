@@ -154,7 +154,7 @@ A → B かつ B → C なら、A → C。
 
 happens-before は、図で覚えるのが速いです。
 
-```text
+```text line-numbers=false
    Thread A                Thread B
    ────────                ────────
    data = "x"     ①

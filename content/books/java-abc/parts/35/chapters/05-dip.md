@@ -46,7 +46,7 @@ public class MySqlOrderRepository {            // 下位
 
 このとき、依存関係はこうなります。
 
-```text
+```text line-numbers=false
 OrderService（上位） ──→ MySqlOrderRepository（下位の具象）
 ```
 
@@ -93,7 +93,7 @@ public class MySqlOrderRepository implements OrderRepository {   // 下位
 
 依存関係を、図にすると、こうなります。
 
-```text
+```text line-numbers=false
 OrderService ──→ OrderRepository ←── MySqlOrderRepository
 （上位）         （抽象）          （下位）
 ```

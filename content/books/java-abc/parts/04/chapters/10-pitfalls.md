@@ -17,7 +17,7 @@ co-author: ["Claude Opus 4.7"]
 変数は、「箱を用意する（宣言）」だけでは、まだ中身が空です。
 ファイルに書いたふつうのプログラム（メソッドの中）では、**値を入れる前の変数を使うとエラー**になります。
 
-```text
+```text line-numbers=false
 エラー: 変数xは初期化されていない可能性があります
         System.out.println(x);
                            ^
@@ -32,7 +32,7 @@ co-author: ["Claude Opus 4.7"]
 
 第7節で学んだ、いちばんはまりやすい落とし穴です。
 
-```text
+```text line-numbers=false
 jshell> int a = 7 / 2;
 a ==> 3
 ```
@@ -46,7 +46,7 @@ a ==> 3
 
 第3節で見たように、型に合わない値を入れるとエラーになります。
 
-```text
+```text line-numbers=false
 jshell> int bad = "abc";
 |  エラー:
 |  不適合な型: java.lang.Stringをintに変換できません:
@@ -61,7 +61,7 @@ jshell> int bad = "abc";
 
 Java は、大文字と小文字をきびしく区別します。`score` と `Score` は、別の変数として扱われます。
 
-```text
+```text line-numbers=false
 jshell> int score = 5;
 score ==> 5
 jshell> IO.println(Score);

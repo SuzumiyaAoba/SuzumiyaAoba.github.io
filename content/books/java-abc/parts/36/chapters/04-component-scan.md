@@ -17,7 +17,7 @@ co-author: ["Claude Opus 4.7"]
 スキャンの**起点**は、**`@SpringBootApplication` が付いたクラスのパッケージ**です。
 そこから**下のすべて**を再帰的にスキャンします。
 
-```text
+```text line-numbers=false
 com.example.shop                  ← ShopApplication.java（@SpringBootApplication）
 com.example.shop.order            ← スキャン対象
 com.example.shop.user             ← スキャン対象
@@ -84,7 +84,7 @@ public class SmtpMailSender implements MailSender { ... }
 そして、`OrderService` が `MailSender` を求めると、Spring はどちらを渡すか**選べません**。
 起動時に、
 
-```text
+```text line-numbers=false
 Field mailSender in com.example.shop.OrderService required a single bean,
 but 2 were found:
         - consoleMailSender: defined in file [...]
@@ -156,7 +156,7 @@ Strategy パターンを **複数同時に動かす**ような場面（通知を
 `@Component` を付け忘れたクラスは、Bean として登録されません。
 それを依存として要求しているクラスを起動しようとすると、こんなエラーが出ます。
 
-```text
+```text line-numbers=false
 Parameter 0 of constructor in com.example.shop.OrderService required a bean
 of type 'com.example.shop.UserRepository' that could not be found.
 ```

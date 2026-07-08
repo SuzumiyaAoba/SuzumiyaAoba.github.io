@@ -33,7 +33,7 @@ greet("佐藤");
 greet("鈴木");
 ```
 
-```text
+```text line-numbers=false
 佐藤さん、こんにちは
 鈴木さん、こんにちは
 ```
@@ -72,7 +72,7 @@ void introduce(String name, int age) {
 introduce("佐藤", 25);
 ```
 
-```text
+```text line-numbers=false
 佐藤さん（25歳）
 ```
 

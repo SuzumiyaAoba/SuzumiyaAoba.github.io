@@ -34,7 +34,7 @@ List<String> result = names.stream()
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 [佐藤]
 ```
 
@@ -55,7 +55,7 @@ s.forEach(x -> IO.println(x));   // 1回目（終端操作）
 long c = s.count();              // ✕ 2回目 → エラー
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
 ```
 

@@ -156,7 +156,7 @@ IntelliJ では、`main` の行の**左側**に、緑色の **▶（再生）ボ
 
 実行すると、画面の**下側**に **実行結果のウィンドウ**（Run ツールウィンドウ）が開き、次のように表示されます。
 
-```text
+```text line-numbers=false
 Hello, World!
 ```
 
@@ -194,7 +194,7 @@ public class Main {
 
 書き換えたら、もう一度 ▶ ボタンで実行します。
 
-```text
+```text line-numbers=false
 はじめての Java プログラム
 ```
 
@@ -213,7 +213,7 @@ public class Main {
 
 実行すると、2行表示されます。
 
-```text
+```text line-numbers=false
 はじめての Java プログラム
 環境構築ができました
 ```

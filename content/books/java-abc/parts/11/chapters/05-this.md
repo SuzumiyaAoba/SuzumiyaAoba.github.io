@@ -94,7 +94,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 ロードスター
 ```

@@ -53,7 +53,7 @@ IO.println(scores.get("佐藤"));
 IO.println(scores.get("鈴木"));
 ```
 
-```text
+```text line-numbers=false
 80
 95
 ```
@@ -71,7 +71,7 @@ IO.println(scores.get("鈴木"));
 IO.println(scores.get("田中"));   // 登録していないキー
 ```
 
-```text
+```text line-numbers=false
 null
 ```
 
@@ -86,7 +86,7 @@ IO.println(scores.getOrDefault("田中", 0));   // なければ 0
 IO.println(scores.getOrDefault("佐藤", 0));   // あれば その値
 ```
 
-```text
+```text line-numbers=false
 0
 80
 ```
@@ -104,7 +104,7 @@ IO.println(scores.containsKey("鈴木"));
 IO.println(scores.containsKey("田中"));
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -124,7 +124,7 @@ scores.put("佐藤", 100);   // 同じキーに、もう一度
 IO.println(scores.get("佐藤"));
 ```
 
-```text
+```text line-numbers=false
 100
 ```
 
@@ -145,7 +145,7 @@ scores.put("鈴木", 95);
 IO.println(scores.size());
 ```
 
-```text
+```text line-numbers=false
 2
 ```
 
@@ -160,7 +160,7 @@ Map<String, Integer> prices = Map.of("りんご", 150, "みかん", 100);
 IO.println(prices.get("りんご"));
 ```
 
-```text
+```text line-numbers=false
 150
 ```
 

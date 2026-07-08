@@ -71,7 +71,7 @@ JRE には、次のものが含まれます。
 
 この「動かすために必要な一式」をまとめたものが、JRE です。
 
-```text
+```text line-numbers=false
 JRE ＝ JVM ＋ 標準ライブラリ ＋ 実行に必要な部品
 ```
 
@@ -101,7 +101,7 @@ JRE には含まれていません。
 
 つまり、
 
-```text
+```text line-numbers=false
 JDK ＝ JRE ＋ 開発のための道具（コンパイラなど）
 ```
 

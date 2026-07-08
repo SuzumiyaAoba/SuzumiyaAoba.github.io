@@ -40,7 +40,7 @@ else if (level == ERROR) { writeToStdout(); sendMail(); notifyMonitor(); }
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Handler（インターフェース）
   └ handle(request)
 

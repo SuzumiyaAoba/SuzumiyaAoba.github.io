@@ -31,7 +31,7 @@ co-author: ["Claude Opus 4.7"]
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Command（インターフェース）
   ├ execute()
   └ undo()                ―― Undo を取るならこちらも

@@ -73,7 +73,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 エラー: 年齢に負の値は設定できません: -5
 ```

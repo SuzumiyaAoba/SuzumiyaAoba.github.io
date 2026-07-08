@@ -29,7 +29,7 @@ DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
 IO.println(date.format(formatter));
 ```
 
-```text
+```text line-numbers=false
 2026年06月09日
 ```
 
@@ -61,7 +61,7 @@ IO.println(dt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
 IO.println(dt.format(DateTimeFormatter.ofPattern("MM月dd日 HH時mm分")));
 ```
 
-```text
+```text line-numbers=false
 2026/06/09 14:30
 06月09日 14時30分
 ```
@@ -87,7 +87,7 @@ LocalDate date = LocalDate.parse("2026-06-09");
 IO.println(date.plusDays(1));   // 読み取った日付で計算できる
 ```
 
-```text
+```text line-numbers=false
 2026-06-10
 ```
 
@@ -102,7 +102,7 @@ LocalDate date = LocalDate.parse("2026/06/09", formatter);
 IO.println(date);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 
@@ -115,7 +115,7 @@ IO.println(date);
 
 整形と解析は、向きが逆なだけで、対になっています。
 
-```text
+```text line-numbers=false
 整形（format）:  日付       →  "2026年06月09日"（文字列）
 解析（parse） :  "2026..."  →  日付
 ```

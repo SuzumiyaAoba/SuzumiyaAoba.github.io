@@ -140,7 +140,7 @@ public void run(String... args) {
 
 実機での出力例：
 
-```text
+```text line-numbers=false
 保存: Book[id=4, title=Java25入門, author=鈴木, year=2026]
 取得: Book[id=4, title=Java25入門, author=鈴木, year=2026]
 削除後の件数: 3

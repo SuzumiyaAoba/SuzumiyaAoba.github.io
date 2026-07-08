@@ -31,7 +31,7 @@ JVM が間にはさまることで、書いた Java コードは「**x86 でも 
 
 `.java` を書いてから、CPU で命令が走るまでには、おおまかに 5 つの段階があります。
 
-```text
+```text line-numbers=false
 [1] .java ファイル
        ↓  javac（コンパイラ）
 [2] .class ファイル（バイトコード）
@@ -67,7 +67,7 @@ public class Hello {
 }
 ```
 
-```text
+```text line-numbers=false
 $ javac Hello.java
 $ ls
 Hello.class  Hello.java
@@ -76,7 +76,7 @@ Hello.class  Hello.java
 `Hello.class` ができました。これがバイトコードです。
 中身は人間が読めるテキストではないので、`javap` という標準ツールで読み解きます。
 
-```text
+```text line-numbers=false
 $ javap -c -p Hello.class
 Compiled from "Hello.java"
 public class Hello {
@@ -130,7 +130,7 @@ javac の段階で**ある程度の最適化**が入っています。
 
 JVM の内部は、本書の範囲では次のように分けて理解すれば十分です。
 
-```text
+```text line-numbers=false
            ┌─────────────────────────────────────────┐
            │              JVM プロセス               │
            │                                         │

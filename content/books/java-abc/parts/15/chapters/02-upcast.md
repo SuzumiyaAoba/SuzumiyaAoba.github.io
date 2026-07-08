@@ -75,7 +75,7 @@ a.cry();      // ◯ cry() は Animal が持っている → OK
 a.fetch();    // ✕ fetch() は Animal にはない → コンパイルエラー
 ```
 
-```text
+```text line-numbers=false
 エラー: シンボルを見つけられません
   シンボル:   メソッド fetch()
   場所: タイプAnimalの変数 a

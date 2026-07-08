@@ -23,7 +23,7 @@ co-author: ["Claude Opus 4.7"]
 これらの**組み合わせ**もしたい。「枠 + 強調」「行番号 + 枠」など。
 継承だけで対応しようとすると、
 
-```
+```text line-numbers=false
 TextView
 ├ BoxedTextView
 ├ BoldTextView

@@ -38,7 +38,7 @@ String s = """
 IO.println("[" + s + "]");
 ```
 
-```text
+```text line-numbers=false
 [りんご
 みかん
 ぶどう
@@ -66,7 +66,7 @@ String s = """
 IO.println("[" + s + "]");
 ```
 
-```text
+```text line-numbers=false
 [りんご
   みかん
 ぶどう
@@ -91,7 +91,7 @@ String s = """
 IO.println("[" + s + "]");
 ```
 
-```text
+```text line-numbers=false
 [項目: 
 値]
 ```
@@ -113,7 +113,7 @@ String s = """
 IO.println(s);
 ```
 
-```text
+```text line-numbers=false
 これは長い文章を1行につなげる例です。
 ```
 

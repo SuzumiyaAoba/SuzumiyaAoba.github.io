@@ -61,7 +61,7 @@ names.add("高橋");
 IO.println(names);
 ```
 
-```text
+```text line-numbers=false
 [佐藤, 鈴木, 高橋]
 ```
 
@@ -85,7 +85,7 @@ votes.add("りんご");      // 同じ「りんご」をもう一度
 IO.println(votes);
 ```
 
-```text
+```text line-numbers=false
 [りんご, みかん, りんご]
 ```
 
@@ -104,7 +104,7 @@ List<String> colors = List.of("赤", "緑", "青");
 IO.println(colors);
 ```
 
-```text
+```text line-numbers=false
 [赤, 緑, 青]
 ```
 
@@ -119,7 +119,7 @@ List<String> colors = List.of("赤", "緑", "青");
 colors.add("黄");   // ✕ 変更不可のリストに追加しようとする
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.UnsupportedOperationException
 ```
 

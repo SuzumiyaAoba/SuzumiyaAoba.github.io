@@ -64,7 +64,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: Animalはabstractです。インスタンスを生成することはできません
         Animal a = new Animal();
                    ^
@@ -99,7 +99,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ はごはんを食べる
 ```

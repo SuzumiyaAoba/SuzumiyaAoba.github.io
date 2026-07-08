@@ -38,7 +38,7 @@ IO.println(score.intValue());         // null に対してメソッド → NullP
 そこで `Optional` の出番です。
 「値がないかもしれない」とき、`null` を返すかわりに、**`Optional` という箱に入れて**返します。
 
-```text
+```text line-numbers=false
 値がある場合:  Optional[80]   ← 箱の中に 80 が入っている
 値がない場合:  Optional.empty  ← 箱は空っぽ
 ```
@@ -64,7 +64,7 @@ IO.println(empty.isPresent());
 IO.println(empty.isEmpty());       // 空か
 ```
 
-```text
+```text line-numbers=false
 true
 false
 true
@@ -88,7 +88,7 @@ Optional<Integer> max = nums.stream().max(Comparator.naturalOrder());
 IO.println(max.isPresent());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 

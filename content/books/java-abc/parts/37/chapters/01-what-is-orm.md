@@ -169,7 +169,7 @@ ORM は、銀の弾丸ではありません。
 - リポジトリのメソッド名から SQL を自動生成
 - ふつうの Spring Boot プロジェクトで使うのは、これ
 
-```text
+```text line-numbers=false
 あなたのコード
        ↓
 Spring Data JPA   ← 「リポジトリ」の自動実装

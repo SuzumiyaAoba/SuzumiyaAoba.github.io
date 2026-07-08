@@ -22,7 +22,7 @@ LocalDate date = LocalDate.of(2026, 6, 9);
 IO.println(date);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 
@@ -35,7 +35,7 @@ LocalDate today = LocalDate.now();   // 実行した日の日付になる
 IO.println(today);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 
@@ -56,7 +56,7 @@ IO.println(date.getDayOfMonth());  // 日
 IO.println(date.getDayOfWeek());   // 曜日
 ```
 
-```text
+```text line-numbers=false
 2026
 6
 9
@@ -78,7 +78,7 @@ LocalTime time = LocalTime.of(14, 30);
 IO.println(time);
 ```
 
-```text
+```text line-numbers=false
 14:30
 ```
 
@@ -97,7 +97,7 @@ LocalDateTime dateTime = LocalDateTime.of(2026, 6, 9, 14, 30);
 IO.println(dateTime);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09T14:30
 ```
 
@@ -113,7 +113,7 @@ LocalDateTime dateTime = date.atTime(time);   // 日付に時刻を合わせる
 IO.println(dateTime);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09T14:30
 ```
 

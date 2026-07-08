@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 すべてを継承で表すと、
 
-```
+```text line-numbers=false
 Shape
 ├ CanvasCircle      ・ OpenGLCircle
 ├ CanvasSquare      ・ OpenGLSquare
@@ -37,7 +37,7 @@ Shape
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Shape（抽象）           Renderer（実装）
   ├ Circle                ├ CanvasRenderer
   ├ Square                └ OpenGLRenderer

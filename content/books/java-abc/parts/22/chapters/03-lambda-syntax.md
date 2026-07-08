@@ -16,7 +16,7 @@ co-author: ["Claude Opus 4.7"]
 
 ラムダ式の、いちばん基本的な形は、次のとおりです。
 
-```text
+```text line-numbers=false
 (引数の型 引数名, ...) -> { 処理; }
 ```
 
@@ -138,7 +138,7 @@ Function<String, Integer> length = s -> s.length(); // 文字数を返す
 IO.println(length.apply("hello"));
 ```
 
-```text
+```text line-numbers=false
 true
 false
 5

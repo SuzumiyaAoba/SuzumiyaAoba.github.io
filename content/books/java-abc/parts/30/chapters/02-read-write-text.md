@@ -29,7 +29,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 書き込みました
 ```
 
@@ -58,7 +58,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 読み込んだ内容: こんにちは、ファイル！
 ```
 
@@ -86,7 +86,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 おはよう
 こんにちは
 こんばんは
@@ -118,7 +118,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 1行目
 2行目
 3行目

@@ -14,7 +14,7 @@ llm: true
 
 JPMS のモジュールには、**慣例的な**ディレクトリ構造があります。
 
-```text
+```text line-numbers=false
 src/
   com.example.greet/                  ← モジュール名のディレクトリ
     module-info.java                  ← モジュール宣言
@@ -76,7 +76,7 @@ public class Greeter {
 
 モジュールをコンパイルするには、**`--module-source-path`** と **`--module`** を使います。
 
-```text
+```text line-numbers=false
 $ javac -d out --module-source-path src --module com.example.greet
 ```
 
@@ -85,7 +85,7 @@ $ javac -d out --module-source-path src --module com.example.greet
 
 実行は、`-cp` ではなく **`--module-path`** と **`--module`** を使います。
 
-```text
+```text line-numbers=false
 $ java --module-path out --module com.example.greet/com.example.greet.Greeter Alice
 Hello, Alice!
 ```
@@ -161,7 +161,7 @@ public class Main {
 
 複数モジュールをまとめてコンパイルするときも、`--module` にカンマ区切りで指定します。
 
-```text
+```text line-numbers=false
 $ javac -d out --module-source-path src --module com.example.app,com.example.lib
 $ java --module-path out --module com.example.app/com.example.app.Main
 square(5) = 25

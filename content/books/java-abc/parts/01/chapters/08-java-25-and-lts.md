@@ -37,7 +37,7 @@ Java のバージョンアップには、現在、決まったリズムがあり
 
 半年ごとに新バージョンが出るため、Java のバージョン番号は速いペースで増えていきます。
 
-```text
+```text line-numbers=false
 … → Java 21（2023年9月）
    → Java 22（2024年3月）
    → Java 23（2024年9月）
@@ -176,7 +176,7 @@ void main() {
 
 実際に Java をインストールしたあとで、自分のコンピュータに入っている Java のバージョンを確認するには、次の命令を使います。
 
-```text
+```text line-numbers=false
 java --version
 ```
 

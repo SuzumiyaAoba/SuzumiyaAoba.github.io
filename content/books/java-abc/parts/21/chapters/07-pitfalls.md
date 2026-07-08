@@ -40,7 +40,7 @@ List<String> colors = List.of("赤", "緑", "青");
 colors.add("黄");   // ✕ 変更不可
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.UnsupportedOperationException
 ```
 
@@ -113,7 +113,7 @@ for (String name : names) {
 }
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.util.ConcurrentModificationException
 ```
 
@@ -126,7 +126,7 @@ names.removeIf(name -> name.equals("佐藤"));   // 条件に合うものを削�
 IO.println(names);
 ```
 
-```text
+```text line-numbers=false
 [鈴木, 高橋]
 ```
 

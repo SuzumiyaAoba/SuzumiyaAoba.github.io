@@ -83,7 +83,7 @@ public class OrderService {
 - リポジトリ層に付けると、メソッド呼び出しごとに細かいトランザクションになり、複数操作のまとまりを担保できない
 - コントローラ層（`@RestController`）に付けると、HTTP 処理とトランザクションが結びついて、責務がぶれる
 
-```text
+```text line-numbers=false
 @RestController     ← HTTP のことだけ
        ↓
 @Service            ← @Transactional はここ

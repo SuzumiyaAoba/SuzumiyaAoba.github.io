@@ -43,7 +43,7 @@ public BookResponse get(@PathVariable Long id) {
 
 実機で動かしてみると、
 
-```text
+```text line-numbers=false
 $ curl http://localhost:8080/api/books/1
 {"id":1,"title":"Java入門","author":"鈴木","publishedYear":2026}
 ```
@@ -111,7 +111,7 @@ public List<BookResponse> list(@RequestParam(required = false) String author) {
 
 `@RequestParam` は、**`?` 以降のクエリパラメータ**を受け取ります。
 
-```text
+```text line-numbers=false
 $ curl "http://localhost:8080/api/books?author=%E4%BD%90%E8%97%A4"
 [{"id":2,"title":"モダンJava","author":"佐藤","publishedYear":2025}]
 ```
@@ -171,7 +171,7 @@ public Page<BookResponse> list(Pageable pageable) {
 
 クエリで `?page=0&size=10&sort=publishedYear,desc` のように指定すると、Spring が `Pageable` に組み立ててくれます。
 
-```text
+```text line-numbers=false
 $ curl "http://localhost:8080/api/books?page=0&size=2&sort=publishedYear,desc"
 {
   "content": [

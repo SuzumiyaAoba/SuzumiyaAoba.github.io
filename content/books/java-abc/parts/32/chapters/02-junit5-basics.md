@@ -156,13 +156,13 @@ assertEquals(5, result);              // 短く書ける
 
 ターミナルで、Maven プロジェクトのルートに移動して、
 
-```text
+```text line-numbers=false
 $ mvn test
 ```
 
 実機の出力（抜粋）。
 
-```text
+```text line-numbers=false
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -191,7 +191,7 @@ assertEquals(99, calc.add(2, 3));   // わざと間違える
 
 実行すると、こんなエラーが出ます。
 
-```text
+```text line-numbers=false
 [ERROR] CalculatorTest.addsTwoNumbers -- Time elapsed: 0.005 s <<< FAILURE!
 org.opentest4j.AssertionFailedError:
 expected: <99> but was: <5>

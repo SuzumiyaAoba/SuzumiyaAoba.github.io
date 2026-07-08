@@ -32,7 +32,7 @@ public class JfrDemo {
 
 最も簡単な方法は、`-XX:StartFlightRecording=...` を渡すことです。
 
-```text
+```text line-numbers=false
 $ javac JfrDemo.java
 $ java -XX:StartFlightRecording=filename=demo.jfr,duration=3s JfrDemo
 [0.168s][info][jfr,startup] Started recording 1. The result will be written to:
@@ -52,7 +52,7 @@ $ ls -la demo.jfr
 
 ### プロセス ID を調べる
 
-```text
+```text line-numbers=false
 $ jps
 12345 MyApp
 12346 Jps
@@ -60,7 +60,7 @@ $ jps
 
 ### 記録を開始
 
-```text
+```text line-numbers=false
 $ jcmd 12345 JFR.start name=session1 duration=60s filename=mid.jfr
 Started recording 1. The result will be written to:
 /path/to/mid.jfr
@@ -68,7 +68,7 @@ Started recording 1. The result will be written to:
 
 ### 記録を確認
 
-```text
+```text line-numbers=false
 $ jcmd 12345 JFR.check
 Recording 1: name=session1 (running)
 ```
@@ -77,7 +77,7 @@ Recording 1: name=session1 (running)
 
 実行中の記録を、**今この瞬間**のデータでファイルに保存できます。
 
-```text
+```text line-numbers=false
 $ jcmd 12345 JFR.dump name=session1 filename=snapshot.jfr
 ```
 
@@ -115,7 +115,7 @@ recording.close();
 
 ### 全体のサマリ
 
-```text
+```text line-numbers=false
 $ jfr summary demo.jfr
 
  Version: 2.1
@@ -144,7 +144,7 @@ $ jfr summary demo.jfr
 
 ### 特定のイベントを抜き出す
 
-```text
+```text line-numbers=false
 $ jfr print --events jdk.GarbageCollection demo.jfr | head -20
 
 jdk.GarbageCollection {
@@ -162,7 +162,7 @@ GC、ロック、ファイル I/O ―― 興味のあるものだけを抜き出
 
 ### イベント名を一覧する
 
-```text
+```text line-numbers=false
 $ jfr metadata demo.jfr | head -20
 ```
 
@@ -176,7 +176,7 @@ $ jfr metadata demo.jfr | head -20
 
 ### 「**CPU を最も使ったメソッドはどれ?**」
 
-```text
+```text line-numbers=false
 $ jfr print --events jdk.ExecutionSample --stack-depth 5 demo.jfr | head -30
 ```
 
@@ -185,7 +185,7 @@ $ jfr print --events jdk.ExecutionSample --stack-depth 5 demo.jfr | head -30
 
 ### 「**GC は何 ms 止めた?**」
 
-```text
+```text line-numbers=false
 $ jfr print --events jdk.GarbageCollection demo.jfr | grep sumOfPauses
 ```
 
@@ -193,7 +193,7 @@ $ jfr print --events jdk.GarbageCollection demo.jfr | grep sumOfPauses
 
 ### 「**最もロックを待ったスレッドは?**」
 
-```text
+```text line-numbers=false
 $ jfr print --events jdk.JavaMonitorWait demo.jfr
 ```
 

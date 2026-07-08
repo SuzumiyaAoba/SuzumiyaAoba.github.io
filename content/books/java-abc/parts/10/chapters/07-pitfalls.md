@@ -67,7 +67,7 @@ IO.println(s.charAt(5));
 
 `jshell` で実行すると、次のように表示されます（行頭の `|` は、jshell がエラーなどの説明に付ける印です）。
 
-```text
+```text line-numbers=false
 |  例外java.lang.StringIndexOutOfBoundsException: Index 5 out of bounds for length 3
 ```
 

@@ -29,7 +29,7 @@ String y = new String("hello");
 
 `x` と `y` は、どちらも内容は `"hello"` です。これを2通りの方法で比べてみます。
 
-```text
+```text line-numbers=false
 jshell> x == y
 $3 ==> false
 
@@ -54,7 +54,7 @@ String a = "Hello";
 String b = "Hello";
 ```
 
-```text
+```text line-numbers=false
 jshell> a.equals(b)
 $3 ==> true
 ```
@@ -77,7 +77,7 @@ String a = "hello";
 String b = "hello";
 ```
 
-```text
+```text line-numbers=false
 jshell> a == b
 $3 ==> true
 ```
@@ -101,7 +101,7 @@ $3 ==> true
 
 **大文字・小文字を無視して比べる ― `equalsIgnoreCase`**
 
-```text
+```text line-numbers=false
 jshell> "Hello".equalsIgnoreCase("hello")
 $1 ==> true
 ```
@@ -110,7 +110,7 @@ $1 ==> true
 
 **順番（辞書順）を比べる ― `compareTo`**
 
-```text
+```text line-numbers=false
 jshell> "apple".compareTo("banana")
 $1 ==> -1
 

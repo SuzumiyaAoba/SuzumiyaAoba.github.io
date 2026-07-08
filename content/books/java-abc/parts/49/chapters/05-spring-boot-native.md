@@ -54,19 +54,19 @@ Spring Boot 3 では、
 
 ネイティブビルドは、Maven なら:
 
-```text
+```text line-numbers=false
 $ mvn -Pnative native:compile
 ```
 
 Gradle なら:
 
-```text
+```text line-numbers=false
 $ ./gradlew nativeCompile
 ```
 
 これで、`target/` または `build/native/` の下に**ネイティブ実行ファイル**が出来上がります。
 
-```text
+```text line-numbers=false
 $ ls -la target/myapp
 -rwxr-xr-x  1 user staff  120M  ...  target/myapp
 
@@ -97,7 +97,7 @@ JVM で動かしたときと比べると:
 ネイティブビルドは時間がかかります（**数分**）。
 そのため、**開発中はふつうの JVM で動かし、本番ビルドだけネイティブ**にする、というのが現実的です。
 
-```text
+```text line-numbers=false
 # 開発時
 $ mvn spring-boot:run
 
@@ -178,7 +178,7 @@ CDS は、
 という、Java 自身の機能です。Java 21 では `-XX:ArchiveClassesAtExit=...` で簡単に作れます。
 Spring Boot もこれに対応していて、
 
-```text
+```text line-numbers=false
 $ java -XX:ArchiveClassesAtExit=app.jsa -jar app.jar
 $ java -XX:SharedArchiveFile=app.jsa -jar app.jar
 ```

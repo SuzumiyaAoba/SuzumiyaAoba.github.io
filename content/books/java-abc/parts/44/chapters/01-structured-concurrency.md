@@ -14,7 +14,7 @@ llm: true
 
 ふつうのメソッド呼び出しは、**入れ子構造**を持ちます。
 
-```text
+```text line-numbers=false
 caller()
   ├── work()
   │     ├── stepA()

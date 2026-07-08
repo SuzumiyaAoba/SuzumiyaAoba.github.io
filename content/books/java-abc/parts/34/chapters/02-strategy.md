@@ -51,7 +51,7 @@ Strategy パターンは、
 というアイデアです。
 インターフェース 1 つを切って、**各アルゴリズムを実装クラスにする**わけです。
 
-```text
+```text line-numbers=false
 PaymentService ──→ PaymentStrategy（interface）
                         ├── CreditCardPayment
                         ├── BankTransferPayment

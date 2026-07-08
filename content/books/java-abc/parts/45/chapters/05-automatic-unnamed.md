@@ -112,7 +112,7 @@ JDK 内部 API へのアクセスが必要なら、`--add-opens` を渡す。
 JPMS の世界では、**同じパッケージ名**を**複数のモジュール**が公開することは**禁止**されます。
 これを **Split Package** と呼びます。
 
-```text
+```text line-numbers=false
 モジュール A     exports com.example.util
 モジュール B     exports com.example.util    ← NG
 ```

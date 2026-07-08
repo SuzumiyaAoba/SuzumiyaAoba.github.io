@@ -35,7 +35,7 @@ class Worker implements Runnable {
 
 理由は、**CPU と JIT がメモリを「直接」読み書きしない**ことにあります。
 
-```text
+```text line-numbers=false
 [Thread A] CPU コア1       [Thread B] CPU コア2
    │                              │
    │ ┌─キャッシュ─┐                │ ┌─キャッシュ─┐
@@ -124,7 +124,7 @@ counter++;     // 内部では: counter = counter + 1
 これは見た目 1 ステップですが、内部では「**読む → 加算 → 書く**」の 3 ステップに分かれています。
 2 つのスレッドがほぼ同時に走ると:
 
-```text
+```text line-numbers=false
 Thread A: counter を読む（= 0）
 Thread B: counter を読む（= 0）
 Thread A: 0 + 1 = 1 を書く（counter = 1）

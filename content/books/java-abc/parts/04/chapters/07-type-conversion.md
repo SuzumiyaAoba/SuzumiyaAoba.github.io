@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 
 `int`（整数）の値を、`double`（小数）の箱に入れてみましょう。
 
-```text
+```text line-numbers=false
 jshell> double d = 10;
 d ==> 10.0
 ```
@@ -39,7 +39,7 @@ d ==> 10.0
 そこで、「情報が失われてもいいので、変換してください」と、自分で指示します。
 これを**キャスト**（Cast、型キャスト）と呼び、`(int)` のように、変換したい型をかっこで囲んで書きます[^jls-narrowing-conversion]。
 
-```text
+```text line-numbers=false
 jshell> int i = (int) 3.9;
 i ==> 3
 ```
@@ -57,7 +57,7 @@ i ==> 3
 
 まず、**整数どうしの割り算**です。`7 ÷ 2` を計算してみましょう。
 
-```text
+```text line-numbers=false
 jshell> int a = 7 / 2;
 a ==> 3
 ```
@@ -67,7 +67,7 @@ a ==> 3
 
 小数の結果がほしいときは、どちらか一方を**小数**にします。
 
-```text
+```text line-numbers=false
 jshell> double b = 7.0 / 2;
 b ==> 3.5
 ```
@@ -95,7 +95,7 @@ b ==> 3.5
 第4節で学んだとおり、`int` で扱える整数には上限（およそ 21 億）があります。
 その上限ぎりぎりの値に、さらに `1` を足すと、どうなるでしょうか。
 
-```text
+```text line-numbers=false
 jshell> int maxv = 2147483647;
 maxv ==> 2147483647
 jshell> int over = maxv + 1;
@@ -118,7 +118,7 @@ over ==> -2147483648
 第5節で見たように、文字列に数値を `+` でつなげると、連結された文字列になります。
 たとえば、文字列の `"5"` と数値の `3` を `+` すると…
 
-```text
+```text line-numbers=false
 jshell> String s = "5" + 3;
 s ==> "53"
 ```
@@ -128,7 +128,7 @@ s ==> "53"
 
 文字列を数値として計算したいときは、`Integer.parseInt(...)` を使って、文字列を整数に変換します[^java-integer-parseInt]。
 
-```text
+```text line-numbers=false
 jshell> int n = Integer.parseInt("5") + 3;
 n ==> 8
 ```

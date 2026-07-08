@@ -28,7 +28,7 @@ tryChange(v);
 
 呼び出したあと、`v` を確認してみます。
 
-```text
+```text line-numbers=false
 jshell> v
 v ==> 5
 ```
@@ -40,7 +40,7 @@ v ==> 5
 このように、**値のコピーを渡す**しくみを、**値渡し**（Pass by Value）と呼びます。
 基本型（`int`・`double`・`boolean` など）は、すべてこの値渡しです。
 
-```text
+```text line-numbers=false
 呼び出し元:  v = 5
               │ コピーを渡す
               ▼
@@ -67,7 +67,7 @@ doubleAll(nums);
 
 呼び出したあと、`nums` を確認してみます。
 
-```text
+```text line-numbers=false
 jshell> nums
 nums ==> int[3] { 2, 4, 6 }
 ```
@@ -81,7 +81,7 @@ nums ==> int[3] { 2, 4, 6 }
 つまり、`doubleAll` の中の `a` と、呼び出し元の `nums` は、**同じ1つの配列を指して**います。
 だから `a[i]` を書き換えると、それは `nums` の中身を書き換えるのと同じことになり、呼び出し元にも反映されるのです。
 
-```text
+```text line-numbers=false
 呼び出し元:  nums ──┐
                     ├──→ [ 1, 2, 3 ]  ← 同じ配列を共有
 メソッド:    a ─────┘     （a[i] を書き換えると nums からも見える）

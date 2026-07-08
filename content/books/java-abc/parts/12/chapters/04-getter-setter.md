@@ -74,7 +74,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 佐藤さん（25歳）
 ```
@@ -120,7 +120,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 年齢に負の値は設定できません: -5
 年齢: 0

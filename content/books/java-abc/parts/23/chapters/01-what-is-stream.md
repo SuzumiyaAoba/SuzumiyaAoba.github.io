@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 ストリームも、まったく同じ流れで処理します。
 
-```text
+```text line-numbers=false
 コレクション → [作る] → [加工 → 加工 → …] → [結果を得る]
               ↑              ↑                  ↑
            ストリーム化    中間操作            終端操作
@@ -64,7 +64,7 @@ List<Integer> passed = scores.stream()       // ① 作る
 IO.println(passed);
 ```
 
-```text
+```text line-numbers=false
 [90, 85, 70]
 ```
 
@@ -105,11 +105,11 @@ IO.println(passed);   // 処理結果（新しいリスト）
 IO.println(scores);   // 元のリストは、そのまま
 ```
 
-```text
+```text line-numbers=false
 [85, 70, 90]
 ```
 
-```text
+```text line-numbers=false
 [85, 40, 70, 55, 90]
 ```
 

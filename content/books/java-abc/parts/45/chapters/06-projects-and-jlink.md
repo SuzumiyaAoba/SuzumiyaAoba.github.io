@@ -17,7 +17,7 @@ Maven は、JPMS と相性がよいビルドツールです。
 
 ディレクトリ構成は、
 
-```text
+```text line-numbers=false
 myapp/
 ├── pom.xml
 ├── src/main/java/
@@ -88,7 +88,7 @@ Gradle も同様の挙動です。
 JPMS のもう一つの大きな魅力が、**`jlink`** です。
 これは「**自分のアプリが必要なモジュールだけ**」を含んだ、**最小限の JDK**（実体は実行イメージ）を作ります。
 
-```text
+```text line-numbers=false
 $ jlink --module-path "$JAVA_HOME/jmods:out" \
         --add-modules com.example.greet \
         --launcher greeter=com.example.greet/com.example.greet.Greeter \

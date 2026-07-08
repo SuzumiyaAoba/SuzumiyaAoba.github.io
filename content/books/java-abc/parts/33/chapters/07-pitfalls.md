@@ -20,7 +20,7 @@ verify(mailSender).send("taro@example.com", anyString(), anyString());   // △
 
 実行すると、
 
-```text
+```text line-numbers=false
 org.mockito.exceptions.misusing.InvalidUseOfMatchersException:
 Invalid use of argument matchers!
 3 matchers expected, 1 recorded.
@@ -115,7 +115,7 @@ Java 25 では、レコードや sealed クラスがらみで final が増えて
 Mockito 5.x では、**inline mock maker** がデフォルトで有効なので、final もモックできるようになっています。
 ただし、まれに環境依存の問題が出るので、こんなエラーが出たら原因を疑ってください。
 
-```text
+```text line-numbers=false
 Cannot mock/spy class com.example.FinalClass
 Mockito cannot mock/spy because :
  - final class

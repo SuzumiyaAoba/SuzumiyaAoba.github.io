@@ -30,7 +30,7 @@ co-author: ["Claude Opus 4.7"]
 「**サービスの一番外側**」に、ハンドラを 1 つ置く。
 内部のコードでは、原則として `catch` を書かない ―― これが、現代的な書き方です。
 
-```text
+```text line-numbers=false
 [境界]                            ← ここで集約してハンドリング
    ↓
 [Controller]                      ← catch しない

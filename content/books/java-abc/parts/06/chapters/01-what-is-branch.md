@@ -11,7 +11,7 @@ co-author: ["Claude Opus 4.7"]
 第1章で、プログラムの基本のひとつとして紹介した考え方ですね。
 たとえば、こんな場面です。
 
-```text
+```text line-numbers=false
 もし点数が 60 点以上なら
   「合格」と表示する
 そうでなければ
@@ -39,7 +39,7 @@ co-author: ["Claude Opus 4.7"]
 
 条件分岐は、日常の判断にもあふれています。
 
-```text
+```text line-numbers=false
 もし雨が降っていたら
   傘を持っていく
 そうでなければ

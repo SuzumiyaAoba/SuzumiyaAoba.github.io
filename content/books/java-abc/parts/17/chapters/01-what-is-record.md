@@ -56,7 +56,7 @@ record Point(int x, int y) {}
 
 `record Point(int x, int y) {}` を分解してみましょう。
 
-```text
+```text line-numbers=false
 record   Point   (int x, int y)   {}
   │       │            │           │
   │       │            │           └─ 本体（今回は空）

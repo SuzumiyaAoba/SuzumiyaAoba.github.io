@@ -46,7 +46,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 名前: ポチ
 種類: 犬

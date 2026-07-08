@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 実際に、`var` を使って変数を宣言してみましょう。
 
-```text
+```text line-numbers=false
 jshell> var v1 = 20;
 v1 ==> 20
 jshell> var v2 = "太郎";
@@ -37,7 +37,7 @@ v3 ==> 100.0
 
 それを確かめてみましょう。jshell の **`/vars`** コマンドを使うと、いま定義されている変数を、型つきで一覧表示できます。
 
-```text
+```text line-numbers=false
 jshell> /vars
 |    int v1 = 20
 |    String v2 = "太郎"
@@ -76,7 +76,7 @@ jshell> /vars
 `var` は、右側の値を見て型を決めます。
 そのため、**値を入れずに `var` だけで宣言することはできません**。
 
-```text
+```text line-numbers=false
 jshell> var y;
 |  エラー:
 |  ローカル変数yの型を推論できません

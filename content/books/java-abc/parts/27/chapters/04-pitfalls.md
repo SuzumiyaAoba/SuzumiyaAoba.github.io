@@ -22,7 +22,7 @@ record Rectangle(double w, double h) implements Shape {}
 record Triangle(double b, double h) implements Shape {}   // ✕ permits にない
 ```
 
-```text
+```text line-numbers=false
 エラー: クラスはシール・クラスShapeを拡張できません('permits'句に指定されていないためです)
 ```
 
@@ -41,7 +41,7 @@ sealed interface Shape permits Circle {}
 class Circle implements Shape {}   // ✕ final / sealed / non-sealed がない
 ```
 
-```text
+```text line-numbers=false
 エラー: sealed、non-sealedまたはfinal修飾子が必要です
 ```
 

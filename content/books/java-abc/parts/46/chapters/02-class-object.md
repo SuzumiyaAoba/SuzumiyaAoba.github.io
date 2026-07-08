@@ -130,7 +130,7 @@ try {
 
 `Class<?>` を取得したら、その**スーパークラス**や**インタフェース**もたどれます。
 
-```text
+```text line-numbers=false
 jshell> ArrayList.class.getSuperclass()
 $1 ==> class java.util.AbstractList
 

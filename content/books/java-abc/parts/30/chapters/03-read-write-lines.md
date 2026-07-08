@@ -31,7 +31,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 りんご
 みかん
 ぶどう
@@ -63,7 +63,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 行数: 3
 > りんご
 > みかん
@@ -102,7 +102,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 「み」を含む行: 1
 ```
 

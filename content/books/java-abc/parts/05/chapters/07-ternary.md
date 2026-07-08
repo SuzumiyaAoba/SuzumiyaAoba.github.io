@@ -17,13 +17,13 @@ co-author: ["Claude Opus 4.7"]
 
 三項演算子は、`?` と `:` を使って、次のように書きます。
 
-```text
+```text line-numbers=false
 条件 ? 条件が true のときの値 : 条件が false のときの値
 ```
 
 実際に使ってみましょう。点数が 60 以上なら「合格」、そうでなければ「不合格」を選ぶ例です。
 
-```text
+```text line-numbers=false
 jshell> int score = 80;
 score ==> 80
 jshell> String result = score >= 60 ? "合格" : "不合格";

@@ -81,7 +81,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 残高: 700
 ```
@@ -107,7 +107,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 残高: 1000
 ```

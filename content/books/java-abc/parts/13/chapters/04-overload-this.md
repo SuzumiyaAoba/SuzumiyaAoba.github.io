@@ -137,7 +137,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 佐藤さん（25歳）
 鈴木さん（0歳）

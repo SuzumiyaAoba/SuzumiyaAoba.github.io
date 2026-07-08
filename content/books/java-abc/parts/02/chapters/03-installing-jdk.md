@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 
 どの OS でも、大きな流れは次の3ステップです。
 
-```text
+```text line-numbers=false
 1. インストーラー（またはパッケージ）を入手する
 2. 画面の案内に従ってインストールする
 3. 正しく入ったかを確認する（次の第4節で行う）
@@ -160,7 +160,7 @@ macOS でも、主に2つの方法があります。
 
 すでに Homebrew を使っている方は、次のコマンドで Temurin 25 をインストールできます。
 
-```text
+```text line-numbers=false
 brew install --cask temurin@25
 ```
 

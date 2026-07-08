@@ -33,7 +33,7 @@ String dow = switch (day) {
 
 jshell で確かめてみましょう。
 
-```text
+```text line-numbers=false
 jshell> int day = 3;
 day ==> 3
 jshell> String dow = switch (day) {
@@ -88,11 +88,11 @@ String type = switch (day) {
 };
 ```
 
-```text
+```text line-numbers=false
 週末です！
 ```
 
-```text
+```text line-numbers=false
 jshell> type
 type ==> "週末"
 ```
@@ -119,7 +119,7 @@ String dow = switch (day) {
 };
 ```
 
-```text
+```text line-numbers=false
 エラー: switch式がすべての可能な入力値をカバーしていません
 ```
 
@@ -162,7 +162,7 @@ switch (day) {
 }
 ```
 
-```text
+```text line-numbers=false
 月
 火
 その他

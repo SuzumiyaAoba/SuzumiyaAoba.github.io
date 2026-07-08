@@ -32,7 +32,7 @@ void printPrice(int price) {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Shop.java
 税込価格: 1100円
 ```

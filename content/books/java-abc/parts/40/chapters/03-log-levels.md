@@ -155,7 +155,7 @@ logging:
 
 Spring Boot Actuator を入れると、**起動中のアプリのログレベルを HTTP で動的に変更**できます。
 
-```text
+```text line-numbers=false
 POST /actuator/loggers/com.example.shop
 {
   "configuredLevel": "DEBUG"
@@ -170,7 +170,7 @@ POST /actuator/loggers/com.example.shop
 
 第40章の章扉でセットアップした `LogDemoApplication` を動かすと、こんな出力になります。
 
-```text
+```text line-numbers=false
 INFO  [] c.e.log.LogDemoApplication - 注文を受け付けました: orderId=1001, userId=42
 WARN  [] c.e.log.LogDemoApplication - 外部API遅延: latencyMs=1500
 ERROR [] c.e.log.LogDemoApplication - 注文処理が失敗しました: orderId=1001

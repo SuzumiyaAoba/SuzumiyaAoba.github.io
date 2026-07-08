@@ -14,7 +14,7 @@ Spring と DI で、初心者がはまりやすいポイントを整理します
 
 最頻出のエラーです。
 
-```text
+```text line-numbers=false
 Parameter 0 of constructor in com.example.shop.OrderService required a bean
 of type 'com.example.shop.UserRepository' that could not be found.
 ```
@@ -33,7 +33,7 @@ of type 'com.example.shop.UserRepository' that could not be found.
 
 スキャン起点を間違えると、**自分のクラスがスキャンされない**事故が起きます。
 
-```text
+```text line-numbers=false
 com.example.shop
 ├── service/
 │   └── OrderService.java         ← @Service が付いている
@@ -55,7 +55,7 @@ com.example.shop
 
 第4節でも見ました。
 
-```text
+```text line-numbers=false
 required a single bean, but 2 were found:
         - consoleMailSender
         - smtpMailSender
@@ -88,7 +88,7 @@ public class B {
 これだと、Spring はどちらも先に作れません。
 起動時に、こんなエラーが出ます。
 
-```text
+```text line-numbers=false
 The dependencies of some of the beans in the application context form a cycle:
    a → b → a
 ```

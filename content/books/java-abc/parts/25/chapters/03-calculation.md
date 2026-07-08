@@ -24,7 +24,7 @@ IO.println(date.plusWeeks(1));     // 1週間後
 IO.println(date.minusMonths(1));   // 1か月前
 ```
 
-```text
+```text line-numbers=false
 2026-06-12
 2026-06-16
 2026-05-09
@@ -46,7 +46,7 @@ IO.println(date);     // 元は変わらない
 IO.println(future);   // 計算結果は新しい日付
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 2026-06-12
 ```
@@ -65,7 +65,7 @@ LocalDate result = date.plusMonths(1).minusDays(2);   // 1か月後の、2日前
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 2026-07-07
 ```
 
@@ -85,7 +85,7 @@ IO.println(d1.isBefore(d2));   // d1 は d2 より前か
 IO.println(d1.isAfter(d2));    // d1 は d2 より後か
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -107,7 +107,7 @@ Period p = Period.between(start, end);
 IO.println(p.getMonths() + "か月 " + p.getDays() + "日");
 ```
 
-```text
+```text line-numbers=false
 5か月 8日
 ```
 
@@ -123,7 +123,7 @@ long days = ChronoUnit.DAYS.between(start, end);
 IO.println(days + "日");
 ```
 
-```text
+```text line-numbers=false
 159日
 ```
 
@@ -144,7 +144,7 @@ Duration work = Duration.between(startWork, endWork);
 IO.println(work.toHours() + "時間" + (work.toMinutes() % 60) + "分");
 ```
 
-```text
+```text line-numbers=false
 8時間30分
 ```
 

@@ -29,7 +29,7 @@ String joined = names.stream()
 IO.println(joined);
 ```
 
-```text
+```text line-numbers=false
 佐藤, 鈴木, 高橋
 ```
 
@@ -62,7 +62,7 @@ Map<String, List<Person>> byCity = people.stream()
 IO.println(byCity.get("東京").size());   // 東京の人数
 ```
 
-```text
+```text line-numbers=false
 2
 ```
 
@@ -86,7 +86,7 @@ Map<String, Long> countByCity = people.stream()
 IO.println(countByCity);
 ```
 
-```text
+```text line-numbers=false
 {東京=2, 大阪=1}
 ```
 
@@ -112,7 +112,7 @@ Map<String, Integer> ageByName = people.stream()
 IO.println(ageByName.get("佐藤"));
 ```
 
-```text
+```text line-numbers=false
 25
 ```
 

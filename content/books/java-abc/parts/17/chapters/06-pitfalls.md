@@ -36,7 +36,7 @@ p.getX();   // ✕ そんなメソッドはない
 p.x();      // ◯ アクセサは x()
 ```
 
-```text
+```text line-numbers=false
 エラー: シンボルを見つけられません
   シンボル:   メソッド getX()
 ```
@@ -83,7 +83,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 999
 ```

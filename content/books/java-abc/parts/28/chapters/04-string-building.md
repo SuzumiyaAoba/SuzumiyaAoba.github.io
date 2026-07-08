@@ -20,7 +20,7 @@ String date = String.join("-", "2026", "06", "09");
 IO.println(date);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 
@@ -33,7 +33,7 @@ String joined = String.join(", ", names);
 IO.println(joined);
 ```
 
-```text
+```text line-numbers=false
 佐藤, 鈴木, 高橋
 ```
 
@@ -54,7 +54,7 @@ for (int i = 0; i < 5; i++) {
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 01234
 ```
 
@@ -79,7 +79,7 @@ String result = sb.toString();   // 最後に文字列にする
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 01234
 ```
 
@@ -98,7 +98,7 @@ sb.append("名前: ").append("佐藤").append(" / 年齢: ").append(25);
 IO.println(sb.toString());
 ```
 
-```text
+```text line-numbers=false
 名前: 佐藤 / 年齢: 25
 ```
 

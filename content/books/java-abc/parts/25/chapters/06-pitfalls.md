@@ -21,7 +21,7 @@ date.plusDays(3);          // ✕ 戻り値を使っていない
 IO.println(date);          // → 2026-06-09（変わっていない！）
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 
@@ -34,7 +34,7 @@ date = date.plusDays(3);   // ◯ 戻り値を受け取る
 IO.println(date);
 ```
 
-```text
+```text line-numbers=false
 2026-06-12
 ```
 
@@ -51,7 +51,7 @@ IO.println(date);
 LocalDate date = LocalDate.of(2026, 2, 30);   // 2月30日は存在しない
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.time.DateTimeException: Invalid date 'FEBRUARY 30'
 ```
 

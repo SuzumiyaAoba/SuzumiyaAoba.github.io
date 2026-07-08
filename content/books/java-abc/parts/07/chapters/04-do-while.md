@@ -36,7 +36,7 @@ do {
 } while (d < 3);
 ```
 
-```text
+```text line-numbers=false
 5
 ```
 

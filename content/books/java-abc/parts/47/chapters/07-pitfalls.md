@@ -52,7 +52,7 @@ UserMapperImpl impl = new UserMapperImpl();
 
 「**プロセッサ A が生成したコードに、プロセッサ A 自身がもう一度反応する**」――こんな事態が起きることがあります。
 
-```text
+```text line-numbers=false
 Round 1: source → プロセッサ A → 新ソース X 生成
 Round 2: X を見て、また A が反応 → 新ソース Y 生成
 Round 3: ...（無限ループ）

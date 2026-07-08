@@ -154,7 +154,7 @@ assertEquals(5, calc.add(2, 3), "足し算の結果が違います");
 
 失敗時の出力は、こうなります。
 
-```text
+```text line-numbers=false
 org.opentest4j.AssertionFailedError: 足し算の結果が違います ==> expected: <5> but was: <99>
 ```
 

@@ -27,7 +27,7 @@ List<Integer> evens = nums.stream()
 IO.println(evens);
 ```
 
-```text
+```text line-numbers=false
 [2, 4, 6]
 ```
 
@@ -53,7 +53,7 @@ List<Integer> doubled = nums.stream()
 IO.println(doubled);
 ```
 
-```text
+```text line-numbers=false
 [2, 4, 6]
 ```
 
@@ -72,7 +72,7 @@ List<Integer> lengths = words.stream()
 IO.println(lengths);
 ```
 
-```text
+```text line-numbers=false
 [5, 6, 6]
 ```
 
@@ -97,7 +97,7 @@ List<String> sorted = names.stream()
 IO.println(sorted);
 ```
 
-```text
+```text line-numbers=false
 [Alice, Bob, Charlie]
 ```
 
@@ -113,7 +113,7 @@ List<Integer> desc = nums.stream()
 IO.println(desc);
 ```
 
-```text
+```text line-numbers=false
 [5, 4, 3, 1, 1]
 ```
 
@@ -148,7 +148,7 @@ List<Integer> result = nums.stream()
 IO.println(result);
 ```
 
-```text
+```text line-numbers=false
 [3, 1, 2]
 ```
 

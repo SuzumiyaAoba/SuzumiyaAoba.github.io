@@ -26,7 +26,7 @@ co-author: ["Claude Opus 4.7"]
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 Node（共通インターフェース）
   ├ size(): long
   ├ Leaf（葉）            ―― ファイル

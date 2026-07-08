@@ -14,7 +14,7 @@ co-author: ["Claude Opus 4.7"]
 
 配列でいちばん大切なルールは、**インデックスは `0` から始まる**ということです。
 
-```text
+```text line-numbers=false
 scores:  [ 80 ][ 95 ][ 70 ][ 60 ][ 100 ]
    番号:    0     1     2     3      4
 ```
@@ -37,7 +37,7 @@ int[] scores = {80, 95, 70, 60, 100};
 
 それぞれの要素を取り出してみましょう。
 
-```text
+```text line-numbers=false
 jshell> scores[0]
 $2 ==> 80
 
@@ -56,7 +56,7 @@ int first = scores[0];
 IO.println("1人目の点数は " + scores[0] + " 点です");
 ```
 
-```text
+```text line-numbers=false
 1人目の点数は 80 点です
 ```
 
@@ -73,7 +73,7 @@ scores[0] = 88;
 
 書き換えたあとの配列を確認してみましょう。
 
-```text
+```text line-numbers=false
 jshell> scores
 scores ==> int[5] { 88, 95, 70, 60, 100 }
 ```
@@ -89,7 +89,7 @@ scores[1] = 95;
 scores[2] = 70;
 ```
 
-```text
+```text line-numbers=false
 jshell> scores
 scores ==> int[3] { 80, 95, 70 }
 ```

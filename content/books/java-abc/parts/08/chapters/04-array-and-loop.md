@@ -20,7 +20,7 @@ co-author: ["Claude Opus 4.7"]
 int[] scores = {80, 95, 70, 60, 100};
 ```
 
-```text
+```text line-numbers=false
 jshell> scores.length
 $2 ==> 5
 ```
@@ -42,7 +42,7 @@ for (int i = 0; i < scores.length; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 0番目: 80
 1番目: 95
 2番目: 70
@@ -68,7 +68,7 @@ for (int i = 0; i < scores.length; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> sum
 sum ==> 405
 ```
@@ -98,7 +98,7 @@ for (int i = 1; i < scores.length; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> max
 max ==> 100
 ```

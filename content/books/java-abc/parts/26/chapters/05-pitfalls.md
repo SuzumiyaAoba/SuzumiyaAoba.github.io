@@ -24,7 +24,7 @@ String f(Object o) {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 先行するcaseラベルが、このcaseラベルよりも優位です
 ```
 
@@ -48,7 +48,7 @@ String f(Object o) {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: switch式がすべての可能な入力値をカバーしていません
 ```
 

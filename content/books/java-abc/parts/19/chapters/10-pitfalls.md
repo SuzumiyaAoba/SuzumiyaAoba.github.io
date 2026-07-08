@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7", "Claude Opus 4.8"]
 List<int> numbers = ...;   // ✕ 基本型は使えない
 ```
 
-```text
+```text line-numbers=false
 エラー: 予期しない型
 ```
 

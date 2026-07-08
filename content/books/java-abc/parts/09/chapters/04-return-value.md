@@ -38,7 +38,7 @@ int sum = add(3, 5);
 
 `add(3, 5)` が `8` を返すので、`sum` には `8` が入ります。
 
-```text
+```text line-numbers=false
 jshell> int sum = add(3, 5);
 sum ==> 8
 ```
@@ -68,7 +68,7 @@ boolean isEven(int n) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> average(3, 4)
 $3 ==> 3.5
 
@@ -98,7 +98,7 @@ void check(int n) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> check(-3)
 マイナスです
 
@@ -127,7 +127,7 @@ String grade(int score) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> grade(95)
 $2 ==> "A"
 

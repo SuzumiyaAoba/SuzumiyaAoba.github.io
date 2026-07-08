@@ -128,7 +128,7 @@ co-author: ["Claude Opus 4.7"]
 
 ### 3. メタ情報が付かない
 
-```text
+```text line-numbers=false
 [INFO ] 2026-06-18 18:17:44.374 [main] c.e.log.LogDemoApplication - 注文を受け付けました
 ```
 

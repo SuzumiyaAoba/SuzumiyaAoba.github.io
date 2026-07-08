@@ -118,7 +118,7 @@ public class ConsoleMailSender implements MailSender { ... }
 
 Spring の中で起きていることを、図にするとこうなります。
 
-```text
+```text line-numbers=false
 [起動]
   ApplicationContext が、@Component などの付いたクラスを探す
         ↓
@@ -164,7 +164,7 @@ DI コンテナは、その典型例です。
 Spring Boot の場合、**`@SpringBootApplication` が付いたクラスのパッケージ**を起点として、**そこから下のパッケージ全体**を自動でスキャンします。
 これを **コンポーネントスキャン**（component scan）と呼びます。詳しくは第4節で扱います。
 
-```text
+```text line-numbers=false
 com.example.shop              ← @SpringBootApplication
 com.example.shop.order        ← スキャンされる
 com.example.shop.user         ← スキャンされる

@@ -14,7 +14,7 @@ llm: true
 
 第41章・第48章の繰り返しになりますが、これは何度言っても足りません。
 
-```text
+```text line-numbers=false
 # NG
 $ java -XX:StartFlightRecording=duration=10s MyApp
 ```
@@ -22,7 +22,7 @@ $ java -XX:StartFlightRecording=duration=10s MyApp
 起動直後の 10 秒は、**JIT がまだ仕事しきっていない**状態です。
 ここで取ったプロファイルは、本来知りたい性能を**反映していません**。
 
-```text
+```text line-numbers=false
 # OK
 $ java -XX:StartFlightRecording=delay=30s,duration=2m MyApp
 ```
@@ -33,7 +33,7 @@ $ java -XX:StartFlightRecording=delay=30s,duration=2m MyApp
 
 ## つまずき2: 「**1 回の計測で結論**」
 
-```text
+```text line-numbers=false
 $ java -XX:StartFlightRecording=duration=60s MyApp
 # 「`Foo.process` が 30 % だった！直そう」
 ```
@@ -53,7 +53,7 @@ $ java -XX:StartFlightRecording=duration=60s MyApp
 
 特に古いプロファイラ（インストルメンテーション系）では、**プロファイラ自身が遅さの原因**になります。
 
-```text
+```text line-numbers=false
 # プロファイラ ON: 100 ms
 # プロファイラ OFF: 10 ms
 ```

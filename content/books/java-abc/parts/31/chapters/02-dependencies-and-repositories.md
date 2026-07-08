@@ -130,7 +130,7 @@ GroupId をドットで分けた階層になっているのがポイントです
 
 このような **「依存の依存」を、自動でたどって取ってきてくれる**しくみを、**推移的依存関係**（transitive dependencies）と呼びます。
 
-```text
+```text line-numbers=false
 あなたのプロジェクト
   └── jackson-databind:2.18.0
         ├── jackson-core:2.18.0           ← 推移的に追加

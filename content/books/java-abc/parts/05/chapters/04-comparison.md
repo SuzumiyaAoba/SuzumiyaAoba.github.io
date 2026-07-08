@@ -20,7 +20,7 @@ co-author: ["Claude Opus 4.7"]
 
 jshell で試してみましょう。結果が `boolean` になることに注目してください。
 
-```text
+```text line-numbers=false
 jshell> boolean ok = 5 > 3;
 ok ==> true
 jshell> boolean same = 5 == 3;

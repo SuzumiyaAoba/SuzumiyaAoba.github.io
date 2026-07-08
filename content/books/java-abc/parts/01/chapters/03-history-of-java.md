@@ -55,7 +55,7 @@ Java が掲げていた「いろいろな環境で同じように動く」とい
 
 この特徴は、有名なスローガンで表現されました。
 
-```text
+```text line-numbers=false
 Write Once, Run Anywhere
 （一度書けば、どこでも動く）
 ```

@@ -81,7 +81,7 @@ public class AnnoDemo {
 
 実行すると、
 
-```text
+```text line-numbers=false
 [TEST] addition
 1+1=2
 [TEST] testSub

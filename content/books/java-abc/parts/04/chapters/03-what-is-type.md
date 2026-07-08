@@ -36,7 +36,7 @@ co-author: ["Claude Opus 4.7"]
 
 整数を入れるための `int` の箱に、文字を入れようとすると、どうなるでしょうか。jshell で試してみましょう。
 
-```text
+```text line-numbers=false
 jshell> int bad = "abc";
 |  エラー:
 |  不適合な型: java.lang.Stringをintに変換できません:

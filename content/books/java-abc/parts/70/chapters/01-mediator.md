@@ -44,7 +44,7 @@ saveButton.onClick = () -> {
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
        Mediator
       ↗  ↑  ↖
     Btn  Txt  Lbl  ← 部品（Colleagues）

@@ -20,7 +20,7 @@ llm: true
 
 それぞれの**寿命**を、`.java` から実行まで追ってみます。
 
-```text
+```text line-numbers=false
 [.java ソース]
    │
    ├── SOURCE ── ここで消える（javac が消す）
@@ -59,7 +59,7 @@ class Child extends Parent {
 
 ここで `helo`（typo）と書くと、コンパイラが、
 
-```text
+```text line-numbers=false
 error: method does not override or implement a method from a supertype
     @Override
     ^

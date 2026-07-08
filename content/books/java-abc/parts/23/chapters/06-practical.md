@@ -47,7 +47,7 @@ List<String> fruitNames = products.stream()
 IO.println(fruitNames);
 ```
 
-```text
+```text line-numbers=false
 [いちご, りんご, バナナ]
 ```
 
@@ -76,7 +76,7 @@ Map<String, Double> avgByCategory = products.stream()
 IO.println(avgByCategory);
 ```
 
-```text
+```text line-numbers=false
 {果物=216.66666666666666, 野菜=140.0}
 ```
 
@@ -98,7 +98,7 @@ int total = products.stream()
 IO.println(total);
 ```
 
-```text
+```text line-numbers=false
 930
 ```
 
@@ -119,7 +119,7 @@ String expensive = products.stream()
 IO.println(expensive);
 ```
 
-```text
+```text line-numbers=false
 トマト, いちご
 ```
 

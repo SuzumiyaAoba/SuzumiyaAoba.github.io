@@ -37,7 +37,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 止まれ
 ```
@@ -77,7 +77,7 @@ String action = switch (signal) {
 };
 ```
 
-```text
+```text line-numbers=false
 エラー: switch式がすべての可能な入力値をカバーしていません
 ```
 

@@ -116,7 +116,7 @@ llm: true
 
 Docker・Kubernetes でアプリを動かすときの、現代的な設定例を挙げます。
 
-```text
+```text line-numbers=false
 $ java \
   -XX:+UseG1GC \
   -XX:MaxRAMPercentage=75.0 \
@@ -144,7 +144,7 @@ $ java \
 Java 12 以降の G1 は、**`-XX:G1PeriodicGCInterval`** などで、アイドル時にヒープを縮める機能があります。
 これにより、コンテナのメモリ実使用量を**定期的に**コミット解除して、ホストに返せます。
 
-```text
+```text line-numbers=false
 $ java -XX:G1PeriodicGCInterval=5000 ...
 ```
 

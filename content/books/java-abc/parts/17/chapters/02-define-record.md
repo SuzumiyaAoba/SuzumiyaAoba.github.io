@@ -26,7 +26,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Point[x=3, y=4]
 ```
@@ -50,7 +50,7 @@ IO.println(p.x());   // x を取り出す → 3
 IO.println(p.y());   // y を取り出す → 4
 ```
 
-```text
+```text line-numbers=false
 3
 4
 ```
@@ -73,7 +73,7 @@ Point p = new Point(3, 4);
 p.x = 10;    // ✕ x は外から触れず、しかも変更もできない
 ```
 
-```text
+```text line-numbers=false
 エラー: xはPointでprivateアクセスされます
 ```
 
@@ -110,7 +110,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 5.0
 ```

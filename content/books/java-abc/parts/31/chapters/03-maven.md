@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 これから、こんなプロジェクトを作ります。
 
-```text
+```text line-numbers=false
 hello-maven/
 ├── pom.xml                                    ← Maven の設定ファイル
 └── src/
@@ -182,13 +182,13 @@ class HelloTest {
 
 プロジェクトのルートで、次のコマンドを実行します。
 
-```text
+```text line-numbers=false
 $ mvn compile
 ```
 
 実機での出力（抜粋）はこうなります（初回は依存の自動ダウンロードがあるため、たくさんのログが流れます）。
 
-```text
+```text line-numbers=false
 [INFO] --- compiler:3.13.0:compile (default-compile) @ hello-maven ---
 [INFO] Recompiling the module because of changed source code.
 [INFO] Compiling 1 source file with javac [debug release 25] to target/classes
@@ -210,13 +210,13 @@ $ mvn compile
 
 ## ステップ4 ― テストを実行する
 
-```text
+```text line-numbers=false
 $ mvn test
 ```
 
 実機での出力（抜粋）。
 
-```text
+```text line-numbers=false
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -237,13 +237,13 @@ $ mvn test
 
 ## ステップ5 ― JAR を作る
 
-```text
+```text line-numbers=false
 $ mvn package
 ```
 
 実機での出力（抜粋）。
 
-```text
+```text line-numbers=false
 [INFO] Building jar: /path/to/hello-maven/target/hello-maven-1.0.0.jar
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
@@ -254,7 +254,7 @@ $ mvn package
 
 実際に動かしてみましょう。
 
-```text
+```text line-numbers=false
 $ java -cp target/hello-maven-1.0.0.jar com.example.Hello
 Hello, Maven!
 ```

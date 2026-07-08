@@ -30,7 +30,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Exception in thread "main" java.lang.ArithmeticException: / by zero
 	at Main.main(Main.java:5)
@@ -61,7 +61,7 @@ Exception in thread "main" java.lang.ArithmeticException: / by zero
 例外が発生したときに表示される情報を、**スタックトレース**（Stack Trace）と呼びます。
 これは、「**どこで、どんな例外が起きたか**」をたどるための、大切な手がかりです。
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.ArithmeticException: / by zero
 	at Main.main(Main.java:5)
 ```

@@ -33,7 +33,7 @@ for (int i = 1; i <= 10; i++) {
 
 ループのあと、`found` を確認すると、
 
-```text
+```text line-numbers=false
 jshell> found
 found ==> 4
 ```
@@ -59,7 +59,7 @@ for (int i = 1; i <= 5; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> total
 total ==> 12
 ```
@@ -93,7 +93,7 @@ for (int i = 1; i <= 10; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 2 4 6 8 10 
 ```
 

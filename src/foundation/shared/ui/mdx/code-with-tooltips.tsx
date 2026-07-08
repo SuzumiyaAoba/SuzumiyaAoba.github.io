@@ -4,6 +4,7 @@ import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
+import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
 import { tooltip } from "@/shared/ui/mdx/codehike-handlers";
@@ -64,6 +65,7 @@ export function CodeWithTooltips({
       data: { ...data, children: match.children },
     };
   });
+  const { displayMeta } = parseCodeMeta(highlighted.meta);
   const normalizedCodeblock: HighlightedCode = {
     ...highlighted,
     annotations,
@@ -71,16 +73,16 @@ export function CodeWithTooltips({
 
   return (
     <div className="my-6">
-      {highlighted.meta ? (
+      {displayMeta ? (
         <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
-          <span className="truncate">{highlighted.meta}</span>
+          <span className="truncate">{displayMeta}</span>
           <span className="text-[10px] uppercase tracking-[0.12em]">{highlighted.lang}</span>
         </div>
       ) : null}
       <CustomCodeBlock
         code={normalizedCodeblock}
         handlers={[tooltip]}
-        {...(normalizedCodeblock.meta ? { className: "rounded-t-none mt-0" } : {})}
+        {...(displayMeta ? { className: "rounded-t-none mt-0" } : {})}
       />
       {notes.length > 0 ? (
         <ul className="mt-3 space-y-1 text-xs text-muted-foreground">

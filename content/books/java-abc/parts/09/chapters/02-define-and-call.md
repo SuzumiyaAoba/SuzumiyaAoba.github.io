@@ -48,13 +48,13 @@ void greet() {
 greet();
 ```
 
-```text
+```text line-numbers=false
 こんにちは
 ```
 
 jshell で試すと、定義したときと呼び出したときで、表示が違うことがわかります。
 
-```text
+```text line-numbers=false
 jshell> void greet() {
    ...>     IO.println("こんにちは");
    ...> }
@@ -87,7 +87,7 @@ void greet() {
 
 これを `Greet.java` という名前で保存して実行すると、
 
-```text
+```text line-numbers=false
 $ java Greet.java
 こんにちは
 こんにちは

@@ -16,7 +16,7 @@ co-author: ["Claude Opus 4.7"]
 
 「設定ファイルの中に、こんな条件を書きたい」とします。
 
-```text
+```text line-numbers=false
 age >= 20 AND status == "active"
 ```
 
@@ -33,7 +33,7 @@ age >= 20 AND status == "active"
 
 文法は、BNF のように再帰的に書けます。
 
-```text
+```text line-numbers=false
 expr ::= number
        | expr "+" expr
        | expr "*" expr
@@ -41,7 +41,7 @@ expr ::= number
 
 これを Java のクラスにそのまま対応させます。
 
-```text
+```text line-numbers=false
 Expr（抽象）
 ├ NumberExpr     ←  number
 ├ AddExpr        ←  expr "+" expr

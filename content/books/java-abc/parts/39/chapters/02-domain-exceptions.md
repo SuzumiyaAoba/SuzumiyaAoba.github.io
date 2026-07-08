@@ -136,7 +136,7 @@ throw new BookSaveException("...", originalSqlException);
 
 業務エラーが増えてくると、こんな階層を作ります。
 
-```text
+```text line-numbers=false
 DomainException
   ├── NotFoundException
   │     ├── BookNotFoundException

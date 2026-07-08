@@ -22,7 +22,7 @@ co-author: ["Claude Opus 4.7"]
 
 `&&` は「両方とも成り立つ」、`||` は「どちらか一方でも成り立つ」を表します。
 
-```text
+```text line-numbers=false
 jshell> boolean a = true && false;
 a ==> false
 jshell> boolean b = true || false;
@@ -34,7 +34,7 @@ b ==> true
 
 実際の条件と組み合わせると、わかりやすくなります。
 
-```text
+```text line-numbers=false
 jshell> int score = 80;
 score ==> 80
 jshell> boolean pass = score >= 0 && score <= 100;
@@ -49,7 +49,7 @@ pass ==> true
 
 `!` は、`boolean` の値を反転します。`true` を `false` に、`false` を `true` にします。
 
-```text
+```text line-numbers=false
 jshell> boolean closed = !true;
 closed ==> false
 ```
@@ -87,7 +87,7 @@ int x = 0;
 boolean safe = (x != 0) && (10 / x > 1);
 ```
 
-```text
+```text line-numbers=false
 jshell> safe
 safe ==> false
 ```

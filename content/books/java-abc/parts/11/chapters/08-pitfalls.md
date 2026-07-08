@@ -32,7 +32,7 @@ Car c = null;       // null を入れた
 c.speed = 60;       // null のフィールドにアクセス
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.NullPointerException: Cannot assign field "speed" because "c" is null
 ```
 
@@ -63,7 +63,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "c.name" is null
 ```
 

@@ -49,7 +49,7 @@ thread.start();
 IO.println("メインの処理");
 ```
 
-```text
+```text line-numbers=false
 （実行の一例 ― 順番は毎回変わりうる）
 メインの処理
 別スレッドの処理
@@ -73,7 +73,7 @@ thread.join();                    // このスレッドが終わるまで待つ
 IO.println("メインの処理");
 ```
 
-```text
+```text line-numbers=false
 別スレッドの処理
 メインの処理
 ```
@@ -100,7 +100,7 @@ for (int i = 1; i <= 3; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 （実行の一例 ― 順番は毎回変わりうる）
 スレッド 2 が動いています
 スレッド 1 が動いています

@@ -45,7 +45,7 @@ IO.println(length.apply("hello"));
 IO.println(length.apply("こんにちは"));
 ```
 
-```text
+```text line-numbers=false
 5
 5
 ```
@@ -66,7 +66,7 @@ IO.println(isEven.test(4));
 IO.println(isEven.test(7));
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -86,7 +86,7 @@ Consumer<String> printer = s -> IO.println("受け取った: " + s);
 printer.accept("やあ");
 ```
 
-```text
+```text line-numbers=false
 受け取った: やあ
 ```
 
@@ -98,7 +98,7 @@ List<String> names = List.of("佐藤", "鈴木", "高橋");
 names.forEach(name -> IO.println(name));   // 各要素を Consumer で処理
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 高橋
@@ -116,7 +116,7 @@ Supplier<String> greeting = () -> "こんにちは";
 IO.println(greeting.get());
 ```
 
-```text
+```text line-numbers=false
 こんにちは
 ```
 
@@ -134,7 +134,7 @@ BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;   // 2つ受け取�
 IO.println(add.apply(3, 5));
 ```
 
-```text
+```text line-numbers=false
 8
 ```
 

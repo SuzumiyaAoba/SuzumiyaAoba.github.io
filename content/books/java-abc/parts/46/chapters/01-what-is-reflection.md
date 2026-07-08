@@ -54,7 +54,7 @@ int len = s.length();
 
 これらをひとつなぎにすると、
 
-```text
+```text line-numbers=false
 Class<?>
   ├── getDeclaredFields()      → Field[]
   ├── getDeclaredMethods()     → Method[]
@@ -71,7 +71,7 @@ Class<?>
 
 `String.class` を覗いてみましょう。
 
-```text
+```text line-numbers=false
 jshell> "hello".getClass()
 $1 ==> class java.lang.String
 
@@ -113,7 +113,7 @@ $3 ==> byte[] java.lang.String.value()
 リフレクションで触れる型情報は、**コンパイル時の型**そのものではありません。
 Java のジェネリクスには **型消去**（type erasure）があり、実行時には型引数が消えています。
 
-```text
+```text line-numbers=false
 jshell> List<String> list = new ArrayList<>();
 jshell> list.getClass().getName()
 $1 ==> "java.util.ArrayList"
@@ -140,7 +140,7 @@ $3 ==> "E"
 `Class<?>` という型は、ちょっと変わった存在です。
 インスタンスは**クラスごとに 1 つ**しかなく、その JVM 上で**ユニーク**です。
 
-```text
+```text line-numbers=false
 jshell> String.class == "x".getClass()
 $1 ==> true
 

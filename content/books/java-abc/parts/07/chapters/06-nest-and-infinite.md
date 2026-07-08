@@ -25,7 +25,7 @@ for (int i = 1; i <= 3; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 1 2 3 
 2 4 6 
 3 6 9 
@@ -61,7 +61,7 @@ while (true) {
 
 ループのあと、`count` を確認すると、
 
-```text
+```text line-numbers=false
 jshell> count
 count ==> 3
 ```

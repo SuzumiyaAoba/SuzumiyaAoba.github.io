@@ -62,7 +62,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 この図形の面積は 314.0 です
 ```

@@ -49,7 +49,7 @@ scores.add(70);
 IO.println(scores);
 ```
 
-```text
+```text line-numbers=false
 [80, 95, 70]
 ```
 
@@ -96,7 +96,7 @@ List<Integer> scores = new ArrayList<>();  // Integer のリスト
 
 Java のコレクションには、たくさんの種類がありますが、大きくは次のように整理できます。
 
-```text
+```text line-numbers=false
 コレクション（たくさんのデータをまとめる）
 ├─ List … 順番に並べる。重複OK            （ArrayList など）
 ├─ Set  … 重複のない集まり                （HashSet など）

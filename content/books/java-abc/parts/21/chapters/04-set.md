@@ -38,7 +38,7 @@ tags.add("Java");        // 同じ「Java」をもう一度
 IO.println(tags.size());
 ```
 
-```text
+```text line-numbers=false
 2
 ```
 
@@ -54,7 +54,7 @@ IO.println(tags.add("Java"));    // 新しく追加された
 IO.println(tags.add("Java"));    // すでにあるので追加されなかった
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -75,7 +75,7 @@ IO.println(visited.contains("page1"));   // 訪問済みか
 IO.println(visited.contains("page3"));
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -95,7 +95,7 @@ Set<String> unique = new HashSet<>(withDup);   // Set に入れ直す
 IO.println(unique.size());
 ```
 
-```text
+```text line-numbers=false
 3
 ```
 
@@ -121,7 +121,7 @@ Set<Integer> sorted = new TreeSet<>(List.of(3, 1, 2, 1));
 IO.println(sorted);
 ```
 
-```text
+```text line-numbers=false
 [1, 2, 3]
 ```
 

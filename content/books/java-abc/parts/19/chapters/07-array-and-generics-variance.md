@@ -39,7 +39,7 @@ public class ArrayCov {
 ところが、`arr` の実体は `String[]` です。文字列の配列に数値を入れることはできません。
 そのため、実行すると次のようになります。
 
-```text
+```text line-numbers=false
 $ java ArrayCov.java
 こんにちは
 Exception in thread "main" java.lang.ArrayStoreException: java.lang.Integer
@@ -67,7 +67,7 @@ public class GenInv {
 }
 ```
 
-```text
+```text line-numbers=false
 $ javac GenInv.java
 GenInv.java:5: エラー: 不適合な型: List<String>をList<Object>に変換できません:
         List<Object> objs = strs;   // これはできない

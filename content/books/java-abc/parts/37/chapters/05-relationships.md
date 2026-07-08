@@ -29,7 +29,7 @@ co-author: ["Claude Opus 4.7"]
 
 第3節までの `Book` クラスを、こんな関係に変えてみます。
 
-```text
+```text line-numbers=false
 authors                           books
 ─────────                        ─────────
 id  | name                       id  | title | author_id (FK)

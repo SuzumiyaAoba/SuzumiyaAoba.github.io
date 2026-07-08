@@ -34,7 +34,7 @@ double add(double a, double b) {
 
 呼び出すと、Java が**渡した引数に合うメソッドを、自動的に選んで**くれます。
 
-```text
+```text line-numbers=false
 jshell> add(1, 2)
 $4 ==> 3
 
@@ -100,7 +100,7 @@ int sum(int... nums) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> sum(1, 2, 3, 4)
 $2 ==> 10
 

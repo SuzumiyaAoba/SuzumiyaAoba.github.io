@@ -30,7 +30,7 @@ if (n >= 80) {
 
 `n` は 75 なので、結果はこうなります。
 
-```text
+```text line-numbers=false
 良
 ```
 
@@ -85,7 +85,7 @@ if (age <= 5) {
 IO.println("料金は " + fee + " 円です");
 ```
 
-```text
+```text line-numbers=false
 料金は 1000 円です
 ```
 

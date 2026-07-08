@@ -24,7 +24,7 @@ for (String name : names) {
 }
 ```
 
-```text
+```text line-numbers=false
 佐藤
 鈴木
 高橋
@@ -73,7 +73,7 @@ for (var entry : scores.entrySet()) {
 }
 ```
 
-```text
+```text line-numbers=false
 高橋 : 70
 鈴木 : 95
 佐藤 : 80
@@ -114,7 +114,7 @@ for (int score : scores.values()) {
 IO.println("合計: " + total);
 ```
 
-```text
+```text line-numbers=false
 鈴木
 佐藤
 合計: 175

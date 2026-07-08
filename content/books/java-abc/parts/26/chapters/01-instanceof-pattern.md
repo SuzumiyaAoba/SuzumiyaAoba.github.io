@@ -53,7 +53,7 @@ if (obj instanceof String s && s.length() > 2) {
 }
 ```
 
-```text
+```text line-numbers=false
 長い文字列: Java
 ```
 
@@ -81,7 +81,7 @@ IO.println(safeLength("hello"));
 IO.println(safeLength(123));
 ```
 
-```text
+```text line-numbers=false
 5
 0
 ```

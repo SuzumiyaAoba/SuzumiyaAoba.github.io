@@ -178,7 +178,7 @@ OrderService orderService = new OrderService(userRepo, mailSender);
 
 この「組み立て」の役目を引き受けるのが、**DI コンテナ**です。
 
-```text
+```text line-numbers=false
 DI コンテナ:
   「私が、すべての部品を覚えておきます。
    どこかで OrderService が必要になったら、

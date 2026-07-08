@@ -75,7 +75,7 @@ System.out.println("はじめまして");
 
 実行すると、次のように表示されます。
 
-```text
+```text line-numbers=false
 はじめまして
 ```
 
@@ -127,7 +127,7 @@ System.out.println("こんにちは");
 
 それぞれの表示のあとに改行が入るので、2行に分かれて表示されます。
 
-```text
+```text line-numbers=false
 おはよう
 こんにちは
 ```
@@ -141,7 +141,7 @@ System.out.print("こんにちは");
 
 改行が入らないので、2つの文字がそのままつながって表示されます。
 
-```text
+```text line-numbers=false
 おはようこんにちは
 ```
 
@@ -169,7 +169,7 @@ System.out.println(1 + 2);     // 計算した結果の 3
 
 実行すると、次のように表示されます。
 
-```text
+```text line-numbers=false
 100
 3
 ```
@@ -184,7 +184,7 @@ System.out.println("1 + 2");   // ← "..." で囲むと、文字としてその
 System.out.println(1 + 2);     // ← 囲まないと、計算した結果が表示
 ```
 
-```text
+```text line-numbers=false
 1 + 2
 3
 ```

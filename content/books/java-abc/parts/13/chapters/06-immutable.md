@@ -69,7 +69,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: final変数xに値を割り当てることはできません
         p.x = 10;
          ^
@@ -143,7 +143,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 p1: (3, 4)
 p2: (8, 4)

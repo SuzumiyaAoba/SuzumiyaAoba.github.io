@@ -14,7 +14,7 @@ llm: true
 
 Java 1.0 から続いてきた**クラスパス**（classpath）は、シンプルで強力ですが、規模が大きくなると問題を起こします。
 
-```text
+```text line-numbers=false
 $ java -cp lib/spring-core-5.0.jar:lib/spring-beans-5.0.jar:lib/log4j-2.0.jar:... MyApp
 ```
 
@@ -25,7 +25,7 @@ $ java -cp lib/spring-core-5.0.jar:lib/spring-beans-5.0.jar:lib/log4j-2.0.jar:..
 同じライブラリの異なるバージョンが、クラスパスに 2 つ入る、ということが起きます。
 たとえば、`A.jar` が `slf4j-1.7` を要求し、`B.jar` が `slf4j-2.0` を要求すると、
 
-```text
+```text line-numbers=false
 -cp slf4j-1.7.jar:slf4j-2.0.jar:A.jar:B.jar
 ```
 
@@ -39,7 +39,7 @@ $ java -cp lib/spring-core-5.0.jar:lib/spring-beans-5.0.jar:lib/log4j-2.0.jar:..
 
 `Foo.jar` をコンパイル時に渡しても、実行時のクラスパスに入れ忘れると、
 
-```text
+```text line-numbers=false
 java.lang.ClassNotFoundException: com.foo.Bar
 ```
 

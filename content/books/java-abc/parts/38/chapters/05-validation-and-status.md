@@ -100,13 +100,13 @@ public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest
 不正な入力で POST すると、`MethodArgumentNotValidException` という例外が投げられます。
 Spring のデフォルトでは、**400 Bad Request** + 詳しいエラーメッセージが返ります。
 
-```text
+```text line-numbers=false
 $ curl -X POST http://localhost:8080/api/books \
        -H "Content-Type: application/json" \
        -d '{"title":"","author":"","publishedYear":1800}' -i
 ```
 
-```text
+```text line-numbers=false
 HTTP/1.1 400
 Content-Type: application/json
 

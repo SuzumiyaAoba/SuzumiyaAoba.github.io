@@ -26,7 +26,7 @@ co-author: ["Claude Opus 4.7"]
 整数を入れる箱が `int`（イント、integer ＝ 整数の略）です。
 ここまで何度も使ってきた、いちばん身近な型ですね。
 
-```text
+```text line-numbers=false
 jshell> int i = 100;
 i ==> 100
 ```
@@ -36,7 +36,7 @@ i ==> 100
 
 ですが、それを超える大きな数を扱いたいときは、`long`（ロング）を使います。
 
-```text
+```text line-numbers=false
 jshell> long big = 10000000000L;
 big ==> 10000000000
 ```
@@ -57,7 +57,7 @@ big ==> 10000000000
 
 `3.14` や `100.5` のような小数を入れる箱が `double`（ダブル）です。
 
-```text
+```text line-numbers=false
 jshell> double d = 3.14;
 d ==> 3.14
 ```
@@ -71,7 +71,7 @@ d ==> 3.14
 
 `boolean`（ブーリアン）は、**`true`（真・はい）** か **`false`（偽・いいえ）** の、どちらか一方だけを入れられる型です。
 
-```text
+```text line-numbers=false
 jshell> boolean isOpen = true;
 isOpen ==> true
 ```
@@ -86,7 +86,7 @@ isOpen ==> true
 `char`（チャー、character ＝ 文字の略）は、**たった1文字**を入れる型です。
 文字は、**シングルクォート `'`** で囲みます。
 
-```text
+```text line-numbers=false
 jshell> char initial = 'A';
 initial ==> 'A'
 ```

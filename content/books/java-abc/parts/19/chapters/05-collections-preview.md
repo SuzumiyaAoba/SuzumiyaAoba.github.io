@@ -64,7 +64,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 人数: 3
 佐藤

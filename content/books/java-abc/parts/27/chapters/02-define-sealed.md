@@ -53,7 +53,7 @@ record Rectangle(double w, double h) implements Shape {}
 final class Square implements Shape {}
 ```
 
-```text
+```text line-numbers=false
 エラー: クラスはシール・クラスShapeを拡張できません('permits'句に指定されていないためです)
 ```
 

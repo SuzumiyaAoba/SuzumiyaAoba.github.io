@@ -18,7 +18,7 @@ co-author: ["Claude Opus 4.7"]
 String s = "Hello";
 ```
 
-```text
+```text line-numbers=false
 jshell> s.length()
 $2 ==> 5
 ```
@@ -44,7 +44,7 @@ $2 ==> 5
 String s = "Hello";
 ```
 
-```text
+```text line-numbers=false
 jshell> s.charAt(0)
 $2 ==> 'H'
 
@@ -61,7 +61,7 @@ $4 ==> 'o'
 最後の文字を取り出したいときは、`charAt(s.length() - 1)` とします。
 長さが5なら、最後のインデックスは `4`（＝長さ − 1）だからです。配列と同じ考え方ですね。
 
-```text
+```text line-numbers=false
 jshell> s.charAt(s.length() - 1)
 $5 ==> 'o'
 ```
@@ -79,7 +79,7 @@ for (int i = 0; i < s.length(); i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 0: J
 1: a
 2: v

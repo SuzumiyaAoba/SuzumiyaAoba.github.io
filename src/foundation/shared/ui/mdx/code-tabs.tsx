@@ -3,6 +3,7 @@
 import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
 import { useEffect, useMemo, useState } from "react";
 
+import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 
 type CodeWithTabsProps = {
@@ -21,7 +22,10 @@ export function CodeWithTabs(props: CodeWithTabsProps) {
 function CodeTabs({ tabs }: { tabs: RawCode[] }) {
   const [highlighted, setHighlighted] = useState<HighlightedCode[]>([]);
   const [active, setActive] = useState(0);
-  const labels = useMemo(() => tabs.map((tab) => tab.meta || tab.lang || "tab"), [tabs]);
+  const labels = useMemo(
+    () => tabs.map((tab) => parseCodeMeta(tab.meta).displayMeta || tab.lang || "tab"),
+    [tabs],
+  );
 
   useEffect(() => {
     let cancelled = false;

@@ -29,7 +29,7 @@ for (int s : scores) {
 }
 ```
 
-```text
+```text line-numbers=false
 80
 95
 70
@@ -68,7 +68,7 @@ for (int s : scores) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> total
 total ==> 245
 ```
@@ -95,7 +95,7 @@ for (int x : nums) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> nums
 nums ==> int[3] { 1, 2, 3 }   // 元の配列は変わらない！
 ```
@@ -108,7 +108,7 @@ for (int i = 0; i < nums.length; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> nums
 nums ==> int[3] { 2, 4, 6 }   // こちらは書き換わる
 ```

@@ -14,7 +14,7 @@ GC は、自分が動くたびに**ログを出します**。
 
 GC ログは、起動オプションで取得します。Java 9 以降は `-Xlog:gc` という統一フォーマットになりました。
 
-```text
+```text line-numbers=false
 # 最低限のログ
 $ java -Xlog:gc MyApp
 
@@ -37,7 +37,7 @@ $ java -Xlog:gc:file=gc.log::filecount=10,filesize=10M MyApp
 
 実機で `GcDemo2.java`（毎ループで 100 KB の `byte[]` を確保）を、`-Xmx64m` で動かしたログです。
 
-```text
+```text line-numbers=false
 [0.004s][info][gc] Using G1
 [0.019s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 35M->4M(64M) 0.612ms
 ```
@@ -84,7 +84,7 @@ $ java -Xlog:gc:file=gc.log::filecount=10,filesize=10M MyApp
 「メモリリークがある」状態をログから見破る練習をしてみましょう。
 `-Xmx64m` で、参照を `List` に貯め続けるアプリを動かすと、OOM 直前にこんなログが出ます。
 
-```text
+```text line-numbers=false
 [0.022s][info][gc] GC(4) Pause Young (Prepare Mixed) (G1 Humongous Allocation) (Evacuation Failure: Allocation) 61M->61M(64M) 0.228ms
 [0.023s][info][gc] GC(5) Pause Full (G1 Compaction Pause) 61M->61M(64M) 1.205ms
 [0.023s][info][gc] GC(6) Pause Young (Concurrent Start) (G1 Evacuation Pause) 62M->62M(64M) 0.106ms
@@ -113,7 +113,7 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 
 `-Xmx` を超えそうになる前に、JVM 自身が「**もう GC ばっかりで進まないぞ**」と諦めて投げてくる例外があります。
 
-```text
+```text line-numbers=false
 java.lang.OutOfMemoryError: GC overhead limit exceeded
 ```
 
@@ -128,7 +128,7 @@ java.lang.OutOfMemoryError: GC overhead limit exceeded
 
 ZGC のログは、G1 とはだいぶ違います。
 
-```text
+```text line-numbers=false
 $ java -XX:+UseZGC -Xlog:gc -Xmx256m MyApp
 [0.012s][info][gc] Using The Z Garbage Collector
 [1.234s][info][gc] GC(0) Garbage Collection (Major Collection (Allocation Rate)) 132M(51%)->24M(9%) 0.823ms

@@ -93,7 +93,7 @@ void throwsWhenUserNotFound() {
 「ユーザーが見つからないときには、メールを送らないはず」と断定しています。
 実機で動かすと、次のように成功します。
 
-```text
+```text line-numbers=false
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 ```

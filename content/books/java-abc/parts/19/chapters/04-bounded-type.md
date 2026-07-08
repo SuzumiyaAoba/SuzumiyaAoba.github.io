@@ -88,7 +88,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 6.0
 4.0
@@ -102,7 +102,7 @@ String[] strings = { "a", "b" };
 sumAll(strings);   // String は Number の仲間ではない
 ```
 
-```text
+```text line-numbers=false
 エラー: クラス Mainのメソッド sumAllは指定された型に適用できません。
   理由: 推論変数Tには、不適合な境界があります
     上限: Number

@@ -152,7 +152,7 @@ for (PaymentProcessor p : loader) {
 
 JPMS は、**モジュール間の循環依存**を**禁止**します。
 
-```text
+```text line-numbers=false
 モジュール A     requires B
 モジュール B     requires A    ← これは NG
 ```

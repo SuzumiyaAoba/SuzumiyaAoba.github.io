@@ -20,7 +20,7 @@ String html = "<ul>\n  <li>りんご</li>\n  <li>みかん</li>\n</ul>";
 IO.println(html);
 ```
 
-```text
+```text line-numbers=false
 <ul>
   <li>りんご</li>
   <li>みかん</li>
@@ -46,7 +46,7 @@ String html = """
 IO.println(html);
 ```
 
-```text
+```text line-numbers=false
 <ul>
   <li>りんご</li>
   <li>みかん</li>

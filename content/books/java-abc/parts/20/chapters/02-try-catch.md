@@ -55,7 +55,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 数値ではありません: あいうえお
 プログラムは続きます
@@ -86,7 +86,7 @@ try {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー内容: For input string: "あいうえお"
 ```
 
@@ -116,7 +116,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 配列の範囲外です
 ```

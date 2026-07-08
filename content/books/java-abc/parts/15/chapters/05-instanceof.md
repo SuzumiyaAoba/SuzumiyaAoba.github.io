@@ -24,7 +24,7 @@ IO.println(a instanceof Dog);   // a の中身は Dog か？
 IO.println(a instanceof Cat);   // a の中身は Cat か？
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```
@@ -63,7 +63,7 @@ Animal a = new Cat();   // 中身は Cat
 Dog dog = (Dog) a;      // Cat を Dog へ無理にキャスト
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.ClassCastException: class Cat cannot be cast to class Dog
 ```
 
@@ -133,7 +133,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ がボールを取ってくる
 タマ は犬ではありません

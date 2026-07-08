@@ -65,7 +65,7 @@ public class CovRet {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CovRet.java
 Cat
 Cat

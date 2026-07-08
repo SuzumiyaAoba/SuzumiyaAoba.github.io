@@ -16,7 +16,7 @@ co-author: ["Claude Opus 4.7"]
 プログラムでは、「変数の値を、いまの値をもとに更新する」ことがよくあります。
 たとえば、得点に 5 点を加える、という操作です。
 
-```text
+```text line-numbers=false
 jshell> int score = 10;
 score ==> 10
 jshell> score = score + 5;
@@ -60,7 +60,7 @@ score += 5;   // score = score + 5 と同じ
 - **`++`**（インクリメント）… 1 を足す。`i = i + 1` と同じ
 - **`--`**（デクリメント）… 1 を引く。`i = i - 1` と同じ
 
-```text
+```text line-numbers=false
 jshell> int i = 5;
 i ==> 5
 jshell> i = i + 1;
@@ -91,7 +91,7 @@ int a = 5;
 int b = a++;   // 後置: b には「増やす前」の 5 が入り、その後 a が 6 になる
 ```
 
-```text
+```text line-numbers=false
 jshell> a
 a ==> 6
 jshell> b
@@ -105,7 +105,7 @@ int c = 5;
 int d = ++c;   // 前置: 先に c が 6 になり、その 6 が d に入る
 ```
 
-```text
+```text line-numbers=false
 jshell> c
 c ==> 6
 jshell> d

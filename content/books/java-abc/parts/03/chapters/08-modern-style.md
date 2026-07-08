@@ -104,13 +104,13 @@ void main() {
 
 たとえば、上のコードを `hello.java` という名前で保存し、コマンドラインから次のように実行します。
 
-```text
+```text line-numbers=false
 java hello.java
 ```
 
 すると、これまでと同じように表示されます。
 
-```text
+```text line-numbers=false
 Hello, World!
 ```
 

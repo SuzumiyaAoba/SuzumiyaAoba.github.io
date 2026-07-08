@@ -113,7 +113,7 @@ return ResponseEntity
 
 `mvn spring-boot:run` で起動して、`curl` で叩いてみます。
 
-```text
+```text line-numbers=false
 $ curl -X POST http://localhost:8080/api/books \
        -H "Content-Type: application/json" \
        -d '{"title":"新刊","author":"鈴木","publishedYear":2026}' \
@@ -122,7 +122,7 @@ $ curl -X POST http://localhost:8080/api/books \
 
 実機での出力：
 
-```text
+```text line-numbers=false
 HTTP/1.1 201
 Location: /api/books/4
 Content-Type: application/json
@@ -204,7 +204,7 @@ public void delete(@PathVariable Long id) {
 
 実行すると、
 
-```text
+```text line-numbers=false
 $ curl -X DELETE http://localhost:8080/api/books/1 -i
 HTTP/1.1 204
 Content-Length: 0

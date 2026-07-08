@@ -67,7 +67,7 @@ System.out.println("Hello, World!");
 
 たとえば、`jshell` で次のように打つと、
 
-```text
+```text line-numbers=false
 jshell> int price = 100;
 price ==> 100
 ```

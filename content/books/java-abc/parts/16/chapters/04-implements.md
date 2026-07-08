@@ -82,7 +82,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 面積: 314.0
 面積: 20.0
@@ -128,7 +128,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 画面に表示する
 ファイルに保存する

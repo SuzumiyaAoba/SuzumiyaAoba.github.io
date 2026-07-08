@@ -145,7 +145,7 @@ int sum = IntStream.of(arr).sum();
 `Stream` は、**1 回しか消費できません**。
 2 回 forEach すると、
 
-```text
+```text line-numbers=false
 java.lang.IllegalStateException: stream has already been operated upon or closed
 ```
 

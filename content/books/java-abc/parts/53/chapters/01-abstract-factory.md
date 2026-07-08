@@ -33,7 +33,7 @@ TextField text = new LightTextField();    // 家族違い!
 
 ## 構造と登場人物
 
-```text
+```text line-numbers=false
 AbstractFactory（抽象工場）
   ├ createButton(): Button
   └ createTextField(): TextField

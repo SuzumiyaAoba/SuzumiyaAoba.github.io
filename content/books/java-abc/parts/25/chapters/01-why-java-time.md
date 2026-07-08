@@ -20,7 +20,7 @@ Java には、古くから **`java.util.Date`** と **`java.util.Calendar`** と
 
 `Calendar` では、月が **0から**数えられていました。1月が `0`、12月が `11` です。
 
-```text
+```text line-numbers=false
 // 古い Calendar（混乱のもと）
 カレンダーで「6月」を表すには … 5 を使う（6 ではない！）
 ```
@@ -61,7 +61,7 @@ LocalDate d = LocalDate.of(2026, 6, 9);   // 2026年6月9日。6 はちゃんと
 IO.println(d);
 ```
 
-```text
+```text line-numbers=false
 2026-06-09
 ```
 

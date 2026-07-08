@@ -23,7 +23,7 @@ if (score = 60) {     // = が1つ → 代入になっている
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: 不適合な型: intをbooleanに変換できません
 ```
 
@@ -81,7 +81,7 @@ String dow = switch (day) {
 };   // 3 以上のときに返す値がない
 ```
 
-```text
+```text line-numbers=false
 エラー: switch式がすべての可能な入力値をカバーしていません
 ```
 

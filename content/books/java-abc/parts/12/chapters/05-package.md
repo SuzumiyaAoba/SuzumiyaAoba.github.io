@@ -21,7 +21,7 @@ co-author: ["Claude Opus 4.7"]
 
 たとえば、次のように分けます。
 
-```text
+```text line-numbers=false
 shop.product   ← 商品に関するクラス（Product, Category …）
 shop.order     ← 注文に関するクラス（Order, Cart …）
 shop.user      ← 利用者に関するクラス（User, Address …）

@@ -95,14 +95,14 @@ public class StringBenchmark {
 
 JMH は、**専用の jar** をビルドして実行します。
 
-```text
+```text line-numbers=false
 $ mvn clean package
 $ java -jar target/benchmarks.jar StringBenchmark
 ```
 
 出力例:
 
-```text
+```text line-numbers=false
 Benchmark               Mode  Cnt   Score    Error  Units
 StringBenchmark.concat  avgt   10  12.345 ±  0.567  ns/op
 StringBenchmark.builder avgt   10  15.678 ±  0.789  ns/op

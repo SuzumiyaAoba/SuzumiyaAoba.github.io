@@ -33,7 +33,7 @@ for (int i = 1; i <= 3; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 1
 2
 3
@@ -63,7 +63,7 @@ for (int i = 1; i <= 10; i++) {
 
 ループのあと、`sum` を確認すると、
 
-```text
+```text line-numbers=false
 jshell> sum
 sum ==> 55
 ```
@@ -85,7 +85,7 @@ for (int i = 1; i <= 5; i++) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> factorial
 factorial ==> 120
 ```

@@ -14,14 +14,14 @@ co-author: ["Claude Opus 4.7"]
 
 依存ライブラリのダウンロードがうまくいかないと、Maven なら次のようなエラーが出ます。
 
-```text
+```text line-numbers=false
 [ERROR] Failed to execute goal on project hello-maven: Could not resolve dependencies for project com.example:hello-maven:jar:1.0.0
 [ERROR] Failed to collect dependencies at org.junit.jupiter:junit-jupyter:jar:5.11.3
 ```
 
 Gradle なら、
 
-```text
+```text line-numbers=false
 > Could not resolve all files for configuration ':testRuntimeClasspath'.
    > Could not find org.junit.jupiter:junit-jupyter:5.11.3.
 ```
@@ -47,7 +47,7 @@ Gradle なら、
 
 `maven.compiler.release` や `JavaLanguageVersion` で指定した Java バージョンと、実機の `java --version` が合わないと、こんなエラーが出ます。
 
-```text
+```text line-numbers=false
 [ERROR] release version 25 not supported
 ```
 
@@ -71,7 +71,7 @@ Gradle なら、
 
 Gradle で、`build.gradle.kts` に **`repositories { ... }`** ブロックを書き忘れると、依存ライブラリを取ってくる先がわからず、次のようなエラーになります。
 
-```text
+```text line-numbers=false
 > Could not resolve all files for configuration ':compileClasspath'.
    > Cannot resolve external dependency org.junit.jupiter:junit-jupiter:5.11.3 because no repositories are defined.
 ```
@@ -125,7 +125,7 @@ repositories {
 
 プロジェクト直下の `.gitignore` に、次を書いておきます。
 
-```text
+```text line-numbers=false
 # Maven
 target/
 
@@ -154,14 +154,14 @@ build/
 といった状況が起きます。
 そんなときは、**何より先にクリーンビルド**を試します。
 
-```text
+```text line-numbers=false
 $ mvn clean package
 $ ./gradlew clean build
 ```
 
 これでも直らなければ、**ローカルリポジトリのキャッシュも疑う**フェーズです。
 
-```text
+```text line-numbers=false
 # Maven のローカルリポジトリ
 $ ls ~/.m2/repository/
 

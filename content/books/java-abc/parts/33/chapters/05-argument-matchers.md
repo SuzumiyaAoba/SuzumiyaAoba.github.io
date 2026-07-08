@@ -132,7 +132,7 @@ verify(mailSender).send("taro@example.com", anyString(), anyString());  // △ I
 
 実行すると、こんなエラーが出ます。
 
-```text
+```text line-numbers=false
 org.mockito.exceptions.misusing.InvalidUseOfMatchersException:
 Invalid use of argument matchers!
 3 matchers expected, 1 recorded.

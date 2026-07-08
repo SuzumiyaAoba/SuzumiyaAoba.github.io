@@ -21,7 +21,7 @@ Optional<String> name = Optional.of("佐藤");
 IO.println(name.isPresent());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -47,7 +47,7 @@ Optional<String> opt = Optional.ofNullable(maybeNull);
 IO.println(opt.isEmpty());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -63,7 +63,7 @@ Optional<Integer> score = Optional.ofNullable(scores.get("田中"));
 IO.println(score.isEmpty());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -80,7 +80,7 @@ Optional<String> empty = Optional.empty();
 IO.println(empty.isEmpty());
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -122,7 +122,7 @@ IO.println(findAge("佐藤").isPresent());   // 見つかる
 IO.println(findAge("田中").isPresent());   // 見つからない
 ```
 
-```text
+```text line-numbers=false
 true
 false
 ```

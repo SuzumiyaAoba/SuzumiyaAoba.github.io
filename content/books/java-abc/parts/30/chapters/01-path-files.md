@@ -22,7 +22,7 @@ Path path = Path.of("memo.txt");
 IO.println(path);
 ```
 
-```text
+```text line-numbers=false
 memo.txt
 ```
 
@@ -68,7 +68,7 @@ IO.println(path.getFileName());   // ファイル名
 IO.println(path.getParent());     // 親フォルダ
 ```
 
-```text
+```text line-numbers=false
 users.csv
 data
 ```
@@ -85,7 +85,7 @@ data
 **`Files`** は、ファイルに対する**操作**（読む・書く・存在確認・削除など）を提供する道具です。
 `Files` のメソッドに `Path` を渡して、操作します。
 
-```text
+```text line-numbers=false
 Path（場所） + Files（操作） = ファイル入出力
 
   Files.writeString(path, "...")  … path の場所に書き込む

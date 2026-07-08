@@ -53,7 +53,7 @@ vt.join();
 IO.println("完了");
 ```
 
-```text
+```text line-numbers=false
 仮想スレッドの処理
 完了
 ```
@@ -77,7 +77,7 @@ try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
 }
 ```
 
-```text
+```text line-numbers=false
 計算結果: 8
 ```
 

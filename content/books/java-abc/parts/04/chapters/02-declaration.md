@@ -26,14 +26,14 @@ co-author: ["Claude Opus 4.7"]
 
 宣言と初期化は、次のように1行でまとめて書くのが基本です。
 
-```text
+```text line-numbers=false
 jshell> int age = 20;
 age ==> 20
 ```
 
 この1行を、部品に分けて読んでみましょう。
 
-```text
+```text line-numbers=false
 int     age     =     20     ;
  │       │      │      │      │
  │       │      │      │      └─ 文の終わりの印（セミコロン）
@@ -66,7 +66,7 @@ int     age     =     20     ;
 
 この違いが、はっきりわかる例があります。
 
-```text
+```text line-numbers=false
 jshell> int age = 20;
 age ==> 20
 jshell> age = age + 1;
@@ -87,7 +87,7 @@ age ==> 21
 
 宣言（箱を用意する）と、代入（値を入れる）は、分けて書くこともできます。
 
-```text
+```text line-numbers=false
 jshell> int count;
 count ==> 0
 jshell> count = 5;
@@ -115,7 +115,7 @@ jshell> IO.println(count);
 
 一度値を入れた変数は、あとから何度でも**書き換え**られます。新しい値を代入するだけです。
 
-```text
+```text line-numbers=false
 jshell> int score = 10;
 score ==> 10
 jshell> score = 50;

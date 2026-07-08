@@ -15,7 +15,7 @@ llm: true
 
 Web アプリで使われるキャッシュは、おおむね 3 階層に分けられます。
 
-```text
+```text line-numbers=false
 [クライアント]
     │
     │ ① CDN / ブラウザキャッシュ

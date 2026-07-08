@@ -41,7 +41,7 @@ Runnable task = new Runnable() {
 task.run();
 ```
 
-```text
+```text line-numbers=false
 実行されました
 ```
 
@@ -62,7 +62,7 @@ Runnable task = () -> IO.println("実行されました");
 task.run();
 ```
 
-```text
+```text line-numbers=false
 実行されました
 ```
 
@@ -94,7 +94,7 @@ Runnable task = () -> IO.println("実行されました");
 
 ラムダ式の基本の形は、次のとおりです。
 
-```text
+```text line-numbers=false
 (引数) -> 処理
 ```
 

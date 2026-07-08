@@ -32,7 +32,7 @@ while (w < 3) {
 }
 ```
 
-```text
+```text line-numbers=false
 0
 1
 2
@@ -63,7 +63,7 @@ while (n < 100) {
 }
 ```
 
-```text
+```text line-numbers=false
 jshell> n
 n ==> 128
 ```

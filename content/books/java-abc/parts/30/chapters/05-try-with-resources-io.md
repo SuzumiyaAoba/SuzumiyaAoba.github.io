@@ -68,7 +68,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 ファイルを読み込めませんでした: memo.txt
 ```
 
@@ -99,7 +99,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 ファイルが見つかりません: not_exist.txt
 ```
 

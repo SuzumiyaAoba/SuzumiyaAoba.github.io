@@ -98,7 +98,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 出金できませんでした: 残高不足です。残高: 1000 円、出金: 5000 円
 現在の残高: 1000 円

@@ -15,7 +15,7 @@ llm: true
 `StructuredTaskScope`（JEP 505）は、Java 25 でも依然として**プレビュー**です。
 コンパイル時に**`--enable-preview --release 25`**、実行時にも**`--enable-preview`** が必要です。
 
-```text
+```text line-numbers=false
 $ javac Foo.java
 Foo.java:5: エラー: java.util.concurrent.StructuredTaskScopeはプレビューAPIであり、デフォルトで無効になっています。
   (プレビューAPIを有効にするには--enable-previewを使用します)

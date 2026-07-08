@@ -38,7 +38,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 Animal のコンストラクタ
 Dog のコンストラクタ
@@ -86,7 +86,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ: ワン
 ```
@@ -117,7 +117,7 @@ class Dog extends Animal {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: クラス Animalのコンストラクタ Animalは指定された型に適用できません。
   期待値: String
   検出値:    引数がありません

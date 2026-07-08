@@ -64,7 +64,7 @@ public class Main {
 
 これを `Main.java` という名前で保存してコンパイル（実行）すると、エラーになります。
 
-```text
+```text line-numbers=false
 エラー: balanceはBankAccountでprivateアクセスされます
         acc.balance = 1000;
            ^

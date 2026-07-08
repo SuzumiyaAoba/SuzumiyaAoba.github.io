@@ -75,7 +75,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 こんにちは
 123

@@ -46,7 +46,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ: ワン
 タマ: ニャー
@@ -84,7 +84,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 ポチ: ワン
 タマ: ニャー
@@ -120,7 +120,7 @@ for (Animal a : animals) {
 }
 ```
 
-```text
+```text line-numbers=false
 ポチ: ワン
 タマ: ニャー
 ピー: ピヨ

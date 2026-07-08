@@ -75,7 +75,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 プリウス の速度: 80 km/h
 ```
@@ -133,7 +133,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 速度超過です
 ```

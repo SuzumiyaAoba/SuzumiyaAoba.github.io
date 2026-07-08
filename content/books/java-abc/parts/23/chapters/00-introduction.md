@@ -30,7 +30,7 @@ List<Integer> passed = scores.stream()
 IO.println(passed);
 ```
 
-```text
+```text line-numbers=false
 [90, 85, 70]
 ```
 

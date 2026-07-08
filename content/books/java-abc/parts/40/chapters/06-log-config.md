@@ -16,7 +16,7 @@ co-author: ["Claude Opus 4.7"]
 
 Spring Boot の場合、**`src/main/resources/logback-spring.xml`** に Logback の設定ファイルを置くと、起動時に自動で読み込まれます。
 
-```text
+```text line-numbers=false
 src/main/resources/
 ├── application.yml
 └── logback-spring.xml          ← この章で書くファイル

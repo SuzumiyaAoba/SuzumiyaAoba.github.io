@@ -30,7 +30,7 @@ co-author: ["Claude Opus 4.7"]
 第3章で、はじめてのプログラムを書いたときのことを思い出してください。
 `Hello.java` を書き、コマンドラインで `javac` と `java` を叩いて、`Hello, World!` を表示しました。
 
-```text
+```text line-numbers=false
 $ javac Hello.java
 $ java Hello
 Hello, World!
@@ -49,7 +49,7 @@ Hello, World!
 
 これを `javac` だけでやろうとすると、どうなるでしょうか。
 
-```text
+```text line-numbers=false
 $ javac -cp jackson-databind.jar:jackson-core.jar:jackson-annotations.jar:slf4j-api.jar \
         -d build/classes \
         src/com/example/foo/Foo.java \
@@ -106,7 +106,7 @@ Web アプリならサーバーへ配布できる WAR / JAR、ライブラリな
 という**お約束（規約）**を守っていれば、「ここがソースです」「ここがテストです」と毎回設定する必要がなくなります。
 このお約束は、Maven が先に決めて世の中に広まり、Gradle もそのまま採用しているため、**Java プロジェクトのほぼ標準**になっています。
 
-```text
+```text line-numbers=false
 my-project/
 ├── pom.xml                    ← Maven の設定ファイル
 └── src/

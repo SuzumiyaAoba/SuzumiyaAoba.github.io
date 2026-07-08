@@ -30,7 +30,7 @@ for (Signal s : Signal.values()) {
 }
 ```
 
-```text
+```text line-numbers=false
 RED
 YELLOW
 GREEN
@@ -50,7 +50,7 @@ Signal s = Signal.valueOf("RED");
 IO.println(s == Signal.RED);
 ```
 
-```text
+```text line-numbers=false
 true
 ```
 
@@ -64,7 +64,7 @@ true
 Signal s = Signal.valueOf("PURPLE");   // 存在しない名前
 ```
 
-```text
+```text line-numbers=false
 Exception in thread "main" java.lang.IllegalArgumentException: No enum constant Signal.PURPLE
 ```
 
@@ -86,7 +86,7 @@ IO.println(s.name());      // 名前
 IO.println(s.ordinal());   // 並び順（0 始まり）
 ```
 
-```text
+```text line-numbers=false
 GREEN
 2
 ```

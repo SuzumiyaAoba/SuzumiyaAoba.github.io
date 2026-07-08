@@ -16,7 +16,7 @@ co-author: ["Claude Opus 4.7"]
 
 簡単な数式の構文木を例にします。
 
-```text
+```text line-numbers=false
 Expr
 ├ Num（数値）
 ├ Add（足し算）

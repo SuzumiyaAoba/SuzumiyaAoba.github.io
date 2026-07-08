@@ -20,7 +20,7 @@ co-author: ["Claude Opus 4.7"]
 
 実機で見てみましょう。
 
-```text
+```text line-numbers=false
 $ head -c 16 Hello.class | od -An -tx1 -w16
  ca fe ba be 00 00 00 45 00 2e 0a 00 02 00 03 07
 ```
@@ -61,7 +61,7 @@ Java 17 で動かしているのに、Java 21 でビルドした `.class` を読
 
 JVM 仕様で定められたクラスファイルの構造は、おおまかにこうなっています。
 
-```text
+```text line-numbers=false
 ClassFile {
     u4             magic;              // 0xCAFEBABE
     u2             minor_version;
@@ -102,7 +102,7 @@ ClassFile {
 
 `javap -v` で表示すると、たとえば `Hello.class` ではこうなります。
 
-```text
+```text line-numbers=false
 Constant pool:
    #1 = Methodref          #2.#3   // java/lang/Object."<init>":()V
    #2 = Class              #4      // java/lang/Object

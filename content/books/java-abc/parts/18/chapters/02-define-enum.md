@@ -48,7 +48,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 RED
 ```
@@ -71,7 +71,7 @@ if (signal == Signal.RED) {       // == で比較してOK
 }
 ```
 
-```text
+```text line-numbers=false
 止まれ
 ```
 
@@ -107,7 +107,7 @@ public class Main {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java Main.java
 商品は発送済みです
 ```

@@ -43,7 +43,7 @@ public class ShippingService {
 
 GoF の定義に近い形は、**抽象クラスとサブクラス**の組み合わせです。
 
-```text
+```text line-numbers=false
 Creator（抽象クラス）
   ├ createProduct()  ← 抽象メソッド = Factory Method
   └ use()            ← 共通の流れ。中で createProduct() を呼ぶ

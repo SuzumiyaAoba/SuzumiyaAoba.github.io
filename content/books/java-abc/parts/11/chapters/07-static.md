@@ -57,7 +57,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 作られた車: 3 台
 ```
@@ -90,7 +90,7 @@ void main() {
 }
 ```
 
-```text
+```text line-numbers=false
 $ java CarApp.java
 25
 ```

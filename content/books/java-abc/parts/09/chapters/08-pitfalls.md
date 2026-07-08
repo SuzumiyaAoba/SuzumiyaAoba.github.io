@@ -22,7 +22,7 @@ int add(int a, int b) {
 }
 ```
 
-```text
+```text line-numbers=false
 エラー: return文が指定されていません
 ```
 
@@ -75,7 +75,7 @@ void greet(String name) {
 greet();   // 引数が足りない → エラー
 ```
 
-```text
+```text line-numbers=false
 エラー: ... メソッド greetは指定された型に適用できません。
   期待値: String
   検出値: 引数がありません
