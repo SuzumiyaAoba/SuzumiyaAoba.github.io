@@ -1,6 +1,60 @@
 version: 1
-updated: "2026-01"
+updated: "2026-07-11"
 events:
+  - year: 2026
+    date: 2026-07-09
+    title_ja: "GPT-5.6 (Sol, Terra, Luna)"
+    summary_ja: |
+      [GPT-5.6：野心に応えるスケーラブルなフロンティア知能 | OpenAI](https://openai.com/ja-JP/index/gpt-5-6/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-07-08
+    title_ja: "GPT-Live"
+    summary_ja: |
+      [Introducing GPT-Live | OpenAI](https://openai.com/index/introducing-gpt-live/)
+    tags: ["OpenAI", "GPT", "Audio Model"]
+  - year: 2026
+    date: 2026-06-30
+    title_ja: "Claude Sonnet 5"
+    summary_ja: |
+      [Introducing Claude Sonnet 5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-5)
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+  - year: 2026
+    date: 2026-06-09
+    title_ja: "Claude Fable 5 / Claude Mythos 5"
+    summary_ja: |
+      [Redeploying Fable 5 \ Anthropic](https://www.anthropic.com/news/redeploying-fable-5)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+  - year: 2026
+    date: 2026-05-28
+    title_ja: "Claude Opus 4.8"
+    summary_ja: |
+      [Introducing Claude Opus 4.8 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-8)
+    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+  - year: 2026
+    date: 2026-04-23
+    title_ja: "GPT-5.5 / GPT-5.5 Pro"
+    summary_ja: |
+      [Introducing GPT-5.5 | OpenAI](https://openai.com/index/introducing-gpt-5-5/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-04-16
+    title_ja: "Claude Opus 4.7"
+    summary_ja: |
+      [Introducing Claude Opus 4.7 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-7)
+    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+  - year: 2026
+    date: 2026-03-05
+    title_ja: "GPT-5.4 / GPT-5.4 Pro"
+    summary_ja: |
+      [GPT-5.4 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-4/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-02-17
+    title_ja: "Claude Sonnet 4.6"
+    summary_ja: |
+      [Introducing Claude Sonnet 4.6 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-6)
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2026
     date: 2026-02-05
     title_ja: "GPT-5.3-Codex"
