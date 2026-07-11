@@ -18,6 +18,7 @@ const navItems = [
   { href: "/blog", labelJa: "Blog", labelEn: "Blog" },
   { href: "/notes", labelJa: "Notes", labelEn: "Notes" },
   { href: "/series", labelJa: "Series", labelEn: "Series" },
+  { href: "/books", labelJa: "Books", labelEn: "Books" },
   { href: "/tags", labelJa: "Tags", labelEn: "Tags" },
   { href: "/archive", labelJa: "Archive", labelEn: "Archive" },
   { href: "/tools", labelJa: "Tools", labelEn: "Tools" },
