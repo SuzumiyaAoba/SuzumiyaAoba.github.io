@@ -1,20 +1,10 @@
 "use client";
 
-import { LineChart } from "@/shared/ui/financial-charts";
+import { createLineChartWrapper } from "./_shared/line-chart-wrapper";
 import section60Data from "@/content/blog/2026-01-01-kakekin/data/section60.json";
 import { buildAutoChartConfig } from "@/shared/ui/financial-data/sectionChartUtils";
 
-export const Section60ChartWrapper: React.FC = () => {
-  if (!section60Data) {
-    return <div>データが見つかりません</div>;
-  }
-
-  return (
-    <LineChart
-      data={section60Data}
-      groups={[]}
-      excludeHeaders={[]}
-      config={buildAutoChartConfig(section60Data)}
-    />
-  );
-};
+export const Section60ChartWrapper = createLineChartWrapper({
+  data: section60Data,
+  config: buildAutoChartConfig(section60Data),
+});

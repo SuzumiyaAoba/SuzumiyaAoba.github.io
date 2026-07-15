@@ -2,10 +2,11 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section31Data from "@/content/blog/2026-01-01-kakekin/data/section31.json";
+import { NoDataFallback } from "./_shared/no-data-fallback";
 
 export const Section31ChartWrapper: React.FC = () => {
   if (!section31Data) {
-    return <div>データが見つかりません</div>;
+    return <NoDataFallback />;
   }
 
   const distributionLabelMap: Record<string, string> = {

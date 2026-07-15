@@ -1,14 +1,15 @@
 "use client";
 
-import { LineChart, SheetDataSchema } from "@/shared/ui/financial-charts";
+import { LineChart } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
+import { NoDataFallback } from "./_shared/no-data-fallback";
+import { parseSheetData } from "./_shared/parse-sheet-data";
 
 export const Sheet3ChartWrapper: React.FC = () => {
-  const result = SheetDataSchema.safeParse(assetsData.sheets["3"]);
-  const sheet3Data = result.success ? result.data : null;
+  const sheet3Data = parseSheetData(assetsData, "3");
 
   if (!sheet3Data) {
-    return <div>データが見つかりません</div>;
+    return <NoDataFallback />;
   }
 
   const excludeHeaders = [

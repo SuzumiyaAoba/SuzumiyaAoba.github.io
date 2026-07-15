@@ -2,6 +2,7 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section42Data from "@/content/blog/2026-01-01-kakekin/data/section42.json";
+import { NoDataFallback } from "./_shared/no-data-fallback";
 
 const HEADERS = {
   overallCost: "老後のひと月当たり 最低予想生活費 | 万円",
@@ -13,7 +14,7 @@ const HEADERS = {
 
 export const Section42ChartWrapper: React.FC = () => {
   if (!section42Data) {
-    return <div>データが見つかりません</div>;
+    return <NoDataFallback />;
   }
 
   const labelMap: Record<string, string> = {

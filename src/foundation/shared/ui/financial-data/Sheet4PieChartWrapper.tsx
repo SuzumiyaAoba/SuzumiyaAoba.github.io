@@ -1,16 +1,16 @@
 "use client";
 
-import { SheetDataSchema } from "@/shared/ui/financial-charts";
 import { PieChart } from "@/shared/ui/financial-charts/PieChart";
 
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
+import { NoDataFallback } from "./_shared/no-data-fallback";
+import { parseSheetData } from "./_shared/parse-sheet-data";
 
 export const Sheet4PieChartWrapper: React.FC = () => {
-  const result = SheetDataSchema.safeParse(assetsData.sheets["4"]);
-  const sheet4Data = result.success ? result.data : null;
+  const sheet4Data = parseSheetData(assetsData, "4");
 
   if (!sheet4Data) {
-    return <div>データが見つかりません</div>;
+    return <NoDataFallback />;
   }
 
   const excludeHeaders = [
