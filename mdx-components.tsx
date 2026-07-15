@@ -1,1 +1,1 @@
-export { useMDXComponents } from "@/shared/lib/mdx-components";
+export { useMDXComponents } from "@/shared/lib/mdx";

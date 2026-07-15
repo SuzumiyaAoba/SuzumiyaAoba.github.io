@@ -1,12 +1,11 @@
-import fs from "node:fs/promises";
 import path from "node:path";
 import { notFound } from "next/navigation";
 import type { ReactElement } from "react";
 
 import { getNoteVariants } from "@/entities/note";
 import { getAffiliateProductsByIds, type AffiliateProduct } from "@/shared/lib/affiliate-products";
-import { resolveContentRoot } from "@/shared/lib/content-root";
-import { renderMdx } from "@/shared/lib/mdx";
+import { resolveContentRoot } from "@/shared/lib/content-file";
+import { extractAmazonProductIdsFromMdx, loadMdxScope, renderMdx } from "@/shared/lib/mdx";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { NotesDetailPageContent } from "./page-content";
 
@@ -14,74 +13,6 @@ type PageProps = {
   params: Promise<{ slug: string }>;
   locale?: Locale;
 };
-
-function extractAmazonProductIdsFromMdx(source: string): string[] {
-  const results: string[] = [];
-  const seen = new Set<string>();
-  const componentRegex = /<AmazonProductSection\b[\s\S]*?>/g;
-  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|"[^"]*"|'[^']*')/;
-
-  for (const match of source.matchAll(componentRegex)) {
-    const tag = match[0];
-    const idsMatch = tag.match(idsPropRegex);
-    if (!idsMatch) {
-      continue;
-    }
-    const rawValue = idsMatch[1]?.trim() ?? "";
-    let candidates: string[] = [];
-    if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
-      const inner = rawValue.slice(1, -1);
-      const quoted = [...inner.matchAll(/"([^"]+)"|'([^']+)'/g)];
-      candidates = quoted
-        .map((quotedValue) => quotedValue[1] ?? quotedValue[2])
-        .filter((value): value is string => Boolean(value));
-    } else if (
-      (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
-      (rawValue.startsWith("'") && rawValue.endsWith("'"))
-    ) {
-      candidates = [rawValue.slice(1, -1)];
-    }
-
-    for (const candidate of candidates) {
-      const normalized = candidate.trim();
-      if (!normalized || seen.has(normalized)) {
-        continue;
-      }
-      seen.add(normalized);
-      results.push(normalized);
-    }
-  }
-
-  return results;
-}
-
-async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
-  const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;
-  const matches = [...source.matchAll(importRegex)];
-  if (matches.length === 0) {
-    return {};
-  }
-
-  const root = await resolveContentRoot();
-  const baseDir = path.join(root, "notes", slug);
-  const scope: Record<string, unknown> = {};
-
-  for (const match of matches) {
-    const [, name, relPath] = match;
-    if (!name || !relPath) {
-      continue;
-    }
-    const filePath = path.join(baseDir, relPath);
-    try {
-      const raw = await fs.readFile(filePath, "utf8");
-      scope[name] = JSON.parse(raw) as unknown;
-    } catch {
-      continue;
-    }
-  }
-
-  return scope;
-}
 
 export default async function Page({ params, locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
@@ -112,10 +43,11 @@ export default async function Page({ params, locale }: PageProps) {
     (id) => !excludedIdsInContent.has(id),
   );
 
+  const noteDir = path.join(await resolveContentRoot(), "notes", slug);
   const scopePromise = primaryContent
-    ? loadMdxScope(primaryContent, slug)
+    ? loadMdxScope(primaryContent, noteDir)
     : fallbackContent
-      ? loadMdxScope(fallbackContent, slug)
+      ? loadMdxScope(fallbackContent, noteDir)
       : Promise.resolve({});
   const contentPromise = renderMdx(contentSource, {
     basePath: `/contents/notes/${slug}`,

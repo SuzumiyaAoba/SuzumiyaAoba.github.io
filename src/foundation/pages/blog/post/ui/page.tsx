@@ -1,10 +1,14 @@
-import fs from "node:fs/promises";
 import path from "node:path";
 import { notFound } from "next/navigation";
 
 import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
-import { resolveContentRoot } from "@/shared/lib/content-root";
-import { financialDataComponents, renderMdxWithToc } from "@/shared/lib/mdx";
+import { resolveContentRoot } from "@/shared/lib/content-file";
+import {
+  extractAmazonProductIdsFromMdx,
+  financialDataComponents,
+  loadMdxScope,
+  renderMdxWithToc,
+} from "@/shared/lib/mdx";
 
 /**
  * 本文中で financial-data の Chart/Sheet ラッパーが使われているかを判定する。
@@ -30,83 +34,6 @@ type PageProps = {
   /** 描画ロケール */
   locale?: Locale;
 };
-
-/**
- * MDX 内にある Amazon 商品カードの ids を抽出する
- */
-function extractAmazonProductIdsFromMdx(source: string): string[] {
-  const results: string[] = [];
-  const seen = new Set<string>();
-  const componentRegex = /<AmazonProductSection\b[\s\S]*?>/g;
-  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|"[^"]*"|'[^']*')/;
-
-  for (const match of source.matchAll(componentRegex)) {
-    const tag = match[0];
-    const idsMatch = tag.match(idsPropRegex);
-    if (!idsMatch) {
-      continue;
-    }
-    const rawValue = idsMatch[1]?.trim() ?? "";
-    let candidates: string[] = [];
-    if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
-      const inner = rawValue.slice(1, -1);
-      const quoted = [...inner.matchAll(/"([^"]+)"|'([^']+)'/g)];
-      candidates = quoted
-        .map((q) => q[1] ?? q[2])
-        .filter((value): value is string => Boolean(value));
-    } else if (
-      (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
-      (rawValue.startsWith("'") && rawValue.endsWith("'"))
-    ) {
-      candidates = [rawValue.slice(1, -1)];
-    }
-
-    for (const candidate of candidates) {
-      const normalized = candidate.trim();
-      if (!normalized || seen.has(normalized)) {
-        continue;
-      }
-      seen.add(normalized);
-      results.push(normalized);
-    }
-  }
-
-  return results;
-}
-
-/**
- * MDX ファイル内でインポートされている JSON ファイルを読み込み、MDX の scope として提供する
- * @param source MDX のソースコード
- * @param slug 記事のスラッグ
- * @returns 解決された JSON データのマップ
- */
-async function loadMdxScope(source: string, slug: string): Promise<Record<string, unknown>> {
-  const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;
-  const matches = [...source.matchAll(importRegex)];
-  if (matches.length === 0) {
-    return {};
-  }
-
-  const root = await resolveContentRoot();
-  const baseDir = path.join(root, "blog", slug);
-  const scope: Record<string, unknown> = {};
-
-  for (const match of matches) {
-    const [, name, relPath] = match;
-    if (!name || !relPath) {
-      continue;
-    }
-    const filePath = path.join(baseDir, relPath);
-    try {
-      const raw = await fs.readFile(filePath, "utf8");
-      scope[name] = JSON.parse(raw) as unknown;
-    } catch {
-      continue;
-    }
-  }
-
-  return scope;
-}
 
 /**
  * ブログ記事詳細ページを表示するサーバーサイドコンポーネント。
@@ -157,10 +84,11 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] mdx scope:${slug}`);
   }
+  const blogPostDir = path.join(await resolveContentRoot(), "blog", slug);
   const scope = primaryContent
-    ? await loadMdxScope(primaryContent, slug)
+    ? await loadMdxScope(primaryContent, blogPostDir)
     : fallbackContent
-      ? await loadMdxScope(fallbackContent, slug)
+      ? await loadMdxScope(fallbackContent, blogPostDir)
       : {};
   if (shouldLogPerf) {
     console.timeEnd(`[blog] mdx scope:${slug}`);
