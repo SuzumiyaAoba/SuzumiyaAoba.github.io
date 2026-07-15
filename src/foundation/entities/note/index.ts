@@ -13,6 +13,5 @@ export type {
   LocalizedNoteSummary,
   Note,
   NoteFrontmatter,
-  NoteLocale,
   NoteSummary,
 } from "./model/note";

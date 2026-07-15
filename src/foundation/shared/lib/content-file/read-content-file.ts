@@ -1,10 +1,10 @@
 import { cache } from "react";
+import type { Locale } from "@/shared/lib/routing";
 import { resolveContentRoot } from "./content-root";
 
-export type ContentLocale = "ja" | "en";
 export type ContentFormat = "md" | "mdx";
 export type ContentFile = { raw: string; format: ContentFormat };
-export type ReadContentOptions = { locale?: ContentLocale; fallback?: boolean };
+export type ReadContentOptions = { locale?: Locale; fallback?: boolean };
 
 /**
  * `content/<collectionDir>/<slug>` 配下のファイル一覧をキャッシュ付きで取得する関数を作る。
@@ -34,7 +34,7 @@ export function createArticleFileLister(
 export async function readLocaleContentFile(
   collectionDir: string,
   slug: string,
-  locale: ContentLocale,
+  locale: Locale,
   listFiles: (slug: string) => Promise<Set<string>>,
 ): Promise<ContentFile | null> {
   const fs = await import("node:fs/promises");

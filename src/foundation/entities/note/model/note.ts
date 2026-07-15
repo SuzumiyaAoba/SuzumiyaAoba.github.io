@@ -1,5 +1,6 @@
 import matter from "gray-matter";
 import { cache } from "react";
+import type { Locale } from "@/shared/lib/routing";
 
 import {
   createArticleFileLister,
@@ -38,10 +39,8 @@ export type NoteSummary = {
   frontmatter: NoteFrontmatter;
 };
 
-export type NoteLocale = "ja" | "en";
-
 type ReadContentOptions = {
-  locale?: NoteLocale;
+  locale?: Locale;
   fallback?: boolean;
 };
 

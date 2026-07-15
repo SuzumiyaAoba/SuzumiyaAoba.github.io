@@ -1,6 +1,7 @@
 import matter from "gray-matter";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
+import type { Locale } from "@/shared/lib/routing";
 
 import {
   createArticleFileLister,
@@ -67,16 +68,11 @@ export type BlogPostSummary = {
 };
 
 /**
- * ブログのロケール（言語）
- */
-export type BlogLocale = "ja" | "en";
-
-/**
  * コンテンツ読み込み時のオプション
  */
 type ReadContentOptions = {
   /** 対象の言語。デフォルトは 'ja' */
-  locale?: BlogLocale;
+  locale?: Locale;
   /** 指定した言語がない場合にフォールバックするか。デフォルトは true */
   fallback?: boolean;
 };

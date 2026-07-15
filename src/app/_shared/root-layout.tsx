@@ -4,11 +4,10 @@ import { AppProviders } from "@/app/providers";
 import { GoogleAdsenseScript } from "@/shared/ui/google-adsense-script";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
 import { SITE_TITLE } from "@/shared/lib/site/site-title";
+import type { Locale } from "@/shared/lib/routing";
 import { notoSansJp, shipporiMincho, sourceCodePro } from "./fonts";
 
-export type SupportedLocale = "ja" | "en";
-
-const OPEN_GRAPH_LOCALE: Record<SupportedLocale, string> = {
+const OPEN_GRAPH_LOCALE: Record<Locale, string> = {
   ja: "ja_JP",
   en: "en_US",
 };
@@ -16,7 +15,7 @@ const OPEN_GRAPH_LOCALE: Record<SupportedLocale, string> = {
 /**
  * ルートレイアウトの基本メタデータ設定。ja/en で locale 以外は共通。
  */
-export function buildRootMetadata(locale: SupportedLocale): Metadata {
+export function buildRootMetadata(locale: Locale): Metadata {
   return {
     metadataBase: new URL(getSiteConfig().siteUrl || "http://localhost:3000"),
     title: {
@@ -56,7 +55,7 @@ export function AppRootLayout({
   locale,
   children,
 }: Readonly<{
-  locale: SupportedLocale;
+  locale: Locale;
   children: React.ReactNode;
 }>) {
   const isProd = process.env.NODE_ENV === "production";

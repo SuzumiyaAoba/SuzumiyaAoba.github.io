@@ -1,5 +1,6 @@
-import { getBlogPostSummariesVariants, type BlogLocale } from "@/entities/blog";
+import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getSiteConfig, SITE_TITLE } from "@/shared/lib/site";
+import type { Locale } from "@/shared/lib/routing";
 
 function escapeXml(value: string): string {
   return value
@@ -23,7 +24,7 @@ function formatRssDate(dateString: string): string {
  * @param locale 出力するRSSの言語
  * @returns RSS 2.0 XML文字列
  */
-export async function buildRssXml(locale: BlogLocale): Promise<string> {
+export async function buildRssXml(locale: Locale): Promise<string> {
   const siteUrl = getSiteConfig().siteUrl || "https://suzumiyaaoba.com";
   const basePath = locale === "en" ? "/en" : "";
   const blogLink = `${siteUrl}${basePath}/blog/`;

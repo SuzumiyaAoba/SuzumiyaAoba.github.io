@@ -20,7 +20,6 @@ export type {
   BlogPost,
   BlogPostSummary,
   BlogFrontmatter,
-  BlogLocale,
   LocalizedBlogPost,
   LocalizedBlogPostSummary,
 } from "./model/blog";
