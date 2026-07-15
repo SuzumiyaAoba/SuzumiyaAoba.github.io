@@ -1,6 +1,6 @@
 import { parse } from "yaml";
 import { z } from "zod";
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import { resolveContentRoot } from "@/shared/lib/content-file";
 
 /**
  * AIニュースのエントリ（出来事）の Zod スキーマ

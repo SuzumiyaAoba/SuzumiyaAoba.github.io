@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 
 // Mock the content-root module (transitive dependency)
-vi.mock("@/shared/lib/content-root", () => ({
+vi.mock("@/shared/lib/content-file", () => ({
   resolveContentRoot: () => Promise.resolve("/mock/content"),
 }));
 

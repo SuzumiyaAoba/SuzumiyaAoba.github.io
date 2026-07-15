@@ -3,7 +3,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import { resolveContentRoot } from "@/shared/lib/content-file";
 
 export const dynamic = "force-static";
 

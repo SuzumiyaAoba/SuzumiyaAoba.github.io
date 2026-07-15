@@ -2,7 +2,19 @@ import matter from "gray-matter";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import {
+  createArticleFileLister,
+  readContentFileWithFallback,
+  listContentSlugs,
+  findAdjacentByIndex,
+  asString,
+  asStringWithDefault,
+  asDateString,
+  asBoolean,
+  asStringArray,
+} from "@/shared/lib/content-file";
+
+const BLOG_COLLECTION_DIR = "blog";
 
 /**
  * ブログ記事のフロントマター（メタデータ）の型定義
@@ -69,83 +81,7 @@ type ReadContentOptions = {
   fallback?: boolean;
 };
 
-/**
- * 記事ディレクトリのファイル一覧をキャッシュ付きで取得する。
- * try/catch で逐次ファイルを試すより readdir 1回で済む。
- */
-const getArticleFiles = cache(async (slug: string): Promise<Set<string>> => {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
-  const root = await resolveContentRoot();
-  const dir = path.join(root, "blog", slug);
-  try {
-    const entries = await fs.readdir(dir);
-    return new Set(entries);
-  } catch {
-    return new Set();
-  }
-});
-
-/**
- * 特定のロケールのコンテンツファイルを読み込む
- * @param slug 記事のスラッグ
- * @param locale 言語
- * @returns ファイルの内容とフォーマット。存在しない場合は null
- */
-async function readContentFileForLocale(
-  slug: string,
-  locale: BlogLocale,
-): Promise<{ raw: string; format: "md" | "mdx" } | null> {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
-
-  const root = await resolveContentRoot();
-  const baseDir = path.join(root, "blog", slug);
-  const baseName = locale === "en" ? "index.en" : "index";
-
-  const files = await getArticleFiles(slug);
-
-  const mdFile = `${baseName}.md`;
-  const mdxFile = `${baseName}.mdx`;
-
-  if (files.has(mdFile)) {
-    const raw = await fs.readFile(path.join(baseDir, mdFile), "utf8");
-    return { raw, format: "md" };
-  }
-  if (files.has(mdxFile)) {
-    const raw = await fs.readFile(path.join(baseDir, mdxFile), "utf8");
-    return { raw, format: "mdx" };
-  }
-  return null;
-}
-
-/**
- * 記事ファイルを読み込む（フォールバック対応）
- * @param slug 記事のスラッグ
- * @param options 読み込みオプション
- * @returns ファイルの内容とフォーマット
- */
-async function readContentFile(
-  slug: string,
-  options?: ReadContentOptions,
-): Promise<{ raw: string; format: "md" | "mdx" } | null> {
-  const locale = options?.locale ?? "ja";
-  const fallback = options?.fallback ?? true;
-
-  const file = await readContentFileForLocale(slug, locale);
-  if (file) {
-    return file;
-  }
-
-  if (!fallback || locale === "ja") {
-    if (!fallback) {
-      return null;
-    }
-    return readContentFileForLocale(slug, "en");
-  }
-
-  return readContentFileForLocale(slug, "ja");
-}
+const listBlogArticleFiles = createArticleFileLister(BLOG_COLLECTION_DIR);
 
 /**
  * すべてのブログ記事のスラッグを取得する
@@ -153,19 +89,7 @@ async function readContentFile(
  */
 export const getBlogSlugs = cache(
   unstable_cache(
-    async (): Promise<string[]> => {
-      const fs = await import("node:fs/promises");
-      const path = await import("node:path");
-
-      const root = await resolveContentRoot();
-      const blogRoot = path.join(root, "blog");
-      const entries = await fs.readdir(blogRoot, { withFileTypes: true });
-
-      return entries
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => entry.name)
-        .sort();
-    },
+    async (): Promise<string[]> => listContentSlugs(BLOG_COLLECTION_DIR),
     ["blog-slugs"],
   ),
 );
@@ -178,7 +102,12 @@ export const getBlogSlugs = cache(
  */
 export const getBlogPost = cache(
   async (slug: string, options?: ReadContentOptions): Promise<BlogPost | null> => {
-    const file = await readContentFile(slug, options);
+    const file = await readContentFileWithFallback(
+      BLOG_COLLECTION_DIR,
+      slug,
+      listBlogArticleFiles,
+      options,
+    );
     if (!file) {
       return null;
     }
@@ -203,7 +132,12 @@ export const getBlogPost = cache(
  */
 export const getBlogPostSummary = cache(
   async (slug: string, options?: ReadContentOptions): Promise<BlogPostSummary | null> => {
-    const file = await readContentFile(slug, options);
+    const file = await readContentFileWithFallback(
+      BLOG_COLLECTION_DIR,
+      slug,
+      listBlogArticleFiles,
+      options,
+    );
     if (!file) {
       return null;
     }
@@ -224,36 +158,26 @@ export const getBlogPostSummary = cache(
  * @returns 正規化されたフロントマター
  */
 function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
-  const title = typeof data["title"] === "string" ? data["title"] : "";
-  const dateValue = data["date"];
-  const date =
-    dateValue instanceof Date
-      ? dateValue.toISOString().slice(0, 10)
-      : typeof dateValue === "string"
-        ? dateValue
-        : "";
+  const category = asString(data["category"]);
+  const tags = asStringArray(data["tags"]);
+  const thumbnail = asString(data["thumbnail"]);
+  const draft = asBoolean(data["draft"]);
+  const layout = asString(data["layout"]);
+  const amazonAssociate = asBoolean(data["amazonAssociate"]);
+  const amazonProductIds = asStringArray(data["amazonProductIds"]);
+  const model = asString(data["model"]);
 
   return {
-    title,
-    date,
-    ...(typeof data["category"] === "string" ? { category: data["category"] } : {}),
-    ...(Array.isArray(data["tags"])
-      ? { tags: data["tags"].filter((tag): tag is string => typeof tag === "string") }
-      : {}),
-    ...(typeof data["thumbnail"] === "string" ? { thumbnail: data["thumbnail"] } : {}),
-    ...(typeof data["draft"] === "boolean" ? { draft: data["draft"] } : {}),
-    ...(typeof data["layout"] === "string" ? { layout: data["layout"] } : {}),
-    ...(typeof data["amazonAssociate"] === "boolean"
-      ? { amazonAssociate: data["amazonAssociate"] }
-      : {}),
-    ...(Array.isArray(data["amazonProductIds"])
-      ? {
-          amazonProductIds: data["amazonProductIds"].filter(
-            (item): item is string => typeof item === "string",
-          ),
-        }
-      : {}),
-    ...(typeof data["model"] === "string" ? { model: data["model"] } : {}),
+    title: asStringWithDefault(data["title"], ""),
+    date: asDateString(data["date"]) ?? "",
+    ...(category !== undefined ? { category } : {}),
+    ...(tags !== undefined ? { tags } : {}),
+    ...(thumbnail !== undefined ? { thumbnail } : {}),
+    ...(draft !== undefined ? { draft } : {}),
+    ...(layout !== undefined ? { layout } : {}),
+    ...(amazonAssociate !== undefined ? { amazonAssociate } : {}),
+    ...(amazonProductIds !== undefined ? { amazonProductIds } : {}),
+    ...(model !== undefined ? { model } : {}),
   };
 }
 
@@ -278,18 +202,9 @@ export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
 export const getAdjacentPosts = cache(
   async (slug: string): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
     const posts = await getBlogPosts();
-    const index = posts.findIndex((post) => post.slug === slug);
-
-    if (index === -1) {
-      return { prev: null, next: null };
-    }
-
     // posts are sorted by date desc (newest first)
     // next is newer (index - 1), prev is older (index + 1)
-    return {
-      prev: posts[index + 1] ?? null,
-      next: posts[index - 1] ?? null,
-    };
+    return findAdjacentByIndex(posts, (post) => post.slug === slug);
   },
 );
 
@@ -413,16 +328,7 @@ export const getAdjacentPostsVariants = cache(
     slug: string,
   ): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> => {
     const posts = await getBlogPostsVariants();
-    const index = posts.findIndex((post) => post.slug === slug);
-
-    if (index === -1) {
-      return { prev: null, next: null };
-    }
-
-    return {
-      prev: posts[index + 1] ?? null,
-      next: posts[index - 1] ?? null,
-    };
+    return findAdjacentByIndex(posts, (post) => post.slug === slug);
   },
 );
 
@@ -436,15 +342,6 @@ export const getAdjacentPostSummariesVariants = cache(
     slug: string,
   ): Promise<{ prev: LocalizedBlogPostSummary | null; next: LocalizedBlogPostSummary | null }> => {
     const posts = await getBlogPostSummariesVariants();
-    const index = posts.findIndex((post) => post.slug === slug);
-
-    if (index === -1) {
-      return { prev: null, next: null };
-    }
-
-    return {
-      prev: posts[index + 1] ?? null,
-      next: posts[index - 1] ?? null,
-    };
+    return findAdjacentByIndex(posts, (post) => post.slug === slug);
   },
 );

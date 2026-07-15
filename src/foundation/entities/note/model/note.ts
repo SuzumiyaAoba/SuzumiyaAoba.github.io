@@ -1,7 +1,18 @@
 import matter from "gray-matter";
 import { cache } from "react";
 
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import {
+  createArticleFileLister,
+  readContentFileWithFallback,
+  listContentSlugs,
+  asString,
+  asStringWithDefault,
+  asDateString,
+  asBoolean,
+  asStringArray,
+} from "@/shared/lib/content-file";
+
+const NOTE_COLLECTION_DIR = "notes";
 
 export type NoteFrontmatter = {
   title: string;
@@ -34,77 +45,18 @@ type ReadContentOptions = {
   fallback?: boolean;
 };
 
-async function readContentFileForLocale(
-  slug: string,
-  locale: NoteLocale,
-): Promise<{ raw: string; format: "md" | "mdx" } | null> {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+const listNoteArticleFiles = createArticleFileLister(NOTE_COLLECTION_DIR);
 
-  const root = await resolveContentRoot();
-  const baseDir = path.join(root, "notes", slug);
-
-  const baseName = locale === "en" ? "index.en" : "index";
-  const mdPath = path.join(baseDir, `${baseName}.md`);
-  const mdxPath = path.join(baseDir, `${baseName}.mdx`);
-
-  try {
-    const raw = await fs.readFile(mdPath, "utf8");
-    return { raw, format: "md" };
-  } catch {
-    try {
-      const raw = await fs.readFile(mdxPath, "utf8");
-      return { raw, format: "mdx" };
-    } catch {
-      return null;
-    }
-  }
-}
-
-async function readContentFile(
-  slug: string,
-  options?: ReadContentOptions,
-): Promise<{ raw: string; format: "md" | "mdx" } | null> {
-  const locale = options?.locale ?? "ja";
-  const fallback = options?.fallback ?? true;
-
-  const file = await readContentFileForLocale(slug, locale);
-  if (file) {
-    return file;
-  }
-
-  if (!fallback || locale === "ja") {
-    if (!fallback) {
-      return null;
-    }
-    return readContentFileForLocale(slug, "en");
-  }
-
-  return readContentFileForLocale(slug, "ja");
-}
-
-export const getNoteSlugs = cache(async (): Promise<string[]> => {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
-
-  const root = await resolveContentRoot();
-  const notesRoot = path.join(root, "notes");
-
-  try {
-    const entries = await fs.readdir(notesRoot, { withFileTypes: true });
-
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort();
-  } catch {
-    return [];
-  }
-});
+export const getNoteSlugs = cache(async (): Promise<string[]> => listContentSlugs(NOTE_COLLECTION_DIR));
 
 export const getNote = cache(
   async (slug: string, options?: ReadContentOptions): Promise<Note | null> => {
-    const file = await readContentFile(slug, options);
+    const file = await readContentFileWithFallback(
+      NOTE_COLLECTION_DIR,
+      slug,
+      listNoteArticleFiles,
+      options,
+    );
     if (!file) {
       return null;
     }
@@ -123,7 +75,12 @@ export const getNote = cache(
 
 export const getNoteSummary = cache(
   async (slug: string, options?: ReadContentOptions): Promise<NoteSummary | null> => {
-    const file = await readContentFile(slug, options);
+    const file = await readContentFileWithFallback(
+      NOTE_COLLECTION_DIR,
+      slug,
+      listNoteArticleFiles,
+      options,
+    );
     if (!file) {
       return null;
     }
@@ -139,35 +96,25 @@ export const getNoteSummary = cache(
 );
 
 function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
-  const title = typeof data["title"] === "string" ? data["title"] : "";
-  const dateValue = data["date"];
-  const date =
-    dateValue instanceof Date
-      ? dateValue.toISOString().slice(0, 10)
-      : typeof dateValue === "string"
-        ? dateValue
-        : "";
+  const date = asDateString(data["date"]);
+  const category = asString(data["category"]);
+  const tags = asStringArray(data["tags"]);
+  const thumbnail = asString(data["thumbnail"]);
+  const draft = asBoolean(data["draft"]);
+  const amazonAssociate = asBoolean(data["amazonAssociate"]);
+  const amazonProductIds = asStringArray(data["amazonProductIds"]);
+  const model = asString(data["model"]);
 
   return {
-    title,
+    title: asStringWithDefault(data["title"], ""),
     ...(date ? { date } : {}),
-    ...(typeof data["category"] === "string" ? { category: data["category"] } : {}),
-    ...(Array.isArray(data["tags"])
-      ? { tags: data["tags"].filter((tag): tag is string => typeof tag === "string") }
-      : {}),
-    ...(typeof data["thumbnail"] === "string" ? { thumbnail: data["thumbnail"] } : {}),
-    ...(typeof data["draft"] === "boolean" ? { draft: data["draft"] } : {}),
-    ...(typeof data["amazonAssociate"] === "boolean"
-      ? { amazonAssociate: data["amazonAssociate"] }
-      : {}),
-    ...(Array.isArray(data["amazonProductIds"])
-      ? {
-          amazonProductIds: data["amazonProductIds"].filter(
-            (item): item is string => typeof item === "string",
-          ),
-        }
-      : {}),
-    ...(typeof data["model"] === "string" ? { model: data["model"] } : {}),
+    ...(category !== undefined ? { category } : {}),
+    ...(tags !== undefined ? { tags } : {}),
+    ...(thumbnail !== undefined ? { thumbnail } : {}),
+    ...(draft !== undefined ? { draft } : {}),
+    ...(amazonAssociate !== undefined ? { amazonAssociate } : {}),
+    ...(amazonProductIds !== undefined ? { amazonProductIds } : {}),
+    ...(model !== undefined ? { model } : {}),
   };
 }
 

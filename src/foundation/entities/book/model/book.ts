@@ -1,7 +1,18 @@
 import matter from "gray-matter";
 import { cache } from "react";
 
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import {
+  resolveContentRoot,
+  listContentSlugs,
+  findAdjacentByIndex,
+  asString,
+  asStringWithDefault,
+  asDateString,
+  asBoolean,
+  asStringArray,
+} from "@/shared/lib/content-file";
+
+const BOOK_COLLECTION_DIR = "books";
 
 // ---------------------------------------------------------------------------
 // 型定義
@@ -62,14 +73,10 @@ export type BookSection = SectionRef & {
 // ---------------------------------------------------------------------------
 
 function normalizeFrontmatter(data: Record<string, unknown>): BookFrontmatter {
-  const title = typeof data["title"] === "string" ? data["title"] : "";
-  const dateValue = data["date"];
-  const date =
-    dateValue instanceof Date
-      ? dateValue.toISOString().slice(0, 10)
-      : typeof dateValue === "string"
-        ? dateValue
-        : undefined;
+  const date = asDateString(data["date"]);
+  const category = asString(data["category"]);
+  const tags = asStringArray(data["tags"]);
+  const llm = asBoolean(data["llm"]);
 
   // co-author は YAML の文字列配列。書籍ルールでは `["Claude Opus 4.7"]` のように複数可。
   const rawCoAuthors = data["co-author"];
@@ -80,13 +87,11 @@ function normalizeFrontmatter(data: Record<string, unknown>): BookFrontmatter {
       : undefined;
 
   return {
-    title,
+    title: asStringWithDefault(data["title"], ""),
     ...(date ? { date } : {}),
-    ...(typeof data["category"] === "string" ? { category: data["category"] } : {}),
-    ...(Array.isArray(data["tags"])
-      ? { tags: data["tags"].filter((tag): tag is string => typeof tag === "string") }
-      : {}),
-    ...(typeof data["llm"] === "boolean" ? { llm: data["llm"] } : {}),
+    ...(category !== undefined ? { category } : {}),
+    ...(tags !== undefined ? { tags } : {}),
+    ...(llm !== undefined ? { llm } : {}),
     ...(coAuthors && coAuthors.length > 0 ? { coAuthors } : {}),
   };
 }
@@ -127,24 +132,10 @@ const readBookIndexRaw = cache(async (bookSlug: string): Promise<string | null> 
 // 公開 API
 // ---------------------------------------------------------------------------
 
-/** `content/books` 直下のディレクトリ名（書籍スラッグ）を昇順で返す。 */
-export const getBookSlugs = cache(async (): Promise<string[]> => {
-  const fs = await import("node:fs/promises");
-  const path = await import("node:path");
-
-  const root = await resolveContentRoot();
-  const booksRoot = path.join(root, "books");
-
-  try {
-    const entries = await fs.readdir(booksRoot, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort();
-  } catch {
-    return [];
-  }
-});
+/** `content/books` 直下のディレクトリ名(書籍スラッグ)を昇順で返す。 */
+export const getBookSlugs = cache(
+  async (): Promise<string[]> => listContentSlugs(BOOK_COLLECTION_DIR),
+);
 
 /**
  * 書籍のトップ情報（frontmatter + リード文）を返す。
@@ -304,15 +295,10 @@ export const getAdjacentSections = cache(
   ): Promise<{ prev: SectionRef | null; next: SectionRef | null }> => {
     const toc = await getBookToc(bookSlug);
     const flat = toc.flatMap((ch) => ch.sections);
-    const idx = flat.findIndex((s) => s.chapter === chapter && s.section === section);
-
-    if (idx < 0) {
-      return { prev: null, next: null };
-    }
-
-    return {
-      prev: idx > 0 ? (flat[idx - 1] ?? null) : null,
-      next: idx < flat.length - 1 ? (flat[idx + 1] ?? null) : null,
-    };
+    return findAdjacentByIndex(
+      flat,
+      (s) => s.chapter === chapter && s.section === section,
+      { prevOffset: -1, nextOffset: 1 },
+    );
   },
 );

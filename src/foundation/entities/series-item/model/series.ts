@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { resolveContentRoot } from "@/shared/lib/content-root";
+import { resolveContentRoot } from "@/shared/lib/content-file";
 import type { Locale } from "@/shared/lib/routing";
 
 /**
