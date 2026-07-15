@@ -1,12 +1,5 @@
-import { buildRssXml } from "@/entities/blog/lib/rss";
+import { createRssRouteHandler } from "@/app/_shared/rss-route";
 
 export const dynamic = "force-static";
 
-export async function GET() {
-  const xml = await buildRssXml("en");
-  return new Response(xml, {
-    headers: {
-      "Content-Type": "application/rss+xml; charset=utf-8",
-    },
-  });
-}
+export const GET = createRssRouteHandler("en");
