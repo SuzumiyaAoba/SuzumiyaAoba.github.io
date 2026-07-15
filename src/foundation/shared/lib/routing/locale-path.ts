@@ -3,6 +3,13 @@
  */
 export type Locale = "ja" | "en";
 
+/**
+ * 未指定の場合のデフォルトロケール("ja")を補って解決する
+ */
+export function resolveLocale(locale: Locale | undefined): Locale {
+  return locale ?? "ja";
+}
+
 const pathsWithoutTrailingSlash = new Set(["/rss.xml", "/en/rss.xml"]);
 
 function normalizeTrailingSlash(path: string): string {

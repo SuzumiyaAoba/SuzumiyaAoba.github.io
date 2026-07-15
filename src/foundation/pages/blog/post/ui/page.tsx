@@ -21,7 +21,7 @@ import {
   getAffiliateProductsByTags,
   type AffiliateProduct,
 } from "@/shared/lib/affiliate-products";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 import { getSiteUrl } from "@/shared/lib/site";
 import { BlogPostPageContent } from "./page-content";
 
@@ -44,7 +44,7 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`);
   }
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const isEn = resolvedLocale === "en";
   const { slug } = await params;
   if (shouldLogPerf) {

@@ -1,6 +1,6 @@
 import { getAiNewsEntries, getAiNewsUpdated } from "@/shared/lib/ai-news";
 import { renderMdx } from "@/shared/lib/mdx";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { AiNewsPageContent } from "./page-content";
 
 type PageProps = {
@@ -8,7 +8,7 @@ type PageProps = {
 };
 
 export default async function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const [entries, updated] = await Promise.all([getAiNewsEntries(), getAiNewsUpdated()]);
   const renderedEntries = await Promise.all(
     entries.map(async (entry) => {

@@ -2,7 +2,7 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 type NotFoundPageProps = {
   locale?: Locale;
@@ -48,6 +48,6 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
 }
 
 export default function NotFoundPage({ locale }: NotFoundPageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   return <NotFoundPageContent locale={resolvedLocale} />;
 }

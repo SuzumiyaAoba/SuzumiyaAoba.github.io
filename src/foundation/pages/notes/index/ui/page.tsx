@@ -1,5 +1,5 @@
 import { getNoteSummariesVariants } from "@/entities/note";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { NotesIndexPageContent, type NoteListEntry } from "./page-content";
 
 type PageProps = {
@@ -7,7 +7,7 @@ type PageProps = {
 };
 
 export default async function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const notes = await getNoteSummariesVariants();
 
   const entries = notes

@@ -1,4 +1,4 @@
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { ToolsIndexPageContent } from "./page-content";
 
 type PageProps = {
@@ -6,6 +6,6 @@ type PageProps = {
 };
 
 export default function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   return <ToolsIndexPageContent locale={resolvedLocale} />;
 }

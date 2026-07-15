@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getSeriesBySlug } from "@/entities/series-item";
 import { getBlogPost } from "@/entities/blog";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { SeriesDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -10,7 +10,7 @@ type PageProps = {
 };
 
 export default async function Page({ params, locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const { series: slug } = await params;
   const series = await getSeriesBySlug(slug, resolvedLocale);
 

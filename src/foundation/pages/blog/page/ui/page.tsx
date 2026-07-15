@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getPageCount, paginate } from "@/shared/lib/presentation";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { BlogPaginationPageContent } from "./page-content";
 
 type PageProps = {
@@ -10,7 +10,7 @@ type PageProps = {
 };
 
 export default async function Page({ params, locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const { page } = await params;
   const pageNumber = Number(page);
 

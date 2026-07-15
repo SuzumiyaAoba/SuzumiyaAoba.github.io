@@ -7,7 +7,7 @@ import { SearchPanel } from "./search-panel";
 import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 function SearchLoading({ locale }: { locale: Locale }) {
   return (
@@ -60,6 +60,6 @@ export function SearchPageContent({ locale }: SearchPageContentProps) {
 }
 
 export default function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   return <SearchPageContent locale={resolvedLocale} />;
 }

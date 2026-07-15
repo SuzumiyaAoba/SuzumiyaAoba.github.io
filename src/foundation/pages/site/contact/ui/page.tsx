@@ -3,7 +3,7 @@ import { Footer } from "@/widgets/footer";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;
@@ -61,6 +61,6 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
 }
 
 export default function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   return <ContactPageContent locale={resolvedLocale} />;
 }

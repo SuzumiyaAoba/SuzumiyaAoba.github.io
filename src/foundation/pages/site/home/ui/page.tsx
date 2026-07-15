@@ -6,7 +6,7 @@ import { Card } from "@/shared/ui/card";
 import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 import { PostActivityHeatmap } from "./post-activity-heatmap";
 
@@ -78,7 +78,7 @@ export function HomePageContent({ locale, latestPosts, activityPosts }: HomePage
 }
 
 export default async function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const posts = await getBlogPostSummariesVariants();
   const latestPosts = posts.slice(0, 3);
   const activityPosts = posts

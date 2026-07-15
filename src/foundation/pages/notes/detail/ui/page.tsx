@@ -6,7 +6,7 @@ import { getNoteVariants } from "@/entities/note";
 import { getAffiliateProductsByIds, type AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { resolveContentRoot } from "@/shared/lib/content-file";
 import { extractAmazonProductIdsFromMdx, loadMdxScope, renderMdx } from "@/shared/lib/mdx";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 import { NotesDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -15,7 +15,7 @@ type PageProps = {
 };
 
 export default async function Page({ params, locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const isEn = resolvedLocale === "en";
   const { slug } = await params;
   const { ja: noteJa, en: noteEn } = await getNoteVariants(slug);

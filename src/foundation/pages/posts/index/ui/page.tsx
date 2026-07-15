@@ -1,5 +1,5 @@
 import { getPostSlugs } from "../lib";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { PostsIndexPageContent } from "./page-content";
 
 type PageProps = {
@@ -7,7 +7,7 @@ type PageProps = {
 };
 
 export default async function Page({ locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const slugs = await getPostSlugs();
 
   return <PostsIndexPageContent locale={resolvedLocale} slugs={slugs} />;

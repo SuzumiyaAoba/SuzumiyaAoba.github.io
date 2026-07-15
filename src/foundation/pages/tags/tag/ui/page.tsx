@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getBlogPostSummariesVariants, type BlogPostSummary } from "@/entities/blog";
-import { type Locale } from "@/shared/lib/routing";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { TagDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -17,7 +17,7 @@ function normalizeTagParam(tag: string): string {
 }
 
 export default async function Page({ params, locale }: PageProps) {
-  const resolvedLocale: Locale = locale ?? "ja";
+  const resolvedLocale = resolveLocale(locale);
   const { tag } = await params;
   const decodedTag = normalizeTagParam(tag);
   const posts = await getBlogPostSummariesVariants();
