@@ -11,21 +11,7 @@ import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
-
-function formatDate(date: string, locale: string): string {
-  if (!date) {
-    return locale.startsWith("ja") ? "不明な日付" : "Unknown date";
-  }
-  const parsed = new Date(date);
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-  return parsed.toLocaleDateString(locale, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/shared/lib/presentation";
 
 export type TagDetailPageContentProps = {
   locale: Locale;
