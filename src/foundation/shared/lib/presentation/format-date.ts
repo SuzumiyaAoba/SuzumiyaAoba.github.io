@@ -18,3 +18,13 @@ export function formatDate(date: string, locale: string): string {
     day: "numeric",
   });
 }
+
+/**
+ * Dateをオプション無しでロケール既定の形式にフォーマットする(ヒートマップの日付表示など)
+ * @param date 日付
+ * @param locale ロケール識別子
+ * @returns フォーマットされた日付文字列
+ */
+export function formatDatePlain(date: Date, locale: string): string {
+  return date.toLocaleDateString(locale);
+}

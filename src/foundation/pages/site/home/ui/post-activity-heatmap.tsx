@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/shared/lib/utils";
 
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { formatDatePlain } from "@/shared/lib/presentation";
 import { Tag } from "@/shared/ui/tag";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -159,7 +160,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
   const legendLabelMax = isJa ? "多い" : "More";
   const activePosts = activeDateKey ? (index.get(activeDateKey) ?? []) : [];
   const activeDateLabel = activeDateKey
-    ? new Date(activeDateKey).toLocaleDateString(dateLocale)
+    ? formatDatePlain(new Date(activeDateKey), dateLocale)
     : null;
 
   useEffect(() => {
@@ -191,7 +192,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
     <div className={cn("space-y-4", className)}>
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <span>
-          {rangeStart.toLocaleDateString(dateLocale)} - {rangeEnd.toLocaleDateString(dateLocale)}
+          {formatDatePlain(rangeStart, dateLocale)} - {formatDatePlain(rangeEnd, dateLocale)}
         </span>
         <span>
           {isJa ? "合計" : "Total"}: {totalCount}

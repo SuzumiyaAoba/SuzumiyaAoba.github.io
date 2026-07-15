@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatDate } from "./format-date";
+import { formatDate, formatDatePlain } from "./format-date";
 
 describe("formatDate", () => {
   describe("空の日付", () => {
@@ -38,5 +38,13 @@ describe("formatDate", () => {
         }),
       );
     });
+  });
+});
+
+describe("formatDatePlain", () => {
+  it("オプション無しでロケール既定の形式にフォーマットする", () => {
+    const date = new Date("2024-01-15");
+    expect(formatDatePlain(date, "ja-JP")).toBe(date.toLocaleDateString("ja-JP"));
+    expect(formatDatePlain(date, "en-US")).toBe(date.toLocaleDateString("en-US"));
   });
 });
