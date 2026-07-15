@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { PaginationNav } from "@/shared/ui/pagination-nav";
@@ -37,10 +37,9 @@ export function BlogListPageContent({
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Blog", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "Blog", path: "/blog" }),
+        )}
       />
       <main
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"

@@ -3,7 +3,7 @@ import { Footer } from "@/widgets/footer";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { Card } from "@/shared/ui/card";
 import { EntryCardList, type EntryCardItem } from "@/shared/ui/entry-card-list";
 
@@ -42,10 +42,9 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Archive", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "Archive", path: "/archive" }),
+        )}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">

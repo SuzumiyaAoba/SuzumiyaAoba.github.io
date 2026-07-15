@@ -3,7 +3,7 @@ import { Footer } from "@/widgets/footer";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;
@@ -19,10 +19,9 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Contact", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "Contact", path: "/contact" }),
+        )}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">

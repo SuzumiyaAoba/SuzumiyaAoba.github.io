@@ -36,6 +36,19 @@ export function buildDetailBreadcrumbItems(
   ];
 }
 
+/**
+ * 「Home > セクション」の2階層パンくず項目を組み立てる。
+ * 一覧ページ向けにHomeと自身のみのJsonLd用パンくずを共通化するためのヘルパー。
+ * @param locale 表示ロケール
+ * @param item セクション名とロケール非依存のパス(例: `{ name: "Blog", path: "/blog" }`)
+ */
+export function buildListBreadcrumbItems(locale: Locale, item: BreadcrumbItem): BreadcrumbItem[] {
+  return [
+    { name: "Home", path: toLocalePath("/", locale) },
+    { name: item.name, path: toLocalePath(item.path, locale) },
+  ];
+}
+
 export function buildBreadcrumbList(items: BreadcrumbItem[]) {
   const siteUrl = getSiteUrl();
   return {

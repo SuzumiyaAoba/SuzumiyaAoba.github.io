@@ -3,7 +3,7 @@ import { Footer } from "@/widgets/footer";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 /**
  * About ページのページコンポーネント用プロパティ
@@ -30,10 +30,9 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "About", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "About", path: "/about" }),
+        )}
       />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-10 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">

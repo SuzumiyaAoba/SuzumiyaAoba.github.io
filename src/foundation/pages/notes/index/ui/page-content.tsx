@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { Card } from "@/shared/ui/card";
@@ -31,10 +31,9 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Notes", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "Notes", path: "/notes" }),
+        )}
       />
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-4">

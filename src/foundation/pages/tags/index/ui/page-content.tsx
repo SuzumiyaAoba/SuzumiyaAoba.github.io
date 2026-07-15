@@ -4,7 +4,7 @@ import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath, type Locale } from "@/shared/lib/routing";
 
 export type TagEntry = {
   name: string;
@@ -23,10 +23,9 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Tags", path: pagePath },
-        ])}
+        data={buildBreadcrumbList(
+          buildListBreadcrumbItems(locale, { name: "Tags", path: "/tags" }),
+        )}
       />
       <main
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
