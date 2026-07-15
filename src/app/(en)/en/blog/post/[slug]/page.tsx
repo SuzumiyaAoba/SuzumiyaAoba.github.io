@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { getBlogPostVariants, getBlogSlugs } from "@/entities/blog";
-import { toLocalePath } from "@/shared/lib/routing";
+import { getBlogSlugs } from "@/entities/blog";
+import { buildBlogPostMetadata } from "@/app/_shared/blog-post-metadata";
 import BlogPostPage from "@/pages/blog/post";
 
 type PageProps = {
@@ -9,34 +9,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  const slug = resolvedParams?.slug;
-  if (!slug) {
-    return { title: "Blog" };
-  }
-  const { ja: postJa, en: postEn } = await getBlogPostVariants(slug);
-  const post = postEn ?? postJa;
-  if (!post) {
-    return { title: "Blog" };
-  }
-  const title = post?.frontmatter.title || slug;
-  const description = post?.frontmatter.category ? `${post.frontmatter.category} article.` : title;
-  const canonicalPath = postEn
-    ? toLocalePath(`/blog/post/${slug}`, "en")
-    : toLocalePath(`/blog/post/${slug}`, "ja");
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: canonicalPath,
-    },
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      publishedTime: post?.frontmatter.date,
-    },
-  };
+  return buildBlogPostMetadata(resolvedParams?.slug, "en");
 }
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {

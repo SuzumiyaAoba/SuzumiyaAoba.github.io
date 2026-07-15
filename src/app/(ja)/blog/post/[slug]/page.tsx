@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getBlogPost, getBlogSlugs } from "@/entities/blog";
+import { getBlogSlugs } from "@/entities/blog";
+import { buildBlogPostMetadata } from "@/app/_shared/blog-post-metadata";
 import BlogPostPage from "@/pages/blog/post";
 
 type MetadataProps = {
@@ -8,26 +9,7 @@ type MetadataProps = {
 
 export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  const slug = resolvedParams?.slug;
-  if (!slug) {
-    return { title: "Blog" };
-  }
-  const post = await getBlogPost(slug);
-  const title = post?.frontmatter.title || slug;
-  const description = post?.frontmatter.category
-    ? `Articles about ${post.frontmatter.category}.`
-    : title;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      publishedTime: post?.frontmatter.date,
-    },
-  };
+  return buildBlogPostMetadata(resolvedParams?.slug, "ja");
 }
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
