@@ -1,4 +1,5 @@
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import { paginate } from "@/shared/lib/presentation";
 import { type Locale } from "@/shared/lib/routing";
 import { BlogListPageContent } from "./page-content";
 
@@ -16,7 +17,7 @@ type PageProps = {
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale: Locale = locale ?? "ja";
   const posts = await getBlogPostSummariesVariants();
-  const pagePosts = posts.slice(0, 10);
+  const pagePosts = paginate(posts, 1);
 
   return (
     <BlogListPageContent

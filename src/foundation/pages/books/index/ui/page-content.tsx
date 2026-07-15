@@ -3,6 +3,7 @@ import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Card } from "@/shared/ui/card";
+import { SimpleEntryList, type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 
 export type BookListEntry = {
   slug: string;
@@ -17,6 +18,13 @@ export type BooksIndexPageContentProps = {
 
 export function BooksIndexPageContent({ locale, books }: BooksIndexPageContentProps) {
   const pagePath = toLocalePath("/books", locale);
+
+  const items: SimpleEntryListItem[] = books.map((book) => ({
+    slug: book.slug,
+    title: book.title,
+    ...(book.date ? { date: book.date } : {}),
+    href: toLocalePath(`/books/${book.slug}`, locale),
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -39,29 +47,16 @@ export function BooksIndexPageContent({ locale, books }: BooksIndexPageContentPr
           </div>
         </section>
 
-        {books.length > 0 ? (
-          <ul className="max-w-3xl divide-y divide-border/40">
-            {books.map((book) => (
-              <li key={book.slug} className="py-4">
-                <a
-                  href={toLocalePath(`/books/${book.slug}`, locale)}
-                  className="inline-flex flex-col gap-1 transition-colors hover:text-foreground/80"
-                >
-                  <span className="text-base font-medium break-words">{book.title}</span>
-                  {book.date ? (
-                    <span className="text-xs text-muted-foreground">{book.date}</span>
-                  ) : null}
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <Card className="border-transparent bg-card/40 shadow-none">
-            <div className="px-5 py-6 text-sm text-muted-foreground">
-              まだ書籍が公開されていません。
-            </div>
-          </Card>
-        )}
+        <SimpleEntryList
+          items={items}
+          emptyState={
+            <Card className="border-transparent bg-card/40 shadow-none">
+              <div className="px-5 py-6 text-sm text-muted-foreground">
+                まだ書籍が公開されていません。
+              </div>
+            </Card>
+          }
+        />
       </main>
       <Footer locale={locale} />
     </div>

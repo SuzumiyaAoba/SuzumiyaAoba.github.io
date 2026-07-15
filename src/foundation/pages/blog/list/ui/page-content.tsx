@@ -3,6 +3,8 @@ import { Footer } from "@/widgets/footer";
 import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { PaginationNav } from "@/shared/ui/pagination-nav";
+import { DEFAULT_PAGE_SIZE, getPageCount } from "@/shared/lib/presentation";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 
@@ -52,27 +54,13 @@ export function BlogListPageContent({
 
         <BlogPostList posts={posts} locale={locale} variant="detailed" showThumbnail />
 
-        {totalCount > 10 ? (
-          <nav className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
-            {Array.from({ length: Math.ceil(totalCount / 10) }, (_, index) => {
-              const page = index + 1;
-              const href = page === 1 ? "/blog" : `/blog/${page}`;
-              const isActive = page === currentPage;
-              return (
-                <a
-                  key={page}
-                  href={toLocalePath(href, locale)}
-                  className={
-                    isActive
-                      ? "rounded-full bg-foreground px-3 py-1 text-xs font-semibold text-background"
-                      : "rounded-full px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
-                  }
-                >
-                  {page}
-                </a>
-              );
-            })}
-          </nav>
+        {totalCount > DEFAULT_PAGE_SIZE ? (
+          <PaginationNav
+            locale={locale}
+            currentPage={currentPage}
+            pageCount={getPageCount(totalCount)}
+            hrefForPage={(page) => (page === 1 ? "/blog" : `/blog/${page}`)}
+          />
         ) : null}
       </main>
       <Footer locale={locale} />

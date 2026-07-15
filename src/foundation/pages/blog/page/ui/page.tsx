@@ -1,13 +1,8 @@
 import { notFound } from "next/navigation";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import { getPageCount, paginate } from "@/shared/lib/presentation";
 import { type Locale } from "@/shared/lib/routing";
 import { BlogPaginationPageContent } from "./page-content";
-
-const POSTS_PER_PAGE = 10;
-
-function getPageCount(total: number): number {
-  return Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
-}
 
 type PageProps = {
   params: Promise<{ page: string }>;
@@ -30,8 +25,7 @@ export default async function Page({ params, locale }: PageProps) {
     notFound();
   }
 
-  const start = (pageNumber - 1) * POSTS_PER_PAGE;
-  const pagePosts = posts.slice(start, start + POSTS_PER_PAGE);
+  const pagePosts = paginate(posts, pageNumber);
 
   return (
     <BlogPaginationPageContent

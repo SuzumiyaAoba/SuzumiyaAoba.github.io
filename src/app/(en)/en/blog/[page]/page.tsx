@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import { getPageCount } from "@/shared/lib/presentation";
 import BlogPage from "@/pages/blog/page";
 
 type PageProps = {
   params: Promise<{ page?: string }>;
 };
-
-const POSTS_PER_PAGE = 10;
-
-function getPageCount(total: number): number {
-  return Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);

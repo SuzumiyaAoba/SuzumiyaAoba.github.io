@@ -4,6 +4,7 @@ import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/rou
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { Card } from "@/shared/ui/card";
+import { SimpleEntryList, type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 
 export type NoteListEntry = {
   slug: string;
@@ -18,6 +19,13 @@ export type NotesIndexPageContentProps = {
 
 export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentProps) {
   const pagePath = toLocalePath("/notes", locale);
+
+  const items: SimpleEntryListItem[] = notes.map((note) => ({
+    slug: note.slug,
+    title: note.title,
+    ...(note.date ? { date: note.date } : {}),
+    href: toLocalePath(`/notes/${note.slug}`, locale),
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -44,33 +52,20 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
           </div>
         </section>
 
-        {notes.length > 0 ? (
-          <ul className="max-w-3xl divide-y divide-border/40">
-            {notes.map((note) => (
-              <li key={note.slug} className="py-4">
-                <a
-                  href={toLocalePath(`/notes/${note.slug}`, locale)}
-                  className="inline-flex flex-col gap-1 transition-colors hover:text-foreground/80"
-                >
-                  <span className="text-base font-medium break-words">{note.title}</span>
-                  {note.date ? (
-                    <span className="text-xs text-muted-foreground">{note.date}</span>
-                  ) : null}
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <Card className="border-transparent bg-card/40 shadow-none">
-            <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText
-                locale={locale}
-                ja="まだノートがありません。"
-                en="No notes have been published yet."
-              />
-            </div>
-          </Card>
-        )}
+        <SimpleEntryList
+          items={items}
+          emptyState={
+            <Card className="border-transparent bg-card/40 shadow-none">
+              <div className="px-5 py-6 text-sm text-muted-foreground">
+                <I18nText
+                  locale={locale}
+                  ja="まだノートがありません。"
+                  en="No notes have been published yet."
+                />
+              </div>
+            </Card>
+          }
+        />
       </main>
       <Footer locale={locale} />
     </div>

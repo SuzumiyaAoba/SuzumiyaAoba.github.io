@@ -3,6 +3,7 @@ import { Footer } from "@/widgets/footer";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { PaginationNav } from "@/shared/ui/pagination-nav";
 import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "@/entities/blog";
 
@@ -55,48 +56,13 @@ export function BlogPaginationPageContent({
 
         <BlogPostList posts={posts} locale={locale} variant="detailed" showThumbnail />
 
-        <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-          {pageNumber > 1 ? (
-            <a
-              href={toLocalePath(pageNumber === 2 ? "/blog" : `/blog/${pageNumber - 1}`, locale)}
-              className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-            >
-              <I18nText locale={locale} ja="← 前のページ" en="← Previous page" />
-            </a>
-          ) : (
-            <span className="w-[5.5rem]" />
-          )}
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            {Array.from({ length: pageCount }, (_, index) => {
-              const page = index + 1;
-              const href = page === 1 ? "/blog" : `/blog/${page}`;
-              const isActive = page === pageNumber;
-              return (
-                <a
-                  key={page}
-                  href={toLocalePath(href, locale)}
-                  className={
-                    isActive
-                      ? "rounded-full bg-foreground px-3 py-1 text-xs font-semibold text-background"
-                      : "rounded-full px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
-                  }
-                >
-                  {page}
-                </a>
-              );
-            })}
-          </div>
-          {pageNumber < pageCount ? (
-            <a
-              href={toLocalePath(`/blog/${pageNumber + 1}`, locale)}
-              className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-            >
-              <I18nText locale={locale} ja="次のページ →" en="Next page →" />
-            </a>
-          ) : (
-            <span className="w-[5.5rem]" />
-          )}
-        </nav>
+        <PaginationNav
+          locale={locale}
+          currentPage={pageNumber}
+          pageCount={pageCount}
+          hrefForPage={(page) => (page === 1 ? "/blog" : `/blog/${page}`)}
+          showPrevNext
+        />
       </main>
       <Footer locale={locale} />
     </div>
