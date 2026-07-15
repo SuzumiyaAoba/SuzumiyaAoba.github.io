@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section42Data from "@/content/blog/2026-01-01-kakekin/data/section42.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 const HEADERS = {
   overallCost: "老後のひと月当たり 最低予想生活費 | 万円",
@@ -27,8 +28,7 @@ export const Section42ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>最低生活費（全体・年齢別）</h4>
+      <ChartSection title="最低生活費（全体・年齢別）" marginBottom>
         <LineChart
           data={section42Data}
           groups={[]}
@@ -41,9 +41,8 @@ export const Section42ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
-      <div>
-        <h4>必要資産残高（全体・60歳未満）</h4>
+      </ChartSection>
+      <ChartSection title="必要資産残高（全体・60歳未満）">
         <LineChart
           data={section42Data}
           groups={[]}
@@ -56,7 +55,7 @@ export const Section42ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };

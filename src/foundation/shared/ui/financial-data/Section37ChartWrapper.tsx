@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section37Data from "@/content/blog/2026-01-01-kakekin/data/section37.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 export const Section37ChartWrapper: React.FC = () => {
   if (!section37Data) {
@@ -42,8 +43,7 @@ export const Section37ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>全体</h4>
+      <ChartSection title="全体" marginBottom>
         <LineChart
           data={section37Data}
           groups={groups}
@@ -56,9 +56,8 @@ export const Section37ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>主要3基準の推移</h4>
+      </ChartSection>
+      <ChartSection title="主要3基準の推移" marginBottom>
         <LineChart
           data={section37Data}
           groups={[]}
@@ -80,7 +79,7 @@ export const Section37ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };

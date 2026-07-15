@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section39Data from "@/content/blog/2026-01-01-kakekin/data/section39.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 export const Section39ChartWrapper: React.FC = () => {
   if (!section39Data) {
@@ -24,8 +25,7 @@ export const Section39ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>増減の概要</h4>
+      <ChartSection title="増減の概要" marginBottom>
         <LineChart
           data={section39Data}
           groups={[]}
@@ -45,9 +45,8 @@ export const Section39ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
-      <div>
-        <h4>増減の詳細（内訳あり）</h4>
+      </ChartSection>
+      <ChartSection title="増減の詳細（内訳あり）">
         <LineChart
           data={section39Data}
           groups={[]}
@@ -60,7 +59,7 @@ export const Section39ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };

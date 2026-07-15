@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section38Data from "@/content/blog/2026-01-01-kakekin/data/section38.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 export const Section38ChartWrapper: React.FC = () => {
   if (!section38Data) {
@@ -21,8 +22,7 @@ export const Section38ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>元本割れ経験の有無</h4>
+      <ChartSection title="元本割れ経験の有無" marginBottom>
         <LineChart
           data={section38Data}
           groups={[]}
@@ -40,9 +40,8 @@ export const Section38ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
-      <div>
-        <h4>元本割れ経験者の受け止め方</h4>
+      </ChartSection>
+      <ChartSection title="元本割れ経験者の受け止め方">
         <LineChart
           data={section38Data}
           groups={[]}
@@ -55,7 +54,7 @@ export const Section38ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };

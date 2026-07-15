@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section29Data from "@/content/blog/2026-01-01-kakekin/data/section29.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 export const Section29ChartWrapper: React.FC = () => {
   if (!section29Data) {
@@ -30,8 +31,7 @@ export const Section29ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>金額帯別分布</h4>
+      <ChartSection title="金額帯別分布" marginBottom>
         <LineChart
           data={section29Data}
           groups={[]}
@@ -44,9 +44,8 @@ export const Section29ChartWrapper: React.FC = () => {
             labelMap: distributionLabelMap,
           }}
         />
-      </div>
-      <div>
-        <h4>平均値・中央値</h4>
+      </ChartSection>
+      <ChartSection title="平均値・中央値">
         <LineChart
           data={section29Data}
           groups={[]}
@@ -71,7 +70,7 @@ export const Section29ChartWrapper: React.FC = () => {
             labelMap: avgLabelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };

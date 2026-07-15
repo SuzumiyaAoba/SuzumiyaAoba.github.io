@@ -3,6 +3,7 @@
 import { LineChart } from "@/shared/ui/financial-charts";
 import section32Data from "@/content/blog/2026-01-01-kakekin/data/section32.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
+import { ChartSection } from "./_shared/chart-section";
 
 export const Section32ChartWrapper: React.FC = () => {
   if (!section32Data) {
@@ -51,8 +52,7 @@ export const Section32ChartWrapper: React.FC = () => {
 
   return (
     <>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>全体</h4>
+      <ChartSection title="全体" marginBottom>
         <LineChart
           data={section32Data}
           groups={groups}
@@ -65,9 +65,8 @@ export const Section32ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
-      <div style={{ marginBottom: "2rem" }}>
-        <h4>主要項目のみ</h4>
+      </ChartSection>
+      <ChartSection title="主要項目のみ" marginBottom>
         <LineChart
           data={section32Data}
           groups={[]}
@@ -86,7 +85,7 @@ export const Section32ChartWrapper: React.FC = () => {
             labelMap,
           }}
         />
-      </div>
+      </ChartSection>
     </>
   );
 };
