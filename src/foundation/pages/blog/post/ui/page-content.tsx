@@ -6,7 +6,6 @@ import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
-import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { getSiteUrl } from "@/shared/lib/site";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
@@ -17,7 +16,12 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  toLocalePath,
+  type Locale,
+} from "@/shared/lib/routing";
 
 /**
  * ブログ記事詳細ページの表示用コンポーネントのプロパティ
@@ -84,16 +88,16 @@ export function BlogPostPageContent({
   prev,
   next,
 }: BlogPostPageContentProps) {
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Blog", path: "/blog" },
+    { name: postTitle, path: postPath },
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={postPath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Blog", path: toLocalePath("/blog", locale) },
-          { name: postTitle, path: postPath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -112,14 +116,7 @@ export function BlogPostPageContent({
         }}
       />
       <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: toLocalePath("/", locale) },
-            { name: "Blog", path: toLocalePath("/blog", locale) },
-            { name: postTitle, path: postPath },
-          ]}
-          className="mb-4"
-        />
+        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <header className="mb-10 space-y-3">
           <p className="text-sm text-muted-foreground">{postDate}</p>
           <h1 className="text-3xl font-semibold break-all">{postTitle}</h1>

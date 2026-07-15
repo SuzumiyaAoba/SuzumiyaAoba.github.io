@@ -6,7 +6,12 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  toLocalePath,
+  type Locale,
+} from "@/shared/lib/routing";
 import { SeriesDefinition } from "@/entities/series-item";
 
 export type SeriesDetailPageContentProps = {
@@ -22,26 +27,18 @@ export type SeriesDetailPageContentProps = {
 
 export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetailPageContentProps) {
   const pagePath = toLocalePath(`/series/${series.slug}`, locale);
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Series", path: "/series" },
+    { name: series.name, path: pagePath },
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Series", path: toLocalePath("/series", locale) },
-          { name: series.name, path: pagePath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: toLocalePath("/", locale) },
-            { name: "Series", path: toLocalePath("/series", locale) },
-            { name: series.name, path: pagePath },
-          ]}
-          className="mb-2"
-        />
+        <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
           <a
             href={toLocalePath("/series", locale)}

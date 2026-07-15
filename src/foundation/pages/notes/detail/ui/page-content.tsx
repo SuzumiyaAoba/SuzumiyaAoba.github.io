@@ -3,7 +3,12 @@ import type { ReactElement } from "react";
 import { Footer } from "@/widgets/footer";
 import { Header } from "@/widgets/header";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  toLocalePath,
+  type Locale,
+} from "@/shared/lib/routing";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { Badge } from "@/shared/ui/badge";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -41,25 +46,18 @@ export function NotesDetailPageContent({
   amazonProducts,
   shouldShowAmazonAssociate,
 }: NotesDetailPageContentProps) {
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Notes", path: "/notes" },
+    { name: noteTitle, path: notePath },
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={notePath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Notes", path: toLocalePath("/notes", locale) },
-          { name: noteTitle, path: notePath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: toLocalePath("/", locale) },
-            { name: "Notes", path: toLocalePath("/notes", locale) },
-            { name: noteTitle, path: notePath },
-          ]}
-          className="mb-4"
-        />
+        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <section className="mb-10 space-y-3">
           <a
             href={toLocalePath("/notes", locale)}

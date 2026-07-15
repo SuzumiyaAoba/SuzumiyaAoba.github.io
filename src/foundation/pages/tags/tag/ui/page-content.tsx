@@ -4,12 +4,16 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
-import { buildBreadcrumbList } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  toLocalePath,
+  type Locale,
+} from "@/shared/lib/routing";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 import { formatDate } from "@/shared/lib/presentation";
 
@@ -29,29 +33,21 @@ export type TagDetailPageContentProps = {
 export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageContentProps) {
   const pagePath = toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale);
   const dateLocale = locale === "en" ? "en-US" : "ja-JP";
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Tags", path: "/tags" },
+    { name: tag, path: pagePath },
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Tags", path: toLocalePath("/tags", locale) },
-          { name: tag, path: pagePath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
         data-pagefind-ignore="all"
       >
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: toLocalePath("/", locale) },
-            { name: "Tags", path: toLocalePath("/tags", locale) },
-            { name: tag, path: pagePath },
-          ]}
-          className="mb-2"
-        />
+        <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
           <a
             href={toLocalePath("/tags", locale)}

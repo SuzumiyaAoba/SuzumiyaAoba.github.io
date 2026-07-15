@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { buildBreadcrumbList, type BreadcrumbItem } from "./breadcrumbs";
+import { buildBreadcrumbList, buildDetailBreadcrumbItems, type BreadcrumbItem } from "./breadcrumbs";
 
 // Mock the site-config module (transitive dependency)
 vi.mock("@/shared/lib/site/site-config", () => ({
@@ -79,5 +79,45 @@ describe("buildBreadcrumbList", () => {
 
     expect(result.itemListElement[0]!.name).toBe("タグ一覧");
     expect(result.itemListElement[0]!.item).toBe("https://suzumiyaaoba.com/tags/日本語");
+  });
+});
+
+describe("buildDetailBreadcrumbItems", () => {
+  it("Home > セクション > 詳細アイテムの3階層を組み立てる(ja)", () => {
+    const result = buildDetailBreadcrumbItems(
+      "ja",
+      { name: "Books", path: "/books" },
+      { name: "Java入門", path: "/books/java-abc" },
+    );
+
+    expect(result).toEqual([
+      { name: "Home", path: "/" },
+      { name: "Books", path: "/books/" },
+      { name: "Java入門", path: "/books/java-abc" },
+    ]);
+  });
+
+  it("enロケールではセクションパスにen接頭辞を付与する", () => {
+    const result = buildDetailBreadcrumbItems(
+      "en",
+      { name: "Books", path: "/books" },
+      { name: "Java Basics", path: "/en/books/java-abc" },
+    );
+
+    expect(result).toEqual([
+      { name: "Home", path: "/en/" },
+      { name: "Books", path: "/en/books/" },
+      { name: "Java Basics", path: "/en/books/java-abc" },
+    ]);
+  });
+
+  it("itemのpathはそのまま(呼び出し側で解決済み)使われる", () => {
+    const result = buildDetailBreadcrumbItems(
+      "ja",
+      { name: "Tags", path: "/tags" },
+      { name: "programming", path: "/tags/programming/" },
+    );
+
+    expect(result[2]).toEqual({ name: "programming", path: "/tags/programming/" });
   });
 });

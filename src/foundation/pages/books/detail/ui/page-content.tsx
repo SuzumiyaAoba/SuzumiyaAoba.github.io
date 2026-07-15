@@ -2,7 +2,12 @@ import type { ReactElement } from "react";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  toLocalePath,
+  type Locale,
+} from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import type { BookChapter } from "@/entities/book";
 
@@ -23,26 +28,19 @@ export function BookDetailPageContent({
   leadContent,
   chapters,
 }: BookDetailPageContentProps) {
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Books", path: "/books" },
+    { name: bookTitle, path: bookPath },
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={bookPath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Books", path: toLocalePath("/books", locale) },
-          { name: bookTitle, path: bookPath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <div>
-          <Breadcrumbs
-            items={[
-              { name: "Home", path: toLocalePath("/", locale) },
-              { name: "Books", path: toLocalePath("/books", locale) },
-              { name: bookTitle, path: bookPath },
-            ]}
-            className="mb-4"
-          />
+          <Breadcrumbs items={breadcrumbItems} className="mb-4" />
           <h1 className="text-3xl font-semibold">{bookTitle}</h1>
         </div>
 
