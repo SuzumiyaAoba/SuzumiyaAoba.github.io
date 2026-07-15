@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { resolveContentRoot } from "@/shared/lib/content-file";
 import type { Locale } from "@/shared/lib/routing";
+import { toIntlLocaleTag } from "@/shared/lib/presentation";
 
 /**
  * シリーズ記事の定義（メタデータ）の型定義
@@ -125,7 +126,7 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
 export async function getSeriesList(locale: Locale = "ja"): Promise<SeriesDefinition[]> {
   const list = await readSeriesDefinitions();
   const resolved = list.map((definition) => resolveSeriesDefinition(definition, locale));
-  return resolved.sort((a, b) => a.name.localeCompare(b.name, locale === "en" ? "en-US" : "ja-JP"));
+  return resolved.sort((a, b) => a.name.localeCompare(b.name, toIntlLocaleTag(locale)));
 }
 
 /**

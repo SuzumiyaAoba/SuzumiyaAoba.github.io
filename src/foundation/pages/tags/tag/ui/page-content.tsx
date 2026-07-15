@@ -16,7 +16,7 @@ import {
   type Locale,
 } from "@/shared/lib/routing";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
-import { formatDate } from "@/shared/lib/presentation";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
 
 export type TagDetailPageContentProps = {
   locale: Locale;
@@ -33,7 +33,7 @@ export type TagDetailPageContentProps = {
 
 export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageContentProps) {
   const pagePath = toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale);
-  const dateLocale = locale === "en" ? "en-US" : "ja-JP";
+  const dateLocale = toIntlLocaleTag(locale);
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Tags", path: "/tags" },

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import * as d3 from "d3";
 
 import type { Locale } from "@/shared/lib/routing";
+import { toIntlLocaleTag } from "@/shared/lib/presentation";
 
 type Row = {
   month: number;
@@ -210,7 +211,7 @@ type AssetFormationSimulatorProps = {
 
 export default function AssetFormationSimulator({ locale }: AssetFormationSimulatorProps) {
   const numberFormatter = useMemo(
-    () => new Intl.NumberFormat(locale === "en" ? "en-US" : "ja-JP"),
+    () => new Intl.NumberFormat(toIntlLocaleTag(locale)),
     [locale],
   );
   const t = useCallback((ja: string, en: string) => (locale === "en" ? en : ja), [locale]);

@@ -1,3 +1,14 @@
+import type { Locale } from "@/shared/lib/routing";
+
+/**
+ * サイトのLocaleをIntl API向けのロケールタグに変換する
+ * @param locale サイトのロケール
+ * @returns Intl API向けのロケールタグ("ja-JP" | "en-US")
+ */
+export function toIntlLocaleTag(locale: Locale): "ja-JP" | "en-US" {
+  return locale === "en" ? "en-US" : "ja-JP";
+}
+
 /**
  * 日付文字列を指定されたロケールの形式にフォーマットする
  * @param date 日付文字列 (YYYY-MM-DD)

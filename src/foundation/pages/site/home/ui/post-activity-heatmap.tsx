@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/shared/lib/utils";
 
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
-import { formatDatePlain } from "@/shared/lib/presentation";
+import { formatDatePlain, toIntlLocaleTag } from "@/shared/lib/presentation";
 import { Tag } from "@/shared/ui/tag";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -153,7 +153,7 @@ export function PostActivityHeatmap({ posts, locale, className }: PostActivityHe
   const hoverTimeoutRef = useRef<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const dateLocale = locale === "en" ? "en-US" : "ja-JP";
+  const dateLocale = toIntlLocaleTag(locale);
   const isJa = locale === "ja";
 
   const legendLabel = isJa ? "少ない" : "Less";

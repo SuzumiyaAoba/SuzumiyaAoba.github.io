@@ -9,7 +9,7 @@ import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import type { LocalizedBlogPostSummary } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
-import { formatDate } from "@/shared/lib/presentation";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
 
 /**
  * 指定されたロケールに最適な記事データを取得する（存在しない場合は別言語でフォールバック）
@@ -64,7 +64,7 @@ export function BlogPostList({
   variant = "compact",
   enableTagLinks,
 }: BlogPostListProps) {
-  const dateLocale = locale === "en" ? "en-US" : "ja-JP";
+  const dateLocale = toIntlLocaleTag(locale);
   const withThumbnail = showThumbnail ?? variant === "detailed";
   const withTagLinks = enableTagLinks ?? variant === "detailed";
 
