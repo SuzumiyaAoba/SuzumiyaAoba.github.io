@@ -1,5 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
+import { BackLink } from "@/shared/ui/back-link";
 import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
@@ -33,12 +34,13 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
             </p>
           </div>
           <Card className="border-transparent bg-card/40 shadow-none">
-            <a
-              href={toLocalePath("/", locale)}
+            <BackLink
+              locale={locale}
+              href="/"
+              ja="← ホームに戻る"
+              en="← Back to home"
               className="flex items-center gap-2 px-6 py-4 text-sm font-medium"
-            >
-              <I18nText locale={locale} ja="← ホームに戻る" en="← Back to home" />
-            </a>
+            />
           </Card>
         </section>
       </main>

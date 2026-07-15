@@ -1,5 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
+import { BackLink } from "@/shared/ui/back-link";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
@@ -40,12 +41,7 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
-          <a
-            href={toLocalePath("/series", locale)}
-            className="text-xs font-medium text-muted-foreground"
-          >
-            <I18nText locale={locale} ja="← シリーズ一覧" en="← Back to series" />
-          </a>
+          <BackLink locale={locale} href="/series" ja="← シリーズ一覧" en="← Back to series" />
           <h1 className="text-3xl font-semibold">{series.name}</h1>
           {series.description ? (
             <p className="text-sm leading-6 text-muted-foreground">{series.description}</p>

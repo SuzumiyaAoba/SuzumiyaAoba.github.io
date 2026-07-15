@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
+import { BackLink } from "@/shared/ui/back-link";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
@@ -49,12 +50,7 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
       >
         <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
-          <a
-            href={toLocalePath("/tags", locale)}
-            className="text-xs font-medium text-muted-foreground"
-          >
-            <I18nText locale={locale} ja="← タグ一覧" en="← Back to tags" />
-          </a>
+          <BackLink locale={locale} href="/tags" ja="← タグ一覧" en="← Back to tags" />
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-3xl font-semibold">#{tag}</h1>
             <Badge

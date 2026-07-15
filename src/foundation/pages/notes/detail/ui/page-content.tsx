@@ -10,9 +10,9 @@ import {
   type Locale,
 } from "@/shared/lib/routing";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
+import { BackLink } from "@/shared/ui/back-link";
 import { Badge } from "@/shared/ui/badge";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { I18nText } from "@/shared/ui/i18n-text";
 import { Message } from "@/shared/ui/mdx";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
@@ -59,12 +59,7 @@ export function NotesDetailPageContent({
       <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <section className="mb-10 space-y-3">
-          <a
-            href={toLocalePath("/notes", locale)}
-            className="text-xs font-medium text-muted-foreground"
-          >
-            <I18nText locale={locale} ja="← ノート一覧" en="← Back to notes" />
-          </a>
+          <BackLink locale={locale} href="/notes" ja="← ノート一覧" en="← Back to notes" />
           {noteDate ? <p className="text-sm text-muted-foreground">{noteDate}</p> : null}
           <h1 className="text-3xl font-semibold break-words">{noteTitle}</h1>
           {category || tags.length > 0 ? (
