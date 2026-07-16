@@ -1,12 +1,8 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList, buildListBreadcrumbItems } from "@/shared/lib/routing";
-import { JsonLd } from "@/shared/ui/seo";
-import { I18nText } from "@/shared/ui/i18n-text";
-import { PaginationNav } from "@/shared/ui/pagination-nav";
-import { DEFAULT_PAGE_SIZE, getPageCount } from "@/shared/lib/presentation";
+import { getPageCount } from "@/shared/lib/presentation";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
-import { BlogPostList } from "@/entities/blog";
+import { BlogListingContent, type BlogListingContentProps } from "@/entities/blog";
 
 /**
  * ブログ記事一覧ページの表示用コンポーネントのプロパティ
@@ -15,7 +11,7 @@ export type BlogListPageContentProps = {
   /** 描画ロケール */
   locale: Locale;
   /** 表示する記事のリスト */
-  posts: React.ComponentProps<typeof BlogPostList>["posts"];
+  posts: BlogListingContentProps["posts"];
   /** 全記事数 */
   totalCount: number;
   /** 現在のページ番号 */
@@ -36,32 +32,14 @@ export function BlogListPageContent({
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
-      <JsonLd
-        data={buildBreadcrumbList(
-          buildListBreadcrumbItems(locale, { name: "Blog", path: "/blog" }),
-        )}
+      <BlogListingContent
+        locale={locale}
+        posts={posts}
+        pageNumber={currentPage}
+        pageCount={getPageCount(totalCount)}
+        totalCount={totalCount}
+        variant="list"
       />
-      <main
-        className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
-        data-pagefind-ignore="all"
-      >
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText locale={locale} ja="ブログ" en="Blog" />
-          </h1>
-        </section>
-
-        <BlogPostList posts={posts} locale={locale} variant="detailed" showThumbnail />
-
-        {totalCount > DEFAULT_PAGE_SIZE ? (
-          <PaginationNav
-            locale={locale}
-            currentPage={currentPage}
-            pageCount={getPageCount(totalCount)}
-            hrefForPage={(page) => (page === 1 ? "/blog" : `/blog/${page}`)}
-          />
-        ) : null}
-      </main>
       <Footer locale={locale} />
     </div>
   );
