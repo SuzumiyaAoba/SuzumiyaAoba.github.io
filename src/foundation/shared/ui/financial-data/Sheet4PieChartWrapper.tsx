@@ -1,6 +1,6 @@
 "use client";
 
-import { PieChart } from "@/shared/ui/financial-charts/PieChart";
+import { PieChart } from "@/shared/ui/financial-charts";
 
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
