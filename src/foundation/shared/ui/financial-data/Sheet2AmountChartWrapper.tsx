@@ -4,6 +4,7 @@ import { LineChart } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
+import { computeMaxValueForMetrics, roundUpToStep } from "./sectionChartUtils";
 
 export const Sheet2AmountChartWrapper: React.FC = () => {
   const sheet2Data = parseSheetData(assetsData, "2");
@@ -23,11 +24,8 @@ export const Sheet2AmountChartWrapper: React.FC = () => {
   // 万円データのみを抽出
   const amountMetrics = availableMetrics.filter((m) => m.includes("万円"));
 
-  // Y軸の最大値を計算
-  const maxValue = Math.max(
-    ...sheet2Data.series.flatMap((s) => amountMetrics.map((m) => (s.values[m] ?? 0) || 0)),
-  );
-  const yAxisMax = Math.ceil(maxValue / 100) * 100; // 100の倍数に切り上げ
+  // Y軸の最大値を計算(100の倍数に切り上げ)
+  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(sheet2Data, amountMetrics), 100);
 
   return (
     <LineChart

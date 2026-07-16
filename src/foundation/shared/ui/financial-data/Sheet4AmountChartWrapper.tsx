@@ -4,6 +4,7 @@ import { LineChart } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
+import { computeMaxValueForMetrics, roundUpToStep } from "./sectionChartUtils";
 
 export const Sheet4AmountChartWrapper: React.FC = () => {
   const sheet4Data = parseSheetData(assetsData, "4");
@@ -23,11 +24,8 @@ export const Sheet4AmountChartWrapper: React.FC = () => {
     sheet4Data.series.some((s) => s.values[header] !== null),
   );
 
-  // Y軸の最大値を計算
-  const maxValue = Math.max(
-    ...sheet4Data.series.flatMap((s) => amountMetrics.map((m) => (s.values[m] ?? 0) || 0)),
-  );
-  const yAxisMax = Math.ceil(maxValue / 500) * 500; // 500の倍数に切り上げ
+  // Y軸の最大値を計算(500の倍数に切り上げ)
+  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(sheet4Data, amountMetrics), 500);
 
   // ラベルマッピング
   const labelMap: Record<string, string> = {

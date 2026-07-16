@@ -53,6 +53,16 @@ const computeMaxValue = (data: SheetData, unit: string) => {
 
 const roundUp = (value: number, step: number) => Math.ceil(value / step) * step;
 
+/**
+ * 指定したmetrics(ヘッダー名)群の中での最大値を算出する。
+ * Sheet2AmountChartWrapper 等のY軸最大値算出で共通利用する。
+ */
+export const computeMaxValueForMetrics = (data: SheetData, metrics: string[]): number =>
+  Math.max(...data.series.flatMap((s) => metrics.map((m) => (s.values[m] ?? 0) || 0)));
+
+/** stepの倍数に切り上げる */
+export const roundUpToStep = roundUp;
+
 export const buildAutoChartConfig = (data: SheetData): ChartConfig => {
   const unit = selectUnit(data.headers);
   const startYear = Math.min(

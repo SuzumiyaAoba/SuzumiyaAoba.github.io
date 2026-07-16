@@ -4,6 +4,7 @@ import { LineChart } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
+import { computeMaxValueForMetrics, roundUpToStep } from "./sectionChartUtils";
 
 export const Sheet3ChartWrapper: React.FC = () => {
   const sheet3Data = parseSheetData(assetsData, "3");
@@ -25,11 +26,8 @@ export const Sheet3ChartWrapper: React.FC = () => {
     );
   });
 
-  // Y軸の最大値を計算
-  const maxValue = Math.max(
-    ...sheet3Data.series.flatMap((s) => percentageMetrics.map((m) => (s.values[m] ?? 0) || 0)),
-  );
-  const yAxisMax = Math.ceil(maxValue / 5) * 5; // 5の倍数に切り上げ
+  // Y軸の最大値を計算(5の倍数に切り上げ)
+  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(sheet3Data, percentageMetrics), 5);
 
   // ラベルマッピング
   const labelMap: Record<string, string> = {
