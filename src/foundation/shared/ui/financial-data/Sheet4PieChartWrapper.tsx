@@ -5,6 +5,7 @@ import { PieChart } from "@/shared/ui/financial-charts/PieChart";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
+import { SHEET4_EXCLUDE_HEADERS, SHEET4_LABEL_MAP } from "./_shared/sheet4-asset-labels";
 
 export const Sheet4PieChartWrapper: React.FC = () => {
   const sheet4Data = parseSheetData(assetsData, "4");
@@ -13,33 +14,15 @@ export const Sheet4PieChartWrapper: React.FC = () => {
     return <NoDataFallback />;
   }
 
-  const excludeHeaders = [
-    "平均 | 万円", // 金額データ
-    "中央値 | 万円", // 金額データ
-  ];
-
   // パーセンテージデータのみを抽出（平均・中央値以外）
   const percentageMetrics = sheet4Data.headers.filter((header) => {
     return (
-      !excludeHeaders.includes(header) && sheet4Data.series.some((s) => s.values[header] !== null)
+      !SHEET4_EXCLUDE_HEADERS.includes(header) &&
+      sheet4Data.series.some((s) => s.values[header] !== null)
     );
   });
 
-  // ラベルマッピング
-  const labelMap: Record<string, string> = {
-    "金融資産 非保有 | ％": "金融資産非保有",
-    "100 | 万円 | 未満 | ％": "100万円未満",
-    "100 | ～ | 200 | 万円 未満 | ％": "100～200万円未満",
-    "200 | ～ | 300 | 万円 未満 | ％": "200～300万円未満",
-    "300 | ～ | 400 | 万円 未満 | ％": "300～400万円未満",
-    "400 | ～ | 500 | 万円 未満 | ％": "400～500万円未満",
-    "500 | ～ | 700 | 万円 未満 | ％": "500～700万円未満",
-    "700 | ～ | 1000 | 万円 未満 | ％": "700～1000万円未満",
-    "1000 | ～ | 1500 | 万円 未満 | ％": "1000～1500万円未満",
-    "1500 | ～ | 2000 | 万円 未満 | ％": "1500～2000万円未満",
-    "2000 | ～ | 3000 | 万円 未満 | ％": "2000～3000万円未満",
-    "3000 | 万円 | 以上 | ％": "3000万円以上",
-  };
+  const labelMap = SHEET4_LABEL_MAP;
 
   // 2023年、2024年、2025年のデータを取得
   const year2023Data = sheet4Data.series.find((s) => s.year === "2023");
