@@ -33,21 +33,6 @@ const dummyPosts = [
   },
 ];
 
-const dummyActivityPosts = [
-  {
-    slug: "post-1",
-    title: "Sample Post 1",
-    date: "2024-01-01",
-    tags: ["Tag1"],
-  },
-  {
-    slug: "post-2",
-    title: "Sample Post 2",
-    date: "2024-01-02",
-    tags: ["Tag2"],
-  },
-];
-
 const meta: Meta<typeof HomePageContent> = {
   title: "pages/site/Home",
   component: HomePageContent,
@@ -57,7 +42,6 @@ const meta: Meta<typeof HomePageContent> = {
   args: {
     locale: "ja",
     latestPosts: dummyPosts,
-    activityPosts: dummyActivityPosts,
   },
   argTypes: {
     locale: {
