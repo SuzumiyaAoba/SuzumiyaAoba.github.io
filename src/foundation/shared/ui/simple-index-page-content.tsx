@@ -1,9 +1,6 @@
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  type Locale,
-} from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, type Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
+import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { Card } from "@/shared/ui/card";
 import { SimpleEntryList, type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
@@ -36,12 +33,12 @@ export function SimpleIndexPageContent({
   emptyMessage,
   items,
 }: SimpleIndexPageContentProps) {
+  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: breadcrumbName, path });
   return (
     <>
-      <JsonLd
-        data={buildBreadcrumbList(buildListBreadcrumbItems(locale, { name: breadcrumbName, path }))}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12">
+        <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja={heading.ja} en={heading.en} />

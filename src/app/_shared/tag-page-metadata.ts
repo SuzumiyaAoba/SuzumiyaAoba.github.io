@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
+import type { Locale } from "@/shared/lib/routing";
+import { buildLocaleAlternates } from "./locale-alternates";
 
 export function decodeTag(tag: string): string {
   try {
@@ -14,16 +16,43 @@ export type TagPageMetadataProps = {
 };
 
 /**
- * タグ詳細ページの generateMetadata。ja/en で完全に共通。
+ * タグ詳細ページの generateMetadata を組み立てる。
+ * タグ一覧は ja/en 双方の記事から集約した共通集合のため、両ロケールで
+ * 常に同じ slug のページが生成される。hreflang は双方向に設定する。
  */
-export async function buildTagPageMetadata({ params }: TagPageMetadataProps): Promise<Metadata> {
+export async function buildTagPageMetadata(
+  { params }: TagPageMetadataProps,
+  locale: Locale,
+): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const tagParam = resolvedParams?.tag;
   if (!tagParam) {
     return { title: "Tags" };
   }
   const tag = decodeTag(tagParam);
-  return { title: `Tag: ${tag}` };
+
+  const posts = await getBlogPostSummariesVariants();
+  const count = posts.filter((post) => {
+    const target = locale === "en" ? (post.en ?? post.ja) : (post.ja ?? post.en);
+    return (target?.frontmatter.tags ?? []).includes(tag);
+  }).length;
+
+  const title = `Tag: ${tag}`;
+  const description =
+    locale === "en"
+      ? `Posts tagged "${tag}" (${count}).`
+      : `「${tag}」タグの記事一覧（${count}件）。`;
+
+  return {
+    title,
+    description,
+    alternates: buildLocaleAlternates(`/tags/${encodeURIComponent(tag)}`, locale),
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+  };
 }
 
 /**

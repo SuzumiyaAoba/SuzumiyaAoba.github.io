@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import BookDetailPage from "@/pages/books/detail";
-import { getBookMeta, getBookSlugs } from "@/entities/book";
+import { getBookSlugs } from "@/entities/book";
+import { buildBooksPageMetadata } from "@/app/_shared/books-page-metadata";
 
 type PageProps = {
   params: Promise<{ book: string }>;
@@ -9,9 +10,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { book } = await params;
-  const meta = await getBookMeta(book);
-  const title = meta?.frontmatter.title || book;
-  return { title };
+  return buildBooksPageMetadata(book);
 }
 
 export async function generateStaticParams(): Promise<Array<{ book: string }>> {

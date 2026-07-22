@@ -61,7 +61,7 @@ export function BlogListingContent({
         className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
         data-pagefind-ignore="all"
       >
-        {variant === "paginated" ? <Breadcrumbs items={breadcrumbItems} /> : null}
+        <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja="ブログ" en="Blog" />

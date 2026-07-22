@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
+import { getSeriesSlugs } from "@/entities/series-item";
+import { buildSeriesPageMetadata } from "@/app/_shared/series-page-metadata";
 import SeriesDetailPage from "@/pages/series/detail";
 
 type PageProps = {
@@ -8,13 +9,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  const slug = resolvedParams?.series;
-  if (!slug) {
-    return { title: "Series" };
-  }
-  const series = await getSeriesBySlug(slug);
-  const title = series?.name || slug;
-  return { title };
+  return buildSeriesPageMetadata(resolvedParams?.series, "en");
 }
 
 export async function generateStaticParams(): Promise<Array<{ series: string }>> {

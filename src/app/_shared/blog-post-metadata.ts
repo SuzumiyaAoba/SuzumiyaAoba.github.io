@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { getBlogPostVariants } from "@/entities/blog";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
+import { buildLocaleAlternates } from "./locale-alternates";
 
 /**
  * ブログ記事詳細ページの Metadata を構築する。
  * ja/en どちらの記事も存在する場合、canonical は常に en 版を指す
  * (既存の en 版ロジックを踏襲。ja のみ存在する場合は ja 版を指す)。
+ * description は frontmatter の `description` を優先し、未設定の場合は
+ * category ベースの生成文言、それも無ければタイトルにフォールバックする。
  */
 export async function buildBlogPostMetadata(
   slug: string | undefined,
@@ -22,21 +25,20 @@ export async function buildBlogPostMetadata(
   }
 
   const title = post.frontmatter.title || slug;
-  const description = post.frontmatter.category
+  const fallbackDescription = post.frontmatter.category
     ? locale === "en"
       ? `${post.frontmatter.category} article.`
       : `Articles about ${post.frontmatter.category}.`
     : title;
-  const canonicalPath = postEn
-    ? toLocalePath(`/blog/post/${slug}`, "en")
-    : toLocalePath(`/blog/post/${slug}`, "ja");
+  const description = post.frontmatter.description || fallbackDescription;
 
   return {
     title,
     description,
-    alternates: {
-      canonical: canonicalPath,
-    },
+    alternates: buildLocaleAlternates(`/blog/post/${slug}`, locale, {
+      availability: { ja: Boolean(postJa), en: Boolean(postEn) },
+      canonicalLocale: postEn ? "en" : "ja",
+    }),
     openGraph: {
       title,
       description,

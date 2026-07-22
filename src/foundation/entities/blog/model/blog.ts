@@ -27,6 +27,8 @@ export type BlogFrontmatter = {
   date: string;
   /** 記事のカテゴリ */
   category?: string;
+  /** 記事の要約（meta description / OGP description に使用） */
+  description?: string;
   /** 記事に紐付くタグのリスト */
   tags?: string[];
   /** サムネイル画像のパス */
@@ -155,6 +157,7 @@ export const getBlogPostSummary = cache(
  */
 function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
   const category = asString(data["category"]);
+  const description = asString(data["description"]);
   const tags = asStringArray(data["tags"]);
   const thumbnail = asString(data["thumbnail"]);
   const draft = asBoolean(data["draft"]);
@@ -167,6 +170,7 @@ function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
     title: asStringWithDefault(data["title"], ""),
     date: asDateString(data["date"]) ?? "",
     ...(category !== undefined ? { category } : {}),
+    ...(description !== undefined ? { description } : {}),
     ...(tags !== undefined ? { tags } : {}),
     ...(thumbnail !== undefined ? { thumbnail } : {}),
     ...(draft !== undefined ? { draft } : {}),
@@ -247,27 +251,24 @@ export const getBlogPostVariants = cache(async (slug: string): Promise<Localized
  * @returns 多言語対応記事の配列
  */
 export const getBlogPostsVariants = cache(
-  unstable_cache(
-    async (): Promise<LocalizedBlogPost[]> => {
-      const slugs = await getBlogSlugs();
-      const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
+  unstable_cache(async (): Promise<LocalizedBlogPost[]> => {
+    const slugs = await getBlogSlugs();
+    const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
 
-      return posts
-        .filter((post) => {
-          const reference = post.ja ?? post.en;
-          if (!reference) {
-            return false;
-          }
-          return !reference.frontmatter.draft;
-        })
-        .sort((a, b) => {
-          const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-          const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-          return dateA < dateB ? 1 : -1;
-        });
-    },
-    ["blog-posts-variants"],
-  ),
+    return posts
+      .filter((post) => {
+        const reference = post.ja ?? post.en;
+        if (!reference) {
+          return false;
+        }
+        return !reference.frontmatter.draft;
+      })
+      .sort((a, b) => {
+        const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+        const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+        return dateA < dateB ? 1 : -1;
+      });
+  }, ["blog-posts-variants"]),
 );
 
 /**
@@ -291,27 +292,24 @@ export const getBlogPostSummaryVariants = cache(
  * @returns 多言語対応記事サマリーの配列
  */
 export const getBlogPostSummariesVariants = cache(
-  unstable_cache(
-    async (): Promise<LocalizedBlogPostSummary[]> => {
-      const slugs = await getBlogSlugs();
-      const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
+  unstable_cache(async (): Promise<LocalizedBlogPostSummary[]> => {
+    const slugs = await getBlogSlugs();
+    const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
 
-      return posts
-        .filter((post) => {
-          const reference = post.ja ?? post.en;
-          if (!reference) {
-            return false;
-          }
-          return !reference.frontmatter.draft;
-        })
-        .sort((a, b) => {
-          const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-          const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-          return dateA < dateB ? 1 : -1;
-        });
-    },
-    ["blog-post-summaries-variants"],
-  ),
+    return posts
+      .filter((post) => {
+        const reference = post.ja ?? post.en;
+        if (!reference) {
+          return false;
+        }
+        return !reference.frontmatter.draft;
+      })
+      .sort((a, b) => {
+        const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
+        const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
+        return dateA < dateB ? 1 : -1;
+      });
+  }, ["blog-post-summaries-variants"]),
 );
 
 /**

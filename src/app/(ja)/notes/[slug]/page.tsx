@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import NotesDetailPage from "@/pages/notes/detail";
-import { getNoteSlugs, getNoteSummary } from "@/entities/note";
+import { getNoteSlugs } from "@/entities/note";
+import { buildNotesPageMetadata } from "@/app/_shared/notes-page-metadata";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -9,11 +10,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-
-  const note = await getNoteSummary(slug);
-  const title = note?.frontmatter.title || slug;
-
-  return { title };
+  return buildNotesPageMetadata(slug, "ja");
 }
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {

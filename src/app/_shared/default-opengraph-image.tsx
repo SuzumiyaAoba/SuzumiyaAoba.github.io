@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import { SITE_TITLE } from "@/shared/lib/site/site-title";
+import { loadShipporiMinchoBold } from "./opengraph-font";
 
 export const DEFAULT_OPENGRAPH_IMAGE_SIZE = {
   width: 1200,
@@ -11,24 +12,7 @@ export const DEFAULT_OPENGRAPH_IMAGE_SIZE = {
  * サイトルート用の既定 OGP 画像を描画する。ja/en で完全に共通。
  */
 export async function renderDefaultOpengraphImage() {
-  // Font loading
-  const fontData = await fetch(
-    new URL("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@700&display=swap").href,
-    {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Droid Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
-      },
-    },
-  ).then((res) => res.text());
-
-  const fontUrl = fontData.match(/src: url\((.+?)\) format\(['"]?truetype['"]?\)/)?.[1];
-
-  if (!fontUrl) {
-    throw new Error("Failed to load font");
-  }
-
-  const fontBuffer = await fetch(fontUrl).then((res) => res.arrayBuffer());
+  const fontBuffer = await loadShipporiMinchoBold();
 
   return new ImageResponse(
     <div

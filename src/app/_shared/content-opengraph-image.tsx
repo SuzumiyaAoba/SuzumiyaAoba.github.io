@@ -1,30 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
-import { getBlogPost, getBlogSlugs } from "@/entities/blog";
-import type { Locale } from "@/shared/lib/routing";
 import { loadShipporiMinchoBold } from "./opengraph-font";
 
-export const BLOG_POST_OPENGRAPH_IMAGE_SIZE = {
+export const CONTENT_OPENGRAPH_IMAGE_SIZE = {
   width: 1200,
   height: 630,
 };
 
-/**
- * ブログ記事詳細の generateStaticParams。ja/en で完全に共通。
- */
-export async function generateBlogPostOpengraphStaticParams() {
-  const slugs = await getBlogSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+export type RenderContentOpengraphImageOptions = {
+  /** 種別ラベル(例: "Notes", "Series", "Tag", "Book") */
+  eyebrow: string;
+  title: string;
+  tags?: string[];
+};
 
 /**
- * ブログ記事詳細用の OGP 画像を描画する。ja/en の差分は取得する記事の locale のみ。
+ * notes/series/tags/books 詳細ページ共通の OGP 画像を描画する。
+ * ブログ記事用テンプレート(blog-post-opengraph-image)と視覚的に統一したレイアウト。
  */
-export async function renderBlogPostOpengraphImage(slug: string, locale: Locale) {
-  const post = await getBlogPost(slug, { locale, fallback: true });
-  const title = post?.frontmatter.title || slug;
-  const tags = post?.frontmatter.tags || [];
-
+export async function renderContentOpengraphImage({
+  eyebrow,
+  title,
+  tags = [],
+}: RenderContentOpengraphImageOptions) {
   const fontBuffer = await loadShipporiMinchoBold();
 
   return new ImageResponse(
@@ -48,6 +46,29 @@ export async function renderBlogPostOpengraphImage(slug: string, locale: Locale)
           gap: "20px",
         }}
       >
+        <div
+          style={{
+            fontSize: 32,
+            color: "#71717a",
+            textTransform: "uppercase",
+            letterSpacing: 4,
+            display: "flex",
+          }}
+        >
+          {eyebrow}
+        </div>
+        <div
+          style={{
+            fontSize: 80,
+            fontWeight: 700,
+            lineHeight: 1.2,
+            color: "#18181b",
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          {title}
+        </div>
         {tags.length > 0 && (
           <div
             style={{
@@ -60,7 +81,7 @@ export async function renderBlogPostOpengraphImage(slug: string, locale: Locale)
               <div
                 key={tag}
                 style={{
-                  fontSize: 32,
+                  fontSize: 28,
                   background: "#f3f4f6",
                   color: "#4b5563",
                   padding: "8px 20px",
@@ -74,18 +95,6 @@ export async function renderBlogPostOpengraphImage(slug: string, locale: Locale)
             ))}
           </div>
         )}
-        <div
-          style={{
-            fontSize: 80,
-            fontWeight: 700,
-            lineHeight: 1.2,
-            color: "#18181b",
-            display: "flex",
-            flexWrap: "wrap",
-          }}
-        >
-          {title}
-        </div>
       </div>
 
       <div
@@ -110,7 +119,7 @@ export async function renderBlogPostOpengraphImage(slug: string, locale: Locale)
       </div>
     </div>,
     {
-      ...BLOG_POST_OPENGRAPH_IMAGE_SIZE,
+      ...CONTENT_OPENGRAPH_IMAGE_SIZE,
       fonts: [
         {
           name: "Shippori Mincho",
