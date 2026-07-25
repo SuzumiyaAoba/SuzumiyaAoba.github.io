@@ -13,6 +13,7 @@ const AUTHOR_NAME = "SuzumiyaAoba";
 export function buildWebsiteJsonLd(locale: Locale) {
   const siteUrl = getSiteUrl();
   const homePath = locale === "en" ? "/en" : "/";
+  const searchPath = locale === "en" ? "/en/search/" : "/search/";
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -23,6 +24,14 @@ export function buildWebsiteJsonLd(locale: Locale) {
     author: {
       "@type": "Person",
       name: AUTHOR_NAME,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}${searchPath}?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 }
