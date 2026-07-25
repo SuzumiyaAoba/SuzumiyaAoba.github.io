@@ -4,6 +4,7 @@ date: 2025-04-15
 category: Diary
 tags: ["Optimization", "Diary"]
 model: GPT-5.2-Codex
+description: Prompted by inefficient boarding on a recent flight, a look at prior research on optimizing aircraft boarding strategies.
 ---
 
 ## Prologue

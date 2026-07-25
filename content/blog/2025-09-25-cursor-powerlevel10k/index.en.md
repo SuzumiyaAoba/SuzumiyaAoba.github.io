@@ -5,6 +5,7 @@ category: "Cursor"
 tags: ["Cursor", "Terminal", "powerlevel10k", "Zellij"]
 thumbnail: iconify:vscode-icons:file-type-cursorrules
 model: GPT-5.2-Codex
+description: Why Cursor's AI agent could no longer run terminal commands after switching to powerlevel10k, and how to fix it.
 ---
 
 While revisiting my terminal setup, I ran into an issue where commands wouldn't run in Cursor, so I’m recording the cause and fix.

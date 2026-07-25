@@ -9,6 +9,7 @@ amazonProductIds:
   - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
   - "Reactハンズオンラーニング"
   - "プロを目指す人のためのTypeScript入門"
+description: react-best-practices Skills の「Server-Side Performance」カテゴリを確認し、公開後に追加されたルールの差分にも触れる。
 ---
 
 [Eliminating Waterfalls](../2026-01-16-react-best-practices/)、[Bundle Size Optimization](../2026-01-17-react-best-practices-bundle-size-optimization/) に続いて

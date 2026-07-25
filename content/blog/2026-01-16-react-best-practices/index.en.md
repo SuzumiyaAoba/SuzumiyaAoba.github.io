@@ -10,6 +10,7 @@ amazonProductIds:
   - "Reactハンズオンラーニング"
   - "プロを目指す人のためのTypeScript入門"
 model: GPT-5.2-Codex
+description: Going through the "Eliminating Waterfalls" category of Vercel's react-best-practices Skills rules one by one.
 ---
 
 Vercel published [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) as a React Skill.

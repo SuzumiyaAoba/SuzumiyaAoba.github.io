@@ -4,6 +4,7 @@ date: 2023-09-30
 tags: ["Astro", "プログラミング"]
 category: プログラミング
 thumbnail: images/how-standards-proliferate.png
+description: Astro v3 でブログ構築を試し、相対パス画像の webp 変換や CJK 改行問題の改善など v1/v2 からの変化を確認する。
 ---
 
 ## Astro v3

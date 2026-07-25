@@ -8,6 +8,7 @@ amazonAssociate: true
 amazonProductIds:
   - "実践Claude Code入門"
   - "Claude CodeによるAI駆動開発"
+description: Claude Code が AGENTS.md にどう対応しているかを整理し、CLAUDE.md との併用方法(シンボリックリンクと @AGENTS.md 参照)を比較する。
 ---
 
 ## TL;DL

@@ -5,6 +5,7 @@ category: "Nix"
 tags: ["Nix"]
 thumbnail: iconify:skill-icons:nix-light
 model: GPT-5.2-Codex
+description: Investigating why a macOS setup managed with nix-darwin and Home Manager suddenly stopped being able to update packages.
 ---
 
 My computer broke without me doing anything.

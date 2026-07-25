@@ -4,6 +4,7 @@ date: 2025-05-31
 category: "Nix"
 tags: ["Nix"]
 thumbnail: iconify:skill-icons:nix-light
+description: nix-darwin と Home Manager で管理していた macOS 環境が、ある日突然パッケージ更新できなくなった原因を調査する。
 ---
 
 何もしていないのにパソコンが壊れた。

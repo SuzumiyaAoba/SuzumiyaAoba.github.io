@@ -3,6 +3,7 @@ title: 仕様駆動開発について調べてみた
 date: 2025-11-16
 category: "プログラミング"
 tags: ["AI", "Claude Code", "Codex", "Kiro", "仕様駆動開発"]
+description: AI コーディングにおける仕様駆動開発(SDD)の考え方と、Kiro や cc-sdd など主要なプラグイン・サービスを整理する。
 ---
 
 少し前から X (旧 Twitter) や Qiita、Zenn で見かけることがあった仕様駆動開発について調べてみた。

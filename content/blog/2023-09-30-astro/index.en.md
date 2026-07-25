@@ -5,6 +5,7 @@ tags: ["Astro", "Programming"]
 category: Programming
 thumbnail: images/how-standards-proliferate.png
 model: GPT-5.2-Codex
+description: Trying Astro v3 for this blog and checking what changed since v1/v2, including relative-path image webp conversion and CJK line-break fixes.
 ---
 
 ## Astro v3

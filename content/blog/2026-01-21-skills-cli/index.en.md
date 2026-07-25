@@ -5,6 +5,7 @@ category: Programming
 tags: ["Coding Agents", "CLI", "Claude Code", "Codex", "GitHub Copilot"]
 thumbnail: iconify:material-icon-theme:claude
 model: GPT-5.2-Codex
+description: Looking at how to use Agent Skills with a common command across tools now that the standard extends beyond Claude Code.
 ---
 
 Anthropic [announced Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) on 2025/10/16, and on 2025/12/18 it was released as the open standard [Agent Skills](https://agentskills.io/home) and [published](https://claude.com/blog/skills).

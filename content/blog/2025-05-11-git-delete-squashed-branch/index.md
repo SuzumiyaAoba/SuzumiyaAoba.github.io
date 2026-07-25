@@ -4,6 +4,7 @@ date: 2025-05-11
 category: プログラミング
 tags: ["プログラミング", "git"]
 thumbnail: iconify:devicon:git
+description: Squash and merge したブランチを git pull --prune で一括削除できない問題と、-D が必要になる理由を整理する。
 ---
 
 ## はじめに

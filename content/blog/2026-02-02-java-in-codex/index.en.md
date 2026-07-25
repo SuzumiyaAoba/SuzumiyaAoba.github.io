@@ -4,6 +4,7 @@ date: 2026-02-02
 category: Programming
 tags: ["Codex", "Java"]
 model: GPT-5.4
+description: Fixing a build failure when running a Java (Gradle) repository in Codex Web, via a setup script configuration.
 ---
 
 When I had Codex Web work on a Java (Gradle) repository, the build failed.

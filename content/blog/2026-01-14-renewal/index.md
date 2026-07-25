@@ -4,6 +4,7 @@ date: 2026-01-16
 tags: ["デザイン", "Vibe Coding", "ポエム"]
 category: プログラミング
 thumbnail: images/renewal.png
+description: TailwindCSS・Feature Sliced Design・shadcn/ui へ移行し、AI ファーストなコードベースでブログを一から作り直した記録。
 ---
 
 サイトのデザインをリニューアルした。

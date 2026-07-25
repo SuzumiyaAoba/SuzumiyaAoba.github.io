@@ -4,6 +4,7 @@ date: 2025-11-16
 category: "Programming"
 tags: ["AI", "Claude Code", "Codex", "Kiro", "Spec-Driven Development"]
 model: GPT-5.2-Codex
+description: An overview of AI-assisted spec-driven development (SDD), and a survey of major plugins, IDEs, and services like Kiro and cc-sdd.
 ---
 
 I looked into spec-driven development, which I've been seeing on X (formerly Twitter), Qiita, and Zenn for a while.

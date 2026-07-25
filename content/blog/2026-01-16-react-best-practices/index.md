@@ -9,6 +9,7 @@ amazonProductIds:
   - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
   - "Reactハンズオンラーニング"
   - "プロを目指す人のためのTypeScript入門"
+description: Vercel 公開の react-best-practices Skills から「非同期ウォーターフォールの解消」カテゴリのルールを一つずつ確認する。
 ---
 
 Vercel が React の Skills として [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) を公開した。

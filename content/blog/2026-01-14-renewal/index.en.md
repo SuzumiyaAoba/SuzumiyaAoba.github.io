@@ -5,6 +5,7 @@ tags: ["Design", "Vibe Coding", "Poem"]
 category: Programming
 thumbnail: images/renewal.png
 model: GPT-5.2-Codex
+description: A record of rebuilding this blog from scratch with an AI-first codebase, moving to TailwindCSS, Feature Sliced Design, and shadcn/ui.
 ---
 
 I renewed the site's design.

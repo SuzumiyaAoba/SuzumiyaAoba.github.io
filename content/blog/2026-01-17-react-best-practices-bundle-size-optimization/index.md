@@ -9,6 +9,7 @@ amazonProductIds:
   - "これからはじめるReact実践入門 コンポーネントの基本からNext.jsによるアプリ開発まで"
   - "Reactハンズオンラーニング"
   - "プロを目指す人のためのTypeScript入門"
+description: react-best-practices Skills の「バンドルサイズ最適化」カテゴリを読み、バレルファイル回避や条件付きモジュール読み込みなどのルールを確認する。
 ---
 
 [前回の記事](../2026-01-16-react-best-practices/)に続いて Vercel が公開した [react-best-practices](https://vercel.com/blog/introducing-react-best-practices) の内容を見ていこう。

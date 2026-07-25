@@ -4,6 +4,7 @@ date: 2025-09-25
 category: "Cursor"
 tags: ["Cursor", "Terminal", "powerlevel10k", "Zellij"]
 thumbnail: iconify:vscode-icons:file-type-cursorrules
+description: Cursor の AI エージェントがターミナルコマンドを実行できずハングする現象の原因が powerlevel10k への移行だった件と解決策。
 ---
 
 ターミナル環境を見直していたところ Cursor でコマンド実行されない現象に遭遇したので原因と解決策を遺しておく。

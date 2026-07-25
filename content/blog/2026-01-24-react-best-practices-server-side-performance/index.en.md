@@ -10,6 +10,7 @@ amazonProductIds:
   - "Reactハンズオンラーニング"
   - "プロを目指す人のためのTypeScript入門"
 model: GPT-5.2-Codex
+description: Reviewing the "Server-Side Performance" category of the react-best-practices Skills, including rules added since launch.
 ---
 
 Following [Eliminating Waterfalls](../2026-01-16-react-best-practices/) and [Bundle Size Optimization](../2026-01-17-react-best-practices-bundle-size-optimization/), this article looks at Server-Side Performance.

@@ -3,6 +3,7 @@ title: Codex Web で Java を動かす
 date: 2026-02-02
 category: プログラミング
 tags: ["Codex", "Java"]
+description: Codex Web で Java (Gradle) リポジトリのビルドが失敗する問題を、セットアップスクリプトの設定で解決する方法をメモする。
 ---
 
 Codex Web で Java (Gradle) リポジトリの実装をさせたところビルドでエラーが発生し、

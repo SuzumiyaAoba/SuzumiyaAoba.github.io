@@ -5,6 +5,7 @@ category: Programming
 tags: ["Programming", "git"]
 thumbnail: iconify:devicon:git
 model: GPT-5.2-Codex
+description: Why squash-and-merged branches can't be bulk-deleted with git pull --prune, and why -D is needed instead of -d.
 ---
 
 ## Introduction
