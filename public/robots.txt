@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+# サイト内検索(pagefind)のインデックスデータ。HTMLではないためクロール対象外にする
+Disallow: /pagefind/
+# Next.js の RSC プリフェッチ用ペイロード(__next.*.txt など)
+Disallow: /*__next*
 
 # サイトマップの場所
 Sitemap: https://suzumiyaaoba.com/sitemap.xml
