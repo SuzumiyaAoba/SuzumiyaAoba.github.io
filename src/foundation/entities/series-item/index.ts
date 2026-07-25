@@ -1,5 +1,6 @@
 export {
   getSeriesBySlug,
+  getSeriesForPostSlug,
   getSeriesList,
   getSeriesSlugs,
   type SeriesDefinition,

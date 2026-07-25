@@ -45,6 +45,10 @@ const meta: Meta<typeof BlogPostPageContent> = {
       slug: "next-post",
       title: "Next Post Title",
     },
+    series: {
+      slug: "sample-series",
+      name: "Sample Series",
+    },
   },
   argTypes: {
     locale: {

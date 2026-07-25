@@ -2,6 +2,7 @@ import path from "node:path";
 import { notFound } from "next/navigation";
 
 import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
+import { getSeriesForPostSlug } from "@/entities/series-item";
 import { resolveContentRoot } from "@/shared/lib/content-file";
 import {
   extractAmazonProductIdsFromMdx,
@@ -50,10 +51,11 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] load posts:${slug}`);
   }
-  const [postJa, postEn, { prev, next }] = await Promise.all([
+  const [postJa, postEn, { prev, next }, series] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
     getBlogPost(slug, { locale: "en", fallback: false }),
     getAdjacentPostSummariesVariants(slug),
+    getSeriesForPostSlug(slug, resolvedLocale),
   ]);
   if (shouldLogPerf) {
     console.timeEnd(`[blog] load posts:${slug}`);
@@ -166,6 +168,7 @@ export default async function Page({ params, locale }: PageProps) {
       headings={headings}
       prev={prev ? { slug: prev.slug, title: prevTitle } : null}
       next={next ? { slug: next.slug, title: nextTitle } : null}
+      series={series ? { slug: series.slug, name: series.name } : null}
     />
   );
 }

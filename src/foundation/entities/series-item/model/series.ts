@@ -152,3 +152,19 @@ export async function getSeriesSlugs(): Promise<string[]> {
   const list = await readSeriesDefinitions();
   return list.map((item) => item.slug);
 }
+
+/**
+ * 指定した記事スラッグが属するシリーズ定義を取得する（逆引き）。
+ * 記事詳細ページからシリーズへの内部リンクを表示するために使用する。
+ * @param postSlug 記事のスラッグ
+ * @param locale ロケール
+ * @returns 見つかったシリーズ定義。属するシリーズが無ければ null
+ */
+export async function getSeriesForPostSlug(
+  postSlug: string,
+  locale: Locale = "ja",
+): Promise<SeriesDefinition | null> {
+  const list = await readSeriesDefinitions();
+  const matched = list.find((item) => item.posts.includes(postSlug));
+  return matched ? resolveSeriesDefinition(matched, locale) : null;
+}

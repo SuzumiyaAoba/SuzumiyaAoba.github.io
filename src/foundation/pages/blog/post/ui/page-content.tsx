@@ -65,6 +65,11 @@ export type BlogPostPageContentProps = {
     slug: string;
     title: string;
   } | null;
+  /** この記事が属するシリーズの情報（属さない場合は null） */
+  series: {
+    slug: string;
+    name: string;
+  } | null;
 };
 
 /**
@@ -87,6 +92,7 @@ export function BlogPostPageContent({
   headings,
   prev,
   next,
+  series,
 }: BlogPostPageContentProps) {
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
@@ -130,6 +136,17 @@ export function BlogPostPageContent({
               <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
                 {category}
               </Badge>
+            ) : null}
+            {series ? (
+              <a href={toLocalePath(`/series/${series.slug}`, locale)} className="inline-flex">
+                <Badge
+                  variant="secondary"
+                  className="gap-1 text-[11px] font-medium transition-colors hover:text-foreground"
+                >
+                  <Icon icon="lucide:layers" className="size-3" aria-hidden />
+                  {series.name}
+                </Badge>
+              </a>
             ) : null}
             {tags.length > 0 ? (
               <div className="flex flex-wrap gap-2">
