@@ -1,4 +1,4 @@
-import { getNoteSlugs, getNoteSummary } from "@/entities/note";
+import { getPublishedNoteSlugs, getNoteSummary } from "@/entities/note";
 import {
   CONTENT_OPENGRAPH_IMAGE_SIZE,
   renderContentOpengraphImage,
@@ -9,7 +9,7 @@ export const contentType = "image/png";
 export const dynamic = "force-static";
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const slugs = await getNoteSlugs();
+  const slugs = await getPublishedNoteSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 

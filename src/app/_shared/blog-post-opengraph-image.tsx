@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
-import { getBlogPost, getBlogSlugs } from "@/entities/blog";
+import { getBlogPost, getPublishedBlogSlugs } from "@/entities/blog";
 import type { Locale } from "@/shared/lib/routing";
 import { loadShipporiMinchoBold } from "./opengraph-font";
 
@@ -13,7 +13,7 @@ export const BLOG_POST_OPENGRAPH_IMAGE_SIZE = {
  * ブログ記事詳細の generateStaticParams。ja/en で完全に共通。
  */
 export async function generateBlogPostOpengraphStaticParams() {
-  const slugs = await getBlogSlugs();
+  const slugs = await getPublishedBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 

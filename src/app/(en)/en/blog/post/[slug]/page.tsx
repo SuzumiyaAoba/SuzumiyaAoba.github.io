@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getBlogSlugs } from "@/entities/blog";
+import { getPublishedBlogSlugs } from "@/entities/blog";
 import { buildBlogPostMetadata } from "@/app/_shared/blog-post-metadata";
 import BlogPostPage from "@/pages/blog/post";
 
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const slugs = await getBlogSlugs();
+  const slugs = await getPublishedBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 

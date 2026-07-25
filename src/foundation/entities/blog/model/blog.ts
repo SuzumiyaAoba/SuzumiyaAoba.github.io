@@ -272,6 +272,17 @@ export const getBlogPostsVariants = cache(
 );
 
 /**
+ * 公開済み（下書きでない）ブログ記事のスラッグ一覧を取得する。
+ * generateStaticParams など、下書き記事を静的ビルド対象・公開 URL に
+ * 含めてはいけない場面ではこちらを使う（getBlogSlugs は下書きを含む全件を返す）。
+ * @returns スラッグの配列
+ */
+export const getPublishedBlogSlugs = cache(async (): Promise<string[]> => {
+  const posts = await getBlogPostsVariants();
+  return posts.map((post) => post.slug);
+});
+
+/**
  * 指定したスラッグの多言語サマリーを取得する
  * @param slug 記事のスラッグ
  * @returns 多言語対応した記事サマリー

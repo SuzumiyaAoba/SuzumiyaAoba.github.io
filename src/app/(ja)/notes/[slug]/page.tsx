@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import NotesDetailPage from "@/pages/notes/detail";
-import { getNoteSlugs } from "@/entities/note";
+import { getPublishedNoteSlugs } from "@/entities/note";
 import { buildNotesPageMetadata } from "@/app/_shared/notes-page-metadata";
 
 type PageProps = {
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const slugs = await getNoteSlugs();
+  const slugs = await getPublishedNoteSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 

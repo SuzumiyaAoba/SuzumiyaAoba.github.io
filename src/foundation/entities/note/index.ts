@@ -7,6 +7,7 @@ export {
   getNoteSummaryVariants,
   getNotesVariants,
   getNoteVariants,
+  getPublishedNoteSlugs,
 } from "./model/note";
 export type {
   LocalizedNote,
