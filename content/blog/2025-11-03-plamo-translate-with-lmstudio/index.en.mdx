@@ -32,25 +32,25 @@ Install it by downloading the installer from the [download page](https://lmstudi
 After launching LM Studio, download the model.
 Click the magnifying-glass icon on the left to open the search screen.
 
-<Img src="./images/lm-studio_launch.png" />
+<Img src="./images/lm-studio_launch.png" alt="LM Studio right after launch, with the search icon on the left side" />
 
 Search for "plamo translate" and you will see several models. Select the one published by mmnga and click "Download".
 In the screenshot it says "Use in New Chat" because the model is already downloaded.
 
-<Img src="./images/lm-studio_donwload-model.png" />
+<Img src="./images/lm-studio_donwload-model.png" alt="Search results for plamo translate with the download button" />
 
 ### Model settings
 
 After downloading, click the folder icon on the left to open the list of downloaded models.
 Find the model named `plamo-2-translate` and click the gear icon in the Action column.
 
-<Img src="./images/lm-studio_model-list.png" />
+<Img src="./images/lm-studio_model-list.png" alt="List of downloaded models with the gear icon in the Action column for plamo-2-translate" />
 
 This opens the settings to edit the default parameters.
 To use PLaMo Translation in LM Studio, change the **Prompt Template** and **Stop String** under the **Prompt** tab.
 While writing this, I realized changing **Additional Stop Strings** might also work.
 
-<Img src="./images/lm-studio_model-template.png" />
+<Img src="./images/lm-studio_model-template.png" alt="Default parameter editing screen with the Prompt tab selected" />
 
 #### Prompt template
 
@@ -87,7 +87,7 @@ Set the stop string to:
 <|plamo:op|>
 ```
 
-<Img src="./images/lm-studio_termination.png" />
+<Img src="./images/lm-studio_termination.png" alt="Tag display shown after setting the stop string to <|plamo:op|> and pressing Enter" />
 
 After entering it and pressing Enter, you will see tags like in the screenshot.
 
@@ -95,23 +95,23 @@ After entering it and pressing Enter, you will see tags like in the screenshot.
 
 Click the speech-bubble icon on the left to open the chat UI.
 
-<Img src="./images/lm-studio_chat.png" />
+<Img src="./images/lm-studio_chat.png" alt="LM Studio chat UI screen" />
 
 Click "Select a model" at the top and choose "Plamo 2 Translate" from the downloaded list.
 
-<Img src="./images/lm-studio_load-model.png" />
+<Img src="./images/lm-studio_load-model.png" alt="Downloaded model selection menu with Plamo 2 Translate" />
 
 You will be prompted with some settings; leave them as default and click "Load Model".
 
-<Img src="./images/lm-studio_model-configuration.png" />
+<Img src="./images/lm-studio_model-configuration.png" alt="Model loading settings screen with default values" />
 
 You will see a familiar ChatGPT-like UI. Enter English and press Enter.
 PLaMo Translation returns the Japanese translation.
 In the screenshots, I used a [description](https://etc.usf.edu/lit2go/41/the-merchant-of-venice/) of Shakespeare's _The Merchant of Venice_.
 
-<Img src="./images/lm-studio_translate.png" />
+<Img src="./images/lm-studio_translate.png" alt="Japanese translation result produced by PLaMo Translation" />
 
-<Img src="./images/google-translate.png" />
+<Img src="./images/google-translate.png" alt="The same English text translated by Google Translate" />
 
 Compared to Google Translate, it seems more paraphrased, but the context is preserved,
 so it may be useful when you want to quickly translate large amounts of collected English information.
@@ -121,7 +121,7 @@ I plan to try it for machine translation of this blog and adopt it if the qualit
 
 Since the model is not trained for conversational use, giving translation instructions does not help.
 
-<Img src="./images/lm-studio_plamo_response.png" />
+<Img src="./images/lm-studio_plamo_response.png" alt="Example response showing translation instructions being ignored" />
 
 You can configure the translation direction (English -> Japanese or Japanese -> English),
 but it only works correctly when the input language matches that configuration.
@@ -130,7 +130,7 @@ but it only works correctly when the input language matches that configuration.
 
 Finally, either fully stop LM Studio or eject the model so memory is not allocated when unused.
 
-<Img src="./images/lm-studio_eject.png" />
+<Img src="./images/lm-studio_eject.png" alt="Location of the button to eject the model" />
 
 ## English translation by PLaMo up to here
 

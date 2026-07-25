@@ -180,11 +180,11 @@ If you don't use a package manager, download the binary from the official LM Stu
 Because we want to use it as an LLM API, switch to Developer mode after launching.
 When LM Studio starts, you see a GUI like this:
 
-<Img src="./images/lm-studio.png" width={800} />
+<Img src="./images/lm-studio.png" alt="LM Studio GUI right after launch" width={800} />
 
 Click the magnifying-glass icon at the bottom-left to search and download models.
 
-<Img src="./images/lm-studio_search-gpt-oss-20b.png" width={800} />
+<Img src="./images/lm-studio_search-gpt-oss-20b.png" alt="Search results for gpt-oss 20B with the download button" width={800} />
 
 Search for `gpt-oss` and you'll see OpenAI's `gpt-oss 20B`. Click "Download" in the bottom-right.
 The screenshot shows "Use in New Chat" because it's already downloaded.
@@ -192,25 +192,25 @@ The screenshot shows "Use in New Chat" because it's already downloaded.
 After the download, click the second icon from the top (terminal icon).
 You should see a screen like this, where you can start a local server for the model.
 
-<Img src="./images/lm-sutdio_development.png" width={800} />
+<Img src="./images/lm-sutdio_development.png" alt="Developer screen for starting a local server" width={800} />
 
 Click "Select a model" and choose "OpenAI's gpt-oss 20B".
 
-<Img src="./images/lm-studio_select-model.png" width={800} />
+<Img src="./images/lm-studio_select-model.png" alt="Downloaded model selection screen with OpenAI's gpt-oss 20B" width={800} />
 
 Loading a model consumes memory even before inference, as shown below.
 
-<Img src="./images/lm-studio_model-load-memory-usage.png" width={800} />
+<Img src="./images/lm-studio_model-load-memory-usage.png" alt="Memory usage while the model is loading" width={800} />
 
 After loading, click the top-left icon to open the chat UI and try a prompt.
 
-<Img src="./images/lm-studio_chat.png" width={800} />
+<Img src="./images/lm-studio_chat.png" alt="Testing the model in the LM Studio chat UI" width={800} />
 
 If you get a response, the LLM is working.
 
 Finally, if you're done, eject the model to free memory. Click the Development icon and press "Eject".
 
-<Img src="./images/lm-studio_model-eject.png" width={800} />
+<Img src="./images/lm-studio_model-eject.png" alt="Location of the Eject button for the loaded model" width={800} />
 
 ## mastra
 
@@ -240,7 +240,7 @@ It is normal for a version upgrade to crash even if the previous version worked.
 
 The command will ask some questions and generate a directory.
 
-<Img src="./images/mastra_setup.png" />
+<Img src="./images/mastra_setup.png" alt="Setup questions shown when running npm create mastra" />
 
 ### Directory structure
 
@@ -379,7 +379,7 @@ index 7299c42..eaedfcb 100644
 
 `openai/gpt-oss-20b` can be found in the LM Studio GUI.
 
-<Img src="./images/lm-studio_model-id.png" width={800} />
+<Img src="./images/lm-studio_model-id.png" alt="Model ID shown in the LM Studio GUI" width={800} />
 
 #### .env
 
@@ -415,12 +415,12 @@ $ npm run dev
 
 Open the browser and you should see this.
 
-<Img src="./images/mastra_top.png" width={800} />
+<Img src="./images/mastra_top.png" alt="Playground top page after starting the mastra dev server" width={800} />
 
 Since we just want to verify it works, click `Weather Agent`, open the chat UI, and send a prompt.
 You will get a response (in English), as shown.
 
-<Img src="./images/mastra_weather.png" width={800} />
+<Img src="./images/mastra_weather.png" alt="Weather information returned by the Weather Agent" width={800} />
 
 Now you have a working TypeScript environment for AI agents.
 

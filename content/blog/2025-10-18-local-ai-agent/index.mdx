@@ -183,11 +183,11 @@ Homebrew を使っていない場合は自身の環境に合わせたインス�
 今回は、LLM を使うための API として利用したいため、アプリケーションを起動した後に Developer モードに変更する。
 LM Studio を起動すると画像のような GUI アプリケーションが起動する。
 
-<Img src="./images/lm-studio.png" width={800} />
+<Img src="./images/lm-studio.png" alt="LM Studio 起動直後の GUI 画面" width={800} />
 
 左側にあるアイコンの一番下にある虫めがねアイコンをクリックするとモデルを検索し、ダウンロードするための画面にある。
 
-<Img src="./images/lm-studio_search-gpt-oss-20b.png" width={800} />
+<Img src="./images/lm-studio_search-gpt-oss-20b.png" alt="gpt-oss 20B モデルの検索結果とダウンロードボタン" width={800} />
 
 検索フォームに `gpt-oss` と入力すると OpenAI が公開している `gpt-oss 20B` モデルがヒットするため、右下の「Donwload」をクリックする。
 画像では「Use in New Chat」となっているのはダウンロード済みだからだ。
@@ -196,27 +196,27 @@ LM Studio を起動すると画像のような GUI アプリケーションが�
 そうすると画像のような画面になるはずだ。
 この画面では、ダウンロードしたモデルを利用するためのサーバをローカルで立ち上げることができる。
 
-<Img src="./images/lm-sutdio_development.png" width={800} />
+<Img src="./images/lm-sutdio_development.png" alt="ローカルサーバを起動する Developer 画面" width={800} />
 
 画面の上の方にある「モデルを選択してください」をクリックすると、次の画像のようにダウンロード済みモデルを選択する画面になる。
 ここでは、先ほど選択した「OpenAI's gpt-oss 20B」を選択する。
 
-<Img src="./images/lm-studio_select-model.png" width={800} />
+<Img src="./images/lm-studio_select-model.png" alt="ダウンロード済みモデルの選択画面。OpenAI's gpt-oss 20B を選択する" width={800} />
 
 そうるとモデルの読み込みが開始するが、LLM はモデルを読み込んだだけの状態でも次の画像を見るとわかるようにそれなりのメモリ消費がロードタイミングでも発生する。
 
-<Img src="./images/lm-studio_model-load-memory-usage.png" width={800} />
+<Img src="./images/lm-studio_model-load-memory-usage.png" alt="モデル読み込み時のメモリ使用量" width={800} />
 
 モデルの読み込みが終了したら正しく動作するか確認するために左側のアイコンの一番上を選択し、チャット UI で適当に問い合わせてみる。
 
-<Img src="./images/lm-studio_chat.png" width={800} />
+<Img src="./images/lm-studio_chat.png" alt="LM Studio のチャット UI での動作確認" width={800} />
 
 何かしらの回答が返ってきたら LLM が正常に動作している証拠だ。
 
 最後に LM Studio でモデルを読み込んだ後、それ以上使わないのであれば忘れずに Eject しておこう。
 Development のアイコンを選択し、画像の「Eject」ボタンを押すとメモリを解放できる。
 
-<Img src="./images/lm-studio_model-eject.png" width={800} />
+<Img src="./images/lm-studio_model-eject.png" alt="モデルを Eject するボタンの位置" width={800} />
 
 ## mastra
 
@@ -247,7 +247,7 @@ mastra は絶賛開発中のフレームワークなのでバージョンが上�
 
 コマンドを実行すると、いくつか質問されるので回答するとディレクトリが作成される。
 
-<Img src="./images/mastra_setup.png" />
+<Img src="./images/mastra_setup.png" alt="npm create mastra 実行時のセットアップ質問" />
 
 ### ディレクトリ構造
 
@@ -387,7 +387,7 @@ index 7299c42..eaedfcb 100644
 
 `openai/gpt-oss-20b` は LM Studio の GUI アプリケーション上で確認できる値だ。
 
-<Img src="./images/lm-studio_model-id.png" width={800} />
+<Img src="./images/lm-studio_model-id.png" alt="LM Studio 上で確認できるモデル ID" width={800} />
 
 #### .env
 
@@ -422,12 +422,12 @@ $ npm run dev
 
 ウェブブラウザでアクセスすると次のような画面が表示されるはずだ。
 
-<Img src="./images/mastra_top.png" width={800} />
+<Img src="./images/mastra_top.png" alt="mastra dev サーバ起動後の Playground トップ画面" width={800} />
 
 今回は動作確認をするのが目的なので `Weather Agent` をクリックしてチャット UI を表示し、適当なプロンプトを投げてみよう。
 すると回答は英語になってしまっているが、画像のように天気に関する情報が返される。
 
-<Img src="./images/mastra_weather.png" width={800} />
+<Img src="./images/mastra_weather.png" alt="Weather Agent との対話で天気情報が返された結果" width={800} />
 
 これでめでたく TypeScript で AI エージェントを開発するための初期環境が整った。
 

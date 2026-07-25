@@ -33,24 +33,24 @@ PFN から CLI でする [PLaMo 翻訳 CLI](https://tech.preferred.jp/ja/blog/pl
 LM Studio を起動したらモデルをダウンロードする。
 モデルのダウンロードは、起動した後のウィンドウの左側に並んだ虫めがねのアイコンをクリックすると検索画面に切り替えて行う。
 
-<Img src="./images/lm-studio_launch.png" />
+<Img src="./images/lm-studio_launch.png" alt="LM Studio 起動直後の画面。左側に検索アイコンが並んでいる" />
 
 PLaMo 翻訳のモデルは、検索フォームに「plamo translate」のようなキーワードを入れると、いくつかモデルがヒットするので mmnga という方が公開しているモデルを選択し、右下の「Download」をクリックする。画像では「Use in New Chat」となっているが、これはモデルを既にダウンロードしているため。
 
-<Img src="./images/lm-studio_donwload-model.png" />
+<Img src="./images/lm-studio_donwload-model.png" alt="plamo translate の検索結果一覧とダウンロードボタン" />
 
 ### モデル設定
 
 モデルのダウンロードが完了したら、ウィンドウの左側にあるフォルダのアイコンをクリックし、ダウンロード済みのモデルが表示される画面を開く。
 リストの中に `plamo-2-translate` という名前のモデルがあるはずなので、その行の「アクション」列にある歯車のアイコンをクリックする。
 
-<Img src="./images/lm-studio_model-list.png" />
+<Img src="./images/lm-studio_model-list.png" alt="ダウンロード済みモデルの一覧画面。plamo-2-translate 行のアクション列に歯車アイコンがある" />
 
 すると、右側にモデルのデフォルトパラメータを編集するための設定が表示される。
 PLaMo 翻訳を LM Studio で使うには「**Prompt**」タブにある「**プロンプトテンプレート**」と「**停止文字列**」の設定を変更する。
 この記事を書いている最中に気がついたが、「**停止文字列**」ではなく「**追加停止文字列**」の変更でも上手く動くかもしれない。
 
-<Img src="./images/lm-studio_model-template.png" />
+<Img src="./images/lm-studio_model-template.png" alt="モデルのデフォルトパラメータ編集画面。Prompt タブが選択されている" />
 
 #### プロンプトテンプレート
 
@@ -87,7 +87,7 @@ translation
 <|plamo:op|>
 ```
 
-<Img src="./images/lm-studio_termination.png" />
+<Img src="./images/lm-studio_termination.png" alt="停止文字列に <|plamo:op|> を設定し Enter を押した後のタグ表示" />
 
 テキストエリアに入力してから Enter を押すと画面のようなタグ表示になる。
 
@@ -95,24 +95,24 @@ translation
 
 設定が完了したらウィンドウの左側にある吹き出しのアイコンをクリックし、チャット UI で LLM を使うための画面を表示しよう。
 
-<Img src="./images/lm-studio_chat.png" />
+<Img src="./images/lm-studio_chat.png" alt="LM Studio のチャット UI 画面" />
 
 次にモデルをロードするためにウィンドウ上部にある「モデルを選択してください」をクリックする。
 そうするとダウンロード済みモデルの一覧が表示されるので「Plamo 2 Translate」を選択しよう。
 
-<Img src="./images/lm-studio_load-model.png" />
+<Img src="./images/lm-studio_load-model.png" alt="ダウンロード済みモデルの選択メニュー。Plamo 2 Translate を選択する" />
 
 次にいくつかの設定を求められるが、ここではデフォルトのまま「モデルを読み込む」をクリックする。
 
-<Img src="./images/lm-studio_model-configuration.png" />
+<Img src="./images/lm-studio_model-configuration.png" alt="モデル読み込み時の設定画面。デフォルト設定のまま読み込む" />
 
 そうすると、ChatGPT のようなおなじみの UI が表示されるので、英語を入力してから Enter を押す。
 すると、日本語訳を PLaMo 翻訳が返してくれる。
 画像では、シェイクスピアの『ヴェニスの商人』の[説明文](https://etc.usf.edu/lit2go/41/the-merchant-of-venice/)を与えている。
 
-<Img src="./images/lm-studio_translate.png" />
+<Img src="./images/lm-studio_translate.png" alt="PLaMo 翻訳による英語から日本語への翻訳結果" />
 
-<Img src="./images/google-translate.png" />
+<Img src="./images/google-translate.png" alt="同じ英文を Google 翻訳で翻訳した結果" />
 
 Google 翻訳と比較すると意訳になっている部分が多いように感じるが、文脈を損なうような翻訳にはなっていないので
 機械的に集めた英語の情報をまとめて高速に翻訳したいような場合には使えるかもしれない。
@@ -122,7 +122,7 @@ Google 翻訳と比較すると意訳になっている部分が多いように�
 
 注意点として、会話形式で動作するような学習はされていないため、翻訳に対する指示を行なっても意味がない。
 
-<Img src="./images/lm-studio_plamo_response.png" />
+<Img src="./images/lm-studio_plamo_response.png" alt="翻訳に対する指示を与えても反映されない応答例" />
 
 設定によって「英語 → 日本語」「日本語 → 英語」のようにどの言語からどの言語に翻訳するかは変更できるが、
 あくまでその設定に応じた言語が与えられた場合に正しく動作する。
@@ -131,7 +131,7 @@ Google 翻訳と比較すると意訳になっている部分が多いように�
 
 最後に LM Studio を完全に停止するか、モデルを Eject して使っていないときはメモリが確保されないように気をつけよう。
 
-<Img src="./images/lm-studio_eject.png" />
+<Img src="./images/lm-studio_eject.png" alt="モデルを Eject するボタンの位置" />
 
 ## ここまでを PLaMo 翻訳で英語に
 
