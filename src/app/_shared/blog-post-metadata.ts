@@ -5,8 +5,10 @@ import { buildLocaleAlternates } from "./locale-alternates";
 
 /**
  * ブログ記事詳細ページの Metadata を構築する。
- * ja/en どちらの記事も存在する場合、canonical は常に en 版を指す
- * (既存の en 版ロジックを踏襲。ja のみ存在する場合は ja 版を指す)。
+ * canonical は常に閲覧中のロケール自身を指す(自己参照 canonical)。
+ * hreflang で ja/en を相互参照しているため、canonical を翻訳版に向けると
+ * Google に矛盾したシグナルを送り、非正規ロケールの評価が正規ロケールに
+ * 吸収されてしまう。
  * description は frontmatter の `description` を優先し、未設定の場合は
  * category ベースの生成文言、それも無ければタイトルにフォールバックする。
  */
@@ -37,7 +39,6 @@ export async function buildBlogPostMetadata(
     description,
     alternates: buildLocaleAlternates(`/blog/post/${slug}`, locale, {
       availability: { ja: Boolean(postJa), en: Boolean(postEn) },
-      canonicalLocale: postEn ? "en" : "ja",
     }),
     openGraph: {
       title,

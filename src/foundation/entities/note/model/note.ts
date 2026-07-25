@@ -19,6 +19,7 @@ export type NoteFrontmatter = {
   title: string;
   date?: string;
   category?: string;
+  description?: string;
   tags?: string[];
   thumbnail?: string;
   draft?: boolean;
@@ -97,6 +98,7 @@ export const getNoteSummary = cache(
 function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
   const date = asDateString(data["date"]);
   const category = asString(data["category"]);
+  const description = asString(data["description"]);
   const tags = asStringArray(data["tags"]);
   const thumbnail = asString(data["thumbnail"]);
   const draft = asBoolean(data["draft"]);
@@ -108,6 +110,7 @@ function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
     title: asStringWithDefault(data["title"], ""),
     ...(date ? { date } : {}),
     ...(category !== undefined ? { category } : {}),
+    ...(description !== undefined ? { description } : {}),
     ...(tags !== undefined ? { tags } : {}),
     ...(thumbnail !== undefined ? { thumbnail } : {}),
     ...(draft !== undefined ? { draft } : {}),
@@ -183,6 +186,17 @@ export const getNotesVariants = cache(async (): Promise<LocalizedNote[]> => {
       return !reference.frontmatter.draft;
     })
     .sort(compareLocalizedNotes);
+});
+
+/**
+ * 公開済み（下書きでない）ノートのスラッグ一覧を取得する。
+ * generateStaticParams など、下書きを静的ビルド対象・公開 URL に
+ * 含めてはいけない場面ではこちらを使う（getNoteSlugs は下書きを含む全件を返す）。
+ * @returns スラッグの配列
+ */
+export const getPublishedNoteSlugs = cache(async (): Promise<string[]> => {
+  const notes = await getNotesVariants();
+  return notes.map((note) => note.slug);
 });
 
 export const getNoteSummaryVariants = cache(async (slug: string): Promise<LocalizedNoteSummary> => {

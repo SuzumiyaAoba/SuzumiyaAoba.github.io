@@ -5,10 +5,10 @@ import { buildLocaleAlternates } from "./locale-alternates";
 
 /**
  * ノート詳細ページの Metadata を構築する。
- * ja/en どちらのノートも存在する場合、canonical は常に en 版を指す
- * (ブログ記事の既存ロジックを踏襲。ja のみ存在する場合は ja 版を指す)。
- * ノートには description frontmatter が無いため、category ベースの文言
- * (無ければタイトル)を description として使う。
+ * canonical は常に閲覧中のロケール自身を指す(自己参照 canonical、
+ * ブログ記事の locale-alternates ロジックを踏襲)。
+ * description は frontmatter の `description` を優先し、未設定の場合は
+ * category ベースの生成文言、それも無ければタイトルにフォールバックする。
  */
 export async function buildNotesPageMetadata(
   slug: string | undefined,
@@ -25,18 +25,18 @@ export async function buildNotesPageMetadata(
   }
 
   const title = note.frontmatter.title || slug;
-  const description = note.frontmatter.category
+  const fallbackDescription = note.frontmatter.category
     ? locale === "en"
       ? `${note.frontmatter.category} note.`
       : `${note.frontmatter.category}に関するノート。`
     : title;
+  const description = note.frontmatter.description || fallbackDescription;
 
   return {
     title,
     description,
     alternates: buildLocaleAlternates(`/notes/${slug}`, locale, {
       availability: { ja: Boolean(noteJa), en: Boolean(noteEn) },
-      canonicalLocale: noteEn ? "en" : "ja",
     }),
     openGraph: {
       title,
