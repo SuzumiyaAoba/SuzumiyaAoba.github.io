@@ -6,7 +6,7 @@ import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
-import { getSiteUrl } from "@/shared/lib/site";
+import { getSiteUrl, SITE_TITLE } from "@/shared/lib/site";
 import { JsonLd } from "@/shared/ui/seo";
 import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -105,6 +105,7 @@ export function BlogPostPageContent({
           headline: postTitle,
           datePublished: postDate,
           dateModified: postDate,
+          image: [`${getSiteUrl()}${postPath}opengraph-image`],
           mainEntityOfPage: {
             "@type": "WebPage",
             "@id": `${getSiteUrl()}${postPath}`,
@@ -112,6 +113,10 @@ export function BlogPostPageContent({
           author: {
             "@type": "Person",
             name: "SuzumiyaAoba",
+          },
+          publisher: {
+            "@type": "Organization",
+            name: SITE_TITLE,
           },
         }}
       />
