@@ -6,7 +6,7 @@ import { getSeriesForPostSlug } from "@/entities/series-item";
 import { resolveContentRoot } from "@/shared/lib/content-file";
 import {
   extractAmazonProductIdsFromMdx,
-  financialDataComponents,
+  loadFinancialDataComponents,
   loadMdxScope,
   renderMdxWithToc,
 } from "@/shared/lib/mdx";
@@ -103,11 +103,15 @@ export default async function Page({ params, locale }: PageProps) {
   if (shouldLogPerf) {
     console.time(`[blog] mdx render:${slug}`);
   }
-  const needsFinancialData = FINANCIAL_DATA_USAGE_RE.test(contentSource);
+  // 使う記事だけが実行時に読み込む。静的 import にすると、チャートを
+  // 使わない記事のバンドルにも約 115KB(gzip) が載る。
+  const financialDataComponents = FINANCIAL_DATA_USAGE_RE.test(contentSource)
+    ? await loadFinancialDataComponents()
+    : null;
   const mdxPromise = renderMdxWithToc(contentSource, {
     basePath: `/contents/blog/${slug}`,
     scope,
-    ...(needsFinancialData ? { extraComponents: financialDataComponents } : {}),
+    ...(financialDataComponents ? { extraComponents: financialDataComponents } : {}),
   });
   if (shouldLogPerf) {
     console.time(`[blog] amazon explicit:${slug}`);

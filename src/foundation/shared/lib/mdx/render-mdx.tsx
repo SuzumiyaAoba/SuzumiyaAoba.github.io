@@ -1,3 +1,8 @@
+// 数式のスタイル。ルートレイアウトで読むと数式を含まないページ
+// （トップ・一覧・タグなど大半）にも約 4.4KB(gzip) のレンダリングブロック CSS が
+// 載るため、MDX を描画する経路にだけスコープする。
+import "katex/dist/katex.min.css";
+
 import type { ComponentProps, ReactElement } from "react";
 import { cache } from "react";
 import type { MDXComponents } from "mdx/types";
@@ -148,6 +153,41 @@ type RenderOptions = {
   extraComponents?: MDXComponents;
 };
 
+/**
+ * mermaid 図を含む MDX かどうかの判定。
+ * remarkMermaid が変換する ```mermaid フェンスと、
+ * MDX 中に直接書かれた <Mermaid> の両方を拾う。
+ */
+const MERMAID_USAGE = /^[ \t]*(?:```|~~~)[ \t]*mermaid\b|<Mermaid[\s/>]/m;
+
+/** codehike の highlight（Shiki + TextMate 文法）を伴うコードブロックの使用判定 */
+const CODE_BLOCK_USAGE = /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/;
+
+/**
+ * 重量級コンポーネントを、実際に使う記事にだけ注入する。
+ *
+ * 実体の読み込みは *-lazy（クライアント側の遅延境界）が行う。
+ * ここで注入を絞るのは、使わない記事のルートに遅延境界そのものが
+ * クライアント参照として登録されるのを防ぐため。
+ */
+async function loadHeavyComponents(source: string): Promise<MDXComponents> {
+  const components: MDXComponents = {};
+
+  if (MERMAID_USAGE.test(source)) {
+    const { MermaidLazy } = await import("@/shared/ui/mdx/mermaid-lazy");
+    components["Mermaid"] = MermaidLazy;
+  }
+
+  if (CODE_BLOCK_USAGE.test(source)) {
+    const lazy = await import("@/shared/ui/mdx/code-blocks-lazy");
+    components["CodeWithTabs"] = lazy.CodeWithTabs;
+    components["CodeSwitcher"] = lazy.CodeSwitcher;
+    components["CodeWithTooltips"] = lazy.CodeWithTooltips;
+  }
+
+  return components;
+}
+
 const devRenderCache = new Map<string, ReactElement>();
 const devRenderWithTocCache = new Map<string, { content: ReactElement; headings: TocHeading[] }>();
 
@@ -220,7 +260,15 @@ export const renderMdx = cache(
     }
 
     const affiliateById = await getAffiliateProductUrlById();
-    const { content } = await compileMDX(buildCompileOptions(source, options, [], affiliateById));
+    const heavyComponents = await loadHeavyComponents(source);
+    const { content } = await compileMDX(
+      buildCompileOptions(
+        source,
+        { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
+        [],
+        affiliateById,
+      ),
+    );
 
     const rendered = <>{content}</>;
     if (useDevCache) devRenderCache.set(cacheKey, rendered);
@@ -248,11 +296,12 @@ export const renderMdxWithToc = cache(
     }
 
     const affiliateById = await getAffiliateProductUrlById();
+    const heavyComponents = await loadHeavyComponents(source);
     const headings: TocHeading[] = [];
     const { content } = await compileMDX(
       buildCompileOptions(
         source,
-        options,
+        { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
         [remarkCollectHeadings(headings, idPrefix)],
         affiliateById,
       ),

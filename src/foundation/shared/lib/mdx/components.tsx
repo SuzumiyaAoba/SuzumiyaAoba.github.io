@@ -1,11 +1,7 @@
-import dynamic from "next/dynamic";
 import type { MDXComponents } from "mdx/types";
 
 import {
   Code,
-  CodeSwitcher,
-  CodeWithTabs,
-  CodeWithTooltips,
   HoverContainer,
   InlineCode,
   AmazonAssociate,
@@ -26,59 +22,6 @@ import { Message } from "@/shared/ui/mdx/message";
 import { YouTubeEmbed } from "@/shared/ui/mdx/youtube-embed";
 import { createPlaceholder } from "@/shared/ui/mdx/placeholders";
 
-/**
- * 重いコンポーネントを遅延読み込みする
- */
-const Mermaid = dynamic(() => import("@/shared/ui/mdx/mermaid").then((mod) => mod.Mermaid));
-
-/**
- * financial-data 系チャートのコンポーネントマップ。
- * 利用するページ（content/blog/2026-01-01-kakekin など）でのみ `extraComponents`
- * として渡して注入する。MDX 共通マップに常時注入するとブログ記事を編集した瞬間に
- * 100 件以上の dynamic import が HMR 対象になり、Chrome のレンダラーが OOM する。
- */
-const FINANCIAL_CHART_NAMES = [
-  "Section10ChartWrapper", "Section11ChartWrapper", "Section12ChartWrapper",
-  "Section13ChartWrapper", "Section14ChartWrapper", "Section15ChartWrapper",
-  "Section16ChartWrapper", "Section17ChartWrapper", "Section18ChartWrapper",
-  "Section19ChartWrapper", "Section20ChartWrapper", "Section21ChartWrapper",
-  "Section22ChartWrapper", "Section23ChartWrapper", "Section24ChartWrapper",
-  "Section25ChartWrapper", "Section26ChartWrapper", "Section27ChartWrapper",
-  "Section28ChartWrapper", "Section29ChartWrapper", "Section30ChartWrapper",
-  "Section31ChartWrapper", "Section32ChartWrapper", "Section33ChartWrapper",
-  "Section34ChartWrapper", "Section35ChartWrapper", "Section36ChartWrapper",
-  "Section37ChartWrapper", "Section38ChartWrapper", "Section39ChartWrapper",
-  "Section40ChartWrapper", "Section41ChartWrapper", "Section42ChartWrapper",
-  "Section43ChartWrapper", "Section44ChartWrapper", "Section45ChartWrapper",
-  "Section46ChartWrapper", "Section47ChartWrapper", "Section48ChartWrapper",
-  "Section49ChartWrapper", "Section50ChartWrapper", "Section51ChartWrapper",
-  "Section52ChartWrapper", "Section53ChartWrapper", "Section54ChartWrapper",
-  "Section55ChartWrapper", "Section56ChartWrapper", "Section57ChartWrapper",
-  "Section58ChartWrapper", "Section59ChartWrapper", "Section5ChartWrapper",
-  "Section60ChartWrapper", "Section61ChartWrapper", "Section62ChartWrapper",
-  "Section63ChartWrapper", "Section64ChartWrapper", "Section65ChartWrapper",
-  "Section66ChartWrapper", "Section67ChartWrapper", "Section68ChartWrapper",
-  "Section69ChartWrapper", "Section6ChartWrapper", "Section70ChartWrapper",
-  "Section71ChartWrapper", "Section72ChartWrapper", "Section73ChartWrapper",
-  "Section74ChartWrapper", "Section75ChartWrapper", "Section7ChartWrapper",
-  "Section8ChartWrapper", "Section9ChartWrapper", "Sheet1BarLineChartWrapper",
-  "Sheet1ChartWrapper", "Sheet1StackedChartWrapper", "Sheet2AmountChartWrapper",
-  "Sheet2BarChartWrapper", "Sheet2ChartWrapper", "Sheet3AmountChartWrapper",
-  "Sheet3BarChartWrapper", "Sheet3ChartWrapper", "Sheet3PieChartWrapper",
-  "Sheet4AmountChartWrapper", "Sheet4BarChartWrapper", "Sheet4ChartWrapper",
-  "Sheet4PieChartWrapper",
-] as const;
-
-export const financialDataComponents = Object.fromEntries(
-  FINANCIAL_CHART_NAMES.map((name) => [
-    name,
-    dynamic(() =>
-      import(`@/shared/ui/financial-data/${name}`).then(
-        (mod) => mod[name] as React.ComponentType,
-      ),
-    ),
-  ]),
-) as MDXComponents;
 
 /**
  * プレースホルダーコンポーネントを生成するための名前リスト
@@ -118,15 +61,14 @@ const placeholders = Object.fromEntries(
  * また、カスタムコンポーネント（Code, Mermaid, YouTubeEmbed など）も提供します。
  */
 export const mdxComponents: MDXComponents = {
-  CodeWithTabs,
-  CodeSwitcher,
-  CodeWithTooltips,
+  // CodeWithTabs / CodeSwitcher / CodeWithTooltips は Shiki を伴うため、
+  // 使用する記事だけに render-mdx.tsx が実行時注入する
   Code,
   InlineCode,
   HoverContainer,
   AmazonAssociate,
   AmazonProductSection,
-  Mermaid,
+  // Mermaid は重量のため、図を含む記事だけに render-mdx.tsx が実行時注入する
   GitHubCodeLink,
   a: MdxLink,
   Img,

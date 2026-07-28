@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/app/styles/globals.css";
-import "katex/dist/katex.min.css";
 import { AppRootLayout, buildRootMetadata } from "@/app/_shared/root-layout";
 
 /**
