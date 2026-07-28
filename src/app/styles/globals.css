@@ -46,8 +46,16 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/*
+ * 本文は明朝体（--font-sans = Shippori Mincho）だが、Amazon 商品セクションだけは
+ * ゴシック体で表示する。ここで Web フォント（Noto Sans JP）を読み込むと利用箇所が
+ * 1 コンポーネントにもかかわらず全ページに約 94KB(gzip) の @font-face CSS が
+ * レンダリングブロックで載るため、OS 標準のゴシックにフォールバックさせる。
+ */
 .font-noto {
-  font-family: var(--font-noto-sans-jp), "Noto Sans JP", var(--font-sans), ui-sans-serif, system-ui;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
 }
 
 :root {
