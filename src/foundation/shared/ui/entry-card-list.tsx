@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 
 import { Card } from "@/shared/ui/card";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";

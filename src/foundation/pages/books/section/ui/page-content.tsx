@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 import { Message } from "@/shared/ui/mdx";
 import type { BookChapter, SectionRef } from "@/entities/book";
 import type { TocHeading } from "@/shared/lib/mdx";

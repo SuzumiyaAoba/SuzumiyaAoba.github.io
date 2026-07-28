@@ -8,7 +8,7 @@ import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { ReactElement } from "react";
 import { AiNewsEntry } from "@/shared/lib/ai-news";
 import { Tag } from "@/shared/ui/tag";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 
 function resolveTimelineIcon(tags?: string[]): string | null {
   if (!tags || tags.length === 0) {

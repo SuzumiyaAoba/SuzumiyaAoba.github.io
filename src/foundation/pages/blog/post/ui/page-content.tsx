@@ -12,7 +12,7 @@ import { Tag } from "@/shared/ui/tag";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
 import { Message, TwitterWidgets } from "@/shared/ui/mdx";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 import { Separator } from "@/shared/ui/separator";
 import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";

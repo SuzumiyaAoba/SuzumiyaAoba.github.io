@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon-client";
 import { Button } from "@/shared/ui/button";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 

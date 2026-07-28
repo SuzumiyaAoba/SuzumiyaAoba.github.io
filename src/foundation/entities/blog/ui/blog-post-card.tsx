@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";

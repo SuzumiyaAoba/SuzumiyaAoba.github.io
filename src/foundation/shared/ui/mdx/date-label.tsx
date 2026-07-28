@@ -1,6 +1,6 @@
 import type { ComponentProps, PropsWithChildren } from "react";
 
-import { Icon } from "@iconify/react";
+import { Icon } from "@/shared/ui/icon";
 
 import { cn } from "@/shared/lib/utils";
 
