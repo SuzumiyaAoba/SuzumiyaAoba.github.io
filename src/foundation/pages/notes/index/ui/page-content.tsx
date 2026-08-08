@@ -33,10 +33,6 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
         path="/notes"
         breadcrumbName="Notes"
         heading={{ ja: "ノート", en: "Notes" }}
-        description={{
-          ja: "読書メモ、設計原則、開発中に残した短い知見をまとめています。",
-          en: "A collection of short notes on reading, design principles, and things learned while building.",
-        }}
         emptyMessage={{
           ja: "まだノートがありません。",
           en: "No notes have been published yet.",

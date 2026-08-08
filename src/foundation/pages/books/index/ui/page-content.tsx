@@ -33,10 +33,6 @@ export function BooksIndexPageContent({ locale, books }: BooksIndexPageContentPr
         path="/books"
         breadcrumbName="Books"
         heading={{ ja: "Books", en: "Books" }}
-        description={{
-          ja: "プログラミングや技術に関する入門書・解説書を公開しています。",
-          en: "Publishing introductory books and guides on programming and technology.",
-        }}
         emptyMessage={{
           ja: "まだ書籍が公開されていません。",
           en: "No books have been published yet.",

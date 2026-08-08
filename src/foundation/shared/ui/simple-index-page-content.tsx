@@ -14,7 +14,7 @@ export type SimpleIndexPageContentProps = {
   /** パンくずの表示名(例: "Books") */
   breadcrumbName: string;
   heading: LocalizedText;
-  description: LocalizedText;
+  description?: LocalizedText;
   emptyMessage: LocalizedText;
   items: SimpleEntryListItem[];
 };
@@ -43,11 +43,13 @@ export function SimpleIndexPageContent({
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja={heading.ja} en={heading.en} />
           </h1>
-          <div className="max-w-3xl space-y-3">
-            <p className="text-sm leading-7 text-muted-foreground">
-              <I18nText locale={locale} ja={description.ja} en={description.en} />
-            </p>
-          </div>
+          {description && (
+            <div className="max-w-3xl space-y-3">
+              <p className="text-sm leading-7 text-muted-foreground">
+                <I18nText locale={locale} ja={description?.ja} en={description?.en} />
+              </p>
+            </div>
+          )}
         </section>
 
         <SimpleEntryList

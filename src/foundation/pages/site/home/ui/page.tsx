@@ -31,9 +31,8 @@ export function HomePageContent({ locale, latestPosts }: HomePageContentProps) {
       <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-12 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
         <section className="space-y-2">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            {SITE_TITLE}
+            HOME
           </h1>
-          <p className="text-sm text-muted-foreground">{SITE_DESCRIPTION[locale]}</p>
         </section>
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
