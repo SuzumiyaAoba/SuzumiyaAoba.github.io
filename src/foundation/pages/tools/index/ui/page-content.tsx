@@ -1,14 +1,8 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { JsonLd } from "@/shared/ui/seo";
-import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { I18nText } from "@/shared/ui/i18n-text";
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  toLocalePath,
-  type Locale,
-} from "@/shared/lib/routing";
+import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
+import { SimpleIndexPageContent } from "@/shared/ui/simple-index-page-content";
 
 export type ToolsIndexPageContentProps = {
   locale: Locale;
@@ -16,44 +10,30 @@ export type ToolsIndexPageContentProps = {
 
 export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
   const pagePath = toLocalePath("/tools", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Tools", path: "/tools" });
+  const items: SimpleEntryListItem[] = [
+    {
+      slug: "ascii-standard-code",
+      title: "ASCII Standard Code",
+      href: toLocalePath("/tools/ascii-standard-code/", locale),
+    },
+    {
+      slug: "asset-formation-simulator",
+      title: locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション",
+      href: toLocalePath("/tools/asset-formation-simulator/", locale),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
-      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
-        <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            <I18nText locale={locale} ja="ツール" en="Tools" />
-          </h1>
-        </section>
-
-        <section className="mt-8">
-          <ul className="list-disc space-y-3 pl-6 text-sm text-muted-foreground">
-            <li>
-              <a
-                href={toLocalePath("/tools/ascii-standard-code/", locale)}
-                className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-              >
-                ASCII Standard Code
-              </a>
-            </li>
-            <li>
-              <a
-                href={toLocalePath("/tools/asset-formation-simulator/", locale)}
-                className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-              >
-                <I18nText
-                  locale={locale}
-                  ja="資産形成シミュレーション"
-                  en="Asset Formation Simulator"
-                />
-              </a>
-            </li>
-          </ul>
-        </section>
-      </main>
+      <SimpleIndexPageContent
+        locale={locale}
+        path="/tools"
+        breadcrumbName="Tools"
+        heading={{ ja: "ツール", en: "Tools" }}
+        emptyMessage={{ ja: "ツールがありません。", en: "No tools yet." }}
+        items={items}
+      />
       <Footer locale={locale} />
     </div>
   );

@@ -49,7 +49,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
@@ -57,18 +57,16 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
           </h1>
         </section>
 
-        <section className="mt-8">
-          <EntryCardList
-            items={items}
-            emptyState={
-              <Card className="border-transparent bg-card/40 shadow-none">
-                <div className="px-5 py-6 text-sm text-muted-foreground">
-                  <I18nText locale={locale} ja="項目がありません。" en="No archive items." />
-                </div>
-              </Card>
-            }
-          />
-        </section>
+        <EntryCardList
+          items={items}
+          emptyState={
+            <Card className="border-transparent bg-card/40 shadow-none">
+              <div className="px-5 py-6 text-sm text-muted-foreground">
+                <I18nText locale={locale} ja="項目がありません。" en="No archive items." />
+              </div>
+            </Card>
+          }
+        />
       </main>
       <Footer locale={locale} />
     </div>
