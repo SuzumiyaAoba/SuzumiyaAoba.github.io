@@ -1,0 +1,25 @@
+---
+title: "Common Closure Principle (CCP)"
+tags: ["Software Design", "Architecture", "Principles", "Components", "Clean Architecture"]
+amazonAssociate: true
+amazonProductIds:
+  - "Clean Architecture"
+description: Organizes the Common Closure Principle (CCP), which says classes that change for the same reason at the same time should be grouped as a component-level restatement of SRP.
+---
+
+<AmazonProductSection ids={["Clean Architecture"]} />
+
+> Group classes that are changed for the same reason and at the same time into one component.
+> Classes changed for different reasons should be split into separate components.
+
+- A restatement of the Single Responsibility Principle for components.
+- A principle that says classes with different reasons for change should be placed in separate components.
+- A component should have as few reasons to change as possible.
+- When application code needs modification, it is better if changes are concentrated in a single component rather than scattered across multiple components.
+- If change points are contained in one component, only that component needs to be redeployed.
+- Keep classes that are often changed at the same time together.
+- If two classes are tightly coupled physically or conceptually and tend to change together, they belong to the same component.
+- Group classes whose change types are similar into one component.
+
+> Consolidate things that change at the same time for the same reason.
+> Separate things that differ in timing or reason.

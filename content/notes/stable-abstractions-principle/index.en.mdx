@@ -1,0 +1,33 @@
+---
+title: "Stable Abstractions Principle (SAP)"
+tags: ["Software Design", "Architecture", "Principles", "Components", "Clean Architecture"]
+amazonAssociate: true
+amazonProductIds:
+  - "Clean Architecture"
+description: Organizes the Stable Abstractions Principle (SAP), which states that a component's level of abstraction should match its stability, and its relationship with SDP.
+---
+
+<AmazonProductSection ids={["Clean Architecture"]} />
+
+> A component's level of abstraction should be equal to its stability.
+
+- A principle about the relationship between abstraction and stability.
+- A component with high stability should also have high abstraction, and high stability should not obstruct extension.
+- A low-stability component should be concrete.
+- High stability makes internal concrete code harder to modify.
+- To keep a component stable and still extensible, design it with interfaces and abstract classes.
+- If a component is to be stable, make it extendable by interfaces and abstract classes.
+- SAP + SDP corresponds to the component-level Dependency Inversion Principle.
+- Stability and abstraction are correlated.
+
+## Measuring Abstraction
+
+A measure of a component's abstraction is `A`.
+
+- `Nc`
+  - Total number of classes in the component
+- `Na`
+  - Number of abstract classes and interfaces in the component
+- `A`
+  - Abstraction
+  - `A = Na ÷ Nc`

@@ -1,0 +1,16 @@
+---
+title: "Acyclic Dependencies Principle (ADP)"
+tags: ["Software Design", "Architecture", "Principles", "Components", "Clean Architecture"]
+amazonAssociate: true
+amazonProductIds:
+  - "Clean Architecture"
+description: Summarizes the Acyclic Dependencies Principle (ADP), which requires the component dependency graph to have no cycles.
+---
+
+> A component dependency graph must not contain cyclic dependencies.
+
+- Component structure changes along with requirements changes.
+- As the application grows, the component dependency structure becomes gradually more fine-grained.
+- You need to monitor the dependency structure continuously so cycles do not enter it.
+- When a cycle occurs, it must be eliminated somehow.
+- New components may appear and the dependency structure may change.

@@ -1,0 +1,35 @@
+---
+title: "Stable Dependencies Principle (SDP)"
+tags: ["Software Design", "Architecture", "Principles", "Components", "Clean Architecture"]
+amazonAssociate: true
+amazonProductIds:
+  - "Clean Architecture"
+description: Organizes the Stable Dependencies Principle (SDP), which says dependencies should point toward more stable components, and the instability metric I.
+---
+
+<AmazonProductSection ids={["Clean Architecture"]} />
+
+> Depend in the direction of higher stability.
+
+- A component expected to change should not be depended on by other components that are hard to change.
+- Even a module designed to be easy to modify becomes hard to change if dependent on by other components.
+- If SDP is satisfied, modules intended to be easy to change will not be depended on by inflexible modules.
+- The instability `I` of a component should be greater than that of the components it depends on.
+- As you follow dependency direction in component structure, `I` should decrease.
+- In design, keep both highly stable and low-stable components, not just one side.
+
+## Stability metric
+
+One method for measuring component stability is to examine how many components this component depends on, and how many depend on it.
+
+- Fan-In
+  - Incoming dependencies: the number of external components depending on classes in this component.
+- Fan-Out
+  - Outgoing dependencies: the number of external components that classes in this component depend on.
+- I (Instability)
+  - Instability.
+  - `I = Fan-Out ÷ (Fan-In + Fan-Out)`
+  - `I = 0` is the most stable component
+  - `I = 1` is the least stable component
+
+To compute fan-in and fan-out, count the classes in the component and the classes in dependent external components.
