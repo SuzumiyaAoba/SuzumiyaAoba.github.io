@@ -16,7 +16,7 @@ export function AssetFormationSimulatorPageContent({
   const pagePath = toLocalePath("/tools/asset-formation-simulator", locale);
   const pageName = locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション";
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd
         data={buildBreadcrumbList([
@@ -25,7 +25,7 @@ export function AssetFormationSimulatorPageContent({
           { name: pageName, path: pagePath },
         ])}
       />
-      <div className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
+      <div className="site-container pt-6 sm:pt-8">
         <Breadcrumbs
           items={[
             { name: "Home", path: toLocalePath("/", locale) },

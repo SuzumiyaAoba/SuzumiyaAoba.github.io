@@ -26,7 +26,7 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
   }));
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <SimpleIndexPageContent
         locale={locale}

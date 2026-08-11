@@ -101,7 +101,7 @@ export function BlogPostPageContent({
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={postPath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <JsonLd
@@ -126,7 +126,7 @@ export function BlogPostPageContent({
           },
         }}
       />
-      <main className="mx-auto flex-1 w-full max-w-6xl min-w-0 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <header className="mb-10 space-y-3">
           <p className="text-sm text-muted-foreground">{postDate}</p>

@@ -24,10 +24,10 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
   const pagePath = toLocalePath("/contact", locale);
   const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Contact", path: "/contact" });
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="mx-auto flex-1 w-full max-w-6xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="site-main">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <div className="space-y-2">

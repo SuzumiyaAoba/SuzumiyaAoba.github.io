@@ -35,10 +35,10 @@ export function BookDetailPageContent({
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={bookPath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="site-main-reading flex flex-col gap-8 sm:gap-10">
         <div>
           <Breadcrumbs items={breadcrumbItems} className="mb-4" />
           <h1 className="text-3xl font-semibold">{bookTitle}</h1>

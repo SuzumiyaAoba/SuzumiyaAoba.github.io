@@ -88,7 +88,7 @@ export function Header({ locale, path }: HeaderProps) {
             style={{ transform: "scaleX(0)" }}
           />
         </div>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 px-6 py-3 lg:border-b-0">
+        <div className="site-container flex items-center justify-between gap-4 border-b border-border/60 py-3 lg:border-b-0">
           <a href={toLocalePath("/", locale)} className="flex items-center gap-4">
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-wide text-foreground">{SITE_TITLE}</p>
@@ -169,7 +169,7 @@ export function Header({ locale, path }: HeaderProps) {
       </div>
       <div
         id="mobile-nav"
-        className={`mx-auto block max-w-6xl px-6 transition-[max-height,opacity] duration-300 lg:hidden ${
+        className={`site-container block transition-[max-height,opacity] duration-300 lg:hidden ${
           isMenuOpen
             ? "max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain opacity-100 pb-4"
             : "max-h-0 overflow-hidden opacity-0 pb-0"

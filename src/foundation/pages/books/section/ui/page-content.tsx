@@ -55,7 +55,7 @@ export function BookSectionPageContent({
   coAuthors,
 }: BookSectionPageContentProps) {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={sectionPath} />
       <JsonLd
         data={buildBreadcrumbList([
@@ -65,7 +65,7 @@ export function BookSectionPageContent({
           { name: sectionTitle, path: sectionPath },
         ])}
       />
-      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-0 px-4 sm:px-6">
+      <div className="site-container-wide flex flex-1 gap-0">
         {/* 左: 章節ナビ */}
         <aside className="hidden xl:block w-60 shrink-0 pt-6 pb-10">
           <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4">

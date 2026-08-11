@@ -18,7 +18,7 @@ export function Footer({ locale }: FooterProps) {
 
   return (
     <footer className="mt-12 bg-card/40">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 text-center sm:px-6 md:flex-row md:justify-center">
+      <div className="site-container flex flex-col items-center gap-4 py-8 text-center md:flex-row md:justify-center">
         <p className="text-xs text-muted-foreground">© {year} SuzumiyaAoba</p>
         <nav className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
           <a href={toLocalePath("/contact", locale)} className="hover:text-foreground">

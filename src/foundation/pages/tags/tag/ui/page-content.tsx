@@ -35,13 +35,10 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main
-        className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
-        data-pagefind-ignore="all"
-      >
+      <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
           <BackLink locale={locale} href="/tags" ja="← タグ一覧" en="← Back to tags" />

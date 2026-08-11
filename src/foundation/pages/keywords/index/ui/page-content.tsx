@@ -10,7 +10,7 @@ export type KeywordsIndexPageContentProps = {
 export function KeywordsIndexPageContent({ locale }: KeywordsIndexPageContentProps) {
   const pagePath = toLocalePath("/keywords", locale);
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <EmptyPage />
       <Footer locale={locale} />

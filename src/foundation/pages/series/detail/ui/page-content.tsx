@@ -35,10 +35,10 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="site-main flex flex-col gap-8 sm:gap-10">
         <Breadcrumbs items={breadcrumbItems} className="mb-2" />
         <section className="space-y-3">
           <BackLink locale={locale} href="/series" ja="← シリーズ一覧" en="← Back to series" />

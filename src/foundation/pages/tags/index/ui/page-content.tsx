@@ -27,13 +27,10 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
   const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Tags", path: "/tags" });
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main
-        className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pt-6 pb-10 sm:gap-10 sm:px-6 sm:pt-8 sm:pb-12"
-        data-pagefind-ignore="all"
-      >
+      <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">

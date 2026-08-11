@@ -672,7 +672,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
   }, [scenarioData, selectedScenario, tableRows, visibleSeries, locale, formatYears]);
 
   return (
-    <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+    <main className="site-main flex flex-col">
       <h1 className="mb-6 text-3xl">
         {t("資産形成シミュレーション", "Asset Formation Simulator")}
       </h1>

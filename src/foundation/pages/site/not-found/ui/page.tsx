@@ -16,9 +16,9 @@ export type NotFoundPageContentProps = {
 export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
   const pagePath = toLocalePath("/", locale);
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="site-page">
       <Header locale={locale} path={pagePath} />
-      <main className="mx-auto flex-1 flex w-full max-w-6xl flex-col gap-12 px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12">
+      <main className="site-main flex flex-col gap-8 sm:gap-10">
         <section className="flex flex-col items-center justify-center gap-8 py-12">
           <div className="text-center space-y-4">
             <h1 className="text-6xl font-bold text-muted-foreground">404</h1>
