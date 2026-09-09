@@ -1,11 +1,10 @@
-import matter from "gray-matter";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import type { Locale } from "@/shared/lib/routing";
 
 import {
-  createArticleFileLister,
-  readContentFileWithFallback,
+  createContentReader,
+  compareContentByDate,
+  compareLocalizedContentByDate,
   listContentSlugs,
   findAdjacentByIndex,
   asString,
@@ -13,6 +12,7 @@ import {
   asDateString,
   asBoolean,
   asStringArray,
+  type ReadContentOptions,
 } from "@/shared/lib/content-file";
 
 const BLOG_COLLECTION_DIR = "blog";
@@ -70,18 +70,6 @@ export type BlogPostSummary = {
 };
 
 /**
- * コンテンツ読み込み時のオプション
- */
-type ReadContentOptions = {
-  /** 対象の言語。デフォルトは 'ja' */
-  locale?: Locale;
-  /** 指定した言語がない場合にフォールバックするか。デフォルトは true */
-  fallback?: boolean;
-};
-
-const listBlogArticleFiles = createArticleFileLister(BLOG_COLLECTION_DIR);
-
-/**
  * すべてのブログ記事のスラッグを取得する
  * @returns スラッグの配列
  */
@@ -98,29 +86,7 @@ export const getBlogSlugs = cache(
  * @param options 読み込みオプション
  * @returns 記事データ。存在しない場合は null
  */
-export const getBlogPost = cache(
-  async (slug: string, options?: ReadContentOptions): Promise<BlogPost | null> => {
-    const file = await readContentFileWithFallback(
-      BLOG_COLLECTION_DIR,
-      slug,
-      listBlogArticleFiles,
-      options,
-    );
-    if (!file) {
-      return null;
-    }
-
-    const { content, data } = matter(file.raw);
-    const frontmatter = normalizeFrontmatter(data);
-
-    return {
-      slug,
-      content,
-      format: file.format,
-      frontmatter,
-    };
-  },
-);
+export const getBlogPost = createContentReader(BLOG_COLLECTION_DIR, normalizeFrontmatter);
 
 /**
  * 指定したスラッグの記事サマリーを取得する
@@ -130,23 +96,8 @@ export const getBlogPost = cache(
  */
 export const getBlogPostSummary = cache(
   async (slug: string, options?: ReadContentOptions): Promise<BlogPostSummary | null> => {
-    const file = await readContentFileWithFallback(
-      BLOG_COLLECTION_DIR,
-      slug,
-      listBlogArticleFiles,
-      options,
-    );
-    if (!file) {
-      return null;
-    }
-
-    const { data } = matter(file.raw);
-    const frontmatter = normalizeFrontmatter(data);
-
-    return {
-      slug,
-      frontmatter,
-    };
+    const post = await getBlogPost(slug, options);
+    return post ? { slug: post.slug, frontmatter: post.frontmatter } : null;
   },
 );
 
@@ -191,7 +142,7 @@ export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
   return posts
     .filter((post): post is BlogPost => Boolean(post))
     .filter((post) => !post.frontmatter.draft)
-    .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1));
+    .sort(compareContentByDate);
 });
 
 /**
@@ -263,11 +214,7 @@ export const getBlogPostsVariants = cache(
         }
         return !reference.frontmatter.draft;
       })
-      .sort((a, b) => {
-        const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-        const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-        return dateA < dateB ? 1 : -1;
-      });
+      .sort(compareLocalizedContentByDate);
   }, ["blog-posts-variants"]),
 );
 
@@ -278,7 +225,7 @@ export const getBlogPostsVariants = cache(
  * @returns スラッグの配列
  */
 export const getPublishedBlogSlugs = cache(async (): Promise<string[]> => {
-  const posts = await getBlogPostsVariants();
+  const posts = await getBlogPostSummariesVariants();
   return posts.map((post) => post.slug);
 });
 
@@ -315,11 +262,7 @@ export const getBlogPostSummariesVariants = cache(
         }
         return !reference.frontmatter.draft;
       })
-      .sort((a, b) => {
-        const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-        const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-        return dateA < dateB ? 1 : -1;
-      });
+      .sort(compareLocalizedContentByDate);
   }, ["blog-post-summaries-variants"]),
 );
 

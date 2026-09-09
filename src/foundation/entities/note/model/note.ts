@@ -1,16 +1,16 @@
-import matter from "gray-matter";
 import { cache } from "react";
-import type { Locale } from "@/shared/lib/routing";
 
 import {
-  createArticleFileLister,
-  readContentFileWithFallback,
+  createContentReader,
+  compareContentByDate,
+  compareLocalizedContentByDate,
   listContentSlugs,
   asString,
   asStringWithDefault,
   asDateString,
   asBoolean,
   asStringArray,
+  type ReadContentOptions,
 } from "@/shared/lib/content-file";
 
 const NOTE_COLLECTION_DIR = "notes";
@@ -40,58 +40,16 @@ export type NoteSummary = {
   frontmatter: NoteFrontmatter;
 };
 
-type ReadContentOptions = {
-  locale?: Locale;
-  fallback?: boolean;
-};
-
-const listNoteArticleFiles = createArticleFileLister(NOTE_COLLECTION_DIR);
-
-export const getNoteSlugs = cache(async (): Promise<string[]> => listContentSlugs(NOTE_COLLECTION_DIR));
-
-export const getNote = cache(
-  async (slug: string, options?: ReadContentOptions): Promise<Note | null> => {
-    const file = await readContentFileWithFallback(
-      NOTE_COLLECTION_DIR,
-      slug,
-      listNoteArticleFiles,
-      options,
-    );
-    if (!file) {
-      return null;
-    }
-
-    const { content, data } = matter(file.raw);
-    const frontmatter = normalizeFrontmatter(data);
-
-    return {
-      slug,
-      content,
-      format: file.format,
-      frontmatter,
-    };
-  },
+export const getNoteSlugs = cache(
+  async (): Promise<string[]> => listContentSlugs(NOTE_COLLECTION_DIR),
 );
+
+export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeFrontmatter);
 
 export const getNoteSummary = cache(
   async (slug: string, options?: ReadContentOptions): Promise<NoteSummary | null> => {
-    const file = await readContentFileWithFallback(
-      NOTE_COLLECTION_DIR,
-      slug,
-      listNoteArticleFiles,
-      options,
-    );
-    if (!file) {
-      return null;
-    }
-
-    const { data } = matter(file.raw);
-    const frontmatter = normalizeFrontmatter(data);
-
-    return {
-      slug,
-      frontmatter,
-    };
+    const note = await getNote(slug, options);
+    return note ? { slug: note.slug, frontmatter: note.frontmatter } : null;
   },
 );
 
@@ -132,26 +90,6 @@ export type LocalizedNoteSummary = {
   en: NoteSummary | null;
 };
 
-function compareLocalizedNotes(
-  a: LocalizedNote | LocalizedNoteSummary,
-  b: LocalizedNote | LocalizedNoteSummary,
-) {
-  const dateA = (a.ja ?? a.en)?.frontmatter.date ?? "";
-  const dateB = (b.ja ?? b.en)?.frontmatter.date ?? "";
-
-  if (dateA && dateB && dateA !== dateB) {
-    return dateA < dateB ? 1 : -1;
-  }
-  if (dateA) {
-    return -1;
-  }
-  if (dateB) {
-    return 1;
-  }
-
-  return a.slug.localeCompare(b.slug);
-}
-
 export const getNoteVariants = cache(async (slug: string): Promise<LocalizedNote> => {
   const [ja, en] = await Promise.all([
     getNote(slug, { locale: "ja", fallback: false }),
@@ -168,9 +106,7 @@ export const getNotes = cache(async (): Promise<Note[]> => {
   return notes
     .filter((note): note is Note => Boolean(note))
     .filter((note) => !note.frontmatter.draft)
-    .sort((a, b) =>
-      compareLocalizedNotes({ slug: a.slug, ja: a, en: null }, { slug: b.slug, ja: b, en: null }),
-    );
+    .sort(compareContentByDate);
 });
 
 export const getNotesVariants = cache(async (): Promise<LocalizedNote[]> => {
@@ -185,7 +121,7 @@ export const getNotesVariants = cache(async (): Promise<LocalizedNote[]> => {
       }
       return !reference.frontmatter.draft;
     })
-    .sort(compareLocalizedNotes);
+    .sort(compareLocalizedContentByDate);
 });
 
 /**
@@ -195,7 +131,7 @@ export const getNotesVariants = cache(async (): Promise<LocalizedNote[]> => {
  * @returns スラッグの配列
  */
 export const getPublishedNoteSlugs = cache(async (): Promise<string[]> => {
-  const notes = await getNotesVariants();
+  const notes = await getNoteSummariesVariants();
   return notes.map((note) => note.slug);
 });
 
@@ -220,5 +156,5 @@ export const getNoteSummariesVariants = cache(async (): Promise<LocalizedNoteSum
       }
       return !reference.frontmatter.draft;
     })
-    .sort(compareLocalizedNotes);
+    .sort(compareLocalizedContentByDate);
 });

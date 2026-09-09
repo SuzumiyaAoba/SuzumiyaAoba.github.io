@@ -34,7 +34,9 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
 
   it("指定localeのファイルが存在すればそれを読む", async () => {
     const listFiles = createArticleFileLister("blog");
-    const file = await readContentFileWithFallback("blog", "both-locales", listFiles, { locale: "ja" });
+    const file = await readContentFileWithFallback("blog", "both-locales", listFiles, {
+      locale: "ja",
+    });
     expect(file).toEqual({ raw: "ja content", format: "md" });
   });
 
@@ -59,6 +61,19 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
       fallback: false,
     });
     expect(file).toBeNull();
+  });
+
+  it("英語版がなければ日本語のMDXにフォールバックする", async () => {
+    const listFiles = createArticleFileLister("blog");
+    expect(
+      await readContentFileWithFallback("blog", "ja-only-mdx", listFiles, { locale: "en" }),
+    ).toEqual({ raw: "ja mdx content", format: "mdx" });
+    expect(
+      await readContentFileWithFallback("blog", "ja-only-mdx", listFiles, {
+        locale: "en",
+        fallback: false,
+      }),
+    ).toBeNull();
   });
 
   it("どちらの言語も存在しなければnullを返す", async () => {

@@ -78,12 +78,7 @@ export async function readContentFileWithFallback(
     return file;
   }
 
-  if (!fallback || locale === "ja") {
-    if (!fallback) {
-      return null;
-    }
-    return readLocaleContentFile(collectionDir, slug, "en", listFiles);
-  }
+  if (!fallback) return null;
 
-  return readLocaleContentFile(collectionDir, slug, "ja", listFiles);
+  return readLocaleContentFile(collectionDir, slug, locale === "ja" ? "en" : "ja", listFiles);
 }

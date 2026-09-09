@@ -1,6 +1,7 @@
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getSiteConfig, SITE_TITLE } from "@/shared/lib/site";
 import type { Locale } from "@/shared/lib/routing";
+import { compareContentByDate } from "@/shared/lib/content-file";
 
 function escapeXml(value: string): string {
   return value
@@ -34,7 +35,7 @@ export async function buildRssXml(locale: Locale): Promise<string> {
   const localizedPosts = posts
     .map((post) => (locale === "en" ? post.en : post.ja))
     .filter((post): post is NonNullable<typeof post> => Boolean(post))
-    .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1));
+    .sort(compareContentByDate);
 
   const items = localizedPosts.map((post) => {
     const link = `${siteUrl}${basePath}/blog/post/${post.slug}/`;

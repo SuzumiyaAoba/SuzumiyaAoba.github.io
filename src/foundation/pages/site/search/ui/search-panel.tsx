@@ -1,42 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { usePagefindSearch } from "../model/use-pagefind-search";
 
-type PagefindResult = {
-  url: string;
-  excerpt: string;
-  meta: {
-    title?: string;
-  };
-};
-
-type PagefindSearchResponse = {
-  results: Array<{
-    id: string;
-    score: number;
-    data: () => Promise<PagefindResult>;
-  }>;
-  term?: string;
-  total?: number;
-};
-
-type PagefindModule = {
-  search: (query: string) => Promise<PagefindSearchResponse>;
-};
-
-declare global {
-  interface Window {
-    pagefind?: PagefindModule;
-    __pagefind_loaded?: boolean;
-    __pagefind_loading?: boolean;
-  }
-}
+const queryParser = parseAsString.withDefault("").withOptions({
+  history: "replace",
+});
 
 function formatUrl(url: string): string {
   try {
@@ -47,118 +21,16 @@ function formatUrl(url: string): string {
   }
 }
 
-type PagefindErrorEvent = CustomEvent<{ error?: string }>;
-
 type SearchPanelProps = {
   locale: Locale;
 };
 
 export function SearchPanel({ locale }: SearchPanelProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialQuery = searchParams?.get("q") ?? "";
-
-  const [query, setQuery] = useState(initialQuery);
-  const [results, setResults] = useState<PagefindResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [pagefindLoaded, setPagefindLoaded] = useState(false);
-  const [pagefindErrorKey, setPagefindErrorKey] = useState<
-    "notLoaded" | "searchError" | "loadFailed" | "timeout" | null
-  >(null);
-  const [pagefindErrorDetail, setPagefindErrorDetail] = useState("");
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const t = useCallback((ja: string, en: string) => (locale === "en" ? en : ja), [locale]);
-
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setResults([]);
-      return;
-    }
-
-    if (!window.pagefind || !window.__pagefind_loaded) {
-      setPagefindErrorKey("notLoaded");
-      return;
-    }
-
-    setIsLoading(true);
-    setPagefindErrorKey(null);
-    setPagefindErrorDetail("");
-
-    try {
-      const search = await window.pagefind.search(searchQuery);
-      const searchResults = await Promise.all(search.results.map(async (result) => result.data()));
-      setResults(searchResults.filter(Boolean));
-    } catch {
-      setResults([]);
-      setPagefindErrorKey("searchError");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    function handlePagefindInitialized() {
-      setPagefindLoaded(true);
-      setPagefindErrorKey(null);
-      setPagefindErrorDetail("");
-      if (initialQuery) {
-        performSearch(initialQuery);
-      }
-    }
-
-    function handlePagefindError(event: Event) {
-      const detail = (event as PagefindErrorEvent).detail;
-      setPagefindErrorKey("loadFailed");
-      setPagefindErrorDetail(detail?.error ?? "");
-    }
-
-    if (window.__pagefind_loaded) {
-      setPagefindLoaded(true);
-      if (initialQuery) {
-        performSearch(initialQuery);
-      }
-      return;
-    }
-
-    window.addEventListener("pagefind:initialized", handlePagefindInitialized);
-    window.addEventListener("pagefind:error", handlePagefindError as EventListener);
-
-    const timeoutId = window.setTimeout(() => {
-      if (!window.__pagefind_loaded && !window.__pagefind_loading) {
-        setPagefindErrorKey("timeout");
-      }
-    }, 10000);
-
-    return () => {
-      window.removeEventListener("pagefind:initialized", handlePagefindInitialized);
-      window.removeEventListener("pagefind:error", handlePagefindError as EventListener);
-      window.clearTimeout(timeoutId);
-    };
-  }, [initialQuery, performSearch]);
-
-  const handleInputChange = (value: string) => {
-    setQuery(value);
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      const params = new URLSearchParams(searchParams?.toString() || "");
-      if (value.trim()) {
-        params.set("q", value);
-      } else {
-        params.delete("q");
-      }
-      const queryString = params.toString();
-      const searchPath = toLocalePath("/search", locale);
-      router.replace(queryString ? `${searchPath}?${queryString}` : searchPath, {
-        scroll: false,
-      });
-      performSearch(value);
-    }, 300);
-  };
+  const [query, setQuery] = useQueryState("q", queryParser);
+  const { results, isLoading, pagefindLoaded, error } = usePagefindSearch(query);
+  const pagefindErrorKey = error?.key;
+  const pagefindErrorDetail = error?.detail ?? "";
+  const t = (ja: string, en: string) => (locale === "en" ? en : ja);
 
   return (
     <div className="space-y-6">
@@ -166,10 +38,10 @@ export function SearchPanel({ locale }: SearchPanelProps) {
         <div className="px-4 py-4">
           <Input
             value={query}
-            onChange={(event) => handleInputChange(event.target.value)}
+            onChange={(event) => void setQuery(event.target.value)}
             placeholder={t("キーワードで検索...", "Search by keyword...")}
             aria-label={t("検索キーワード", "Search keyword")}
-            disabled={Boolean(pagefindErrorKey) || !pagefindLoaded}
+            disabled={!pagefindLoaded}
           />
         </div>
       </Card>
@@ -241,7 +113,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
             ))}
           </ul>
         </div>
-      ) : query ? (
+      ) : query.trim() ? (
         <div className="text-sm text-muted-foreground">
           {t(
             "検索結果が見つかりませんでした。別のキーワードをお試しください。",

@@ -1,10 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { NuqsAdapter } from "nuqs/adapters/react";
 
 import { SearchPageContent } from "./ui/page";
 
 const meta: Meta<typeof SearchPageContent> = {
   title: "pages/site/Search",
   component: SearchPageContent,
+  decorators: [
+    (Story) => (
+      <NuqsAdapter>
+        <Story />
+      </NuqsAdapter>
+    ),
+  ],
   parameters: {
     layout: "fullscreen",
     nextjs: {
