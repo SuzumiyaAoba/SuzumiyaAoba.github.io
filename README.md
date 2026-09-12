@@ -39,6 +39,27 @@ npm run pagefind:dev:force
 
 MDX のコンパイルは `shared/lib/mdx/render-mdx.tsx`、AST変換は個別のプラグイン、目次抽出は `toc.ts` が担当します。重いチャートやコード表示は使用する記事で遅延読み込みします。グラフの凡例操作・ツールチップ・模様定義と、目次の監視・位置計算もそれぞれ表示本体から分離しています。
 
+## アフィリエイトリンクの管理
+
+記事全体のリンク先は `content/affiliate-products.json` に集約しています。リンクを差し替えるときは、対象の `id` の `productUrl` を変更して再ビルドします。同じ ID を参照する日本語・英語の記事や商品カードに反映されるため、記事本文の編集は不要です。開発中はページを再読み込みすると変更を反映します。
+
+- `products`: 商品カードにも使う定義。`id`、`title`、`productUrl`、`imageUrl` が必須です。`amazonProductIds` や `<AmazonProductSection>` はここの ID を参照します。
+- `links`: 本文だけで使う定義。`id`、`title`、`productUrl` が必須で、画像は不要です。
+
+本文では、`affiliate://` の後に管理ファイルの `id` を完全一致で指定します。表示名は記事ごとに自由に設定できます。次の例はいずれも登録済みの ID を参照しています。
+
+```md
+[Clean Code](affiliate://clean-code)
+[Clean Architecture](affiliate://clean-architecture-reference)
+[現場で活用するためのAIエージェント実践入門](affiliate://ai-agent-practical-introduction)
+```
+
+新しい ID は `clean-code` のような英小文字・数字・ハイフンによる kebab-case にします。リンクは管理ファイルに一度だけ登録し、本文に URL を直接書かず ID を参照してください。ID は `products` と `links` を通して一意にします。ID の重複・未登録の参照・不正な定義はビルド時にエラーになります。
+
+既存の `products` には日本語や空白を含む ID もあります。その場合も登録済みの ID をそのまま指定します。空白を含む場合は `[Clean Architecture](<affiliate://Clean Architecture>)` のようにリンク先を `<...>` で囲みます。
+
+既存のリンク先を保つため、同じ書籍名でも異なる URL は別の ID として登録しています（例: `Clean Architecture`、`clean-architecture-intro`、`clean-architecture-reference`）。これらを同じリンク先に統一する場合は、各定義の `productUrl` を更新します。
+
 ## 検証
 
 ```sh

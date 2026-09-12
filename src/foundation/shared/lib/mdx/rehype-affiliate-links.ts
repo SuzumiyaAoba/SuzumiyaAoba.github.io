@@ -10,7 +10,10 @@ export function createRehypeAffiliateLinks(affiliateById: Map<string, string>) {
       if (!url.url.startsWith(AFFILIATE_PROTOCOL)) return;
       const affiliateId = decodeURIComponent(url.url.slice(AFFILIATE_PROTOCOL.length));
       const productUrl = affiliateById.get(affiliateId);
-      if (productUrl && url.propertyName) {
+      if (!productUrl) {
+        url.file.fail(`未登録のアフィリエイトリンク ID: ${affiliateId}`, url.node);
+      }
+      if (url.propertyName) {
         url.node.properties = url.node.properties ?? {};
         url.node.properties[url.propertyName] = productUrl;
       }

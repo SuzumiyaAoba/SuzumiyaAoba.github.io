@@ -2,18 +2,22 @@ import { z } from "zod";
 
 import { resolveContentRoot } from "@/shared/lib/content-file";
 
-/**
- * アフィリエイト商品情報の Zod スキーマ
- */
-export const AffiliateProductSchema = z.object({
+/** 本文だけで使う、画像を必要としないアフィリエイトリンク。 */
+const AffiliateLinkSchema = z.object({
   /** ユニークID */
   id: z.string().min(1),
   /** 商品名/タイトル */
   title: z.string().min(1),
-  /** 商品画像のURL */
-  imageUrl: z.string().url(),
   /** 商品詳細ページ（Amazon等）のURL */
   productUrl: z.string().url(),
+});
+
+/**
+ * アフィリエイト商品情報の Zod スキーマ
+ */
+export const AffiliateProductSchema = AffiliateLinkSchema.extend({
+  /** 商品画像のURL */
+  imageUrl: z.string().url(),
   /** Yahoo!ショッピング用のURL（オプション） */
   yahooShoppingUrl: z.string().url().optional(),
   /** 関連するタグのリスト */
@@ -31,9 +35,26 @@ export type AffiliateProduct = z.infer<typeof AffiliateProductSchema>;
 /**
  * ソースファイル（JSON）の構造の Zod スキーマ
  */
-const AffiliateProductSourceSchema = z.object({
-  products: z.array(AffiliateProductSchema).optional(),
-});
+const AffiliateProductSourceSchema = z
+  .object({
+    products: z.array(AffiliateProductSchema).default([]),
+    links: z.array(AffiliateLinkSchema).default([]),
+  })
+  .superRefine((source, context) => {
+    const ids = new Set<string>();
+    for (const collection of ["products", "links"] as const) {
+      source[collection].forEach(({ id }, index) => {
+        if (ids.has(id)) {
+          context.addIssue({
+            code: "custom",
+            message: `アフィリエイトリンクの ID が重複しています: ${id}`,
+            path: [collection, index, "id"],
+          });
+        }
+        ids.add(id);
+      });
+    }
+  });
 
 /**
  * 読み込まれた商品データのインデックス情報
@@ -44,6 +65,8 @@ type AffiliateProductIndex = {
   byId: Map<string, AffiliateProduct>;
   /** タグをキーとした商品配列マップ */
   byTag: Map<string, AffiliateProduct[]>;
+  /** 本文用リンクと商品カードで共用する ID → URL マップ */
+  urlById: Map<string, string>;
   /** ファイルの最終更新日時(ms) */
   mtimeMs?: number;
 };
@@ -70,85 +93,52 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
     return cachedIndex;
   }
 
-  try {
-    let mtimeMs: number | undefined = undefined;
-    if (isDev) {
-      try {
-        const stat = await fs.stat(filePath);
-        mtimeMs = stat.mtimeMs;
-        if (cachedIndex && cachedIndex.mtimeMs === mtimeMs) {
-          return cachedIndex;
-        }
-      } catch {
-        // fall through to read/parse
-      }
-    }
-
-    const raw = await fs.readFile(filePath, "utf8");
-    const data = JSON.parse(raw);
-    const parsed = AffiliateProductSourceSchema.safeParse(data);
-
-    if (!parsed.success || !parsed.data.products) {
-      const emptyIndex: AffiliateProductIndex = {
-        products: [],
-        byId: new Map(),
-        byTag: new Map(),
-      };
-      if (typeof mtimeMs === "number") {
-        emptyIndex.mtimeMs = mtimeMs;
-      }
-      cachedIndex = emptyIndex;
-      return emptyIndex;
-    }
-
-    const products = parsed.data.products;
-    const byId = new Map<string, AffiliateProduct>();
-    const byTag = new Map<string, AffiliateProduct[]>();
-    for (const product of products) {
-      byId.set(product.id, product);
-      const tags = product.tags ?? [];
-      for (const tag of tags) {
-        const key = tag.trim();
-        if (!key) {
-          continue;
-        }
-        const existing = byTag.get(key);
-        if (existing) {
-          existing.push(product);
-        } else {
-          byTag.set(key, [product]);
-        }
-      }
-    }
-
-    const index: AffiliateProductIndex = { products, byId, byTag };
-    if (typeof mtimeMs === "number") {
-      index.mtimeMs = mtimeMs;
-    }
-    cachedIndex = index;
-    return index;
-  } catch {
-    const emptyIndex: AffiliateProductIndex = {
-      products: [],
-      byId: new Map(),
-      byTag: new Map(),
-    };
-    cachedIndex = emptyIndex;
-    return emptyIndex;
+  const mtimeMs = isDev ? (await fs.stat(filePath)).mtimeMs : undefined;
+  if (cachedIndex && isDev && cachedIndex.mtimeMs === mtimeMs) {
+    return cachedIndex;
   }
+
+  // 定義の破損や ID の重複は、リンク切れを公開する前にエラーにする。
+  const raw = await fs.readFile(filePath, "utf8");
+  const { products, links } = AffiliateProductSourceSchema.parse(JSON.parse(raw));
+  const byId = new Map<string, AffiliateProduct>();
+  const byTag = new Map<string, AffiliateProduct[]>();
+  const urlById = new Map<string, string>();
+  for (const link of [...products, ...links]) {
+    urlById.set(link.id, link.productUrl);
+  }
+  for (const product of products) {
+    byId.set(product.id, product);
+    const tags = product.tags ?? [];
+    for (const tag of tags) {
+      const key = tag.trim();
+      if (!key) {
+        continue;
+      }
+      const existing = byTag.get(key);
+      if (existing) {
+        existing.push(product);
+      } else {
+        byTag.set(key, [product]);
+      }
+    }
+  }
+
+  const index: AffiliateProductIndex = { products, byId, byTag, urlById };
+  if (typeof mtimeMs === "number") {
+    index.mtimeMs = mtimeMs;
+  }
+  cachedIndex = index;
+  return index;
 }
 
 /**
- * 商品 ID → productUrl のマップを返す
+ * 商品カードと本文用リンクの ID → productUrl のマップを返す
  * @returns ID をキー、productUrl を値とした Map
  */
 export async function getAffiliateProductUrlById(): Promise<Map<string, string>> {
   const index = await loadAffiliateProducts();
-  const urlById = new Map<string, string>();
-  for (const [id, product] of index.byId) {
-    urlById.set(id, product.productUrl);
-  }
-  return urlById;
+  return new Map(index.urlById);
 }
 
 /**

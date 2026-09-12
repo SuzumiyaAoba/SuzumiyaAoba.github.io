@@ -1,4 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+
+const files = vi.hoisted(() => ({ readFile: vi.fn(), stat: vi.fn() }));
+vi.mock("node:fs/promises", () => files);
 
 // Mock the content-root module (transitive dependency)
 vi.mock("@/shared/lib/content-file", () => ({
@@ -6,6 +9,93 @@ vi.mock("@/shared/lib/content-file", () => ({
 }));
 
 import { AffiliateProductSchema } from "./affiliate-products";
+
+afterEach(() => vi.unstubAllEnvs());
+
+describe("アフィリエイトリンクの読み込み", () => {
+  const product = {
+    id: "card",
+    title: "商品カード",
+    imageUrl: "https://example.com/image.jpg",
+    productUrl: "https://example.com/card",
+    tags: ["book"],
+  };
+  const link = {
+    id: "text",
+    title: "本文用リンク",
+    productUrl: "https://example.com/text",
+  };
+
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubEnv("NODE_ENV", "development");
+    files.stat.mockReset().mockResolvedValue({ mtimeMs: 1 });
+    files.readFile
+      .mockReset()
+      .mockResolvedValue(JSON.stringify({ products: [product], links: [link] }));
+  });
+
+  it("商品と画像のないリンクを本文で参照でき、商品カードには商品のみ返す", async () => {
+    const { getAffiliateProductUrlById, getAffiliateProductsByIds, getAffiliateProductsByTags } =
+      await import("./affiliate-products");
+
+    expect(await getAffiliateProductUrlById()).toEqual(
+      new Map([
+        [product.id, product.productUrl],
+        [link.id, link.productUrl],
+      ]),
+    );
+    expect(await getAffiliateProductsByIds([product.id, link.id])).toEqual([product]);
+    expect(await getAffiliateProductsByTags(["book"])).toEqual([product]);
+  });
+
+  it("本文用リンクだけの定義も読み込める", async () => {
+    files.readFile.mockResolvedValue(JSON.stringify({ links: [link] }));
+    const { getAffiliateProductUrlById } = await import("./affiliate-products");
+    expect(await getAffiliateProductUrlById()).toEqual(new Map([[link.id, link.productUrl]]));
+  });
+
+  it.each([
+    { products: [product, product] },
+    { links: [link, link] },
+    { products: [product], links: [{ ...link, id: product.id }] },
+  ])("重複する ID を拒否する: %j", async (source) => {
+    files.readFile.mockResolvedValue(JSON.stringify(source));
+    const { getAffiliateProductUrlById } = await import("./affiliate-products");
+    await expect(getAffiliateProductUrlById()).rejects.toThrow("ID が重複しています");
+  });
+
+  it("不正な URL を含む定義を黙って空のデータにしない", async () => {
+    files.readFile.mockResolvedValue(
+      JSON.stringify({ links: [{ ...link, productUrl: "invalid-url" }] }),
+    );
+    const { getAffiliateProductUrlById } = await import("./affiliate-products");
+    await expect(getAffiliateProductUrlById()).rejects.toThrow();
+  });
+
+  it("開発時に管理ファイルを更新すると商品カードと本文用 URL を再読み込みする", async () => {
+    const { getAffiliateProductUrlById, getAffiliateProductsByIds } =
+      await import("./affiliate-products");
+    await getAffiliateProductUrlById();
+
+    const updatedProduct = { ...product, productUrl: "https://example.com/new-card" };
+    files.stat.mockResolvedValue({ mtimeMs: 2 });
+    files.readFile.mockResolvedValue(
+      JSON.stringify({
+        products: [updatedProduct],
+        links: [{ ...link, productUrl: "https://example.com/new-text" }],
+      }),
+    );
+
+    expect(await getAffiliateProductUrlById()).toEqual(
+      new Map([
+        [product.id, updatedProduct.productUrl],
+        [link.id, "https://example.com/new-text"],
+      ]),
+    );
+    expect(await getAffiliateProductsByIds([product.id])).toEqual([updatedProduct]);
+  });
+});
 
 describe("AffiliateProductSchema", () => {
   describe("有効なデータのパース", () => {

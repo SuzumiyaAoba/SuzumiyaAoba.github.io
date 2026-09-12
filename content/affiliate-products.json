@@ -98,5 +98,102 @@
       "productUrl": "https://amzn.to/4tREpdX",
       "tags": ["デザインパターン", "GoF"]
     }
+  ],
+  "links": [
+    {
+      "id": "clean-architecture-intro",
+      "title": "Clean Architecture 達人に学ぶソフトウェアの構造と設計（本文冒頭）",
+      "productUrl": "https://amzn.to/4uOMXEk"
+    },
+    {
+      "id": "clean-architecture-reference",
+      "title": "Clean Architecture 達人に学ぶソフトウェアの構造と設計（本文中の参照）",
+      "productUrl": "https://amzn.to/4uORTsQ"
+    },
+    {
+      "id": "robert-c-martin-books",
+      "title": "Robert C. Martin が執筆した書籍",
+      "productUrl": "https://amzn.to/40MCSdi"
+    },
+    {
+      "id": "clean-code",
+      "title": "Clean Code アジャイルソフトウェア達人の技",
+      "productUrl": "https://amzn.to/4boZtCO"
+    },
+    {
+      "id": "clean-coder",
+      "title": "Clean Coder プロフェッショナルプログラマへの道",
+      "productUrl": "https://amzn.to/3PqXVj1"
+    },
+    {
+      "id": "clean-agile",
+      "title": "Clean Agile 基本に立ち戻れ",
+      "productUrl": "https://amzn.to/4suJIjM"
+    },
+    {
+      "id": "clean-craftsmanship",
+      "title": "Clean Craftsmanship 規律、基準、倫理",
+      "productUrl": "https://amzn.to/4cZ2UBn"
+    },
+    {
+      "id": "ai-agent-practical-introduction",
+      "title": "現場で活用するためのAIエージェント実践入門 (KS情報科学専門書)（本文用）",
+      "productUrl": "https://amzn.to/4h2sk0R"
+    },
+    {
+      "id": "llm-prompt-engineering",
+      "title": "LLMのプロンプトエンジニアリング ―GitHub Copilotを生んだ開発者が教える生成AIアプリケーション開発（書籍一覧）",
+      "productUrl": "https://amzn.to/46Mahsh"
+    },
+    {
+      "id": "llm-prompt-engineering-reference",
+      "title": "LLMのプロンプトエンジニアリング ―GitHub Copilotを生んだ開発者が教える生成AIアプリケーション開発（本文中の参照）",
+      "productUrl": "https://amzn.to/46I6qfR"
+    },
+    {
+      "id": "prompt-engineering-for-llms",
+      "title": "Prompt Engineering for Llms: The Art and Science of Building Large Language Model-Based Applications",
+      "productUrl": "https://amzn.to/48qRxQj"
+    },
+    {
+      "id": "practical-llm-application-development",
+      "title": "実践 LLMアプリケーション開発 ―プロトタイプを脱却し、実用的な実装に迫るための包括的な手引き",
+      "productUrl": "https://amzn.to/46SWIWE"
+    },
+    {
+      "id": "hands-on-large-language-models",
+      "title": "直感 LLM ―ハンズオンで動かして学ぶ大規模言語モデル入門",
+      "productUrl": "https://amzn.to/4o4uxM9"
+    },
+    {
+      "id": "build-a-large-language-model",
+      "title": "つくりながら学ぶ！LLM 自作入門",
+      "productUrl": "https://amzn.to/471JYwX"
+    },
+    {
+      "id": "large-language-models-introduction",
+      "title": "大規模言語モデル入門",
+      "productUrl": "https://amzn.to/4q34pCw"
+    },
+    {
+      "id": "large-language-models-introduction-2",
+      "title": "大規模言語モデル入門Ⅱ〜生成型LLMの実装と評価",
+      "productUrl": "https://amzn.to/4nTDec4"
+    },
+    {
+      "id": "lofree-ghost-switch",
+      "title": "Lofree Ghost switch / linear (90pcs)",
+      "productUrl": "https://amzn.to/470FUx2"
+    },
+    {
+      "id": "tapl-reference",
+      "title": "型システム入門 プログラミング言語と型の理論（本文用）",
+      "productUrl": "https://amzn.to/49r8xF8"
+    },
+    {
+      "id": "gof-design-patterns",
+      "title": "Design Patterns: Elements of Reusable Object-Oriented Software (Addison-Wesley Professional Computing Series)",
+      "productUrl": "https://amzn.to/4vwturC"
+    }
   ]
 }

@@ -134,20 +134,27 @@ async function compileContent(
   options: RenderOptions,
   collectHeadings: boolean,
 ): Promise<RenderResult> {
+  const [affiliateById, heavyComponents] = await Promise.all([
+    getAffiliateProductUrlById(),
+    loadHeavyComponents(source),
+  ]);
   // コンポーネント関数はシリアライズできないため、追加マップがある場合は開発キャッシュを使わない。
   const useDevCache = process.env["NODE_ENV"] === "development" && !options.extraComponents;
   const cacheKey = useDevCache
-    ? JSON.stringify([collectHeadings, options.idPrefix, options.basePath, options.scope, source])
+    ? JSON.stringify([
+        collectHeadings,
+        options.idPrefix,
+        options.basePath,
+        options.scope,
+        source,
+        [...affiliateById],
+      ])
     : "";
   if (useDevCache) {
     const cached = devRenderCache.get(cacheKey);
     if (cached) return cached;
   }
 
-  const [affiliateById, heavyComponents] = await Promise.all([
-    getAffiliateProductUrlById(),
-    loadHeavyComponents(source),
-  ]);
   const headings: TocHeading[] = [];
   const { content } = await compileMDX(
     buildCompileOptions(
