@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import { max } from "d3-array";
-import { axisBottom, axisLeft } from "d3-axis";
 import { scaleLinear } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { select } from "d3-selection";
+import { appendChartAxes } from "./chart-axes";
 import { area, stack, stackOrderNone, stackOffsetNone, type SeriesPoint } from "d3-shape";
 import { appendChartPatterns } from "./chart-patterns";
 
@@ -93,43 +93,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         .y0((d) => y(d[0]))
         .y1((d) => y(d[1]));
 
-      // X軸のグリッド線
-      g.append("g")
-        .attr("class", "grid")
-        .attr("transform", `translate(0,${height})`)
-        .call(
-          axisBottom(x)
-            .tickSize(-height)
-            .tickFormat(() => ""),
-        )
-        .call((g) => g.select(".domain").remove())
-        .call((g) =>
-          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-        );
-
-      // X軸
-      g.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(axisBottom(x).tickFormat((d) => `${d}年`))
-        .selectAll("text")
-        .attr("transform", "rotate(-45)")
-        .style("text-anchor", "end");
-
-      // Y軸のグリッド線
-      g.append("g")
-        .attr("class", "grid")
-        .call(
-          axisLeft(y)
-            .tickSize(-width)
-            .tickFormat(() => ""),
-        )
-        .call((g) => g.select(".domain").remove())
-        .call((g) =>
-          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-        );
-
-      // Y軸
-      g.append("g").call(axisLeft(y).tickFormat((d) => `${d}%`));
+      appendChartAxes(g, { x, y, width, height });
 
       // 帯グラフを描画
       stackedData.forEach((layer) => {

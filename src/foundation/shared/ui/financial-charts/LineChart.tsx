@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { max } from "d3-array";
-import { axisBottom, axisLeft } from "d3-axis";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
+import { appendChartAxes } from "./chart-axes";
 import { line } from "d3-shape";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 import { useChartMetrics } from "./use-chart-metrics";
@@ -35,10 +35,11 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
   } = useChartMetrics({ data, groups, excludeHeaders, labelMap });
 
   useEffect(() => {
-    if (!svgRef.current || selectedMetrics.length === 0) return;
+    if (!svgRef.current) return;
 
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
+    if (selectedMetrics.length === 0) return;
 
     const margin = { top: 20, right: 20, bottom: 60, left: 80 };
     const width = 700 - margin.left - margin.right;
@@ -50,15 +51,11 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    interface ParsedDatum {
-      year: number;
-      [key: string]: number | null | string;
-    }
-    const parseData: ParsedDatum[] = data.series
-      .filter((d) => selectedMetrics.some((m) => d.values[m] !== null))
+    const parseData = data.series
+      .filter((d) => selectedMetrics.some((metric) => Number.isFinite(d.values[metric])))
       .map((d) => ({
-        year: Number.parseInt(d.year),
-        ...d.values,
+        year: Number.parseInt(d.year, 10),
+        values: d.values,
       }));
 
     if (parseData.length === 0) return;
@@ -68,54 +65,19 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
 
     const y = scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
-    g.append("g")
-      .attr("class", "grid")
-      .attr("transform", `translate(0,${height})`)
-      .call(
-        axisBottom(x)
-          .tickSize(-height)
-          .tickFormat(() => ""),
-      )
-      .call((g) => g.select(".domain").remove())
-      .call((g) =>
-        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-      );
-
-    g.append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(axisBottom(x).tickFormat((d) => `${d}年`))
-      .selectAll("text")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
-
-    g.append("g")
-      .attr("class", "grid")
-      .call(
-        axisLeft(y)
-          .tickSize(-width)
-          .tickFormat(() => ""),
-      )
-      .call((g) => g.select(".domain").remove())
-      .call((g) =>
-        g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-      );
-
-    g.append("g").call(axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
+    appendChartAxes(g, { x, y, width, height, yAxisLabel });
 
     const tooltip = createChartTooltip();
     selectedMetrics.forEach((metric) => {
       const metricIndex = availableMetrics.indexOf(metric);
       const colorIndex = metricIndex >= 0 ? metricIndex : 0;
       const strokeColor = colors[colorIndex % colors.length] ?? "#000";
-      const metricData = parseData.filter((d) => d[metric] !== null);
+      const metricData = parseData.filter((d) => Number.isFinite(d.values[metric]));
 
       const lineGenerator = line<(typeof parseData)[0]>()
-        .defined((d) => d[metric] !== null)
+        .defined((d) => Number.isFinite(d.values[metric]))
         .x((d) => x(d.year))
-        .y((d) => {
-          const val = d[metric];
-          return y(typeof val === "number" ? val : 0);
-        });
+        .y((d) => y(d.values[metric] ?? 0));
 
       g.append("path")
         .datum(parseData)
@@ -127,14 +89,15 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
       metricData.forEach((d) => {
         g.append("circle")
           .attr("cx", x(d.year))
-          .attr("cy", () => {
-            const val = d[metric];
-            return y(typeof val === "number" ? val : 0);
-          })
+          .attr("cy", y(d.values[metric] ?? 0))
           .attr("r", 4)
           .attr("fill", strokeColor)
           .on("mouseover", function (event) {
-            tooltip.show(event, `${d.year}年`, `${getLabel(metric)}: ${d[metric]}${yAxisLabel}`);
+            tooltip.show(
+              event,
+              `${d.year}年`,
+              `${getLabel(metric)}: ${d.values[metric]}${yAxisLabel}`,
+            );
 
             select(this as SVGCircleElement).attr("r", 6);
           })

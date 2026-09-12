@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { axisBottom, axisLeft } from "d3-axis";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
+import { appendChartAxes } from "./chart-axes";
 import { stack, stackOrderNone, stackOffsetNone } from "d3-shape";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
 import { useChartMetrics } from "./use-chart-metrics";
@@ -74,44 +74,14 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
 
       const stackedData = stackGenerator(parseData);
 
-      g.append("g")
-        .attr("class", "grid")
-        .attr("transform", `translate(0,${height})`)
-        .call(
-          axisBottom(x)
-            .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
-            .tickSize(-height)
-            .tickFormat(() => ""),
-        )
-        .call((g) => g.select(".domain").remove())
-        .call((g) =>
-          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-        );
-
-      g.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(
-          axisBottom(x)
-            .tickValues(years.filter((_, i) => i % 2 === 0).map(String))
-            .tickFormat((d) => `${d}年`),
-        )
-        .selectAll("text")
-        .attr("transform", "rotate(-45)")
-        .style("text-anchor", "end");
-
-      g.append("g")
-        .attr("class", "grid")
-        .call(
-          axisLeft(y)
-            .tickSize(-width)
-            .tickFormat(() => ""),
-        )
-        .call((g) => g.select(".domain").remove())
-        .call((g) =>
-          g.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-        );
-
-      g.append("g").call(axisLeft(y).tickFormat((d) => `${d}${yAxisLabel}`));
+      appendChartAxes(g, {
+        x,
+        y,
+        width,
+        height,
+        yAxisLabel,
+        xTickValues: years.filter((_, index) => index % 2 === 0).map(String),
+      });
 
       stackedData.forEach((layer) => {
         const metricIndex = availableMetrics.indexOf(layer.key);
@@ -138,8 +108,9 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
 
   useEffect(() => {
     effectiveGroups.forEach((group, index) => {
-      if (svgRefs.current[index]) {
-        renderBarChart(svgRefs.current[index]!, group);
+      const svgElement = svgRefs.current[index];
+      if (svgElement) {
+        renderBarChart(svgElement, group);
       }
     });
   }, [effectiveGroups, renderBarChart]);

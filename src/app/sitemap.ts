@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getBlogPostSummariesVariants } from "@/entities/blog";
+import { getAllBlogTags, getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
 import { getBookSlugs, getBookToc, getBookMeta } from "@/entities/book";
 import { getSeriesList } from "@/entities/series-item";
-import { getSiteConfig } from "@/shared/lib/site/site-config";
+import { getSiteUrl } from "@/shared/lib/site/site-url";
 import { resolveLocalizedValue } from "@/shared/lib/routing";
 import {
   buildContentSitemapEntries,
@@ -14,7 +14,7 @@ import {
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = getSiteConfig().siteUrl || "https://suzumiyaaoba.com";
+  const siteUrl = getSiteUrl();
 
   const buildTime = new Date();
   const staticPages = buildTranslatedSitemapEntries(
@@ -37,10 +37,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     buildTime,
   );
 
-  const [posts, notes, seriesList] = await Promise.all([
+  const [posts, notes, seriesList, tags] = await Promise.all([
     getBlogPostSummariesVariants(),
     getNoteSummariesVariants(),
     getSeriesList(),
+    getAllBlogTags(),
   ]);
   const postsForDates = posts.flatMap((post) => resolveLocalizedValue(post, "ja") ?? []);
   const blogPages = buildContentSitemapEntries(posts, {
@@ -129,30 +130,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     buildTime,
   );
 
-  const allTags = new Set<string>();
-  const tagLastModified = new Map<string, Date>();
-  for (const post of postsForDates) {
-    if (post?.frontmatter.tags) {
-      for (const tag of post.frontmatter.tags) {
-        allTags.add(tag);
-      }
-      if (post.frontmatter.date) {
-        const postDate = new Date(post.frontmatter.date);
-        for (const tag of post.frontmatter.tags) {
-          const existing = tagLastModified.get(tag);
-          if (!existing || postDate > existing) {
-            tagLastModified.set(tag, postDate);
-          }
-        }
-      }
-    }
-  }
-
   const tagPages = buildTranslatedSitemapEntries(
-    Array.from(allTags).map(
+    tags.map(
       (tag): SitemapPage => ({
-        path: `/tags/${encodeURIComponent(tag)}`,
-        lastModified: tagLastModified.get(tag) ?? buildTime,
+        path: `/tags/${encodeURIComponent(tag.name)}`,
+        lastModified: tag.lastModified ?? buildTime,
         changeFrequency: "weekly",
         priority: 0.6,
       }),

@@ -1,6 +1,6 @@
-import { resolveLocalizedValue, decodePathParam, type Locale } from "@/shared/lib/routing";
+import { decodePathParam, type Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
-import { getBlogPostSummariesVariants } from "@/entities/blog";
+import { getAllBlogTags, getBlogTagIndex } from "@/entities/blog";
 import { buildLocaleAlternates } from "./locale-alternates";
 
 export { decodePathParam as decodeTag } from "@/shared/lib/routing";
@@ -18,18 +18,14 @@ export async function buildTagPageMetadata(
   { params }: TagPageMetadataProps,
   locale: Locale,
 ): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
-  const tagParam = resolvedParams?.tag;
+  const { tag: tagParam } = await params;
   if (!tagParam) {
     return { title: "Tags" };
   }
   const tag = decodePathParam(tagParam);
 
-  const posts = await getBlogPostSummariesVariants();
-  const count = posts.filter((post) => {
-    const target = resolveLocalizedValue(post, locale);
-    return (target?.frontmatter.tags ?? []).includes(tag);
-  }).length;
+  const index = await getBlogTagIndex(locale);
+  const count = index.get(tag)?.length ?? 0;
 
   const title = `Tag: ${tag}`;
   const description =
@@ -53,20 +49,12 @@ export async function buildTagPageMetadata(
  * タグ詳細ページの generateStaticParams。ja/en で完全に共通。
  */
 export async function buildTagPageStaticParams(): Promise<Array<{ tag: string }>> {
-  const posts = await getBlogPostSummariesVariants();
-  const tags = new Set<string>();
-  posts.forEach((post) => {
-    (post.ja?.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
-    (post.en?.frontmatter.tags ?? []).forEach((tag) => tags.add(tag));
+  const tags = await getAllBlogTags();
+  return tags.flatMap(({ name: tag }) => {
+    const encoded = encodeURIComponent(tag);
+    if (tag === encoded) {
+      return [{ tag }];
+    }
+    return [{ tag }, { tag: encoded }];
   });
-
-  return [...tags.values()]
-    .filter((tag) => typeof tag === "string" && tag.length > 0)
-    .flatMap((tag) => {
-      const encoded = encodeURIComponent(tag);
-      if (tag === encoded) {
-        return [{ tag }];
-      }
-      return [{ tag }, { tag: encoded }];
-    });
 }

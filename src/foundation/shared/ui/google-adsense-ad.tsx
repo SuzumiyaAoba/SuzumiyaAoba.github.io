@@ -13,7 +13,7 @@ export interface GoogleAdsenseAdProps {
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle?: { push: (options: Record<string, unknown>) => void };
   }
 }
 
@@ -38,7 +38,8 @@ export function GoogleAdsenseAd({
 
     try {
       if (!pushedRef.current) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        const pendingAds: Record<string, unknown>[] = [];
+        (window.adsbygoogle ??= pendingAds).push({});
         pushedRef.current = true;
       }
     } catch (e) {

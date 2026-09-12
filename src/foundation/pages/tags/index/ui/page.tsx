@@ -1,27 +1,6 @@
-import { getBlogPostSummariesVariants, type BlogPostSummary } from "@/entities/blog";
-import { resolveLocale, type Locale, resolveLocalizedValue } from "@/shared/lib/routing";
-import { TagsListPageContent, type TagEntry } from "./page-content";
-
-function buildTagList(posts: BlogPostSummary[], locale: Locale): TagEntry[] {
-  const tagMap = new Map<string, TagEntry>();
-
-  for (const post of posts) {
-    const tags = post.frontmatter.tags ?? [];
-    for (const tag of tags) {
-      tagMap.set(tag, {
-        name: tag,
-        count: (tagMap.get(tag)?.count ?? 0) + 1,
-      });
-    }
-  }
-
-  return [...tagMap.values()].sort((a, b) => {
-    if (b.count !== a.count) {
-      return b.count - a.count;
-    }
-    return a.name.localeCompare(b.name, locale === "ja" ? "ja" : "en");
-  });
-}
+import { getBlogTagIndex } from "@/entities/blog";
+import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { TagsListPageContent } from "./page-content";
 
 type PageProps = {
   locale?: Locale;
@@ -29,9 +8,10 @@ type PageProps = {
 
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
-  const posts = await getBlogPostSummariesVariants();
-  const localizedPosts = posts.flatMap((post) => resolveLocalizedValue(post, resolvedLocale) ?? []);
-  const tags = buildTagList(localizedPosts, resolvedLocale);
+  const index = await getBlogTagIndex(resolvedLocale);
+  const tags = Array.from(index, ([name, posts]) => ({ name, count: posts.length })).sort(
+    (a, b) => b.count - a.count || a.name.localeCompare(b.name, resolvedLocale),
+  );
 
   return <TagsListPageContent locale={resolvedLocale} tags={tags} />;
 }

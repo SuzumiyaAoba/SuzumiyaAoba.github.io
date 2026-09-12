@@ -11,4 +11,4 @@ export type {
   BookMeta,
   BookSection,
   SectionRef,
-} from "./model/book";
+} from "./model/types";

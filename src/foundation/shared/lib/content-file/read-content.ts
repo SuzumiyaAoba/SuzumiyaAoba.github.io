@@ -1,6 +1,6 @@
-import matter from "gray-matter";
 import { cache } from "react";
 import type { Locale } from "@/shared/lib/routing";
+import { parseContent } from "./parse-content";
 import {
   createArticleFileLister,
   readContentFileWithFallback,
@@ -33,8 +33,7 @@ export function createContentReader<Frontmatter>(
       });
       if (!file) return null;
 
-      const { content, data } = matter(file.raw);
-      return { slug, content, format: file.format, frontmatter: normalizeFrontmatter(data) };
+      return { slug, format: file.format, ...parseContent(file.raw, normalizeFrontmatter) };
     },
   );
 

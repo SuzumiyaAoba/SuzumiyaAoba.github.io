@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { ChartConfig, MetricGroup, SheetData } from "./types";
 
 const EMPTY_GROUPS: MetricGroup[] = [];
@@ -18,26 +18,32 @@ export function useChartMetrics({
   excludeHeaders: string[] | undefined;
   labelMap: ChartConfig["labelMap"];
 }) {
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
+  // 非表示にした項目だけを保持し、全解除と初期状態を区別する。
+  const [hiddenMetrics, setHiddenMetrics] = useState<Set<string>>(() => new Set());
   const availableMetrics = useMemo(
     () =>
       data.headers.filter(
         (header) =>
           !excludeHeaders.includes(header) &&
-          data.series.some((row) => row.values[header] !== null),
+          data.series.some((row) => Number.isFinite(row.values[header])),
       ),
     [data.headers, data.series, excludeHeaders],
   );
   const effectiveGroups = useMemo(
-    () => (groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }]),
+    () =>
+      groups.length > 0
+        ? groups.map((group) => ({
+            ...group,
+            metrics: group.metrics.filter((metric) => availableMetrics.includes(metric)),
+          }))
+        : [{ name: "", metrics: availableMetrics }],
     [groups, availableMetrics],
   );
 
-  useEffect(() => {
-    if (selectedMetrics.length === 0 && availableMetrics.length > 0) {
-      setSelectedMetrics(availableMetrics);
-    }
-  }, [availableMetrics, selectedMetrics.length]);
+  const selectedMetrics = useMemo(
+    () => availableMetrics.filter((metric) => !hiddenMetrics.has(metric)),
+    [availableMetrics, hiddenMetrics],
+  );
 
   const getLabel = useCallback(
     (metric: string) =>
@@ -51,19 +57,24 @@ export function useChartMetrics({
   );
 
   const toggleMetric = useCallback((metric: string) => {
-    setSelectedMetrics((previous) =>
-      previous.includes(metric)
-        ? previous.filter((item) => item !== metric)
-        : [...previous, metric],
-    );
+    setHiddenMetrics((previous) => {
+      const next = new Set(previous);
+      if (next.has(metric)) next.delete(metric);
+      else next.add(metric);
+      return next;
+    });
   }, []);
 
   const toggleGroup = useCallback((metrics: string[]) => {
-    setSelectedMetrics((previous) =>
-      metrics.every((metric) => previous.includes(metric))
-        ? previous.filter((metric) => !metrics.includes(metric))
-        : [...new Set([...previous, ...metrics])],
-    );
+    setHiddenMetrics((previous) => {
+      const allSelected = metrics.every((metric) => !previous.has(metric));
+      const next = new Set(previous);
+      for (const metric of metrics) {
+        if (allSelected) next.add(metric);
+        else next.delete(metric);
+      }
+      return next;
+    });
   }, []);
 
   return {

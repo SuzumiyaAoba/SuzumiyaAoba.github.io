@@ -50,4 +50,15 @@ export const WithExcludedHeaders: Story = {
   args: {
     excludeHeaders: ["Cost", "Profit"],
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const revenue = canvas.getByRole("button", { name: "Revenue" });
+    await expect(canvas.queryByRole("button", { name: "Year" })).not.toBeInTheDocument();
+    await userEvent.click(revenue);
+    await expect(revenue).toHaveAttribute("aria-pressed", "false");
+    await expect(canvasElement.querySelectorAll("circle")).toHaveLength(0);
+    await userEvent.click(revenue);
+    await expect(revenue).toHaveAttribute("aria-pressed", "true");
+    await expect(canvasElement.querySelectorAll("circle")).toHaveLength(5);
+  },
 };

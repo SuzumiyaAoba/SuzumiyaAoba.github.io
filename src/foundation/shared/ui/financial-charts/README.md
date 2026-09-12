@@ -1,6 +1,6 @@
 # Charts コンポーネント
 
-財務データ可視化のための汎用グラフコンポーネントライブラリ。
+財務データ可視化のための汎用グラフコンポーネントライブラリ。折れ線・積み上げ棒・積み上げ面の軸描画は `chart-axes.ts`、操作可能な凡例の選択状態は `use-chart-metrics.ts` で管理します。
 
 ## コンポーネント一覧
 
@@ -18,8 +18,8 @@
 **使用例:**
 
 ```tsx
-import { LineChart } from "@/components/Charts";
-import type { MetricGroup } from "@/components/Charts";
+import { LineChart } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
 
 const groups: MetricGroup[] = [
   {
@@ -59,8 +59,8 @@ const groups: MetricGroup[] = [
 **使用例:**
 
 ```tsx
-import { StackedBarChart } from "@/components/Charts";
-import type { MetricGroup } from "@/components/Charts";
+import { StackedBarChart } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
 
 const groups: MetricGroup[] = [
   {
@@ -139,7 +139,8 @@ type ChartConfig = {
 - **グループ操作**: グループ名をクリックでグループ内の全メトリクスを一括操作
 - **ツールチップ**: データポイントにマウスオーバーで詳細情報を表示
 - **レスポンシブデザイン**: グリッド線とラベルで見やすい表示
-- **初期状態**: すべてのメトリクスが初期選択状態
+- **初期状態**: 有効な数値データがあるメトリクスをすべて選択。欠損値だけの項目は除外し、ゼロは有効な値として扱う
+- **選択状態**: 全項目を非表示にしてもその状態を維持。データ更新時は既存の非表示設定を保ち、新しい項目を表示
 
 ### LineChart の特徴
 
@@ -160,9 +161,9 @@ type ChartConfig = {
 ```tsx
 "use client";
 
-import { LineChart } from "@/components/Charts";
-import type { MetricGroup } from "@/components/Charts";
-import assetsData from "@/contents/blog/2026-01-01-kakekin/data/assets.json";
+import { LineChart } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
+import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 
 export const Sheet2ChartWrapper: React.FC = () => {
   const sheetData = assetsData.sheets["2"];
@@ -200,5 +201,5 @@ export const Sheet2ChartWrapper: React.FC = () => {
 ## 注意事項
 
 - データは JSON 形式で `SheetData` 型に準拠している必要があります
-- メトリクス名に `|` が含まれる場合、最初の要素のみが凡例に表示されます
+- 凡例は `config.labelMap` を優先し、指定がなければメトリクス名を `|` で分割して空白・単位の `％` を取り除き連結します
 - グループを指定しない場合、すべてのメトリクスが1つのグループとして扱われます
