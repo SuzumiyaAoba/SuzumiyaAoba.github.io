@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { select } from "d3-selection";
+import { arc, pie, type PieArcDatum } from "d3-shape";
+import "d3-transition";
+import { createChartTooltip } from "./chart-tooltip";
 import type { ChartConfig } from "./types";
 
 type PieData = {
@@ -17,12 +21,12 @@ type Props = {
 
 export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const colors = config.colors || d3.schemeCategory10;
+  const colors = config.colors || schemeCategory10;
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return;
 
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     svg.selectAll("*").remove();
 
     const width = 700;
@@ -36,12 +40,11 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .append("g")
       .attr("transform", `translate(${width / 2},${height / 2})`);
 
-    const pieGenerator = d3
-      .pie<PieData>()
+    const pieGenerator = pie<PieData>()
       .value((d) => d.value)
       .sort(null);
 
-    const arcGenerator = d3.arc<d3.PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
+    const arcGenerator = arc<PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
 
     const arcs = g
       .selectAll(".arc")
@@ -50,6 +53,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .append("g")
       .attr("class", "arc");
 
+    const tooltip = createChartTooltip();
     arcs
       .append("path")
       .attr("d", arcGenerator)
@@ -57,30 +61,14 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .attr("stroke", "var(--card)")
       .attr("stroke-width", 2)
       .on("mouseover", function (event, d) {
-        d3.select(this).transition().duration(200).attr("opacity", 0.7);
+        select(this).transition().duration(200).attr("opacity", 0.7);
 
-        const tooltip = d3
-          .select("body")
-          .append("div")
-          .attr("class", "tooltip")
-          .style("position", "absolute")
-          .style("background", "var(--card)")
-          .style("color", "var(--foreground)")
-          .style("border", "1px solid var(--border)")
-          .style("border-radius", "4px")
-          .style("padding", "8px")
-          .style("pointer-events", "none")
-          .style("z-index", "1000");
-
-        tooltip
-          .html(`<strong>${d.data.label}</strong><br/>${d.data.value}%`)
-          .style("left", `${event.pageX + 10}px`)
-          .style("top", `${event.pageY - 28}px`);
+        tooltip.show(event, d.data.label, `${d.data.value}%`);
       })
       .on("mouseout", function () {
-        d3.select(this).transition().duration(200).attr("opacity", 1);
+        select(this).transition().duration(200).attr("opacity", 1);
 
-        d3.selectAll(".tooltip").remove();
+        tooltip.hide();
       });
 
     // リーダー線とラベルを追加
@@ -166,6 +154,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       })
       .attr("font-size", "11px")
       .text((d) => `${d.data.label} (${d.data.value}%)`);
+    return tooltip.hide;
   }, [data, colors]);
 
   return (

@@ -1,7 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import * as d3 from "d3";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import { max } from "d3-array";
+import { axisBottom, axisLeft } from "d3-axis";
+import { scaleLinear } from "d3-scale";
+import { schemeCategory10 } from "d3-scale-chromatic";
+import { select } from "d3-selection";
+import { area, stack, stackOrderNone, stackOffsetNone, type SeriesPoint } from "d3-shape";
+import { appendChartPatterns } from "./chart-patterns";
 
 import type { SheetData, MetricGroup } from "./types";
 
@@ -17,18 +23,7 @@ type Props = {
   title: string;
 };
 
-const PATTERNS = [
-  { id: "pattern-0", type: "horizontal" },
-  { id: "pattern-1", type: "vertical" },
-  { id: "pattern-2", type: "diagonal-right" },
-  { id: "pattern-3", type: "diagonal-left" },
-  { id: "pattern-4", type: "dots" },
-  { id: "pattern-5", type: "cross" },
-  { id: "pattern-6", type: "grid" },
-  { id: "pattern-7", type: "horizontal-thick" },
-  { id: "pattern-8", type: "vertical-thick" },
-  { id: "pattern-9", type: "diagonal-cross" },
-] as const;
+type StackedDatum = { year: number } & Record<string, number>;
 
 /**
  * 連続X軸(年)の積み上げエリアチャート(帯グラフ)。パターン塗り・静的凡例が特徴。
@@ -41,8 +36,9 @@ export const StackedAreaChart: React.FC<Props> = ({
   availableMetrics: availableMetricsProp,
   title,
 }) => {
+  const chartId = useId();
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
-  const colors = d3.schemeCategory10;
+  const colors = schemeCategory10;
 
   const availableMetrics = useMemo(
     () => availableMetricsProp ?? groups.flatMap((g) => g.metrics),
@@ -51,135 +47,14 @@ export const StackedAreaChart: React.FC<Props> = ({
 
   const renderStackedChart = useCallback(
     (svgElement: SVGSVGElement, group: MetricGroup, groupIndex: number) => {
-      const svg = d3.select(svgElement);
+      const svg = select(svgElement);
       svg.selectAll("*").remove();
 
       const margin = { top: 20, right: 120, bottom: 60, left: 80 };
       const width = 700 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
-      // パターン定義を追加
-      const defs = svg.append("defs");
-
-      PATTERNS.forEach((pattern, i) => {
-        const patternEl = defs
-          .append("pattern")
-          .attr("id", `${pattern.id}-${groupIndex}`)
-          .attr("patternUnits", "userSpaceOnUse")
-          .attr("width", 8)
-          .attr("height", 8);
-
-        const color = colors[i % colors.length] ?? "#000";
-
-        switch (pattern.type) {
-          case "horizontal":
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 4)
-              .attr("x2", 8)
-              .attr("y2", 4)
-              .attr("stroke", color)
-              .attr("stroke-width", 2);
-            break;
-          case "vertical":
-            patternEl
-              .append("line")
-              .attr("x1", 4)
-              .attr("y1", 0)
-              .attr("x2", 4)
-              .attr("y2", 8)
-              .attr("stroke", color)
-              .attr("stroke-width", 2);
-            break;
-          case "diagonal-right":
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 0)
-              .attr("x2", 8)
-              .attr("y2", 8)
-              .attr("stroke", color)
-              .attr("stroke-width", 2);
-            break;
-          case "diagonal-left":
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 8)
-              .attr("x2", 8)
-              .attr("y2", 0)
-              .attr("stroke", color)
-              .attr("stroke-width", 2);
-            break;
-          case "dots":
-            patternEl.append("circle").attr("cx", 4).attr("cy", 4).attr("r", 2).attr("fill", color);
-            break;
-          case "cross":
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 4)
-              .attr("x2", 8)
-              .attr("y2", 4)
-              .attr("stroke", color)
-              .attr("stroke-width", 1);
-            patternEl
-              .append("line")
-              .attr("x1", 4)
-              .attr("y1", 0)
-              .attr("x2", 4)
-              .attr("y2", 8)
-              .attr("stroke", color)
-              .attr("stroke-width", 1);
-            break;
-          case "grid":
-            patternEl
-              .append("rect")
-              .attr("width", 8)
-              .attr("height", 8)
-              .attr("fill", "none")
-              .attr("stroke", color)
-              .attr("stroke-width", 1);
-            break;
-          case "horizontal-thick":
-            patternEl
-              .append("rect")
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("width", 8)
-              .attr("height", 3)
-              .attr("fill", color);
-            break;
-          case "vertical-thick":
-            patternEl
-              .append("rect")
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("width", 3)
-              .attr("height", 8)
-              .attr("fill", color);
-            break;
-          case "diagonal-cross":
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 0)
-              .attr("x2", 8)
-              .attr("y2", 8)
-              .attr("stroke", color)
-              .attr("stroke-width", 1);
-            patternEl
-              .append("line")
-              .attr("x1", 0)
-              .attr("y1", 8)
-              .attr("x2", 8)
-              .attr("y2", 0)
-              .attr("stroke", color)
-              .attr("stroke-width", 1);
-            break;
-        }
-      });
+      const patternFill = appendChartPatterns(svgElement, colors, `${chartId}-${groupIndex}`);
 
       const g = svg
         .attr("width", width + margin.left + margin.right)
@@ -189,7 +64,7 @@ export const StackedAreaChart: React.FC<Props> = ({
 
       // データを変換
       const parseData = data.series.map((d) => {
-        const yearData: any = { year: Number.parseInt(d.year) };
+        const yearData: StackedDatum = { year: Number.parseInt(d.year) };
         group.metrics.forEach((metric) => {
           yearData[metric] = d.values[metric] || 0;
         });
@@ -199,23 +74,21 @@ export const StackedAreaChart: React.FC<Props> = ({
       if (parseData.length === 0) return;
 
       // スケール設定
-      const maxYear = d3.max(parseData, (d) => d.year) || 2025;
-      const x = d3.scaleLinear().domain([2006, maxYear]).range([0, width]);
+      const maxYear = max(parseData, (d) => d.year) || 2025;
+      const x = scaleLinear().domain([2006, maxYear]).range([0, width]);
 
-      const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+      const y = scaleLinear().domain([0, 100]).range([height, 0]);
 
       // スタックレイアウト
-      const stackGenerator = d3
-        .stack<any>()
+      const stackGenerator = stack<StackedDatum>()
         .keys(group.metrics)
-        .order(d3.stackOrderNone)
-        .offset(d3.stackOffsetNone);
+        .order(stackOrderNone)
+        .offset(stackOffsetNone);
 
       const stackedData = stackGenerator(parseData);
 
       // エリア生成
-      const areaGenerator = d3
-        .area<any>()
+      const areaGenerator = area<SeriesPoint<StackedDatum>>()
         .x((d) => x(d.data.year))
         .y0((d) => y(d[0]))
         .y1((d) => y(d[1]));
@@ -225,8 +98,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("class", "grid")
         .attr("transform", `translate(0,${height})`)
         .call(
-          d3
-            .axisBottom(x)
+          axisBottom(x)
             .tickSize(-height)
             .tickFormat(() => ""),
         )
@@ -238,7 +110,7 @@ export const StackedAreaChart: React.FC<Props> = ({
       // X軸
       g.append("g")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat((d) => `${d}年`))
+        .call(axisBottom(x).tickFormat((d) => `${d}年`))
         .selectAll("text")
         .attr("transform", "rotate(-45)")
         .style("text-anchor", "end");
@@ -247,8 +119,7 @@ export const StackedAreaChart: React.FC<Props> = ({
       g.append("g")
         .attr("class", "grid")
         .call(
-          d3
-            .axisLeft(y)
+          axisLeft(y)
             .tickSize(-width)
             .tickFormat(() => ""),
         )
@@ -258,7 +129,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         );
 
       // Y軸
-      g.append("g").call(d3.axisLeft(y).tickFormat((d) => `${d}%`));
+      g.append("g").call(axisLeft(y).tickFormat((d) => `${d}%`));
 
       // 帯グラフを描画
       stackedData.forEach((layer) => {
@@ -268,7 +139,7 @@ export const StackedAreaChart: React.FC<Props> = ({
 
         g.append("path")
           .datum(layer)
-          .attr("fill", `url(#pattern-${patternIndex % PATTERNS.length}-${groupIndex})`)
+          .attr("fill", patternFill(patternIndex))
           .attr("stroke", strokeColor)
           .attr("stroke-width", 1)
           .attr("d", areaGenerator);
@@ -294,7 +165,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("fill", (d) => {
           const index = availableMetrics.indexOf(d);
           const patternIndex = index >= 0 ? index : 0;
-          return `url(#pattern-${patternIndex % PATTERNS.length}-${groupIndex})`;
+          return patternFill(patternIndex);
         })
         .attr("stroke", (d) => {
           const index = availableMetrics.indexOf(d);
@@ -310,7 +181,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("dy", "0.35em")
         .text((d) => d?.split("|")[0]?.trim() ?? "");
     },
-    [availableMetrics, colors, data.series],
+    [availableMetrics, chartId, colors, data.series],
   );
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect } from "storybook/test";
 import type { SheetData } from "./types";
 
 import { StackedAreaChart } from "@/shared/ui/financial-charts/StackedAreaChart";
@@ -29,3 +30,24 @@ export default meta;
 type Story = StoryObj<typeof StackedAreaChart>;
 
 export const Default: Story = {};
+
+export const MultipleCharts: Story = {
+  render: (args) => (
+    <>
+      <StackedAreaChart {...args} />
+      <StackedAreaChart {...args} />
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const patterns = [...canvasElement.querySelectorAll("pattern")];
+    await expect(patterns).toHaveLength(20);
+    await expect(new Set(patterns.map((pattern) => pattern.id)).size).toBe(20);
+    for (const svg of canvasElement.querySelectorAll("svg")) {
+      const localIds = new Set([...svg.querySelectorAll("pattern")].map((pattern) => pattern.id));
+      for (const shape of svg.querySelectorAll('[fill^="url(#"]')) {
+        const id = shape.getAttribute("fill")?.slice(5, -1);
+        await expect(localIds.has(id ?? "")).toBe(true);
+      }
+    }
+  },
+};

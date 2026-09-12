@@ -3,8 +3,7 @@ import { unstable_cache } from "next/cache";
 
 import {
   createContentReader,
-  compareContentByDate,
-  compareLocalizedContentByDate,
+  createContentCollection,
   listContentSlugs,
   findAdjacentByIndex,
   asString,
@@ -12,7 +11,8 @@ import {
   asDateString,
   asBoolean,
   asStringArray,
-  type ReadContentOptions,
+  type ContentSummary,
+  type LocalizedContent,
 } from "@/shared/lib/content-file";
 
 const BLOG_COLLECTION_DIR = "blog";
@@ -62,12 +62,7 @@ export type BlogPost = {
 /**
  * ブログ記事のサマリー（一覧用）の型定義
  */
-export type BlogPostSummary = {
-  /** スラッグ */
-  slug: string;
-  /** メタデータ */
-  frontmatter: BlogFrontmatter;
-};
+export type BlogPostSummary = ContentSummary<BlogPost>;
 
 /**
  * すべてのブログ記事のスラッグを取得する
@@ -88,18 +83,15 @@ export const getBlogSlugs = cache(
  */
 export const getBlogPost = createContentReader(BLOG_COLLECTION_DIR, normalizeFrontmatter);
 
+const collection = createContentCollection({ getSlugs: getBlogSlugs, getContent: getBlogPost });
+
 /**
  * 指定したスラッグの記事サマリーを取得する
  * @param slug 記事のスラッグ
  * @param options 読み込みオプション
  * @returns 記事サマリー。存在しない場合は null
  */
-export const getBlogPostSummary = cache(
-  async (slug: string, options?: ReadContentOptions): Promise<BlogPostSummary | null> => {
-    const post = await getBlogPost(slug, options);
-    return post ? { slug: post.slug, frontmatter: post.frontmatter } : null;
-  },
-);
+export const getBlogPostSummary = collection.getSummary;
 
 /**
  * フロントマターのデータを正規化する
@@ -136,14 +128,7 @@ function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
  * すべてのブログ記事を取得する（日付順降順、下書きを除く）
  * @returns 記事データの配列
  */
-export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
-  const slugs = await getBlogSlugs();
-  const posts = await Promise.all(slugs.map((slug) => getBlogPost(slug)));
-  return posts
-    .filter((post): post is BlogPost => Boolean(post))
-    .filter((post) => !post.frontmatter.draft)
-    .sort(compareContentByDate);
-});
+export const getBlogPosts = collection.getAll;
 
 /**
  * 指定した記事の前後（前後の日付）の記事を取得する
@@ -162,60 +147,26 @@ export const getAdjacentPosts = cache(
 /**
  * 多言語対応した記事データの型定義
  */
-export type LocalizedBlogPost = {
-  /** スラッグ */
-  slug: string;
-  /** 日本語版の記事データ */
-  ja: BlogPost | null;
-  /** 英語版の記事データ */
-  en: BlogPost | null;
-};
+export type LocalizedBlogPost = LocalizedContent<BlogPost>;
 
 /**
  * 多言語対応した記事サマリーの型定義
  */
-export type LocalizedBlogPostSummary = {
-  /** スラッグ */
-  slug: string;
-  /** 日本語版のサマリー */
-  ja: BlogPostSummary | null;
-  /** 英語版のサマリー */
-  en: BlogPostSummary | null;
-};
+export type LocalizedBlogPostSummary = LocalizedContent<BlogPostSummary>;
 
 /**
  * 指定したスラッグの多言語バリアントを取得する
  * @param slug 記事のスラッグ
  * @returns 多言語対応した記事データ
  */
-export const getBlogPostVariants = cache(async (slug: string): Promise<LocalizedBlogPost> => {
-  const [ja, en] = await Promise.all([
-    getBlogPost(slug, { locale: "ja", fallback: false }),
-    getBlogPost(slug, { locale: "en", fallback: false }),
-  ]);
-
-  return { slug, ja, en };
-});
+export const getBlogPostVariants = collection.getVariants;
 
 /**
  * すべての多言語対応記事を取得する（日付順降順、下書きを除く）
  * @returns 多言語対応記事の配列
  */
 export const getBlogPostsVariants = cache(
-  unstable_cache(async (): Promise<LocalizedBlogPost[]> => {
-    const slugs = await getBlogSlugs();
-    const posts = await Promise.all(slugs.map((slug) => getBlogPostVariants(slug)));
-
-    return posts
-      .filter((post) => {
-        const reference = post.ja ?? post.en;
-        if (!reference) {
-          return false;
-        }
-        return !reference.frontmatter.draft;
-      })
-      .sort(compareLocalizedContentByDate);
-  }, ["blog-posts-variants"]),
+  unstable_cache(collection.getAllVariants, ["blog-posts-variants"]),
 );
 
 /**
@@ -234,36 +185,14 @@ export const getPublishedBlogSlugs = cache(async (): Promise<string[]> => {
  * @param slug 記事のスラッグ
  * @returns 多言語対応した記事サマリー
  */
-export const getBlogPostSummaryVariants = cache(
-  async (slug: string): Promise<LocalizedBlogPostSummary> => {
-    const [ja, en] = await Promise.all([
-      getBlogPostSummary(slug, { locale: "ja", fallback: false }),
-      getBlogPostSummary(slug, { locale: "en", fallback: false }),
-    ]);
-
-    return { slug, ja, en };
-  },
-);
+export const getBlogPostSummaryVariants = collection.getSummaryVariants;
 
 /**
  * すべての多言語対応記事サマリーを取得する（日付順降順、下書きを除く）
  * @returns 多言語対応記事サマリーの配列
  */
 export const getBlogPostSummariesVariants = cache(
-  unstable_cache(async (): Promise<LocalizedBlogPostSummary[]> => {
-    const slugs = await getBlogSlugs();
-    const posts = await Promise.all(slugs.map((slug) => getBlogPostSummaryVariants(slug)));
-
-    return posts
-      .filter((post) => {
-        const reference = post.ja ?? post.en;
-        if (!reference) {
-          return false;
-        }
-        return !reference.frontmatter.draft;
-      })
-      .sort(compareLocalizedContentByDate);
-  }, ["blog-post-summaries-variants"]),
+  unstable_cache(collection.getAllSummaryVariants, ["blog-post-summaries-variants"]),
 );
 
 /**

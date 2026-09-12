@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import { getBlogPostSummariesVariants, type BlogPostSummary } from "@/entities/blog";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import {
+  decodePathParam,
+  resolveLocale,
+  type Locale,
+  resolveLocalizedValue,
+} from "@/shared/lib/routing";
 import { TagDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -8,41 +13,31 @@ type PageProps = {
   locale?: Locale;
 };
 
-function normalizeTagParam(tag: string): string {
-  try {
-    return decodeURIComponent(tag);
-  } catch {
-    return tag;
-  }
+function buildTagEntries(posts: BlogPostSummary[], tag: string) {
+  return posts
+    .filter((post) => (post.frontmatter.tags ?? []).includes(tag))
+    .map((post) => ({
+      slug: post.slug,
+      title: post.frontmatter.title || post.slug,
+      date: post.frontmatter.date,
+      tags: (post.frontmatter.tags ?? []).filter((item) => item !== tag),
+      category: post.frontmatter.category,
+      thumbnail: post.frontmatter.thumbnail,
+    }));
 }
 
 export default async function Page({ params, locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
   const { tag } = await params;
-  const decodedTag = normalizeTagParam(tag);
+  const decodedTag = decodePathParam(tag);
   const posts = await getBlogPostSummariesVariants();
-  const postsJa = posts.map((post) => post.ja ?? post.en).filter(Boolean) as BlogPostSummary[];
-  const postsEn = posts.map((post) => post.en ?? post.ja).filter(Boolean) as BlogPostSummary[];
-  const entriesJa = postsJa
-    .filter((post) => (post.frontmatter.tags ?? []).includes(decodedTag))
-    .map((post) => ({
-      slug: post.slug,
-      title: post.frontmatter.title || post.slug,
-      date: post.frontmatter.date,
-      tags: (post.frontmatter.tags ?? []).filter((item) => item !== decodedTag),
-      category: post.frontmatter.category,
-      thumbnail: post.frontmatter.thumbnail,
-    }));
-  const entriesEn = postsEn
-    .filter((post) => (post.frontmatter.tags ?? []).includes(decodedTag))
-    .map((post) => ({
-      slug: post.slug,
-      title: post.frontmatter.title || post.slug,
-      date: post.frontmatter.date,
-      tags: (post.frontmatter.tags ?? []).filter((item) => item !== decodedTag),
-      category: post.frontmatter.category,
-      thumbnail: post.frontmatter.thumbnail,
-    }));
+  const entriesForLocale = (targetLocale: Locale) =>
+    buildTagEntries(
+      posts.flatMap((post) => resolveLocalizedValue(post, targetLocale) ?? []),
+      decodedTag,
+    );
+  const entriesJa = entriesForLocale("ja");
+  const entriesEn = entriesForLocale("en");
 
   if (entriesJa.length === 0 && entriesEn.length === 0) {
     notFound();

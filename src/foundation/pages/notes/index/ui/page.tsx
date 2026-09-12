@@ -1,5 +1,5 @@
+import { resolveLocalizedValue, resolveLocale, type Locale } from "@/shared/lib/routing";
 import { getNoteSummariesVariants } from "@/entities/note";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { NotesIndexPageContent, type NoteListEntry } from "./page-content";
 
 type PageProps = {
@@ -12,8 +12,7 @@ export default async function Page({ locale }: PageProps) {
 
   const entries = notes
     .map((variant): NoteListEntry | null => {
-      const note =
-        resolvedLocale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
+      const note = resolveLocalizedValue(variant, resolvedLocale);
       if (!note) {
         return null;
       }

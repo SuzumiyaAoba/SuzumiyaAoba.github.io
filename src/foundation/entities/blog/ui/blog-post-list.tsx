@@ -1,3 +1,4 @@
+import { resolveLocalizedValue, toLocalePath, type Locale } from "@/shared/lib/routing";
 import Image from "next/image";
 import { Icon } from "@/shared/ui/icon";
 
@@ -5,22 +6,11 @@ import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import type { LocalizedBlogPostSummary } from "@/entities/blog/model/blog";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
 import { BlogPostCard } from "./blog-post-card";
-
-/**
- * 指定されたロケールに最適な記事データを取得する（存在しない場合は別言語でフォールバック）
- * @param variant 多言語対応した記事データ
- * @param locale 表示したいロケール
- * @returns 解決された単一言語の記事データ
- */
-function resolvePost(variant: LocalizedBlogPostSummary, locale: Locale) {
-  return locale === "ja" ? (variant.ja ?? variant.en) : (variant.en ?? variant.ja);
-}
 
 /**
  * 記事が空の場合に表示するメッセージの多言語定義
@@ -83,7 +73,7 @@ export function BlogPostList({
   return (
     <ul className={cn("space-y-4", className)}>
       {posts.map((variantItem) => {
-        const post = resolvePost(variantItem, locale);
+        const post = resolveLocalizedValue(variantItem, locale);
         if (!post) return null;
         const postSlug = variantItem.slug;
         const title = post.frontmatter.title || postSlug;

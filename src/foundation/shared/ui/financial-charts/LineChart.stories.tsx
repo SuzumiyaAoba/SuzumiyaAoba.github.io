@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, within } from "storybook/test";
 import type { SheetData } from "./types";
 
 import { LineChart } from "@/shared/ui/financial-charts/LineChart";
@@ -30,7 +31,20 @@ export default meta;
 
 type Story = StoryObj<typeof LineChart>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const revenue = canvas.getByRole("button", { name: "Revenue" });
+    await expect(revenue).toHaveAttribute("aria-pressed", "true");
+    const pointsBefore = canvasElement.querySelectorAll("circle").length;
+    await userEvent.click(revenue);
+    await expect(revenue).toHaveAttribute("aria-pressed", "false");
+    await expect(canvasElement.querySelectorAll("circle").length).toBeLessThan(pointsBefore);
+    await userEvent.click(revenue);
+    await expect(revenue).toHaveAttribute("aria-pressed", "true");
+    await expect(canvasElement.querySelectorAll("circle")).toHaveLength(pointsBefore);
+  },
+};
 
 export const WithExcludedHeaders: Story = {
   args: {

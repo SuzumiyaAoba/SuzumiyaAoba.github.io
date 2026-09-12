@@ -26,6 +26,8 @@ export default defineConfig({
       },
       {
         extends: true,
+        // 遅延読み込み中の依存最適化でテストブラウザーがリロードされるのを防ぐ。
+        optimizeDeps: { include: ["storybook/test", "d3-transition"] },
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
           // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest

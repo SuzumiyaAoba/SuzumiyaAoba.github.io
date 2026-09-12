@@ -5,6 +5,7 @@ import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
 import { remark } from "remark";
 import { cache } from "react";
+import { extractMarkdownText, walkMarkdown, type MarkdownNode } from "./markdown-tree";
 
 export type TocHeading = {
   id: string;
@@ -12,26 +13,19 @@ export type TocHeading = {
   level: 2 | 3;
 };
 
-type MdastNode = {
-  type?: string;
-  value?: string;
-  depth?: number;
-  children?: MdastNode[];
-};
-
-function extractText(node: MdastNode): string {
-  if (node.type === "text" || node.type === "inlineCode") {
-    return node.value ?? "";
-  }
-  if (!node.children) {
-    return "";
-  }
-  return node.children.map(extractText).join("");
-}
-
-function walk(node: MdastNode, handler: (node: MdastNode) => void) {
-  handler(node);
-  node.children?.forEach((child) => walk(child, handler));
+/** コンパイル中の AST と単独の目次取得で同じ見出し抽出を使う。 */
+export function collectTocHeadings(tree: MarkdownNode, idPrefix?: string): TocHeading[] {
+  const slugger = new GithubSlugger();
+  const headings: TocHeading[] = [];
+  walkMarkdown(tree, (node) => {
+    const level = node.depth;
+    if (node.type !== "heading" || (level !== 2 && level !== 3)) return;
+    const text = extractMarkdownText(node).trim();
+    if (!text) return;
+    const id = slugger.slug(text);
+    headings.push({ id: `${idPrefix ?? ""}${id}`, text, level });
+  });
+  return headings;
 }
 
 export const getTocHeadings = cache(
@@ -41,30 +35,7 @@ export const getTocHeadings = cache(
       .use(remarkEmoji)
       .use(remarkJoinCjkLines)
       .use(remarkMath);
-    const tree = processor.runSync(processor.parse(source)) as MdastNode;
-    const slugger = new GithubSlugger();
-    const headings: TocHeading[] = [];
-
-    walk(tree, (node) => {
-      if (node.type !== "heading") {
-        return;
-      }
-      const level = node.depth;
-      if (level !== 2 && level !== 3) {
-        return;
-      }
-      const text = extractText(node).trim();
-      if (!text) {
-        return;
-      }
-      const id = slugger.slug(text);
-      headings.push({
-        id: options?.idPrefix ? `${options.idPrefix}${id}` : id,
-        text,
-        level,
-      });
-    });
-
-    return headings;
+    const tree = processor.runSync(processor.parse(source));
+    return collectTocHeadings(tree, options?.idPrefix);
   },
 );

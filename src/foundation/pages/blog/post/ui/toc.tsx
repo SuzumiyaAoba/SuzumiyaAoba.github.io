@@ -1,6 +1,6 @@
 "use client";
 
-import { TOCProvider, TOCScrollArea, ClerkTOCItems } from "@/shared/ui/toc-crux";
+import { TOCProvider, TOCScrollArea, ClerkTOCItems } from "@/shared/ui/toc";
 import { I18nText } from "@/shared/ui/i18n-text";
 import type { TocHeading } from "@/shared/lib/mdx";
 import type { Locale } from "@/shared/lib/routing";

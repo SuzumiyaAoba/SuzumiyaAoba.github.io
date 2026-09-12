@@ -2,15 +2,15 @@ import { cache } from "react";
 
 import {
   createContentReader,
-  compareContentByDate,
-  compareLocalizedContentByDate,
+  createContentCollection,
   listContentSlugs,
   asString,
   asStringWithDefault,
   asDateString,
   asBoolean,
   asStringArray,
-  type ReadContentOptions,
+  type ContentSummary,
+  type LocalizedContent,
 } from "@/shared/lib/content-file";
 
 const NOTE_COLLECTION_DIR = "notes";
@@ -35,10 +35,7 @@ export type Note = {
   frontmatter: NoteFrontmatter;
 };
 
-export type NoteSummary = {
-  slug: string;
-  frontmatter: NoteFrontmatter;
-};
+export type NoteSummary = ContentSummary<Note>;
 
 export const getNoteSlugs = cache(
   async (): Promise<string[]> => listContentSlugs(NOTE_COLLECTION_DIR),
@@ -46,12 +43,9 @@ export const getNoteSlugs = cache(
 
 export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeFrontmatter);
 
-export const getNoteSummary = cache(
-  async (slug: string, options?: ReadContentOptions): Promise<NoteSummary | null> => {
-    const note = await getNote(slug, options);
-    return note ? { slug: note.slug, frontmatter: note.frontmatter } : null;
-  },
-);
+const collection = createContentCollection({ getSlugs: getNoteSlugs, getContent: getNote });
+
+export const getNoteSummary = collection.getSummary;
 
 function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
   const date = asDateString(data["date"]);
@@ -78,51 +72,15 @@ function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
   };
 }
 
-export type LocalizedNote = {
-  slug: string;
-  ja: Note | null;
-  en: Note | null;
-};
+export type LocalizedNote = LocalizedContent<Note>;
 
-export type LocalizedNoteSummary = {
-  slug: string;
-  ja: NoteSummary | null;
-  en: NoteSummary | null;
-};
+export type LocalizedNoteSummary = LocalizedContent<NoteSummary>;
 
-export const getNoteVariants = cache(async (slug: string): Promise<LocalizedNote> => {
-  const [ja, en] = await Promise.all([
-    getNote(slug, { locale: "ja", fallback: false }),
-    getNote(slug, { locale: "en", fallback: false }),
-  ]);
+export const getNoteVariants = collection.getVariants;
 
-  return { slug, ja, en };
-});
+export const getNotes = collection.getAll;
 
-export const getNotes = cache(async (): Promise<Note[]> => {
-  const slugs = await getNoteSlugs();
-  const notes = await Promise.all(slugs.map((slug) => getNote(slug)));
-
-  return notes
-    .filter((note): note is Note => Boolean(note))
-    .filter((note) => !note.frontmatter.draft)
-    .sort(compareContentByDate);
-});
-
-export const getNotesVariants = cache(async (): Promise<LocalizedNote[]> => {
-  const slugs = await getNoteSlugs();
-  const notes = await Promise.all(slugs.map((slug) => getNoteVariants(slug)));
-
-  return notes
-    .filter((note) => {
-      const reference = note.ja ?? note.en;
-      if (!reference) {
-        return false;
-      }
-      return !reference.frontmatter.draft;
-    })
-    .sort(compareLocalizedContentByDate);
-});
+export const getNotesVariants = collection.getAllVariants;
 
 /**
  * 公開済み（下書きでない）ノートのスラッグ一覧を取得する。
@@ -135,26 +93,6 @@ export const getPublishedNoteSlugs = cache(async (): Promise<string[]> => {
   return notes.map((note) => note.slug);
 });
 
-export const getNoteSummaryVariants = cache(async (slug: string): Promise<LocalizedNoteSummary> => {
-  const [ja, en] = await Promise.all([
-    getNoteSummary(slug, { locale: "ja", fallback: false }),
-    getNoteSummary(slug, { locale: "en", fallback: false }),
-  ]);
+export const getNoteSummaryVariants = collection.getSummaryVariants;
 
-  return { slug, ja, en };
-});
-
-export const getNoteSummariesVariants = cache(async (): Promise<LocalizedNoteSummary[]> => {
-  const slugs = await getNoteSlugs();
-  const notes = await Promise.all(slugs.map((slug) => getNoteSummaryVariants(slug)));
-
-  return notes
-    .filter((note) => {
-      const reference = note.ja ?? note.en;
-      if (!reference) {
-        return false;
-      }
-      return !reference.frontmatter.draft;
-    })
-    .sort(compareLocalizedContentByDate);
-});
+export const getNoteSummariesVariants = collection.getAllSummaryVariants;

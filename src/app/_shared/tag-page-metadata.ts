@@ -1,15 +1,9 @@
+import { resolveLocalizedValue, decodePathParam, type Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
-import type { Locale } from "@/shared/lib/routing";
 import { buildLocaleAlternates } from "./locale-alternates";
 
-export function decodeTag(tag: string): string {
-  try {
-    return decodeURIComponent(tag);
-  } catch {
-    return tag;
-  }
-}
+export { decodePathParam as decodeTag } from "@/shared/lib/routing";
 
 export type TagPageMetadataProps = {
   params: Promise<{ tag?: string }>;
@@ -29,11 +23,11 @@ export async function buildTagPageMetadata(
   if (!tagParam) {
     return { title: "Tags" };
   }
-  const tag = decodeTag(tagParam);
+  const tag = decodePathParam(tagParam);
 
   const posts = await getBlogPostSummariesVariants();
   const count = posts.filter((post) => {
-    const target = locale === "en" ? (post.en ?? post.ja) : (post.ja ?? post.en);
+    const target = resolveLocalizedValue(post, locale);
     return (target?.frontmatter.tags ?? []).includes(tag);
   }).length;
 

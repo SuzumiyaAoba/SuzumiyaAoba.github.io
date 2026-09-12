@@ -1,6 +1,6 @@
+import { resolveLocalizedValue, type Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getBlogPostVariants } from "@/entities/blog";
-import type { Locale } from "@/shared/lib/routing";
 import { buildLocaleAlternates } from "./locale-alternates";
 
 /**
@@ -21,7 +21,7 @@ export async function buildBlogPostMetadata(
   }
 
   const { ja: postJa, en: postEn } = await getBlogPostVariants(slug);
-  const post = locale === "en" ? (postEn ?? postJa) : (postJa ?? postEn);
+  const post = resolveLocalizedValue({ ja: postJa, en: postEn }, locale);
   if (!post) {
     return { title: "Blog" };
   }

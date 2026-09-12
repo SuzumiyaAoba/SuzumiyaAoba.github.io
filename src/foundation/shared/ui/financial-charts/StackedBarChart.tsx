@@ -1,12 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { axisBottom, axisLeft } from "d3-axis";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
 import { stack, stackOrderNone, stackOffsetNone } from "d3-shape";
 import type { SheetData, MetricGroup, ChartConfig } from "./types";
+import { useChartMetrics } from "./use-chart-metrics";
+import { MetricLegend } from "./metric-legend";
 
 type Props = {
   data: SheetData;
@@ -15,60 +17,20 @@ type Props = {
   excludeHeaders?: string[];
 };
 
-export const StackedBarChart: React.FC<Props> = ({
-  data,
-  groups = [],
-  config = {},
-  excludeHeaders = [],
-}) => {
+export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, excludeHeaders }) => {
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([]);
   const colors = config.colors || schemeCategory10;
 
-  const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", labelMap = {} } = config;
+  const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", labelMap } = config;
 
-  // ラベルを取得する関数
-  const getLabel = (metric: string): string => {
-    if (labelMap[metric]) {
-      return labelMap[metric];
-    }
-    // デフォルト: パイプ区切りを整形
-    const parts = metric
-      .split("|")
-      .map((p) => p.trim())
-      .filter((p) => p && p !== "％");
-    return parts.join("");
-  };
-
-  const availableMetrics = useMemo(() => {
-    return data.headers.filter((header) => {
-      return !excludeHeaders.includes(header) && data.series.some((s) => s.values[header] !== null);
-    });
-  }, [data, excludeHeaders]);
-
-  const effectiveGroups = useMemo(() => {
-    return groups.length > 0 ? groups : [{ name: "", metrics: availableMetrics }];
-  }, [groups, availableMetrics]);
-
-  useEffect(() => {
-    if (selectedMetrics.length === 0 && availableMetrics.length > 0) {
-      setSelectedMetrics(availableMetrics);
-    }
-  }, [availableMetrics, selectedMetrics.length]);
-
-  const handleLegendClick = (metric: string) => {
-    setSelectedMetrics((prev) =>
-      prev.includes(metric) ? prev.filter((m) => m !== metric) : [...prev, metric],
-    );
-  };
-
-  const handleGroupClick = (groupMetrics: string[]) => {
-    setSelectedMetrics((prev) => {
-      const allSelected = groupMetrics.every((m) => prev.includes(m));
-      if (allSelected) return prev.filter((m) => !groupMetrics.includes(m));
-      return [...new Set([...prev, ...groupMetrics])];
-    });
-  };
+  const {
+    availableMetrics,
+    effectiveGroups,
+    selectedMetrics,
+    getLabel,
+    toggleMetric,
+    toggleGroup,
+  } = useChartMetrics({ data, groups, excludeHeaders, labelMap });
 
   const renderBarChart = useCallback(
     (svgElement: SVGSVGElement, group: MetricGroup) => {
@@ -194,7 +156,7 @@ export const StackedBarChart: React.FC<Props> = ({
             <button
               type="button"
               className="text-center font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 w-full"
-              onClick={() => handleGroupClick(group.metrics)}
+              onClick={() => toggleGroup(group.metrics)}
             >
               {group.name}
             </button>
@@ -207,25 +169,15 @@ export const StackedBarChart: React.FC<Props> = ({
             />
           </div>
           <div className="mt-4 flex flex-wrap gap-4">
-            {group.metrics.map((metric) => {
-              const index = availableMetrics.indexOf(metric);
-              const isActive = selectedMetrics.includes(metric);
-              return (
-                <button
-                  key={metric}
-                  type="button"
-                  onClick={() => handleLegendClick(metric)}
-                  className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
-                  style={{ opacity: isActive ? 1 : 0.3 }}
-                >
-                  <div
-                    className="w-4 h-4"
-                    style={{ backgroundColor: colors[index % colors.length], opacity: 0.7 }}
-                  />
-                  <span className="text-sm">{getLabel(metric)}</span>
-                </button>
-              );
-            })}
+            <MetricLegend
+              metrics={group.metrics}
+              availableMetrics={availableMetrics}
+              selectedMetrics={selectedMetrics}
+              colors={colors}
+              getLabel={getLabel}
+              onToggle={toggleMetric}
+              colorOpacity={0.7}
+            />
           </div>
         </div>
       ))}

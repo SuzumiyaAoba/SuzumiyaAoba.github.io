@@ -18,7 +18,7 @@ import remarkCustomHeadingId from "remark-custom-heading-id";
 import remarkEmoji from "remark-emoji";
 import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
-import GithubSlugger from "github-slugger";
+import type { PluggableList } from "unified";
 
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
@@ -26,124 +26,8 @@ import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
 import { createRehypeAffiliateLinks } from "./rehype-affiliate-links";
 import type { TocHeading } from "./toc";
 
-type MdastNode = {
-  type?: string;
-  value?: string;
-  depth?: number;
-  children?: MdastNode[];
-};
-
-function extractTextFromNode(node: MdastNode): string {
-  if (node.type === "text" || node.type === "inlineCode") {
-    return node.value ?? "";
-  }
-  if (!node.children) return "";
-  return node.children.map(extractTextFromNode).join("");
-}
-
-function remarkCollectHeadings(headings: TocHeading[], idPrefix?: string) {
-  const slugger = new GithubSlugger();
-  return () => (tree: MdastNode) => {
-    const walk = (node: MdastNode) => {
-      if (node.type === "heading") {
-        const level = node.depth;
-        if (level === 2 || level === 3) {
-          const text = extractTextFromNode(node).trim();
-          if (text) {
-            const id = slugger.slug(text);
-            headings.push({ id: idPrefix ? `${idPrefix}${id}` : id, text, level });
-          }
-        }
-      }
-      node.children?.forEach(walk);
-    };
-    walk(tree);
-  };
-}
-
-function rehypeHeadingIdPrefix(prefix: string) {
-  return (tree: any) => {
-    const visit = (node: any) => {
-      if (!node || typeof node !== "object") {
-        return;
-      }
-      if (node.type === "element" && node.properties?.id) {
-        node.properties.id = `${prefix}${node.properties.id}`;
-      }
-      if (Array.isArray(node.children)) {
-        node.children.forEach(visit);
-      }
-    };
-    visit(tree);
-  };
-}
-
-/**
- * 画像のみを含む段落タグを剥がすプラグイン。
- * MDX は ![alt](src) を <p><img/></p> に変換するが、Img コンポーネントが
- * <div>（Zoom）を描画するため <p> 内に <div> が入り HTML が不正になる。
- */
-function remarkUnwrapImages() {
-  return (tree: any) => {
-    const visit = (parent: any) => {
-      if (!parent || !Array.isArray(parent.children)) return;
-
-      parent.children = parent.children.flatMap((node: any) => {
-        if (
-          node.type === "paragraph" &&
-          Array.isArray(node.children) &&
-          node.children.length > 0 &&
-          node.children.every(
-            (child: any) =>
-              child.type === "image" ||
-              (child.type === "text" && /^\s*$/.test(child.value ?? "")),
-          )
-        ) {
-          return node.children.filter((child: any) => child.type === "image");
-        }
-        return [node];
-      });
-
-      for (const child of parent.children) {
-        visit(child);
-      }
-    };
-    visit(tree);
-  };
-}
-
-function remarkMermaid() {
-  return (tree: any) => {
-    const visit = (node: any) => {
-      if (!node || !Array.isArray(node.children)) {
-        return;
-      }
-
-      node.children = node.children.map((child: any) => {
-        if (child?.type === "code" && child.lang === "mermaid") {
-          return {
-            type: "mdxJsxFlowElement",
-            name: "Mermaid",
-            attributes: [
-              {
-                type: "mdxJsxAttribute",
-                name: "code",
-                value: child.value,
-              },
-            ],
-            children: [],
-          };
-        }
-
-        return child;
-      });
-
-      node.children.forEach(visit);
-    };
-
-    visit(tree);
-  };
-}
+import { remarkCollectHeadings, remarkMermaid, remarkUnwrapImages } from "./remark-plugins";
+import { rehypeHeadingIdPrefix } from "./rehype-heading-id-prefix";
 
 type RenderOptions = {
   basePath?: string;
@@ -188,23 +72,21 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
   return components;
 }
 
-const devRenderCache = new Map<string, ReactElement>();
-const devRenderWithTocCache = new Map<string, { content: ReactElement; headings: TocHeading[] }>();
+type RenderResult = { content: ReactElement; headings: TocHeading[] };
+const devRenderCache = new Map<string, RenderResult>();
 
 function buildCompileOptions(
   source: string,
   { basePath, scope, idPrefix, extraComponents }: RenderOptions,
-  extraRemarkPlugins: any[] = [],
+  extraRemarkPlugins: PluggableList = [],
   affiliateById: Map<string, string> = new Map(),
-) {
+): Parameters<typeof compileMDX>[0] {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
     syntaxHighlighting: { theme: "github-from-css" },
   };
 
-  const baseComponents = extraComponents
-    ? { ...mdxComponents, ...extraComponents }
-    : mdxComponents;
+  const baseComponents = extraComponents ? { ...mdxComponents, ...extraComponents } : mdxComponents;
   const components = basePath
     ? {
         ...baseComponents,
@@ -244,71 +126,49 @@ function buildCompileOptions(
         ],
       },
     },
-  } as Parameters<typeof compileMDX>[0];
+  };
 }
 
-export const renderMdx = cache(
-  async (source: string, options: RenderOptions = {}) => {
-    const { scope, idPrefix, basePath } = options;
-    const useDevCache = process.env["NODE_ENV"] === "development";
-    let cacheKey = "";
-    if (useDevCache) {
-      const scopeKey = scope ? JSON.stringify(scope) : "";
-      cacheKey = `${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
-      const cached = devRenderCache.get(cacheKey);
-      if (cached) return cached;
-    }
+async function compileContent(
+  source: string,
+  options: RenderOptions,
+  collectHeadings: boolean,
+): Promise<RenderResult> {
+  // コンポーネント関数はシリアライズできないため、追加マップがある場合は開発キャッシュを使わない。
+  const useDevCache = process.env["NODE_ENV"] === "development" && !options.extraComponents;
+  const cacheKey = useDevCache
+    ? JSON.stringify([collectHeadings, options.idPrefix, options.basePath, options.scope, source])
+    : "";
+  if (useDevCache) {
+    const cached = devRenderCache.get(cacheKey);
+    if (cached) return cached;
+  }
 
-    const affiliateById = await getAffiliateProductUrlById();
-    const heavyComponents = await loadHeavyComponents(source);
-    const { content } = await compileMDX(
-      buildCompileOptions(
-        source,
-        { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
-        [],
-        affiliateById,
-      ),
-    );
+  const [affiliateById, heavyComponents] = await Promise.all([
+    getAffiliateProductUrlById(),
+    loadHeavyComponents(source),
+  ]);
+  const headings: TocHeading[] = [];
+  const { content } = await compileMDX(
+    buildCompileOptions(
+      source,
+      { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
+      collectHeadings ? [remarkCollectHeadings(headings, options.idPrefix)] : [],
+      affiliateById,
+    ),
+  );
+  const result = { content: <>{content}</>, headings };
+  if (useDevCache) devRenderCache.set(cacheKey, result);
+  return result;
+}
 
-    const rendered = <>{content}</>;
-    if (useDevCache) devRenderCache.set(cacheKey, rendered);
-    return rendered;
-  },
-);
+export const renderMdx = cache(async (source: string, options: RenderOptions = {}) => {
+  const { content } = await compileContent(source, options, false);
+  return content;
+});
 
-/**
- * MDX をコンパイルしながら同一パスで TOC 見出しを抽出する。
- * renderMdx + getTocHeadings を別々に呼ぶより remark パースが1回で済む。
- */
+/** MDX のコンパイルと目次抽出を同じパースで実行する。 */
 export const renderMdxWithToc = cache(
-  async (
-    source: string,
-    options: RenderOptions = {},
-  ): Promise<{ content: ReactElement; headings: TocHeading[] }> => {
-    const { scope, idPrefix, basePath } = options;
-    const useDevCache = process.env["NODE_ENV"] === "development";
-    let cacheKey = "";
-    if (useDevCache) {
-      const scopeKey = scope ? JSON.stringify(scope) : "";
-      cacheKey = `toc::${idPrefix ?? ""}::${basePath ?? ""}::${scopeKey}::${source}`;
-      const cached = devRenderWithTocCache.get(cacheKey);
-      if (cached) return cached;
-    }
-
-    const affiliateById = await getAffiliateProductUrlById();
-    const heavyComponents = await loadHeavyComponents(source);
-    const headings: TocHeading[] = [];
-    const { content } = await compileMDX(
-      buildCompileOptions(
-        source,
-        { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
-        [remarkCollectHeadings(headings, idPrefix)],
-        affiliateById,
-      ),
-    );
-
-    const result = { content: <>{content}</>, headings };
-    if (useDevCache) devRenderWithTocCache.set(cacheKey, result);
-    return result;
-  },
+  (source: string, options: RenderOptions = {}): Promise<RenderResult> =>
+    compileContent(source, options, true),
 );

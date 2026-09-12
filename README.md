@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# suzumiyaaoba.com
 
-## Getting Started
+Next.js App Router、React、TypeScript で構築した個人サイトです。日本語・英語のブログとノート、書籍、ツールを静的出力し、GitHub Pages に公開します。
 
-First, run the development server:
+## 開発
 
-```bash
+CI と同じ Node.js 22 系と npm を使用します。
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+開発サーバーは `http://localhost:3000` で起動します。検索に必要な Pagefind インデックスは、別途生成します。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npm run pagefind:dev
+# コンテンツの変更を検索に反映する場合
+npm run pagefind:dev:force
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 構成
 
-## Learn More
+| パス                        | 役割                                                        |
+| --------------------------- | ----------------------------------------------------------- |
+| `src/app`                   | ルーティング、レイアウト、メタデータ、OGP画像、サイトマップ |
+| `src/foundation/pages`      | 各ページのデータ取得と表示                                  |
+| `src/foundation/widgets`    | ヘッダー・フッターなどのページ共通領域                      |
+| `src/foundation/entities`   | ブログ、ノート、書籍、シリーズのモデルと公開API             |
+| `src/foundation/shared/lib` | コンテンツ読み込み、MDX変換、言語選択、URL・日付処理        |
+| `src/foundation/shared/ui`  | 共通UI、目次、グラフ、MDXコンポーネント                     |
+| `content`                   | Markdown / MDX本文、記事データ、シリーズ定義                |
+| `src/i18n/messages`         | 日本語・英語のUIメッセージ                                  |
+| `scripts`                   | アイコン生成と検索インデックスのビルド補助                  |
 
-To learn more about Next.js, take a look at the following resources:
+依存方向は `pages → widgets / entities → shared` を基本とし、Steiger で確認します。スライス外からの参照には各 `index.ts` の公開APIを使います。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ブログとノートは `shared/lib/content-file` の共通コレクション処理を使用し、frontmatter の正規化と永続キャッシュの方針は各エンティティが管理します。翻訳のフォールバックは `shared/lib/routing` に集約しています。公開一覧は日本語版の下書き状態・日付を基準にし、日本語版がない場合は英語版を使います。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MDX のコンパイルは `shared/lib/mdx/render-mdx.tsx`、AST変換は個別のプラグイン、目次抽出は `toc.ts` が担当します。重いチャートやコード表示は使用する記事で遅延読み込みします。グラフの凡例操作・ツールチップ・模様定義と、目次の監視・位置計算もそれぞれ表示本体から分離しています。
 
-## Deploy on Vercel
+## 検証
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```sh
+npm run typecheck
+npm run lint
+npm run test -- --project=unit
+npx playwright install chromium
+npm run test -- --project=storybook
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`npm run test` は単体テストと Storybook のブラウザテストをまとめて実行します。Storybook 単体は `npm run storybook` で確認できます。ファイル監視数の制限で Steiger が `EMFILE` になる環境では、`CHOKIDAR_USEPOLLING=1 npm run lint` を使用できます。
+
+`npm run build` はアイコン生成、Next.js の静的出力、Pagefind のインデックス生成を順に行い、公開用ファイルを `out/` に出力します。PRでは lint・テスト・ビルドを実行し、`master` への push 時に GitHub Pages へデプロイします。

@@ -1,3 +1,9 @@
+import {
+  resolveLocalizedValue,
+  toLocalePath,
+  resolveLocale,
+  type Locale,
+} from "@/shared/lib/routing";
 import path from "node:path";
 import { notFound } from "next/navigation";
 
@@ -22,7 +28,6 @@ import {
   getAffiliateProductsByTags,
   type AffiliateProduct,
 } from "@/shared/lib/affiliate-products";
-import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 import { getSiteUrl } from "@/shared/lib/site";
 import { BlogPostPageContent } from "./page-content";
 
@@ -61,7 +66,7 @@ export default async function Page({ params, locale }: PageProps) {
     console.timeEnd(`[blog] load posts:${slug}`);
   }
 
-  const post = isEn ? (postEn ?? postJa) : (postJa ?? postEn);
+  const post = resolveLocalizedValue({ ja: postJa, en: postEn }, resolvedLocale);
 
   if (!post) {
     notFound();
@@ -148,10 +153,10 @@ export default async function Page({ params, locale }: PageProps) {
   const shouldShowAmazonAssociate = amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
 
   const prevTitle = prev
-    ? ((isEn ? (prev.en ?? prev.ja) : (prev.ja ?? prev.en))?.frontmatter.title ?? prev.slug)
+    ? (resolveLocalizedValue(prev, resolvedLocale)?.frontmatter.title ?? prev.slug)
     : "";
   const nextTitle = next
-    ? ((isEn ? (next.en ?? next.ja) : (next.ja ?? next.en))?.frontmatter.title ?? next.slug)
+    ? (resolveLocalizedValue(next, resolvedLocale)?.frontmatter.title ?? next.slug)
     : "";
 
   return (

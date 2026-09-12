@@ -1,6 +1,6 @@
+import { resolveLocalizedValue, type Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getNoteSummaryVariants } from "@/entities/note";
-import type { Locale } from "@/shared/lib/routing";
 import { buildLocaleAlternates } from "./locale-alternates";
 
 /**
@@ -19,7 +19,7 @@ export async function buildNotesPageMetadata(
   }
 
   const { ja: noteJa, en: noteEn } = await getNoteSummaryVariants(slug);
-  const note = locale === "en" ? (noteEn ?? noteJa) : (noteJa ?? noteEn);
+  const note = resolveLocalizedValue({ ja: noteJa, en: noteEn }, locale);
   if (!note) {
     return { title: "Notes" };
   }

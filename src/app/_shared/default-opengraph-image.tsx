@@ -1,20 +1,12 @@
-/* eslint-disable @next/next/no-img-element */
-import { ImageResponse } from "next/og";
 import { SITE_TITLE } from "@/shared/lib/site/site-title";
-import { loadShipporiMinchoBold } from "./opengraph-font";
-
-export const DEFAULT_OPENGRAPH_IMAGE_SIZE = {
-  width: 1200,
-  height: 630,
-};
+import { renderOpengraphImage } from "./opengraph-image";
+export { OPENGRAPH_IMAGE_SIZE as DEFAULT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
 /**
  * サイトルート用の既定 OGP 画像を描画する。ja/en で完全に共通。
  */
-export async function renderDefaultOpengraphImage() {
-  const fontBuffer = await loadShipporiMinchoBold();
-
-  return new ImageResponse(
+export function renderDefaultOpengraphImage() {
+  return renderOpengraphImage(
     <div
       style={{
         background: "white",
@@ -48,16 +40,5 @@ export async function renderDefaultOpengraphImage() {
         suzumiyaaoba.com
       </div>
     </div>,
-    {
-      ...DEFAULT_OPENGRAPH_IMAGE_SIZE,
-      fonts: [
-        {
-          name: "Shippori Mincho",
-          data: fontBuffer,
-          style: "normal",
-          weight: 700,
-        },
-      ],
-    },
   );
 }

@@ -5,3 +5,4 @@ export * from "./adjacent";
 export * from "./content-root";
 export * from "./read-content";
 export * from "./compare-content";
+export * from "./content-collection";

@@ -1,6 +1,6 @@
 "use client";
 
-import { TOCProvider, TOCScrollArea, ClerkTOCItems } from "@/shared/ui/toc-crux";
+import { TOCProvider, TOCScrollArea, ClerkTOCItems } from "@/shared/ui/toc";
 import type { TocHeading } from "@/shared/lib/mdx";
 
 type TocProps = {
