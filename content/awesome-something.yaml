@@ -544,3 +544,18 @@ items:
     category: デザイン
     description: Web サイトから配色・タイポグラフィ・余白などのデザインシステムを抽出し、AI が利用できる DESIGN.md を生成するツール。
     websiteUrl: https://designmd.me/
+  - id: getdesign-md
+    name: getdesign.md
+    category: デザイン
+    description: 実在する Web サイトの配色・タイポグラフィ・余白・コンポーネントを分析した DESIGN.md のコレクション。AI コーディングエージェントに渡すデザインの参照資料を探せる。
+    websiteUrl: https://getdesign.md/
+  - id: collectui
+    name: Collect UI
+    category: デザイン
+    description: Web サイトやユーザーインターフェースのデザイン事例を集めたギャラリー。画面やレイアウトの設計に役立つインスピレーションを探せる。
+    websiteUrl: https://collectui.com/
+  - id: designmd-store
+    name: Design.md Store
+    category: デザイン
+    description: AI コーディング向けのデザインシステム仕様を DESIGN.md 形式で配布するライブラリ。カテゴリ別のデザインをプレビューし、プロジェクト用にダウンロードできる。
+    websiteUrl: https://designmd-store.com/
