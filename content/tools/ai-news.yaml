@@ -1,6 +1,110 @@
 version: 1
-updated: "2026-07-11"
+updated: "2026-09-13"
 events:
+  - year: 2026
+    date: 2026-09-10
+    title_ja: "DeepSeek-V4.1-Flash"
+    summary_ja: |
+      画像理解に対応した新アーキテクチャのモデルを API で提供開始。
+
+      [DeepSeek-V4.1-Flash の発表 | DeepSeek](https://deepseek.com/en/news/deepseek-v4-1-flash/)
+    tags: ["DeepSeek", "LLM Model"]
+  - year: 2026
+    date: 2026-09-10
+    title_ja: "GPT-Live 1 (API GA)"
+    summary_ja: |
+      音声対話モデルの API 一般提供を開始。
+
+      [GPT-Live 1 の一般提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "Audio Model"]
+  - year: 2026
+    date: 2026-09-08
+    title_ja: "GPT Image 2.5 (Sunburst, Flare)"
+    summary_ja: |
+      画像生成・編集モデルの Sunburst と Flare を提供開始。
+
+      [GPT Image 2.5 の発表 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "Image Model"]
+  - year: 2026
+    date: 2026-09-08
+    title_ja: "GPT-Rosalind (GA・承認制)"
+    summary_ja: |
+      ライフサイエンス研究向けモデルを、承認された利用者向けに正式提供。
+
+      [GPT-Rosalind の正式提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-09-03
+    title_ja: "GPT-6 Astra"
+    summary_ja: |
+      推論、コーディング、コンピューター操作、調査、文書作成に対応するモデルを提供開始。
+
+      [GPT-6 Astra | OpenAI](https://developers.openai.com/api/docs/models/gpt-6-astra) / [発表日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-09-02
+    title_ja: "Gemini 3.8 Flash / 3.8 Flash Cyber"
+    summary_ja: |
+      3.8 Flash を提供開始。サイバーセキュリティ向けの 3.8 Flash Cyber は、Fairwind Program を通じた限定提供。
+
+      [Gemini 3.8 Flash と 3.8 Flash Cyber の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)
+    tags: ["Google", "Gemini", "LLM Model"]
+  - year: 2026
+    date: 2026-09-01
+    title_ja: "Claude Fable 5.1 / Claude Mythos 5.1"
+    summary_ja: |
+      Fable 5.1 を一般提供。Mythos 5.1 は、サイバーセキュリティ・ライフサイエンス分野の審査済み組織向けに限定提供。
+
+      [Claude Fable 5.1 と Claude Mythos 5.1 の発表 | Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-1)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+  - year: 2026
+    date: 2026-08-26
+    title_ja: "Gemini 3.5 Transcribe / Transcribe Live (GA)"
+    summary_ja: |
+      音声認識モデルと、ストリーミング音声認識モデルの一般提供を開始。
+
+      [Gemini 3.5 Transcribe の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5-transcribe/)
+    tags: ["Google", "Gemini", "Audio Model"]
+  - year: 2026
+    date: 2026-08-21
+    title_ja: "DeepSeek-V4-Flash-Vision-Exp"
+    summary_ja: |
+      [DeepSeek-V4-Flash-Vision-Exp の発表 | DeepSeek API Docs](https://api-docs.deepseek.com/news/news260821/)
+    tags: ["DeepSeek", "LLM Model"]
+  - year: 2026
+    date: 2026-08-13
+    title_ja: "Gemini 3.7 Flash"
+    summary_ja: |
+      [Gemini 3.7 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/)
+    tags: ["Google", "Gemini", "LLM Model"]
+  - year: 2026
+    date: 2026-08-13
+    title_ja: "DeepSeek-V4-Pro (GA)"
+    summary_ja: |
+      [DeepSeek-V4-Pro の一般提供開始 | DeepSeek API Docs](https://api-docs.deepseek.com/news/news260813/)
+    tags: ["DeepSeek", "LLM Model"]
+  - year: 2026
+    date: 2026-08-07
+    title_ja: "GPT-5.6 Cyber (限定提供)"
+    summary_ja: |
+      Daybreak Red を通じ、承認された利用者向けにサイバーセキュリティ専用モデルを提供。
+
+      [GPT-5.6 Cyber | OpenAI](https://developers.openai.com/api/docs/models/gpt-5.6-cyber) / [提供開始日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-07-24
+    title_ja: "Claude Opus 5"
+    summary_ja: |
+      [Claude Opus 5 の発表 | Anthropic](https://www.anthropic.com/news/claude-opus-5)
+    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+  - year: 2026
+    date: 2026-07-21
+    title_ja: "Gemini 3.6 Flash / 3.5 Flash-Lite / 3.5 Flash Cyber"
+    summary_ja: |
+      3.6 Flash と 3.5 Flash-Lite を提供開始。3.5 Flash Cyber は CodeMender と組み合わせたサイバーセキュリティ向けモデルとして発表。
+
+      [Gemini 3.6 Flash・3.5 Flash-Lite・3.5 Flash Cyber の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/)
+    tags: ["Google", "Gemini", "LLM Model"]
   - year: 2026
     date: 2026-07-09
     title_ja: "GPT-5.6 (Sol, Terra, Luna)"
@@ -20,6 +124,12 @@ events:
       [Introducing Claude Sonnet 5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-5)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2026
+    date: 2026-06-30
+    title_ja: "Nano Banana 2 Lite (Gemini 3.1 Flash-Lite Image)"
+    summary_ja: |
+      [Nano Banana 2 Lite の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Nano Banana", "Image Model"]
+  - year: 2026
     date: 2026-06-09
     title_ja: "Claude Fable 5 / Claude Mythos 5"
     summary_ja: |
@@ -31,6 +141,20 @@ events:
     summary_ja: |
       [Introducing Claude Opus 4.8 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-8)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+  - year: 2026
+    date: 2026-05-19
+    title_ja: "Gemini 3.5 Flash"
+    summary_ja: |
+      [Gemini 3.5 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/)
+    tags: ["Google", "Gemini", "LLM Model"]
+  - year: 2026
+    date: 2026-04-24
+    title_ja: "DeepSeek-V4-Pro / DeepSeek-V4-Flash (Preview)"
+    summary_ja: |
+      100万トークンのコンテキストに対応するモデルをプレビュー提供し、重みを公開。
+
+      [DeepSeek-V4 Preview の発表 | DeepSeek](https://deepseek.com/en/news/v4-preview/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
   - year: 2026
     date: 2026-04-23
     title_ja: "GPT-5.5 / GPT-5.5 Pro"
@@ -44,11 +168,41 @@ events:
       [Introducing Claude Opus 4.7 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-7)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
   - year: 2026
+    date: 2026-03-17
+    title_ja: "GPT-5.4 mini / GPT-5.4 nano"
+    summary_ja: |
+      [GPT-5.4 mini と GPT-5.4 nano の発表 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
     date: 2026-03-05
     title_ja: "GPT-5.4 / GPT-5.4 Pro"
     summary_ja: |
       [GPT-5.4 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-4/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-03-03
+    title_ja: "GPT-5.3 Instant"
+    summary_ja: |
+      [GPT-5.3 Instant の API 提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2026
+    date: 2026-03-03
+    title_ja: "Gemini 3.1 Flash-Lite (Preview)"
+    summary_ja: |
+      [Gemini 3.1 Flash-Lite の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/)
+    tags: ["Google", "Gemini", "LLM Model"]
+  - year: 2026
+    date: 2026-02-26
+    title_ja: "Nano Banana 2 (Gemini 3.1 Flash Image Preview)"
+    summary_ja: |
+      [Nano Banana 2 の発表 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Nano Banana", "Image Model"]
+  - year: 2026
+    date: 2026-02-19
+    title_ja: "Gemini 3.1 Pro (Preview)"
+    summary_ja: |
+      [Gemini 3.1 Pro の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/)
+    tags: ["Google", "Gemini", "LLM Model"]
   - year: 2026
     date: 2026-02-17
     title_ja: "Claude Sonnet 4.6"
@@ -99,7 +253,7 @@ events:
     tags: ["Google", "Nano Banana", "Image Model"]
   - year: 2025
     date: 2025-11-19
-    title_ja: "GPT-5.1-Codex"
+    title_ja: "GPT-5.1-Codex-Max"
     summary_ja: |
       [GPT-5.1-Codex-Max で広がる可能性 | OpenAI](https://openai.com/ja-JP/index/gpt-5-1-codex-max/)
     tags: ["OpenAI", "GPT", "Codex", "LLM Model"]
@@ -126,31 +280,31 @@ events:
     title_ja: "Claude Haiku 4.5"
     summary_ja: |
       [Introducing Claude Haiku 4.5 \ Anthropic](https://www.anthropic.com/news/claude-haiku-4-5)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
   - year: 2025
     date: 2025-09-30
     title_ja: "Claude Sonnet 4.5"
     summary_ja: |
       [Introducing Claude Sonnet 4.5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-5)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2025
-    date: 2025-11-19
-    title_ja: "Nano Banana Pro (Gemini 2.5 Flash Image)"
+    date: 2025-08-26
+    title_ja: "Nano Banana (Gemini 2.5 Flash Image)"
     summary_ja: |
       [最先端の画像処理モデル Gemini 2.5 Flash Image のご紹介 - Google Developers Blog](https://developers.googleblog.com/ja/introducing-gemini-2-5-flash-image/)
     tags: ["Google", "Nano Banana", "Image Model"]
-  - year: 2025
-    date: 2025-08-06
-    title_ja: "Claude Opus 4.1"
-    summary_ja: |
-      [Claude Opus 4.1 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-1)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
   - year: 2025
     date: 2025-08-07
     title_ja: "GPT-5 (thinking, Pro)"
     summary_ja: |
       [GPT-5 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+  - year: 2025
+    date: 2025-08-06
+    title_ja: "Claude Opus 4.1"
+    summary_ja: |
+      [Claude Opus 4.1 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-1)
+    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
   - year: 2025
     date: 2025-08-05
     title_ja: "gpt-oss (20b, 120b)"
@@ -168,7 +322,7 @@ events:
     title_ja: "Claude Code (GA)"
     summary_ja: |
       [Release Claude Code 1.0.0 with general availability · anthropics/claude-code@6f27711](https://github.com/anthropics/claude-code/pull/1227)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude Code", "Agent"]
   - year: 2025
     date: 2025-05-23
     title_ja: "Claude Opus 4"
@@ -180,7 +334,7 @@ events:
     title_ja: "Claude Sonnet 4"
     summary_ja: |
       [Introducing Claude 4 \ Anthropic](https://www.anthropic.com/news/claude-4)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2025
     date: 2025-05-21
     title_ja: "Gemini 2.5 Pro"
@@ -216,7 +370,7 @@ events:
     title_ja: "Claude Sonnet 3.7"
     summary_ja: |
       [Claude 3.7 Sonnet and Claude Code \ Anthropic](https://www.anthropic.com/news/claude-3-7-sonnet)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2025
     date: 2025-02-25
     title_ja: "Claude Code (Research Preview)"
@@ -228,7 +382,7 @@ events:
     title_ja: "Gemini 2.0 Flash / Flash-Lite / Pro Experimental"
     summary_ja: |
       [Gemini 2.0 model updates: 2.0 Flash, Flash-Lite, Pro Experimental](https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/)
-    tags: ["OpenAI", "GPT", "LLM Model"]
+    tags: ["Google", "Gemini", "LLM Model"]
   - year: 2025
     date: 2025-01-31
     title_ja: "OpenAI o3-mini"
@@ -258,49 +412,49 @@ events:
     title_ja: "Claude Sonnet 3.5"
     summary_ja: |
       [Introducing Claude 3.5 Sonnet \ Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
   - year: 2024
     date: 2024-05-08
     title_ja: "Gemini 1.5 Pro / Flash"
     summary_ja: |
       [Google Gemini updates: Flash 1.5, Gemma 2 and Project Astra](https://blog.google/innovation-and-ai/products/google-gemini-update-flash-ai-assistant-io-2024/#gemini-model-updates)
-    tags: ["OpenAI", "GPT", "LLM Model"]
+    tags: ["Google", "Gemini", "LLM Model"]
   - year: 2024
     date: 2024-03-14
-    title_ja: "Claude Sonnet 3 Haiku"
+    title_ja: "Claude 3 Haiku"
     summary_ja: |
       [Claude 3 Haiku: our fastest model yet \ Anthropic](https://www.anthropic.com/news/claude-3-haiku)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
   - year: 2023
     date: 2023-12-06
     title_ja: "Gemini"
     summary_ja: |
       [Introducing Gemini: Google’s most capable AI model yet](https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/)
-    tags: ["OpenAI", "GPT", "LLM Model"]
+    tags: ["Google", "Gemini", "LLM Model"]
   - year: 2023
     date: 2023-11-21
     title_ja: "Claude 2.1"
     summary_ja: |
       [Introducing Claude 2.1 \ Anthropic](https://www.anthropic.com/news/claude-2-1)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "LLM Model"]
   - year: 2023
     date: 2023-08-09
     title_ja: "Claude Instant 1.2"
     summary_ja: |
       [Releasing Claude Instant 1.2 \ Anthropic](https://www.anthropic.com/news/releasing-claude-instant-1-2)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "LLM Model"]
   - year: 2023
     date: 2023-07-11
     title_ja: "Claude 2"
     summary_ja: |
       [Claude 2 \ Anthropic](https://www.anthropic.com/news/claude-2)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "LLM Model"]
   - year: 2023
     date: 2023-03-14
     title_ja: "Claude"
     summary_ja: |
       [Introducing Claude \ Anthropic](https://www.anthropic.com/news/introducing-claude)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "LLM Model"]
   - year: 2021
     date: 2021-03-25
     title_ja: "GPT-3"

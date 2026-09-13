@@ -25,7 +25,7 @@ function resolveTimelineIcon(tags?: string[]): string | null {
     normalized.includes("claude") ||
     normalized.includes("claude opus") ||
     normalized.includes("claude sonnet") ||
-    normalized.includes("claude hike")
+    normalized.includes("claude haiku")
   ) {
     return "material-icon-theme:claude";
   }

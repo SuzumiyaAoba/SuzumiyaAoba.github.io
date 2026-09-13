@@ -31,7 +31,7 @@ const TAG_ICON_MAP: Record<string, string> = {
   claude: "material-icon-theme:claude",
   "claude opus": "material-icon-theme:claude",
   "claude sonnet": "material-icon-theme:claude",
-  "claude hike": "material-icon-theme:claude",
+  "claude haiku": "material-icon-theme:claude",
   anthropic: "material-icon-theme:claude",
   codex: "logos:openai-icon",
   gpt: "logos:openai-icon",
