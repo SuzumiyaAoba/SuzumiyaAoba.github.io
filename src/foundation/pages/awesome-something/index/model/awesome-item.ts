@@ -29,6 +29,10 @@ const awesomeItemSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   name: textSchema,
   category: textSchema,
+  tags: z
+    .array(textSchema)
+    .nullish()
+    .transform((value) => [...new Set(value ?? [])]),
   description: textSchema,
   websiteUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
   githubUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),

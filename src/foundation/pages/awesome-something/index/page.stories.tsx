@@ -8,6 +8,7 @@ const items: AwesomeItem[] = [
     id: "example-library",
     name: "Example Library",
     category: "ライブラリ",
+    tags: ["TypeScript", "バリデーション"],
     description: "データの検証を扱うライブラリ。\n型の推論にも対応しています。",
     websiteUrl: "https://example.com/library/",
     githubUrl: "https://github.com/example/library",
@@ -21,6 +22,7 @@ const items: AwesomeItem[] = [
     id: "example-service",
     name: "Example Service",
     category: "サービス",
+    tags: ["ナレッジ管理"],
     description: "日々の発見やアイデアをまとめるサービス。",
     websiteUrl: "https://example.com/service/",
     articles: [],
@@ -30,6 +32,7 @@ const items: AwesomeItem[] = [
     id: "example-framework",
     name: "Example Framework",
     category: "フレームワーク",
+    tags: ["TypeScript", "Web開発"],
     description: "Web アプリケーションを構築するためのフレームワーク。",
     githubUrl: "https://github.com/example/framework",
     articles: [],
@@ -39,6 +42,7 @@ const items: AwesomeItem[] = [
     id: "example-app",
     name: "Example App",
     category: "アプリケーション",
+    tags: [],
     description: "見つけたばかりのアプリケーション。リンクは後で追記。",
     articles: [],
     relatedPosts: [],
@@ -59,6 +63,10 @@ export const Japanese: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const library = within(canvas.getByRole("article", { name: "Example Library" }));
+    const tags = within(library.getByRole("list", { name: "タグ" }));
+    await expect(tags.getAllByRole("listitem")).toHaveLength(2);
+    await expect(tags.getByText("TypeScript")).toBeVisible();
+    await expect(tags.getByText("バリデーション")).toBeVisible();
     await expect(library.getByRole("link", { name: "公式サイト" })).toHaveAttribute(
       "href",
       "https://example.com/library/",
@@ -76,6 +84,7 @@ export const Japanese: Story = {
       "/blog/post/example-library/",
     );
     const app = within(canvas.getByRole("article", { name: "Example App" }));
+    await expect(app.queryByRole("list", { name: "タグ" })).not.toBeInTheDocument();
     await expect(app.queryAllByRole("link")).toHaveLength(0);
     await expect(app.queryAllByRole("heading", { level: 4 })).toHaveLength(0);
   },
@@ -86,10 +95,23 @@ export const English: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("status")).toHaveTextContent("4 of 4 items");
+    const library = within(canvas.getByRole("article", { name: "Example Library" }));
+    await expect(library.getByRole("list", { name: "Tags" })).toHaveTextContent("TypeScript");
     await expect(canvas.getByRole("link", { name: "試してみた記録" })).toHaveAttribute(
       "href",
       "/blog/post/example-library/",
     );
+    await userEvent.type(
+      canvas.getByRole("searchbox", { name: "Search by name, description, category, or tag" }),
+      "typescript",
+    );
+    await expect(canvas.getByRole("status")).toHaveTextContent("2 of 4 items");
+    await userEvent.click(library.getByRole("button", { name: "TypeScript" }));
+    const clearTag = canvas.getByRole("button", { name: "Clear tag filter: TypeScript" });
+    await expect(clearTag).toBeVisible();
+    await userEvent.click(clearTag);
+    await expect(canvas.getByRole("searchbox")).toHaveValue("typescript");
+    await expect(canvas.getByRole("status")).toHaveTextContent("2 of 4 items");
   },
 };
 
@@ -117,6 +139,18 @@ export const Filtering: Story = {
     await userEvent.type(search, "  ＥＸＡＭＰＬＥ  検証  ");
     await expect(canvas.getAllByRole("article")).toHaveLength(1);
     await expect(canvas.getByRole("article", { name: "Example Library" })).toBeVisible();
+
+    await userEvent.clear(search);
+    await userEvent.type(search, "ｔｙｐｅｓｃｒｉｐｔ");
+    await expect(canvas.getAllByRole("article")).toHaveLength(2);
+    await userEvent.click(canvas.getByRole("button", { name: "フレームワーク" }));
+    await expect(canvas.getAllByRole("article")).toHaveLength(1);
+    await expect(canvas.getByRole("article", { name: "Example Framework" })).toBeVisible();
+
+    await userEvent.click(canvas.getByRole("button", { name: "絞り込みを解除" }));
+    await userEvent.type(search, "TypeScript バリデーション");
+    await expect(canvas.getAllByRole("article")).toHaveLength(1);
+    await expect(canvas.getByRole("article", { name: "Example Library" })).toBeVisible();
   },
 };
 
@@ -129,6 +163,74 @@ export const Empty: Story = {
   },
 };
 
+export const TagFiltering: Story = {
+  args: {
+    items: items.map((item) =>
+      item.id === "example-service"
+        ? {
+            ...item,
+            tags: [...item.tags, "TypeScript入門"],
+            description: "TypeScript のサービス。",
+          }
+        : item,
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const search = canvas.getByRole("searchbox");
+    const libraryTag = () =>
+      within(canvas.getByRole("article", { name: "Example Library" })).getByRole("button", {
+        name: "TypeScript",
+      });
+
+    await userEvent.click(libraryTag());
+    await expect(canvas.getAllByRole("article")).toHaveLength(2);
+    await expect(canvas.getByRole("status")).toHaveTextContent("4 件中 2 件を表示");
+    for (const button of canvas.getAllByRole("button", { name: "TypeScript" })) {
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+    }
+
+    await userEvent.click(canvas.getByRole("button", { name: "ライブラリ" }));
+    await expect(canvas.getAllByRole("article")).toHaveLength(1);
+    await userEvent.type(search, "service");
+    await expect(canvas.queryAllByRole("article")).toHaveLength(0);
+    await expect(canvas.getByText("条件に一致する項目がありません。")).toBeVisible();
+    await userEvent.click(
+      canvas.getByRole("button", { name: "タグ「TypeScript」の絞り込みを解除" }),
+    );
+    await expect(search).toHaveValue("service");
+    await expect(canvas.getByRole("button", { name: "ライブラリ" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(canvas.queryAllByRole("article")).toHaveLength(0);
+
+    await userEvent.click(canvas.getByRole("button", { name: "絞り込みを解除" }));
+    await expect(canvas.getAllByRole("article")).toHaveLength(4);
+    await userEvent.click(libraryTag());
+    await userEvent.keyboard(" ");
+    await expect(canvas.getAllByRole("article")).toHaveLength(4);
+    await expect(libraryTag()).toHaveAttribute("aria-pressed", "false");
+
+    await userEvent.click(libraryTag());
+    await userEvent.click(canvas.getByRole("button", { name: "Web開発" }));
+    await expect(canvas.getAllByRole("article")).toHaveLength(1);
+    await expect(canvas.getByRole("article", { name: "Example Framework" })).toBeVisible();
+    await expect(canvas.getByRole("button", { name: "Web開発" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(canvas.getByRole("button", { name: "TypeScript" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "絞り込みを解除" }));
+    await expect(canvas.getAllByRole("article")).toHaveLength(4);
+    await expect(search).toHaveValue("");
+    await expect(libraryTag()).toHaveAttribute("aria-pressed", "false");
+  },
+};
+
 export const LongContent: Story = {
   args: {
     items: [
@@ -136,6 +238,7 @@ export const LongContent: Story = {
         ...items[0]!,
         name: "A library with a long name for everyday development and experimentation",
         category: "開発・データ分析・ワークフローの自動化に関するツール",
+        tags: ["TypeScript", "開発ワークフローの自動化とデータの検証", "long-tag-".repeat(15)],
         articles: [{ url: `https://example.com/articles/${"long-path-".repeat(20)}` }],
       },
       ...items.slice(1),

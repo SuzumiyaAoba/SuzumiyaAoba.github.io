@@ -1,10 +1,11 @@
 "use client";
 
 import { useId, useRef, useState, type ReactNode } from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import type { AwesomeItem, AwesomeLink } from "../model/awesome-item";
 import type { Locale } from "@/shared/lib/routing";
 import { Input } from "@/shared/ui/input";
+import { Tag } from "@/shared/ui/tag";
 
 function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
   const external = !url.startsWith("/");
@@ -42,8 +43,9 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const isEnglish = locale === "en";
-  const hasFilters = query.length > 0 || category !== null;
+  const hasFilters = query.length > 0 || category !== null || selectedTag !== null;
   const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase(locale);
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
   const categories = new Map<string, AwesomeItem[]>();
@@ -57,7 +59,10 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
     .map(([name, categoryItems]) => ({
       name,
       items: categoryItems.filter((item) => {
-        const text = normalize([item.name, item.category, item.description].join(" "));
+        if (selectedTag !== null && !item.tags.includes(selectedTag)) return false;
+        const text = normalize(
+          [item.name, item.category, ...item.tags, item.description].join(" "),
+        );
         return terms.every((term) => text.includes(term));
       }),
     }))
@@ -79,8 +84,8 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
           <search className="relative w-full sm:max-w-sm">
             <label htmlFor={searchId} className="sr-only">
               {isEnglish
-                ? "Search by name, description, or category"
-                : "名称・説明・カテゴリで検索"}
+                ? "Search by name, description, category, or tag"
+                : "名称・説明・カテゴリ・タグで検索"}
             </label>
             <Search
               className="pointer-events-none absolute left-0 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -92,7 +97,9 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder={isEnglish ? "Search by name or category…" : "名称・カテゴリで検索…"}
+              placeholder={
+                isEnglish ? "Search by name, category, or tag…" : "名称・カテゴリ・タグで検索…"
+              }
               className="rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0"
             />
           </search>
@@ -109,6 +116,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                 onClick={() => {
                   setQuery("");
                   setCategory(null);
+                  setSelectedTag(null);
                   inputRef.current?.focus();
                 }}
               >
@@ -141,6 +149,24 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
             </button>
           ))}
         </fieldset>
+        {selectedTag !== null && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="shrink-0">{isEnglish ? "Tag:" : "タグ:"}</span>
+            <button
+              type="button"
+              aria-label={
+                isEnglish
+                  ? `Clear tag filter: ${selectedTag}`
+                  : `タグ「${selectedTag}」の絞り込みを解除`
+              }
+              onClick={() => setSelectedTag(null)}
+              className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span className="min-w-0 break-words">{selectedTag}</span>
+              <X className="size-3.5 shrink-0" aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </div>
 
       {filteredCount === 0 ? (
@@ -197,6 +223,30 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                         <p className="whitespace-pre-line break-words text-sm leading-7 text-muted-foreground">
                           {item.description}
                         </p>
+                        {item.tags.length > 0 && (
+                          <ul
+                            aria-label={isEnglish ? "Tags" : "タグ"}
+                            className="flex flex-wrap gap-2"
+                          >
+                            {item.tags.map((tag) => (
+                              <li key={tag} className="min-w-0 max-w-full">
+                                <button
+                                  type="button"
+                                  aria-pressed={selectedTag === tag}
+                                  onClick={() =>
+                                    setSelectedTag((current) => (current === tag ? null : tag))
+                                  }
+                                  className="group inline-flex min-h-9 max-w-full items-center rounded-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                >
+                                  <Tag
+                                    tag={tag}
+                                    className="max-w-full bg-muted py-1 text-[11px] font-medium text-muted-foreground group-hover:bg-accent group-hover:text-accent-foreground group-aria-pressed:bg-foreground group-aria-pressed:text-background [&>span]:min-w-0 [&>span]:break-words"
+                                  />
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                         <ArticleLinks
                           title={isEnglish ? "Articles" : "紹介記事"}
                           links={item.articles}

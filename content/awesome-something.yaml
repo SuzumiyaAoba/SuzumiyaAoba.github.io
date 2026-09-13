@@ -6,6 +6,7 @@
 #   - id: example-tool
 #     name: Example Tool
 #     category: アプリケーション
+#     tags: [CLI, 自動化]
 #     description: 日々の作業を少し便利にするツール。
 #     websiteUrl: https://example.com/
 #     githubUrl: https://github.com/example/example-tool
@@ -18,56 +19,67 @@
 #         url: /blog/post/example-tool/
 #
 # category は自由に指定できます（例: サービス、ライブラリ、フレームワーク、アプリケーション）。
-# URL と記事リストは省略できます。id は重複しない英小文字・数字・ハイフンにします。
+# tags は用途・技術・特徴を表す文字列のリストです。記載順に表示され、検索にも使えます。
+# タグ・URL・記事リストは省略できます。id は重複しない英小文字・数字・ハイフンにします。
 items:
   - id: tradingagents
     name: TradingAgents
     category: 金融・投資
+    tags: [AIエージェント, マルチエージェント, 市場分析]
     description: 複数の AI エージェントが市場分析・投資判断・リスク管理を分担する、研究向けの金融取引フレームワーク。
     githubUrl: https://github.com/TauricResearch/TradingAgents
   - id: librechat
     name: LibreChat
     category: AIチャット
+    tags: [LLM, チャット, セルフホスト]
     description: GPT・Claude・Gemini など複数の AI モデルを、一つのインターフェースで切り替えて利用できるチャットアプリ。セルフホストにも対応。
     githubUrl: https://github.com/danny-avila/LibreChat
   - id: hyperframes
     name: HyperFrames
     category: 動画生成
+    tags: [HTML, CSS, アニメーション]
     description: HeyGen が公開するオープンソースの動画生成フレームワーク。HTML・CSS・アニメーションから MP4 動画を生成できる。
     githubUrl: https://github.com/heygen-com/hyperframes
   - id: fincept-terminal
     name: Fincept Terminal
     category: 金融・投資
+    tags: [市場分析, 経済データ, リサーチ]
     description: 市場分析・投資調査・経済データの閲覧をまとめて行える金融ターミナル。
     githubUrl: https://github.com/Fincept-Corporation/FinceptTerminal
   - id: moneyprinterturbo
     name: MoneyPrinterTurbo
     category: 動画生成
+    tags: [生成AI, 自動化, ショート動画]
     description: テーマやキーワードを指定すると、AI と自動化ワークフローで短編動画をワンクリック生成できるツール。
     githubUrl: https://github.com/harry0703/MoneyPrinterTurbo
   - id: agentic-inbox
     name: Agentic Inbox
     category: メール
+    tags: [AIエージェント, Cloudflare Workers, セルフホスト]
     description: Cloudflare Workers 上で動作する、AI エージェント搭載のセルフホスト型メールクライアント。受信メールの確認・会話の検索・返信の下書きを支援する。
     githubUrl: https://github.com/cloudflare/agentic-inbox
   - id: voxcpm
     name: VoxCPM
     category: 音声生成
+    tags: [音声合成, ボイスクローニング, 生成AI]
     description: テキストからの音声合成と、参照音声を使った声のクローニングに対応する AI 音声生成モデル。
     githubUrl: https://github.com/OpenBMB/VoxCPM
   - id: flowsint
     name: Flowsint
     category: OSINT
+    tags: [情報収集, グラフ, 可視化]
     description: 公開情報を収集・分析し、対象間の関係をグラフで可視化できる OSINT 調査ツール。
     githubUrl: https://github.com/reconurge/flowsint
   - id: agent-skills
     name: agent-skills
     category: 開発ツール
+    tags: [AIコーディング, スキル, Claude Code]
     description: Claude Code などの AI コーディングエージェント向けスキル集。設計・実装・テスト・レビューなど、開発工程の手順やベストプラクティスをまとめている。
     githubUrl: https://github.com/addyosmani/agent-skills
   - id: spec-kit
     name: Spec Kit
     category: 開発ツール
+    tags: [AIコーディング, 仕様駆動開発, GitHub]
     description: GitHub が公開する仕様駆動開発のためのツールキット。AI コーディングエージェントと連携し、仕様作成・実装計画・タスク分解・実装を段階的に進められる。
     githubUrl: https://github.com/github/spec-kit
     relatedPosts:
@@ -76,6 +88,7 @@ items:
   - id: nango
     name: Nango
     category: API連携
+    tags: [API, 認証, データ同期]
     description: 外部サービスとの API 連携を構築・運用するためのプラットフォーム。認証・トークン更新・データ同期などを支援する。
     githubUrl: https://github.com/NangoHQ/nango
 
@@ -83,46 +96,55 @@ items:
   - id: claude-mem
     name: Grok Mem（旧 Claude-Mem）
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, コンテキスト管理]
     description: コーディングエージェントの作業を自動記録・要約し、編集内容や設計判断を次のセッションへ引き継ぐ永続メモリ。
     githubUrl: https://github.com/thedotmack/claude-mem
   - id: mem0
     name: Mem0
     category: AIメモリ
+    tags: [永続メモリ, パーソナライズ, 検索]
     description: 会話やイベントから事実・好みを抽出し、ユーザーやエージェントごとに追加・検索・更新・削除できるメモリ基盤。
     githubUrl: https://github.com/mem0ai/mem0
   - id: openviking
     name: OpenViking
     category: AIメモリ
+    tags: [コンテキスト管理, ナレッジ管理, ファイルシステム]
     description: 文書・会話・記憶・スキルを仮想ファイルシステムにまとめるコンテキストデータベース。階層的な要約と検索で必要な情報を取り出す。
     githubUrl: https://github.com/volcengine/OpenViking
   - id: graphiti
     name: Graphiti（Zep）
     category: AIメモリ
+    tags: [知識グラフ, 時系列, 検索]
     description: 会話やイベントから時間情報付きの知識グラフを構築するライブラリ。事実の変化と出典を保持し、意味検索・キーワード検索・関係探索を組み合わせる。
     githubUrl: https://github.com/getzep/graphiti
   - id: cognee
     name: Cognee
     category: AIメモリ
+    tags: [永続メモリ, 知識グラフ, ベクトル検索]
     description: 文書・コード・会話を知識グラフとベクトル索引へ変換し、エージェントがセッションを越えて検索・再利用できるメモリ基盤。
     githubUrl: https://github.com/topoteretes/cognee
   - id: supermemory
     name: Supermemory
     category: AIメモリ
+    tags: [永続メモリ, パーソナライズ, コンテキスト管理]
     description: 会話・URL・ファイルから事実やユーザープロファイルを構築し、複数のアプリやエージェントへ検索可能な長期コンテキストを提供する。
     githubUrl: https://github.com/supermemoryai/supermemory
   - id: agentmemory
     name: agentmemory
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, MCP, API]
     description: 複数のコーディングエージェントの編集・コマンド・判断を取り込み、圧縮して共有するメモリサーバー。MCP や REST API から利用できる。
     githubUrl: https://github.com/rohitg00/agentmemory
   - id: tencentdb-agent-memory
     name: TencentDB Agent Memory
     category: AIメモリ
+    tags: [ナレッジ管理, スキル, Wiki, アクセス制御]
     description: 会話記憶・スキル・Wiki・CodeGraph をチームの共有資産として管理するメモリ基盤。権限やバージョンを管理し、エージェントごとに必要な知識を提供する。
     githubUrl: https://github.com/TencentCloud/TencentDB-Agent-Memory
   - id: letta
     name: Letta / MemGPT
     category: AIメモリ
+    tags: [永続メモリ, AIエージェント, スキル]
     description: エージェントが記憶やスキルを自ら更新し、複数セッションにわたって状態を維持する基盤。MemGPT の系譜を継ぎ、現行実装は Letta Code として公開。
     githubUrl: https://github.com/letta-ai/letta-code
     articles:
@@ -133,61 +155,73 @@ items:
   - id: hindsight
     name: Hindsight
     category: AIメモリ
+    tags: [永続メモリ, 経験学習, パーソナライズ]
     description: 観測の保持・想起・内省を通じて、経験から事実や信念を更新するエージェントメモリ。ユーザーやエージェントごとの記憶領域を管理できる。
     githubUrl: https://github.com/vectorize-io/hindsight
   - id: context-mode
     name: Context Mode
     category: AIメモリ
+    tags: [AIコーディング, コンテキスト管理, 検索]
     description: コーディングエージェントの大量のツール出力を隔離・検索し、必要な情報をコンテキストに取り込むツール。作業状態を保存してセッションの継続を支援する。
     githubUrl: https://github.com/mksglu/context-mode
   - id: second-me
     name: Second Me
     category: AIメモリ
+    tags: [ローカルLLM, ファインチューニング, パーソナライズ]
     description: 個人の文書や対話を使ってローカルの言語モデルを学習し、好みや人物像を反映した AI を作るプロジェクト。モデルの重みに個人情報を取り込む方式を採用する。
     githubUrl: https://github.com/mindverse/Second-Me
   - id: memu
     name: MemU
     category: AIメモリ
+    tags: [ナレッジ管理, Wiki, Markdown, スキル]
     description: 個人の知識や作業手順を Wiki・Markdown のスキルとして蓄積し、複数のエージェントから検索・更新・共有できるメモリ基盤。
     githubUrl: https://github.com/NevaMind-AI/memU
   - id: everos
     name: EverOS
     category: AIメモリ
+    tags: [永続メモリ, ローカルファースト, Markdown, Git]
     description: 会話・ファイル・エージェントの経験を Markdown として保存するローカル中心のメモリ基盤。人間による編集や Git 管理と、検索索引を組み合わせられる。
     githubUrl: https://github.com/EverMind-AI/EverOS
   - id: memos
     name: MemOS
     category: AIメモリ
+    tags: [永続メモリ, スキル, コンテキスト管理]
     description: 会話・文書・ツールの実行履歴・スキルを統一的に扱うメモリ基盤。Memory Cube による記憶の分離と、バックグラウンドでの整理・更新に対応する。
     githubUrl: https://github.com/MemTensor/MemOS
   - id: honcho
     name: Honcho
     category: AIメモリ
+    tags: [パーソナライズ, 対話, ユーザープロファイル]
     description: 人間や AI を対話の参加者としてモデル化し、継続的な会話から人物像や関係性を推論するメモリ基盤。長期的なユーザー理解を支援する。
     githubUrl: https://github.com/plastic-labs/honcho
   - id: engram
     name: Engram
     category: AIメモリ
+    tags: [永続メモリ, Go, SQLite, MCP, CLI]
     description: Go の単一バイナリと SQLite で動作する、コーディングエージェント向け永続メモリ。設計判断やバグ修正の学びを保存し、MCP・HTTP・CLI から検索できる。
     githubUrl: https://github.com/Gentleman-Programming/engram
   - id: byterover-cli
     name: ByteRover CLI
     category: AIメモリ
+    tags: [AIコーディング, コンテキスト管理, ナレッジ共有, バージョン管理]
     description: コードベースの知識をコンテキストツリーとして整理するメモリツール。Git に似た分岐・変更履歴・統合の操作で、複数のエージェントやチーム間の知識共有を支援する。
     githubUrl: https://github.com/campfirein/byterover-cli
   - id: longmemory
     name: LongMemory（旧 OpenMemory）
     category: AIメモリ
+    tags: [永続メモリ, ローカルファースト, コンテキスト管理]
     description: 会話・文書・スキル・コード知識をローカルに保存するメモリエンジン。時間情報と出典を保持し、トークン予算に応じたコンテキストを組み立てる。
     githubUrl: https://github.com/CaviraOSS/LongMemory
   - id: basic-memory
     name: Basic Memory
     category: AIメモリ
+    tags: [Markdown, ナレッジ管理, MCP]
     description: 人間と AI が同じ Markdown ノートを読み書きするメモリツール。Wiki リンクから知識の関係を構築し、MCP を通じて検索・更新できる。
     githubUrl: https://github.com/basicmachines-co/basic-memory
   - id: mirix
     name: MIRIX
     category: AIメモリ
+    tags: [マルチモーダル, マルチエージェント, パーソナライズ]
     description: テキスト・画像・音声・画面の活動から個人の記憶を構築するマルチエージェントシステム。出来事・事実・手順などの記憶を種類別に管理・整理する。
     githubUrl: https://github.com/Mirix-AI/MIRIX
     articles:
@@ -196,26 +230,31 @@ items:
   - id: memmachine
     name: MemMachine
     category: AIメモリ
+    tags: [永続メモリ, グラフ, SQL, MCP]
     description: エピソード記憶・ユーザープロファイル・作業記憶を分けて扱う汎用メモリ基盤。グラフと SQL を組み合わせ、API・SDK・MCP から利用できる。
     githubUrl: https://github.com/MemMachine/MemMachine
   - id: memobase
     name: Memobase
     category: AIメモリ
+    tags: [パーソナライズ, ユーザープロファイル, チャット]
     description: 会話から構造化されたユーザープロファイルとイベント履歴を作るメモリバックエンド。チャットアプリの個人化に必要な属性や好みを管理する。
     githubUrl: https://github.com/memodb-io/memobase
   - id: mcp-memory-service
     name: MCP Memory Service
     category: AIメモリ
+    tags: [永続メモリ, MCP, セルフホスト, 知識グラフ]
     description: MCP と REST API を備えるセルフホスト可能な永続メモリサービス。意味検索・知識グラフ・記憶の整理を通じて複数のエージェントで情報を共有する。
     githubUrl: https://github.com/doobidoo/mcp-memory-service
   - id: langmem
     name: LangMem
     category: AIメモリ
+    tags: [永続メモリ, SDK, LangGraph, プロンプト最適化]
     description: 会話からの記憶抽出・統合・更新と、プロンプト改善を組み込むための SDK。LangGraph の Store と連携し、会話中やバックグラウンドで記憶を管理する。
     githubUrl: https://github.com/langchain-ai/langmem
   - id: langgraph
     name: LangGraph
     category: AIフレームワーク
+    tags: [AIエージェント, ワークフロー, 状態管理, 永続メモリ]
     description: エージェントの状態や処理フローを管理するフレームワーク。チェックポイントによる再開と、スレッドを越えた長期記憶用の Store を提供する。
     githubUrl: https://github.com/langchain-ai/langgraph
     articles:
@@ -224,6 +263,7 @@ items:
   - id: langchain
     name: LangChain
     category: AIフレームワーク
+    tags: [AIエージェント, LLM, LangGraph, 永続メモリ]
     description: モデル・ツール・検索を組み合わせて AI エージェントを構築するフレームワーク。LangGraph の保存機構と連携し、会話状態や長期記憶をアプリへ組み込める。
     githubUrl: https://github.com/langchain-ai/langchain
     articles:
@@ -232,6 +272,7 @@ items:
   - id: llamaindex
     name: LlamaIndex
     category: AIフレームワーク
+    tags: [AIエージェント, 文書処理, 検索, コンテキスト管理]
     description: 文書処理・検索・エージェント構築を支援するフレームワーク。Chat Store に会話履歴を保存し、Memory と組み合わせて対話の文脈を管理できる。
     githubUrl: https://github.com/run-llama/llama_index
     articles:
@@ -240,6 +281,7 @@ items:
   - id: autogen
     name: AutoGen
     category: AIフレームワーク
+    tags: [マルチエージェント, 永続メモリ, コンテキスト管理]
     description: 複数の AI エージェントを連携させるフレームワーク。Memory インターフェースを通じて、検索結果や外部ストアの情報をモデルの文脈へ追加できる。
     githubUrl: https://github.com/microsoft/autogen
     articles:
@@ -248,6 +290,7 @@ items:
   - id: crewai
     name: CrewAI
     category: AIフレームワーク
+    tags: [マルチエージェント, ワークフロー, 永続メモリ]
     description: 役割を持つ AI エージェントを組み合わせ、タスクやワークフローを実行するフレームワーク。記憶や知識をエージェントの作業へ統合できる。
     githubUrl: https://github.com/crewAIInc/crewAI
     articles:
@@ -256,6 +299,7 @@ items:
   - id: semantic-kernel
     name: Semantic Kernel
     category: AIフレームワーク
+    tags: [LLM, SDK, ベクトル検索, RAG]
     description: LLM・ツール・エージェントをアプリに組み込む SDK。Vector Store の抽象化とコネクタを備え、データの永続化や RAG を構築できる。
     githubUrl: https://github.com/microsoft/semantic-kernel
     articles:
@@ -264,6 +308,7 @@ items:
   - id: generative-agents
     name: Generative Agents
     category: AI研究
+    tags: [AIエージェント, シミュレーション, 永続メモリ, 経験学習]
     description: 自然言語で蓄積した経験を、新しさ・重要度・関連性から検索するエージェントシミュレーション。記憶の内省を行動計画へつなげる研究の実装。
     githubUrl: https://github.com/joonspk-research/generative_agents
     articles:
@@ -272,6 +317,7 @@ items:
   - id: memorybank
     name: MemoryBank
     category: AI研究
+    tags: [永続メモリ, パーソナライズ, 対話]
     description: 長期対話からユーザー像を形成するメモリ機構。忘却曲線に着想を得た時間減衰と、重要な記憶の強化を組み合わせる研究。
     githubUrl: https://github.com/zhongwanjun/MemoryBank-SiliconFriend
     articles:
@@ -280,6 +326,7 @@ items:
   - id: longmem
     name: LongMem
     category: AI研究
+    tags: [LLM, 永続メモリ, コンテキスト管理]
     description: 固定した言語モデルと学習可能な補助ネットワークを組み合わせ、外部メモリに保存した過去の文脈を検索・利用する長期記憶の研究実装。
     githubUrl: https://github.com/Victorwz/LongMem
     articles:
@@ -288,6 +335,7 @@ items:
   - id: hipporag
     name: HippoRAG
     category: AI研究
+    tags: [RAG, 知識グラフ, 検索]
     description: 人間の長期記憶に着想を得た RAG フレームワーク。知識グラフと Personalized PageRank を使い、複数の文書にまたがる関係を検索する。
     githubUrl: https://github.com/OSU-NLP-Group/HippoRAG
     articles:
@@ -296,6 +344,7 @@ items:
   - id: a-mem
     name: A-MEM
     category: AI研究
+    tags: [永続メモリ, Zettelkasten, ナレッジ管理]
     description: Zettelkasten に着想を得たエージェントメモリ。構造化ノートと動的なリンクを作り、新しい記憶に応じて既存の記憶の文脈も更新する。
     githubUrl: https://github.com/agiresearch/A-mem
     articles:
@@ -304,6 +353,7 @@ items:
   - id: simplemem
     name: SimpleMem
     category: AI研究
+    tags: [永続メモリ, コンテキスト圧縮, 検索]
     description: 会話を構造化・圧縮して記憶を統合し、質問に応じて必要な情報を取り出す長期メモリ。記憶の情報密度と検索時のトークン効率を重視する。
     githubUrl: https://github.com/aiming-lab/SimpleMem
     articles:
@@ -312,6 +362,7 @@ items:
   - id: mindmemos
     name: MindMemOS
     category: AI研究
+    tags: [永続メモリ, スキル, 経験学習]
     description: 対象・属性・時間を構造化し、記憶のスキーマやスキル自体を更新するメモリ基盤の研究。バックグラウンドでの重複・矛盾整理と経験の再利用を扱う。
     articles:
       - title: MindMemOS 論文
@@ -319,243 +370,601 @@ items:
   - id: memorybear
     name: MemoryBear
     category: AIメモリ
+    tags: [永続メモリ, AIエージェント, ナレッジ管理]
     description: 生物の記憶に着想を得て、情報の抽出・関連付け・整理・忘却を行うエージェント向けメモリ基盤。
     githubUrl: https://github.com/SuanmoSuanyangTechnology/MemoryBear
   - id: memory-lancedb-pro
     name: memory-lancedb-pro
     category: AIメモリ
+    tags: [OpenClaw, LanceDB, ベクトル検索, ハイブリッド検索]
     description: OpenClaw 向けの LanceDB メモリプラグイン。ベクトル検索と BM25、再ランキング、用途ごとの記憶の分離を組み合わせる。
     githubUrl: https://github.com/CortexReach/memory-lancedb-pro
   - id: powercontext
     name: PowerContext（旧 PowerMem）
     category: AIメモリ
+    tags: [コンテキスト管理, ナレッジ共有, スキル]
     description: 人間とエージェントが作業を引き継ぐためのコンテキスト基盤。決定事項・進捗・根拠・次の作業を、記憶やスキルとともに保存・共有する。
     githubUrl: https://github.com/oceanbase/powercontext
   - id: puppyone
     name: Puppyone
     category: AIメモリ
+    tags: [AIエージェント, コンテキスト管理, ナレッジ管理]
     description: AI エージェント向けに文書や知識をまとめて提供するコンテキスト管理基盤。複数の情報源をエージェントが使える形で整理する。
     githubUrl: https://github.com/puppyone-ai/puppyone
   - id: mem9
     name: Mem9
     category: AIメモリ
+    tags: [永続メモリ, OpenClaw, API]
     description: OpenClaw などのエージェントに会話を越えた記憶を提供する基盤。記憶の保存・検索を API やプラグインから利用できる。
     githubUrl: https://github.com/mem9-ai/mem9
   - id: omnigraph
     name: Omnigraph
     category: データベース
+    tags: [グラフデータベース, ベクトル検索, 全文検索, バージョン管理]
     description: エージェント間で状態や知識を共有するグラフデータベース。グラフ・ベクトル・全文検索と、Git に似た分岐・統合による変更管理を備える。
     githubUrl: https://github.com/ModernRelay/omnigraph
   - id: codealmanac
     name: CodeAlmanac
     category: AIメモリ
+    tags: [AIコーディング, Wiki, ナレッジ管理]
     description: コードからは読み取りにくい設計判断・処理の流れ・制約・注意点を Wiki に蓄積し、コーディングエージェントへ提供する。
     githubUrl: https://github.com/AlmanacCode/codealmanac
   - id: agent-qa
     name: Agent QA
     category: 開発ツール
+    tags: [AIエージェント, テスト自動化, Web, モバイル]
     description: 自然言語で Web・モバイルのテストを記述できる QA エージェント。過去の実行結果を記憶し、画面変更への適応や回帰テストの改善に利用する。
     githubUrl: https://github.com/vostride/agent-qa
   - id: hms
     name: HMS（Holographic Memory System）
     category: AIメモリ
+    tags: [永続メモリ, 情報抽出, コンテキスト管理]
     description: 会話や文書から事実・関連する対象・イベントを抽出する長期メモリ。モデル呼び出しの前後に記憶の想起・保存を組み込める。
     githubUrl: https://github.com/Shadow-Weave/HMS
   - id: projectmem
     name: projectmem
     category: AIメモリ
+    tags: [永続メモリ, MCP, ローカルファースト, デバッグ]
     description: 問題・試行・修正・設計判断をローカルに記録する MCP メモリサーバー。過去に失敗した方法をエージェントが繰り返さないよう支援する。
     githubUrl: https://github.com/riponcm/projectmem
   - id: deja
     name: deja
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, Go, ローカルファースト]
     description: ディスク上の既存セッション履歴を取り込み、複数のコーディングエージェント間で修正方法や経験を共有するローカルメモリ。Go の単一バイナリで動作する。
     githubUrl: https://github.com/vshulcz/deja-vu
   - id: memorix
     name: Memorix
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, MCP, ナレッジ共有]
     description: MCP を通じて複数のコーディングエージェントへ共通の永続メモリを提供するツール。エージェントを切り替えてもプロジェクトの知識を引き継げる。
     githubUrl: https://github.com/AVIDS2/memorix
   - id: vestige
     name: Vestige
     category: AIメモリ
+    tags: [永続メモリ, 時系列, デバッグ]
     description: 過去の変更や設計判断を時間軸に沿って検索し、現在の障害につながった原因の発見を支援するエージェント向けメモリ。
     githubUrl: https://github.com/samvallad33/vestige
   - id: compartment
     name: Compartment
     category: AIメモリ
+    tags: [永続メモリ, 暗号化, オフライン, 可視化]
     description: 暗号化とオフライン動作に対応するエージェントメモリ。GUI のメモリマップで保存した情報を閲覧・管理できる。
     githubUrl: https://github.com/MaxFreedomPollard/Compartment
   - id: caura
     name: Caura（旧 MemClaw）
     category: AIメモリ
+    tags: [ナレッジ共有, アクセス制御, 知識グラフ]
     description: 複数のエージェントや組織で記憶を共有する基盤。アクセス範囲・信頼度・監査履歴を管理し、知識グラフと検索を通じて経験を再利用する。
     githubUrl: https://github.com/caura-ai/caura
   - id: misakanet
     name: MisakaNet
     category: AIメモリ
+    tags: [AIエージェント, デバッグ, Git, ナレッジ共有]
     description: 検証済みのデバッグ経験を短いメモとして Git に蓄積し、複数の AI エージェントが非同期に共有・検索するライブラリ。
     githubUrl: https://github.com/Ikalus1988/MisakaNet
   - id: statewave
     name: Statewave
     category: AIメモリ
+    tags: [コンテキスト管理, PostgreSQL, pgvector, セルフホスト]
     description: 出典付きのコンテキストを再現可能な単位で提供するエージェント向けメモリ基盤。PostgreSQL と pgvector 上でセルフホストし、SDK から利用できる。
     githubUrl: https://github.com/smaramwbc/statewave
   - id: mnemory
     name: Mnemory
     category: AIメモリ
+    tags: [永続メモリ, セルフホスト, 情報抽出]
     description: 会話から事実を抽出・重複排除するセルフホスト型メモリ。詳細なコンテンツを保存する領域も備え、AI エージェントやアシスタントから利用できる。
     githubUrl: https://github.com/fpytloun/mnemory
   - id: omega-memory
     name: OMEGA
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, ナレッジ管理]
     description: コーディングエージェントの経験やプロジェクトの知識を、セッションを越えて保存・検索する永続メモリ。
     githubUrl: https://github.com/omega-memory/omega-memory
   - id: remnic
     name: Remnic
     category: AIメモリ
+    tags: [永続メモリ, MCP, API, 検索]
     description: ユーザーや用途ごとに記憶を分離し、出典・訂正・検索品質を管理するメモリ基盤。MCP と HTTP からエージェントの文脈として利用できる。
     githubUrl: https://github.com/joshuaswarren/remnic
   - id: memov
     name: Memov
     category: AIメモリ
+    tags: [永続メモリ, AIコーディング, MCP, バージョン管理]
     description: コーディングエージェントの記憶を Git に似た履歴管理で追跡するメモリツール。MCP 経由で経験を共有し、スキルの継続的な改善を支援する。
     githubUrl: https://github.com/memovai/memov
   - id: belief-context-graph
     name: Belief Context Graph
     category: AI研究
+    tags: [グラフ, 推論, コンテキスト管理]
     description: 信頼度を持つ信念をグラフで管理し、長期タスクに必要な文脈を更新・追跡する研究プロジェクト。エージェントの推論に利用できる。
     githubUrl: https://github.com/bigai-nlco/belief-context-graph
   - id: commonground-kernel
     name: CommonGround Kernel
     category: AIフレームワーク
+    tags: [AIエージェント, 状態管理, ワークフロー, ナレッジ共有]
     description: 人間・エージェント・ツールの共有作業状態を永続化する基盤。依頼・引き継ぎ・成果・根拠を記録し、中断後や担当変更後の作業再開を支援する。
     githubUrl: https://github.com/Intelligent-Internet/CommonGround
   - id: taosmd
     name: taOSmd
     category: AIメモリ
+    tags: [永続メモリ, 知識グラフ, ハイブリッド検索, オフライン]
     description: 会話の原文アーカイブ・知識グラフ・複合検索を備えるローカルメモリ。オフラインで動作し、フレームワークを問わず記憶を利用できる。
     githubUrl: https://github.com/jaylfc/taosmd
   - id: causal-memory
     name: causal-memory
     category: AIメモリ
+    tags: [永続メモリ, MCP, 因果関係]
     description: 判断と結果の因果関係を記録する MCP メモリサーバー。コンテキストの圧縮後も過去の選択とその結果を参照できる。
     githubUrl: https://github.com/JingxuanC/causal-memory
   - id: synap
     name: Synap
     category: AIメモリ
+    tags: [永続メモリ, SDK, AIエージェント]
     description: 複数のエージェントフレームワークと連携する長期メモリ SDK。アプリに記憶の保存・検索を組み込み、セッションを越えた知識の再利用を支援する。
     githubUrl: https://github.com/maximem-ai/maximem_synap_sdk
   - id: wenlan
     name: Wenlan
     category: AIメモリ
+    tags: [AIエージェント, Wiki, ナレッジ管理]
     description: AI エージェントが学んだ知識を蓄積・更新し、出典付きの Wiki ページへ整理する知識基盤。作業を通じて得た情報を継続的に管理できる。
     githubUrl: https://github.com/7xuanlu/wenlan
   - id: retaindb
     name: RetainDB
     category: AIメモリ
+    tags: [永続メモリ, コンテキスト管理, 検索]
     description: AI システム向けのメモリとコンテキストを保存・検索する基盤。会話を越えて情報を保持し、アプリやエージェントから利用する。
     githubUrl: https://github.com/RetainDB/RetainDB
   - id: lwc
     name: LWC（llm-wiki-cli）
     category: AIメモリ
+    tags: [CLI, Wiki, 全文検索, コード解析]
     description: 出典付きの Wiki・全文検索・文書グラフ・CodeGraph を備えるメモリ CLI。エージェントがプロジェクトの知識をセッションを越えて検索・更新する。
     githubUrl: https://github.com/JanYork/llm-wiki-cli
   - id: widemem
     name: widemem-ai
     category: AIメモリ
+    tags: [永続メモリ, コンテキスト管理, 時系列]
     description: 重要度・時間による減衰・階層構造を組み合わせる AI メモリ基盤。蓄積した情報から長期的に必要な文脈を取り出す。
     githubUrl: https://github.com/remete618/widemem-ai
   - id: mi-memory
     name: Mi-Memory
     category: AIメモリ
+    tags: [永続メモリ, AIエージェント, パーソナライズ]
     description: 日常的なアシスタントエージェント向けのメモリシステム。複数の情報源から得た記憶を組み合わせ、継続的に更新・発展させる。
     githubUrl: https://github.com/Darwin-Agent/Mi-Memory
   - id: awesome-agent-memory
     name: Awesome Agent Memory
     category: 資料集
+    tags: [永続メモリ, LLM, マルチモーダル, 論文, リンク集]
     description: LLM・マルチモーダルエージェントの記憶に関する製品・実装・ベンチマーク・論文を整理した資料集。長期記憶や経験学習の調査に使える。
     githubUrl: https://github.com/TeleAI-UAGI/Awesome-Agent-Memory
   - id: awesome-ai-memory
     name: Awesome AI Memory
     category: 資料集
+    tags: [永続メモリ, 検索, ストレージ, リンク集]
     description: AI の記憶に関するツール・フレームワーク・検索最適化・ストレージをまとめたリンク集。グラフ・ベクトルなどの方式から関連プロジェクトを探せる。
     githubUrl: https://github.com/topoteretes/awesome-ai-memory
 
   - id: isreadyforlaunch
     name: Is Ready For Launch
     category: 開発ツール
+    tags: [Web, SEO, アクセシビリティ]
     description: ウェブサイトの公開準備を確認するチェックツール。URL を指定すると、技術面・SEO・アクセシビリティの問題を検査できる。
     websiteUrl: https://isreadyforlaunch.com/
   - id: free-for-dev
     name: Free for Developers
     category: 資料集
+    tags: [無料リソース, API, ホスティング, リンク集]
     description: 開発者向けの無料ツール・API・ホスティングなどをまとめた資料集。無料枠のあるサービスを用途別に探せる。
     websiteUrl: https://free-for.dev/
   - id: freepublicapis
     name: Free Public APIs
     category: API連携
+    tags: [API, 無料リソース, リンク集]
     description: アプリに機能を追加するための無料パブリック API を探せるカタログ。カテゴリやキーワードで検索できる。
     websiteUrl: https://www.freepublicapis.com/
   - id: openclaude
     name: openclaude
     category: 開発ツール
+    tags: [AIコーディング, CLI, LLM]
     description: ターミナルで動作するオープンソースの AI コーディングエージェント。複数のモデルに対応し、ファイル編集やコマンド実行を支援する。
     websiteUrl: https://openclaude.gitlawb.com/
+  - id: deepwiki-rs
+    name: Litho（deepwiki-rs）
+    category: 開発ツール
+    tags: [ドキュメント生成, コード解析, Rust, C4モデル]
+    description: ソースコードを AI で解析し、C4 モデルの構成図や技術文書を自動生成する Rust 製のドキュメント生成ツール。
+    githubUrl: https://github.com/sopaco/deepwiki-rs
+  - id: pistachio
+    name: pistachio
+    category: 開発ツール
+    tags: [PostgreSQL, SQL, スキーマ管理]
+    description: PostgreSQL のスキーマを SQL で宣言的に管理するツール。差分の DDL を生成し、Terraform に似た plan/apply の手順で変更を確認・適用できる。
+    githubUrl: https://github.com/winebarrel/pistachio
+  - id: funes
+    name: funes
+    category: AIメモリ
+    tags: [永続メモリ, AIコーディング, ナレッジ共有, Hugging Face]
+    description: 複数の AI コーディングエージェントの過去のセッションを索引化し、判断理由や調査結果を検索・再利用できる永続メモリ。Hugging Face Hub のデータセットとして共有できる。
+    githubUrl: https://github.com/huggingface/funes
+  - id: executor
+    name: Executor
+    category: API連携
+    tags: [AIエージェント, MCP, OpenAPI, GraphQL, サンドボックス]
+    description: MCP・OpenAPI・GraphQL のツールを一つの接続先にまとめる、AI エージェント向けの MCP ゲートウェイ。必要なツールを検索し、サンドボックス内のコードから呼び出せる。
+    websiteUrl: https://executor.sh/
+  - id: reelfolio
+    name: Reelfolio
+    category: 動画生成
+    tags: [ポートフォリオ, SNS, 動画編集]
+    description: スクリーンショットや画面録画から、ポートフォリオや SNS 向けの作品紹介動画を作成するサービス。テンプレートで動きや背景を調整し、複数の縦横比で書き出せる。
+    websiteUrl: https://reelfolio.io/
+  - id: codex-astra-luna-orchestrator
+    name: Codex Astra Orchestrator + Luna Subagents
+    category: 開発ツール
+    tags: [AIコーディング, Codex, マルチエージェント, スキル]
+    description: Codex で Astra と Luna を役割別に使い分ける設定・スキル集。作業の統括・調査・実装・テスト・レビューを複数のエージェントに分担させる構成を導入できる。
+    githubUrl: https://github.com/donvito/codex-astra-luna-orchestrator
+  - id: tgrep
+    name: tgrep
+    category: 開発ツール
+    tags: [コード検索, 正規表現, インデックス]
+    description: トライグラム索引を使い、大規模なコードベースを正規表現で高速検索するツール。常駐サーバーがファイル変更を監視し、更新を検索結果に反映する。
+    githubUrl: https://github.com/microsoft/tgrep
+  - id: tabularis
+    name: Tabularis
+    category: 開発ツール
+    tags: [データベース, SQL, デスクトップ, MCP]
+    description: PostgreSQL・MySQL・SQLite など複数のデータベースを扱えるデスクトップアプリ。SQL の編集・実行やスキーマの閲覧に加え、MCP 経由で AI エージェントとも連携できる。
+    githubUrl: https://github.com/TabularisDB/tabularis
+  - id: ox-content
+    name: Ox Content
+    category: 開発ツール
+    tags: [Markdown, MDX, Rust, 静的サイト生成, ドキュメント生成]
+    description: Rust 製の Markdown エンジンを中心に、静的サイト・API ドキュメントの生成やエディタ連携をまとめたツール群。MDX と複数の JavaScript フレームワークに対応する。
+    githubUrl: https://github.com/ubugeeei-prod/ox-content
+  - id: screendrop
+    name: Screendrop
+    category: 画面キャプチャ
+    tags: [macOS, スクリーンショット, 画面録画, OCR, 動画編集]
+    description: スクリーンショット・画面録画・注釈・動画編集をまとめて扱える macOS 向けアプリ。端末内の OCR や文字起こし、自分の Cloudflare アカウントを使った共有にも対応する。
+    githubUrl: https://github.com/fayazara/screendrop
+  - id: modelmap
+    name: modelmap
+    category: AI研究
+    tags: [Hugging Face, 可視化, モデル比較]
+    description: Hugging Face のモデル ID から、層の構造やテンソルの流れを対話的な図で可視化するツール。重みをダウンロードせず、パラメータ数・計算量・メモリ使用量の推定やモデル比較ができる。
+    websiteUrl: https://modelmap.cc/
+  - id: vercel-fx
+    name: fx
+    category: 開発ツール
+    tags: [AIコーディング, CLI, Zig, MCP, WebAssembly]
+    description: Zig 製の軽量な AI コーディングエージェント。Unix シェルに近い CLI を備え、MCP・サブエージェントや WebAssembly による組み込みに対応する実験的なプロジェクト。
+    websiteUrl: https://fx.sh/
+    githubUrl: https://github.com/vercel-labs/fx
+  - id: prime-agent
+    name: Prime Agent
+    category: 開発ツール
+    tags: [AIコーディング, リサーチ, 永続メモリ, スキル]
+    description: 長時間のコーディング・リサーチ向けの AI エージェント。作業履歴から記憶やスキルを改善し、端末の切断後もバックグラウンドで処理を続けて再接続できる。
+    githubUrl: https://github.com/PrimeIntellect-ai/prime-agent
+  - id: pi
+    name: Pi
+    category: 開発ツール
+    tags: [AIコーディング, LLM, API, CLI]
+    description: OpenAI・Anthropic・Google などのモデル API、エージェント実行基盤、ターミナル型コーディングエージェントをまとめたツールキット。権限制限は内蔵せず、起動元と同じ権限で動作する。
+    websiteUrl: https://pi.dev/
+    githubUrl: https://github.com/earendil-works/pi
+  - id: cloudflare-computer
+    name: Cloudflare Computer
+    category: 開発ツール
+    tags: [AIエージェント, Cloudflare, ファイルシステム, JavaScript]
+    description: AI エージェント向けに、永続ファイルシステムとコマンド・JavaScript の実行環境を提供する Cloudflare の基盤。実験・試作向けのプレビュー版で、本番利用には適さない。
+    githubUrl: https://github.com/cloudflare/computer
+  - id: corsair
+    name: Corsair
+    category: API連携
+    tags: [AIエージェント, API, 認証, 承認フロー]
+    description: AI エージェントやアプリから外部サービスの API 連携を統一的に扱う基盤。認証情報をエージェントから分離して管理し、重要な操作に人の承認を挟む設定ができる。
+    websiteUrl: https://corsair.dev/
+    githubUrl: https://github.com/corsairdev/corsair
+  - id: daily-stock-analysis
+    name: daily_stock_analysis
+    category: 金融・投資
+    tags: [生成AI, 市場分析, ダッシュボード, 自動化]
+    description: 中国・香港・米国・日本など複数市場の株価・ニュースを AI で分析し、判断材料をダッシュボードにまとめるツール。定期実行やチャット・メールへの自動通知に対応する。
+    githubUrl: https://github.com/ZhuLinsen/daily_stock_analysis
+  - id: paperclip
+    name: Paperclip
+    category: 開発ツール
+    tags: [マルチエージェント, タスク管理, コスト管理, ダッシュボード]
+    description: 複数の AI エージェントに役割や目標を割り当て、チームとして運用する管理アプリ。組織構成・タスク・予算・進捗・コストを一つのダッシュボードで管理できる。
+    websiteUrl: https://paperclip.ing/
+    githubUrl: https://github.com/paperclipai/paperclip
+  - id: unsloth
+    name: Unsloth
+    category: AI研究
+    tags: [ローカルLLM, ファインチューニング, マルチモーダル, デスクトップ]
+    description: ローカルで AI モデルを実行・追加学習できるデスクトップアプリと学習ツール群。言語モデルに加え、画像・動画・音声などのモデルにも対応する。
+    websiteUrl: https://unsloth.ai/
+    githubUrl: https://github.com/unslothai/unsloth
+  - id: code-graph-rag
+    name: Code-Graph-RAG
+    category: 開発ツール
+    tags: [コード解析, 知識グラフ, AIコーディング]
+    description: 複数言語のコードベースを解析して知識グラフを構築し、自然言語で質問・検索・修正できるツール。コードの関係をたどり、変更を適用する前に差分を確認できる。
+    githubUrl: https://github.com/vitali87/code-graph-rag
+  - id: pullfrog
+    name: Pullfrog
+    category: 開発ツール
+    tags: [AIコーディング, GitHub Actions, コードレビュー, CI]
+    description: GitHub Actions 上で動作する AI 開発支援ボット。PR レビュー・Issue の整理・CI 失敗の修正などを、GitHub のイベントや @pullfrog のメンションをきっかけに実行できる。
+    websiteUrl: https://pullfrog.com/
+    githubUrl: https://github.com/pullfrog/pullfrog
+  - id: canario
+    name: Canario
+    category: 開発ツール
+    tags: [macOS, ターミナル, AIエージェント]
+    description: Rio のエンジンを基盤とする macOS 向けターミナルのベータ版。スペースによる整理・ペイン分割・ライブプレビュー・セッション復元を備え、AI エージェントの完了や入力待ちを通知できる。
+    websiteUrl: https://rioterm.com/canario
 
   # AI コーディング向け DESIGN.md・UI/UX デザインリソース。
   - id: refero-styles
     name: Refero Styles
     category: デザイン
+    tags: [DESIGN.md, デザインシステム, AIコーディング]
     description: 配色・タイポグラフィ・余白・コンポーネントをまとめた DESIGN.md の作例集。AI コーディングに使うデザインスタイルを探せる。
     websiteUrl: https://styles.refero.design/
   - id: neuform
     name: Neuform
     category: デザイン
+    tags: [生成AI, Web, DESIGN.md, プロトタイピング]
     description: プロンプトから Web ページを生成し、テンプレートや再利用可能な DESIGN.md を作成できる AI デザインツール。
     websiteUrl: https://neuform.ai/
   - id: typeui
     name: TypeUI
     category: デザイン
+    tags: [UI, プロンプト, スキル, デザインシステム]
     description: AI コーディング向けの UI プロンプト・デザインスキル・デザインシステムを提供するサービス。コンポーネントや画面の設計を支援する。
     websiteUrl: https://typeui.sh/
   - id: aura
     name: Aura
     category: デザイン
+    tags: [生成AI, Web, HTML, Figma]
     description: テンプレートや UI コンポーネントを参考に、AI で Web デザインを生成・編集できるサービス。HTML や Figma への書き出しに対応する。
     websiteUrl: https://aura.build/
   - id: hyperbrowser-design-md
     name: DESIGN.md（Hyperbrowser）
     category: デザイン
+    tags: [DESIGN.md, AIコーディング, デザインリソース]
     description: AI コーディング向けの DESIGN.md を扱う、Hyperbrowser のデザインリソース。
     websiteUrl: https://design-md.hyperbrowser.ai/
   - id: designmd-supply
     name: designmd.supply
     category: デザイン
+    tags: [DESIGN.md, UI, UX, デザインリソース]
     description: AI コーディングや UI/UX 設計に活用できる、DESIGN.md を中心としたデザインリソース集。
     websiteUrl: https://designmd.supply/
   - id: open-design
     name: OpenDesign
     category: デザイン
+    tags: [DESIGN.md, AIコーディング, プロトタイピング, スライド]
     description: AI コーディングエージェントと DESIGN.md を使い、プロトタイプ・Web ページ・スライドなどを作成できる、オープンソースのデザインワークスペース。
     websiteUrl: https://open-design.ai/
   - id: designmd-me
     name: DesignMD
     category: デザイン
+    tags: [DESIGN.md, デザインシステム, デザイン抽出]
     description: Web サイトから配色・タイポグラフィ・余白などのデザインシステムを抽出し、AI が利用できる DESIGN.md を生成するツール。
     websiteUrl: https://designmd.me/
   - id: getdesign-md
     name: getdesign.md
     category: デザイン
+    tags: [DESIGN.md, デザインシステム, デザインリソース]
     description: 実在する Web サイトの配色・タイポグラフィ・余白・コンポーネントを分析した DESIGN.md のコレクション。AI コーディングエージェントに渡すデザインの参照資料を探せる。
     websiteUrl: https://getdesign.md/
   - id: collectui
     name: Collect UI
     category: デザイン
+    tags: [UI, Web, ギャラリー, デザインリソース]
     description: Web サイトやユーザーインターフェースのデザイン事例を集めたギャラリー。画面やレイアウトの設計に役立つインスピレーションを探せる。
     websiteUrl: https://collectui.com/
   - id: designmd-store
     name: Design.md Store
     category: デザイン
+    tags: [DESIGN.md, デザインシステム, デザインリソース]
     description: AI コーディング向けのデザインシステム仕様を DESIGN.md 形式で配布するライブラリ。カテゴリ別のデザインをプレビューし、プロジェクト用にダウンロードできる。
     websiteUrl: https://designmd-store.com/
+  - id: ambient-css
+    name: Ambient CSS
+    category: デザイン
+    tags: [CSS, ライティング, 視覚効果]
+    description: 光源の方向・要素の高さ・表面の材質に応じた光と影を表現する、物理ベースの CSS ライティングシステム。
+    websiteUrl: https://ambientcss.vercel.app/
+  - id: kigen-color
+    name: Kigen Color Generator
+    category: デザイン
+    tags: [カラーパレット, デザイントークン, CSS, Tailwind CSS]
+    description: 基準色から濃淡のカラーパレットを生成するツール。色数やコントラストを調整し、CSS・Tailwind CSS・デザイントークンなどの形式で書き出せる。
+    websiteUrl: https://kigen.design/color
+  - id: transitions-dev
+    name: Transitions.dev
+    category: デザイン
+    tags: [UI, アニメーション, スキル]
+    description: Web アプリ向けの UI トランジション集。動きをプレビューしてコードをコピーでき、専用スキルを通じて AI コーディングエージェントからも利用できる。
+    websiteUrl: https://transitions.dev/
+  - id: diagram-design
+    name: Diagram Design
+    category: デザイン
+    tags: [図解, スキル, HTML, SVG]
+    description: AI コーディングエージェント向けの図解作成スキル。構成図・フローチャート・タイムラインなどを、単体で閲覧できる HTML と SVG として生成できる。
+    githubUrl: https://github.com/cathrynlavery/diagram-design
+  - id: emilkowalski-skills
+    name: Skills（Emil Kowalski）
+    category: デザイン
+    tags: [UI, アニメーション, スキル, プロトタイピング]
+    description: Emil Kowalski が公開する、UI 設計・アニメーション実装を支援する AI エージェント向けスキル集。動きの設計・レビュー・改善やプロトタイプ作成に活用できる。
+    githubUrl: https://github.com/emilkowalski/skills
+  - id: design-words
+    name: Design Words
+    category: デザイン
+    tags: [UI, プロンプト, AIコーディング]
+    description: デザインのスタイル・レイアウト・部品を選び、プレビューを見ながら見た目を言語化できるツール。AI コーディングエージェントに渡すプロンプトを作成・コピーできる。
+    websiteUrl: https://bensbites.com/design-words/
+  - id: spectrum-ui
+    name: Spectrum UI
+    category: デザイン
+    tags: [React, shadcn/ui, Tailwind CSS, Motion, UIコンポーネント]
+    description: 高級感のあるデザインとアニメーションを備える React コンポーネント・ブロック集。shadcn/ui・Tailwind CSS・Motion を使い、MCP 経由の導入にも対応する。
+    websiteUrl: https://ui.spectrumhq.in/
+  - id: 21st-dev
+    name: 21st.dev
+    category: デザイン
+    tags: [React, shadcn/ui, UIコンポーネント, テンプレート]
+    description: コミュニティが作成した React コンポーネント・テンプレート・shadcn テーマを集めた大規模な UI ライブラリ。作例を探し、コードや AI 向けのプロンプトを再利用できる。
+    websiteUrl: https://21st.dev/
+  - id: shadcnblocks
+    name: Shadcnblocks
+    category: デザイン
+    tags: [React, shadcn/ui, Tailwind CSS, UIコンポーネント, テンプレート]
+    description: shadcn/ui・Tailwind CSS・React 向けの UI ブロック・コンポーネント・テンプレート集。ランディングページやダッシュボードの部品を、コピーや CLI で組み込める。
+    websiteUrl: https://shadcnblocks.com/
+  - id: react-bits
+    name: React Bits
+    category: デザイン
+    tags: [React, アニメーション, UIコンポーネント]
+    description: React 向けのアニメーション付き UI パーツ集。テキスト・背景・カーソル・スクロールなどの演出を組み合わせ、動きのある Web ページを作成できる。
+    websiteUrl: https://reactbits.dev/
+  - id: 8bitcn
+    name: 8bitcn/ui
+    category: デザイン
+    tags: [ピクセルアート, UIコンポーネント, レトロ]
+    description: レトロな 8 ビット風ピクセルデザインの UI コンポーネント・ブロック集。オープンソースで公開されており、コードをコピーして画面に組み込める。
+    websiteUrl: https://8bitcn.com/
+  - id: evil-charts
+    name: EvilCharts
+    category: デザイン
+    tags: [React, チャート, 可視化, shadcn/ui]
+    description: React 向けのアニメーション・インタラクション付きチャート集。Recharts と Apache ECharts を基盤に、shadcn/ui に合うグラフをコピーして組み込める。
+    websiteUrl: https://evilcharts.com/
+  - id: coss-ui
+    name: coss ui
+    category: デザイン
+    tags: [Base UI, UIコンポーネント, フォーム]
+    description: Base UI を基盤としたモダンな UI コンポーネントライブラリ。フォーム・ダイアログ・ナビゲーションなど、アプリの画面に必要な部品を提供する。
+    websiteUrl: https://coss.com/ui
+  - id: rare-ui
+    name: Rare UI
+    category: デザイン
+    tags: [React, アニメーション, UIコンポーネント, shadcn/ui]
+    description: 独特な見た目と動きを持つ React コンポーネント集。アニメーション付きのフォルダ・入力欄・視覚効果などを、shadcn CLI で組み込める。
+    websiteUrl: https://rareui.com/
+  - id: beui
+    name: beUI
+    category: デザイン
+    tags: [React, Next.js, Motion, Tailwind CSS, UIコンポーネント]
+    description: React・Next.js 向けのアニメーション付き UI コンポーネント集。Motion と Tailwind CSS を使ったボタン・モーダル・タブなどを、コピーや shadcn CLI で導入できる。
+    websiteUrl: https://beui.dev/
+  - id: cue-design
+    name: Cue
+    category: デザイン
+    tags: [UIコンポーネント, インタラクション, プロンプト]
+    description: UI コンポーネント・インタラクションの作例を厳選したデザインライブラリ。各作例の AI 向けプロンプトを使い、制作ツールへ見た目や動きを伝えられる。
+    websiteUrl: https://www.cuedesign.space/
+  - id: neat-annotations
+    name: neat-annotations
+    category: デザイン
+    tags: [CSS, 注釈, 手描き風]
+    description: CSS だけで手描き風の矢印・注釈・ハイライトを Web ページに追加できるライブラリ。矢印の方向や色、ラベルを指定して説明を添えられる。
+    websiteUrl: https://neat-annotations.syabro.com/
+  - id: motion-panels
+    name: motion-panels
+    category: デザイン
+    tags: [React, Motion, アニメーション, パネル]
+    description: Motion を使い、サイズ変更・折り畳み・スナップをアニメーションで表現できるパネルライブラリ。フレームワーク非依存のコアと React 向けのアダプターを提供する。
+    githubUrl: https://github.com/letstri/motion-panels
+  - id: m3e-canvas
+    name: M3E Canvas
+    category: デザイン
+    tags: [Material Design, Android, Web, プロトタイピング]
+    description: Material 3 Expressive の画面をブラウザで組み立てるデザインツール。画面遷移やテーマを確認し、Android・Web 向けの AI コーディング用プロンプトとして書き出せる。
+    websiteUrl: https://lnkiai.github.io/m3e-canvas/
+    githubUrl: https://github.com/lnkiai/m3e-canvas
+  - id: scandinavian-design
+    name: Scandinavian Design
+    category: デザイン
+    tags: [Cursor, スキル, ミニマルデザイン]
+    description: 白黒の配色・サンセリフ書体・広い余白を軸に、北欧風の UI を適用する Cursor 向けスキル。既存サイトを再デザインした作例と比較プレビューを提供する。
+    websiteUrl: https://scandinavian-design.vercel.app/
+    githubUrl: https://github.com/ericzakariasson/scandinavian-design
+
+  - id: tanstack-markdown
+    name: TanStack Markdown
+    category: ライブラリ
+    tags: [Markdown, React, ストリーミング]
+    description: ブログや技術文書向けの軽量な Markdown パーサー・レンダラー。実行時依存を持たず、HTML 出力や React・Octane との連携、AI ストリーミング向けの処理に対応する。
+    githubUrl: https://github.com/TanStack/markdown
+  - id: knap
+    name: Knap
+    category: ライブラリ
+    tags: [Markdown, テンプレート, Obsidian]
+    description: 変数・フィルター・条件分岐・繰り返しを使い、データから Markdown を生成するテンプレート言語。Obsidian Web Clipper や Importer でも使われ、アプリへの組み込みに対応する。
+    websiteUrl: https://knap.md/
+    githubUrl: https://github.com/obsidianmd/knap
+  - id: shadcn-cn
+    name: cn
+    category: ライブラリ
+    tags: [Tailwind CSS, クラス名, ユーティリティ]
+    description: Tailwind CSS v4 のクラス名の条件付き結合と競合解決を行うライブラリ。clsx と tailwind-merge の互換 API を備え、フレームワークに依存せず利用できる。
+    githubUrl: https://github.com/shadcn-ui/cn
+  - id: minitype
+    name: minitype
+    category: ライブラリ
+    tags: [TypeScript, 組版, 文書生成, 日本語]
+    description: 禁則処理・縦組・ルビ・段組などに対応する TypeScript 製の組版エンジン。Node.js・Bun・ブラウザで動作し、アプリや AI のワークフローに文書生成を組み込める。
+    websiteUrl: https://typeset.jp/
+  - id: tanstack-time
+    name: TanStack Time
+    category: ライブラリ
+    tags: [TypeScript, JavaScript, 日時, カレンダー]
+    description: 時刻やカレンダーの UI 構築を支援するヘッドレスユーティリティのプロジェクト。TypeScript・JavaScript と主要フレームワークを対象とし、現時点のリポジトリは概要の README のみ。
+    githubUrl: https://github.com/TanStack/time
+  - id: assistant-ui
+    name: assistant-ui
+    category: ライブラリ
+    tags: [React, AIエージェント, チャット, ストリーミング]
+    description: React などで AI エージェントのチャット画面を構築するライブラリ。会話・ストリーミング・ツール呼び出しを管理し、AI SDK や LangGraph などのバックエンドと連携できる。
+    websiteUrl: https://www.assistant-ui.com/
+  - id: yjs
+    name: Yjs
+    category: ライブラリ
+    tags: [JavaScript, CRDT, 共同編集, オフライン]
+    description: CRDT に基づく共有データ型を提供する JavaScript ライブラリ。同時編集の変更を自動統合し、リッチテキストエディタの共同編集やオフライン編集、共有カーソルなどを支援する。
+    githubUrl: https://github.com/yjs/yjs
+  - id: incremental
+    name: Incremental
+    category: ライブラリ
+    tags: [OCaml, 増分計算, GUI]
+    description: 入力の変更に応じた再計算を効率化する、Jane Street の OCaml 向け増分計算ライブラリ。表計算・GUI・元データと同期する派生データの処理に活用できる。
+    githubUrl: https://github.com/janestreet/incremental

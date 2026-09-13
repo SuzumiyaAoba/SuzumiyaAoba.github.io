@@ -23,6 +23,7 @@ items:
   - id: example-tool
     name: Example Tool
     category: 開発ツール
+    tags: [TypeScript, 自動化]
     description: |-
       作業を便利にするツール。
       気になった点のメモ。
@@ -44,6 +45,7 @@ items:
 `);
     expect(items.map((entry) => entry.id)).toEqual(["example-tool", "another-tool"]);
     expect(items[0]).toMatchObject({
+      tags: ["TypeScript", "自動化"],
       description: "作業を便利にするツール。\n気になった点のメモ。",
       websiteUrl: "https://example.com/",
       githubUrl: "https://github.com/example/tool",
@@ -59,13 +61,30 @@ items:
     });
   });
 
-  it.each([{}, { websiteUrl: null, githubUrl: "  ", articles: null, relatedPosts: [] }])(
-    "省略・空欄の任意項目を扱える: %j",
-    (optional) => {
-      const [entry] = parseAwesomeItems(stringify({ items: [{ ...item, ...optional }] }));
-      expect(entry).toMatchObject({ ...item, articles: [], relatedPosts: [] });
-      expect(entry?.websiteUrl).toBeUndefined();
-      expect(entry?.githubUrl).toBeUndefined();
+  it.each([
+    {},
+    { tags: null, websiteUrl: null, githubUrl: "  ", articles: null, relatedPosts: [] },
+    { tags: [] },
+  ])("省略・空欄の任意項目を扱える: %j", (optional) => {
+    const [entry] = parseAwesomeItems(stringify({ items: [{ ...item, ...optional }] }));
+    expect(entry).toMatchObject({ ...item, tags: [], articles: [], relatedPosts: [] });
+    expect(entry?.websiteUrl).toBeUndefined();
+    expect(entry?.githubUrl).toBeUndefined();
+  });
+
+  it("タグの前後の空白と重複を除き、記載順を保つ", () => {
+    const [entry] = parseAwesomeItems(
+      stringify({ items: [{ ...item, tags: [" TypeScript ", "自動化", "TypeScript"] }] }),
+    );
+    expect(entry?.tags).toEqual(["TypeScript", "自動化"]);
+  });
+
+  it.each(["TypeScript", [""], ["  "], [null], [123]])(
+    "文字列リストでないタグや空のタグを拒否する: %j",
+    (tags) => {
+      expect(() => parseAwesomeItems(stringify({ items: [{ ...item, tags }] }))).toThrow(
+        "items.0.tags",
+      );
     },
   );
 
