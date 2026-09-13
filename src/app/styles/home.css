@@ -30,12 +30,12 @@
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
     align-items: center;
-    gap: 2.5rem 4.5rem;
-    padding-block: 3.25rem 2.5rem;
+    gap: 1.5rem 3rem;
+    padding-block: 2rem 1.5rem;
   }
   .home-headline {
     font-family: var(--font-shippori-mincho), serif;
-    font-size: clamp(2.5rem, 4.7vw, 4.25rem);
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
     font-weight: 500;
     line-height: 1.25;
     letter-spacing: -0.045em;
@@ -50,10 +50,10 @@
   .home-overview > a {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;
-    min-height: 3.5rem;
+    min-height: 2.75rem;
     align-items: center;
-    gap: 1.5rem;
-    padding-block: 0.75rem;
+    gap: 1rem;
+    padding-block: 0.5rem;
     border-bottom: 1px solid var(--rule);
     font-size: 0.8125rem;
     transition: color var(--duration-fast) ease;
@@ -80,8 +80,8 @@
     grid-column: 1 / -1;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0 1.75rem;
-    padding-block: 0.5rem;
+    gap: 0 1.25rem;
+    padding-block: 0.25rem;
     border-block: 1px solid var(--rule);
     font-size: 0.75rem;
   }
@@ -107,7 +107,7 @@
   }
 
   .home-writing {
-    padding-bottom: 4.75rem;
+    padding-bottom: var(--space-section);
     scroll-margin-top: 1rem;
   }
   .home-section-heading {
@@ -115,20 +115,20 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 0.5rem 1.25rem;
+    margin-bottom: 1rem;
   }
   .home-section-title {
     font-family: var(--font-shippori-mincho), serif;
-    font-size: 1.625rem;
+    font-size: 1.375rem;
     font-weight: 500;
-    line-height: 1.6;
+    line-height: 1.5;
     letter-spacing: -0.025em;
   }
   .home-lead-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
   }
   .home-lead-solo {
     grid-template-columns: 1fr;
@@ -144,9 +144,9 @@
     position: relative;
     display: flex;
     height: 100%;
-    min-height: 25rem;
+    min-height: 20rem;
     flex-direction: column;
-    padding: 1.75rem 2rem 1.25rem;
+    padding: 1.25rem 1.5rem 1rem;
   }
   .home-feature-meta {
     display: flex;
@@ -163,17 +163,17 @@
   }
   .home-feature-copy {
     margin-block: auto;
-    padding-block: 2.5rem;
+    padding-block: 1.5rem;
   }
   .home-feature-category {
-    margin-bottom: 0.875rem;
+    margin-bottom: 0.625rem;
     color: var(--feature-accent);
     font-size: 0.75rem;
   }
   .home-feature-title {
     max-width: 19ch;
     font-family: var(--font-shippori-mincho), serif;
-    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-size: clamp(1.625rem, 2.4vw, 2.125rem);
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: -0.035em;
@@ -181,18 +181,18 @@
   }
   .home-feature-description {
     max-width: 34em;
-    margin-top: 1.25rem;
+    margin-top: 0.875rem;
     color: var(--feature-muted);
     font-size: 0.875rem;
-    line-height: 1.9;
+    line-height: 1.75;
   }
   .home-feature-footer {
     display: flex;
-    min-height: 3rem;
+    min-height: 2.75rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-top: 1rem;
+    padding-top: 0.75rem;
     border-top: 1px solid color-mix(in srgb, var(--feature-muted) 30%, transparent);
     color: var(--feature-accent);
     font-size: 0.75rem;
@@ -219,8 +219,8 @@
     display: flex;
     height: 100%;
     flex-direction: column;
-    gap: 0.75rem;
-    padding-block: 1.5rem 1rem;
+    gap: 0.5rem;
+    padding-block: 1rem 0.75rem;
   }
   .home-recent-list > li:first-child .home-recent-link {
     padding-top: 0.375rem;
@@ -239,9 +239,9 @@
   }
   .home-recent h3 {
     font-family: var(--font-shippori-mincho), serif;
-    font-size: 1.4375rem;
+    font-size: 1.25rem;
     font-weight: 500;
-    line-height: 1.6;
+    line-height: 1.5;
     text-wrap: balance;
     transition: color var(--duration-fast) ease;
   }
@@ -252,7 +252,7 @@
     -webkit-line-clamp: 2;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
-    line-height: 1.85;
+    line-height: 1.7;
   }
   .home-recent-footer {
     display: flex;
@@ -270,8 +270,8 @@
   .home-earlier-list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
   }
   .home-earlier-list > li {
     border-top: 1px solid var(--rule);
@@ -287,7 +287,7 @@
     font-family: var(--font-shippori-mincho), serif;
     font-size: 1rem;
     font-weight: 500;
-    line-height: 1.8;
+    line-height: 1.6;
     text-wrap: balance;
     transition: color var(--duration-fast) ease;
   }
@@ -299,14 +299,14 @@
   }
 
   .home-series {
-    padding-block: 3.25rem;
+    padding-block: var(--space-section);
     border-block: 1px solid var(--rule);
     background: var(--muted);
   }
   .home-series-list {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.75rem 2rem;
+    gap: 1.25rem 1.5rem;
   }
   .home-series-link {
     position: relative;
@@ -332,16 +332,16 @@
   }
   .home-series-link h3 {
     font-family: var(--font-shippori-mincho), serif;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 1.7;
+    line-height: 1.6;
     text-wrap: balance;
     transition: color var(--duration-fast) ease;
   }
   .home-series-link p {
     color: var(--muted-foreground);
     font-size: 0.75rem;
-    line-height: 1.9;
+    line-height: 1.75;
   }
   .home-series-link .home-arrow {
     position: absolute;
@@ -353,8 +353,8 @@
   .home-library {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 4rem;
-    padding-block: 4.75rem;
+    gap: 2.5rem;
+    padding-block: var(--space-section);
   }
   .home-library .home-section-heading {
     align-items: end;
@@ -364,13 +364,13 @@
   }
   .home-note-list a {
     display: flex;
-    min-height: 4rem;
+    min-height: 3.25rem;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    padding-block: 1rem;
+    gap: 1rem;
+    padding-block: 0.75rem;
     font-size: 0.875rem;
-    line-height: 1.8;
+    line-height: 1.65;
     transition: color var(--duration-fast) ease;
   }
   .home-note-list .home-arrow {
@@ -382,31 +382,31 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    margin-top: 1.25rem;
+    margin-top: 0.75rem;
     padding-block: 0.75rem;
     color: var(--muted-foreground);
     font-size: 0.75rem;
   }
   .home-toolbox {
     align-self: start;
-    padding: 2rem;
+    padding: 1.5rem;
     border: 1px solid var(--rule);
     border-radius: 0.125rem;
     background: var(--card);
   }
   .home-toolbox ul {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
   .home-toolbox li {
     border-top: 1px solid var(--rule);
   }
   .home-toolbox li a {
     display: flex;
-    min-height: 5rem;
+    min-height: 4.25rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 1rem;
+    padding-block: 0.75rem;
   }
   .home-toolbox strong {
     font-size: 0.8125rem;
@@ -415,10 +415,10 @@
   }
   .home-tool-description {
     display: block;
-    margin-top: 0.375rem;
+    margin-top: 0.25rem;
     color: var(--muted-foreground);
     font-size: 0.6875rem;
-    line-height: 1.8;
+    line-height: 1.65;
   }
   .home-toolbox > .home-inline-link {
     margin-top: 0.5rem;
@@ -473,13 +473,10 @@
   }
   @media (max-width: 1023px) {
     .home-intro {
-      column-gap: 2.5rem;
+      column-gap: 2rem;
     }
     .home-lead-grid {
-      gap: 1.75rem;
-    }
-    .home-feature-link {
-      padding-inline: 1.5rem;
+      gap: 1.5rem;
     }
     .home-series-list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -489,39 +486,46 @@
       column-gap: 2rem;
     }
     .home-toolbox {
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
   }
   @media (max-width: 767px) {
     .home-intro {
       grid-template-columns: 1fr;
-      gap: 1.75rem;
-      padding-block: 2rem;
+      gap: 1.25rem;
+      padding-block: 1.5rem;
     }
     .home-headline {
-      font-size: clamp(2.25rem, 9.5vw, 3.5rem);
-      line-height: 1.22;
+      font-size: clamp(1.875rem, 7.5vw, 2.75rem);
+      line-height: 1.25;
     }
     .home-topics {
-      gap: 0 1rem;
+      position: relative;
+      gap: 0 0.5rem;
       padding-block: 0.25rem;
+      padding-right: 3rem;
       font-size: 0.6875rem;
+    }
+    .home-topics > a {
+      gap: 0.375rem;
     }
     .home-topics-label {
       display: none;
     }
     .home-topics-all {
+      position: absolute;
+      right: 0;
+      bottom: 0.25rem;
+      min-width: 2.75rem;
+      justify-content: center;
       padding-inline: 0.5rem;
-    }
-    .home-writing {
-      padding-bottom: 3rem;
     }
     .home-section-heading {
       gap: 0.5rem;
       margin-bottom: 1rem;
     }
     .home-section-title {
-      font-size: 1.375rem;
+      font-size: 1.25rem;
     }
     .home-inline-link {
       gap: 0.5rem;
@@ -532,23 +536,26 @@
       gap: 1.25rem;
     }
     .home-feature-link {
-      min-height: 21rem;
-      padding: 1.25rem 1.5rem;
+      min-height: 17rem;
+      padding: 1rem 1.25rem;
     }
     .home-feature-copy {
-      padding-block: 2rem;
+      padding-block: 1.25rem;
     }
     .home-feature-title {
-      font-size: 2rem;
+      font-size: 1.625rem;
     }
     .home-feature-description {
       font-size: 0.8125rem;
     }
     .home-recent-link {
-      padding-block: 1.25rem;
+      padding-block: 1rem;
+    }
+    .home-recent-list {
+      grid-auto-rows: auto;
     }
     .home-recent h3 {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
     }
     .home-earlier-list {
       grid-template-columns: 1fr;
@@ -561,31 +568,21 @@
     .home-earlier-list .home-arrow {
       bottom: 1.25rem;
     }
-    .home-series {
-      padding-block: 2.5rem;
-    }
     .home-series-list {
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
     .home-series-link {
       padding-right: 1rem;
-    }
-    .home-series-link h3 {
-      font-size: 1rem;
     }
     .home-series-link p {
       font-size: 0.6875rem;
     }
     .home-library {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
-      padding-block: 3rem;
+      gap: 2rem;
     }
     .home-note-list a {
       font-size: 0.8125rem;
-    }
-    .home-toolbox {
-      padding: 1.5rem;
     }
   }
   @media (max-width: 359px) {

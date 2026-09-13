@@ -55,20 +55,21 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
           { name: pageName, path: pagePath },
         ])}
       />
-      <main className="site-main">
+      <main className="site-main page-stack">
         <Breadcrumbs
           items={[
             { name: "Home", path: toLocalePath("/", locale) },
             { name: archiveName, path: toLocalePath("/archive", locale) },
             { name: pageName, path: pagePath },
           ]}
-          className="mb-4"
         />
-        <section className="space-y-4">
+        <section className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja="ツール" en="Tools" />
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">{pageName}</h1>
+          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+            {pageName}
+          </h1>
           {updated ? (
             <p className="text-xs text-muted-foreground">
               <I18nText locale={locale} ja="更新" en="Updated" />: {updated}
@@ -88,13 +89,13 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
           </p>
         </section>
 
-        <section className="mt-8">
+        <section>
           {entries.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               <I18nText locale={locale} ja="ニュースデータがありません。" en="No data." />
             </p>
           ) : (
-            <div className="relative space-y-10">
+            <div className="relative space-y-6">
               <span className="pointer-events-none absolute left-[9.5rem] top-0 hidden h-full w-px bg-muted-foreground/20 sm:block" />
               {entries.map(({ entry, title, summary }, index) => {
                 const dateParts = entry.date ? entry.date.split("-") : [];

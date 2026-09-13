@@ -18,8 +18,8 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
   return (
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10">
-        <section className="flex flex-col items-center justify-center gap-8 py-12">
+      <main className="site-main page-stack">
+        <section className="flex flex-col items-center justify-center gap-6 py-8">
           <div className="text-center space-y-4">
             <h1 className="text-6xl font-bold text-muted-foreground">404</h1>
             <h2 className="text-2xl font-semibold">

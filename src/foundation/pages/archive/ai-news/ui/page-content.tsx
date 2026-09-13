@@ -27,7 +27,7 @@ export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPag
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main min-w-0 font-noto bg-muted/20">
-        <div className="min-w-0 space-y-6">
+        <div className="page-stack min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Breadcrumbs items={breadcrumbs} />
             <a

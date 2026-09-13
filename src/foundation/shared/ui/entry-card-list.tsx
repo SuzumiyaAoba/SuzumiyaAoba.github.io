@@ -40,13 +40,13 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
           <li key={item.slug}>
             <article className="collection-card">
               <a href={item.href} className="collection-card-link">
-                <div className="collection-thumbnail relative size-16 shrink-0 overflow-hidden rounded-lg sm:size-20">
+                <div className="collection-thumbnail relative size-14 shrink-0 overflow-hidden rounded-lg sm:size-16">
                   {thumbnail.type === "image" ? (
                     <Image
                       src={thumbnail.src}
                       alt=""
                       fill
-                      sizes="(min-width: 640px) 80px, 64px"
+                      sizes="(min-width: 640px) 64px, 56px"
                       className={
                         isFallback
                           ? "object-contain p-3 opacity-70 dark:invert dark:opacity-80"
@@ -63,9 +63,9 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
                     </div>
                   )}
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-4 self-stretch">
-                  <div className="space-y-2">
-                    <h2 className="collection-card-title text-lg font-medium leading-relaxed">
+                <div className="flex min-w-0 flex-1 flex-col gap-3 self-stretch">
+                  <div className="space-y-1.5">
+                    <h2 className="collection-card-title text-base font-medium leading-normal">
                       {item.title}
                     </h2>
                     {item.description ? (

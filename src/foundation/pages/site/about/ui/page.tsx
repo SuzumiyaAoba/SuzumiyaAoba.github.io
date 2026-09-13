@@ -38,7 +38,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10">
+      <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="page-heading">
           <div className="space-y-2">
@@ -50,7 +50,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
         </section>
 
         <section className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl bg-muted/70 px-6 py-8 sm:p-9">
+          <div className="rounded-xl bg-muted/70 p-5 sm:p-6">
             <h2 className="text-lg font-semibold">
               <I18nText locale={locale} ja="コンテンツ" en="Contents" />
             </h2>
@@ -90,7 +90,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
               </li>
             </ul>
           </div>
-          <div className="rounded-xl bg-muted/70 px-6 py-8 sm:p-9">
+          <div className="rounded-xl bg-muted/70 p-5 sm:p-6">
             <h2 className="text-lg font-semibold">
               <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </h2>

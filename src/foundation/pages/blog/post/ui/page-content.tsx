@@ -128,9 +128,9 @@ export function BlogPostPageContent({
       />
       <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <header className="article-heading mb-10 space-y-5 pt-6 pb-6 sm:mb-12 sm:pb-8">
+        <header className="article-heading mb-6 space-y-3 pt-2 pb-5 sm:mb-8 sm:pb-6">
           <p className="font-mono text-xs text-muted-foreground">{postDate}</p>
-          <h1 className="max-w-4xl text-3xl font-medium leading-relaxed break-words sm:text-4xl">
+          <h1 className="max-w-4xl text-2xl font-medium leading-snug tracking-tight break-words sm:text-3xl">
             {postTitle}
           </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -164,7 +164,7 @@ export function BlogPostPageContent({
             ) : null}
           </div>
         </header>
-        <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
+        <div className="grid w-full min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-8">
           <div className="flex flex-col w-full min-w-0">
             <article className="prose prose-neutral min-w-0 max-w-none font-serif">
               {isEn && translationModel ? (
@@ -205,7 +205,7 @@ export function BlogPostPageContent({
           </div>
         </div>
 
-        <div className="mt-6 space-y-8">
+        <div className="mt-6 space-y-6">
           <Separator className="bg-border/40" />
           <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {prev ? (

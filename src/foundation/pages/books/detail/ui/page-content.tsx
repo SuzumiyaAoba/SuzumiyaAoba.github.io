@@ -38,21 +38,21 @@ export function BookDetailPageContent({
     <div className="site-page">
       <Header locale={locale} path={bookPath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main-reading flex flex-col gap-8 sm:gap-10">
+      <main className="site-main-reading page-stack">
         <div>
           <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-          <h1 className="text-3xl font-semibold">{bookTitle}</h1>
+          <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">{bookTitle}</h1>
         </div>
 
         {leadContent ? (
           <div className="prose prose-neutral max-w-none font-serif">{leadContent}</div>
         ) : null}
 
-        <nav aria-label="目次" className="space-y-6">
+        <nav aria-label="目次" className="space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             目次
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-5">
             {chapters.map((ch) => (
               <section key={ch.chapter} className="space-y-2">
                 <h3 className="text-sm font-semibold text-foreground">

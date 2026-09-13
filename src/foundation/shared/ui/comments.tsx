@@ -97,5 +97,5 @@ export function Comments({
     }
   }, [giscusTheme, mounted]);
 
-  return <div ref={containerRef} className={cn("mt-12", className)} />;
+  return <div ref={containerRef} className={cn("mt-8", className)} />;
 }

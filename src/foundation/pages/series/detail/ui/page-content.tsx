@@ -38,11 +38,11 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10">
-        <Breadcrumbs items={breadcrumbItems} className="mb-2" />
+      <main className="site-main page-stack">
+        <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
           <BackLink locale={locale} href="/series" ja="← シリーズ一覧" en="← Back to series" />
-          <h1 className="text-3xl font-semibold">{series.name}</h1>
+          <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">{series.name}</h1>
           {series.description ? (
             <p className="text-sm leading-6 text-muted-foreground">{series.description}</p>
           ) : null}
@@ -55,7 +55,7 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
             </div>
           </Card>
         ) : (
-          <ul className="space-y-4">
+          <ul className="space-y-3">
             {entries.map((post) => (
               <li key={`${locale}-${post.slug}`}>
                 <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
@@ -65,7 +65,7 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
                   />
                   <a
                     href={toLocalePath(`/blog/post/${post.slug}`, locale)}
-                    className="relative z-10 flex flex-col gap-3 px-5 py-5"
+                    className="relative z-10 flex flex-col gap-2 px-5 py-4"
                   >
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{post.date}</span>

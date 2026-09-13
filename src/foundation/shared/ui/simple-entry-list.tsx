@@ -25,13 +25,13 @@ export function SimpleEntryList({ items, emptyState }: SimpleEntryListProps) {
         <li key={item.slug}>
           <a
             href={item.href}
-            className="simple-entry-link flex min-h-24 items-center gap-5 px-1 py-6 sm:gap-8"
+            className="simple-entry-link flex min-h-18 items-center gap-4 px-1 py-4 sm:gap-6"
           >
             <span className="simple-entry-number font-mono" aria-hidden="true">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="min-w-0 flex-1 space-y-2">
-              <span className="simple-entry-title block text-base font-medium leading-relaxed break-words">
+            <span className="min-w-0 flex-1 space-y-1">
+              <span className="simple-entry-title block text-base font-medium leading-normal break-words">
                 {item.title}
               </span>
               {item.date ? (

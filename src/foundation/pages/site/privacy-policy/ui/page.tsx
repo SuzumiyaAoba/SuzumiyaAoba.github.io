@@ -31,18 +31,18 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main">
-        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
+      <main className="site-main page-stack">
+        <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja="プライバシー" en="Privacy Policy" />
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
             <I18nText locale={locale} ja="プライバシーポリシー" en="Privacy Policy" />
           </h1>
         </section>
 
-        <section className="mt-8 space-y-6 text-sm leading-7 text-muted-foreground">
+        <section className="space-y-5 text-sm leading-6 text-muted-foreground">
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
               <I18nText locale={locale} ja="個人情報の利用目的" en="Purpose of Personal Data Use" />

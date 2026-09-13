@@ -25,7 +25,7 @@ export function AwesomeSomethingPageContent({ locale, items }: AwesomeSomethingP
     <div className="site-page">
       <Header locale={locale} path={toLocalePath(path, locale)} />
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
-      <main className="site-main space-y-8 sm:space-y-10">
+      <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
         <section className="space-y-4">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Awesome Something</h1>

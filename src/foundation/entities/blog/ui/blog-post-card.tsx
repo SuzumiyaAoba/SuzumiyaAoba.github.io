@@ -55,7 +55,7 @@ export function BlogPostCard({
             sizes={
               layout === "featured"
                 ? "(min-width: 1024px) 540px, (min-width: 640px) 80vw, 90vw"
-                : "(min-width: 640px) 144px, 80px"
+                : "(min-width: 768px) 96px, 64px"
             }
             className={
               isFallback ? "object-contain p-4 opacity-70 dark:invert sm:p-6" : "object-cover"
@@ -75,7 +75,7 @@ export function BlogPostCard({
           </div>
         )}
       </div>
-      <div className="journal-card-copy min-w-0 space-y-2">
+      <div className="journal-card-copy min-w-0 space-y-1.5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {post.date && (
             <time dateTime={post.date} className="font-mono text-[11px] tabular-nums">

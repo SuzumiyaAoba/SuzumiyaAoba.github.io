@@ -92,7 +92,7 @@ export function BookSectionPageContent({
             ]}
             className="mb-4"
           />
-          <header className="mb-8 space-y-1">
+          <header className="mb-6 space-y-1">
             <p className="text-xs text-muted-foreground">
               第{chapterNum}章 — {chapterTitle}
             </p>
@@ -118,7 +118,7 @@ export function BookSectionPageContent({
           </article>
 
           {/* 前後節ナビ */}
-          <div className="mt-10 space-y-6">
+          <div className="mt-8 space-y-5">
             <Separator className="bg-border/40" />
             <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {prev ? (

@@ -58,10 +58,12 @@ export function NotesDetailPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <section className="mb-10 space-y-3">
+        <section className="mb-6 space-y-3 sm:mb-8">
           <BackLink locale={locale} href="/notes" ja="← ノート一覧" en="← Back to notes" />
           {noteDate ? <p className="text-sm text-muted-foreground">{noteDate}</p> : null}
-          <h1 className="text-3xl font-semibold break-words">{noteTitle}</h1>
+          <h1 className="text-2xl font-semibold leading-snug break-words sm:text-3xl">
+            {noteTitle}
+          </h1>
           {category || tags.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {category ? (

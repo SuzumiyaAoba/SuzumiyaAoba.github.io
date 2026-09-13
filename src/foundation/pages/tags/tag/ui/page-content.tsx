@@ -38,12 +38,12 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
-        <Breadcrumbs items={breadcrumbItems} className="mb-2" />
+      <main className="site-main page-stack" data-pagefind-ignore="all">
+        <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
           <BackLink locale={locale} href="/tags" ja="← タグ一覧" en="← Back to tags" />
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-semibold">#{tag}</h1>
+            <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">#{tag}</h1>
             <Badge
               variant="secondary"
               className="bg-muted text-xs font-medium text-muted-foreground"
@@ -57,7 +57,7 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
           </div>
         </section>
 
-        <ul className="space-y-5">
+        <ul className="post-list">
           {entries.map((post) => (
             <li key={`${locale}-${post.slug}`}>
               <BlogPostCard post={post} locale={locale} thumbnailIconClassName="size-10" />

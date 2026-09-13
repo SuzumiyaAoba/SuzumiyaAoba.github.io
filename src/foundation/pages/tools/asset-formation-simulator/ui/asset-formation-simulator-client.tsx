@@ -33,8 +33,8 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
   } = useAssetFormationSimulator(locale);
 
   return (
-    <main className="site-main flex flex-col">
-      <h1 className="mb-6 text-3xl">
+    <main className="site-main flex flex-col pt-5 sm:pt-6">
+      <h1 className="mb-5 text-2xl leading-snug sm:text-3xl">
         {t("資産形成シミュレーション", "Asset Formation Simulator")}
       </h1>
       <p className="mb-4 text-sm text-foreground/80">
@@ -62,7 +62,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         )}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <label className="flex flex-col gap-2">
           <span className="text-sm">{t("積立て期間（年）", "Contribution period (years)")}</span>
           <input
@@ -81,7 +81,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         </label>
       </div>
 
-      <div className="mb-8 space-y-4">
+      <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-sm font-semibold text-foreground/80">
             {t("積立てパターン", "Contribution scenarios")}
@@ -195,7 +195,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="p-4 border rounded-md" style={{ backgroundColor: "var(--card)" }}>
           <p className="text-xs text-foreground/60 mb-1">{t("元本合計", "Total principal")}</p>
           <p className="text-xl font-semibold">{formatYenWithMan(summary.principal)}</p>
@@ -217,7 +217,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
         visibleSeries={visibleSeries}
         setVisibleSeries={setVisibleSeries}
       />
-      <div className="mb-10 flex justify-end">
+      <div className="mb-6 flex justify-end">
         <button
           type="button"
           className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-foreground text-background hover:bg-foreground/90"

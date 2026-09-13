@@ -57,7 +57,7 @@ export function BlogListingContent({
   return (
     <>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
+      <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">

@@ -36,7 +36,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
   const t = (ja: string, en: string) => (locale === "en" ? en : ja);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <search className="relative">
         <Search
           className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
@@ -50,7 +50,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           placeholder={t("キーワードで検索...", "Search by keyword...")}
           aria-label={t("検索キーワード", "Search keyword")}
           disabled={!pagefindLoaded}
-          className="h-14 pl-12 pr-14 [&::-webkit-search-cancel-button]:appearance-none"
+          className="h-12 pl-12 pr-14 [&::-webkit-search-cancel-button]:appearance-none"
         />
         {query && (
           <Button
@@ -116,7 +116,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
               <li key={result.url}>
                 <a
                   href={toLocalePath(result.url, locale)}
-                  className="index-link flex flex-col gap-3 px-1 py-6"
+                  className="index-link flex flex-col gap-2 px-1 py-4"
                 >
                   <h2 className="text-base font-medium">
                     {result.meta.title ?? t("タイトルなし", "Untitled")}

@@ -22,13 +22,15 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main">
-        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <section className="space-y-4">
+      <main className="site-main page-stack">
+        <Breadcrumbs items={breadcrumbItems} />
+        <section className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja="ツール" en="Tools" />
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">ASCII Standard Code</h1>
+          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+            ASCII Standard Code
+          </h1>
           <p className="text-sm leading-6 text-muted-foreground">
             <I18nText
               locale={locale}
@@ -64,7 +66,12 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
           </p>
         </section>
 
-        <section className="mt-8">
+        <section
+          className="min-w-0 overflow-x-auto"
+          // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 表を矢印キーで横スクロールできるようにする。
+          tabIndex={0}
+          aria-label={locale === "en" ? "ASCII code table" : "ASCIIコード表"}
+        >
           <StandardCode />
         </section>
       </main>

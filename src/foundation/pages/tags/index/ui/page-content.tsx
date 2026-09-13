@@ -30,7 +30,7 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
+      <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="page-heading">
           <h1 className="page-title">
@@ -48,12 +48,12 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
             </div>
           </Card>
         ) : (
-          <ul className="tag-index grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="tag-index grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
                 <a
                   href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, locale)}
-                  className="index-link flex min-h-18 items-center justify-between gap-4 px-1 py-4"
+                  className="index-link flex min-h-14 items-center justify-between gap-3 px-1 py-3"
                 >
                   <Tag
                     tag={tag.name}

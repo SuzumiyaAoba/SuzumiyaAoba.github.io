@@ -60,6 +60,9 @@
     var(--font-source-sans-3, "Source Sans 3"), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
     "Noto Sans JP", "Noto Sans CJK JP", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
   --radius: 0.375rem;
+  --site-header-height: 4rem;
+  --space-page: clamp(1.25rem, 2vw, 1.5rem);
+  --space-section: clamp(2rem, 3.5vw, 3rem);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
   --duration-normal: 240ms;
@@ -224,7 +227,7 @@
     @apply border-border outline-ring/50;
   }
   html {
-    scroll-padding-top: 6rem;
+    scroll-padding-top: calc(var(--site-header-height) + 1rem);
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
   }
@@ -276,17 +279,22 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6;
   }
   .site-main {
-    @apply mx-auto w-full min-w-0 max-w-7xl flex-1 px-5 pt-8 pb-16 sm:px-8 sm:pt-12 sm:pb-24 lg:px-12;
+    @apply mx-auto w-full min-w-0 max-w-7xl flex-1 px-5 pt-6 pb-12 sm:px-8 sm:pt-8 sm:pb-16 lg:px-12;
   }
   .site-main-reading {
     @apply mx-auto w-full min-w-0 max-w-3xl flex-1 px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16;
   }
+  .page-stack {
+    @apply flex flex-col;
+    gap: var(--space-page);
+  }
   .page-heading {
-    @apply flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 pt-4 pb-6 sm:pb-8;
+    @apply flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 pt-1 pb-4 sm:pb-5;
     border-bottom: 1px solid var(--rule);
   }
   .page-title {
-    @apply font-serif text-3xl font-medium leading-snug tracking-tight text-foreground sm:text-5xl;
+    @apply font-serif font-medium leading-snug tracking-tight text-foreground;
+    font-size: clamp(1.625rem, 2.5vw, 2rem);
     text-wrap: balance;
   }
   .page-count {
@@ -294,7 +302,7 @@
     font-family: var(--font-source-code-pro), monospace;
   }
   .prose {
-    @apply text-[16px] leading-8 text-foreground;
+    @apply text-base leading-[1.8] text-foreground;
     font-feature-settings: "palt" 1;
     text-wrap: pretty;
   }
@@ -305,19 +313,19 @@
     @apply mb-0;
   }
   .prose p {
-    @apply my-5 tracking-[0.01em];
+    @apply my-4 tracking-[0.01em];
   }
   .prose small {
     @apply text-xs text-muted-foreground;
   }
   .prose h1 {
-    @apply mt-10 text-2xl font-semibold leading-tight tracking-[0.02em];
+    @apply mt-8 text-2xl font-semibold leading-snug tracking-[0.02em];
   }
   .prose h2 {
-    @apply mt-8 text-xl font-semibold leading-tight tracking-[0.02em];
+    @apply mt-7 text-xl font-semibold leading-snug tracking-[0.02em];
   }
   .prose h3 {
-    @apply mt-7 text-lg font-semibold leading-snug tracking-[0.015em];
+    @apply mt-6 text-lg font-semibold leading-snug tracking-[0.015em];
   }
   .prose h4 {
     @apply mt-6 text-base font-semibold leading-snug tracking-[0.01em];
@@ -352,7 +360,7 @@
   }
   .prose ul,
   .prose ol {
-    @apply mt-0.5 mb-5 pl-6;
+    @apply mt-0.5 mb-4 pl-6;
   }
   .prose ul {
     @apply list-disc;
@@ -366,26 +374,29 @@
   .prose li > p {
     @apply my-0.5;
   }
+  .prose li > :is(ul, ol) {
+    @apply my-1;
+  }
   .prose blockquote {
-    @apply my-6 border-l-2 border-border pl-4 text-muted-foreground;
+    @apply my-5 border-l-2 border-border pl-4 text-muted-foreground;
   }
   .prose blockquote.twitter-tweet {
-    @apply mx-auto my-10;
+    @apply mx-auto my-6;
   }
   .prose .twitter-tweet.twitter-tweet-rendered {
-    margin-top: 2.5rem !important;
+    margin-top: 1.5rem !important;
     margin-right: auto !important;
-    margin-bottom: 2.5rem !important;
+    margin-bottom: 1.5rem !important;
     margin-left: auto !important;
   }
   .prose hr {
-    @apply my-8 border-border/60;
+    @apply my-6 border-border/60;
   }
   .prose code {
     @apply rounded bg-muted px-1.5 py-0.5 text-[0.9em];
   }
   .prose pre {
-    @apply my-6 overflow-x-auto rounded-lg bg-muted p-4 text-sm leading-6;
+    @apply my-5 overflow-x-auto rounded-lg bg-muted p-4 text-sm leading-6;
   }
   .prose pre code {
     @apply bg-transparent p-0 text-sm leading-6;
@@ -394,7 +405,7 @@
     @apply rounded-md border border-foreground/20 bg-foreground px-2 py-0.5 text-[0.75rem] font-semibold text-background;
   }
   .prose figure {
-    @apply my-6;
+    @apply my-5;
   }
   .prose figcaption {
     @apply mt-2 text-xs text-muted-foreground;
@@ -407,7 +418,7 @@
     @apply overflow-x-auto;
   }
   .prose table {
-    @apply my-6 min-w-full w-max border-collapse text-sm;
+    @apply my-5 min-w-full w-max border-collapse text-sm;
   }
   .prose thead {
     @apply border-b border-border/60;
@@ -420,7 +431,7 @@
     @apply bg-muted/40;
   }
   .prose dl {
-    @apply my-6;
+    @apply my-5;
   }
   .prose dt {
     @apply font-semibold;
@@ -429,7 +440,7 @@
     @apply mb-4 ml-4 text-muted-foreground;
   }
   .prose details {
-    @apply my-6 rounded-lg border border-border/60 bg-muted/30 px-4 py-3;
+    @apply my-5 rounded-lg border border-border/60 bg-muted/30 px-4 py-3;
   }
   .prose summary {
     @apply cursor-pointer font-semibold;
@@ -442,20 +453,17 @@
     @apply cursor-help underline decoration-dotted;
   }
   @media (min-width: 768px) {
-    .prose {
-      @apply text-[16px] leading-8;
-    }
     .prose h1 {
-      @apply mt-12 text-3xl;
+      @apply mt-10 text-[1.625rem];
     }
     .prose h2 {
-      @apply mt-10 text-2xl;
+      @apply mt-8 text-[1.375rem];
     }
     .prose h3 {
-      @apply mt-8 text-xl;
+      @apply mt-7 text-xl;
     }
     .prose h4 {
-      @apply mt-7 text-lg;
+      @apply mt-6 text-lg;
     }
     .prose h5 {
       @apply mt-6 text-base;

@@ -60,7 +60,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
 
   if (items.length === 0) {
     return (
-      <p className="rounded-xl bg-muted/60 px-6 py-12 text-center text-sm text-muted-foreground">
+      <p className="rounded-xl bg-muted/60 px-5 py-8 text-center text-sm text-muted-foreground">
         {isEnglish ? "No discoveries recorded yet." : "まだ登録がありません。"}
       </p>
     );
@@ -141,7 +141,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
       </div>
 
       {filteredItems.length === 0 ? (
-        <div className="space-y-4 rounded-xl bg-muted/60 px-6 py-12 text-center">
+        <div className="space-y-3 rounded-xl bg-muted/60 px-5 py-8 text-center">
           <p className="text-sm text-muted-foreground">
             {isEnglish ? "No matching discoveries." : "条件に一致する項目がありません。"}
           </p>
@@ -153,7 +153,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
               key={item.id}
               id={`awesome-${item.id}`}
               aria-labelledby={`awesome-${item.id}-title`}
-              className="min-w-0 scroll-mt-24 space-y-5 rounded-xl bg-muted/50 p-6 transition-colors hover:bg-muted sm:p-8"
+              className="min-w-0 scroll-mt-24 space-y-4 rounded-xl bg-muted/50 p-5 transition-colors hover:bg-muted sm:p-6"
             >
               <div className="space-y-3">
                 <Badge variant="secondary" className="font-normal text-muted-foreground">

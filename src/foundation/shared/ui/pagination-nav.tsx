@@ -32,7 +32,7 @@ export function PaginationNav({
     "inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted";
 
   return (
-    <nav aria-label={en ? "Pagination" : "ページ送り"} className="space-y-4 pt-8">
+    <nav aria-label={en ? "Pagination" : "ページ送り"} className="space-y-3 pt-4">
       <ol className="flex flex-wrap items-center justify-center gap-1">
         {visiblePages.map((page, index) => {
           const previousPage = visiblePages[index - 1];
