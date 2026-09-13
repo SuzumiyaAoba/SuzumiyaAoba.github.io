@@ -33,9 +33,32 @@ const ICON_DIR = path.join(ROOT, "src/foundation/shared/ui/icon");
  * クライアントコンポーネントから使うアイコン。
  * これらだけがクライアントバンドルへ載る。
  * 対象ファイル: widgets/header/ui/header.tsx, shared/ui/theme-toggle.tsx,
- *              shared/ui/language-toggle.tsx
+ *              shared/ui/language-toggle.tsx, pages/archive/ai-news/ui/provider-identity.tsx
  */
-const CLIENT_ICONS = ["lucide:search", "lucide:sun", "lucide:moon", "lucide:languages"];
+const CLIENT_ICONS = [
+  "lucide:search",
+  "lucide:sun",
+  "lucide:moon",
+  "lucide:languages",
+  "logos:openai-icon",
+  "material-icon-theme:claude",
+  "logos:google-icon",
+  "ri:deepseek-fill",
+  "ri:qwen-ai-fill",
+  "simple-icons:kimi",
+  "logos:meta",
+  "logos:mistral-ai-icon",
+  "ri:grok-ai-fill",
+  "ri:zhipu-ai-fill",
+  "simple-icons:minimax",
+  "logos:microsoft",
+  "ri:amazon-fill",
+  "simple-icons:nvidia",
+  "simple-icons:ibm",
+  "logos:hugging-face-icon",
+  "ri:baidu-fill",
+  "simple-icons:databricks",
+];
 
 /** 指定拡張子のファイルを再帰的に集める */
 function collectFiles(dir, extensions) {

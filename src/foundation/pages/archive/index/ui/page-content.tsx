@@ -29,10 +29,10 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         en: "AI News",
       },
       description: {
-        ja: "AI関連ニュースのタイムライン",
-        en: "Timeline of AI-related news.",
+        ja: "AIモデルのリリース日と、系列ごとのリリース間隔をカレンダーで比較。",
+        en: "Explore AI model release dates and compare release intervals by series.",
       },
-      thumbnail: "iconify:lucide:newspaper",
+      thumbnail: "iconify:lucide:calendar-days",
     },
     {
       slug: "tools",

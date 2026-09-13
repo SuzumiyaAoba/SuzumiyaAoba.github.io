@@ -17,6 +17,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
 
   const buildTime = new Date();
+  const aiNewsPages: MetadataRoute.Sitemap = [
+    "/archive/ai-news/",
+    "/archive/ai-news/timeline/",
+  ].map((path) => ({
+    url: `${siteUrl}${path}`,
+    lastModified: buildTime,
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
   const staticPages = buildTranslatedSitemapEntries(
     [
       { path: "/", changeFrequency: "daily", priority: 1.0 },
@@ -146,6 +155,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...aiNewsPages,
     ...blogPages,
     ...notePages,
     ...bookIndexPages,

@@ -2,12 +2,14 @@ import { getAiNewsEntries, getAiNewsUpdated } from "@/shared/lib/ai-news";
 import { renderMdx } from "@/shared/lib/mdx";
 import { resolveLocale, type Locale } from "@/shared/lib/routing";
 import { AiNewsPageContent } from "./page-content";
+import { AiNewsTimelinePageContent } from "./timeline-page-content";
 
 type PageProps = {
   locale?: Locale;
+  view?: "calendar" | "timeline";
 };
 
-export default async function Page({ locale }: PageProps) {
+export default async function Page({ locale, view = "calendar" }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
   const [entries, updated] = await Promise.all([getAiNewsEntries(), getAiNewsUpdated()]);
   const renderedEntries = await Promise.all(
@@ -24,11 +26,7 @@ export default async function Page({ locale }: PageProps) {
     }),
   );
 
-  return (
-    <AiNewsPageContent
-      locale={resolvedLocale}
-      updated={updated ?? null}
-      entries={renderedEntries}
-    />
-  );
+  const Content = view === "timeline" ? AiNewsTimelinePageContent : AiNewsPageContent;
+
+  return <Content locale={resolvedLocale} updated={updated ?? null} entries={renderedEntries} />;
 }

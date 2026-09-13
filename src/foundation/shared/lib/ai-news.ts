@@ -18,6 +18,8 @@ export const AiNewsEntrySchema = z.object({
   summary_en: z.string().optional(),
   /** 関連するタグのリスト */
   tags: z.array(z.string()).optional(),
+  /** リリース間隔を比較するモデル系列。同時発表は複数指定できる。 */
+  series: z.array(z.string().trim().min(1)).optional(),
 });
 
 /**
@@ -35,6 +37,7 @@ export type AiNewsEntry = {
     en?: string;
   };
   tags?: string[];
+  series?: string[];
 };
 
 /**
@@ -84,6 +87,7 @@ function normalizeEntry(raw: unknown): AiNewsEntry | null {
       ...(data.summary_en ? { en: data.summary_en } : {}),
     },
     ...(data.tags && data.tags.length > 0 ? { tags: data.tags } : {}),
+    ...(data.series && data.series.length > 0 ? { series: [...new Set(data.series)] } : {}),
   };
 }
 

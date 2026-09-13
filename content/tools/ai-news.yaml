@@ -9,6 +9,7 @@ events:
 
       [DeepSeek-V4.1-Flash の発表 | DeepSeek](https://deepseek.com/en/news/deepseek-v4-1-flash/)
     tags: ["DeepSeek", "LLM Model"]
+    series: ["DeepSeek Flash"]
   - year: 2026
     date: 2026-09-10
     title_ja: "GPT-Live 1 (API GA)"
@@ -17,6 +18,7 @@ events:
 
       [GPT-Live 1 の一般提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "Audio Model"]
+    series: ["GPT-Live"]
   - year: 2026
     date: 2026-09-08
     title_ja: "GPT Image 2.5 (Sunburst, Flare)"
@@ -25,6 +27,7 @@ events:
 
       [GPT Image 2.5 の発表 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "Image Model"]
+    series: ["GPT Image"]
   - year: 2026
     date: 2026-09-08
     title_ja: "GPT-Rosalind (GA・承認制)"
@@ -33,6 +36,7 @@ events:
 
       [GPT-Rosalind の正式提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT-Rosalind"]
   - year: 2026
     date: 2026-09-03
     title_ja: "GPT-6 Astra"
@@ -41,6 +45,17 @@ events:
 
       [GPT-6 Astra | OpenAI](https://developers.openai.com/api/docs/models/gpt-6-astra) / [発表日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-09-02
+    title_ja: "Qwen3.8-Max-0902"
+    summary_ja: |
+      開発・ツール連携・視覚理解を改善した API スナップショットを提供。
+
+      [Qwen3.8-Max-0902 の公式発表・公開情報 | Alibaba](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
   - year: 2026
     date: 2026-09-02
     title_ja: "Gemini 3.8 Flash / 3.8 Flash Cyber"
@@ -49,6 +64,7 @@ events:
 
       [Gemini 3.8 Flash と 3.8 Flash Cyber の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash", "Gemini Flash Cyber"]
   - year: 2026
     date: 2026-09-01
     title_ja: "Claude Fable 5.1 / Claude Mythos 5.1"
@@ -57,6 +73,7 @@ events:
 
       [Claude Fable 5.1 と Claude Mythos 5.1 の発表 | Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-1)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Fable", "Claude Mythos"]
   - year: 2026
     date: 2026-08-26
     title_ja: "Gemini 3.5 Transcribe / Transcribe Live (GA)"
@@ -65,24 +82,78 @@ events:
 
       [Gemini 3.5 Transcribe の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5-transcribe/)
     tags: ["Google", "Gemini", "Audio Model"]
+    series: ["Gemini Transcribe", "Gemini Transcribe Live"]
+  - year: 2026
+    date: 2026-08-26
+    title_ja: "GLM-5.3-Flash"
+    summary_ja: |
+      視覚理解と効率的なハイブリッド構造を採用。
+
+      [GLM-5.3-Flash の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "LLM Model"]
+    series: ["GLM Flash"]
+
   - year: 2026
     date: 2026-08-21
     title_ja: "DeepSeek-V4-Flash-Vision-Exp"
     summary_ja: |
       [DeepSeek-V4-Flash-Vision-Exp の発表 | DeepSeek API Docs](https://api-docs.deepseek.com/news/news260821/)
     tags: ["DeepSeek", "LLM Model"]
+    series: ["DeepSeek Flash"]
+  - year: 2026
+    date: 2026-08-18
+    title_ja: "GLM-5.3"
+    summary_ja: |
+      コード生成と大規模な開発作業を改善。
+
+      [GLM-5.3 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
+  - year: 2026
+    date: 2026-08-14
+    title_ja: "Qwen3.8-27B"
+    summary_ja: |
+      Qwen3.8 の Dense 27B モデルを公開。
+
+      [Qwen3.8-27B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2026
     date: 2026-08-13
     title_ja: "Gemini 3.7 Flash"
     summary_ja: |
       [Gemini 3.7 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash"]
   - year: 2026
     date: 2026-08-13
     title_ja: "DeepSeek-V4-Pro (GA)"
     summary_ja: |
       [DeepSeek-V4-Pro の一般提供開始 | DeepSeek API Docs](https://api-docs.deepseek.com/news/news260813/)
     tags: ["DeepSeek", "LLM Model"]
+    series: ["DeepSeek Pro"]
+  - year: 2026
+    date: 2026-08-12
+    title_ja: "Qwen3.8-2.4T-A95B"
+    summary_ja: |
+      Qwen3.8 の大規模 MoE モデルの重みを公開。
+
+      [Qwen3.8-2.4T-A95B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2026
+    date: 2026-08-12
+    title_ja: "Grok 4.6"
+    summary_ja: |
+      長時間のエージェント作業と視覚を使う開発作業を強化。
+
+      [Grok 4.6 の公式発表・公開情報 | xAI](https://x.ai/news/grok-4-6)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
   - year: 2026
     date: 2026-08-07
     title_ja: "GPT-5.6 Cyber (限定提供)"
@@ -91,12 +162,24 @@ events:
 
       [GPT-5.6 Cyber | OpenAI](https://developers.openai.com/api/docs/models/gpt-5.6-cyber) / [提供開始日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT Cyber"]
+  - year: 2026
+    date: 2026-08-03
+    title_ja: "Qwen3.8-Max (API)"
+    summary_ja: |
+      視覚理解と長いコンテキストに対応する大規模モデルを API で提供。
+
+      [Qwen3.8-Max (API) の公式発表・公開情報 | Alibaba](https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen3-8-max)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
   - year: 2026
     date: 2026-07-24
     title_ja: "Claude Opus 5"
     summary_ja: |
       [Claude Opus 5 の発表 | Anthropic](https://www.anthropic.com/news/claude-opus-5)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
   - year: 2026
     date: 2026-07-21
     title_ja: "Gemini 3.6 Flash / 3.5 Flash-Lite / 3.5 Flash Cyber"
@@ -105,48 +188,146 @@ events:
 
       [Gemini 3.6 Flash・3.5 Flash-Lite・3.5 Flash Cyber の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash", "Gemini Flash-Lite", "Gemini Flash Cyber"]
+  - year: 2026
+    date: 2026-07-16
+    title_ja: "Kimi K3"
+    summary_ja: |
+      画像理解と100万トークンのコンテキストに対応する新世代モデルを発表し、Kimi と API で提供を開始。モデル重みの公開は後日の予定として案内。
+
+      [Kimi K3 の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k3)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi"]
+
+  - year: 2026
+    date: 2026-07-16
+    title_ja: "Grok 4.5"
+    summary_ja: |
+      コード・エージェント・知識業務向けモデルを提供。
+
+      [Grok 4.5 の公式発表・公開情報 | xAI](https://x.ai/news/grok-4-5)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
   - year: 2026
     date: 2026-07-09
     title_ja: "GPT-5.6 (Sol, Terra, Luna)"
     summary_ja: |
       [GPT-5.6：野心に応えるスケーラブルなフロンティア知能 | OpenAI](https://openai.com/ja-JP/index/gpt-5-6/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
   - year: 2026
     date: 2026-07-08
     title_ja: "GPT-Live"
     summary_ja: |
       [Introducing GPT-Live | OpenAI](https://openai.com/index/introducing-gpt-live/)
     tags: ["OpenAI", "GPT", "Audio Model"]
+    series: ["GPT-Live"]
   - year: 2026
     date: 2026-06-30
     title_ja: "Claude Sonnet 5"
     summary_ja: |
       [Introducing Claude Sonnet 5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-5)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
   - year: 2026
     date: 2026-06-30
     title_ja: "Nano Banana 2 Lite (Gemini 3.1 Flash-Lite Image)"
     summary_ja: |
       [Nano Banana 2 Lite の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
     tags: ["Google", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-06-16
+    title_ja: "GLM-5.2"
+    summary_ja: |
+      100万トークンの文脈と長い開発作業に対応。
+
+      [GLM-5.2 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
   - year: 2026
     date: 2026-06-09
     title_ja: "Claude Fable 5 / Claude Mythos 5"
     summary_ja: |
       [Redeploying Fable 5 \ Anthropic](https://www.anthropic.com/news/redeploying-fable-5)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Fable", "Claude Mythos"]
+  - year: 2026
+    date: 2026-06-03
+    title_ja: "Gemma 4 12B"
+    summary_ja: |
+      視覚・音声入力を統合した 12B モデルを追加。
+
+      [Gemma 4 12B の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12b/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2026
+    date: 2026-06-01
+    title_ja: "MiniMax-M3"
+    summary_ja: |
+      100万トークンの文脈と画像・動画入力に対応するモデルを発表。
+
+      [MiniMax-M3 の公式発表・公開情報 | MiniMax](https://www.minimax.io/blog/minimax-m3)
+    tags: ["MiniMax", "LLM Model"]
+    series: ["MiniMax"]
+
   - year: 2026
     date: 2026-05-28
     title_ja: "Claude Opus 4.8"
     summary_ja: |
       [Introducing Claude Opus 4.8 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-8)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
+  - year: 2026
+    date: 2026-05-22
+    title_ja: "Mistral Medium 3.5 (Preview)"
+    summary_ja: |
+      指示追従・推論・開発を統合したモデルの重みを公開。
+
+      [Mistral Medium 3.5 (Preview) の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Medium"]
+
+  - year: 2026
+    date: 2026-05-21
+    title_ja: "Qwen3.7-Max"
+    summary_ja: |
+      長時間の推論やエージェント用途向けのモデルを提供開始。
+
+      [Qwen3.7-Max の公式発表・公開情報 | Alibaba](https://modelstudio.alibabacloud.com/)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2026
+    date: 2026-05-20
+    title_ja: "Command A+"
+    summary_ja: |
+      MoE モデル Command A+ を API で提供。多言語対応を 48 言語に拡大。
+
+      [Command A+ の公式発表・公開情報 | Cohere](https://docs.cohere.com/v2/changelog)
+    tags: ["Cohere", "Command", "LLM Model"]
+    series: ["Command A"]
+
   - year: 2026
     date: 2026-05-19
     title_ja: "Gemini 3.5 Flash"
     summary_ja: |
       [Gemini 3.5 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash"]
+  - year: 2026
+    date: 2026-04-28
+    title_ja: "Nemotron 3 Nano Omni"
+    summary_ja: |
+      画像・音声・動画を扱うマルチモーダルモデル Nemotron 3 Nano Omni を公開。
+
+      [Nemotron 3 Nano Omni の公式発表・公開情報 | NVIDIA](https://blogs.nvidia.com/blog/nemotron-3-nano-omni-multimodal-ai-agents/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+
   - year: 2026
     date: 2026-04-24
     title_ja: "DeepSeek-V4-Pro / DeepSeek-V4-Flash (Preview)"
@@ -155,315 +336,2290 @@ events:
 
       [DeepSeek-V4 Preview の発表 | DeepSeek](https://deepseek.com/en/news/v4-preview/)
     tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek Pro", "DeepSeek Flash"]
   - year: 2026
     date: 2026-04-23
     title_ja: "GPT-5.5 / GPT-5.5 Pro"
     summary_ja: |
       [Introducing GPT-5.5 | OpenAI](https://openai.com/index/introducing-gpt-5-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-04-22
+    title_ja: "Qwen3.6-27B"
+    summary_ja: |
+      Qwen3.6 の Dense 27B モデルを公開。
+
+      [Qwen3.6-27B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2026
+    date: 2026-04-20
+    title_ja: "Kimi K2.6"
+    summary_ja: |
+      長い開発作業と複数エージェントの協調能力を強化。
+
+      [Kimi K2.6 の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k2-6)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+
+  - year: 2026
+    date: 2026-04-18
+    title_ja: "Qwen3.6-Max-Preview"
+    summary_ja: |
+      知識・指示追従・開発能力を強化したモデルをプレビュー提供。
+
+      [Qwen3.6-Max-Preview の公式発表・公開情報 | Alibaba](https://qwen.ai/blog?id=qwen3.6-max-preview)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2026
+    date: 2026-04-16
+    title_ja: "Qwen3.6-35B-A3B"
+    summary_ja: |
+      開発作業と複数ターンの推論を改善した MoE モデルを公開。
+
+      [Qwen3.6-35B-A3B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2026
     date: 2026-04-16
     title_ja: "Claude Opus 4.7"
     summary_ja: |
       [Introducing Claude Opus 4.7 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-7)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
+  - year: 2026
+    date: 2026-04-07
+    title_ja: "GLM-5.1"
+    summary_ja: |
+      長時間の計画・実行・修正を強化。
+
+      [GLM-5.1 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
+  - year: 2026
+    date: 2026-04-03
+    title_ja: "PLaMo 2.1 8B VLM / 2B VLM"
+    summary_ja: |
+      画像を扱う国産マルチモーダルモデル PLaMo 2.1 8B VLM と 2B VLM を公開。
+
+      [PLaMo 2.1 8B VLM / 2B VLM の公式発表・公開情報 | Preferred Networks](https://www.preferred.jp/ja/news/802)
+    tags: ["Preferred Networks", "PLaMo", "Open Weight Model", "LLM Model"]
+    series: ["PLaMo"]
+
+  - year: 2026
+    date: 2026-04-02
+    title_ja: "Gemma 4 (E2B, E4B, 26B MoE, 31B)"
+    summary_ja: |
+      推論・エージェント用途向けの第4世代モデルを公開。
+
+      [Gemma 4 (E2B, E4B, 26B MoE, 31B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2026
+    date: 2026-03-18
+    title_ja: "MiniMax-M2.7"
+    summary_ja: |
+      複雑な開発作業とエージェントの協調を強化。
+
+      [MiniMax-M2.7 の公式発表・公開情報 | MiniMax](https://www.minimax.io/news/minimax-m27-en)
+    tags: ["MiniMax", "LLM Model"]
+    series: ["MiniMax"]
+
   - year: 2026
     date: 2026-03-17
     title_ja: "GPT-5.4 mini / GPT-5.4 nano"
     summary_ja: |
       [GPT-5.4 mini と GPT-5.4 nano の発表 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT mini", "GPT nano"]
+  - year: 2026
+    date: 2026-03-16
+    title_ja: "Mistral Small 4"
+    summary_ja: |
+      汎用・推論・開発能力を統合したモデルを公開。
+
+      [Mistral Small 4 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-small-4/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Small"]
+
+  - year: 2026
+    date: 2026-03-16
+    title_ja: "Leanstral"
+    summary_ja: |
+      形式証明と検証可能なコード生成向けのモデルを公開。
+
+      [Leanstral の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/leanstral/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Leanstral"]
+
+  - year: 2026
+    date: 2026-03-11
+    title_ja: "Nemotron 3 Super"
+    summary_ja: |
+      エージェント用途向けの Nemotron 3 Super を公開。
+
+      [Nemotron 3 Super の公式発表・公開情報 | NVIDIA](https://blogs.nvidia.com/blog/nemotron-3-super-agentic-ai/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+
   - year: 2026
     date: 2026-03-05
     title_ja: "GPT-5.4 / GPT-5.4 Pro"
     summary_ja: |
       [GPT-5.4 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-4/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
   - year: 2026
     date: 2026-03-03
     title_ja: "GPT-5.3 Instant"
     summary_ja: |
       [GPT-5.3 Instant の API 提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
   - year: 2026
     date: 2026-03-03
     title_ja: "Gemini 3.1 Flash-Lite (Preview)"
     summary_ja: |
       [Gemini 3.1 Flash-Lite の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash-Lite"]
+  - year: 2026
+    date: 2026-03-02
+    title_ja: "Qwen3.5 (0.8B, 2B, 4B, 9B)"
+    summary_ja: |
+      小型の視覚言語モデルを追加。
+
+      [Qwen3.5 (0.8B, 2B, 4B, 9B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2026
     date: 2026-02-26
     title_ja: "Nano Banana 2 (Gemini 3.1 Flash Image Preview)"
     summary_ja: |
       [Nano Banana 2 の発表 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
     tags: ["Google", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-02-24
+    title_ja: "Qwen3.5 (27B, 35B-A3B, 122B-A10B)"
+    summary_ja: |
+      Dense・MoE の中型モデルを追加。
+
+      [Qwen3.5 (27B, 35B-A3B, 122B-A10B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2026
     date: 2026-02-19
     title_ja: "Gemini 3.1 Pro (Preview)"
     summary_ja: |
       [Gemini 3.1 Pro の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Pro"]
   - year: 2026
     date: 2026-02-17
     title_ja: "Claude Sonnet 4.6"
     summary_ja: |
       [Introducing Claude Sonnet 4.6 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-6)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
+  - year: 2026
+    date: 2026-02-16
+    title_ja: "Qwen3.5-397B-A17B"
+    summary_ja: |
+      視覚言語処理を統合した第3.5世代の最初のモデルを公開。
+
+      [Qwen3.5-397B-A17B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2026
+    date: 2026-02-12
+    title_ja: "MiniMax-M2.5"
+    summary_ja: |
+      コード・ツール利用・業務作業向けの性能を改善。
+
+      [MiniMax-M2.5 の公式発表・公開情報 | MiniMax](https://www.minimax.io/blog/minimax-m25)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax"]
+
+  - year: 2026
+    date: 2026-02-12
+    title_ja: "GLM-5"
+    summary_ja: |
+      システム開発と長時間の作業向けモデルを提供。
+
+      [GLM-5 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
   - year: 2026
     date: 2026-02-05
     title_ja: "GPT-5.3-Codex"
     summary_ja: |
       [GPT-5.3-Codex のご紹介 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-3-codex/)
     tags: ["OpenAI", "GPT", "Codex", "LLM Model"]
+    series: ["GPT Codex"]
   - year: 2026
     date: 2026-02-05
     title_ja: "Claude Opus 4.6"
     summary_ja: |
       [Claude Opus 4.6 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-6)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
+  - year: 2026
+    date: 2026-02-02
+    title_ja: "Qwen3-Coder-Next"
+    summary_ja: |
+      開発エージェントとローカル実行向けのハイブリッドモデルを公開。
+
+      [Qwen3-Coder-Next の公式発表・公開情報 | Alibaba](https://qwen.ai/blog?id=qwen3-coder-next)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Coder"]
+
+  - year: 2026
+    date: 2026-01-27
+    title_ja: "Kimi K2.5"
+    summary_ja: |
+      視覚理解と開発・エージェント能力を統合したモデルを公開。
+
+      [Kimi K2.5 の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k2-5)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+
+  - year: 2026
+    date: 2026-01-25
+    title_ja: "Qwen3-Max-Thinking"
+    summary_ja: |
+      推論と検索・コード実行の連携を強化したモデルを発表。
+
+      [Qwen3-Max-Thinking の公式発表・公開情報 | Alibaba](https://qwen.ai/blog?id=qwen3-max-thinking)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2026
+    date: 2026-01-19
+    title_ja: "GLM-4.7-Flash"
+    summary_ja: |
+      推論効率を重視した小型版を提供。
+
+      [GLM-4.7-Flash の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM Flash"]
+
+  - year: 2025
+    date: 2025-12-23
+    title_ja: "MiniMax-M2.1"
+    summary_ja: |
+      多言語のプログラミングと実用的な開発作業を強化。
+
+      [MiniMax-M2.1 の公式発表・公開情報 | MiniMax](https://www.minimax.io/blog/minimax-m21)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax"]
+
+  - year: 2025
+    date: 2025-12-22
+    title_ja: "GLM-4.7"
+    summary_ja: |
+      推論・開発・ツール利用を改善。
+
+      [GLM-4.7 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
   - year: 2025
     date: 2025-12-18
     title_ja: "GPT-5.2-Codex"
     summary_ja: |
       [GPT-5.2-Codex が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-2-codex/)
     tags: ["OpenAI", "GPT", "Codex", "LLM Model"]
+    series: ["GPT Codex"]
   - year: 2025
     date: 2025-12-17
     title_ja: "Gemini 3 Flash"
     summary_ja: |
       [Gemini 3 Flash：スピードを追求した最先端知能](https://blog.google/intl/ja-jp/company-news/technology/gemini3-flash/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash"]
+  - year: 2025
+    date: 2025-12-15
+    title_ja: "Nemotron 3 Nano"
+    summary_ja: |
+      Nemotron 3 ファミリーを発表し、最初のモデル Nano を公開。Super と Ultra は後続の公開予定として紹介。
+
+      [Nemotron 3 Nano の公式発表・公開情報 | NVIDIA](https://research.nvidia.com/labs/nemotron/Nemotron-3/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+
   - year: 2025
     date: 2025-12-11
     title_ja: "GPT-5.2 (Instant, Thinking, Pro)"
     summary_ja: |
       [GPT-5.2 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-2/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2025
+    date: 2025-12-09
+    title_ja: "Devstral 2 / Devstral Small 2"
+    summary_ja: |
+      開発向けモデルの第2世代を公開。
+
+      [Devstral 2 / Devstral Small 2 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/devstral-2-vibe-cli/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Devstral"]
+
+  - year: 2025
+    date: 2025-12-08
+    title_ja: "GLM-4.6V"
+    summary_ja: |
+      画像理解と長いマルチモーダル入力への対応を改善。
+
+      [GLM-4.6V の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM Vision"]
+
+  - year: 2025
+    date: 2025-12-02
+    title_ja: "Mistral Large 3 / Ministral 3 (3B, 8B, 14B)"
+    summary_ja: |
+      大規模 MoE と小型の視覚言語モデル群を公開。
+
+      [Mistral Large 3 / Ministral 3 (3B, 8B, 14B) の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-3/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Large", "Ministral"]
+
+  - year: 2025
+    date: 2025-12-02
+    title_ja: "Amazon Nova 2 Lite / Pro Preview"
+    summary_ja: |
+      推論能力を強化した Nova 2 Lite と Nova 2 Pro のプレビューを Amazon Bedrock で提供。
+
+      [Amazon Nova 2 Lite / Pro Preview の公式発表・公開情報 | Amazon](https://aws.amazon.com/about-aws/whats-new/2025/12/nova-2-foundation-models-amazon-bedrock/)
+    tags: ["Amazon", "Nova", "LLM Model"]
+    series: ["Nova"]
+
+  - year: 2025
+    date: 2025-12-01
+    title_ja: "DeepSeek-V3.2 / V3.2-Speciale"
+    summary_ja: |
+      推論とツール利用を強化したモデルと推論重視版を公開。
+
+      [DeepSeek-V3.2 / V3.2-Speciale の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news251201/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
   - year: 2025
     date: 2025-11-25
     title_ja: "Claude Opus 4.5"
     summary_ja: |
       [Introducing Claude Opus 4.5 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-5)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
+  - year: 2025
+    date: 2025-11-25
+    title_ja: "Sarashina2.2-Vision-3B"
+    summary_ja: |
+      日本語の画像理解に対応する Sarashina2.2-Vision-3B を公開。
+
+      [Sarashina2.2-Vision-3B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/sarashinalab/)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina Vision"]
+
+  - year: 2025
+    date: 2025-11-20
+    title_ja: "Olmo 3"
+    summary_ja: |
+      Olmo 3 の Base、Instruct、Think モデルを公開。学習過程を再現するためのデータとコードも提供。
+
+      [Olmo 3 の公式発表・公開情報 | Ai2](https://allenai.org/blog/olmo3)
+    tags: ["Ai2", "OLMo", "Open Weight Model", "LLM Model"]
+    series: ["OLMo"]
+
   - year: 2025
     date: 2025-11-19
     title_ja: "Nano Banana Pro (Gemini 3 Pro Image)"
     summary_ja: |
       [Nano Banana Pro available for enterprise | Google Cloud Blog](https://cloud.google.com/blog/products/ai-machine-learning/nano-banana-pro-available-for-enterprise?e=48754805&hl=en)
     tags: ["Google", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
   - year: 2025
     date: 2025-11-19
     title_ja: "GPT-5.1-Codex-Max"
     summary_ja: |
       [GPT-5.1-Codex-Max で広がる可能性 | OpenAI](https://openai.com/ja-JP/index/gpt-5-1-codex-max/)
     tags: ["OpenAI", "GPT", "Codex", "LLM Model"]
+    series: ["GPT Codex"]
   - year: 2025
     date: 2025-11-19
     title_ja: "Gemini 3 Pro"
     summary_ja: |
       [Gemini 3 を発表](https://blog.google/intl/ja-jp/company-news/technology/gemini-3-collection/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Pro"]
+  - year: 2025
+    date: 2025-11-19
+    title_ja: "Grok 4.1 Fast"
+    summary_ja: |
+      ツールを使うエージェント向けモデルを提供。
+
+      [Grok 4.1 Fast の公式発表・公開情報 | xAI](https://x.ai/news/grok-4-1-fast)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok Fast"]
+
+  - year: 2025
+    date: 2025-11-17
+    title_ja: "Grok 4.1"
+    summary_ja: |
+      対話能力を改善したモデルを提供。
+
+      [Grok 4.1 の公式発表・公開情報 | xAI](https://x.ai/news/grok-4-1)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
   - year: 2025
     date: 2025-11-12
     title_ja: "GPT-5.1 (Instant, Thinking)"
     summary_ja: |
       [GPT-5.1：さらに賢く、より会話的になった ChatGPT | OpenAI](https://openai.com/ja-JP/index/gpt-5-1/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2025
+    date: 2025-11-06
+    title_ja: "Kimi K2 Thinking"
+    summary_ja: |
+      推論中にツールを使い続ける能力を強化したモデルを公開。
+
+      [Kimi K2 Thinking の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k2-thinking)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+
   - year: 2025
     date: 2025-10-29
     title_ja: "gpt-oss-safeguard (20b, 120b)"
     summary_ja: |
       [gpt-oss-safeguard が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss-safeguard/)
     tags: ["OpenAI", "gpt", "Open Weight Model", "LLM Model"]
+    series: ["gpt-oss safeguard"]
+  - year: 2025
+    date: 2025-10-27
+    title_ja: "MiniMax-M2"
+    summary_ja: |
+      コード生成・ツール利用・検索向けモデルを公開。
+
+      [MiniMax-M2 の公式発表・公開情報 | MiniMax](https://www.minimax.io/blog/minimax-m2-en-1748600000)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax"]
+
+  - year: 2025
+    date: 2025-10-21
+    title_ja: "Qwen3-VL (2B, 32B)"
+    summary_ja: |
+      2B・32B の視覚言語モデルを公開。
+
+      [Qwen3-VL (2B, 32B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
   - year: 2025
     date: 2025-10-16
     title_ja: "Claude Haiku 4.5"
     summary_ja: |
       [Introducing Claude Haiku 4.5 \ Anthropic](https://www.anthropic.com/news/claude-haiku-4-5)
     tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
+    series: ["Claude Haiku"]
+  - year: 2025
+    date: 2025-10-15
+    title_ja: "Qwen3-VL (4B, 8B)"
+    summary_ja: |
+      4B・8B の視覚言語モデルを公開。
+
+      [Qwen3-VL (4B, 8B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-10-04
+    title_ja: "Qwen3-VL-30B-A3B (Instruct, Thinking)"
+    summary_ja: |
+      視覚言語モデルに 30B MoE 版を追加。
+
+      [Qwen3-VL-30B-A3B (Instruct, Thinking) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-10-02
+    title_ja: "Granite 4.0"
+    summary_ja: |
+      Mamba-2 と Transformer を組み合わせたハイブリッドモデルを含む Granite 4.0 を公開。Micro、Tiny、Small を展開。
+
+      [Granite 4.0 の公式発表・公開情報 | IBM](https://www.ibm.com/new/announcements/ibm-granite-4-0-hyper-efficient-high-performance-hybrid-models)
+    tags: ["IBM", "Granite", "Open Weight Model", "LLM Model"]
+    series: ["Granite"]
+
   - year: 2025
     date: 2025-09-30
     title_ja: "Claude Sonnet 4.5"
     summary_ja: |
       [Introducing Claude Sonnet 4.5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-5)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
+  - year: 2025
+    date: 2025-09-30
+    title_ja: "GLM-4.6"
+    summary_ja: |
+      開発能力と長文対応を強化。
+
+      [GLM-4.6 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
+  - year: 2025
+    date: 2025-09-29
+    title_ja: "DeepSeek-V3.2-Exp"
+    summary_ja: |
+      DeepSeek Sparse Attention を導入した実験版を公開。長文処理の効率を改善。
+
+      [DeepSeek-V3.2-Exp の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250929/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2025
+    date: 2025-09-23
+    title_ja: "Qwen3-VL-235B-A22B (Instruct, Thinking)"
+    summary_ja: |
+      視覚言語モデルの指示追従版と推論版を公開。
+
+      [Qwen3-VL-235B-A22B (Instruct, Thinking) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-09-23
+    title_ja: "Qwen3-Max"
+    summary_ja: |
+      開発エージェントとツール利用を強化した Max モデルを提供。
+
+      [Qwen3-Max の公式発表・公開情報 | Alibaba](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2025
+    date: 2025-09-22
+    title_ja: "DeepSeek-V3.1-Terminus"
+    summary_ja: |
+      V3.1 の応答品質とツール利用を改善。
+
+      [DeepSeek-V3.1-Terminus の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250922/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2025
+    date: 2025-09-22
+    title_ja: "Qwen3-Omni"
+    summary_ja: |
+      画像・音声・動画を理解し、テキストと音声を生成するモデルを公開。
+
+      [Qwen3-Omni の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-Omni)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Omni"]
+
+  - year: 2025
+    date: 2025-09-19
+    title_ja: "Grok 4 Fast"
+    summary_ja: |
+      応答速度と推論コストを重視したモデルを提供。
+
+      [Grok 4 Fast の公式発表・公開情報 | xAI](https://x.ai/news/grok-4-fast)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok Fast"]
+
+  - year: 2025
+    date: 2025-09-11
+    title_ja: "Qwen3-Next-80B-A3B"
+    summary_ja: |
+      ハイブリッド注意機構を用いた効率重視の MoE モデルを公開。
+
+      [Qwen3-Next-80B-A3B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Next"]
+
+  - year: 2025
+    date: 2025-09-05
+    title_ja: "Kimi-K2-Instruct-0905"
+    summary_ja: |
+      開発能力と長文理解を強化した K2 の更新版を公開。
+
+      [Kimi-K2-Instruct-0905 の公式発表・公開情報 | Moonshot AI](https://platform.kimi.com/blog/posts/kimi-k2-0905)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+
+  - year: 2025
+    date: 2025-09-05
+    title_ja: "Qwen3-Max-Preview"
+    summary_ja: |
+      第3世代 Max モデルをプレビュー提供。
+
+      [Qwen3-Max-Preview の公式発表・公開情報 | Alibaba](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2025
+    date: 2025-08-28
+    title_ja: "Grok Code Fast 1"
+    summary_ja: |
+      開発作業向けの高速な推論モデルを提供。
+
+      [Grok Code Fast 1 の公式発表・公開情報 | xAI](https://x.ai/news/grok-code-fast-1)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok Code"]
+
   - year: 2025
     date: 2025-08-26
     title_ja: "Nano Banana (Gemini 2.5 Flash Image)"
     summary_ja: |
       [最先端の画像処理モデル Gemini 2.5 Flash Image のご紹介 - Google Developers Blog](https://developers.googleblog.com/ja/introducing-gemini-2-5-flash-image/)
     tags: ["Google", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
+  - year: 2025
+    date: 2025-08-21
+    title_ja: "DeepSeek-V3.1"
+    summary_ja: |
+      推論モードと非推論モードを統合したモデルを提供。
+
+      [DeepSeek-V3.1 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250821/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2025
+    date: 2025-08-14
+    title_ja: "Gemma 3 270M"
+    summary_ja: |
+      特定用途への調整に適した軽量なテキストモデルを追加。
+
+      [Gemma 3 270M の公式発表・公開情報 | Google](https://developers.googleblog.com/en/introducing-gemma-3-270m/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2025
+    date: 2025-08-11
+    title_ja: "GLM-4.5V"
+    summary_ja: |
+      動画理解や画面操作向けの視覚推論モデルを公開。
+
+      [GLM-4.5V の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM Vision"]
+
   - year: 2025
     date: 2025-08-07
     title_ja: "GPT-5 (thinking, Pro)"
     summary_ja: |
       [GPT-5 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2025
+    date: 2025-08-06
+    title_ja: "Qwen3-4B-Instruct-2507 / Thinking-2507"
+    summary_ja: |
+      4B の指示追従版と推論版を公開。
+
+      [Qwen3-4B-Instruct-2507 / Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2025
     date: 2025-08-06
     title_ja: "Claude Opus 4.1"
     summary_ja: |
       [Claude Opus 4.1 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-1)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
   - year: 2025
     date: 2025-08-05
     title_ja: "gpt-oss (20b, 120b)"
     summary_ja: |
       [gpt-oss が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss/)
     tags: ["OpenAI", "gpt", "Open Weight Model", "LLM Model"]
+    series: ["gpt-oss"]
+  - year: 2025
+    date: 2025-08-01
+    title_ja: "Kimi K2 Turbo (Preview)"
+    summary_ja: |
+      Kimi K2 の高速な API 提供版を公開。
+
+      [Kimi K2 Turbo (Preview) の公式発表・公開情報 | Moonshot AI](https://platform.kimi.ai/blog/posts/changelog)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi Turbo"]
+
+  - year: 2025
+    date: 2025-07-31
+    title_ja: "Qwen3-30B-A3B-Thinking-2507"
+    summary_ja: |
+      30B MoE の推論モデルを更新。
+
+      [Qwen3-30B-A3B-Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2025
+    date: 2025-07-30
+    title_ja: "Qwen3-30B-A3B-Instruct-2507"
+    summary_ja: |
+      30B MoE の非推論モデルを更新。
+
+      [Qwen3-30B-A3B-Instruct-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2025
+    date: 2025-07-30
+    title_ja: "Codestral 25.08"
+    summary_ja: |
+      コード補完・生成モデルを更新。
+
+      [Codestral 25.08 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/codestral-25-08/)
+    tags: ["Mistral AI", "LLM Model"]
+    series: ["Codestral"]
+
+  - year: 2025
+    date: 2025-07-28
+    title_ja: "GLM-4.5 / GLM-4.5-Air"
+    summary_ja: |
+      推論・コード・エージェント用途のモデルを公開。
+
+      [GLM-4.5 / GLM-4.5-Air の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
+  - year: 2025
+    date: 2025-07-25
+    title_ja: "Qwen3-235B-A22B-Thinking-2507"
+    summary_ja: |
+      Qwen3 の推論専用モデルを更新。
+
+      [Qwen3-235B-A22B-Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2025
+    date: 2025-07-22
+    title_ja: "Qwen3-Coder-480B-A35B-Instruct"
+    summary_ja: |
+      コード生成とツールを使う開発作業向けの MoE モデルを公開。
+
+      [Qwen3-Coder-480B-A35B-Instruct の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen3-coder/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Coder"]
+
+  - year: 2025
+    date: 2025-07-21
+    title_ja: "Qwen3-235B-A22B-Instruct-2507"
+    summary_ja: |
+      非推論モードの指示追従モデルを更新。
+
+      [Qwen3-235B-A22B-Instruct-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2025
+    date: 2025-07-11
+    title_ja: "Kimi K2"
+    summary_ja: |
+      コード生成とツール利用を重視した MoE モデルを公開。
+
+      [Kimi K2 の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k2)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+
+  - year: 2025
+    date: 2025-07-10
+    title_ja: "Devstral Small 1.1 / Devstral Medium"
+    summary_ja: |
+      開発向けモデルを更新し、Medium 版を追加。
+
+      [Devstral Small 1.1 / Devstral Medium の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/devstral-2507/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Devstral"]
+
+  - year: 2025
+    date: 2025-07-09
+    title_ja: "Grok 4 / Grok 4 Heavy"
+    summary_ja: |
+      ツール利用と検索を組み込んだ第4世代を提供。
+
+      [Grok 4 / Grok 4 Heavy の公式発表・公開情報 | xAI](https://x.ai/news/grok-4)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
+  - year: 2025
+    date: 2025-07-08
+    title_ja: "SmolLM3"
+    summary_ja: |
+      多言語・長文コンテキスト・推論に対応した 3B パラメータの SmolLM3 を公開。
+
+      [SmolLM3 の公式発表・公開情報 | Hugging Face](https://huggingface.co/blog/smollm3)
+    tags: ["Hugging Face", "SmolLM", "Open Weight Model", "LLM Model"]
+    series: ["SmolLM"]
+
+  - year: 2025
+    date: 2025-07-02
+    title_ja: "GLM-4.1V-9B-Thinking"
+    summary_ja: |
+      画像を使った推論向けの 9B モデルを公開。
+
+      [GLM-4.1V-9B-Thinking の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM Vision"]
+
+  - year: 2025
+    date: 2025-06-30
+    title_ja: "ERNIE 4.5（モデル重み公開）"
+    summary_ja: |
+      Baidu が ERNIE 4.5 ファミリーのモデル重みを公開。
+
+      [ERNIE 4.5 の公開日とモデル情報 | Hugging Face Transformers](https://huggingface.co/docs/transformers/v5.4.0/model_doc/ernie4_5)
+    tags: ["Baidu", "ERNIE", "Open Weight Model", "LLM Model"]
+    series: ["ERNIE"]
+
+  - year: 2025
+    date: 2025-06-27
+    title_ja: "Hunyuan-A13B"
+    summary_ja: |
+      総パラメータ 80B・アクティブ 13B の MoE モデルを公開。推論モードの切り替えと 256K コンテキストに対応。
+
+      [Hunyuan-A13B の公式発表・公開情報 | Tencent](https://github.com/Tencent-Hunyuan/Hunyuan-A13B)
+    tags: ["Tencent", "Hunyuan", "Open Weight Model", "LLM Model"]
+    series: ["Hunyuan"]
+
+  - year: 2025
+    date: 2025-06-26
+    title_ja: "Gemma 3n (E2B, E4B)"
+    summary_ja: |
+      端末上で画像・音声・動画を扱うモデルの重みを公開。
+
+      [Gemma 3n (E2B, E4B) の公式発表・公開情報 | Google](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma 3n"]
+
   - year: 2025
     date: 2025-06-25
     title_ja: "Gemini CLI"
     summary_ja: |
       [Google I/O 2025: Google DeepMind から Gemini 2.5 のアップデート](https://blog.google/intl/ja-jp/company-news/technology/google-gemini-updates-io-2025/)
     tags: ["Google", "Gemini", "Gemini CLI", "Agent"]
+    series: ["Gemini CLI"]
+  - year: 2025
+    date: 2025-06-21
+    title_ja: "Kimi-VL-A3B-Thinking-2506"
+    summary_ja: |
+      視覚推論モデルを更新し、画像認識・動画理解・高解像度入力への対応を強化。
+
+      [Kimi-VL-A3B-Thinking-2506 の公式発表・公開情報 | Moonshot AI](https://github.com/MoonshotAI/Kimi-VL)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi VL"]
+
+  - year: 2025
+    date: 2025-06-17
+    title_ja: "Kimi-Dev-72B"
+    summary_ja: |
+      ソフトウェア開発向けモデルを発表。
+
+      [Kimi-Dev-72B の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/)
+      [Kimi-Dev 公式プロジェクト](https://moonshotai.github.io/Kimi-Dev/)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi Dev"]
+
+  - year: 2025
+    date: 2025-06-16
+    title_ja: "MiniMax-M1"
+    summary_ja: |
+      ハイブリッド注意機構を用いた長文推論モデルを発表。
+
+      [MiniMax-M1 の公式発表・公開情報 | MiniMax](https://www.minimax.io/news/minimaxm1)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax"]
+
+  - year: 2025
+    date: 2025-06-10
+    title_ja: "Magistral Small / Medium"
+    summary_ja: |
+      推論モデルを発表。Small の重みを公開し、Medium を提供。
+
+      [Magistral Small / Medium の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/magistral/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Magistral"]
+
+  - year: 2025
+    date: 2025-05-28
+    title_ja: "DeepSeek-R1-0528"
+    summary_ja: |
+      R1 の推論・コード・指示追従能力を改善。
+
+      [DeepSeek-R1-0528 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250528/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek R"]
+
   - year: 2025
     date: 2025-05-23
     title_ja: "Claude Code (GA)"
     summary_ja: |
       [Release Claude Code 1.0.0 with general availability · anthropics/claude-code@6f27711](https://github.com/anthropics/claude-code/pull/1227)
     tags: ["Anthropic", "Claude Code", "Agent"]
+    series: ["Claude Code"]
   - year: 2025
     date: 2025-05-23
     title_ja: "Claude Opus 4"
     summary_ja: |
       [Introducing Claude 4 \ Anthropic](https://www.anthropic.com/news/claude-4)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    series: ["Claude Opus"]
   - year: 2025
     date: 2025-05-23
     title_ja: "Claude Sonnet 4"
     summary_ja: |
       [Introducing Claude 4 \ Anthropic](https://www.anthropic.com/news/claude-4)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
+  - year: 2025
+    date: 2025-05-22
+    title_ja: "PLaMo 2.0 Prime"
+    summary_ja: |
+      日本語での実務利用に向けた PLaMo 2.0 Prime を公開し、API で提供を開始。
+
+      [PLaMo 2.0 Prime の公式発表・公開情報 | Preferred Networks](https://www.preferred.jp/ja/blog/tech/plamo-2-prime-release)
+    tags: ["Preferred Networks", "PLaMo", "LLM Model"]
+    series: ["PLaMo"]
+
   - year: 2025
     date: 2025-05-21
     title_ja: "Gemini 2.5 Pro"
     summary_ja: |
       [Google I/O 2025: Google DeepMind から Gemini 2.5 のアップデート](https://blog.google/intl/ja-jp/company-news/technology/google-gemini-updates-io-2025/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Pro"]
+  - year: 2025
+    date: 2025-05-21
+    title_ja: "Devstral Small"
+    summary_ja: |
+      リポジトリを操作するソフトウェア開発向けモデルを公開。
+
+      [Devstral Small の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/devstral/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Devstral"]
+
+  - year: 2025
+    date: 2025-05-20
+    title_ja: "Gemma 3n (Preview)"
+    summary_ja: |
+      モバイル端末を重視したマルチモーダルモデルをプレビュー公開。
+
+      [Gemma 3n (Preview) の公式発表・公開情報 | Google](https://developers.googleblog.com/en/introducing-gemma-3n)
+    tags: ["Google", "Gemma", "LLM Model"]
+    series: ["Gemma 3n"]
+
   - year: 2025
     date: 2025-05-16
     title_ja: "Codex"
     summary_ja: |
       [Codex が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-codex/)
     tags: ["OpenAI", "GPT", "Agent"]
+    series: ["Codex agent"]
+  - year: 2025
+    date: 2025-05-07
+    title_ja: "Mistral Medium 3"
+    summary_ja: |
+      企業向けの汎用モデルを提供開始。
+
+      [Mistral Medium 3 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-medium-3/)
+    tags: ["Mistral AI", "LLM Model"]
+    series: ["Mistral Medium"]
+
+  - year: 2025
+    date: 2025-04-30
+    title_ja: "Phi-4 Reasoning / Reasoning Plus / Mini Reasoning"
+    summary_ja: |
+      Phi-4 Reasoning、Reasoning Plus、Mini Reasoning を公開。小型モデルの推論能力を強化。
+
+      [Phi-4 Reasoning / Reasoning Plus / Mini Reasoning の公式発表・公開情報 | Microsoft](https://azure.microsoft.com/en-us/blog/one-year-of-phi-small-language-models-making-big-leaps-in-ai/)
+    tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
+    series: ["Phi"]
+
+  - year: 2025
+    date: 2025-04-30
+    title_ja: "Amazon Nova Premier"
+    summary_ja: |
+      複雑なマルチモーダル処理やカスタムモデルの蒸留に向けた Nova Premier を提供開始。
+
+      [Amazon Nova Premier の公式発表・公開情報 | Amazon](https://docs.aws.amazon.com/nova/latest/userguide/additional-resources.html)
+    tags: ["Amazon", "Nova", "LLM Model"]
+    series: ["Nova"]
+
+  - year: 2025
+    date: 2025-04-29
+    title_ja: "Qwen3 (0.6B–235B)"
+    summary_ja: |
+      推論モードを切り替えられる第3世代の Dense・MoE モデルを公開。
+
+      [Qwen3 (0.6B–235B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
   - year: 2025
     date: 2025-04-17
     title_ja: "Gemini 2.5 Flash"
     summary_ja: |
       [Gemini 2.5 Flash で開発を始める - Google Developers Blog](https://developers.googleblog.com/ja/start-building-with-gemini-25-flash/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash"]
   - year: 2025
     date: 2025-04-16
     title_ja: "OpenAI o3, OpenAI o4-mini"
     summary_ja: |
       [OpenAI o3 と o4-mini が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-o3-and-o4-mini/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["OpenAI o-series"]
+  - year: 2025
+    date: 2025-04-14
+    title_ja: "GLM-4-32B-0414 / GLM-Z1"
+    summary_ja: |
+      対話・推論・調査向けのモデル群を公開。
+
+      [GLM-4-32B-0414 / GLM-Z1 の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM", "GLM Z1"]
+
+  - year: 2025
+    date: 2025-04-14
+    title_ja: "GPT-4.1 / mini / nano"
+    summary_ja: |
+      コード生成・指示追従・長文理解を強化した GPT-4.1、mini、nano を API で提供。
+
+      [GPT-4.1 / mini / nano の公式発表・公開情報 | OpenAI](https://openai.com/index/gpt-4-1/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT", "GPT mini", "GPT nano"]
+
+  - year: 2025
+    date: 2025-04-10
+    title_ja: "Kimi-VL"
+    summary_ja: |
+      MoE 構造の視覚言語モデルを発表。
+
+      [Kimi-VL の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/)
+      [Kimi-VL 公式リポジトリ](https://github.com/MoonshotAI/Kimi-VL)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi VL"]
+
+  - year: 2025
+    date: 2025-04-05
+    title_ja: "Llama 4 Scout / Maverick"
+    summary_ja: |
+      画像・テキストを扱う第4世代の MoE モデルを公開。
+
+      [Llama 4 Scout / Maverick の公式発表・公開情報 | Meta](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
+  - year: 2025
+    date: 2025-03-27
+    title_ja: "Qwen2.5-Omni-7B"
+    summary_ja: |
+      テキスト・画像・音声・動画を入力し、テキストと音声を生成。
+
+      [Qwen2.5-Omni-7B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5-omni/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Omni"]
+
+  - year: 2025
+    date: 2025-03-25
+    title_ja: "Qwen2.5-VL-32B"
+    summary_ja: |
+      視覚言語モデルに 32B 版を追加。
+
+      [Qwen2.5-VL-32B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-03-25
+    title_ja: "DeepSeek-V3-0324"
+    summary_ja: |
+      DeepSeek-V3 の更新版を API で提供。推論、フロントエンド開発、ツール利用を改善。
+
+      [DeepSeek-V3-0324 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250325/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2025
+    date: 2025-03-17
+    title_ja: "Mistral Small 3.1"
+    summary_ja: |
+      画像理解と長文対応を加えた小型モデルを公開。
+
+      [Mistral Small 3.1 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-small-3-1/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Small"]
+
+  - year: 2025
+    date: 2025-03-13
+    title_ja: "Command A"
+    summary_ja: |
+      企業での運用効率を重視した Command A を公開。多言語処理や RAG、ツール利用に対応。
+
+      [Command A の公式発表・公開情報 | Cohere](https://cohere.com/blog/command-a)
+    tags: ["Cohere", "Command", "Open Weight Model", "LLM Model"]
+    series: ["Command A"]
+
+  - year: 2025
+    date: 2025-03-12
+    title_ja: "Gemma 3 (1B, 4B, 12B, 27B)"
+    summary_ja: |
+      多言語・長文対応を強化し、4B 以上で画像理解に対応。
+
+      [Gemma 3 (1B, 4B, 12B, 27B) の公式発表・公開情報 | Google](https://developers.googleblog.com/introducing-gemma3/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2025
+    date: 2025-03-06
+    title_ja: "QwQ-32B"
+    summary_ja: |
+      強化学習で推論能力を高めた 32B モデルを公開。
+
+      [QwQ-32B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwq-32b/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["QwQ"]
+
+  - year: 2025
+    date: 2025-03-06
+    title_ja: "Jamba 1.6"
+    summary_ja: |
+      Jamba Large と Mini の新世代を公開。長文処理と指示追従を改善。
+
+      [Jamba 1.6 の公式発表・公開情報 | AI21 Labs](https://www.ai21.com/blog/introducing-jamba-1-6/)
+    tags: ["AI21 Labs", "Jamba", "Open Weight Model", "LLM Model"]
+    series: ["Jamba"]
+
   - year: 2025
     date: 2025-02-27
     title_ja: "GPT-4.5"
     summary_ja: |
       [GPT-4.5が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-4-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2025
+    date: 2025-02-26
+    title_ja: "Phi-4 Mini / Multimodal"
+    summary_ja: |
+      Phi-4 Mini と、テキスト・画像・音声を扱う Phi-4 Multimodal を公開。
+
+      [Phi-4 Mini / Multimodal の公式発表・公開情報 | Microsoft](https://techcommunity.microsoft.com/blog/educatordeveloperblog/welcome-to-the-new-phi-4-models---microsoft-phi-4-mini--phi-4-multimodal/4386037)
+    tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
+    series: ["Phi"]
+
   - year: 2025
     date: 2025-02-25
     title_ja: "Claude Sonnet 3.7"
     summary_ja: |
       [Claude 3.7 Sonnet and Claude Code \ Anthropic](https://www.anthropic.com/news/claude-3-7-sonnet)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
   - year: 2025
     date: 2025-02-25
     title_ja: "Claude Code (Research Preview)"
     summary_ja: |
       [Claude 3.7 Sonnet and Claude Code \ Anthropic](https://www.anthropic.com/news/claude-3-7-sonnet)
     tags: ["Anthropic", "Claude Code", "Agent"]
+    series: ["Claude Code"]
+  - year: 2025
+    date: 2025-02-19
+    title_ja: "Grok 3 / Grok 3 mini (Beta)"
+    summary_ja: |
+      推論を強化した第3世代を発表。
+
+      [Grok 3 / Grok 3 mini (Beta) の公式発表・公開情報 | xAI](https://x.ai/news/grok-3)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok", "Grok mini"]
+
+  - year: 2025
+    date: 2025-02-17
+    title_ja: "Kimi Latest"
+    summary_ja: |
+      Kimi の最新の対話・画像理解能力を利用できる API モデルを発表。
+
+      [Kimi Latest の公式発表・公開情報 | Moonshot AI](https://platform.kimi.com/blog/posts/kimi-latest)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi"]
+
   - year: 2025
     date: 2025-02-05
     title_ja: "Gemini 2.0 Flash / Flash-Lite / Pro Experimental"
     summary_ja: |
       [Gemini 2.0 model updates: 2.0 Flash, Flash-Lite, Pro Experimental](https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash", "Gemini Flash-Lite", "Gemini Pro"]
   - year: 2025
     date: 2025-01-31
     title_ja: "OpenAI o3-mini"
     summary_ja: |
       [OpenAI o3-mini | OpenAI](https://openai.com/ja-JP/index/openai-o3-mini/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["OpenAI o-series"]
+  - year: 2025
+    date: 2025-01-30
+    title_ja: "Mistral Small 3"
+    summary_ja: |
+      効率を重視した小型の汎用モデルを公開。
+
+      [Mistral Small 3 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-small-3/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Small"]
+
+  - year: 2025
+    date: 2025-01-28
+    title_ja: "Qwen2.5-Max"
+    summary_ja: |
+      大規模 MoE モデルをチャットと API で提供開始。
+
+      [Qwen2.5-Max の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5-max/)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Max"]
+
+  - year: 2025
+    date: 2025-01-28
+    title_ja: "Qwen2.5-VL (3B, 7B, 72B)"
+    summary_ja: |
+      文書・画像・動画理解を強化した視覚言語モデルを公開。
+
+      [Qwen2.5-VL (3B, 7B, 72B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-01-20
+    title_ja: "Kimi K1.5"
+    summary_ja: |
+      強化学習を用いたマルチモーダル推論モデルを発表。
+
+      [Kimi K1.5 の公式発表・公開情報 | Moonshot AI](https://github.com/MoonshotAI/Kimi-k1.5)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi"]
+
   - year: 2025
     date: 2025-01-20
     title_ja: "DeepSeek R1"
     summary_ja: |
       [DeepSeek-R1 Release | DeepSeek API Docs](https://api-docs.deepseek.com/news/news250120)
     tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek R"]
+  - year: 2025
+    date: 2025-01-15
+    title_ja: "MiniMax-Text-01 / MiniMax-VL-01"
+    summary_ja: |
+      長文対応の言語モデルと視覚言語モデルを公開。
+
+      [MiniMax-Text-01 / MiniMax-VL-01 の公式発表・公開情報 | MiniMax](https://www.minimax.io/news/minimax-01-series-2)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax", "MiniMax VL"]
+
+  - year: 2024
+    date: 2024-12-26
+    title_ja: "DeepSeek-V3"
+    summary_ja: |
+      大規模 MoE の基盤モデルと対話モデルを公開。
+
+      [DeepSeek-V3 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news1226/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2024
+    date: 2024-12-25
+    title_ja: "QVQ-72B-Preview"
+    summary_ja: |
+      画像を使った推論向けの実験モデルを公開。
+
+      [QVQ-72B-Preview の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["QVQ"]
+
+  - year: 2024
+    date: 2024-12-18
+    title_ja: "Granite 3.1"
+    summary_ja: |
+      Granite の言語モデルを更新し、長文コンテキストへの対応を強化。
+
+      [Granite 3.1 の公式発表・公開情報 | IBM](https://www.ibm.com/new/announcements/ibm-granite-3-1-powerful-performance-long-context-and-more)
+    tags: ["IBM", "Granite", "Open Weight Model", "LLM Model"]
+    series: ["Granite"]
+
+  - year: 2024
+    date: 2024-12-17
+    title_ja: "Falcon 3"
+    summary_ja: |
+      小型モデル群 Falcon 3 を公開。1B / 3B / 7B / 10B を展開。
+
+      [Falcon 3 の公式発表・公開情報 | TII](https://www.tii.ae/news/falcon-3-uaes-technology-innovation-institute-launches-worlds-most-powerful-small-ai-models)
+    tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
+    series: ["Falcon"]
+
+  - year: 2024
+    date: 2024-12-12
+    title_ja: "Phi-4 発表"
+    summary_ja: |
+      数学などの推論能力を強化した 14B パラメータの Phi-4 を発表。Azure AI Foundry で提供。
+
+      [Phi-4 発表 の公式発表・公開情報 | Microsoft](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-phi-4-microsoft%E2%80%99s-newest-small-language-model-specializing-in-comple/4357090)
+    tags: ["Microsoft", "Phi", "LLM Model"]
+    series: ["Phi"]
+
+  - year: 2024
+    date: 2024-12-10
+    title_ja: "Sarashina2.1-1B"
+    summary_ja: |
+      小型の日本語モデル Sarashina2.1-1B を公開。
+
+      [Sarashina2.1-1B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/sarashinalab/)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
+
+  - year: 2024
+    date: 2024-12-10
+    title_ja: "DeepSeek-V2.5-1210"
+    summary_ja: |
+      V2.5 系列の最終更新版を公開。数学、コード生成、文章作成を改善。
+
+      [DeepSeek-V2.5-1210 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news1210/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2024
+    date: 2024-12-06
+    title_ja: "Llama 3.3 70B"
+    summary_ja: |
+      多言語の指示追従能力を改善した 70B モデルを公開。
+
+      [Llama 3.3 70B の公式発表・公開情報 | Meta](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
+  - year: 2024
+    date: 2024-12-03
+    title_ja: "Amazon Nova Micro / Lite / Pro"
+    summary_ja: |
+      Amazon Bedrock で Nova Micro、Lite、Pro を提供開始。Micro はテキスト、Lite と Pro は画像や動画の理解にも対応。
+
+      [Amazon Nova Micro / Lite / Pro の公式発表・公開情報 | Amazon](https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-nova-foundation-models-bedrock/)
+    tags: ["Amazon", "Nova", "LLM Model"]
+    series: ["Nova"]
+
+  - year: 2024
+    date: 2024-11-28
+    title_ja: "QwQ-32B-Preview"
+    summary_ja: |
+      数学・コードなどの推論に取り組む実験モデルを公開。
+
+      [QwQ-32B-Preview の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwq-32b-preview/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["QwQ"]
+
+  - year: 2024
+    date: 2024-11-26
+    title_ja: "OLMo 2"
+    summary_ja: |
+      OLMo 2 の 7B / 13B モデルを公開。学習データ・コード・評価手順を含む公開を継続。
+
+      [OLMo 2 の公式発表・公開情報 | Ai2](https://allenai.org/blog/olmo2)
+    tags: ["Ai2", "OLMo", "Open Weight Model", "LLM Model"]
+    series: ["OLMo"]
+
+  - year: 2024
+    date: 2024-11-20
+    title_ja: "DeepSeek-R1-Lite-Preview"
+    summary_ja: |
+      R1 系列の推論モデルをプレビュー提供。
+
+      [DeepSeek-R1-Lite-Preview の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news1120/)
+    tags: ["DeepSeek", "LLM Model"]
+    series: ["DeepSeek R"]
+
+  - year: 2024
+    date: 2024-11-18
+    title_ja: "Pixtral Large"
+    summary_ja: |
+      大規模な視覚言語モデルを公開。
+
+      [Pixtral Large の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/pixtral-large/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Pixtral"]
+
+  - year: 2024
+    date: 2024-11-12
+    title_ja: "Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B)"
+    summary_ja: |
+      32B を含むコード生成モデルの全サイズを発表。
+
+      [Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B) の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5-coder-family/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Coder"]
+
+  - year: 2024
+    date: 2024-11-08
+    title_ja: "Sarashina2-8x70B"
+    summary_ja: |
+      Sarashina2-70B を基に MoE で大規模化した日本語モデルを公開。
+
+      [Sarashina2-8x70B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20241108_01/)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
+
+  - year: 2024
+    date: 2024-10-31
+    title_ja: "SmolLM2"
+    summary_ja: |
+      SmolLM2 の小型言語モデルを公開。公式モデルリポジトリの公開履歴に基づく日付。
+
+      [SmolLM2 の公式発表・公開情報 | Hugging Face](https://huggingface.co/HuggingFaceTB/SmolLM2-360M/commits/f8027fd0eaeea54caa13c31d31b9fdc459c38b49)
+    tags: ["Hugging Face", "SmolLM", "Open Weight Model", "LLM Model"]
+    series: ["SmolLM"]
+
+  - year: 2024
+    date: 2024-10-22
+    title_ja: "Claude 3.5 Sonnet（更新版）"
+    summary_ja: |
+      Claude 3.5 Sonnet を更新。コード生成能力を改善し、computer use を公開ベータで導入。
+
+      [Claude 3.5 Sonnet（更新版） の公式発表・公開情報 | Anthropic](https://www.anthropic.com/news/3-5-models-and-computer-use)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Sonnet"]
+
+  - year: 2024
+    date: 2024-10-21
+    title_ja: "Granite 3.0"
+    summary_ja: |
+      企業向けの Granite 3.0 を公開。2B / 8B の言語モデルなどを展開。
+
+      [Granite 3.0 の公式発表・公開情報 | IBM](https://www.ibm.com/new/announcements/ibm-granite-3-0-open-state-of-the-art-enterprise-models)
+    tags: ["IBM", "Granite", "Open Weight Model", "LLM Model"]
+    series: ["Granite"]
+
+  - year: 2024
+    date: 2024-09-25
+    title_ja: "Llama 3.2 (1B, 3B, 11B Vision, 90B Vision)"
+    summary_ja: |
+      端末向けの小型モデルと画像理解モデルを公開。
+
+      [Llama 3.2 (1B, 3B, 11B Vision, 90B Vision) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
+  - year: 2024
+    date: 2024-09-19
+    title_ja: "Qwen2.5 / Qwen2.5-Coder / Qwen2.5-Math"
+    summary_ja: |
+      汎用・コード・数学向けのモデル群を同時発表。
+
+      [Qwen2.5 / Qwen2.5-Coder / Qwen2.5-Math の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen", "Qwen Coder", "Qwen Math"]
+
+  - year: 2024
+    date: 2024-09-19
+    title_ja: "Qwen2-VL-72B"
+    summary_ja: |
+      Qwen2-VL の 72B 指示追従モデルを公開。
+
+      [Qwen2-VL-72B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2024
+    date: 2024-09-17
+    title_ja: "Pixtral 12B"
+    summary_ja: |
+      画像とテキストを扱うモデルを発表。
+
+      [Pixtral 12B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/pixtral-12b/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Pixtral"]
+
   - year: 2024
     date: 2024-09-12
     title_ja: "OpenAI o1-mini"
     summary_ja: |
       [OpenAI o1-mini | OpenAI](https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["OpenAI o-series"]
+  - year: 2024
+    date: 2024-09-05
+    title_ja: "DeepSeek-V2.5"
+    summary_ja: |
+      汎用対話とコード生成の能力を統合したモデルを公開。
+
+      [DeepSeek-V2.5 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news0905/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek"]
+
+  - year: 2024
+    date: 2024-08-30
+    title_ja: "Qwen2-VL (2B, 7B)"
+    summary_ja: |
+      画像・動画を理解する視覚言語モデルを公開。
+
+      [Qwen2-VL (2B, 7B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen VL"]
+
+  - year: 2024
+    date: 2024-08-30
+    title_ja: "Command R / R+（08-2024）"
+    summary_ja: |
+      Command R と R+ を更新。多言語対応、ツール利用、応答品質を改善。
+
+      [Command R / R+（08-2024） の公式発表・公開情報 | Cohere](https://docs.cohere.com/v2/changelog/command-gets-refreshed)
+    tags: ["Cohere", "Command", "Open Weight Model", "LLM Model"]
+    series: ["Command R"]
+
+  - year: 2024
+    date: 2024-08-22
+    title_ja: "Phi-3.5 Mini / MoE / Vision"
+    summary_ja: |
+      多言語対応を強化した Phi-3.5 Mini、MoE、Vision を発表。テキストと画像を扱う小型モデルの選択肢を拡充。
+
+      [Phi-3.5 Mini / MoE / Vision の公式発表・公開情報 | Microsoft](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/discover-the-new-multi-lingual-high-quality-phi-3-5-slms/4225280/)
+    tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
+    series: ["Phi"]
+
+  - year: 2024
+    date: 2024-08-22
+    title_ja: "Jamba 1.5 Large / Mini"
+    summary_ja: |
+      長いコンテキストを扱う Jamba 1.5 Large と Mini を公開。
+
+      [Jamba 1.5 Large / Mini の公式発表・公開情報 | AI21 Labs](https://www.ai21.com/blog/announcing-jamba-model-family/)
+    tags: ["AI21 Labs", "Jamba", "Open Weight Model", "LLM Model"]
+    series: ["Jamba"]
+
+  - year: 2024
+    date: 2024-08-13
+    title_ja: "Grok-2 / Grok-2 mini (Beta)"
+    summary_ja: |
+      第2世代の汎用モデルと軽量版をベータ提供。
+
+      [Grok-2 / Grok-2 mini (Beta) の公式発表・公開情報 | xAI](https://x.ai/news/grok-2)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok", "Grok mini"]
+
+  - year: 2024
+    date: 2024-08-07
+    title_ja: "Sarashina2-70B"
+    summary_ja: |
+      Sarashina2 シリーズに 70B パラメータの日本語モデルを追加公開。
+
+      [Sarashina2-70B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20240614_01/)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
+
+  - year: 2024
+    date: 2024-07-24
+    title_ja: "Mistral Large 2"
+    summary_ja: |
+      コード・数学・多言語処理を強化したモデルを公開。
+
+      [Mistral Large 2 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-large-2407/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Large"]
+
+  - year: 2024
+    date: 2024-07-23
+    title_ja: "Llama 3.1 (8B, 70B, 405B)"
+    summary_ja: |
+      405B モデルを追加し、多言語・長文対応を強化。
+
+      [Llama 3.1 (8B, 70B, 405B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/meta-llama-3-1/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
   - year: 2024
     date: 2024-07-18
     title_ja: "GPT-4o mini"
     summary_ja: |
       [GPT-4o mini：費用効率の高いインテリジェンスの推進 | OpenAI](https://openai.com/ja-JP/index/gpt-4o-mini-advancing-cost-efficient-intelligence/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT mini"]
+  - year: 2024
+    date: 2024-07-18
+    title_ja: "Mistral NeMo 12B"
+    summary_ja: |
+      NVIDIA と共同開発した多言語モデルを公開。
+
+      [Mistral NeMo 12B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-nemo/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral NeMo"]
+
+  - year: 2024
+    date: 2024-07-16
+    title_ja: "SmolLM"
+    summary_ja: |
+      135M / 360M / 1.7B の小型言語モデル SmolLM を公開。
+
+      [SmolLM の公式発表・公開情報 | Hugging Face](https://huggingface.co/blog/smollm)
+    tags: ["Hugging Face", "SmolLM", "Open Weight Model", "LLM Model"]
+    series: ["SmolLM"]
+
+  - year: 2024
+    date: 2024-06-27
+    title_ja: "Gemma 2 (9B, 27B)"
+    summary_ja: |
+      性能と推論効率を高めた第2世代を公開。
+
+      [Gemma 2 (9B, 27B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/google-gemma-2/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2024
+    date: 2024-06-26
+    title_ja: "Llama-3-ELYZA-JP（8B・70B）"
+    summary_ja: |
+      Llama 3 ベースの日本語モデルを発表。8B のモデル重みと、70B のデモを公開。
+
+      [Llama-3-ELYZA-JP（8B・70B） の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000046.000047565.html)
+    tags: ["ELYZA", "Open Weight Model", "LLM Model"]
+    series: ["ELYZA"]
+
   - year: 2024
     date: 2024-06-21
     title_ja: "Claude Sonnet 3.5"
     summary_ja: |
       [Introducing Claude 3.5 Sonnet \ Anthropic](https://www.anthropic.com/news/claude-3-5-sonnet)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
+    series: ["Claude Sonnet"]
+  - year: 2024
+    date: 2024-06-14
+    title_ja: "Sarashina1 / Sarashina2"
+    summary_ja: |
+      日本語 LLM の Sarashina1（7B / 13B / 65B）と Sarashina2（7B / 13B）を公開。
+
+      [Sarashina1 / Sarashina2 の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20240614_01/)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
+
+  - year: 2024
+    date: 2024-06-14
+    title_ja: "Nemotron-4 340B"
+    summary_ja: |
+      合成データ生成にも利用できる Nemotron-4 340B の Base / Instruct / Reward モデルを公開。
+
+      [Nemotron-4 340B の公式発表・公開情報 | NVIDIA](https://research.nvidia.com/publication/2024-06_nemotron-4-340b)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+
+  - year: 2024
+    date: 2024-06-06
+    title_ja: "Qwen2"
+    summary_ja: |
+      多言語、推論、コーディングを強化した第2世代を公開。
+
+      [Qwen2 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2024
+    date: 2024-06-05
+    title_ja: "GLM-4-9B"
+    summary_ja: |
+      GLM-4 の 9B オープンウェイトモデルを公開。
+
+      [GLM-4-9B の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["GLM"]
+
+  - year: 2024
+    date: 2024-05-29
+    title_ja: "Codestral 22B"
+    summary_ja: |
+      コード生成・補完に特化したモデルを公開。
+
+      [Codestral 22B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/codestral/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Codestral"]
+
+  - year: 2024
+    date: 2024-05-13
+    title_ja: "Yi-1.5"
+    summary_ja: |
+      Yi-1.5 の 6B / 9B / 34B ベースモデルと Chat モデルを公開。
+
+      [Yi-1.5 の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi-1.5)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
+  - year: 2024
+    date: 2024-05-13
+    title_ja: "Falcon 2"
+    summary_ja: |
+      Falcon 2 の言語モデルと視覚言語モデルを公開。
+
+      [Falcon 2 の公式発表・公開情報 | TII](https://www.tii.ae/news/falcon-2-uaes-technology-innovation-institute-releases-new-ai-model-series-outperforming-metas)
+    tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
+    series: ["Falcon"]
+
+  - year: 2024
+    date: 2024-05-13
+    title_ja: "GPT-4o"
+    summary_ja: |
+      テキスト・画像・音声を統合する GPT-4o を発表。まずテキスト・画像機能の提供を開始。
+
+      [GPT-4o の公式発表・公開情報 | OpenAI](https://openai.com/index/hello-gpt-4o/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+
   - year: 2024
     date: 2024-05-08
     title_ja: "Gemini 1.5 Pro / Flash"
     summary_ja: |
       [Google Gemini updates: Flash 1.5, Gemma 2 and Project Astra](https://blog.google/innovation-and-ai/products/google-gemini-update-flash-ai-assistant-io-2024/#gemini-model-updates)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Pro", "Gemini Flash"]
+  - year: 2024
+    date: 2024-05-02
+    title_ja: "Jamba-Instruct"
+    summary_ja: |
+      Jamba の指示応答向けモデルを発表。企業向けの長文処理に対応。
+
+      [Jamba-Instruct の公式発表・公開情報 | AI21 Labs](https://www.ai21.com/blog/announcing-jamba-instruct/)
+    tags: ["AI21 Labs", "Jamba", "LLM Model"]
+    series: ["Jamba"]
+
+  - year: 2024
+    date: 2024-04-30
+    title_ja: "llm-jp-13b v2.0"
+    summary_ja: |
+      日本語大規模言語モデル llm-jp-13b v2.0 を公開。
+
+      [llm-jp-13b v2.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.github.io/blog/2024/04/30/v2.0-release.html)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2024
+    date: 2024-04-25
+    title_ja: "Qwen1.5-110B"
+    summary_ja: |
+      Qwen1.5 系列に 110B モデルを追加。
+
+      [Qwen1.5-110B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen1.5-110b/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2024
+    date: 2024-04-23
+    title_ja: "Phi-3 Mini"
+    summary_ja: |
+      Phi-3 ファミリーの最初のモデルとして、3.8B パラメータの Phi-3 Mini を公開。
+
+      [Phi-3 Mini の公式発表・公開情報 | Microsoft](https://news.microsoft.com/source/features/ai/the-phi-3-small-language-models-with-big-potential/)
+    tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
+    series: ["Phi"]
+
+  - year: 2024
+    date: 2024-04-18
+    title_ja: "Llama 3 (8B, 70B)"
+    summary_ja: |
+      第3世代の基盤・指示追従モデルを公開。
+
+      [Llama 3 (8B, 70B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/meta-llama-3/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
+  - year: 2024
+    date: 2024-04-17
+    title_ja: "Mixtral 8x22B"
+    summary_ja: |
+      Mixtral の大規模版を発表。
+
+      [Mixtral 8x22B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mixtral-8x22b/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mixtral"]
+
+  - year: 2024
+    date: 2024-04-16
+    title_ja: "CodeQwen1.5-7B"
+    summary_ja: |
+      コード生成向けの基盤・対話モデルを発表。
+
+      [CodeQwen1.5-7B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/codeqwen1.5/)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen Coder"]
+
+  - year: 2024
+    date: 2024-04-12
+    title_ja: "Grok-1.5V (Preview)"
+    summary_ja: |
+      画像理解に対応するマルチモーダルモデルを発表。
+
+      [Grok-1.5V (Preview) の公式発表・公開情報 | xAI](https://x.ai/news/grok-1.5v)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok Vision"]
+
+  - year: 2024
+    date: 2024-04-04
+    title_ja: "Command R+"
+    summary_ja: |
+      企業向けの RAG と複数段階のツール利用を強化した Command R+ を公開。
+
+      [Command R+ の公式発表・公開情報 | Cohere](https://cohere.com/blog/command-r-plus-microsoft-azure)
+    tags: ["Cohere", "Command", "Open Weight Model", "LLM Model"]
+    series: ["Command R"]
+
+  - year: 2024
+    date: 2024-03-28
+    title_ja: "Qwen1.5-MoE-A2.7B"
+    summary_ja: |
+      Qwen 初の Mixture-of-Experts モデルを公開。
+
+      [Qwen1.5-MoE-A2.7B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2024
+    date: 2024-03-28
+    title_ja: "Grok-1.5 (Preview)"
+    summary_ja: |
+      推論と長文対応を改善したモデルを発表。
+
+      [Grok-1.5 (Preview) の公式発表・公開情報 | xAI](https://x.ai/news/grok-1.5)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
+  - year: 2024
+    date: 2024-03-28
+    title_ja: "Jamba"
+    summary_ja: |
+      Mamba と Transformer を組み合わせたハイブリッド言語モデル Jamba を公開。
+
+      [Jamba の公式発表・公開情報 | AI21 Labs](https://www.ai21.com/blog/announcing-jamba/)
+    tags: ["AI21 Labs", "Jamba", "Open Weight Model", "LLM Model"]
+    series: ["Jamba"]
+
+  - year: 2024
+    date: 2024-03-27
+    title_ja: "DBRX"
+    summary_ja: |
+      MoE を採用した汎用言語モデル DBRX の Base / Instruct を公開。
+
+      [DBRX の公式発表・公開情報 | Databricks](https://www.prnewswire.com/news-releases/databricks-launches-dbrx-a-new-standard-for-efficient-open-source-models-302100601.html)
+    tags: ["Databricks", "Open Weight Model", "LLM Model"]
+    series: ["DBRX"]
+
+  - year: 2024
+    date: 2024-03-17
+    title_ja: "Grok-1 (重み公開)"
+    summary_ja: |
+      Grok-1 の基盤モデルの重みと構造を公開。
+
+      [Grok-1 (重み公開) の公式発表・公開情報 | xAI](https://x.ai/news/grok-os)
+    tags: ["xAI", "Grok", "Open Weight Model", "LLM Model"]
+    series: ["Grok"]
+
+  - year: 2024
+    date: 2024-03-16
+    title_ja: "Yi-9B 200K"
+    summary_ja: |
+      Yi-9B の 200K コンテキスト対応モデルを公開。
+
+      [Yi-9B 200K の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
   - year: 2024
     date: 2024-03-14
     title_ja: "Claude 3 Haiku"
     summary_ja: |
       [Claude 3 Haiku: our fastest model yet \ Anthropic](https://www.anthropic.com/news/claude-3-haiku)
     tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
+    series: ["Claude Haiku"]
+  - year: 2024
+    date: 2024-03-11
+    title_ja: "Command R"
+    summary_ja: |
+      検索拡張生成（RAG）とツール利用に対応する Command R を公開。
+
+      [Command R の公式発表・公開情報 | Cohere](https://cohere.com/blog/command-r)
+    tags: ["Cohere", "Command", "Open Weight Model", "LLM Model"]
+    series: ["Command R"]
+
+  - year: 2024
+    date: 2024-03-06
+    title_ja: "Yi-9B"
+    summary_ja: |
+      Yi ファミリーに 9B パラメータのベースモデルを追加。
+
+      [Yi-9B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
+  - year: 2024
+    date: 2024-03-04
+    title_ja: "Claude 3 Opus / Sonnet"
+    summary_ja: |
+      Claude 3 ファミリーを発表し、Opus と Sonnet の提供を開始。画像入力に対応。
+
+      [Claude 3 Opus / Sonnet の公式発表・公開情報 | Anthropic](https://www.anthropic.com/news/claude-3-family)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Opus", "Claude Sonnet"]
+
+  - year: 2024
+    date: 2024-02-26
+    title_ja: "Mistral Large"
+    summary_ja: |
+      多言語の汎用モデルを API で提供開始。
+
+      [Mistral Large の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-large/)
+    tags: ["Mistral AI", "LLM Model"]
+    series: ["Mistral Large"]
+
+  - year: 2024
+    date: 2024-02-21
+    title_ja: "Gemma (2B, 7B)"
+    summary_ja: |
+      小型の基盤・指示追従モデルを公開。
+
+      [Gemma (2B, 7B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-open-models/)
+    tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
+    series: ["Gemma"]
+
+  - year: 2024
+    date: 2024-02-09
+    title_ja: "llm-jp-13b v1.1"
+    summary_ja: |
+      llm-jp-13b の v1.1 を公開。v1.0 に続く日本語モデルの更新。
+
+      [llm-jp-13b v1.1 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-521/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2024
+    date: 2024-02-05
+    title_ja: "Qwen1.5"
+    summary_ja: |
+      多言語対応の基盤モデルと対話モデルを複数サイズで公開。
+
+      [Qwen1.5 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2024
+    date: 2024-02-01
+    title_ja: "OLMo"
+    summary_ja: |
+      言語モデル OLMo を公開。モデル重みに加え、学習データやコードも提供。
+
+      [OLMo の公式発表・公開情報 | Ai2](https://allenai.org/blog/hello-olmo-a-truly-open-llm-43f7e7359222)
+    tags: ["Ai2", "OLMo", "Open Weight Model", "LLM Model"]
+    series: ["OLMo"]
+
+  - year: 2024
+    date: 2024-01-31
+    title_ja: "Moonshot-v1 (8K, 32K, 128K)"
+    summary_ja: |
+      Kimi の基盤となる長文対応モデルを API の公開ベータで提供。
+
+      [Moonshot-v1 (8K, 32K, 128K) の公式発表・公開情報 | Moonshot AI](https://platform.kimi.com/blog/posts/kimi-latest)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Moonshot"]
+
+  - year: 2024
+    date: 2024-01-29
+    title_ja: "Code Llama 70B"
+    summary_ja: |
+      Code Llama に 70B の基盤・Python・指示追従版を追加。
+
+      [Code Llama 70B の公式発表・公開情報 | Meta](https://ai.meta.com/blog/code-llama-large-language-model-coding/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Code Llama"]
+
+  - year: 2024
+    date: 2024-01-23
+    title_ja: "Yi-VL-6B / 34B"
+    summary_ja: |
+      画像と言語を扱う Yi-VL-6B / 34B を公開。
+
+      [Yi-VL-6B / 34B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi-VL"]
+
+  - year: 2023
+    date: 2023-12-27
+    title_ja: "ELYZA-japanese-Llama-2-13b"
+    summary_ja: |
+      日本語の追加学習を行った 13B パラメータの Llama 2 派生モデルを公開。
+
+      [ELYZA-japanese-Llama-2-13b の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000039.000047565.html)
+    tags: ["ELYZA", "Open Weight Model", "LLM Model"]
+    series: ["ELYZA"]
+
+  - year: 2023
+    date: 2023-12-12
+    title_ja: "Phi-2"
+    summary_ja: |
+      Microsoft が 2.7B パラメータの小型言語モデル Phi-2 を公開。
+
+      [Phi-2 の公式発表・公開情報 | Microsoft](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)
+    tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
+    series: ["Phi"]
+
+  - year: 2023
+    date: 2023-12-11
+    title_ja: "Mixtral 8x7B"
+    summary_ja: |
+      疎な Mixture-of-Experts モデルを発表。
+
+      [Mixtral 8x7B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mixtral-of-experts/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mixtral"]
+
   - year: 2023
     date: 2023-12-06
     title_ja: "Gemini"
     summary_ja: |
       [Introducing Gemini: Google’s most capable AI model yet](https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/)
     tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini"]
+  - year: 2023
+    date: 2023-11-30
+    title_ja: "Qwen-72B / Qwen-1.8B"
+    summary_ja: |
+      大規模版と小型版の基盤・対話モデルを公開。
+
+      [Qwen-72B / Qwen-1.8B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2023
+    date: 2023-11-23
+    title_ja: "Yi-6B / 34B Chat"
+    summary_ja: |
+      Yi-6B / 34B の対話向け Chat モデルを公開。
+
+      [Yi-6B / 34B Chat の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
   - year: 2023
     date: 2023-11-21
     title_ja: "Claude 2.1"
     summary_ja: |
       [Introducing Claude 2.1 \ Anthropic](https://www.anthropic.com/news/claude-2-1)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude"]
+  - year: 2023
+    date: 2023-11-06
+    title_ja: "GPT-4 Turbo（Preview）"
+    summary_ja: |
+      128K コンテキストに対応する GPT-4 Turbo をプレビュー公開。
+
+      [GPT-4 Turbo（Preview） の公式発表・公開情報 | OpenAI](https://openai.com/index/new-models-and-developer-products-announced-at-devday/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+
+  - year: 2023
+    date: 2023-11-05
+    title_ja: "Yi-6B / 34B 200K"
+    summary_ja: |
+      Yi-6B / 34B に 200K コンテキスト長のモデルを追加。
+
+      [Yi-6B / 34B 200K の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
+  - year: 2023
+    date: 2023-11-03
+    title_ja: "Grok (Early Access)"
+    summary_ja: |
+      初代 Grok の早期アクセスを発表。
+
+      [Grok (Early Access) の公式発表・公開情報 | xAI](https://x.ai/news/grok)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+
+  - year: 2023
+    date: 2023-11-02
+    title_ja: "Yi-6B / 34B"
+    summary_ja: |
+      01.AI が英語・中国語に対応する Yi-6B / 34B のベースモデルを公開。
+
+      [Yi-6B / 34B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
+    tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
+    series: ["Yi"]
+
+  - year: 2023
+    date: 2023-10-20
+    title_ja: "llm-jp-13b v1.0"
+    summary_ja: |
+      LLM-jp が日本語大規模言語モデル llm-jp-13b v1.0 を公開。
+
+      [llm-jp-13b v1.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-521/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2023
+    date: 2023-09-27
+    title_ja: "Mistral 7B"
+    summary_ja: |
+      7B の基盤・指示追従モデルを公開。
+
+      [Mistral 7B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/announcing-mistral-7b/)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral"]
+
+  - year: 2023
+    date: 2023-09-25
+    title_ja: "Qwen-14B / Qwen-14B-Chat"
+    summary_ja: |
+      14B モデルを追加し、7B モデルも更新。
+
+      [Qwen-14B / Qwen-14B-Chat の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2023
+    date: 2023-09-06
+    title_ja: "Falcon 180B"
+    summary_ja: |
+      Falcon シリーズを 180B パラメータへ拡大したモデルを公開。
+
+      [Falcon 180B の公式発表・公開情報 | TII](https://www.tii.ae/news/technology-innovation-institute-introduces-worlds-most-powerful-open-llm-falcon-180b)
+    tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
+    series: ["Falcon"]
+
+  - year: 2023
+    date: 2023-08-29
+    title_ja: "ELYZA-japanese-Llama-2-7b"
+    summary_ja: |
+      Llama 2 をベースに日本語の追加学習を行った 7B モデルを公開。
+
+      [ELYZA-japanese-Llama-2-7b の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000034.000047565.html)
+    tags: ["ELYZA", "Open Weight Model", "LLM Model"]
+    series: ["ELYZA"]
+
+  - year: 2023
+    date: 2023-08-24
+    title_ja: "Code Llama (7B, 13B, 34B)"
+    summary_ja: |
+      Llama 2 を基にしたコード生成・補完向けモデルを公開。
+
+      [Code Llama (7B, 13B, 34B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/code-llama-large-language-model-coding/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Code Llama"]
+
   - year: 2023
     date: 2023-08-09
     title_ja: "Claude Instant 1.2"
     summary_ja: |
       [Releasing Claude Instant 1.2 \ Anthropic](https://www.anthropic.com/news/releasing-claude-instant-1-2)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Instant"]
+  - year: 2023
+    date: 2023-08-03
+    title_ja: "Qwen-7B / Qwen-7B-Chat"
+    summary_ja: |
+      初代 Qwen の基盤モデルと対話モデルを公開。
+
+      [Qwen-7B / Qwen-7B-Chat の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
+    series: ["Qwen"]
+
+  - year: 2023
+    date: 2023-07-18
+    title_ja: "Llama 2 (7B, 13B, 70B)"
+    summary_ja: |
+      商用利用にも対応する基盤モデルと対話モデルを公開。
+
+      [Llama 2 (7B, 13B, 70B) の公式発表・公開情報 | Meta](https://about.fb.com/news/2023/07/llama-2/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
   - year: 2023
     date: 2023-07-11
     title_ja: "Claude 2"
     summary_ja: |
       [Claude 2 \ Anthropic](https://www.anthropic.com/news/claude-2)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude"]
+  - year: 2023
+    date: 2023-06-25
+    title_ja: "ChatGLM2-6B"
+    summary_ja: |
+      中英対話モデルの第2世代を公開。
+
+      [ChatGLM2-6B の公式発表・公開情報 | Z.ai](https://github.com/THUDM/ChatGLM-6B)
+    tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
+    series: ["ChatGLM"]
+
+  - year: 2023
+    date: 2023-05-25
+    title_ja: "Falcon 40B"
+    summary_ja: |
+      TII が Falcon 40B のモデル重みを研究・商用利用向けに公開。
+
+      [Falcon 40B の公式発表・公開情報 | TII](https://www.tii.ae/news/uaes-technology-innovation-institute-launches-open-source-falcon-40b-large-language-model)
+    tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
+    series: ["Falcon"]
+
+  - year: 2023
+    date: 2023-04-12
+    title_ja: "Dolly 2.0"
+    summary_ja: |
+      商用利用可能な指示応答モデル Dolly 2.0 と、人手で作成した学習データを公開。
+
+      [Dolly 2.0 の公式発表・公開情報 | Databricks](https://www.databricks.com/blog/2023/04/12/dolly-first-open-commercially-viable-instruction-tuned-llm)
+    tags: ["Databricks", "Open Weight Model", "LLM Model"]
+    series: ["Dolly"]
+
   - year: 2023
     date: 2023-03-14
     title_ja: "Claude"
     summary_ja: |
       [Introducing Claude \ Anthropic](https://www.anthropic.com/news/introducing-claude)
     tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude"]
+  - year: 2023
+    date: 2023-03-14
+    title_ja: "GPT-4"
+    summary_ja: |
+      推論能力を向上した GPT-4 を発表。ChatGPT Plus と待機リスト制の API で提供を開始。
+
+      [GPT-4 の公式発表・公開情報 | OpenAI](https://openai.com/index/gpt-4-research/)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+
+  - year: 2023
+    date: 2023-02-24
+    title_ja: "LLaMA (7B, 13B, 33B, 65B)"
+    summary_ja: |
+      研究者向けに初代 LLaMA のモデルを公開。
+
+      [LLaMA (7B, 13B, 33B, 65B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/large-language-model-llama-meta-ai/)
+    tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
+    series: ["Llama"]
+
   - year: 2021
     date: 2021-03-25
     title_ja: "GPT-3"
     summary_ja: |
       [GPT-3 powers the next generation of apps | OpenAI](https://openai.com/index/gpt-3-apps/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
   - year: 2019
     date: 2019-11-05
     title_ja: "GPT-2"
     summary_ja: |
       [GPT-2: 1.5B release | OpenAI](https://openai.com/index/gpt-2-1-5b-release/)
     tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
