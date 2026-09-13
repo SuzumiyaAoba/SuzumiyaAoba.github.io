@@ -30,6 +30,7 @@ export function renderIcon(
       viewBox={data.viewBox}
       width={data.width}
       height={data.height}
+      fill={icon === "logos:openai-icon" ? "currentColor" : undefined}
       {...props}
       dangerouslySetInnerHTML={{ __html: data.body }}
     />

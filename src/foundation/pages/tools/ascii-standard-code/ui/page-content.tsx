@@ -12,25 +12,18 @@ export type AsciiStandardCodePageContentProps = {
 
 export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageContentProps) {
   const pagePath = toLocalePath("/tools/ascii-standard-code", locale);
+  const breadcrumbItems = [
+    { name: "Home", path: toLocalePath("/", locale) },
+    { name: "Archive", path: toLocalePath("/archive", locale) },
+    { name: "Tools", path: toLocalePath("/tools", locale) },
+    { name: "ASCII Standard Code", path: pagePath },
+  ];
   return (
     <div className="site-page">
       <Header locale={locale} path={pagePath} />
-      <JsonLd
-        data={buildBreadcrumbList([
-          { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Tools", path: toLocalePath("/tools", locale) },
-          { name: "ASCII Standard Code", path: pagePath },
-        ])}
-      />
+      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main">
-        <Breadcrumbs
-          items={[
-            { name: "Home", path: toLocalePath("/", locale) },
-            { name: "Tools", path: toLocalePath("/tools", locale) },
-            { name: "ASCII Standard Code", path: pagePath },
-          ]}
-          className="mb-4"
-        />
+        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <section className="space-y-4">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             <I18nText locale={locale} ja="ツール" en="Tools" />

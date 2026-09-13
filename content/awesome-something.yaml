@@ -1,0 +1,21 @@
+# 項目は記載順に表示されます。追加するときは items: [] を items: に変更し、
+# 次の記入例を参考にリストへ追記してください。詳しい仕様は README.md を参照。
+#
+# items:
+#   - id: example-tool
+#     name: Example Tool
+#     category: アプリケーション
+#     description: 日々の作業を少し便利にするツール。
+#     websiteUrl: https://example.com/
+#     githubUrl: https://github.com/example/example-tool
+#     articles:
+#       - https://example.com/introduction
+#       - title: 使い方の紹介
+#         url: https://example.com/guide
+#     relatedPosts:
+#       - title: このサイトでの紹介記事
+#         url: /blog/post/example-tool/
+#
+# category は自由に指定できます（例: サービス、ライブラリ、フレームワーク、アプリケーション）。
+# URL と記事リストは省略できます。id は重複しない英小文字・数字・ハイフンにします。
+items: []

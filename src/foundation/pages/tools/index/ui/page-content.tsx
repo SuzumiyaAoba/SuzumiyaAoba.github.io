@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildDetailBreadcrumbItems, toLocalePath, type Locale } from "@/shared/lib/routing";
 import { type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 import { SimpleIndexPageContent } from "@/shared/ui/simple-index-page-content";
 
@@ -10,6 +10,11 @@ export type ToolsIndexPageContentProps = {
 
 export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
   const pagePath = toLocalePath("/tools", locale);
+  const breadcrumbItems = buildDetailBreadcrumbItems(
+    locale,
+    { name: "Archive", path: "/archive" },
+    { name: "Tools", path: pagePath },
+  );
   const items: SimpleEntryListItem[] = [
     {
       slug: "ascii-standard-code",
@@ -30,6 +35,7 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
         locale={locale}
         path="/tools"
         breadcrumbName="Tools"
+        breadcrumbItems={breadcrumbItems}
         heading={{ ja: "ツール", en: "Tools" }}
         emptyMessage={{ ja: "ツールがありません。", en: "No tools yet." }}
         items={items}

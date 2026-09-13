@@ -1,4 +1,9 @@
-import { buildBreadcrumbList, buildListBreadcrumbItems, type Locale } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  type BreadcrumbItem,
+  type Locale,
+} from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
@@ -13,6 +18,8 @@ export type SimpleIndexPageContentProps = {
   path: string;
   /** パンくずの表示名(例: "Books") */
   breadcrumbName: string;
+  /** 階層のある一覧ページで使う、ロケール適用済みのパンくず項目 */
+  breadcrumbItems?: BreadcrumbItem[];
   heading: LocalizedText;
   description?: LocalizedText;
   emptyMessage: LocalizedText;
@@ -28,12 +35,12 @@ export function SimpleIndexPageContent({
   locale,
   path,
   breadcrumbName,
+  breadcrumbItems = buildListBreadcrumbItems(locale, { name: breadcrumbName, path }),
   heading,
   description,
   emptyMessage,
   items,
 }: SimpleIndexPageContentProps) {
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: breadcrumbName, path });
   return (
     <>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />

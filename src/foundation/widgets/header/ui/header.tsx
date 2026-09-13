@@ -21,7 +21,7 @@ const navItems = [
   { href: "/books", labelJa: "Books", labelEn: "Books" },
   { href: "/tags", labelJa: "Tags", labelEn: "Tags" },
   { href: "/archive", labelJa: "Archive", labelEn: "Archive" },
-  { href: "/tools", labelJa: "Tools", labelEn: "Tools" },
+  { href: "/awesome-something", labelJa: "Awesome", labelEn: "Awesome" },
 ];
 
 /**
@@ -88,26 +88,26 @@ export function Header({ locale, path }: HeaderProps) {
             style={{ transform: "scaleX(0)" }}
           />
         </div>
-        <div className="site-container flex items-center justify-between gap-4 border-b border-border/60 py-3 lg:border-b-0">
+        <div className="site-container flex items-center justify-between gap-4 border-b border-border/60 py-3 xl:border-b-0">
           <a href={toLocalePath("/", locale)} className="flex items-center gap-4">
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-wide text-foreground">{SITE_TITLE}</p>
             </div>
           </a>
 
-          <nav className="hidden items-center gap-1 rounded-full p-1 text-sm font-medium text-muted-foreground lg:flex">
+          <nav className="hidden items-center gap-1 whitespace-nowrap rounded-full p-1 text-sm font-medium text-muted-foreground xl:flex">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={toLocalePath(item.href, locale)}
-                className="rounded-full px-4 py-1.5 transition-colors hover:bg-background hover:text-foreground"
+                className="rounded-full px-3 py-1.5 transition-colors hover:bg-background hover:text-foreground"
               >
                 <I18nText locale={locale} ja={item.labelJa} en={item.labelEn} />
               </a>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-4 text-sm text-muted-foreground lg:flex">
+          <div className="hidden items-center gap-4 text-sm text-muted-foreground xl:flex">
             <Button
               asChild
               size="sm"
@@ -137,7 +137,7 @@ export function Header({ locale, path }: HeaderProps) {
             </div>
           </div>
 
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center xl:hidden">
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors"
@@ -169,7 +169,7 @@ export function Header({ locale, path }: HeaderProps) {
       </div>
       <div
         id="mobile-nav"
-        className={`site-container block transition-[max-height,opacity] duration-300 lg:hidden ${
+        className={`site-container block transition-[max-height,opacity] duration-300 xl:hidden ${
           isMenuOpen
             ? "max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain opacity-100 pb-4"
             : "max-h-0 overflow-hidden opacity-0 pb-0"

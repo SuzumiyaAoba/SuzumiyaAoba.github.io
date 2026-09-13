@@ -23,6 +23,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
   const archives = [
     {
       slug: "ai-news",
+      path: "/archive/ai-news/",
       title: {
         ja: "AIニュース",
         en: "AI News",
@@ -33,6 +34,19 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
       },
       thumbnail: "iconify:lucide:newspaper",
     },
+    {
+      slug: "tools",
+      path: "/tools/",
+      title: {
+        ja: "ツール",
+        en: "Tools",
+      },
+      description: {
+        ja: "ASCII コード表や資産形成シミュレーションなどのツール集。",
+        en: "A collection of tools, including an ASCII code table and an asset formation simulator.",
+      },
+      thumbnail: "iconify:lucide:wrench",
+    },
   ];
 
   const items: EntryCardItem[] = archives.map((archive) => ({
@@ -41,7 +55,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     description: locale === "en" ? archive.description.en : archive.description.ja,
     thumbnail: archive.thumbnail,
     thumbnailBasePath: `/contents/archive/${archive.slug}`,
-    href: toLocalePath(`/archive/${archive.slug}/`, locale),
+    href: toLocalePath(archive.path, locale),
     cta: <I18nText locale={locale} ja="開く →" en="Open →" />,
   }));
 

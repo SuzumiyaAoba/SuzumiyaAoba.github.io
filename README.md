@@ -43,6 +43,44 @@ frontmatter の解析は書籍も含めて `shared/lib/content-file/parse-conten
 
 MDX のコンパイルは `shared/lib/mdx/render-mdx.tsx`、AST変換は個別のプラグイン、目次抽出は `toc.ts` が担当します。重いチャートやコード表示は使用する記事で遅延読み込みします。グラフの凡例操作・ツールチップ・模様定義と、目次の監視・位置計算もそれぞれ表示本体から分離しています。
 
+## Awesome Something の記録
+
+`content/awesome-something.yaml` に記録すると、`/awesome-something/` と `/en/awesome-something/` の一覧に反映されます。ヘッダーの「Awesome」から開けます。公開時は再ビルドが必要です。開発中はページを再読み込みすると変更を反映します。
+
+初期状態は `items: []` です。登録を始めるときは次のように `items` の下へ項目を追加してください。表示順は YAML の記載順です。新しい発見を先頭に表示したい場合はリストの先頭へ追記します。
+
+```yaml
+items:
+  - id: example-tool
+    name: Example Tool
+    category: アプリケーション
+    description: 日々の作業を少し便利にするツール。
+    websiteUrl: https://example.com/
+    githubUrl: https://github.com/example/example-tool
+    articles:
+      - https://example.com/introduction
+      - title: 使い方の紹介
+        url: https://example.com/guide
+    relatedPosts:
+      - title: このサイトでの紹介記事
+        url: /blog/post/example-tool/
+```
+
+| フィールド     | 必須 | 内容                                                                                    |
+| -------------- | ---- | --------------------------------------------------------------------------------------- |
+| `id`           | ○    | 重複しない英小文字・数字・ハイフンの ID。項目のアンカー `#awesome-<id>` にも使用        |
+| `name`         | ○    | 名称                                                                                    |
+| `category`     | ○    | 自由なカテゴリ名。例: サービス、ライブラリ、フレームワーク、アプリケーション            |
+| `description`  | ○    | 簡単な説明。複数行は YAML の `\|` や `>` で記入可能                                     |
+| `websiteUrl`   |      | 公式サイトの HTTP(S) URL                                                                |
+| `githubUrl`    |      | GitHub リポジトリの HTTP(S) URL                                                         |
+| `articles`     |      | 紹介記事のリスト。HTTP(S) URL、または `url` と任意の `title` を持つオブジェクト         |
+| `relatedPosts` |      | サイト内の関連記事のリスト。`articles` と同形式で、`/` から始まるサイト内パスも指定可能 |
+
+任意の URL は省略・空欄、記事リストは省略・空欄・`[]` にできます。未設定のリンクや見出しは表示しません。カテゴリの選択肢は記録から自動生成され、名称・説明・カテゴリのキーワード検索と組み合わせて絞り込めます。
+
+日英のページで記録内容は共通です。関連記事は指定した URL をそのまま使うため、日本語だけの記事にも英語ページからリンクできます。必須項目の不足、ID の重複、不正な URL、フィールド名の誤りは読み込み時にファイル名と項目の位置を含むエラーになり、ビルドも失敗します。
+
 ## アフィリエイトリンクの管理
 
 記事全体のリンク先は `content/affiliate-products.json` に集約しています。リンクを差し替えるときは、対象の `id` の `productUrl` を変更して再ビルドします。同じ ID を参照する日本語・英語の記事や商品カードに反映されるため、記事本文の編集は不要です。開発中はページを再読み込みすると変更を反映します。
