@@ -12,7 +12,12 @@ import {
 import { ProviderIcon, providerLabel, providerStyles } from "./provider-identity";
 import { ReleasePoint } from "./release-point";
 import type { ReleasePopoverControls } from "./release-popover";
-import { ReleaseViewHeader, releaseActionClass, releaseSelectClass } from "./release-view-layout";
+import {
+  ReleaseScrollArea,
+  ReleaseViewHeader,
+  releaseActionClass,
+  releaseSelectClass,
+} from "./release-view-layout";
 
 const SERIES_WIDTH = 176;
 const AXIS_PADDING = 24;
@@ -250,7 +255,7 @@ export function ReleaseTimeline({
           </div>
         </div>
       </ReleaseViewHeader>
-      <div
+      <ReleaseScrollArea
         ref={scrollRef}
         role="region"
         aria-label={en ? "Release interval chart" : "リリース間隔の比較チャート"}
@@ -449,7 +454,7 @@ export function ReleaseTimeline({
             </Fragment>
           ))}
         </div>
-      </div>
+      </ReleaseScrollArea>
     </div>
   );
 }

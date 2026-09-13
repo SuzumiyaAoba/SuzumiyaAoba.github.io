@@ -14,8 +14,9 @@ import { shiftDate } from "../model/release-activity";
 import { dateInMonth, getMonthDays, getMonthWindow, monthsBetween } from "../model/release-months";
 import type { ReleaseTimelineRange } from "../model/release-timeline";
 import { ProviderIcon, providerStyles } from "./provider-identity";
+import { ReleaseDatePicker } from "./release-date-picker";
 import type { ReleasePopoverControls } from "./release-popover";
-import { ReleaseViewHeader, releaseActionClass, releaseSelectClass } from "./release-view-layout";
+import { ReleaseScrollArea, ReleaseViewHeader, releaseActionClass } from "./release-view-layout";
 
 const MONTH_GAP = 16;
 
@@ -187,12 +188,13 @@ export function ReleaseCalendarStrip({
             >
               <ArrowRight aria-hidden="true" />
             </Button>
-            <input
-              type="month"
-              aria-label={en ? "Jump to month" : "月へ移動"}
-              value={visibleMonth}
-              onChange={(event) => jumpToMonth(event.target.value)}
-              className={cn(releaseSelectClass, "w-0 flex-1 tabular-nums sm:w-40 sm:flex-none")}
+            <ReleaseDatePicker
+              month={visibleMonth}
+              selectedDate={selectedDate}
+              today={today}
+              locale={locale}
+              onSelectDate={jumpTo}
+              onOpen={popover.dismiss}
             />
           </div>
           <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
@@ -215,7 +217,7 @@ export function ReleaseCalendarStrip({
           </div>
         </div>
       </ReleaseViewHeader>
-      <div
+      <ReleaseScrollArea
         ref={scrollRef}
         role="region"
         aria-label={en ? "Scrollable release calendar" : "横スクロールカレンダー"}
@@ -424,7 +426,7 @@ export function ReleaseCalendarStrip({
             );
           })}
         </div>
-      </div>
+      </ReleaseScrollArea>
       <div className="flex items-center justify-between gap-2 border-t px-4 py-3 text-[10px] text-muted-foreground sm:px-6 sm:text-[11px]">
         <span className="shrink-0 whitespace-nowrap">← {en ? "Past" : "過去"}</span>
         <span>{en ? "Logos mark release days" : "ロゴのある日がリリース日"}</span>

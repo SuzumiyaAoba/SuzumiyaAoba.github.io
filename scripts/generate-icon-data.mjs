@@ -14,6 +14,7 @@
  *
  * 収集対象:
  *   - src 配下の "prefix:name" 形式の文字列リテラル
+ *     （サムネイル用の `icon:` / `iconify:` 接頭辞付きも含む）
  *   - content 配下の frontmatter `thumbnail: iconify:prefix:name`
  *
  * prefix は node_modules に @iconify-json/<prefix> があるものだけを採用する。
@@ -77,19 +78,23 @@ function collectFiles(dir, extensions) {
 }
 
 const candidates = new Set(CLIENT_ICONS);
+const explicitIcons = new Set(CLIENT_ICONS);
 
 // src の文字列リテラルは「アイコンかもしれない」候補。prefix が
 // アイコンコレクションでないもの（node:path など）は黙って除外してよい。
+// `icon:` / `iconify:` 付きのサムネイル指定は明示的なアイコンとして扱う。
 for (const file of collectFiles(path.join(ROOT, "src"), [".ts", ".tsx"])) {
   const source = readFileSync(file, "utf8");
-  for (const match of source.matchAll(/["'`]([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/g)) {
-    candidates.add(match[1]);
+  for (const match of source.matchAll(
+    /["'`](icon(?:ify)?:)?([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/g,
+  )) {
+    candidates.add(match[2]);
+    if (match[1]) explicitIcons.add(match[2]);
   }
 }
 
 // content の `iconify:` は曖昧さのない明示的なアイコン指定。
 // 解決できなかったものは必ず報告する（黙って消すと記事から絵が消える）。
-const explicitIcons = new Set(CLIENT_ICONS);
 for (const file of collectFiles(path.join(ROOT, "content"), [".mdx", ".md", ".json", ".yml"])) {
   const source = readFileSync(file, "utf8");
   for (const match of source.matchAll(/iconify:([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)/g)) {

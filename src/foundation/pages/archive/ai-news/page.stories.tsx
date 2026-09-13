@@ -4,6 +4,27 @@ import { AiNewsPageContent } from "./ui/page-content";
 import { AiNewsTimelinePageContent } from "./ui/timeline-page-content";
 import type { RenderedRelease } from "./model/release-calendar";
 
+async function chooseCalendarDate(canvasElement: HTMLElement, date: string) {
+  const canvas = within(canvasElement);
+  const document = within(canvasElement.ownerDocument.body);
+  const [year, month, day] = date.split("-");
+  const trigger = canvas.getByRole("button", { name: "月へ移動" });
+  await userEvent.click(trigger);
+  const picker = within(document.getByRole("dialog", { name: "移動する日付を選択" }));
+  await userEvent.selectOptions(picker.getByRole("combobox", { name: "年を選択" }), year!);
+  await userEvent.selectOptions(
+    picker.getByRole("combobox", { name: "月を選択" }),
+    String(Number(month) - 1),
+  );
+  await userEvent.click(
+    picker.getByRole("button", { name: new RegExp(`${year}年${Number(month)}月${Number(day)}日`) }),
+  );
+  await waitFor(() =>
+    expect(document.queryByRole("dialog", { name: "移動する日付を選択" })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(trigger).toHaveFocus());
+}
+
 function release(
   title: string,
   date: string | undefined,
@@ -110,16 +131,14 @@ export const Japanese: Story = {
       document.getAllByRole("link", { name: "Official announcement" })[0]!,
     ).toHaveAttribute("href", "https://example.com/release");
     await userEvent.click(canvas.getByRole("button", { name: "前の月" }));
-    await expect(canvas.getByLabelText("月へ移動")).toHaveValue("2026-02");
-    await fireEvent.change(canvas.getByLabelText("月へ移動"), {
-      target: { value: "2025-12" },
-    });
+    await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年2月");
+    await chooseCalendarDate(canvasElement, "2025-12-01");
     await userEvent.click(within(scroll).getByRole("button", { name: /^2025年12月31日:/ }));
     await expect(document.getByRole("article", { name: "Claude Opus Previous" })).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "次の月" }));
-    await expect(canvas.getByLabelText("月へ移動")).toHaveValue("2026-01");
+    await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年1月");
     await userEvent.click(canvas.getByRole("button", { name: "今日に戻る" }));
-    await expect(canvas.getByLabelText("月へ移動")).toHaveValue("2026-03");
+    await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年3月");
     await waitFor(() =>
       expect(
         Math.abs(
@@ -195,9 +214,7 @@ export const UndatedAndEmptyMonth: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
-    await fireEvent.change(canvas.getByLabelText("月へ移動"), {
-      target: { value: "2026-04" },
-    });
+    await chooseCalendarDate(canvasElement, "2026-04-01");
     await userEvent.click(canvas.getByRole("button", { name: /^2026年4月1日:/ }));
     await expect(
       within(canvasElement.ownerDocument.body).getByText("この日のリリース記録はありません。"),
@@ -231,6 +248,21 @@ export const English: Story = {
     await expect(canvas.getByRole("button", { name: /^March 6, 2026:/ })).toHaveAttribute(
       "aria-current",
       "date",
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "Jump to month" }));
+    const picker = within(document.getByRole("dialog", { name: "Choose a date to navigate to" }));
+    await userEvent.selectOptions(
+      picker.getByRole("combobox", { name: "Choose the Year" }),
+      "2024",
+    );
+    await userEvent.selectOptions(picker.getByRole("combobox", { name: "Choose the Month" }), "1");
+    await userEvent.click(picker.getByRole("button", { name: /February 29.*2024/ }));
+    await expect(canvas.getByRole("button", { name: /^February 29, 2024:/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(canvas.getByRole("button", { name: "Jump to month" })).toHaveTextContent(
+      "February 2024",
     );
     await userEvent.click(canvas.getByRole("button", { name: "List" }));
     await expect(canvas.getAllByRole("article")).toHaveLength(8);
@@ -355,32 +387,65 @@ export const FullHistory: Story = {
   },
 };
 
+export const DatePickerKeyboardAndCancel: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const document = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
+    const trigger = canvas.getByRole("button", { name: "月へ移動" });
+    await userEvent.click(trigger);
+    const picker = within(document.getByRole("dialog", { name: "移動する日付を選択" }));
+    await userEvent.click(picker.getByRole("button", { name: "次の月へ" }));
+    await expect(picker.getByRole("combobox", { name: "月を選択" })).toHaveValue("3");
+    await expect(trigger).toHaveTextContent("2026年3月");
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() =>
+      expect(
+        document.queryByRole("dialog", { name: "移動する日付を選択" }),
+      ).not.toBeInTheDocument(),
+    );
+    await expect(trigger).toHaveFocus();
+    await userEvent.click(trigger);
+    const reopened = within(document.getByRole("dialog", { name: "移動する日付を選択" }));
+    await expect(reopened.getByRole("combobox", { name: "月を選択" })).toHaveValue("2");
+    await waitFor(() =>
+      expect(reopened.getByRole("button", { name: /2026年3月6日/ })).toHaveFocus(),
+    );
+    await userEvent.keyboard("{ArrowRight}{Enter}");
+    await expect(canvas.getByRole("button", { name: /^2026年3月7日:/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await waitFor(() => expect(trigger).toHaveFocus());
+  },
+};
+
 export const CalendarAcrossYears: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
     const scroll = canvas.getByRole("region", { name: "横スクロールカレンダー" });
-    const monthInput = canvas.getByLabelText("月へ移動");
-    await fireEvent.change(monthInput, { target: { value: "2024-02" } });
+    const monthPicker = canvas.getByRole("button", { name: "月へ移動" });
+    await chooseCalendarDate(canvasElement, "2024-02-29");
     const leapDay = within(scroll).getByRole("button", { name: /^2024年2月29日:/ });
-    await userEvent.click(leapDay);
     await expect(leapDay).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(leapDay);
     await userEvent.keyboard("{ArrowRight}");
-    await expect(monthInput).toHaveValue("2024-03");
+    await expect(monthPicker).toHaveTextContent("2024年3月");
     await waitFor(() =>
       expect(within(scroll).getByRole("button", { name: /^2024年3月1日:/ })).toHaveFocus(),
     );
     await userEvent.keyboard("{PageUp}");
-    await expect(monthInput).toHaveValue("2024-02");
-    monthInput.focus();
+    await expect(monthPicker).toHaveTextContent("2024年2月");
+    monthPicker.focus();
     scroll.scrollLeft +=
       scroll.querySelector('[data-calendar-month="2024-02"]')!.getBoundingClientRect().width + 16;
-    await waitFor(() => expect(monthInput).toHaveValue("2024-03"));
-    await expect(monthInput).toHaveFocus();
+    await waitFor(() => expect(monthPicker).toHaveTextContent("2024年3月"));
+    await expect(monthPicker).toHaveFocus();
     await expect(scroll.querySelectorAll("[data-calendar-month]").length).toBeLessThan(7);
-    await fireEvent.change(monthInput, { target: { value: "2028-12" } });
+    await chooseCalendarDate(canvasElement, "2028-12-01");
     await userEvent.click(canvas.getByRole("button", { name: "次の月" }));
-    await expect(monthInput).toHaveValue("2029-01");
+    await expect(monthPicker).toHaveTextContent("2029年1月");
     await expect(scroll.querySelectorAll("[data-calendar-month]").length).toBeLessThan(7);
     await userEvent.click(canvas.getByRole("button", { name: "今日に戻る" }));
     const initialLeft = scroll.scrollLeft;
@@ -388,15 +453,15 @@ export const CalendarAcrossYears: Story = {
       .querySelector('[data-calendar-month="2026-03"]')!
       .getBoundingClientRect().width;
     scroll.scrollLeft -= monthWidth + 16;
-    await waitFor(() => expect(monthInput).toHaveValue("2026-02"));
+    await waitFor(() => expect(monthPicker).toHaveTextContent("2026年2月"));
     await expect(scroll.scrollLeft).toBeLessThan(initialLeft);
     await userEvent.click(canvas.getByRole("button", { name: "OpenAI" }));
-    await expect(monthInput).toHaveValue("2026-02");
+    await expect(monthPicker).toHaveTextContent("2026年2月");
     await userEvent.click(canvas.getByRole("button", { name: "今日に戻る" }));
-    await expect(monthInput).toHaveValue("2026-03");
-    await fireEvent.change(monthInput, { target: { value: "2010-01" } });
+    await expect(monthPicker).toHaveTextContent("2026年3月");
+    await chooseCalendarDate(canvasElement, "2010-01-01");
     scroll.scrollLeft = 0;
-    await waitFor(() => expect(monthInput).toHaveValue("2009-01"));
+    await waitFor(() => expect(monthPicker).toHaveTextContent("2009年1月"));
     await waitFor(() => expect(scroll.scrollLeft).toBeGreaterThan(0));
   },
 };

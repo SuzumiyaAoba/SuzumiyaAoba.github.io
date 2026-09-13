@@ -87,8 +87,13 @@ export function ReleaseExplorer({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border bg-background">
-        <div data-pagefind-ignore>
+      <div
+        className={cn(
+          "rounded-2xl border bg-background",
+          (view === "list" || filtered.length === 0) && "overflow-hidden",
+        )}
+      >
+        <div data-pagefind-ignore className="overflow-hidden rounded-t-2xl">
           <ReleaseHighlights
             releases={releases}
             today={today}
