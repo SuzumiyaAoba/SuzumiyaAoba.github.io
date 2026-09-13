@@ -163,9 +163,7 @@ export function ReleaseCalendarStrip({
       <ReleaseViewHeader
         title={en ? "Monthly release calendar" : "月別リリースカレンダー"}
         description={
-          en
-            ? "Scroll through months. Select a day to pin its release details in a popup."
-            : "月ごとのカレンダーを横スクロール。日付を選ぶと、ポップアップを固定してリリースの詳細を表示します。"
+          en ? "Select a date for release details." : "日付を選択してリリースの詳細を表示"
         }
       >
         <div className="flex flex-wrap items-center justify-between gap-2">

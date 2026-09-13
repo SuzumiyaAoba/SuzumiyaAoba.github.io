@@ -21,13 +21,12 @@ export type SimpleIndexPageContentProps = {
   /** 階層のある一覧ページで使う、ロケール適用済みのパンくず項目 */
   breadcrumbItems?: BreadcrumbItem[];
   heading: LocalizedText;
-  description?: LocalizedText;
   emptyMessage: LocalizedText;
   items: SimpleEntryListItem[];
 };
 
 /**
- * 見出し・説明文・空メッセージ以外はレイアウトが同一な一覧ページの共通テンプレート。
+ * 見出し・件数・空メッセージを持つ一覧ページの共通テンプレート。
  * books/index, notes/index のような単純な一覧ページで利用する。
  * Header/Footer はページ側の責務のため含まない。
  */
@@ -37,7 +36,6 @@ export function SimpleIndexPageContent({
   breadcrumbName,
   breadcrumbItems = buildListBreadcrumbItems(locale, { name: breadcrumbName, path }),
   heading,
-  description,
   emptyMessage,
   items,
 }: SimpleIndexPageContentProps) {
@@ -46,17 +44,13 @@ export function SimpleIndexPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        <section className="page-heading">
+          <h1 className="page-title">
             <I18nText locale={locale} ja={heading.ja} en={heading.en} />
           </h1>
-          {description && (
-            <div className="max-w-3xl space-y-3">
-              <p className="text-sm leading-7 text-muted-foreground">
-                <I18nText locale={locale} ja={description?.ja} en={description?.en} />
-              </p>
-            </div>
-          )}
+          <p className="page-count">
+            {locale === "en" ? `${items.length} items` : `${items.length} 件`}
+          </p>
         </section>
 
         <SimpleEntryList

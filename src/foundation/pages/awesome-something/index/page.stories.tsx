@@ -77,7 +77,7 @@ export const Japanese: Story = {
     );
     const app = within(canvas.getByRole("article", { name: "Example App" }));
     await expect(app.queryAllByRole("link")).toHaveLength(0);
-    await expect(app.queryAllByRole("heading", { level: 3 })).toHaveLength(0);
+    await expect(app.queryAllByRole("heading", { level: 4 })).toHaveLength(0);
   },
 };
 
@@ -98,7 +98,7 @@ export const Filtering: Story = {
     const canvas = within(canvasElement);
     const search = canvas.getByRole("searchbox");
 
-    await userEvent.click(canvas.getByRole("button", { name: "ライブラリ 1" }));
+    await userEvent.click(canvas.getByRole("button", { name: "ライブラリ" }));
     await expect(canvas.getAllByRole("article")).toHaveLength(1);
     await expect(canvas.getByRole("status")).toHaveTextContent("4 件中 1 件を表示");
 
@@ -108,7 +108,7 @@ export const Filtering: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "絞り込みを解除" }));
     await expect(search).toHaveValue("");
-    await expect(canvas.getByRole("button", { name: "すべて 4" })).toHaveAttribute(
+    await expect(canvas.getByRole("button", { name: "すべて" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );

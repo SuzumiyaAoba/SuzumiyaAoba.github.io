@@ -21,7 +21,7 @@ export function ThemeToggle() {
       <Button
         variant="ghost"
         size="icon"
-        className="h-9 w-9 rounded-full"
+        className="size-11 rounded-lg"
         aria-label="テーマを切り替え"
       >
         <span className="h-4 w-4" />
@@ -44,8 +44,9 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="h-9 w-9 rounded-full"
+      className="size-11 rounded-lg"
       aria-label={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+      title={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
     >
       {isDark ? (
         <Icon icon="lucide:sun" className="h-4 w-4" />

@@ -137,7 +137,7 @@ export function ReleaseExplorer({
                   value={filters.query}
                   onChange={(event) => updateFilters({ query: event.target.value })}
                   placeholder={en ? "Find a model, series, or provider…" : "モデル名・系列で検索…"}
-                  className="h-10 rounded-lg bg-background pl-10 text-xs shadow-none"
+                  className="h-11 rounded-lg bg-background pl-10 shadow-none"
                 />
               </search>
               <select
@@ -199,7 +199,7 @@ export function ReleaseExplorer({
                       setView(value);
                     }}
                     className={cn(
-                      "relative flex h-9 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4",
+                      "relative flex h-11 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4 sm:text-sm",
                       view === value
                         ? "bg-background font-semibold text-teal-800 shadow-sm dark:text-teal-200"
                         : "text-muted-foreground hover:text-foreground",
@@ -213,7 +213,7 @@ export function ReleaseExplorer({
               <div className="flex min-h-10 items-center gap-3">
                 <p
                   role="status"
-                  className="flex items-center gap-1.5 text-[11px] tabular-nums text-muted-foreground"
+                  className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground"
                 >
                   <SlidersHorizontal className="hidden size-3 sm:block" aria-hidden="true" />
                   <span className="sm:hidden">
@@ -228,7 +228,7 @@ export function ReleaseExplorer({
                 {hasFilters && (
                   <Button
                     variant="ghost"
-                    className="h-8 gap-1 px-1 text-[11px]"
+                    className="h-11 gap-1 px-2 text-xs"
                     onClick={() => updateFilters(INITIAL_FILTERS)}
                     aria-label={en ? "Clear filters" : "絞り込みを解除"}
                   >

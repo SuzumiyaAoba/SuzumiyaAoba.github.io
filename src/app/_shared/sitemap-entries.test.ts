@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { buildContentSitemapEntries, buildTranslatedSitemapEntries } from "./sitemap-entries";
 
 const siteUrl = "https://example.com";

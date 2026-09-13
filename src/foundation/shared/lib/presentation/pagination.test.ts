@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { DEFAULT_PAGE_SIZE, getPageCount, paginate } from "./pagination";
 
 describe("DEFAULT_PAGE_SIZE", () => {

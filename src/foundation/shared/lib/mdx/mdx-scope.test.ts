@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vite-plus/test";
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -10,10 +10,7 @@ describe("loadMdxScope", () => {
   beforeAll(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "mdx-scope-test-"));
     await mkdir(path.join(baseDir, "data"), { recursive: true });
-    await writeFile(
-      path.join(baseDir, "data", "sample.json"),
-      JSON.stringify({ hello: "world" }),
-    );
+    await writeFile(path.join(baseDir, "data", "sample.json"), JSON.stringify({ hello: "world" }));
   });
 
   afterAll(async () => {

@@ -8,7 +8,6 @@ import {
   type Locale,
 } from "@/shared/lib/routing";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { I18nText } from "@/shared/ui/i18n-text";
 import { JsonLd } from "@/shared/ui/seo";
 import { AwesomeList } from "./awesome-list";
 
@@ -27,14 +26,10 @@ export function AwesomeSomethingPageContent({ locale, items }: AwesomeSomethingP
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
-        <section className="space-y-4">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Awesome Something</h1>
-          <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-            <I18nText
-              locale={locale}
-              ja="日々見つけた、気になるサービス、ライブラリ、フレームワーク、アプリケーション。紹介記事や使ってみた記録と一緒にまとめています。"
-              en="Services, libraries, frameworks, and applications discovered along the way, collected with useful articles and notes from trying them out."
-            />
+        <section className="page-heading">
+          <h1 className="page-title">Awesome Something</h1>
+          <p className="page-count">
+            {locale === "en" ? `${items.length} items` : `${items.length} 件`}
           </p>
         </section>
         <AwesomeList locale={locale} items={items} />

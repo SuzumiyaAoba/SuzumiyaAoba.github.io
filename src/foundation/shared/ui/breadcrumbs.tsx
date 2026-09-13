@@ -18,23 +18,27 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   }
 
   return (
-    <nav className={cn("text-xs text-foreground/80", className)} aria-label="Breadcrumb">
+    <nav className={cn("text-[13px] text-muted-foreground", className)} aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
             <li key={`${item.path}-${item.name}`} className="flex items-center gap-2">
               {index !== 0 ? (
-                <Icon icon="lucide:chevron-right" className="size-3 text-foreground/60" />
+                <Icon
+                  icon="lucide:chevron-right"
+                  className="size-3 shrink-0 text-muted-foreground"
+                  aria-hidden
+                />
               ) : null}
               {isLast ? (
-                <span className="font-medium text-foreground">
+                <span aria-current="page" className="font-medium text-foreground">
                   {item.path === "/" ? <Icon icon="lucide:home" className="size-3.5" /> : item.name}
                 </span>
               ) : item.path === "/" ? (
                 <a
                   href={item.path}
-                  className="font-medium text-foreground/70 hover:text-foreground"
+                  className="inline-flex min-h-8 min-w-8 items-center rounded-sm font-medium transition-colors hover:text-foreground"
                   aria-label="Home"
                 >
                   <Icon icon="lucide:home" className="size-3.5" />
@@ -42,7 +46,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               ) : (
                 <a
                   href={item.path}
-                  className="font-medium text-foreground/70 hover:text-foreground"
+                  className="inline-flex min-h-8 items-center rounded-sm font-medium transition-colors hover:text-foreground"
                 >
                   {item.name}
                 </a>

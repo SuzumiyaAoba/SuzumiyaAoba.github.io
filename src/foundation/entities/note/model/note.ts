@@ -37,8 +37,8 @@ export type Note = {
 
 export type NoteSummary = ContentSummary<Note>;
 
-export const getNoteSlugs = cache(
-  async (): Promise<string[]> => listContentSlugs(NOTE_COLLECTION_DIR),
+export const getNoteSlugs = cache(async (): Promise<string[]> =>
+  listContentSlugs(NOTE_COLLECTION_DIR),
 );
 
 export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeFrontmatter);

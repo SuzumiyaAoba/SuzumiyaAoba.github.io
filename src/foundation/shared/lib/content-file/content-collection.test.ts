@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { resolveLocalizedValue, type LocalizedValue } from "@/shared/lib/routing";
 import { createContentCollection } from "./content-collection";
 

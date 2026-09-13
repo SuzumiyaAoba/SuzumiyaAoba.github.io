@@ -4,8 +4,7 @@ import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
 
 export const metadata: Metadata = {
   title: "Awesome Something",
-  description:
-    "A collection of services, libraries, frameworks, and applications, with useful articles and related posts from this site.",
+  description: "Services, libraries, frameworks, and applications.",
   alternates: buildLocaleAlternates("/awesome-something", "en"),
 };
 

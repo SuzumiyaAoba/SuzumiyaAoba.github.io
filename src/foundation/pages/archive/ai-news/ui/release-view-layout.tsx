@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactNode } from "react";
 
 export const releaseSelectClass =
-  "h-10 min-w-0 rounded-lg border bg-background px-3 text-xs text-foreground shadow-none focus-visible:outline-2 focus-visible:outline-ring";
+  "h-11 min-w-0 rounded-lg border bg-background px-3 text-base text-foreground shadow-none focus-visible:outline-2 focus-visible:outline-ring sm:text-sm";
 
-export const releaseActionClass = "h-10 rounded-lg px-3 text-xs shadow-none";
+export const releaseActionClass = "h-11 rounded-lg px-3 text-sm shadow-none";
 
 /** ページの @container を基準に、スクロールバーを除く画面幅まで表示枠を広げる。 */
 export function ReleaseScrollArea({ children, ...props }: ComponentProps<"div">) {
@@ -23,7 +23,7 @@ export function ReleaseViewHeader({
   children,
 }: {
   title: string;
-  description: string;
+  description?: string;
   descriptionId?: string;
   aside?: ReactNode;
   children?: ReactNode;
@@ -33,9 +33,11 @@ export function ReleaseViewHeader({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1.5">
           <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-          <p id={descriptionId} className="text-xs leading-6 text-muted-foreground">
-            {description}
-          </p>
+          {description && (
+            <p id={descriptionId} className="text-xs leading-6 text-muted-foreground">
+              {description}
+            </p>
+          )}
         </div>
         {aside}
       </div>

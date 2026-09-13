@@ -32,25 +32,20 @@ export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPag
             <Breadcrumbs items={breadcrumbs} />
             <a
               href={toLocalePath("/archive/ai-news/timeline", locale)}
-              className="py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex min-h-10 items-center text-xs text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
             >
               {en ? "Original timeline ↗" : "従来のタイムライン ↗"}
             </a>
           </div>
-          <section className="space-y-3">
+          <section className="page-heading">
+            <h1 className="page-title">
+              {en ? "AI model release comparison" : "AIモデルのリリース比較"}
+            </h1>
             {updated && (
               <p className="text-xs text-muted-foreground">
                 {en ? "Updated" : "最終更新"}: <time dateTime={updated}>{updated}</time>
               </p>
             )}
-            <h1 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-              {en ? "AI model release comparison" : "AIモデルのリリース比較"}
-            </h1>
-            <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
-              {en
-                ? "Every release, and the time until the next. Follow the pace of AI across providers, models, and years."
-                : "発表日と、次のモデルまでの時間。提供元を横断して、AIの進化の流れを見渡せます。"}
-            </p>
           </section>
           <ReleaseExplorer entries={entries} locale={locale} {...(today ? { today } : {})} />
         </div>

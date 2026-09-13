@@ -142,9 +142,7 @@ export function ReleaseTimeline({
       <ReleaseViewHeader
         title={en ? "Release intervals · All dates" : "全期間のリリース間隔"}
         description={
-          en
-            ? "Compare release dates and elapsed days across series. Select a model to pin its details in a popup."
-            : "モデルの発売日と前回からの日数を、系列ごとに比較できます。モデルを選ぶと、ポップアップを固定して詳細を表示します。"
+          en ? "Select a model for release details." : "モデルを選択してリリースの詳細を表示"
         }
         descriptionId={descriptionId}
         aside={

@@ -1,5 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { asString, asStringWithDefault, asDateString, asBoolean, asStringArray } from "./frontmatter";
+import { describe, it, expect } from "vite-plus/test";
+import {
+  asString,
+  asStringWithDefault,
+  asDateString,
+  asBoolean,
+  asStringArray,
+} from "./frontmatter";
 
 describe("asString", () => {
   it("string値をそのまま返す", () => {

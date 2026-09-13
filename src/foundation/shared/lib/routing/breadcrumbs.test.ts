@@ -1,5 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
-import { buildBreadcrumbList, buildDetailBreadcrumbItems, type BreadcrumbItem } from "./breadcrumbs";
+import { describe, it, expect, vi } from "vite-plus/test";
+import {
+  buildBreadcrumbList,
+  buildDetailBreadcrumbItems,
+  type BreadcrumbItem,
+} from "./breadcrumbs";
 
 // Mock the site-config module (transitive dependency)
 vi.mock("@/shared/lib/site/site-config", () => ({

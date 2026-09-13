@@ -2,7 +2,7 @@
 
 import { act, StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { LineChart } from "./LineChart";
 import { StackedBarChart } from "./StackedBarChart";
 import type { SheetData } from "./types";

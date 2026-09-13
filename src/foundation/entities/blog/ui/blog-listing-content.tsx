@@ -59,12 +59,18 @@ export function BlogListingContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        <section className="page-heading">
+          <h1 className="page-title">
             <I18nText locale={locale} ja="ブログ" en="Blog" />
           </h1>
           {variant === "paginated" ? (
-            <div className="text-sm text-muted-foreground">{pageLabel}</div>
+            <p className="page-count">
+              {pageNumber} / {pageCount}
+            </p>
+          ) : totalCount !== undefined ? (
+            <p className="page-count">
+              {locale === "en" ? `${totalCount} posts` : `${totalCount} 件`}
+            </p>
           ) : null}
         </section>
 

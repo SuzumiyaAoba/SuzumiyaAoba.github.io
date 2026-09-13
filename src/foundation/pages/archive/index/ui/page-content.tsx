@@ -65,10 +65,13 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        <section className="page-heading">
+          <h1 className="page-title">
             <I18nText locale={locale} ja="アーカイブ" en="Archive" />
           </h1>
+          <p className="page-count">
+            {locale === "en" ? `${items.length} items` : `${items.length} 件`}
+          </p>
         </section>
 
         <EntryCardList

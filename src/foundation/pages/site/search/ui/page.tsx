@@ -36,17 +36,10 @@ export function SearchPageContent({ locale }: SearchPageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-3">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        <section className="page-heading">
+          <h1 className="page-title">
             <I18nText locale={locale} ja="検索" en="Search" />
           </h1>
-          <p className="text-sm text-muted-foreground">
-            <I18nText
-              locale={locale}
-              ja="記事・シリーズ・ツールなどをキーワードで検索できます。"
-              en="Search posts, series, tools, and more by keyword."
-            />
-          </p>
         </section>
         <Suspense fallback={<SearchLoading locale={locale} />}>
           <SearchPanel locale={locale} />

@@ -30,11 +30,6 @@ export function ReleaseList({ releases, locale }: { releases: Release[]; locale:
     <section aria-label={en ? "All recorded releases" : "全期間のリリース一覧"} className="min-w-0">
       <ReleaseViewHeader
         title={en ? "All recorded releases" : "全期間のリリース一覧"}
-        description={
-          en
-            ? "A chronological record. Open any release for sources and previous models."
-            : "モデルの発売日と前回からの日数を、月ごとに一覧で。各行を開くと発表内容や出典を確認できます。"
-        }
         aside={
           <label className="flex items-center gap-2 text-xs text-muted-foreground">
             <ArrowDownWideNarrow className="size-4" aria-hidden="true" />

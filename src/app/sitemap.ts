@@ -128,27 +128,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const seriesPages = buildTranslatedSitemapEntries(
-    seriesList.map(
-      (series): SitemapPage => ({
-        path: `/series/${series.slug}`,
-        lastModified: seriesLastModified.get(series.slug) ?? buildTime,
-        changeFrequency: "monthly",
-        priority: 0.7,
-      }),
-    ),
+    seriesList.map((series): SitemapPage => ({
+      path: `/series/${series.slug}`,
+      lastModified: seriesLastModified.get(series.slug) ?? buildTime,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    })),
     siteUrl,
     buildTime,
   );
 
   const tagPages = buildTranslatedSitemapEntries(
-    tags.map(
-      (tag): SitemapPage => ({
-        path: `/tags/${encodeURIComponent(tag.name)}`,
-        lastModified: tag.lastModified ?? buildTime,
-        changeFrequency: "weekly",
-        priority: 0.6,
-      }),
-    ),
+    tags.map((tag): SitemapPage => ({
+      path: `/tags/${encodeURIComponent(tag.name)}`,
+      lastModified: tag.lastModified ?? buildTime,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    })),
     siteUrl,
     buildTime,
   );

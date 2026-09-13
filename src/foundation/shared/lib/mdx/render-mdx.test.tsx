@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element -- MDX の img 出力と基準パスを検証するためのモック。 */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { renderToStaticMarkup } from "react-dom/server";
 
 vi.mock("@/shared/lib/mdx/components", () => ({ mdxComponents: {} }));

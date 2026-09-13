@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import type { LocalizedBlogPostSummary } from "@/entities/blog";
 import sitemap from "../sitemap";
 import { buildTagPageMetadata, buildTagPageStaticParams } from "./tag-page-metadata";

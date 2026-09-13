@@ -4,8 +4,7 @@ import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
 
 export const metadata: Metadata = {
   title: "Awesome Something",
-  description:
-    "日々見つけたサービス、ライブラリ、フレームワーク、アプリケーションを、紹介記事やサイト内の関連記事と一緒にまとめています。",
+  description: "サービス・ライブラリ・フレームワーク・アプリケーションのリンク集。",
   alternates: buildLocaleAlternates("/awesome-something", "ja"),
 };
 

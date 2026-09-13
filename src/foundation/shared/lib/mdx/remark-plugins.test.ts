@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { remark } from "remark";
 import { remarkCollectHeadings, remarkMermaid, remarkUnwrapImages } from "./remark-plugins";
 import type { TocHeading } from "./toc";

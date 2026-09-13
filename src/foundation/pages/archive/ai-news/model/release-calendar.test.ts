@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { AiNewsEntrySchema } from "@/shared/lib/ai-news";

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { buildReleases, type RenderedRelease } from "./release-calendar";
 import { getReleaseActivity, localDate, shiftDate } from "./release-activity";
 

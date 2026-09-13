@@ -29,11 +29,11 @@ export function LanguageToggle({ locale, path }: LanguageToggleProps) {
       asChild
       variant="ghost"
       size="icon"
-      className="h-9 w-9 rounded-full"
+      className="size-11 rounded-lg"
       aria-label={label}
       title={label}
     >
-      <a href={targetPath}>
+      <a href={targetPath} hrefLang={targetLocale}>
         <Icon icon="lucide:languages" className="h-4 w-4" aria-hidden="true" />
       </a>
     </Button>

@@ -1,11 +1,9 @@
 "use client";
 
 import { useId, useRef, useState, type ReactNode } from "react";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import type { AwesomeItem, AwesomeLink } from "../model/awesome-item";
 import type { Locale } from "@/shared/lib/routing";
-import { Badge } from "@/shared/ui/badge";
-import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
 function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
@@ -14,7 +12,7 @@ function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
     <a
       href={url}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="inline-block min-h-8 break-words py-1 text-sm underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+      className="inline-block min-h-8 break-words py-1 text-sm text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
     >
       {children}
       {external && <span aria-hidden="true"> ↗</span>}
@@ -26,9 +24,9 @@ function ArticleLinks({ title, links }: { title: string; links: AwesomeLink[] })
   if (links.length === 0) return null;
 
   return (
-    <div className="space-y-2">
-      <h3 className="text-xs font-semibold text-foreground">{title}</h3>
-      <ul className="space-y-2 text-muted-foreground">
+    <div className="flex flex-col gap-x-4 sm:flex-row sm:items-baseline">
+      <h4 className="shrink-0 text-xs text-muted-foreground">{title}</h4>
+      <ul className="min-w-0 space-y-1">
         {links.map((link, index) => (
           <li key={`${link.url}-${index}`}>
             <ResourceLink url={link.url}>{link.title ?? link.url}</ResourceLink>
@@ -48,19 +46,27 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
   const hasFilters = query.length > 0 || category !== null;
   const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase(locale);
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
-  const categories = new Map<string, number>();
+  const categories = new Map<string, AwesomeItem[]>();
   for (const item of items) {
-    categories.set(item.category, (categories.get(item.category) ?? 0) + 1);
+    const categoryItems = categories.get(item.category);
+    if (categoryItems) categoryItems.push(item);
+    else categories.set(item.category, [item]);
   }
-  const filteredItems = items.filter((item) => {
-    if (category !== null && item.category !== category) return false;
-    const text = normalize([item.name, item.category, item.description].join(" "));
-    return terms.every((term) => text.includes(term));
-  });
+  const filteredGroups = Array.from(categories)
+    .filter(([name]) => category === null || name === category)
+    .map(([name, categoryItems]) => ({
+      name,
+      items: categoryItems.filter((item) => {
+        const text = normalize([item.name, item.category, item.description].join(" "));
+        return terms.every((term) => text.includes(term));
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+  const filteredCount = filteredGroups.reduce((count, group) => count + group.items.length, 0);
 
   if (items.length === 0) {
     return (
-      <p className="rounded-xl bg-muted/60 px-5 py-8 text-center text-sm text-muted-foreground">
+      <p className="py-8 text-sm text-muted-foreground">
         {isEnglish ? "No discoveries recorded yet." : "まだ登録がありません。"}
       </p>
     );
@@ -68,124 +74,144 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4 rounded-xl bg-muted/60 p-5 sm:p-7" data-pagefind-ignore>
-        <search className="relative max-w-xl">
-          <label htmlFor={searchId} className="sr-only">
-            {isEnglish ? "Search by name, description, or category" : "名称・説明・カテゴリで検索"}
-          </label>
-          <Search
-            className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            ref={inputRef}
-            id={searchId}
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={isEnglish ? "Search by name or category…" : "名称・カテゴリで検索…"}
-            className="h-12 bg-background pl-10"
-          />
-        </search>
-        <div
-          role="group"
+      <div className="space-y-2" data-pagefind-ignore>
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <search className="relative w-full sm:max-w-sm">
+            <label htmlFor={searchId} className="sr-only">
+              {isEnglish
+                ? "Search by name, description, or category"
+                : "名称・説明・カテゴリで検索"}
+            </label>
+            <Search
+              className="pointer-events-none absolute left-0 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              ref={inputRef}
+              id={searchId}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={isEnglish ? "Search by name or category…" : "名称・カテゴリで検索…"}
+              className="rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0"
+            />
+          </search>
+          <div className={hasFilters ? "flex items-center gap-4" : "sr-only"}>
+            <output className="text-xs tabular-nums text-muted-foreground">
+              {isEnglish
+                ? `${filteredCount} of ${items.length} items`
+                : `${items.length} 件中 ${filteredCount} 件を表示`}
+            </output>
+            {hasFilters && (
+              <button
+                type="button"
+                className="min-h-11 text-xs text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+                onClick={() => {
+                  setQuery("");
+                  setCategory(null);
+                  inputRef.current?.focus();
+                }}
+              >
+                {isEnglish ? "Clear filters" : "絞り込みを解除"}
+              </button>
+            )}
+          </div>
+        </div>
+        <fieldset
           aria-label={isEnglish ? "Filter by category" : "カテゴリで絞り込み"}
-          className="flex flex-wrap gap-2"
+          className="flex min-w-0 flex-wrap gap-x-5"
         >
-          <Button
+          <button
             type="button"
-            variant={category === null ? "default" : "outline"}
             aria-pressed={category === null}
             onClick={() => setCategory(null)}
-            className="h-auto min-h-11 whitespace-normal rounded-lg shadow-none"
+            className="min-h-11 py-2 text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
           >
             {isEnglish ? "All" : "すべて"}
-            <span className="text-xs tabular-nums opacity-75">{items.length}</span>
-          </Button>
-          {Array.from(categories, ([name, count]) => (
-            <Button
+          </button>
+          {Array.from(categories.keys(), (name) => (
+            <button
               key={name}
               type="button"
-              variant={category === name ? "default" : "outline"}
               aria-pressed={category === name}
               onClick={() => setCategory(name)}
-              className="h-auto min-h-11 max-w-full whitespace-normal rounded-lg shadow-none"
+              className="min-h-11 max-w-full break-words py-2 text-left text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
             >
               {name}
-              <span className="text-xs tabular-nums opacity-75">{count}</span>
-            </Button>
+            </button>
           ))}
-        </div>
-        <div className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-3">
-          <output className="text-sm tabular-nums text-muted-foreground">
-            {isEnglish
-              ? `${filteredItems.length} of ${items.length} items`
-              : `${items.length} 件中 ${filteredItems.length} 件を表示`}
-          </output>
-          {hasFilters && (
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-11 px-2"
-              onClick={() => {
-                setQuery("");
-                setCategory(null);
-                inputRef.current?.focus();
-              }}
-            >
-              <X className="size-4" aria-hidden="true" />
-              {isEnglish ? "Clear filters" : "絞り込みを解除"}
-            </Button>
-          )}
-        </div>
+        </fieldset>
       </div>
 
-      {filteredItems.length === 0 ? (
-        <div className="space-y-3 rounded-xl bg-muted/60 px-5 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            {isEnglish ? "No matching discoveries." : "条件に一致する項目がありません。"}
-          </p>
-        </div>
+      {filteredCount === 0 ? (
+        <p className="border-t border-border py-8 text-sm text-muted-foreground">
+          {isEnglish ? "No matching discoveries." : "条件に一致する項目がありません。"}
+        </p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-          {filteredItems.map((item) => (
-            <article
-              key={item.id}
-              id={`awesome-${item.id}`}
-              aria-labelledby={`awesome-${item.id}-title`}
-              className="min-w-0 scroll-mt-24 space-y-4 rounded-xl bg-muted/50 p-5 transition-colors hover:bg-muted sm:p-6"
-            >
-              <div className="space-y-3">
-                <Badge variant="secondary" className="font-normal text-muted-foreground">
-                  {item.category}
-                </Badge>
-                <h2
-                  id={`awesome-${item.id}-title`}
-                  className="text-xl font-semibold tracking-tight"
-                >
-                  {item.name}
-                </h2>
-                <p className="whitespace-pre-line text-sm leading-7 text-foreground/80">
-                  {item.description}
-                </p>
-              </div>
-              {(item.websiteUrl || item.githubUrl) && (
-                <div className="flex flex-wrap gap-x-5 gap-y-2 pt-3">
-                  {item.websiteUrl && (
-                    <ResourceLink url={item.websiteUrl}>
-                      {isEnglish ? "Official website" : "公式サイト"}
-                    </ResourceLink>
-                  )}
-                  {item.githubUrl && <ResourceLink url={item.githubUrl}>GitHub</ResourceLink>}
+        <div className="space-y-8">
+          {filteredGroups.map(({ name, items: categoryItems }) => {
+            const headingId = `awesome-category-${encodeURIComponent(name)}`;
+
+            return (
+              <section
+                key={name}
+                aria-labelledby={headingId}
+                className="grid gap-4 border-t border-border pt-6 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[12rem_minmax(0,1fr)]"
+              >
+                <div className="flex items-baseline gap-3">
+                  <h2 id={headingId} className="min-w-0 break-words text-sm font-medium leading-7">
+                    {name}
+                  </h2>
+                  <span className="text-xs tabular-nums text-muted-foreground" data-pagefind-ignore>
+                    {categoryItems.length}
+                  </span>
                 </div>
-              )}
-              <ArticleLinks title={isEnglish ? "Articles" : "紹介記事"} links={item.articles} />
-              <ArticleLinks
-                title={isEnglish ? "Related posts on this site" : "サイト内の関連記事"}
-                links={item.relatedPosts}
-              />
-            </article>
-          ))}
+                <ul className="min-w-0 divide-y divide-border/60">
+                  {categoryItems.map((item) => (
+                    <li key={item.id} className="py-5 first:pt-0 last:pb-0">
+                      <article
+                        id={`awesome-${item.id}`}
+                        aria-labelledby={`awesome-${item.id}-title`}
+                        className="min-w-0 scroll-mt-24 space-y-2"
+                      >
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                          <h3
+                            id={`awesome-${item.id}-title`}
+                            className="min-w-0 break-words text-base font-semibold leading-7 tracking-tight"
+                          >
+                            {item.name}
+                          </h3>
+                          {(item.websiteUrl || item.githubUrl) && (
+                            <div className="flex flex-wrap gap-x-4">
+                              {item.websiteUrl && (
+                                <ResourceLink url={item.websiteUrl}>
+                                  {isEnglish ? "Official website" : "公式サイト"}
+                                </ResourceLink>
+                              )}
+                              {item.githubUrl && (
+                                <ResourceLink url={item.githubUrl}>GitHub</ResourceLink>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <p className="whitespace-pre-line break-words text-sm leading-7 text-muted-foreground">
+                          {item.description}
+                        </p>
+                        <ArticleLinks
+                          title={isEnglish ? "Articles" : "紹介記事"}
+                          links={item.articles}
+                        />
+                        <ArticleLinks
+                          title={isEnglish ? "Related posts on this site" : "サイト内の関連記事"}
+                          links={item.relatedPosts}
+                        />
+                      </article>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

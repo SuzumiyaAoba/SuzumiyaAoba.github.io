@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vite-plus/test";
 
 // Mock the content-root module (transitive dependency)
 vi.mock("@/shared/lib/content-file", () => ({

@@ -4,7 +4,7 @@ Next.js App Router、React、TypeScript で構築した個人サイトです。�
 
 ## 開発
 
-CI と同じ Node.js 22 系と npm を使用します。
+CI と同じ Node.js 22 系（22.18.0 以上）と npm を使用します。テスト・lint・整形には [Vite+](https://viteplus.dev/guide/migrate) を使用し、プロジェクトの依存関係としてインストールします。
 
 ```sh
 npm ci
@@ -47,7 +47,7 @@ MDX のコンパイルは `shared/lib/mdx/render-mdx.tsx`、AST変換は個別�
 
 `content/awesome-something.yaml` に記録すると、`/awesome-something/` と `/en/awesome-something/` の一覧に反映されます。ヘッダーの「Awesome」から開けます。公開時は再ビルドが必要です。開発中はページを再読み込みすると変更を反映します。
 
-初期状態は `items: []` です。登録を始めるときは次のように `items` の下へ項目を追加してください。表示順は YAML の記載順です。新しい発見を先頭に表示したい場合はリストの先頭へ追記します。
+次のように `items` の下へ項目を追加してください。項目はカテゴリごとにまとめて表示されます。カテゴリは YAML で最初に登場する順、カテゴリ内の項目は記載順です。新しい発見を先頭に表示したい場合はリストの先頭へ追記します。登録を空にする場合は `items: []` と記載します。
 
 ```yaml
 items:
@@ -127,6 +127,7 @@ Qwen・Kimi・Llama・Mistral・Grok・GLM・MiniMax などの海外モデルと
 ```sh
 npm run typecheck
 npm run lint
+npm run format:check
 npm run test -- --project=unit
 npx playwright install chromium
 npm run test -- --project=storybook
@@ -135,4 +136,10 @@ npm run build
 
 `npm run test` は単体テストと Storybook のブラウザテストをまとめて実行します。Storybook 単体は `npm run storybook` で確認できます。ファイル監視数の制限で Steiger が `EMFILE` になる環境では、`CHOKIDAR_USEPOLLING=1 npm run lint` を使用できます。
 
-`npm run build` はアイコン生成、Next.js の静的出力、Pagefind のインデックス生成を順に行い、公開用ファイルを `out/` に出力します。PRでは lint・テスト・ビルドを実行し、`master` への push 時に GitHub Pages へデプロイします。
+`vite.config.ts` に Vite+ のテスト・lint・整形設定をまとめています。`npm run lint` は `vp lint` と Steiger、`npm run test` は `vp test run`、`npm run format` は `vp fmt` を実行します。テストを監視しながら実行するには `npm run test:watch` を使用します。型検査は `npm run typecheck` で TypeScript を実行します。
+
+Vite+ の `vp dev` / `vp build` は Vite 向けのコマンドです。このサイトの開発・静的出力は Next.js を使用するため、`npm run dev` / `npm run build` を使います。
+
+Vite+ は Storybook 10.6 の対応範囲に合わせて 0.2.9 に固定しています。更新するときは Storybook の対応範囲を確認し、`vite` のエイリアスと overrides、`vitest`・`@vitest/browser-playwright`・`@vitest/coverage-v8` も同梱バージョンに揃えてください。これらの直接依存は Storybook の peer dependency とブラウザテスト・カバレッジに必要です。TypeScript のパスエイリアスは Vite の `resolve.tsconfigPaths` で解決します。
+
+`npm run build` はアイコン生成、Next.js の静的出力、Pagefind のインデックス生成を順に行い、公開用ファイルを `out/` に出力します。PRでは型検査・lint・テスト・ビルドを実行し、`master` への push 時に GitHub Pages へデプロイします。

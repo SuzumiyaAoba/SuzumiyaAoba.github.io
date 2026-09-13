@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { calculateSchedule, toYearlyRows } from "./simulation";
 import type { ScheduleRow } from "./types";
 
