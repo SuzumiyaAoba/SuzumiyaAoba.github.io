@@ -30,7 +30,7 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
   }
 
   return (
-    <ul className="space-y-4">
+    <ul className="collection-card-list grid gap-6 lg:grid-cols-2">
       {items.map((item) => {
         const thumbnail = resolveThumbnail(item.slug, item.thumbnail, {
           basePath: item.thumbnailBasePath,
@@ -39,25 +39,21 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
 
         return (
           <li key={item.slug}>
-            <Card className="group relative border-transparent bg-card/50 shadow-none transition-colors hover:bg-muted/30">
-              <span
-                aria-hidden
-                className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/40 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
-              />
+            <Card className="collection-card group h-full border-0 bg-muted/60 shadow-none transition-colors hover:bg-muted">
               <a
                 href={item.href}
-                className="relative z-10 flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6"
+                className="flex h-full items-start gap-4 rounded-xl p-5 sm:gap-6 sm:p-8"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
+                <div className="collection-thumbnail relative size-16 shrink-0 overflow-hidden rounded-lg sm:size-20">
                   {thumbnail.type === "image" ? (
                     <Image
                       src={thumbnail.src}
-                      alt={isFallback ? "Site icon" : item.title}
+                      alt=""
                       fill
-                      sizes="(min-width: 768px) 176px, 100vw"
+                      sizes="(min-width: 640px) 80px, 64px"
                       className={
                         isFallback
-                          ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80"
+                          ? "object-contain p-3 opacity-70 dark:invert dark:opacity-80"
                           : "object-cover"
                       }
                     />
@@ -65,21 +61,22 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
                     <div className="flex h-full w-full items-center justify-center">
                       <Icon
                         icon={thumbnail.icon}
-                        className="size-10 text-muted-foreground/70 dark:text-muted-foreground/80"
+                        className="size-7 text-muted-foreground sm:size-8"
                         aria-hidden
                       />
-                      <span className="sr-only">{item.title}</span>
                     </div>
                   )}
                 </div>
-                <div className="flex flex-1 flex-col gap-2 py-2">
+                <div className="flex min-w-0 flex-1 flex-col gap-4 self-stretch">
                   <div className="space-y-2">
-                    <div className="text-lg font-semibold text-foreground">{item.title}</div>
+                    <h2 className="text-lg font-semibold leading-relaxed text-foreground">
+                      {item.title}
+                    </h2>
                     {item.description ? (
                       <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
                     ) : null}
                   </div>
-                  <span className="text-xs font-medium text-muted-foreground md:mt-auto">
+                  <span className="mt-auto text-sm font-medium text-muted-foreground group-hover:text-foreground">
                     {item.cta}
                   </span>
                 </div>

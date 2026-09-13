@@ -32,10 +32,13 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main flex flex-col gap-8 sm:gap-10" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <h1 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+        <section className="page-heading">
+          <h1 className="page-title">
             <I18nText locale={locale} ja="タグ" en="Tags" />
           </h1>
+          <p className="page-count">
+            {locale === "en" ? `${tags.length} tags` : `${tags.length} 件`}
+          </p>
         </section>
 
         {tags.length === 0 ? (
@@ -45,19 +48,21 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
             </div>
           </Card>
         ) : (
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
-                <Card className="border-transparent bg-card/40 shadow-none transition-colors hover:bg-card/60">
+                <Card className="border-0 bg-muted/60 shadow-none transition-colors hover:bg-accent">
                   <a
                     href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, locale)}
-                    className="flex items-center justify-between gap-3 px-3 py-2"
+                    className="flex min-h-18 items-center justify-between gap-4 rounded-xl px-5 py-4"
                   >
                     <Tag
                       tag={tag.name}
-                      label={`${tag.name} (${tag.count})`}
-                      className="bg-muted text-xs font-semibold text-muted-foreground"
+                      className="min-w-0 whitespace-normal border-0 bg-transparent p-0 text-sm font-medium text-foreground"
                     />
+                    <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+                      {tag.count}
+                    </span>
                   </a>
                 </Card>
               </li>

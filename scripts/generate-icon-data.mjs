@@ -38,6 +38,9 @@ const ICON_DIR = path.join(ROOT, "src/foundation/shared/ui/icon");
  */
 const CLIENT_ICONS = [
   "lucide:search",
+  "lucide:menu",
+  "lucide:x",
+  "lucide:chevron-right",
   "lucide:sun",
   "lucide:moon",
   "lucide:languages",

@@ -20,15 +20,32 @@ export function SimpleEntryList({ items, emptyState }: SimpleEntryListProps) {
   }
 
   return (
-    <ul className="max-w-3xl divide-y divide-border/40">
-      {items.map((item) => (
-        <li key={item.slug} className="py-4">
+    <ul className="simple-journal-list">
+      {items.map((item, index) => (
+        <li key={item.slug}>
           <a
             href={item.href}
-            className="inline-flex flex-col gap-1 transition-colors hover:text-foreground/80"
+            className="group flex min-h-24 items-center gap-5 rounded-lg px-4 py-6 transition-colors hover:bg-muted/70 focus-visible:relative sm:gap-8 sm:px-6"
           >
-            <span className="text-base font-medium break-words">{item.title}</span>
-            {item.date ? <span className="text-xs text-muted-foreground">{item.date}</span> : null}
+            <span className="simple-entry-number font-mono" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="min-w-0 flex-1 space-y-2">
+              <span className="block text-base font-medium leading-relaxed break-words">
+                {item.title}
+              </span>
+              {item.date ? (
+                <span className="block text-xs tabular-nums text-muted-foreground">
+                  {item.date}
+                </span>
+              ) : null}
+            </span>
+            <span
+              aria-hidden="true"
+              className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1"
+            >
+              →
+            </span>
           </a>
         </li>
       ))}

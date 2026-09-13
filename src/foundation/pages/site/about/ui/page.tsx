@@ -40,62 +40,17 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main flex flex-col gap-8 sm:gap-10">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
+        <section className="page-heading">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               <I18nText locale={locale} ja="概要" en="About" />
             </p>
-            <h1 className="text-3xl font-semibold tracking-tight">SuzumiyaAoba</h1>
+            <h1 className="page-title">SuzumiyaAoba</h1>
           </div>
-          <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-            <I18nText
-              locale={locale}
-              ja="開発・読書・ツールづくりの記録をまとめる場所です。記事の整理と公開を続けながら、学習の過程や試行錯誤をログとして残しています。"
-              en="A place to collect notes on development, reading, and tool building. I keep publishing posts while logging what I learned and the experiments along the way."
-            />
-          </p>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: { ja: "執筆", en: "Writing" },
-              body: {
-                ja: "ブログと連載記事の更新。技術メモや検証結果を中心に掲載。",
-                en: "Updates to blog posts and series, focusing on technical notes and findings.",
-              },
-            },
-            {
-              title: { ja: "制作", en: "Building" },
-              body: {
-                ja: "小さなツールや実験的なプロトタイプの開発ログ。",
-                en: "Development logs for small tools and experimental prototypes.",
-              },
-            },
-            {
-              title: { ja: "学習", en: "Learning" },
-              body: {
-                ja: "書籍や資料からの学びを整理し、後で参照できる形で保存。",
-                en: "Summaries of books and materials, organized for future reference.",
-              },
-            },
-          ].map((item) => (
-            <div
-              key={item.title.en}
-              className="rounded-2xl bg-card/40 px-5 py-6 text-sm text-muted-foreground shadow-none"
-            >
-              <div className="text-base font-semibold text-foreground">
-                <I18nText locale={locale} ja={item.title.ja} en={item.title.en} />
-              </div>
-              <p className="mt-2 leading-6">
-                <I18nText locale={locale} ja={item.body.ja} en={item.body.en} />
-              </p>
-            </div>
-          ))}
         </section>
 
         <section className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl bg-card/40 px-5 py-6 shadow-none">
+          <div className="rounded-xl bg-muted/70 px-6 py-8 sm:p-9">
             <h2 className="text-lg font-semibold">
               <I18nText locale={locale} ja="コンテンツ" en="Contents" />
             </h2>
@@ -135,7 +90,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
               </li>
             </ul>
           </div>
-          <div className="rounded-2xl bg-card/40 px-5 py-6 shadow-none">
+          <div className="rounded-xl bg-muted/70 px-6 py-8 sm:p-9">
             <h2 className="text-lg font-semibold">
               <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </h2>

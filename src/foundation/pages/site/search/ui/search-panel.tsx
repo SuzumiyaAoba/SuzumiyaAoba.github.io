@@ -1,10 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import { parseAsString, useQueryState } from "nuqs";
+import { Search, X } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { usePagefindSearch } from "../model/use-pagefind-search";
 
@@ -26,25 +29,45 @@ type SearchPanelProps = {
 };
 
 export function SearchPanel({ locale }: SearchPanelProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useQueryState("q", queryParser);
   const { results, isLoading, pagefindLoaded, error } = usePagefindSearch(query);
   const pagefindErrorKey = error?.key;
-  const pagefindErrorDetail = error?.detail ?? "";
   const t = (ja: string, en: string) => (locale === "en" ? en : ja);
 
   return (
     <div className="space-y-6">
-      <Card className="border-transparent bg-card/40 shadow-none">
-        <div className="px-4 py-4">
-          <Input
-            value={query}
-            onChange={(event) => void setQuery(event.target.value)}
-            placeholder={t("キーワードで検索...", "Search by keyword...")}
-            aria-label={t("検索キーワード", "Search keyword")}
-            disabled={!pagefindLoaded}
-          />
-        </div>
-      </Card>
+      <search className="relative">
+        <Search
+          className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
+        <Input
+          ref={inputRef}
+          type="search"
+          value={query}
+          onChange={(event) => void setQuery(event.target.value)}
+          placeholder={t("キーワードで検索...", "Search by keyword...")}
+          aria-label={t("検索キーワード", "Search keyword")}
+          disabled={!pagefindLoaded}
+          className="h-14 pl-12 pr-14 [&::-webkit-search-cancel-button]:appearance-none"
+        />
+        {query && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-1.5 top-1/2 size-11 -translate-y-1/2 rounded-lg"
+            aria-label={t("検索をクリア", "Clear search")}
+            onClick={() => {
+              void setQuery("");
+              inputRef.current?.focus();
+            }}
+          >
+            <X className="size-4" aria-hidden="true" />
+          </Button>
+        )}
+      </search>
 
       {pagefindErrorKey ? (
         <Card className="border-transparent bg-muted/40 shadow-none">
@@ -63,39 +86,38 @@ export function SearchPanel({ locale }: SearchPanelProps) {
                         "Search loading timed out.",
                       )
                     : t(
-                        `検索エンジンの読み込みに失敗しました。${pagefindErrorDetail}`.trim(),
-                        `Failed to load search.${pagefindErrorDetail ? ` ${pagefindErrorDetail}` : ""}`.trim(),
+                        "検索の読み込みに失敗しました。ページを再読み込みしてください。",
+                        "Search could not load. Please reload the page.",
                       )}
             </p>
-            <p className="text-xs">
-              {t(
-                "ビルド後に Pagefind を実行していない場合は、検索インデックスが生成されていない可能性があります。",
-                "If Pagefind hasn’t been run after build, the search index might be missing.",
-              )}
-            </p>
+            <Button type="button" variant="outline" onClick={() => window.location.reload()}>
+              {t("再読み込み", "Reload")}
+            </Button>
           </div>
         </Card>
       ) : !pagefindLoaded ? (
-        <div className="text-sm text-muted-foreground">
+        <output className="block text-sm text-muted-foreground">
           {t("検索エンジンを読み込み中...", "Loading search...")}
-        </div>
+        </output>
       ) : isLoading ? (
-        <div className="text-sm text-muted-foreground">{t("検索中...", "Searching...")}</div>
+        <output className="block text-sm text-muted-foreground">
+          {t("検索中...", "Searching...")}
+        </output>
       ) : results.length > 0 ? (
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <output className="flex items-center gap-2 text-sm text-muted-foreground">
             <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
               {locale === "en" ? `${results.length} results` : `${results.length} 件`}
             </Badge>
             <span>{t("検索結果", "Results")}</span>
-          </div>
+          </output>
           <ul className="space-y-4">
             {results.map((result) => (
               <li key={result.url}>
-                <Card className="border-transparent bg-card/40 shadow-none">
+                <Card className="border-0 bg-muted/50 shadow-none transition-colors hover:bg-muted">
                   <a
                     href={toLocalePath(result.url, locale)}
-                    className="flex flex-col gap-2 px-5 py-5 transition-colors hover:text-foreground/80"
+                    className="flex flex-col gap-3 rounded-xl p-5 sm:p-6"
                   >
                     <h2 className="text-base font-semibold text-foreground">
                       {result.meta.title ?? t("タイトルなし", "Untitled")}
@@ -114,12 +136,12 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           </ul>
         </div>
       ) : query.trim() ? (
-        <div className="text-sm text-muted-foreground">
+        <output className="block text-sm text-muted-foreground">
           {t(
             "検索結果が見つかりませんでした。別のキーワードをお試しください。",
             "No results found. Try another keyword.",
           )}
-        </div>
+        </output>
       ) : null}
     </div>
   );

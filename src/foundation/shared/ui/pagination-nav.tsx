@@ -1,13 +1,11 @@
-import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { cn } from "@/shared/lib/utils";
 
 export type PaginationNavProps = {
   locale: Locale;
   currentPage: number;
   pageCount: number;
-  /** ロケール非依存のパスを返す(例: page===1 なら "/blog"、それ以外は "/blog/2") */
   hrefForPage: (page: number) => string;
-  /** 前後ページへのリンクも表示するかどうか */
   showPrevNext?: boolean;
 };
 
@@ -16,62 +14,89 @@ export function PaginationNav({
   currentPage,
   pageCount,
   hrefForPage,
-  showPrevNext = false,
+  showPrevNext = true,
 }: PaginationNavProps) {
+  if (pageCount <= 1) return null;
+
+  const en = locale === "en";
   const resolvedHref = (page: number) => toLocalePath(hrefForPage(page), locale);
-
-  const pageLinks = (
-    <div className="flex flex-wrap items-center gap-2 text-sm">
-      {Array.from({ length: pageCount }, (_, index) => {
-        const page = index + 1;
-        const isActive = page === currentPage;
-        return (
-          <a
-            key={page}
-            href={resolvedHref(page)}
-            className={
-              isActive
-                ? "rounded-full bg-foreground px-3 py-1 text-xs font-semibold text-background"
-                : "rounded-full px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
-            }
-          >
-            {page}
-          </a>
-        );
-      })}
-    </div>
+  const visiblePages = Array.from({ length: pageCount }, (_, index) => index + 1).filter(
+    (page) =>
+      page === 1 ||
+      page === pageCount ||
+      Math.abs(page - currentPage) <= 1 ||
+      (currentPage <= 3 && page <= 5) ||
+      (currentPage >= pageCount - 2 && page >= pageCount - 4),
   );
-
-  if (!showPrevNext) {
-    return (
-      <nav className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
-        {pageLinks}
-      </nav>
-    );
-  }
+  const controlClass =
+    "inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted";
 
   return (
-    <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-      {currentPage > 1 ? (
-        <a
-          href={resolvedHref(currentPage - 1)}
-          className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-        >
-          <I18nText locale={locale} ja="← 前のページ" en="← Previous page" />
-        </a>
-      ) : (
-        <span className="w-[5.5rem]" />
-      )}
-      {pageLinks}
-      {currentPage < pageCount ? (
-        <a
-          href={resolvedHref(currentPage + 1)}
-          className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-        >
-          <I18nText locale={locale} ja="次のページ →" en="Next page →" />
-        </a>
-      ) : (
-        <span className="w-[5.5rem]" />
+    <nav aria-label={en ? "Pagination" : "ページ送り"} className="space-y-4 pt-8">
+      <ol className="flex flex-wrap items-center justify-center gap-1">
+        {visiblePages.map((page, index) => {
+          const previousPage = visiblePages[index - 1];
+          return (
+            <li key={page} className="flex items-center gap-1">
+              {previousPage !== undefined && page - previousPage > 1 && (
+                <span aria-hidden="true" className="px-2 text-muted-foreground">
+                  …
+                </span>
+              )}
+              <a
+                href={resolvedHref(page)}
+                aria-current={page === currentPage ? "page" : undefined}
+                aria-label={en ? `Page ${page}` : `ページ ${page}`}
+                className={cn(
+                  "inline-flex h-11 w-9 items-center justify-center rounded-full font-mono text-xs tabular-nums transition-colors sm:w-11",
+                  page === currentPage
+                    ? "bg-[var(--brand)] font-semibold text-[var(--brand-contrast)]"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                {page}
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+      {showPrevNext && (
+        <div className="flex items-center justify-between gap-2">
+          {currentPage > 1 ? (
+            <a href={resolvedHref(currentPage - 1)} rel="prev" className={controlClass}>
+              {en ? "← Previous" : "← 前のページ"}
+            </a>
+          ) : (
+            <span
+              aria-disabled="true"
+              className="inline-flex min-h-11 items-center px-3 text-sm text-muted-foreground/60"
+            >
+              {en ? "← Previous" : "← 前のページ"}
+            </span>
+          )}
+          <span
+            className="text-sm tabular-nums text-muted-foreground"
+            aria-label={
+              en
+                ? `Page ${currentPage} of ${pageCount}`
+                : `${pageCount} ページ中 ${currentPage} ページ`
+            }
+          >
+            {currentPage} / {pageCount}
+          </span>
+          {currentPage < pageCount ? (
+            <a href={resolvedHref(currentPage + 1)} rel="next" className={controlClass}>
+              {en ? "Next →" : "次のページ →"}
+            </a>
+          ) : (
+            <span
+              aria-disabled="true"
+              className="inline-flex min-h-11 items-center px-3 text-sm text-muted-foreground/60"
+            >
+              {en ? "Next →" : "次のページ →"}
+            </span>
+          )}
+        </div>
       )}
     </nav>
   );

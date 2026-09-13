@@ -128,12 +128,14 @@ export function BlogPostPageContent({
       />
       <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <header className="mb-10 space-y-3">
-          <p className="text-sm text-muted-foreground">{postDate}</p>
-          <h1 className="text-3xl font-semibold break-all">{postTitle}</h1>
+        <header className="mb-10 space-y-5 pt-6 pb-6 sm:mb-12 sm:pb-8">
+          <p className="font-mono text-xs text-muted-foreground">{postDate}</p>
+          <h1 className="max-w-4xl text-3xl font-medium leading-relaxed break-words sm:text-4xl">
+            {postTitle}
+          </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {category ? (
-              <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
+              <Badge variant="secondary" className="text-[11px] font-medium">
                 {category}
               </Badge>
             ) : null}

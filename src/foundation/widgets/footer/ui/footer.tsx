@@ -17,20 +17,34 @@ export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-12 bg-card/40">
-      <div className="site-container flex flex-col items-center gap-4 py-8 text-center md:flex-row md:justify-center">
-        <p className="text-xs text-muted-foreground">© {year} SuzumiyaAoba</p>
-        <nav className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-          <a href={toLocalePath("/contact", locale)} className="hover:text-foreground">
-            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-          </a>
-          <a href={toLocalePath("/privacy-policy", locale)} className="hover:text-foreground">
-            <I18nText locale={locale} ja="プライバシー" en="Privacy" />
-          </a>
-          <a href={toLocalePath("/rss.xml", locale)} className="hover:text-foreground">
-            RSS
-          </a>
-        </nav>
+    <footer className="site-footer">
+      <div className="site-container">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="eyebrow text-muted-foreground">© {year} SuzumiyaAoba</p>
+          <nav
+            aria-label={locale === "en" ? "Footer navigation" : "フッターナビゲーション"}
+            className="font-noto flex flex-wrap gap-x-5 text-xs text-muted-foreground"
+          >
+            <a
+              href={toLocalePath("/contact", locale)}
+              className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+            >
+              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
+            </a>
+            <a
+              href={toLocalePath("/privacy-policy", locale)}
+              className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+            >
+              <I18nText locale={locale} ja="プライバシー" en="Privacy" />
+            </a>
+            <a
+              href={toLocalePath("/rss.xml", locale)}
+              className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+            >
+              RSS
+            </a>
+          </nav>
+        </div>
       </div>
     </footer>
   );

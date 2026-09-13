@@ -36,8 +36,8 @@ type BlogPostListProps = {
   emptyMessage?: EmptyMessage;
   /** サムネイルを表示するかどうか */
   showThumbnail?: boolean;
-  /** 表示バリアント（コンパクトまたは詳細） */
-  variant?: "compact" | "detailed";
+  /** ホームの特集組み、通常の記事一覧、コンパクト表示 */
+  variant?: "compact" | "detailed" | "editorial";
   /** タグをクリックした際にリンクとして機能させるかどうか */
   enableTagLinks?: boolean;
 };
@@ -57,7 +57,7 @@ export function BlogPostList({
 }: BlogPostListProps) {
   const dateLocale = toIntlLocaleTag(locale);
   const withThumbnail = showThumbnail ?? variant === "detailed";
-  const withTagLinks = enableTagLinks ?? variant === "detailed";
+  const withTagLinks = enableTagLinks ?? variant !== "compact";
 
   if (posts.length === 0) {
     if (!emptyMessage) return null;
@@ -71,8 +71,8 @@ export function BlogPostList({
   }
 
   return (
-    <ul className={cn("space-y-4", className)}>
-      {posts.map((variantItem) => {
+    <ul className={cn(variant === "editorial" ? "post-editorial" : "space-y-5", className)}>
+      {posts.map((variantItem, index) => {
         const post = resolveLocalizedValue(variantItem, locale);
         if (!post) return null;
         const postSlug = variantItem.slug;
@@ -82,7 +82,7 @@ export function BlogPostList({
         const tags = post.frontmatter.tags ?? [];
         const category = post.frontmatter.category;
 
-        if (variant === "detailed") {
+        if (variant === "detailed" || variant === "editorial") {
           return (
             <li key={postSlug}>
               <BlogPostCard
@@ -96,7 +96,8 @@ export function BlogPostList({
                 }}
                 locale={locale}
                 interactive
-                thumbnailIconClassName="size-24 sm:size-10"
+                layout={variant === "editorial" ? (index === 0 ? "featured" : "compact") : "list"}
+                headingLevel={variant === "editorial" ? "h3" : "h2"}
               />
             </li>
           );

@@ -1,8 +1,6 @@
 import Image from "next/image";
 import { Icon } from "@/shared/ui/icon";
-
 import { Badge } from "@/shared/ui/badge";
-import { Card } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
@@ -21,132 +19,119 @@ export type BlogPostCardData = {
 export type BlogPostCardProps = {
   post: BlogPostCardData;
   locale: Locale;
-  /**
-   * true: ホバー時に装飾レイヤーが浮き上がり、サムネイルとタイトルが独立したリンクになり、
-   * タグもリンクになる(BlogPostList の detailed バリアント相当)。
-   * false: カード全体が1つのリンクになり、タグはリンクにならないシンプルな見た目
-   * (タグ詳細ページ相当)。
-   */
+  /** カード全体の記事リンクに加えて、タグを個別のリンクにする。 */
   interactive?: boolean;
-  /** サムネイルが無い場合に表示するfallbackアイコンのサイズクラス */
   thumbnailIconClassName?: string;
+  layout?: "list" | "featured" | "compact";
+  headingLevel?: "h2" | "h3";
 };
 
-/**
- * ブログ記事1件分のカードUI。BlogPostList(detailed)とタグ詳細ページで
- * 見た目のバリエーションが異なるため interactive フラグで吸収する。
- */
 export function BlogPostCard({
   post,
   locale,
   interactive = false,
-  thumbnailIconClassName = "size-10",
+  thumbnailIconClassName = "size-8 sm:size-10",
+  layout = "list",
+  headingLevel: Heading = "h2",
 }: BlogPostCardProps) {
-  const dateLocale = toIntlLocaleTag(locale);
   const thumbnail = resolveThumbnail(post.slug, post.thumbnail);
   const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
+  const isGraphic = thumbnail.type === "icon" || isFallback;
   const postHref = toLocalePath(`/blog/post/${post.slug}`, locale);
 
-  const thumbnailInner =
-    thumbnail.type === "image" ? (
-      <Image
-        src={thumbnail.src}
-        alt={isFallback ? "Site icon" : post.title}
-        fill
-        sizes="(min-width: 768px) 176px, 100vw"
-        className={
-          isFallback ? "object-contain p-6 opacity-70 dark:invert dark:opacity-80" : "object-cover"
-        }
-      />
-    ) : (
-      <div className="flex h-full w-full items-center justify-center">
-        <Icon
-          icon={thumbnail.icon}
-          className={cn(thumbnailIconClassName, "text-muted-foreground/70 dark:text-muted-foreground/80")}
-          aria-hidden
-        />
-        <span className="sr-only">{post.title}</span>
-      </div>
-    );
-
-  const thumbnailBox = interactive ? (
-    <a
-      href={postHref}
-      className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44"
-    >
-      {thumbnailInner}
-    </a>
-  ) : (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-muted bg-muted md:w-44">
-      {thumbnailInner}
-    </div>
-  );
-
-  const titleElement = interactive ? (
-    <a
-      href={postHref}
-      className="block text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80"
-    >
-      {post.title}
-    </a>
-  ) : (
-    <p className="text-lg font-semibold text-foreground transition-colors group-hover:text-foreground/80">
-      {post.title}
-    </p>
-  );
-
   const content = (
-    <div
-      className={cn(
-        "flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-stretch md:gap-6",
-        interactive && "relative z-10",
-      )}
-    >
-      {thumbnailBox}
-      <div className="flex-1 flex flex-col gap-2 py-2">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span>{formatDate(post.date, dateLocale)}</span>
-            {post.category ? (
-              <Badge variant="outline" className="border-border/40 text-[11px] font-medium">
-                {post.category}
-              </Badge>
-            ) : null}
+    <div className="journal-card-content">
+      <div className={cn("journal-thumbnail", isGraphic && "journal-thumbnail-art")}>
+        {layout === "featured" && isGraphic && (
+          <span className="journal-featured-label eyebrow" aria-hidden="true">
+            LATEST ENTRY / 01
+          </span>
+        )}
+        {thumbnail.type === "image" ? (
+          <Image
+            src={thumbnail.src}
+            alt=""
+            fill
+            sizes={
+              layout === "featured"
+                ? "(min-width: 1024px) 540px, (min-width: 640px) 80vw, 90vw"
+                : "(min-width: 640px) 144px, 80px"
+            }
+            className={
+              isFallback ? "object-contain p-4 opacity-70 dark:invert sm:p-6" : "object-cover"
+            }
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <Icon
+              icon={thumbnail.icon}
+              className={cn(
+                layout === "featured" ? "size-24 sm:size-28" : thumbnailIconClassName,
+                "text-muted-foreground",
+              )}
+              aria-hidden
+            />
           </div>
-          {titleElement}
-        </div>
-        {post.tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2 md:mt-auto">
-            {post.tags.map((tag) => (
-              <Tag
-                key={tag}
-                tag={tag}
-                {...(interactive
-                  ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
-                  : {})}
-                className="bg-muted text-xs font-medium text-muted-foreground"
-              />
-            ))}
-          </div>
-        ) : null}
+        )}
       </div>
+      <div className="journal-card-copy min-w-0 space-y-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+          {post.date && (
+            <time dateTime={post.date} className="font-mono text-[11px] tabular-nums">
+              {formatDate(post.date, toIntlLocaleTag(locale))}
+            </time>
+          )}
+          {post.category && (
+            <Badge
+              variant="secondary"
+              className="font-noto bg-transparent px-0 text-[11px] font-medium text-muted-foreground"
+            >
+              {post.category}
+            </Badge>
+          )}
+        </div>
+        <Heading className="journal-card-title">
+          {interactive ? (
+            <a href={postHref} className="after:absolute after:inset-0 after:rounded-lg">
+              {post.title}
+            </a>
+          ) : (
+            post.title
+          )}
+        </Heading>
+      </div>
+      {post.tags.length > 0 && (
+        <div className="journal-card-tags flex flex-wrap gap-x-3 gap-y-1">
+          {post.tags.map((tag) => (
+            <Tag
+              key={tag}
+              tag={tag}
+              {...(interactive
+                ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
+                : {})}
+              className={cn(
+                "font-noto min-h-7 rounded-sm bg-transparent px-0 text-[11px] font-medium text-muted-foreground",
+                interactive && "relative z-10",
+              )}
+            />
+          ))}
+        </div>
+      )}
+      <span className="journal-card-arrow" aria-hidden="true">
+        ↗
+      </span>
     </div>
   );
 
   return (
-    <Card
-      className={cn(
-        "group border-transparent bg-card/50 shadow-none transition-colors",
-        interactive ? "relative hover:bg-muted/30" : "hover:bg-card/70",
-      )}
-    >
+    <article className={cn("journal-card group", `journal-card-${layout}`)}>
       {interactive ? (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/40 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
-        />
-      ) : null}
-      {interactive ? content : <a href={postHref}>{content}</a>}
-    </Card>
+        content
+      ) : (
+        <a href={postHref} className="block rounded-xl">
+          {content}
+        </a>
+      )}
+    </article>
   );
 }
