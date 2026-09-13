@@ -111,26 +111,24 @@ export function SearchPanel({ locale }: SearchPanelProps) {
             </Badge>
             <span>{t("検索結果", "Results")}</span>
           </output>
-          <ul className="space-y-4">
+          <ul className="search-results">
             {results.map((result) => (
               <li key={result.url}>
-                <Card className="border-0 bg-muted/50 shadow-none transition-colors hover:bg-muted">
-                  <a
-                    href={toLocalePath(result.url, locale)}
-                    className="flex flex-col gap-3 rounded-xl p-5 sm:p-6"
-                  >
-                    <h2 className="text-base font-semibold text-foreground">
-                      {result.meta.title ?? t("タイトルなし", "Untitled")}
-                    </h2>
-                    {result.excerpt ? (
-                      <div
-                        className="text-sm leading-6 text-muted-foreground"
-                        dangerouslySetInnerHTML={{ __html: result.excerpt }}
-                      />
-                    ) : null}
-                    <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
-                  </a>
-                </Card>
+                <a
+                  href={toLocalePath(result.url, locale)}
+                  className="index-link flex flex-col gap-3 px-1 py-6"
+                >
+                  <h2 className="text-base font-medium">
+                    {result.meta.title ?? t("タイトルなし", "Untitled")}
+                  </h2>
+                  {result.excerpt ? (
+                    <div
+                      className="text-sm leading-6 text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                    />
+                  ) : null}
+                  <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
+                </a>
               </li>
             ))}
           </ul>

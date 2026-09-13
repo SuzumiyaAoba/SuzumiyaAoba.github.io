@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Icon } from "@/shared/ui/icon";
 
-import { Card } from "@/shared/ui/card";
 import { resolveThumbnail } from "@/shared/lib/thumbnail";
 
 export type EntryCardItem = {
@@ -30,7 +29,7 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
   }
 
   return (
-    <ul className="collection-card-list grid gap-6 lg:grid-cols-2">
+    <ul className="collection-card-list">
       {items.map((item) => {
         const thumbnail = resolveThumbnail(item.slug, item.thumbnail, {
           basePath: item.thumbnailBasePath,
@@ -39,11 +38,8 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
 
         return (
           <li key={item.slug}>
-            <Card className="collection-card group h-full border-0 bg-muted/60 shadow-none transition-colors hover:bg-muted">
-              <a
-                href={item.href}
-                className="flex h-full items-start gap-4 rounded-xl p-5 sm:gap-6 sm:p-8"
-              >
+            <article className="collection-card">
+              <a href={item.href} className="collection-card-link">
                 <div className="collection-thumbnail relative size-16 shrink-0 overflow-hidden rounded-lg sm:size-20">
                   {thumbnail.type === "image" ? (
                     <Image
@@ -69,19 +65,17 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-4 self-stretch">
                   <div className="space-y-2">
-                    <h2 className="text-lg font-semibold leading-relaxed text-foreground">
+                    <h2 className="collection-card-title text-lg font-medium leading-relaxed">
                       {item.title}
                     </h2>
                     {item.description ? (
                       <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
                     ) : null}
                   </div>
-                  <span className="mt-auto text-sm font-medium text-muted-foreground group-hover:text-foreground">
-                    {item.cta}
-                  </span>
+                  <span className="collection-card-cta mt-auto text-sm">{item.cta}</span>
                 </div>
               </a>
-            </Card>
+            </article>
           </li>
         );
       })}

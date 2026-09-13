@@ -71,7 +71,16 @@ export function BlogPostList({
   }
 
   return (
-    <ul className={cn(variant === "editorial" ? "post-editorial" : "space-y-5", className)}>
+    <ul
+      className={cn(
+        variant === "editorial"
+          ? "post-editorial"
+          : variant === "detailed"
+            ? "post-list"
+            : "space-y-5",
+        className,
+      )}
+    >
       {posts.map((variantItem, index) => {
         const post = resolveLocalizedValue(variantItem, locale);
         if (!post) return null;

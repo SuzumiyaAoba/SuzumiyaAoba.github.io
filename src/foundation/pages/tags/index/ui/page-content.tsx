@@ -48,23 +48,21 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
             </div>
           </Card>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="tag-index grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
-                <Card className="border-0 bg-muted/60 shadow-none transition-colors hover:bg-accent">
-                  <a
-                    href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, locale)}
-                    className="flex min-h-18 items-center justify-between gap-4 rounded-xl px-5 py-4"
-                  >
-                    <Tag
-                      tag={tag.name}
-                      className="min-w-0 whitespace-normal border-0 bg-transparent p-0 text-sm font-medium text-foreground"
-                    />
-                    <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
-                      {tag.count}
-                    </span>
-                  </a>
-                </Card>
+                <a
+                  href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, locale)}
+                  className="index-link flex min-h-18 items-center justify-between gap-4 px-1 py-4"
+                >
+                  <Tag
+                    tag={tag.name}
+                    className="min-w-0 whitespace-normal border-0 bg-transparent p-0 text-sm font-medium text-inherit"
+                  />
+                  <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+                    {tag.count}
+                  </span>
+                </a>
               </li>
             ))}
           </ul>

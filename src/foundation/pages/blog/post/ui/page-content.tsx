@@ -128,7 +128,7 @@ export function BlogPostPageContent({
       />
       <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <header className="mb-10 space-y-5 pt-6 pb-6 sm:mb-12 sm:pb-8">
+        <header className="article-heading mb-10 space-y-5 pt-6 pb-6 sm:mb-12 sm:pb-8">
           <p className="font-mono text-xs text-muted-foreground">{postDate}</p>
           <h1 className="max-w-4xl text-3xl font-medium leading-relaxed break-words sm:text-4xl">
             {postTitle}

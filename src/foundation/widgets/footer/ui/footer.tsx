@@ -1,5 +1,6 @@
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { SITE_TITLE } from "@/shared/lib/site";
 
 /**
  * Footer コンポーネントのプロップス
@@ -19,6 +20,10 @@ export function Footer({ locale }: FooterProps) {
   return (
     <footer className="site-footer">
       <div className="site-container">
+        <div className="site-footer-identity">
+          <a href={toLocalePath("/", locale)}>SuzumiyaAoba</a>
+          <p>{SITE_TITLE}</p>
+        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="eyebrow text-muted-foreground">© {year} SuzumiyaAoba</p>
           <nav

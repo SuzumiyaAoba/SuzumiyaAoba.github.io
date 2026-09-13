@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "./journal.css";
+@import "./home.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,6 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-shippori-mincho);
+  --font-serif: var(--font-shippori-mincho);
   --font-mono: var(--font-source-code-pro);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -68,29 +70,39 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: #f6f5ef;
-  --foreground: #292b29;
-  --card: #fbfaf6;
-  --card-foreground: #292b29;
+  --font-ui:
+    ui-sans-serif, system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+  --radius: 0.375rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-normal: 240ms;
+  --duration-slow: 700ms;
+  --background: #f8f8f3;
+  --foreground: #252e27;
+  --card: #ffffff;
+  --card-foreground: #252e27;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #eeeee6;
+  --secondary: #eef0e7;
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: #ecece3;
-  --muted-foreground: #62665f;
-  --accent: #e6eafa;
-  --accent-foreground: #304bd2;
+  --muted: #ecefe5;
+  --muted-foreground: #66705f;
+  --accent: #e8eedc;
+  --accent-foreground: #455a36;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: #304bd2;
-  --brand: #304bd2;
+  --border: #d9dfd0;
+  --input: #bbc6b2;
+  --ring: #526c40;
+  --brand: #526c40;
   --brand-contrast: #ffffff;
-  --art-blue: #3b50d5;
-  --feature-surface: #e4e8da;
+  --feature-surface: #ecefe5;
+  --feature-ink: #283b2f;
+  --feature-foreground: #f5f7ed;
+  --feature-muted: #c1cfb8;
+  --feature-accent: #dbeba6;
+  --rule: #d9dfd0;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -145,28 +157,28 @@
 }
 
 .dark {
-  --background: #1b1e1e;
-  --foreground: #eeeee5;
-  --card: #222626;
-  --card-foreground: #eeeee5;
+  --background: #19211c;
+  --foreground: #eef2e7;
+  --card: #222d25;
+  --card-foreground: #eef2e7;
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: #292e2d;
+  --secondary: #28342b;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: #292e2d;
-  --muted-foreground: #a8aea5;
-  --accent: #2e3554;
-  --accent-foreground: #a2afff;
+  --muted: #222e25;
+  --muted-foreground: #b0bcaa;
+  --accent: #33462e;
+  --accent-foreground: #cee1aa;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: #a2afff;
-  --brand: #a2afff;
-  --brand-contrast: #1b234b;
-  --art-blue: #8c9cfa;
-  --feature-surface: #303c33;
+  --border: #3a493d;
+  --input: #596c57;
+  --ring: #c4d8a5;
+  --brand: #c4d8a5;
+  --brand-contrast: #23321e;
+  --feature-surface: #25392b;
+  --rule: #3a493d;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -227,6 +239,7 @@
   html {
     scroll-padding-top: 6rem;
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
@@ -266,6 +279,8 @@
 @layer components {
   .site-page {
     @apply flex min-h-screen flex-col bg-background text-foreground;
+    font-family: var(--font-ui);
+    font-feature-settings: normal;
   }
   .site-container {
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
@@ -281,13 +296,15 @@
   }
   .page-heading {
     @apply flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 pt-4 pb-6 sm:pb-8;
+    border-bottom: 1px solid var(--rule);
   }
   .page-title {
-    @apply text-3xl font-medium leading-snug tracking-tight text-foreground sm:text-5xl;
+    @apply font-serif text-3xl font-medium leading-snug tracking-tight text-foreground sm:text-5xl;
     text-wrap: balance;
   }
   .page-count {
     @apply text-sm tabular-nums text-muted-foreground;
+    font-family: var(--font-source-code-pro), monospace;
   }
   .prose {
     @apply text-[16px] leading-8 text-foreground;
@@ -325,7 +342,14 @@
     @apply mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground;
   }
   .prose a {
-    @apply underline decoration-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground;
+    @apply underline underline-offset-4;
+    text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color var(--duration-fast) ease;
+  }
+  .prose a:hover,
+  .prose a:focus-visible {
+    text-decoration-color: var(--brand);
   }
   .prose strong {
     @apply font-semibold;

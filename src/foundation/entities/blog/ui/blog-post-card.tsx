@@ -44,7 +44,7 @@ export function BlogPostCard({
       <div className={cn("journal-thumbnail", isGraphic && "journal-thumbnail-art")}>
         {layout === "featured" && isGraphic && (
           <span className="journal-featured-label eyebrow" aria-hidden="true">
-            LATEST ENTRY / 01
+            LATEST ENTRY
           </span>
         )}
         {thumbnail.type === "image" ? (
@@ -66,8 +66,9 @@ export function BlogPostCard({
             <Icon
               icon={thumbnail.icon}
               className={cn(
-                layout === "featured" ? "size-24 sm:size-28" : thumbnailIconClassName,
-                "text-muted-foreground",
+                layout === "featured"
+                  ? "size-20 text-(--brand)"
+                  : cn(thumbnailIconClassName, "text-muted-foreground"),
               )}
               aria-hidden
             />
@@ -92,7 +93,7 @@ export function BlogPostCard({
         </div>
         <Heading className="journal-card-title">
           {interactive ? (
-            <a href={postHref} className="after:absolute after:inset-0 after:rounded-lg">
+            <a href={postHref} className="journal-card-link">
               {post.title}
             </a>
           ) : (
@@ -110,7 +111,7 @@ export function BlogPostCard({
                 ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
                 : {})}
               className={cn(
-                "font-noto min-h-7 rounded-sm bg-transparent px-0 text-[11px] font-medium text-muted-foreground",
+                "font-noto min-h-8 rounded-sm bg-transparent px-0 text-[11px] font-medium text-muted-foreground",
                 interactive && "relative z-10",
               )}
             />
@@ -118,7 +119,7 @@ export function BlogPostCard({
         </div>
       )}
       <span className="journal-card-arrow" aria-hidden="true">
-        ↗
+        →
       </span>
     </div>
   );
@@ -128,7 +129,7 @@ export function BlogPostCard({
       {interactive ? (
         content
       ) : (
-        <a href={postHref} className="block rounded-xl">
+        <a href={postHref} className="journal-card-link block">
           {content}
         </a>
       )}
