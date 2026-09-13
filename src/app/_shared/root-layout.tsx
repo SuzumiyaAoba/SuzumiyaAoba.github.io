@@ -8,7 +8,7 @@ import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import { buildWebsiteJsonLd } from "@/shared/lib/site/website-jsonld";
 import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
-import { shipporiMincho, sourceCodePro } from "./fonts";
+import { shipporiMincho, sourceCodePro, sourceSans3 } from "./fonts";
 
 const OPEN_GRAPH_LOCALE: Record<Locale, string> = {
   ja: "ja_JP",
@@ -68,9 +68,9 @@ export function AppRootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${shipporiMincho.variable} ${sourceCodePro.variable}`}
+      className={`${shipporiMincho.variable} ${sourceCodePro.variable} ${sourceSans3.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body className="font-serif antialiased">
         <JsonLd data={buildWebsiteJsonLd(locale)} />
         <AppProviders>{children}</AppProviders>
         {isProd ? (

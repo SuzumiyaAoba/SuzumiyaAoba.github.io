@@ -99,18 +99,17 @@ export function BookSectionPageContent({
             <h1 className="text-2xl font-semibold">{sectionTitle}</h1>
           </header>
 
-          <article className="prose prose-neutral max-w-none font-sans">
+          <article className="prose prose-neutral max-w-none font-serif">
             {llm ? (
               <Message variant="info" title="この節は LLM を活用して執筆しています">
                 <p>
                   本節の本文は LLM（大規模言語モデル）を活用して執筆しています。
-                  技術的な内容は執筆者が検証していますが、誤りに気付かれた際は
-                  リポジトリの Issue やプルリクエストでご指摘いただけると助かります。
+                  技術的な内容は執筆者が検証していますが、誤りに気付かれた際は リポジトリの Issue
+                  やプルリクエストでご指摘いただけると助かります。
                 </p>
                 {coAuthors.length > 0 ? (
                   <p>
-                    <strong>執筆に使用したモデル:</strong>{" "}
-                    {coAuthors.join(" / ")}
+                    <strong>執筆に使用したモデル:</strong> {coAuthors.join(" / ")}
                   </p>
                 ) : null}
               </Message>

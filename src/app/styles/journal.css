@@ -277,7 +277,7 @@
     flex-shrink: 0;
     place-items: center;
     color: var(--muted-foreground);
-    font-family: system-ui, sans-serif;
+    font-family: var(--font-ui);
     font-size: 1.125rem;
     transition:
       color var(--duration-fast) ease,
@@ -537,7 +537,7 @@
 
   .simple-entry-arrow {
     color: var(--muted-foreground);
-    font-family: system-ui, sans-serif;
+    font-family: var(--font-ui);
     transition:
       color var(--duration-fast) ease,
       transform var(--duration-normal) var(--ease-out);

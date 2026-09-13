@@ -45,7 +45,7 @@ export function BookDetailPageContent({
         </div>
 
         {leadContent ? (
-          <div className="prose prose-neutral max-w-none font-sans">{leadContent}</div>
+          <div className="prose prose-neutral max-w-none font-serif">{leadContent}</div>
         ) : null}
 
         <nav aria-label="目次" className="space-y-6">

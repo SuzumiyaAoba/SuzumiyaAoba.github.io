@@ -1,4 +1,10 @@
-import { Shippori_Mincho, Source_Code_Pro } from "next/font/google";
+import { Shippori_Mincho, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
+
+export const sourceSans3 = Source_Sans_3({
+  variable: "--font-source-sans-3",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const sourceCodePro = Source_Code_Pro({
   variable: "--font-source-code-pro",

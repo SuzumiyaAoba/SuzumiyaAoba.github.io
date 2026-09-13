@@ -50,7 +50,7 @@ export function Message({
           />
         </summary>
       ) : null}
-      <div className={cn("prose prose-sm max-w-none font-sans", title ? "mt-2" : "")}>
+      <div className={cn("prose prose-sm max-w-none font-serif", title ? "mt-2" : "")}>
         {children}
       </div>
     </details>

@@ -134,7 +134,7 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
                         </div>
                         <div className="space-y-2">
                           <h2 className="text-base font-semibold text-foreground">{title}</h2>
-                          <div className="prose prose-sm max-w-none font-sans text-muted-foreground">
+                          <div className="prose prose-sm max-w-none font-serif text-muted-foreground">
                             {summary}
                           </div>
                           {entry.tags && entry.tags.length > 0 ? (

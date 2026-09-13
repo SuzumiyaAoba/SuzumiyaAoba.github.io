@@ -166,7 +166,7 @@ export function BlogPostPageContent({
         </header>
         <div className="grid w-full min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10">
           <div className="flex flex-col w-full min-w-0">
-            <article className="prose prose-neutral min-w-0 max-w-none font-sans">
+            <article className="prose prose-neutral min-w-0 max-w-none font-serif">
               {isEn && translationModel ? (
                 <Message title="Notes" variant="info" defaultOpen>
                   This article was translated by {translationModel}. The original is{" "}

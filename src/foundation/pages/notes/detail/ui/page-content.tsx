@@ -85,7 +85,7 @@ export function NotesDetailPageContent({
           ) : null}
         </section>
 
-        <article className="prose prose-neutral min-w-0 max-w-none font-sans">
+        <article className="prose prose-neutral min-w-0 max-w-none font-serif">
           {isEn && translationModel ? (
             <Message title="Translation" variant="info" defaultOpen>
               This note was translated by {translationModel}. The original is{" "}
