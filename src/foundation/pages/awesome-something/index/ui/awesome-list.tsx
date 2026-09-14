@@ -7,6 +7,7 @@ import type { AwesomeItem, AwesomeLink } from "../model/awesome-item";
 import type { Locale } from "@/shared/lib/routing";
 import { Input } from "@/shared/ui/input";
 import { Tag } from "@/shared/ui/tag";
+import { CategoryIcon } from "./category-icon";
 
 function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
   const external = !url.startsWith("/");
@@ -141,8 +142,9 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
             type="button"
             aria-pressed={category === null}
             onClick={() => setCategory(null)}
-            className="min-h-11 py-2 text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
+            className="inline-flex min-h-11 items-center gap-1.5 py-2 text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
           >
+            <CategoryIcon />
             {isEnglish ? "All" : "すべて"}
           </button>
           {Array.from(categories.keys(), (name) => (
@@ -151,9 +153,10 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
               type="button"
               aria-pressed={category === name}
               onClick={() => setCategory(name)}
-              className="min-h-11 max-w-full break-words py-2 text-left text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
+              className="inline-flex min-h-11 max-w-full items-center gap-1.5 py-2 text-left text-sm text-muted-foreground underline-offset-8 transition-colors hover:text-foreground aria-pressed:text-foreground aria-pressed:underline"
             >
-              {name}
+              <CategoryIcon category={name} />
+              <span className="min-w-0 break-words">{name}</span>
             </button>
           ))}
         </fieldset>
@@ -170,7 +173,10 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
               onClick={() => setSelectedTag(null)}
               className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="min-w-0 break-words">{selectedTag}</span>
+              <Tag
+                tag={selectedTag}
+                className="min-w-0 border-0 bg-transparent p-0 text-inherit [&>span]:min-w-0 [&>span]:break-words"
+              />
               <X className="size-3.5 shrink-0" aria-hidden="true" />
             </button>
           </div>
@@ -193,8 +199,12 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                 className="grid gap-4 border-t border-border pt-6 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-8 lg:grid-cols-[12rem_minmax(0,1fr)]"
               >
                 <div className="flex items-baseline gap-3">
-                  <h2 id={headingId} className="min-w-0 break-words text-sm font-medium leading-7">
-                    {name}
+                  <h2
+                    id={headingId}
+                    className="flex min-w-0 items-center gap-2 text-sm font-medium leading-7"
+                  >
+                    <CategoryIcon category={name} />
+                    <span className="min-w-0 break-words">{name}</span>
                   </h2>
                   <span className="text-xs tabular-nums text-muted-foreground" data-pagefind-ignore>
                     {categoryItems.length}
