@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getBookMeta } from "@/entities/book";
-import { buildLocaleAlternates } from "./locale-alternates";
+import { buildPageMetadata } from "./page-metadata";
 
 const DESCRIPTION_MAX_LENGTH = 120;
 
@@ -42,14 +42,12 @@ export async function buildBooksPageMetadata(book: string | undefined): Promise<
   const title = meta.frontmatter.title || book;
   const description = meta.lead ? extractDescription(meta.lead) : title;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: buildLocaleAlternates(`/books/${book}`, "ja", { availability: { ja: true } }),
-    openGraph: {
-      title,
-      description,
-      type: "book",
-    },
-  };
+    path: `/books/${book}`,
+    locale: "ja",
+    alternates: { availability: { ja: true } },
+    openGraph: { type: "book" },
+  });
 }

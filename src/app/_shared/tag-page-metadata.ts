@@ -2,7 +2,7 @@ import { decodePathParam } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getAllBlogTags, getBlogTagIndex } from "@/entities/blog";
-import { buildLocaleAlternates } from "./locale-alternates";
+import { buildPageMetadata } from "./page-metadata";
 
 export { decodePathParam as decodeTag } from "@/shared/lib/routing";
 
@@ -34,16 +34,12 @@ export async function buildTagPageMetadata(
       ? `Posts tagged "${tag}" (${count}).`
       : `「${tag}」タグの記事一覧（${count}件）。`;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: buildLocaleAlternates(`/tags/${encodeURIComponent(tag)}`, locale),
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
-  };
+    path: `/tags/${encodeURIComponent(tag)}`,
+    locale,
+  });
 }
 
 /**

@@ -37,11 +37,15 @@ npm run pagefind:dev:force
 
 ブログとノートは `shared/lib/content-file` の共通コレクション処理を使用し、frontmatter の正規化と永続キャッシュの方針は各エンティティが管理します。翻訳のフォールバックは `shared/lib/routing` に集約しています。公開一覧は日本語版の下書き状態・日付を基準にし、日本語版がない場合は英語版を使います。
 
+ブログとノートの共通 frontmatter は `shared/lib/content-file/article-frontmatter.ts` で型定義と正規化を共有し、ブログ固有の日付の必須化とレイアウトはブログモデルが扱います。詳細ページのタイトル・説明・OGP・言語別URLは `app/_shared/page-metadata.ts` で組み立て、説明文の選択とデータ取得は各ページが担当します。
+
 frontmatter の解析は書籍も含めて `shared/lib/content-file/parse-content.ts` を使います。解析途中のデータが再利用されないよう、キャッシュは読み込み側で管理します。書籍モデルは型定義・解析・ファイル探索・公開APIに分割し、目次と本文で同じ Markdown / MDX ファイルを参照します。
 
 タグ集計は `entities/blog/model/blog-tags.ts` に集約しています。一覧・詳細・メタデータには言語別の索引を使い、静的ルートとサイトマップには両言語のタグ集合を使います。同じ記事内の重複タグは一度だけ数えます。
 
 MDX のコンパイルは `shared/lib/mdx/render-mdx.tsx`、AST変換は個別のプラグイン、目次抽出は `toc.ts` が担当します。重いチャートやコード表示は使用する記事で遅延読み込みします。グラフの凡例操作・ツールチップ・模様定義と、目次の監視・位置計算もそれぞれ表示本体から分離しています。
+
+金融資産グラフの静的JSONは `shared/ui/financial-data/_shared/asset-sheets.ts` から読み込み、必要なシートを一度だけ解析します。同じシートの折れ線・棒グラフは分類と軸設定を共有し、平均・中央値と年別の円グラフも共通コンポーネントを使います。
 
 ## Awesome Something の記録
 

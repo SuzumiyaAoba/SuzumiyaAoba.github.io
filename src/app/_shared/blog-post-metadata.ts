@@ -2,7 +2,7 @@ import { resolveLocalizedValue } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getBlogPostVariants } from "@/entities/blog";
-import { buildLocaleAlternates } from "./locale-alternates";
+import { buildPageMetadata } from "./page-metadata";
 
 /**
  * ブログ記事詳細ページの Metadata を構築する。
@@ -35,17 +35,17 @@ export async function buildBlogPostMetadata(
     : title;
   const description = post.frontmatter.description || fallbackDescription;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: buildLocaleAlternates(`/blog/post/${slug}`, locale, {
+    path: `/blog/post/${slug}`,
+    locale,
+    alternates: {
       availability: { ja: Boolean(postJa), en: Boolean(postEn) },
-    }),
+    },
     openGraph: {
-      title,
-      description,
       type: "article",
       publishedTime: post.frontmatter.date,
     },
-  };
+  });
 }

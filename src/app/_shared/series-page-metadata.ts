@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getSeriesBySlug } from "@/entities/series-item";
 import type { Locale } from "@/shared/lib/routing";
-import { buildLocaleAlternates } from "./locale-alternates";
+import { buildPageMetadata } from "./page-metadata";
 
 /**
  * シリーズ詳細ページの Metadata を構築する。
@@ -29,14 +29,10 @@ export async function buildSeriesPageMetadata(
       ? `${series.name} — a series of ${series.posts.length} posts.`
       : `「${series.name}」シリーズの記事一覧（全${series.posts.length}件）。`);
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: buildLocaleAlternates(`/series/${slug}`, locale),
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
-  };
+    path: `/series/${slug}`,
+    locale,
+  });
 }

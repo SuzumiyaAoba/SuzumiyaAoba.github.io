@@ -4,28 +4,17 @@ import {
   createContentReader,
   createContentCollection,
   listContentSlugs,
-  asString,
-  asStringWithDefault,
-  asDateString,
-  asBoolean,
-  asStringArray,
+  normalizeArticleFrontmatter,
 } from "@/shared/lib/content-file";
-import type { ContentSummary, LocalizedContent } from "@/shared/lib/content-file";
+import type {
+  ArticleFrontmatter,
+  ContentSummary,
+  LocalizedContent,
+} from "@/shared/lib/content-file";
 
 const NOTE_COLLECTION_DIR = "notes";
 
-export type NoteFrontmatter = {
-  title: string;
-  date?: string;
-  category?: string;
-  description?: string;
-  tags?: string[];
-  thumbnail?: string;
-  draft?: boolean;
-  amazonAssociate?: boolean;
-  amazonProductIds?: string[];
-  model?: string;
-};
+export type NoteFrontmatter = ArticleFrontmatter;
 
 export type Note = {
   slug: string;
@@ -40,36 +29,11 @@ export const getNoteSlugs = cache(async (): Promise<string[]> =>
   listContentSlugs(NOTE_COLLECTION_DIR),
 );
 
-export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeFrontmatter);
+export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeArticleFrontmatter);
 
 const collection = createContentCollection({ getSlugs: getNoteSlugs, getContent: getNote });
 
 export const getNoteSummary = collection.getSummary;
-
-function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
-  const date = asDateString(data["date"]);
-  const category = asString(data["category"]);
-  const description = asString(data["description"]);
-  const tags = asStringArray(data["tags"]);
-  const thumbnail = asString(data["thumbnail"]);
-  const draft = asBoolean(data["draft"]);
-  const amazonAssociate = asBoolean(data["amazonAssociate"]);
-  const amazonProductIds = asStringArray(data["amazonProductIds"]);
-  const model = asString(data["model"]);
-
-  return {
-    title: asStringWithDefault(data["title"], ""),
-    ...(date ? { date } : {}),
-    ...(category === undefined ? {} : { category }),
-    ...(description === undefined ? {} : { description }),
-    ...(tags === undefined ? {} : { tags }),
-    ...(thumbnail === undefined ? {} : { thumbnail }),
-    ...(draft === undefined ? {} : { draft }),
-    ...(amazonAssociate === undefined ? {} : { amazonAssociate }),
-    ...(amazonProductIds === undefined ? {} : { amazonProductIds }),
-    ...(model === undefined ? {} : { model }),
-  };
-}
 
 export type LocalizedNote = LocalizedContent<Note>;
 

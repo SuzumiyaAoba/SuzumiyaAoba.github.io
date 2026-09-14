@@ -1,13 +1,12 @@
 "use client";
 
 import { LineChart } from "@/shared/ui/financial-charts";
-import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
-import { parseSheetData } from "./_shared/parse-sheet-data";
+import { getAssetSheet } from "./_shared/asset-sheets";
 import { computeMaxValueForMetrics, roundUpToStep } from "./sectionChartUtils";
 
 export const Sheet2AmountChartWrapper: React.FC = () => {
-  const sheet2Data = parseSheetData(assetsData, "2");
+  const sheet2Data = getAssetSheet("2");
 
   if (!sheet2Data) {
     return <NoDataFallback />;

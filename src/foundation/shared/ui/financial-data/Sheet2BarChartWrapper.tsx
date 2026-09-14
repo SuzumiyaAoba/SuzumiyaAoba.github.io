@@ -1,56 +1,7 @@
 "use client";
 
-import { StackedBarChart } from "@/shared/ui/financial-charts";
-import type { MetricGroup } from "@/shared/ui/financial-charts";
-import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
-import { parseSheetData } from "./_shared/parse-sheet-data";
+import { AssetOwnershipChart } from "./_shared/asset-ownership-chart";
 
-export const Sheet2BarChartWrapper: React.FC = () => {
-  const sheet2Data = parseSheetData(assetsData, "2");
-
-  if (!sheet2Data) {
-    return <NoDataFallback />;
-  }
-
-  const excludeHeaders = ["column_8", "column_9", "column_10", "column_11"];
-
-  const availableMetrics = sheet2Data.headers.filter(
-    (header) =>
-      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null),
-  );
-
-  // パーセンテージデータのみを抽出
-  const percentageMetrics = availableMetrics.filter((m) => m.includes("％"));
-
-  const groups: MetricGroup[] = [
-    {
-      name: "金融資産の有無（注1）",
-      metrics: percentageMetrics.filter((m) => {
-        const headerIdx = sheet2Data.headers.indexOf(m);
-        return headerIdx !== -1 && headerIdx < 2;
-      }),
-    },
-    {
-      name: "金融資産非保有世帯の預貯金口座の有無（注2）",
-      metrics: percentageMetrics.filter((m) => {
-        const headerIdx = sheet2Data.headers.indexOf(m);
-        return headerIdx >= 2 && headerIdx < 5;
-      }),
-    },
-  ];
-
-  return (
-    <StackedBarChart
-      data={sheet2Data}
-      groups={groups}
-      excludeHeaders={excludeHeaders}
-      config={{
-        yAxisMin: 0,
-        yAxisMax: 100,
-        yAxisLabel: "%",
-        startYear: 1963,
-      }}
-    />
-  );
-};
+export const Sheet2BarChartWrapper: React.FC = () => (
+  <AssetOwnershipChart sheetKey="2" kind="bar" />
+);

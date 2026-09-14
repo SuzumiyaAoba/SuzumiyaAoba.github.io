@@ -1,12 +1,11 @@
 "use client";
 
 import { Sheet1StackedChart } from "./Sheet1StackedChart";
-import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
-import { parseSheetData } from "./_shared/parse-sheet-data";
+import { getAssetSheet } from "./_shared/asset-sheets";
 
 export const Sheet1StackedChartWrapper: React.FC = () => {
-  const sheet1Data = parseSheetData(assetsData, "1");
+  const sheet1Data = getAssetSheet("1");
 
   if (!sheet1Data) {
     return <NoDataFallback />;

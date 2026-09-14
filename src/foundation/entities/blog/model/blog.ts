@@ -7,41 +7,24 @@ import {
   listContentSlugs,
   findAdjacentByIndex,
   asString,
-  asStringWithDefault,
-  asDateString,
-  asBoolean,
-  asStringArray,
+  normalizeArticleFrontmatter,
 } from "@/shared/lib/content-file";
-import type { ContentSummary, LocalizedContent } from "@/shared/lib/content-file";
+import type {
+  ArticleFrontmatter,
+  ContentSummary,
+  LocalizedContent,
+} from "@/shared/lib/content-file";
 
 const BLOG_COLLECTION_DIR = "blog";
 
 /**
  * ブログ記事のフロントマター（メタデータ）の型定義
  */
-export type BlogFrontmatter = {
-  /** 記事のタイトル */
-  title: string;
+export type BlogFrontmatter = ArticleFrontmatter & {
   /** 記事の投稿日 (YYYY-MM-DD形式) */
   date: string;
-  /** 記事のカテゴリ */
-  category?: string;
-  /** 記事の要約（meta description / OGP description に使用） */
-  description?: string;
-  /** 記事に紐付くタグのリスト */
-  tags?: string[];
-  /** サムネイル画像のパス */
-  thumbnail?: string;
-  /** 下書き状態かどうか */
-  draft?: boolean;
   /** レイアウトの種類 */
   layout?: string;
-  /** Amazonアソシエイトの情報を表示するかどうか */
-  amazonAssociate?: boolean;
-  /** Amazon商品のIDリスト */
-  amazonProductIds?: string[];
-  /** 使用しているAIモデル名など */
-  model?: string;
 };
 
 /**
@@ -98,28 +81,13 @@ export const getBlogPostSummary = collection.getSummary;
  * @returns 正規化されたフロントマター
  */
 function normalizeFrontmatter(data: Record<string, unknown>): BlogFrontmatter {
-  const category = asString(data["category"]);
-  const description = asString(data["description"]);
-  const tags = asStringArray(data["tags"]);
-  const thumbnail = asString(data["thumbnail"]);
-  const draft = asBoolean(data["draft"]);
+  const frontmatter = normalizeArticleFrontmatter(data);
   const layout = asString(data["layout"]);
-  const amazonAssociate = asBoolean(data["amazonAssociate"]);
-  const amazonProductIds = asStringArray(data["amazonProductIds"]);
-  const model = asString(data["model"]);
 
   return {
-    title: asStringWithDefault(data["title"], ""),
-    date: asDateString(data["date"]) ?? "",
-    ...(category === undefined ? {} : { category }),
-    ...(description === undefined ? {} : { description }),
-    ...(tags === undefined ? {} : { tags }),
-    ...(thumbnail === undefined ? {} : { thumbnail }),
-    ...(draft === undefined ? {} : { draft }),
+    ...frontmatter,
+    date: frontmatter.date ?? "",
     ...(layout === undefined ? {} : { layout }),
-    ...(amazonAssociate === undefined ? {} : { amazonAssociate }),
-    ...(amazonProductIds === undefined ? {} : { amazonProductIds }),
-    ...(model === undefined ? {} : { model }),
   };
 }
 

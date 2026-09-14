@@ -11,3 +11,15 @@ export function parseSheetData(
   const result = SheetDataSchema.safeParse(assetsData.sheets[sheetKey]);
   return result.success ? result.data : null;
 }
+
+/** 静的なデータセット用。必要になったシートだけを解析し、同じ参照を各グラフに渡す。 */
+export function createSheetDataReader(assetsData: AssetsDataWithSheets) {
+  const parsedSheets = new Map<string, SheetData | null>();
+
+  return (sheetKey: string): SheetData | null => {
+    if (!parsedSheets.has(sheetKey)) {
+      parsedSheets.set(sheetKey, parseSheetData(assetsData, sheetKey));
+    }
+    return parsedSheets.get(sheetKey) ?? null;
+  };
+}

@@ -1,7 +1,7 @@
 /**
  * frontmatter の値を型ガードしつつ変換するプリミティブ群。
- * スキーマ全体はジェネリック化せず、各 entity の normalizeFrontmatter が
- * これらを組み合わせてフィールドを組み立てる。
+ * 共通の記事項目は normalizeArticleFrontmatter、書籍などの固有項目は
+ * 各 entity の正規化処理がこれらを組み合わせて組み立てる。
  */
 
 /** 値が string であればそのまま返す */

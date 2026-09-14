@@ -2,7 +2,7 @@ import { resolveLocalizedValue } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getNoteSummaryVariants } from "@/entities/note";
-import { buildLocaleAlternates } from "./locale-alternates";
+import { buildPageMetadata } from "./page-metadata";
 
 /**
  * ノート詳細ページの Metadata を構築する。
@@ -33,17 +33,17 @@ export async function buildNotesPageMetadata(
     : title;
   const description = note.frontmatter.description || fallbackDescription;
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: buildLocaleAlternates(`/notes/${slug}`, locale, {
+    path: `/notes/${slug}`,
+    locale,
+    alternates: {
       availability: { ja: Boolean(noteJa), en: Boolean(noteEn) },
-    }),
+    },
     openGraph: {
-      title,
-      description,
       type: "article",
       ...(note.frontmatter.date ? { publishedTime: note.frontmatter.date } : {}),
     },
-  };
+  });
 }
