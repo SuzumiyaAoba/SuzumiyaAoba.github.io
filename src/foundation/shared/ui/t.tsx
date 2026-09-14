@@ -1,11 +1,10 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 type TProps = {
   id: string;
-  values?: Record<string, ReactNode>;
+  values?: Parameters<ReturnType<typeof useTranslations>>[1];
   fallback?: string;
   className?: string;
 };
@@ -13,9 +12,9 @@ type TProps = {
 export function T({ id, values, fallback, className }: TProps) {
   const t = useTranslations();
 
-  let text = "";
+  let text: string;
   try {
-    text = t(id, values as never);
+    text = t(id, values);
   } catch {
     text = fallback ?? id;
   }

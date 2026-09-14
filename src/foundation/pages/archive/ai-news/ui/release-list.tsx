@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { ArrowDownWideNarrow } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
-import { dateTimestamp, type Release } from "../model/release-calendar";
+import { dateTimestamp } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
 import { ReleaseCard } from "./release-card";
 import { ReleaseViewHeader, releaseSelectClass } from "./release-view-layout";
 
@@ -9,8 +10,10 @@ export function ReleaseList({ releases, locale }: { releases: Release[]; locale:
   const en = locale === "en";
   const [order, setOrder] = useState("newest");
   const groups = useMemo(() => {
-    const sorted = [...releases].sort((a, b) => {
-      if (!a.date || !b.date) return a.date ? -1 : b.date ? 1 : b.entry.year - a.entry.year;
+    const sorted = releases.toSorted((a, b) => {
+      if (!a.date || !b.date) {
+        return a.date ? -1 : b.date ? 1 : b.entry.year - a.entry.year;
+      }
       return (
         (order === "newest" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) ||
         a.title.localeCompare(b.title)

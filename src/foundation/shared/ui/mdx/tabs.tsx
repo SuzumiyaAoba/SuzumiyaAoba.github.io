@@ -1,6 +1,7 @@
 "use client";
 
-import { Children, isValidElement, useMemo, useState, type ReactElement } from "react";
+import { isValidElement, useMemo, useState } from "react";
+import type { ReactElement } from "react";
 
 import { cn } from "@/shared/lib/utils";
 import type { TabProps } from "./tab";
@@ -13,8 +14,8 @@ export function Tabs({ children }: TabsProps) {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = useMemo(
     () =>
-      Children.toArray(children).filter((child): child is ReactElement<TabProps> =>
-        isValidElement(child),
+      (Array.isArray(children) ? children : [children]).filter(
+        (child): child is ReactElement<TabProps> => isValidElement(child),
       ),
     [children],
   );

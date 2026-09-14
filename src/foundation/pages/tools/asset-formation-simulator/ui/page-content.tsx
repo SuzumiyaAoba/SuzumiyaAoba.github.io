@@ -3,8 +3,9 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import AssetFormationSimulatorClient from "./asset-formation-simulator-client";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { AssetFormationSimulator as AssetFormationSimulatorClient } from "./asset-formation-simulator-client";
+import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 export type AssetFormationSimulatorPageContentProps = {
   locale: Locale;

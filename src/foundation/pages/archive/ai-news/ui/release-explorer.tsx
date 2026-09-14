@@ -13,12 +13,8 @@ import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import {
-  buildReleases,
-  filterReleases,
-  type ReleaseFilters,
-  type RenderedRelease,
-} from "../model/release-calendar";
+import { buildReleases, filterReleases } from "../model/release-calendar";
+import type { ReleaseFilters, RenderedRelease } from "../model/release-calendar";
 import { getReleaseTimelineRange } from "../model/release-timeline";
 import { useCurrentDate } from "../model/use-current-date";
 import { ReleaseCalendarStrip } from "./release-calendar-strip";
@@ -61,7 +57,7 @@ export function ReleaseExplorer({
         (item) => item.series,
       ),
     ),
-  ].sort();
+  ].toSorted();
   const hasFilters = Object.values(filters).some(Boolean);
   const kindOptions = [
     ["", en ? "All types" : "すべての種類"],
@@ -78,12 +74,13 @@ export function ReleaseExplorer({
     setTimelineDate(null);
   }
 
-  if (releases.length === 0)
+  if (releases.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed p-12 text-center text-sm text-muted-foreground">
         {en ? "No release data yet." : "リリースデータがありません。"}
       </p>
     );
+  }
 
   return (
     <div className="space-y-4">
@@ -167,10 +164,9 @@ export function ReleaseExplorer({
               </select>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 sm:px-6">
-              <div
-                role="group"
+              <fieldset
                 aria-label={en ? "Display mode" : "表示形式"}
-                className="flex max-w-full gap-1 rounded-lg bg-muted/50 p-1"
+                className="min-w-0 flex max-w-full gap-1 rounded-lg bg-muted/50 p-1"
               >
                 {(
                   [
@@ -209,12 +205,9 @@ export function ReleaseExplorer({
                     {label}
                   </button>
                 ))}
-              </div>
+              </fieldset>
               <div className="flex min-h-10 items-center gap-3">
-                <p
-                  role="status"
-                  className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground"
-                >
+                <output className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground">
                   <SlidersHorizontal className="hidden size-3 sm:block" aria-hidden="true" />
                   <span className="sm:hidden">
                     {filtered.length}/{releases.length}
@@ -224,7 +217,7 @@ export function ReleaseExplorer({
                       ? `${filtered.length} of ${releases.length} releases`
                       : `${releases.length} 件中 ${filtered.length} 件`}
                   </span>
-                </p>
+                </output>
                 {hasFilters && (
                   <Button
                     variant="ghost"

@@ -46,7 +46,7 @@ export function appendChartPatterns(
   const defs = select(svg).append("defs");
   const patternId = (index: number) => `${namespace}-pattern-${index % PATTERNS.length}`;
 
-  PATTERNS.forEach((shapes, index) => {
+  for (const [index, shapes] of PATTERNS.entries()) {
     const pattern = defs
       .append("pattern")
       .attr("id", patternId(index))
@@ -61,7 +61,7 @@ export function appendChartPatterns(
         element.attr(name, value);
       }
     }
-  });
+  }
 
   return (index: number) => `url(#${patternId(index)})`;
 }

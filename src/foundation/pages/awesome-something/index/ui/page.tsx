@@ -1,5 +1,6 @@
 import { getAwesomeItems } from "../model/awesome-items";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { AwesomeSomethingPageContent } from "./page-content";
 
 export default async function Page({ locale }: { locale?: Locale }) {

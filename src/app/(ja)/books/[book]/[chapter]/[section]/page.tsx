@@ -19,13 +19,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams(): Promise<
-  Array<{ book: string; chapter: string; section: string }>
+  { book: string; chapter: string; section: string }[]
 > {
   const slugs = await getBookSlugs();
-  const results: Array<{ book: string; chapter: string; section: string }> = [];
+  const books = await Promise.all(
+    slugs.map(async (book) => ({ book, toc: await getBookToc(book) })),
+  );
+  const results: { book: string; chapter: string; section: string }[] = [];
 
-  for (const book of slugs) {
-    const toc = await getBookToc(book);
+  for (const { book, toc } of books) {
     for (const ch of toc) {
       for (const sec of ch.sections) {
         results.push({ book, chapter: sec.chapter, section: sec.section });

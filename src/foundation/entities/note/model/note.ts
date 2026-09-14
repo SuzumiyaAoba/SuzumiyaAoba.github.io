@@ -9,9 +9,8 @@ import {
   asDateString,
   asBoolean,
   asStringArray,
-  type ContentSummary,
-  type LocalizedContent,
 } from "@/shared/lib/content-file";
+import type { ContentSummary, LocalizedContent } from "@/shared/lib/content-file";
 
 const NOTE_COLLECTION_DIR = "notes";
 
@@ -61,14 +60,14 @@ function normalizeFrontmatter(data: Record<string, unknown>): NoteFrontmatter {
   return {
     title: asStringWithDefault(data["title"], ""),
     ...(date ? { date } : {}),
-    ...(category !== undefined ? { category } : {}),
-    ...(description !== undefined ? { description } : {}),
-    ...(tags !== undefined ? { tags } : {}),
-    ...(thumbnail !== undefined ? { thumbnail } : {}),
-    ...(draft !== undefined ? { draft } : {}),
-    ...(amazonAssociate !== undefined ? { amazonAssociate } : {}),
-    ...(amazonProductIds !== undefined ? { amazonProductIds } : {}),
-    ...(model !== undefined ? { model } : {}),
+    ...(category === undefined ? {} : { category }),
+    ...(description === undefined ? {} : { description }),
+    ...(tags === undefined ? {} : { tags }),
+    ...(thumbnail === undefined ? {} : { thumbnail }),
+    ...(draft === undefined ? {} : { draft }),
+    ...(amazonAssociate === undefined ? {} : { amazonAssociate }),
+    ...(amazonProductIds === undefined ? {} : { amazonProductIds }),
+    ...(model === undefined ? {} : { model }),
   };
 }
 
@@ -82,6 +81,10 @@ export const getNotes = collection.getAll;
 
 export const getNotesVariants = collection.getAllVariants;
 
+export const getNoteSummaryVariants = collection.getSummaryVariants;
+
+export const getNoteSummariesVariants = collection.getAllSummaryVariants;
+
 /**
  * 公開済み（下書きでない）ノートのスラッグ一覧を取得する。
  * generateStaticParams など、下書きを静的ビルド対象・公開 URL に
@@ -92,7 +95,3 @@ export const getPublishedNoteSlugs = cache(async (): Promise<string[]> => {
   const notes = await getNoteSummariesVariants();
   return notes.map((note) => note.slug);
 });
-
-export const getNoteSummaryVariants = collection.getSummaryVariants;
-
-export const getNoteSummariesVariants = collection.getAllSummaryVariants;

@@ -19,27 +19,23 @@ export const TopSide = () => {
     const isHovered = hoveredValue?.[0] === px;
     return (
       <g key={`top-side-group-${px}`}>
-        {px
-          .toString(2)
-          .padStart(3, "0")
-          .split("")
-          .map((b, py) => (
-            <RectText
-              key={`top-side-${px}-${py}`}
-              x={x + cellWidth * px}
-              y={cellHeight * py}
-              width={cellWidth}
-              height={cellHeight}
-              offsetX={offsetX}
-              sides={["left", "right"]}
-              stroke={themeColors.stroke}
-              fill={isHovered ? themeColors.hover.primary : "transparent"}
-              fontWeight={isHovered ? "bold" : "normal"}
-              color={isHovered ? themeColors.text.hover : themeColors.text.normal}
-            >
-              {b}
-            </RectText>
-          ))}
+        {range(3).map((py) => (
+          <RectText
+            key={`top-side-${px}-${py}`}
+            x={x + cellWidth * px}
+            y={cellHeight * py}
+            width={cellWidth}
+            height={cellHeight}
+            offsetX={offsetX}
+            sides={["left", "right"]}
+            stroke={themeColors.stroke}
+            fill={isHovered ? themeColors.hover.primary : "transparent"}
+            fontWeight={isHovered ? "bold" : "normal"}
+            color={isHovered ? themeColors.text.hover : themeColors.text.normal}
+          >
+            {px.toString(2).padStart(3, "0")[py]}
+          </RectText>
+        ))}
         <RectText
           key={`top-side-${px}-column`}
           x={x + cellWidth * px}

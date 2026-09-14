@@ -15,20 +15,19 @@ export function buildYearlyPieSeries(
   metrics: string[],
   labelMap: Record<string, string>,
 ): YearlyPieSeries[] | null {
-  const yearlySeries = years.map((year) => data.series.find((s) => s.year === year));
-
-  if (yearlySeries.some((series) => !series)) {
-    return null;
-  }
-
-  return years.map((year, index) => {
-    const series = yearlySeries[index]!;
+  const result: YearlyPieSeries[] = [];
+  for (const year of years) {
+    const series = data.series.find((row) => row.year === year);
+    if (!series) {
+      return null;
+    }
     const pieData = metrics
       .filter((metric) => series.values[metric] !== null)
       .map((metric) => ({
         label: labelMap[metric] || metric,
         value: series.values[metric] ?? 0,
       }));
-    return { year, pieData };
-  });
+    result.push({ year, pieData });
+  }
+  return result;
 }

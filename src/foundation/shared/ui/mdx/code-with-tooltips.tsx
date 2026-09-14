@@ -1,46 +1,37 @@
 "use client";
 
-import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
+import { annotationData } from "./annotation-data";
+
+import type { HighlightedCode, RawCode } from "codehike/code";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+
+import { useHighlightedCode } from "./use-highlighted-code";
 
 import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
-import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
-import { tooltip } from "@/shared/ui/mdx/codehike-handlers";
+import { FootnoteNumber, tooltip } from "@/shared/ui/mdx/codehike-handlers";
 
 type TooltipBlock = {
   title?: string;
   children?: ReactNode;
 };
 
+const DEFAULT_TOOLTIPS: TooltipBlock[] = [];
+
 export function CodeWithTooltips({
   code,
-  tooltips = [],
+  tooltips = DEFAULT_TOOLTIPS,
 }: {
   code: RawCode;
   tooltips?: TooltipBlock[];
 }) {
-  const [highlighted, setHighlighted] = useState<HighlightedCode | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const result = await highlight(code, "github-from-css");
-      if (!cancelled) {
-        setHighlighted(result);
-      }
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [code]);
+  const { blocks, hasError } = useHighlightedCode(code);
+  const [highlighted] = blocks;
 
   if (!highlighted) {
     return (
       <div className="my-6 rounded-lg border border-border bg-muted px-4 py-6 text-sm text-muted-foreground">
-        Loading code...
+        {hasError ? "Unable to highlight code." : "Loading code..."}
       </div>
     );
   }
@@ -56,7 +47,10 @@ export function CodeWithTooltips({
     }
 
     const match = tooltips.find((entry) => entry.title === annotation.query);
-    const data = annotation.name === "ref" ? { ...annotation.data, n: noteIndex } : annotation.data;
+    const data =
+      annotation.name === "ref"
+        ? { ...annotationData(annotation.data), n: noteIndex }
+        : annotationData(annotation.data);
     if (!match) {
       return { ...annotation, data };
     }

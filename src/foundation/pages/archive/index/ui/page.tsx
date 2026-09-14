@@ -1,4 +1,5 @@
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { ArchivePageContent } from "./page-content";
 
 type PageProps = {

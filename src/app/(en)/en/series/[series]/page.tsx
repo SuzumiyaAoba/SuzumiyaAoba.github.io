@@ -9,10 +9,10 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  return buildSeriesPageMetadata(resolvedParams?.series, "en");
+  return buildSeriesPageMetadata(resolvedParams.series, "en");
 }
 
-export async function generateStaticParams(): Promise<Array<{ series: string }>> {
+export async function generateStaticParams(): Promise<{ series: string }[]> {
   const slugs = await getSeriesSlugs();
   return slugs.map((series) => ({ series }));
 }

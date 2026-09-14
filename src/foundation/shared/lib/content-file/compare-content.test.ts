@@ -8,7 +8,7 @@ function entry(slug: string, date?: string) {
 describe("compareContentByDate", () => {
   it("日付の降順に並べ、日付がない記事は末尾に置く", () => {
     const entries = [entry("undated"), entry("old", "2025-01-01"), entry("new", "2026-01-01")];
-    expect(entries.sort(compareContentByDate).map(({ slug }) => slug)).toEqual([
+    expect(entries.toSorted(compareContentByDate).map(({ slug }) => slug)).toStrictEqual([
       "new",
       "old",
       "undated",
@@ -17,7 +17,10 @@ describe("compareContentByDate", () => {
 
   it.each(["2026-01-01", "", undefined])("日付が同じ場合はスラッグの昇順になる (%s)", (date) => {
     const entries = [entry("b", date), entry("a", date)];
-    expect(entries.sort(compareContentByDate).map(({ slug }) => slug)).toEqual(["a", "b"]);
+    expect(entries.toSorted(compareContentByDate).map(({ slug }) => slug)).toStrictEqual([
+      "a",
+      "b",
+    ]);
   });
 
   it("同じ記事は同値として扱い、比較の向きを反転すると符号も反転する", () => {
@@ -35,7 +38,7 @@ describe("compareLocalizedContentByDate", () => {
       { slug: "en-only", ja: null, en: entry("en-only", "2026-01-01") },
       { slug: "missing", ja: null, en: null },
     ];
-    expect(entries.sort(compareLocalizedContentByDate).map(({ slug }) => slug)).toEqual([
+    expect(entries.toSorted(compareLocalizedContentByDate).map(({ slug }) => slug)).toStrictEqual([
       "en-only",
       "both",
       "missing",
@@ -45,7 +48,7 @@ describe("compareLocalizedContentByDate", () => {
   it("同日付の多言語記事もスラッグで安定して並ぶ", () => {
     const a = { slug: "a", ja: entry("a", "2026-01-01"), en: null };
     const b = { slug: "b", ja: null, en: entry("b", "2026-01-01") };
-    expect([b, a].sort(compareLocalizedContentByDate)).toEqual([a, b]);
+    expect([b, a].toSorted(compareLocalizedContentByDate)).toStrictEqual([a, b]);
     expect(compareLocalizedContentByDate(a, a)).toBe(0);
   });
 });

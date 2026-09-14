@@ -1,12 +1,8 @@
 import { cache } from "react";
 import type { Locale } from "@/shared/lib/routing";
 import { parseContent } from "./parse-content";
-import {
-  createArticleFileLister,
-  readContentFileWithFallback,
-  type ContentFormat,
-  type ReadContentOptions,
-} from "./read-content-file";
+import { createArticleFileLister, readContentFileWithFallback } from "./read-content-file";
+import type { ContentFormat, ReadContentOptions } from "./read-content-file";
 
 type ParsedContent<Frontmatter> = {
   slug: string;
@@ -31,13 +27,15 @@ export function createContentReader<Frontmatter>(
         locale,
         fallback,
       });
-      if (!file) return null;
+      if (!file) {
+        return null;
+      }
 
       return { slug, format: file.format, ...parseContent(file.raw, normalizeFrontmatter) };
     },
   );
 
   // React.cache は引数を参照比較するため、都度生成される options をキーにしない。
-  return (slug: string, options?: ReadContentOptions) =>
+  return async (slug: string, options?: ReadContentOptions) =>
     readContent(slug, options?.locale ?? "ja", options?.fallback ?? true);
 }

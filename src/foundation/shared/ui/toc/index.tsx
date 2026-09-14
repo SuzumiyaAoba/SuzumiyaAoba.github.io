@@ -9,20 +9,18 @@ import {
   useEffect,
   useMemo,
   useLayoutEffect,
-  type ReactNode,
-  type RefObject,
-  type ComponentProps,
 } from "react";
+import type { ReactNode, RefObject, ComponentProps } from "react";
 import { cn } from "@/shared/lib/utils";
 import { useAnchorObserver } from "./use-anchor-observer";
 import { TocThumb } from "./thumb";
 import { findTocLink } from "./geometry";
 
-export interface TOCItemType {
+export type TOCItemType = {
   title: ReactNode;
   url: string;
   depth: number;
-}
+};
 
 export type TableOfContents = TOCItemType[];
 
@@ -44,26 +42,24 @@ export function useTOCItems(): TOCItemType[] {
 
 function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]): React.RefCallback<T> {
   return (value) => {
-    refs.forEach((ref) => {
+    for (const ref of refs) {
       if (typeof ref === "function") {
         ref(value);
-      } else if (ref != null) {
-        (ref as React.MutableRefObject<T | null>).current = value;
+      } else if (ref !== null && ref !== undefined) {
+        ref.current = value;
       }
-    });
+    }
   };
 }
 
-export interface TOCProviderProps {
+export type TOCProviderProps = {
   toc: TableOfContents;
   single?: boolean;
   children?: ReactNode;
-}
+};
 
 export function TOCProvider({ toc, single = false, children }: TOCProviderProps) {
-  const headings = useMemo(() => {
-    return toc.flatMap((item) => item.url.split("#")[1] || []);
-  }, [toc]);
+  const headings = useMemo(() => toc.flatMap((item) => item.url.split("#")[1] || []), [toc]);
 
   const activeAnchors = useAnchorObserver(headings, single);
 
@@ -91,10 +87,10 @@ export function TOCScrollArea({ ref, className, ...props }: ComponentProps<"div"
   );
 }
 
-export interface TOCItemProps extends Omit<ComponentProps<"a">, "href"> {
+export type TOCItemProps = {
   href: string;
   onActiveChange?: (v: boolean) => void;
-}
+} & Omit<ComponentProps<"a">, "href">;
 
 export function TOCItem({ ref, onActiveChange, ...props }: TOCItemProps) {
   const containerRef = useContext(ScrollContext);
@@ -141,9 +137,9 @@ export function TOCItem({ ref, onActiveChange, ...props }: TOCItemProps) {
   );
 }
 
-export interface TOCItemsProps extends ComponentProps<"div"> {
+export type TOCItemsProps = {
   emptyText?: string;
-}
+} & ComponentProps<"div">;
 
 export function TOCItems({ ref, className, emptyText = "No Headings", ...props }: TOCItemsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -193,8 +189,12 @@ function SimpleTOCItem({ item }: { item: TOCItemType }) {
 }
 
 function getItemOffset(depth: number): number {
-  if (depth <= 2) return 14;
-  if (depth === 3) return 26;
+  if (depth <= 2) {
+    return 14;
+  }
+  if (depth === 3) {
+    return 26;
+  }
   return 36;
 }
 
@@ -202,9 +202,9 @@ function getLineOffset(depth: number): number {
   return depth >= 3 ? 10 : 0;
 }
 
-export interface ClerkTOCItemsProps extends ComponentProps<"div"> {
+export type ClerkTOCItemsProps = {
   emptyText?: string;
-}
+} & ComponentProps<"div">;
 
 export function ClerkTOCItems({
   ref,
@@ -223,29 +223,35 @@ export function ClerkTOCItems({
   }>();
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+      return;
+    }
     const container = containerRef.current;
 
     function onResize(): void {
-      if (container.clientHeight === 0) return;
+      if (container.clientHeight === 0) {
+        return;
+      }
       let w = 0;
       let h = 0;
       const d: string[] = [];
 
       for (let i = 0; i < items.length; i++) {
         const element = findTocLink(container, items[i]?.url ?? "");
-        if (!element) continue;
+        if (!element) {
+          continue;
+        }
 
         const styles = getComputedStyle(element);
         const offset = getLineOffset(items[i]?.depth ?? 2) + 1;
-        const top = element.offsetTop + parseFloat(styles.paddingTop);
-        const bottom = element.offsetTop + element.clientHeight - parseFloat(styles.paddingBottom);
+        const top = element.offsetTop + Number.parseFloat(styles.paddingTop);
+        const bottom =
+          element.offsetTop + element.clientHeight - Number.parseFloat(styles.paddingBottom);
 
         w = Math.max(offset, w);
         h = Math.max(h, bottom);
 
-        d.push(`${i === 0 ? "M" : "L"}${offset} ${top}`);
-        d.push(`L${offset} ${bottom}`);
+        d.push(`${i === 0 ? "M" : "L"}${offset} ${top}`, `L${offset} ${bottom}`);
       }
 
       setSvg({
@@ -329,7 +335,7 @@ function ClerkTOCItemElement({
       }}
       className="prose leading-snug relative py-1.5 text-sm text-muted-foreground hover:text-accent-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary"
     >
-      {offset !== upperOffset ? (
+      {offset === upperOffset ? null : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -344,7 +350,7 @@ function ClerkTOCItemElement({
             strokeWidth="1"
           />
         </svg>
-      ) : null}
+      )}
       <div
         className={cn(
           "absolute inset-y-0 w-px bg-foreground/10",
@@ -360,9 +366,9 @@ function ClerkTOCItemElement({
   );
 }
 
-export interface PageTOCProps extends ComponentProps<"div"> {
+export type PageTOCProps = {
   children?: ReactNode;
-}
+} & ComponentProps<"div">;
 
 export function PageTOC({ className, children, ...props }: PageTOCProps) {
   return (
@@ -372,13 +378,13 @@ export function PageTOC({ className, children, ...props }: PageTOCProps) {
   );
 }
 
-export interface PageTOCItemsProps extends ComponentProps<"div"> {
+export type PageTOCItemsProps = {
   variant?: "default" | "clerk";
   emptyText?: string;
-}
+} & ComponentProps<"div">;
 
 export function PageTOCItems({ variant = "default", emptyText, ...props }: PageTOCItemsProps) {
-  const emptyTextProp = emptyText !== undefined ? { emptyText } : {};
+  const emptyTextProp = emptyText === undefined ? {} : { emptyText };
   return (
     <TOCScrollArea>
       {variant === "clerk" ? (

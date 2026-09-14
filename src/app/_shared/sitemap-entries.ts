@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import type { LocalizedContent } from "@/shared/lib/content-file";
-import { resolveLocalizedValue, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { resolveLocalizedValue, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 export type SitemapPage = Omit<SitemapEntry, "url"> & { path: string };
@@ -39,7 +40,9 @@ export function buildContentSitemapEntries(
 ): MetadataRoute.Sitemap {
   const pagesForLocale = (locale: Locale) =>
     entries.flatMap((entry): MetadataRoute.Sitemap => {
-      if (locale === "en" && !entry.en) return [];
+      if (locale === "en" && !entry.en) {
+        return [];
+      }
       const date = resolveLocalizedValue(entry, locale)?.frontmatter.date;
       return [
         {

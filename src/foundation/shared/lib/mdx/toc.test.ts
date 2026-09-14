@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vite-plus/test";
+import { assert, describe, it, expect } from "vite-plus/test";
 import { getTocHeadings } from "./toc";
 
 describe("getTocHeadings", () => {
@@ -18,8 +18,8 @@ describe("getTocHeadings", () => {
       const result = await getTocHeadings(source);
 
       expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({ id: "セクション1", text: "セクション1", level: 2 });
-      expect(result[1]).toEqual({ id: "セクション2", text: "セクション2", level: 2 });
+      expect(result[0]).toStrictEqual({ id: "セクション1", text: "セクション1", level: 2 });
+      expect(result[1]).toStrictEqual({ id: "セクション2", text: "セクション2", level: 2 });
     });
 
     it("h3 ヘッダーを抽出する", async () => {
@@ -33,8 +33,10 @@ describe("getTocHeadings", () => {
       const result = await getTocHeadings(source);
 
       expect(result).toHaveLength(3);
-      expect(result[1]!.level).toBe(3);
-      expect(result[2]!.level).toBe(3);
+      assert(result[1]);
+      expect(result[1].level).toBe(3);
+      assert(result[2]);
+      expect(result[2].level).toBe(3);
     });
 
     it("h1 と h4 以上は除外する", async () => {
@@ -63,14 +65,16 @@ describe("getTocHeadings", () => {
       const source = `## Getting Started`;
       const result = await getTocHeadings(source);
 
-      expect(result[0]!.id).toBe("getting-started");
+      assert(result[0]);
+      expect(result[0].id).toBe("getting-started");
     });
 
     it("日本語テキストからスラッグを生成する", async () => {
       const source = `## はじめに`;
       const result = await getTocHeadings(source);
 
-      expect(result[0]!.id).toBe("はじめに");
+      assert(result[0]);
+      expect(result[0].id).toBe("はじめに");
     });
 
     it("重複するヘッダーに連番を付ける", async () => {
@@ -83,9 +87,12 @@ describe("getTocHeadings", () => {
 `;
       const result = await getTocHeadings(source);
 
-      expect(result[0]!.id).toBe("セクション");
-      expect(result[1]!.id).toBe("セクション-1");
-      expect(result[2]!.id).toBe("セクション-2");
+      assert(result[0]);
+      expect(result[0].id).toBe("セクション");
+      assert(result[1]);
+      expect(result[1].id).toBe("セクション-1");
+      assert(result[2]);
+      expect(result[2].id).toBe("セクション-2");
     });
   });
 
@@ -94,14 +101,16 @@ describe("getTocHeadings", () => {
       const source = `## セクション`;
       const result = await getTocHeadings(source, { idPrefix: "user-content-" });
 
-      expect(result[0]!.id).toBe("user-content-セクション");
+      assert(result[0]);
+      expect(result[0].id).toBe("user-content-セクション");
     });
 
     it("プレフィックスなしではIDそのまま", async () => {
       const source = `## セクション`;
       const result = await getTocHeadings(source);
 
-      expect(result[0]!.id).toBe("セクション");
+      assert(result[0]);
+      expect(result[0].id).toBe("セクション");
     });
   });
 
@@ -110,7 +119,8 @@ describe("getTocHeadings", () => {
       const source = "## `console.log` の使い方";
       const result = await getTocHeadings(source);
 
-      expect(result[0]!.text).toBe("console.log の使い方");
+      assert(result[0]);
+      expect(result[0].text).toBe("console.log の使い方");
     });
   });
 
@@ -126,8 +136,10 @@ describe("getTocHeadings", () => {
       const result = await getTocHeadings(source);
 
       expect(result).toHaveLength(2);
-      expect(result[0]!.text).toBe("有効なヘッダー");
-      expect(result[1]!.text).toBe("もう一つの有効なヘッダー");
+      assert(result[0]);
+      expect(result[0].text).toBe("有効なヘッダー");
+      assert(result[1]);
+      expect(result[1].text).toBe("もう一つの有効なヘッダー");
     });
   });
 });

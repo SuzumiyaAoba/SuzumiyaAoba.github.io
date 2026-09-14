@@ -10,7 +10,9 @@ type LocalizedDatedContent = {
 };
 
 function compareDates(dateA: string, dateB: string): number {
-  if (dateA === dateB) return 0;
+  if (dateA === dateB) {
+    return 0;
+  }
   return dateA < dateB ? 1 : -1;
 }
 

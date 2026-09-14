@@ -9,7 +9,7 @@ export function calculateSchedule(
   const schedule: ScheduleRow[] = [];
 
   if (monthsCount > 0) {
-    const monthlyRate = Math.pow(1 + annualRate / 100, 1 / 12) - 1;
+    const monthlyRate = (1 + annualRate / 100) ** (1 / 12) - 1;
     let balance = 0;
     let principal = 0;
 

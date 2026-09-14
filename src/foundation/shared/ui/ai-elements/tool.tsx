@@ -86,7 +86,7 @@ export type ToolInputProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export function ToolInput({ className, input, ...props }: ToolInputProps) {
-  if (input == null) {
+  if (input === null || input === undefined) {
     return null;
   }
 
@@ -108,11 +108,16 @@ export type ToolOutputProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export function ToolOutput({ className, output, errorText, ...props }: ToolOutputProps) {
-  if (output == null && !errorText) {
+  if ((output === null || output === undefined) && !errorText) {
     return null;
   }
 
-  const body = typeof output === "string" ? output : output ? JSON.stringify(output, null, 2) : "";
+  const body =
+    typeof output === "string"
+      ? output
+      : output === undefined
+        ? ""
+        : JSON.stringify(output, null, 2);
 
   return (
     <div className={cn("space-y-1.5 text-xs", className)} {...props}>

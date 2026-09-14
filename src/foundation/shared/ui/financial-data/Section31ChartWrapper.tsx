@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section31Data from "@/content/blog/2026-01-01-kakekin/data/section31.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section31ChartWrapper: React.FC = () => {
-  if (!section31Data) {
-    return <NoDataFallback />;
-  }
-
   const distributionLabelMap: Record<string, string> = {
     "金融資産非保有 | ％": "非保有",
     "100万円未満 | ％": "100万円未満",
@@ -24,7 +19,7 @@ export const Section31ChartWrapper: React.FC = () => {
     "2000～3000万円未満 | ％": "2000～3000万円",
     "3000万円以上 | ％": "3000万円以上",
   };
-  const startYear = Number(section31Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section31Data.metadata.startYear);
 
   return (
     <>

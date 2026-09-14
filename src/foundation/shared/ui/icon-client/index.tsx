@@ -1,8 +1,10 @@
 "use client";
 
 import { ICONS } from "@/shared/ui/icon/icon-data.client";
-import { renderIcon, type IconProps } from "@/shared/ui/icon/render";
+import { renderIcon } from "@/shared/ui/icon/render";
+import type { IconProps } from "@/shared/ui/icon/render";
 
+export { type IconProps } from "@/shared/ui/icon/render";
 /**
  * クライアントコンポーネント用のアイコン。
  *
@@ -14,5 +16,3 @@ import { renderIcon, type IconProps } from "@/shared/ui/icon/render";
 export function Icon(props: IconProps) {
   return renderIcon(ICONS, props);
 }
-
-export type { IconProps };

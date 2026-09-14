@@ -16,12 +16,10 @@ import { GitHubCodeLink } from "@/shared/ui/mdx/github-code-link";
 import { MdxH1, MdxH2, MdxH3, MdxH4, MdxH5 } from "@/shared/ui/mdx/heading";
 import { Img } from "@/shared/ui/mdx/img";
 import { MdxTable } from "@/shared/ui/mdx/table";
-import { ChatHistory } from "@/shared/ui/mdx/chat-history";
 import { Column } from "@/shared/ui/mdx/column";
 import { Message } from "@/shared/ui/mdx/message";
 import { YouTubeEmbed } from "@/shared/ui/mdx/youtube-embed";
 import { createPlaceholder } from "@/shared/ui/mdx/placeholders";
-
 
 /**
  * プレースホルダーコンポーネントを生成するための名前リスト
@@ -86,6 +84,5 @@ export const mdxComponents: MDXComponents = {
   MdxLabel,
   MdxDateLabel,
   YouTubeEmbed,
-  ChatHistory,
   ...placeholders,
 };

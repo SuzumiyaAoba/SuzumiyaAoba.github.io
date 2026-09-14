@@ -27,18 +27,18 @@ describe("paginate", () => {
   const items = Array.from({ length: 25 }, (_, i) => i + 1);
 
   it("既定のページサイズで1ページ目を切り出す", () => {
-    expect(paginate(items, 1)).toEqual(items.slice(0, 10));
+    expect(paginate(items, 1)).toStrictEqual(items.slice(0, 10));
   });
 
   it("既定のページサイズで2ページ目を切り出す", () => {
-    expect(paginate(items, 2)).toEqual(items.slice(10, 20));
+    expect(paginate(items, 2)).toStrictEqual(items.slice(10, 20));
   });
 
   it("最終ページは残り件数のみ返す", () => {
-    expect(paginate(items, 3)).toEqual(items.slice(20, 25));
+    expect(paginate(items, 3)).toStrictEqual(items.slice(20, 25));
   });
 
   it("カスタムページサイズを指定できる", () => {
-    expect(paginate(items, 2, 5)).toEqual(items.slice(5, 10));
+    expect(paginate(items, 2, 5)).toStrictEqual(items.slice(5, 10));
   });
 });

@@ -54,21 +54,17 @@ export function resolveThumbnail(
     }
   }
 
-  const basePath = (options.basePath ?? `/contents/blog/${slug}`).replace(/\/$/, "");
-  let resolvedPath: string;
-  if (
+  const basePath = (options.basePath ?? `/contents/blog/${slug}`).replace(/\/$/u, "");
+  let resolvedPath =
     normalized.startsWith("http://") ||
     normalized.startsWith("https://") ||
     normalized.startsWith("/")
-  ) {
-    resolvedPath = normalized;
-  } else {
-    resolvedPath = `${basePath}/${normalized}`;
-  }
+      ? normalized
+      : `${basePath}/${normalized}`;
 
   // Convert supported image formats to webp
-  if (/\.(png|jpe?g)$/i.test(resolvedPath)) {
-    resolvedPath = resolvedPath.replace(/\.(png|jpe?g)$/i, ".webp");
+  if (/\.(png|jpe?g)$/iu.test(resolvedPath)) {
+    resolvedPath = resolvedPath.replace(/\.(png|jpe?g)$/iu, ".webp");
   }
 
   return { type: "image", src: resolvedPath, isFallback: resolvedPath === "/icon.svg" };

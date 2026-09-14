@@ -1,3 +1,4 @@
+/** @type {import("next").NextConfig} */
 const nextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   output: "export",
@@ -5,7 +6,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  webpack: (config) => {
+  webpack: (/** @type {{ watchOptions?: Record<string, unknown> }} */ config) => {
     config.watchOptions = {
       ...config.watchOptions,
       ignored: ["**/node_modules/**", "**/.git/**", "**/out/**", "**/.next/**"],

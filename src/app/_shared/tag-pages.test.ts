@@ -3,20 +3,22 @@ import type { LocalizedBlogPostSummary } from "@/entities/blog";
 import sitemap from "../sitemap";
 import { buildTagPageMetadata, buildTagPageStaticParams } from "./tag-page-metadata";
 
-const { readPosts } = vi.hoisted(() => ({ readPosts: vi.fn() }));
-vi.mock("@/entities/blog/model/blog", () => ({ getBlogPostSummariesVariants: readPosts }));
-vi.mock("@/entities/blog", async () => ({
+const { readPosts } = vi.hoisted(() => ({
+  readPosts: vi.fn<() => Promise<LocalizedBlogPostSummary[]>>(),
+}));
+vi.mock(import("@/entities/blog/model/blog"), () => ({ getBlogPostSummariesVariants: readPosts }));
+vi.mock(import("@/entities/blog"), async () => ({
   ...(await import("@/entities/blog/model/blog-tags")),
   getBlogPostSummariesVariants: readPosts,
 }));
-vi.mock("@/entities/note", () => ({ getNoteSummariesVariants: async () => [] }));
-vi.mock("@/entities/series-item", () => ({ getSeriesList: async () => [] }));
-vi.mock("@/entities/book", () => ({
+vi.mock(import("@/entities/note"), () => ({ getNoteSummariesVariants: async () => [] }));
+vi.mock(import("@/entities/series-item"), () => ({ getSeriesList: async () => [] }));
+vi.mock(import("@/entities/book"), () => ({
   getBookSlugs: async () => [],
   getBookToc: async () => [],
   getBookMeta: async () => null,
 }));
-vi.mock("@/shared/lib/site/site-url", () => ({ getSiteUrl: () => "https://example.com" }));
+vi.mock(import("@/shared/lib/site/site-url"), () => ({ getSiteUrl: () => "https://example.com" }));
 
 const posts: LocalizedBlogPostSummary[] = [
   {

@@ -3,12 +3,10 @@ import { ArrowLeft, ArrowRight, ZoomIn, ZoomOut } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
-import { dateTimestamp, daysBetween, type Release } from "../model/release-calendar";
-import {
-  buildTimelineRows,
-  timelinePosition,
-  type ReleaseTimelineRange,
-} from "../model/release-timeline";
+import { dateTimestamp, daysBetween } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
+import { buildTimelineRows, timelinePosition } from "../model/release-timeline";
+import type { ReleaseTimelineRange } from "../model/release-timeline";
 import { ProviderIcon, providerLabel, providerStyles } from "./provider-identity";
 import { ReleasePoint } from "./release-point";
 import type { ReleasePopoverControls } from "./release-popover";
@@ -44,7 +42,7 @@ export function ReleaseTimeline({
 }: ReleaseTimelineProps) {
   const en = locale === "en";
   const descriptionId = useId();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLElement>(null);
   const [zoom, setZoom] = useState<number | "fit">(3);
   const [viewportWidth, setViewportWidth] = useState(0);
   const showLabels = viewportWidth >= 640 && zoom !== "fit" && zoom >= 2;
@@ -67,7 +65,9 @@ export function ReleaseTimeline({
 
   useLayoutEffect(() => {
     const element = scrollRef.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
     const observer = new ResizeObserver(() => setViewportWidth(element.clientWidth));
     setViewportWidth(element.clientWidth);
     observer.observe(element);
@@ -76,7 +76,9 @@ export function ReleaseTimeline({
 
   useLayoutEffect(() => {
     const element = scrollRef.current;
-    if (!element || !viewportWidth) return;
+    if (!element || !viewportWidth) {
+      return;
+    }
     const previous = previousLayout.current;
     const visibleWidth = viewportWidth - SERIES_WIDTH;
     if (!previous || previous.start !== range.start) {
@@ -98,7 +100,9 @@ export function ReleaseTimeline({
 
   function scrollToDate(date: string) {
     const element = scrollRef.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
     element.scrollLeft =
       AXIS_PADDING +
       daysBetween(range.start, date) * pixelsPerDay -
@@ -107,7 +111,9 @@ export function ReleaseTimeline({
 
   function scrollPage(direction: number) {
     const element = scrollRef.current;
-    if (element) element.scrollLeft += direction * (element.clientWidth - SERIES_WIDTH) * 0.8;
+    if (element) {
+      element.scrollLeft += direction * (element.clientWidth - SERIES_WIDTH) * 0.8;
+    }
   }
 
   const monthStep = pixelsPerDay * 28 >= 44 ? 1 : pixelsPerDay * 90 >= 44 ? 3 : 12;
@@ -191,7 +197,7 @@ export function ReleaseTimeline({
               variant="ghost"
               className={releaseActionClass}
               onClick={() => {
-                const date = releases.filter((release) => release.date).at(-1)?.date;
+                const date = releases.findLast((release) => release.date)?.date;
                 if (date) {
                   onSelectDate(date);
                   scrollToDate(date);
@@ -214,10 +220,9 @@ export function ReleaseTimeline({
               {en ? "Latest" : "最新の記録"}
             </Button>
           </div>
-          <div
-            role="group"
+          <fieldset
             aria-label={en ? "Timeline zoom" : "時間軸の表示倍率"}
-            className="flex items-center gap-1.5"
+            className="min-w-0 flex items-center gap-1.5"
           >
             <Button
               size="icon"
@@ -225,7 +230,11 @@ export function ReleaseTimeline({
               className="size-10 rounded-lg shadow-none"
               aria-label={en ? "Zoom out" : "縮小"}
               disabled={smallerZoom === undefined || plotWidth <= availableWidth}
-              onClick={() => smallerZoom !== undefined && setZoom(smallerZoom)}
+              onClick={() => {
+                if (smallerZoom !== undefined) {
+                  setZoom(smallerZoom);
+                }
+              }}
             >
               <ZoomOut aria-hidden="true" />
             </Button>
@@ -238,7 +247,11 @@ export function ReleaseTimeline({
               className="size-10 rounded-lg shadow-none"
               aria-label={en ? "Zoom in" : "拡大"}
               disabled={largerZoom === undefined}
-              onClick={() => largerZoom !== undefined && setZoom(largerZoom)}
+              onClick={() => {
+                if (largerZoom !== undefined) {
+                  setZoom(largerZoom);
+                }
+              }}
             >
               <ZoomIn aria-hidden="true" />
             </Button>
@@ -250,12 +263,11 @@ export function ReleaseTimeline({
             >
               {en ? "Fit all dates" : "全期間を表示"}
             </Button>
-          </div>
+          </fieldset>
         </div>
       </ReleaseViewHeader>
       <ReleaseScrollArea
         ref={scrollRef}
-        role="region"
         aria-label={en ? "Release interval chart" : "リリース間隔の比較チャート"}
         aria-describedby={descriptionId}
         tabIndex={0}
@@ -401,7 +413,10 @@ export function ReleaseTimeline({
                     />
                   )}
                   {points.map(({ date, sameDay, lane }) => {
-                    const item = sameDay[0]!;
+                    const [item] = sameDay;
+                    if (!item) {
+                      return null;
+                    }
                     const interval = item.intervals.find((value) => value.series === series);
                     const end = timelinePosition(date, range);
                     const start = interval ? timelinePosition(interval.previousDate, range) : end;

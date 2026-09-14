@@ -9,7 +9,7 @@ const AffiliateLinkSchema = z.object({
   /** 商品名/タイトル */
   title: z.string().min(1),
   /** 商品詳細ページ（Amazon等）のURL */
-  productUrl: z.string().url(),
+  productUrl: z.url(),
 });
 
 /**
@@ -17,9 +17,9 @@ const AffiliateLinkSchema = z.object({
  */
 export const AffiliateProductSchema = AffiliateLinkSchema.extend({
   /** 商品画像のURL */
-  imageUrl: z.string().url(),
+  imageUrl: z.url(),
   /** Yahoo!ショッピング用のURL（オプション） */
-  yahooShoppingUrl: z.string().url().optional(),
+  yahooShoppingUrl: z.url().optional(),
   /** 関連するタグのリスト */
   tags: z
     .union([z.array(z.string()), z.string()])
@@ -43,7 +43,7 @@ const AffiliateProductSourceSchema = z
   .superRefine((source, context) => {
     const ids = new Set<string>();
     for (const collection of ["products", "links"] as const) {
-      source[collection].forEach(({ id }, index) => {
+      for (const [index, { id }] of source[collection].entries()) {
         if (ids.has(id)) {
           context.addIssue({
             code: "custom",
@@ -52,7 +52,7 @@ const AffiliateProductSourceSchema = z
           });
         }
         ids.add(id);
-      });
+      }
     }
   });
 
@@ -82,12 +82,12 @@ let cachedIndex: AffiliateProductIndex | null = null;
  * @returns 商品データのインデックス情報
  */
 async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
   const fs = await import("node:fs/promises");
 
   const root = await resolveContentRoot();
   const filePath = path.join(root, "affiliate-products.json");
-  const isDev = process.env["NODE_ENV"] === "development";
+  const isDev = process.env.NODE_ENV === "development";
 
   if (cachedIndex && !isDev) {
     return cachedIndex;
@@ -180,7 +180,7 @@ export async function getAffiliateProductsByTags(
 
   const index = await loadAffiliateProducts();
   const normalizedTags = new Set(tags.map((tag) => tag.trim()).filter(Boolean));
-  const excluded = new Set(options?.excludeIds ?? []);
+  const excluded = new Set(options?.excludeIds);
   const matches: AffiliateProduct[] = [];
   const seen = new Set<string>();
   for (const tag of normalizedTags) {

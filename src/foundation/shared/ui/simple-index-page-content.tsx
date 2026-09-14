@@ -1,14 +1,11 @@
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  type BreadcrumbItem,
-  type Locale,
-} from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems } from "@/shared/lib/routing";
+import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { Card } from "@/shared/ui/card";
-import { SimpleEntryList, type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
+import { SimpleEntryList } from "@/shared/ui/simple-entry-list";
+import type { SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 
 type LocalizedText = { ja: string; en: string };
 

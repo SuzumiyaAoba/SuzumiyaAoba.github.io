@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { join } from "node:path";
+import path from "node:path";
 
 const force = process.argv.includes("--force");
-const target = join(process.cwd(), "out", "pagefind");
+const target = path.join(process.cwd(), "out", "pagefind");
 
 if (!force && existsSync(target)) {
   console.log(

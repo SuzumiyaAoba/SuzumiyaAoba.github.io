@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section34Data from "@/content/blog/2026-01-01-kakekin/data/section34.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section34ChartWrapper: React.FC = () => {
-  if (!section34Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "金融資産に振り分けた | ％": "振り分けた",
     "5%未満 | ％": "5%未満",
@@ -23,7 +18,7 @@ export const Section34ChartWrapper: React.FC = () => {
     "振り分けしなかった | ％": "振り分けなし",
     "平均 | ％": "平均",
   };
-  const startYear = Number(section34Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section34Data.metadata.startYear);
 
   return (
     <>

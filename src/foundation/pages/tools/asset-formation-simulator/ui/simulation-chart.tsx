@@ -1,15 +1,8 @@
 "use client";
 
 import * as d3 from "d3";
-import {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { Locale } from "@/shared/lib/routing";
 import type { ScheduleRow, YearlyRow, ScenarioData, VisibleState } from "../model/types";
 import { useSimulatorFormatters } from "./use-simulator-formatters";
@@ -102,13 +95,13 @@ export function SimulationChart({
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const lastMonth = selectedScenario.schedule[selectedScenario.schedule.length - 1]?.month ?? 1;
+    const lastMonth = selectedScenario.schedule.at(-1)?.month ?? 1;
     const maxValue = d3.max(scenarioData, (scenario) =>
       d3.max(scenario.schedule, (row) => Math.max(row.balance, row.principal, row.gain)),
     );
     const maxDiff = d3.max(tableRows, (row) => row.gainDiff);
-    const yMax = maxValue ? maxValue * 1.05 : 0;
-    const yMaxWithDiff = maxDiff && maxDiff > yMax ? maxDiff * 1.05 : yMax;
+    const yMax = (maxValue ?? 0) * 1.05;
+    const yMaxWithDiff = maxDiff !== undefined && maxDiff > yMax ? maxDiff * 1.05 : yMax;
 
     const xScale = d3.scaleLinear().domain([1, lastMonth]).range([0, innerWidth]);
     const yScale = d3.scaleLinear().domain([0, yMaxWithDiff]).range([innerHeight, 0]);
@@ -120,7 +113,7 @@ export function SimulationChart({
         for (let i = 1; i <= lastMonth; i += step) {
           values.push(i);
         }
-        if (values[values.length - 1] !== lastMonth) {
+        if (values.at(-1) !== lastMonth) {
           values.push(lastMonth);
         }
         return values;
@@ -130,7 +123,7 @@ export function SimulationChart({
       for (let year = 1; year <= lastMonth / 12; year += 1) {
         values.push(year * 12);
       }
-      if (values[values.length - 1] !== lastMonth) {
+      if (values.at(-1) !== lastMonth) {
         values.push(lastMonth);
       }
       return values;
@@ -155,7 +148,7 @@ export function SimulationChart({
       .axisBottom(xScale)
       .tickValues(tickValues)
       .tickFormat((value) => {
-        const monthValue = value as number;
+        const monthValue = Number(value);
         if (monthValue >= 12) {
           return formatYears(monthValue);
         }
@@ -167,8 +160,8 @@ export function SimulationChart({
       .ticks(5)
       .tickFormat((value) =>
         locale === "en"
-          ? `¥${d3.format(",")((value as number) / 10000)} x10k`
-          : `${d3.format(",")((value as number) / 10000)}万円`,
+          ? `¥${d3.format(",")(Number(value) / 10_000)} x10k`
+          : `${d3.format(",")(Number(value) / 10_000)}万円`,
       );
 
     const xAxisGroup = chartGroup
@@ -207,7 +200,7 @@ export function SimulationChart({
           .y((row) => yScale(row.gainDiff));
         path.datum(scenario.tableRows).attr("d", line);
       } else {
-        const key = series.key;
+        const { key } = series;
         const line = d3
           .line<ScheduleRow>()
           .x((row) => xScale(row.month))
@@ -218,10 +211,14 @@ export function SimulationChart({
 
     // 評価額の線を先に描き、元本・運用益・前年差の線をその上に重ねる。
     const [balanceSeries, ...secondarySeries] = chartSeries;
-    scenarioData.forEach((scenario) => drawSeries(scenario, balanceSeries));
-    scenarioData.forEach((scenario) => {
-      secondarySeries.forEach((series) => drawSeries(scenario, series));
-    });
+    for (const scenario of scenarioData) {
+      drawSeries(scenario, balanceSeries);
+    }
+    for (const scenario of scenarioData) {
+      for (const series of secondarySeries) {
+        drawSeries(scenario, series);
+      }
+    }
 
     const pointData = scenarioData.flatMap((scenario) =>
       visibleSeries[`${scenario.id}:balance`]
@@ -258,7 +255,7 @@ export function SimulationChart({
         const y = svgRect.top + margin.top + yScale(item.row.balance) - top;
         setTooltip({ x, y, row: item.row, label: item.label });
       })
-      .on("mousemove", (event, item) => {
+      .on("mousemove", (event: MouseEvent, item) => {
         const container = chartContainerRef.current;
         if (!container) {
           return;
@@ -295,9 +292,9 @@ export function SimulationChart({
                 setVisibleSeries((prev) => {
                   const allOn = keys.every((key) => prev[key] !== false);
                   const next = { ...prev };
-                  keys.forEach((key) => {
+                  for (const key of keys) {
                     next[key] = !allOn;
-                  });
+                  }
                   return next;
                 });
               }}
@@ -316,7 +313,7 @@ export function SimulationChart({
                   type="button"
                   className="flex items-center gap-2 text-left"
                   onClick={() => setVisibleSeries((prev) => ({ ...prev, [key]: !prev[key] }))}
-                  aria-pressed={!!visibleSeries[key]}
+                  aria-pressed={Boolean(visibleSeries[key])}
                 >
                   <svg width="18" height="6" viewBox="0 0 18 6">
                     <line

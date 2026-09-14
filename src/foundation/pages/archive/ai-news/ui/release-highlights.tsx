@@ -1,7 +1,8 @@
 import { ArrowUpRight, Activity, Layers3, Check } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
-import { PROVIDERS, type Release } from "../model/release-calendar";
+import { PROVIDERS } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
 import { getReleaseActivity } from "../model/release-activity";
 import { ProviderIcon, providerLabel } from "./provider-identity";
 
@@ -42,7 +43,7 @@ export function ReleaseHighlights({
       {latest?.date ? (
         <button
           type="button"
-          onClick={(event) => onSelectDate(latest.date!, event.currentTarget)}
+          onClick={(event) => onSelectDate(latest.date, event.currentTarget)}
           aria-haspopup="dialog"
           aria-label={en ? "Explore the latest release" : "最新リリースの詳細を見る"}
           className="group flex min-w-0 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-muted/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-6"
@@ -91,10 +92,9 @@ export function ProviderFilters({
   );
   const choices = ["", ...providers] as const;
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label={en ? "Filter by provider" : "提供元で絞り込み"}
-      className="grid grid-flow-col auto-cols-[7rem] gap-1.5 overflow-x-auto pb-2 sm:auto-cols-[9rem] sm:gap-2 lg:auto-cols-[11rem]"
+      className="min-w-0 grid grid-flow-col auto-cols-[7rem] gap-1.5 overflow-x-auto pb-2 sm:auto-cols-[9rem] sm:gap-2 lg:auto-cols-[11rem]"
     >
       {choices.map((provider) => {
         const active = selected === provider;
@@ -134,6 +134,6 @@ export function ProviderFilters({
           </button>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useId, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { Search, X } from "lucide-react";
 import type { AwesomeItem, AwesomeLink } from "../model/awesome-item";
 import type { Locale } from "@/shared/lib/routing";
@@ -22,14 +23,16 @@ function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
 }
 
 function ArticleLinks({ title, links }: { title: string; links: AwesomeLink[] }) {
-  if (links.length === 0) return null;
+  if (links.length === 0) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-x-4 sm:flex-row sm:items-baseline">
       <h4 className="shrink-0 text-xs text-muted-foreground">{title}</h4>
       <ul className="min-w-0 space-y-1">
-        {links.map((link, index) => (
-          <li key={`${link.url}-${index}`}>
+        {links.map((link) => (
+          <li key={link.url}>
             <ResourceLink url={link.url}>{link.title ?? link.url}</ResourceLink>
           </li>
         ))}
@@ -47,19 +50,24 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
   const isEnglish = locale === "en";
   const hasFilters = query.length > 0 || category !== null || selectedTag !== null;
   const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase(locale);
-  const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
+  const terms = normalize(query).trim().split(/\s+/u).filter(Boolean);
   const categories = new Map<string, AwesomeItem[]>();
   for (const item of items) {
     const categoryItems = categories.get(item.category);
-    if (categoryItems) categoryItems.push(item);
-    else categories.set(item.category, [item]);
+    if (categoryItems) {
+      categoryItems.push(item);
+    } else {
+      categories.set(item.category, [item]);
+    }
   }
-  const filteredGroups = Array.from(categories)
+  const filteredGroups = [...categories]
     .filter(([name]) => category === null || name === category)
     .map(([name, categoryItems]) => ({
       name,
       items: categoryItems.filter((item) => {
-        if (selectedTag !== null && !item.tags.includes(selectedTag)) return false;
+        if (selectedTag !== null && !item.tags.includes(selectedTag)) {
+          return false;
+        }
         const text = normalize(
           [item.name, item.category, ...item.tags, item.description].join(" "),
         );

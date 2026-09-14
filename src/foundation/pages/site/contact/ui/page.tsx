@@ -9,8 +9,8 @@ import {
   buildListBreadcrumbItems,
   toLocalePath,
   resolveLocale,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;
@@ -50,6 +50,7 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
         <section>
           <div className="overflow-hidden rounded-2xl bg-card/40">
             <iframe
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               title="Contact form"
               src="https://docs.google.com/forms/d/e/1FAIpQLSeXOZA4Mriinisf4yXq8Y9XxfiSNvWjF_qhg5qFYY8af85bfQ/viewform?embedded=true"
               className="h-[1000px] w-full border-0"

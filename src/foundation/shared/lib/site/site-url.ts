@@ -6,9 +6,9 @@ import { getSiteConfig } from "./site-config";
  * @returns サイトのベースURL
  */
 export function getSiteUrl(): string {
-  const siteUrl = getSiteConfig().siteUrl;
+  const { siteUrl } = getSiteConfig();
   if (siteUrl && siteUrl.trim().length > 0) {
-    return siteUrl.replace(/\/$/, "");
+    return siteUrl.replace(/\/$/u, "");
   }
   return "http://localhost:3000";
 }

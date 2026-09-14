@@ -21,7 +21,7 @@ export const B1b4Row = () => {
       </text>
     )),
     <text
-      key={`row-text`}
+      key="row-text"
       x={4 * cellWidth + offsetX / 2}
       y={y - 10}
       fontSize="0.8rem"

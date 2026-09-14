@@ -11,7 +11,7 @@ export const Bits = () => {
     <>
       {["B", "I", "T", "S"].map((char, py) => (
         <text
-          key={`bits-${py}-text`}
+          key={char}
           x={(cellWidth * py) / 2 + offsetX}
           y={((py + 1) * cellHeight) / 1.25}
           fontSize="0.8rem"

@@ -1,6 +1,7 @@
 import { Footer } from "@/widgets/footer";
 import { Header } from "@/widgets/header";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 export type PostsIndexPageContentProps = {
   locale: Locale;

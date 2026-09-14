@@ -1,5 +1,6 @@
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 export type BackLinkProps = {
   locale: Locale;

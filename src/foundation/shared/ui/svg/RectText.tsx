@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler, PropsWithChildren } from "react";
+import type { FC, MouseEventHandler, PropsWithChildren } from "react";
 
 type BorderSide = "top" | "right" | "bottom" | "left";
 
@@ -60,7 +60,7 @@ export const RectText: FC<PropsWithChildren<RectTextProps>> = (props) => {
     onMouseOver,
     children,
   } = props;
-  const existsSides = sides && sides.length !== 0;
+  const existsSides = sides && sides.length > 0;
   return (
     <g>
       <rect
@@ -74,7 +74,7 @@ export const RectText: FC<PropsWithChildren<RectTextProps>> = (props) => {
         onClick={onClick}
         onMouseOver={onMouseOver}
       />
-      {existsSides ? <LineRect {...props} /> : <></>}
+      {existsSides ? <LineRect {...props} /> : null}
       <text
         x={x + offsetX}
         y={y + (offsetY ?? (height * 2) / 3)}

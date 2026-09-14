@@ -22,6 +22,7 @@ import type { PluggableList } from "unified";
 
 import { mdxComponents } from "@/shared/lib/mdx/components";
 import { Img } from "@/shared/ui/mdx/img";
+import { createChatHistory } from "@/shared/ui/mdx/chat-history";
 import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
 import { createRehypeAffiliateLinks } from "./rehype-affiliate-links";
 import type { TocHeading } from "./toc";
@@ -42,10 +43,10 @@ type RenderOptions = {
  * remarkMermaid が変換する ```mermaid フェンスと、
  * MDX 中に直接書かれた <Mermaid> の両方を拾う。
  */
-const MERMAID_USAGE = /^[ \t]*(?:```|~~~)[ \t]*mermaid\b|<Mermaid[\s/>]/m;
+const MERMAID_USAGE = /^[ \t]*(?:```|~~~)[ \t]*mermaid\b|<Mermaid[\s/>]/mu;
 
 /** codehike の highlight（Shiki + TextMate 文法）を伴うコードブロックの使用判定 */
-const CODE_BLOCK_USAGE = /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/;
+const CODE_BLOCK_USAGE = /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/u;
 
 /**
  * 重量級コンポーネントを、実際に使う記事にだけ注入する。
@@ -75,18 +76,33 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
 type RenderResult = { content: ReactElement; headings: TocHeading[] };
 const devRenderCache = new Map<string, RenderResult>();
 
+export const renderMdx = cache(async (source: string, options: RenderOptions = {}) => {
+  const { content } = await compileContent(source, options, false);
+  return content;
+});
+
+/** MDX のコンパイルと目次抽出を同じパースで実行する。 */
+export const renderMdxWithToc = cache(
+  async (source: string, options: RenderOptions = {}): Promise<RenderResult> =>
+    compileContent(source, options, true),
+);
+
 function buildCompileOptions(
   source: string,
   { basePath, scope, idPrefix, extraComponents }: RenderOptions,
   extraRemarkPlugins: PluggableList = [],
-  affiliateById: Map<string, string> = new Map(),
+  affiliateById = new Map<string, string>(),
 ): Parameters<typeof compileMDX>[0] {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
     syntaxHighlighting: { theme: "github-from-css" },
   };
 
-  const baseComponents = extraComponents ? { ...mdxComponents, ...extraComponents } : mdxComponents;
+  const baseComponents = {
+    ...mdxComponents,
+    ChatHistory: createChatHistory(renderMdx),
+    ...extraComponents,
+  };
   const components = basePath
     ? {
         ...baseComponents,
@@ -139,7 +155,7 @@ async function compileContent(
     loadHeavyComponents(source),
   ]);
   // コンポーネント関数はシリアライズできないため、追加マップがある場合は開発キャッシュを使わない。
-  const useDevCache = process.env["NODE_ENV"] === "development" && !options.extraComponents;
+  const useDevCache = process.env.NODE_ENV === "development" && !options.extraComponents;
   const cacheKey = useDevCache
     ? JSON.stringify([
         collectHeadings,
@@ -152,7 +168,9 @@ async function compileContent(
     : "";
   if (useDevCache) {
     const cached = devRenderCache.get(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      return cached;
+    }
   }
 
   const headings: TocHeading[] = [];
@@ -164,18 +182,9 @@ async function compileContent(
       affiliateById,
     ),
   );
-  const result = { content: <>{content}</>, headings };
-  if (useDevCache) devRenderCache.set(cacheKey, result);
+  const result = { content, headings };
+  if (useDevCache) {
+    devRenderCache.set(cacheKey, result);
+  }
   return result;
 }
-
-export const renderMdx = cache(async (source: string, options: RenderOptions = {}) => {
-  const { content } = await compileContent(source, options, false);
-  return content;
-});
-
-/** MDX のコンパイルと目次抽出を同じパースで実行する。 */
-export const renderMdxWithToc = cache(
-  (source: string, options: RenderOptions = {}): Promise<RenderResult> =>
-    compileContent(source, options, true),
-);

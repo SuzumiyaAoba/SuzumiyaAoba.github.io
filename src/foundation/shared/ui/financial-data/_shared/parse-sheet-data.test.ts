@@ -10,7 +10,7 @@ const validSheet = {
 describe("parseSheetData", () => {
   it("有効なシートデータをパースして返す", () => {
     const assetsData = { sheets: { "1": validSheet } };
-    expect(parseSheetData(assetsData, "1")).toEqual(validSheet);
+    expect(parseSheetData(assetsData, "1")).toStrictEqual(validSheet);
   });
 
   it("指定したsheetKeyが存在しなければnullを返す", () => {

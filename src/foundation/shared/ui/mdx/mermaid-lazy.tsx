@@ -20,9 +20,15 @@ type MermaidLazyProps = {
  * mermaid は useEffect の中で描画するためサーバーでは空要素しか返らない。
  * よって ssr: false による表示上の差は無い。
  */
-const Mermaid = dynamic(() => import("./mermaid").then((mod) => mod.Mermaid), {
-  ssr: false,
-});
+const Mermaid = dynamic(
+  async () => {
+    const { Mermaid: Component } = await import("./mermaid");
+    return Component;
+  },
+  {
+    ssr: false,
+  },
+);
 
 /**
  * Mermaid 図を描画する。図を含む記事でのみ読み込まれる。

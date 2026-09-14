@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vite-plus/test";
-import { toLocalePath, type Locale } from "./locale-path";
+import { toLocalePath } from "./locale-path";
+import type { Locale } from "./locale-path";
 
 describe("toLocalePath", () => {
   describe("日本語ロケール (ja)", () => {

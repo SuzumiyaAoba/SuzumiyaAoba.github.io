@@ -4,14 +4,11 @@ import { Footer } from "@/widgets/footer";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  toLocalePath,
-  type Locale,
-} from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { Card } from "@/shared/ui/card";
-import { EntryCardList, type EntryCardItem } from "@/shared/ui/entry-card-list";
+import { EntryCardList } from "@/shared/ui/entry-card-list";
+import type { EntryCardItem } from "@/shared/ui/entry-card-list";
 
 export type ArchivePageContentProps = {
   locale: Locale;

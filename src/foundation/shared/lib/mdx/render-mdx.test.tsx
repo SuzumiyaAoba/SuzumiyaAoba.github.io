@@ -1,19 +1,20 @@
 /* eslint-disable @next/next/no-img-element -- MDX の img 出力と基準パスを検証するためのモック。 */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { renderToStaticMarkup } from "react-dom/server";
-
-vi.mock("@/shared/lib/mdx/components", () => ({ mdxComponents: {} }));
-vi.mock("@/shared/lib/affiliate-products", () => ({
-  getAffiliateProductUrlById: vi.fn(),
-}));
-vi.mock("@/shared/ui/mdx/img", () => ({
-  Img: ({ src, alt, basePath }: { src: string; alt?: string; basePath?: string }) => (
-    <img src={basePath ? `${basePath}/${src}` : src} alt={alt ?? ""} />
-  ),
-}));
+import type { MdxImgProps } from "@/shared/ui/mdx/img";
 
 import { renderMdx, renderMdxWithToc } from "./render-mdx";
 import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
+
+vi.mock(import("@/shared/lib/mdx/components"), () => ({ mdxComponents: {} }));
+vi.mock(import("@/shared/lib/affiliate-products"), () => ({
+  getAffiliateProductUrlById: vi.fn<typeof getAffiliateProductUrlById>(),
+}));
+vi.mock(import("@/shared/ui/mdx/img"), () => ({
+  Img: ({ src, alt, basePath }: MdxImgProps) => (
+    <img src={basePath && typeof src === "string" ? `${basePath}/${src}` : src} alt={alt ?? ""} />
+  ),
+}));
 
 beforeEach(() => {
   vi.mocked(getAffiliateProductUrlById).mockResolvedValue(
@@ -28,7 +29,7 @@ describe("MDX rendering", () => {
     const plain = await renderMdx(source);
     const withToc = await renderMdxWithToc(source);
     expect(renderToStaticMarkup(withToc.content)).toBe(renderToStaticMarkup(plain));
-    expect(withToc.headings).toEqual([
+    expect(withToc.headings).toStrictEqual([
       { id: "hello", text: "Hello", level: 2 },
       { id: "details", text: "Details", level: 3 },
     ]);
@@ -39,7 +40,10 @@ describe("MDX rendering", () => {
       idPrefix: "chapter-",
     });
     const html = renderToStaticMarkup(content);
-    expect(headings.map((heading) => heading.id)).toEqual(["chapter-intro", "chapter-intro-1"]);
+    expect(headings.map((heading) => heading.id)).toStrictEqual([
+      "chapter-intro",
+      "chapter-intro-1",
+    ]);
     for (const { id } of headings) {
       expect(html).toContain(`id="${id}"`);
       expect(html).toContain(`href="#${id}"`);
@@ -78,7 +82,7 @@ describe("MDX rendering", () => {
       "[書籍](<affiliate://書籍 入門>)\n\n[Reference][book]\n\n[book]: affiliate://%E6%9B%B8%E7%B1%8D%20%E5%85%A5%E9%96%80",
     );
     const html = renderToStaticMarkup(content);
-    expect(html.match(/href="https:\/\/example.com\/japanese-book"/g)).toHaveLength(2);
+    expect(html.match(/href="https:\/\/example.com\/japanese-book"/gu)).toHaveLength(2);
     expect(html).not.toContain("affiliate://");
   });
 
@@ -104,6 +108,6 @@ describe("MDX rendering", () => {
     expect(renderToStaticMarkup(beforeWithToc.content)).toBe(renderToStaticMarkup(before));
     expect(renderToStaticMarkup(after)).toContain('href="https://example.com/replacement"');
     expect(renderToStaticMarkup(afterWithToc.content)).toBe(renderToStaticMarkup(after));
-    expect(afterWithToc.headings).toEqual(beforeWithToc.headings);
+    expect(afterWithToc.headings).toStrictEqual(beforeWithToc.headings);
   });
 });

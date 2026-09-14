@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section26Data from "@/content/blog/2026-01-01-kakekin/data/section26.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section26ChartWrapper: React.FC = () => {
-  if (!section26Data) {
-    return <NoDataFallback />;
-  }
-
   const distributionHeaders = [
     "10 万円 未満 | ％",
     "10 ～ 20 万円 未満 | ％",

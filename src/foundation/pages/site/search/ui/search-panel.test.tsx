@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 
 import { act, StrictMode } from "react";
-import { createRoot, type Root } from "react-dom/client";
-import { NuqsTestingAdapter, type OnUrlUpdateFunction } from "nuqs/adapters/testing";
+import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
+import { NuqsTestingAdapter } from "nuqs/adapters/testing";
+import type { OnUrlUpdateFunction } from "nuqs/adapters/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { SearchPanel } from "./search-panel";
 
@@ -41,15 +43,16 @@ async function render(query = "") {
 
 function input() {
   const element = container.querySelector("input");
-  if (!element) throw new Error("Search input not found");
+  if (!element) {
+    throw new Error("Search input not found");
+  }
   return element;
 }
 
 async function typeQuery(value: string) {
   await act(async () => {
     // React の入力値トラッカーを経由せず、ブラウザーの入力イベントを再現する。
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
-    setter?.call(input(), value);
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input(), value);
     input().dispatchEvent(new Event("input", { bubbles: true }));
   });
 }
@@ -114,7 +117,7 @@ describe("SearchPanel", () => {
 
   it("古い検索応答が後から届いても、新しい結果を上書きせず詳細も取得しない", async () => {
     const old = Promise.withResolvers<SearchResponse>();
-    const oldData = vi.fn(async () => result("old-result"));
+    const oldData = vi.fn<() => Promise<ResultData>>(async () => result("old-result"));
     search.mockReturnValueOnce(old.promise).mockResolvedValue(response("new-result"));
     await render("old");
     await advance();
@@ -129,7 +132,7 @@ describe("SearchPanel", () => {
   it("古い検索結果の詳細取得が遅れても、新しい結果を維持する", async () => {
     const oldData = Promise.withResolvers<ResultData>();
     search
-      .mockResolvedValueOnce({ results: [{ data: () => oldData.promise }] })
+      .mockResolvedValueOnce({ results: [{ data: async () => oldData.promise }] })
       .mockResolvedValue(response("new-result"));
     await render("old");
     await advance();
@@ -180,7 +183,7 @@ describe("SearchPanel", () => {
     window.__pagefind_loading = true;
     search.mockResolvedValue(response("ready-result"));
     await render("ready");
-    await advance(10000);
+    await advance(10_000);
     expect(container.textContent).toContain("Search loading timed out.");
     expect(input().disabled).toBe(true);
     expect(search).not.toHaveBeenCalled();
@@ -199,6 +202,6 @@ describe("SearchPanel", () => {
     await render("second");
     await advance();
     expect(input().value).toBe("second");
-    expect(search.mock.calls).toEqual([["first"], ["second"]]);
+    expect(search.mock.calls).toStrictEqual([["first"], ["second"]]);
   });
 });

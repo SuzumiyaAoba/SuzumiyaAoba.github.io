@@ -14,7 +14,7 @@ export type GitHubCodeLinkProps = {
  */
 export function GitHubCodeLink({ url, skipPath = 0 }: GitHubCodeLinkProps) {
   const urlPath = url.replace("https://github.com/", "");
-  const [, , , , ...rest] = urlPath.split("/");
+  const rest = urlPath.split("/").slice(4);
 
   return (
     <div className="my-4 text-center text-sm">

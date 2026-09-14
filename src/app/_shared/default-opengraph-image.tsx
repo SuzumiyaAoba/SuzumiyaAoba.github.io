@@ -1,11 +1,12 @@
 import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import { renderOpengraphImage } from "./opengraph-image";
+
 export { OPENGRAPH_IMAGE_SIZE as DEFAULT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
 /**
  * サイトルート用の既定 OGP 画像を描画する。ja/en で完全に共通。
  */
-export function renderDefaultOpengraphImage() {
+export async function renderDefaultOpengraphImage() {
   return renderOpengraphImage(
     <div
       style={{

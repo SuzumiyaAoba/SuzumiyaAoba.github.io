@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
-import { getBlogPostSummariesVariants, type BlogPostSummary } from "./blog";
+import { getBlogPostSummariesVariants } from "./blog";
+import type { BlogPostSummary } from "./blog";
 import { getAllBlogTags, getBlogTagIndex, groupBlogPostsByTag } from "./blog-tags";
 
-vi.mock("./blog", () => ({ getBlogPostSummariesVariants: vi.fn() }));
+vi.mock(import("./blog"), () => ({
+  getBlogPostSummariesVariants: vi.fn<typeof getBlogPostSummariesVariants>(),
+}));
 
 function post(slug: string, tags: string[], date = "2026-01-01"): BlogPostSummary {
   return { slug, frontmatter: { title: slug, date, tags } };
@@ -15,9 +18,9 @@ describe("ブログのタグ集計", () => {
     const newest = post("new", ["TypeScript", "TypeScript", ""]);
     const oldest = post("old", ["React", "TypeScript"]);
     const index = groupBlogPostsByTag([newest, oldest]);
-    expect([...index.keys()]).toEqual(["TypeScript", "React"]);
-    expect(index.get("TypeScript")).toEqual([newest, oldest]);
-    expect(index.get("React")).toEqual([oldest]);
+    expect([...index.keys()]).toStrictEqual(["TypeScript", "React"]);
+    expect(index.get("TypeScript")).toStrictEqual([newest, oldest]);
+    expect(index.get("React")).toStrictEqual([oldest]);
   });
 
   it("各言語のタグを選び、翻訳がない場合だけフォールバックする", async () => {
@@ -32,13 +35,13 @@ describe("ブログのタグ集計", () => {
     ]);
     const jaIndex = await getBlogTagIndex("ja");
     const enIndex = await getBlogTagIndex("en");
-    expect(jaIndex.get("日本語")?.map((entry) => entry.slug)).toEqual([
+    expect(jaIndex.get("日本語")?.map((entry) => entry.slug)).toStrictEqual([
       "translated",
       "ja-only",
       "empty",
     ]);
-    expect(enIndex.get("English")).toEqual([en]);
-    expect(enIndex.get("日本語")).toEqual([jaOnly]);
+    expect(enIndex.get("English")).toStrictEqual([en]);
+    expect(enIndex.get("日本語")).toStrictEqual([jaOnly]);
   });
 
   it("全言語のタグを集め、翻訳も含めた最新の有効日付を採用する", async () => {
@@ -51,7 +54,7 @@ describe("ブログのタグ集計", () => {
       { slug: "invalid", ja: post("invalid", ["共通", "日付なし"], "invalid"), en: null },
       { slug: "older", ja: post("older", ["共通"], "2025-01-01"), en: null },
     ]);
-    expect(await getAllBlogTags()).toEqual([
+    await expect(getAllBlogTags()).resolves.toStrictEqual([
       { name: "共通", lastModified: new Date("2026-03-01") },
       { name: "日本語", lastModified: new Date("2026-01-01") },
       { name: "English", lastModified: new Date("2026-03-01") },
@@ -62,6 +65,6 @@ describe("ブログのタグ集計", () => {
   it("記事がなければ空の索引とタグ一覧を返す", async () => {
     vi.mocked(getBlogPostSummariesVariants).mockResolvedValue([]);
     expect((await getBlogTagIndex("ja")).size).toBe(0);
-    expect(await getAllBlogTags()).toEqual([]);
+    await expect(getAllBlogTags()).resolves.toStrictEqual([]);
   });
 });

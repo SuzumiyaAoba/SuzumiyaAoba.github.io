@@ -20,15 +20,15 @@ describe("loadMdxScope", () => {
   it("import文からJSONを読み込みscopeとして返す", async () => {
     const source = `import sampleData from "./data/sample.json";\n\n# タイトル`;
     const scope = await loadMdxScope(source, baseDir);
-    expect(scope).toEqual({ sampleData: { hello: "world" } });
+    expect(scope).toStrictEqual({ sampleData: { hello: "world" } });
   });
 
   it("import文が無ければ空オブジェクトを返す", async () => {
-    expect(await loadMdxScope("# タイトルのみ", baseDir)).toEqual({});
+    await expect(loadMdxScope("# タイトルのみ", baseDir)).resolves.toStrictEqual({});
   });
 
   it("存在しないJSONへのimportは無視する", async () => {
     const source = `import missing from "./data/missing.json";\n\n# タイトル`;
-    expect(await loadMdxScope(source, baseDir)).toEqual({});
+    await expect(loadMdxScope(source, baseDir)).resolves.toStrictEqual({});
   });
 });

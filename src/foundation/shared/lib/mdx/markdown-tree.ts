@@ -9,7 +9,9 @@ export type MarkdownNode = {
 
 export function walkMarkdown(node: MarkdownNode, visit: (node: MarkdownNode) => void): void {
   visit(node);
-  node.children?.forEach((child) => walkMarkdown(child, visit));
+  for (const child of node.children ?? []) {
+    walkMarkdown(child, visit);
+  }
 }
 
 export function extractMarkdownText(node: MarkdownNode): string {

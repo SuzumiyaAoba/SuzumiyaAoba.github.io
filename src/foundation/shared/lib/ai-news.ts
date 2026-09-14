@@ -97,7 +97,7 @@ function normalizeEntry(raw: unknown): AiNewsEntry | null {
  * @returns ソート後のエントリ
  */
 function sortEntries(entries: AiNewsEntry[]): AiNewsEntry[] {
-  return [...entries].sort((a, b) => {
+  return entries.toSorted((a, b) => {
     if (a.year !== b.year) {
       return b.year - a.year;
     }
@@ -120,12 +120,12 @@ function sortEntries(entries: AiNewsEntry[]): AiNewsEntry[] {
  * @returns ニュース全体のインデックス情報
  */
 async function loadAiNews(): Promise<AiNewsIndex> {
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
   const fs = await import("node:fs/promises");
 
   const root = await resolveContentRoot();
   const filePath = path.join(root, "tools", "ai-news.yaml");
-  const isDev = process.env["NODE_ENV"] === "development";
+  const isDev = process.env.NODE_ENV === "development";
 
   if (cachedIndex && !isDev) {
     return cachedIndex;
@@ -136,8 +136,8 @@ async function loadAiNews(): Promise<AiNewsIndex> {
     if (isDev) {
       try {
         const stat = await fs.stat(filePath);
-        mtimeMs = stat.mtimeMs;
-        if (cachedIndex && cachedIndex.mtimeMs === mtimeMs) {
+        ({ mtimeMs } = stat);
+        if (cachedIndex?.mtimeMs === mtimeMs) {
           return cachedIndex;
         }
       } catch {
@@ -146,7 +146,7 @@ async function loadAiNews(): Promise<AiNewsIndex> {
     }
 
     const raw = await fs.readFile(filePath, "utf8");
-    const data = parse(raw);
+    const data: unknown = parse(raw);
     const result = AiNewsSourceSchema.safeParse(data);
 
     if (!result.success) {
@@ -155,9 +155,9 @@ async function loadAiNews(): Promise<AiNewsIndex> {
 
     const parsed = result.data;
     const events = parsed.events ?? [];
-    const entries = events.map(normalizeEntry).filter((entry): entry is AiNewsEntry => {
-      return Boolean(entry);
-    });
+    const entries = events
+      .map((entry) => normalizeEntry(entry))
+      .filter((entry): entry is AiNewsEntry => Boolean(entry));
     const sorted = sortEntries(entries);
 
     const updated = typeof parsed.updated === "string" ? parsed.updated : undefined;

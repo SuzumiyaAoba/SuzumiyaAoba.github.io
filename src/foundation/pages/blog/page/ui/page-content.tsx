@@ -1,7 +1,9 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
-import { BlogListingContent, type BlogListingContentProps } from "@/entities/blog";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
+import { BlogListingContent } from "@/entities/blog";
+import type { BlogListingContentProps } from "@/entities/blog";
 
 export type BlogPaginationPageContentProps = {
   locale: Locale;

@@ -1,20 +1,18 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import {
-  getBlogPostSummariesVariants,
-  getBlogTagIndex,
-  type LocalizedBlogPostSummary,
-} from "@/entities/blog";
+import { getBlogPostSummariesVariants, getBlogTagIndex } from "@/entities/blog";
+import type { LocalizedBlogPostSummary } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
-import { getSeriesList, type SeriesDefinition } from "@/entities/series-item";
+import { getSeriesList } from "@/entities/series-item";
+import type { SeriesDefinition } from "@/entities/series-item";
 import { JsonLd } from "@/shared/ui/seo";
 import {
   buildBreadcrumbList,
   resolveLocalizedValue,
   toLocalePath,
   resolveLocale,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { SITE_TITLE } from "@/shared/lib/site";
 
 type PageProps = { locale?: Locale };
@@ -38,13 +36,17 @@ function Arrow({ className = "" }: { className?: string }) {
   );
 }
 
+const EMPTY_SERIES: SeriesDefinition[] = [];
+const EMPTY_NOTES: HomeNote[] = [];
+const EMPTY_TOPICS: HomeTopic[] = [];
+
 export function HomePageContent({
   locale,
   latestPosts,
   postCount = latestPosts.length,
-  series = [],
-  notes = [],
-  topics = [],
+  series = EMPTY_SERIES,
+  notes = EMPTY_NOTES,
+  topics = EMPTY_TOPICS,
 }: HomePageContentProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);

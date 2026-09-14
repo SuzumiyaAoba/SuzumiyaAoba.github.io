@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import type { ReactElement } from "react";
 
 import { getNoteVariants } from "@/entities/note";
-import { getAffiliateProductsByIds, type AffiliateProduct } from "@/shared/lib/affiliate-products";
+import { getAffiliateProductsByIds } from "@/shared/lib/affiliate-products";
+import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { resolveContentRoot } from "@/shared/lib/content-file";
 import { extractAmazonProductIdsFromMdx, loadMdxScope, renderMdx } from "@/shared/lib/mdx";
-import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { NotesDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -28,7 +30,7 @@ export default async function Page({ params, locale }: PageProps) {
   const noteTitleJa = noteJa?.frontmatter.title || note.slug;
   const noteTitleEn = noteEn?.frontmatter.title || noteTitleJa;
   const noteTitle = isEn ? noteTitleEn : noteTitleJa;
-  const category = note.frontmatter.category;
+  const { category } = note.frontmatter;
   const tags = note.frontmatter.tags ?? [];
   const notePath = toLocalePath(`/notes/${slug}`, resolvedLocale);
   const translationModel = noteEn?.frontmatter.model;

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getBookMeta, getBookToc } from "@/entities/book";
 import { bookContentBasePath } from "@/shared/lib/books";
 import { renderMdx } from "@/shared/lib/mdx";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { BookDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -14,10 +15,7 @@ type PageProps = {
 export default async function Page({ params, locale = "ja" }: PageProps) {
   const { book: bookSlug } = await params;
 
-  const [meta, chapters] = await Promise.all([
-    getBookMeta(bookSlug),
-    getBookToc(bookSlug),
-  ]);
+  const [meta, chapters] = await Promise.all([getBookMeta(bookSlug), getBookToc(bookSlug)]);
 
   if (!meta) {
     notFound();
@@ -27,10 +25,7 @@ export default async function Page({ params, locale = "ja" }: PageProps) {
   const bookPath = toLocalePath(`/books/${bookSlug}`, locale);
 
   // MDX は {#id} を JavaScript 式として解釈するため、見出しのカスタム ID アノテーションを事前に除去する
-  const sanitizedLead = meta.lead.replace(
-    /^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gm,
-    "$1",
-  );
+  const sanitizedLead = meta.lead.replaceAll(/^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gmu, "$1");
 
   // リード文を MDX レンダリング（bookContentBasePath で ./images/... を解決）
   const leadContent = sanitizedLead

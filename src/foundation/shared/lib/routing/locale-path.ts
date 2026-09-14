@@ -13,7 +13,7 @@ export function resolveLocale(locale: Locale | undefined): Locale {
 const pathsWithoutTrailingSlash = new Set(["/rss.xml", "/en/rss.xml"]);
 
 function normalizeTrailingSlash(path: string): string {
-  const match = path.match(/^([^?#]*)(\?[^#]*)?(#.*)?$/);
+  const match = /^([^?#]*)(\?[^#]*)?(#.*)?$/u.exec(path);
 
   if (!match) {
     return path;
@@ -58,7 +58,7 @@ export function toLocalePath(path: string, locale: Locale): string {
   } else if (path === "/en") {
     localizedPath = "/";
   } else if (path.startsWith("/en/")) {
-    localizedPath = path.replace(/^\/en/, "");
+    localizedPath = path.replace(/^\/en/u, "");
   }
 
   return normalizeTrailingSlash(localizedPath);

@@ -1,4 +1,5 @@
 import { ArticleOpengraphImage, OpengraphTags, renderOpengraphImage } from "./opengraph-image";
+
 export { OPENGRAPH_IMAGE_SIZE as CONTENT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
 export type RenderContentOpengraphImageOptions = {
@@ -9,7 +10,7 @@ export type RenderContentOpengraphImageOptions = {
 };
 
 /** notes/series/tags/books 詳細ページ共通の OGP 画像を描画する。 */
-export function renderContentOpengraphImage({
+export async function renderContentOpengraphImage({
   eyebrow,
   title,
   tags = [],

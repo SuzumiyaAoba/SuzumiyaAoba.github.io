@@ -23,7 +23,7 @@ const contentTypeMap: Record<string, string> = {
  * Turbopack の過剰なディレクトリ解析を避けるためにラップする
  */
 async function readFileHelper(filePath: string): Promise<Buffer> {
-  return await fs.readFile(filePath);
+  return fs.readFile(filePath);
 }
 
 async function collectFilePaths(root: string, current: string): Promise<string[]> {
@@ -33,6 +33,7 @@ async function collectFilePaths(root: string, current: string): Promise<string[]
   for (const entry of entries) {
     const entryPath = path.join(current, entry.name);
     if (entry.isDirectory()) {
+      // oxlint-disable-next-line no-await-in-loop -- 再帰的な読み込みで同時に開くディレクトリ数を抑える。
       files.push(...(await collectFilePaths(root, entryPath)));
       continue;
     }
@@ -53,10 +54,24 @@ async function collectFilePaths(root: string, current: string): Promise<string[]
   return files;
 }
 
-export async function generateStaticParams(): Promise<Array<{ path: string[] }>> {
+export async function generateStaticParams(): Promise<{ path: string[] }[]> {
   const root = await resolveContentRoot();
   const files = await collectFilePaths(root, root);
   return files.map((file) => ({ path: file.split(path.sep) }));
+}
+
+async function findWebpSource(filePath: string): Promise<string | null> {
+  for (const ext of [".png", ".jpg", ".jpeg"]) {
+    const possibleSource = filePath.replace(/\.webp$/u, ext);
+    try {
+      // oxlint-disable-next-line no-await-in-loop -- 拡張子の優先順に調べ、見つかった時点で探索を終える。
+      await fs.access(possibleSource);
+      return possibleSource;
+    } catch {
+      continue;
+    }
+  }
+  return null;
 }
 
 export async function GET(_request: Request, { params }: { params: Promise<{ path: string[] }> }) {
@@ -71,38 +86,26 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
       const ext = path.extname(filePath).toLowerCase();
       const contentType = contentTypeMap[ext] ?? "application/octet-stream";
 
-      return new NextResponse(file as unknown as BodyInit, {
+      return new NextResponse(new Uint8Array(file), {
         headers: {
           "Content-Type": contentType,
           "Cache-Control": "public, max-age=31536000, immutable",
         },
       });
     } catch (error: unknown) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
         throw error;
       }
 
       // If file not found, check if it's a requested .webp derived from an existing image
       if (filePath.endsWith(".webp")) {
-        const extensions = [".png", ".jpg", ".jpeg"];
-        let sourcePath: string | null = null;
-
-        for (const ext of extensions) {
-          const possibleSource = filePath.replace(/\.webp$/, ext);
-          try {
-            await fs.access(possibleSource);
-            sourcePath = possibleSource;
-            break;
-          } catch {
-            continue;
-          }
-        }
+        const sourcePath = await findWebpSource(filePath);
 
         if (sourcePath) {
           const source = await readFileHelper(sourcePath);
           const webp = await sharp(source).webp().toBuffer();
 
-          return new NextResponse(webp as unknown as BodyInit, {
+          return new NextResponse(new Uint8Array(webp), {
             headers: {
               "Content-Type": "image/webp",
               "Cache-Control": "public, max-age=31536000, immutable",

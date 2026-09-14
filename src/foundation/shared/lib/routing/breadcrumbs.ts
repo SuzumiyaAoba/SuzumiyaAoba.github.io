@@ -1,5 +1,6 @@
 import { getSiteUrl } from "@/shared/lib/site/site-url";
-import { toLocalePath, type Locale } from "./locale-path";
+import { toLocalePath } from "./locale-path";
+import type { Locale } from "./locale-path";
 
 /**
  * パンくずリストの項目

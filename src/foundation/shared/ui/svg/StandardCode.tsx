@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Cell, cellToInfo } from "./StandardCode.utils";
+import type { Cell } from "./StandardCode.utils";
+import { cellToInfo } from "./StandardCode.utils";
 import { AsciiTable } from "./AsciiTable";
 import { LeftSide } from "./LeftSide";
 import { TopSide } from "./TopSide";
@@ -13,9 +14,9 @@ import { TopLine } from "./TopLine";
 import { AsciiInfo } from "./AsciiInfo";
 import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
 
-export default function StandardCode() {
-  const [hoveredCell, setHoveredCell] = useState<Cell | undefined>(undefined);
-  const [clickedCell, setClickedCell] = useState<Cell | undefined>(undefined);
+export function StandardCode() {
+  const [hoveredCell, setHoveredCell] = useState<Cell | undefined>();
+  const [clickedCell, setClickedCell] = useState<Cell | undefined>();
   const [mounted, setMounted] = useState(false);
 
   // クライアント側でのみ実行されるようにする

@@ -235,7 +235,7 @@ export const LongContent: Story = {
   args: {
     items: [
       {
-        ...items[0]!,
+        ...requireValue(items[0]),
         name: "A library with a long name for everyday development and experimentation",
         category: "開発・データ分析・ワークフローの自動化に関するツール",
         tags: ["TypeScript", "開発ワークフローの自動化とデータの検証", "long-tag-".repeat(15)],
@@ -245,3 +245,10 @@ export const LongContent: Story = {
     ],
   },
 };
+
+function requireValue<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error("Required story fixture was not found");
+  }
+  return value;
+}

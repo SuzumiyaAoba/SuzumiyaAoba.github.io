@@ -1,14 +1,12 @@
 import { getBookMeta, getBookSlugs } from "@/entities/book";
-import {
-  CONTENT_OPENGRAPH_IMAGE_SIZE,
-  renderContentOpengraphImage,
-} from "@/app/_shared/content-opengraph-image";
+import { renderContentOpengraphImage } from "@/app/_shared/content-opengraph-image";
 
-export const size = CONTENT_OPENGRAPH_IMAGE_SIZE;
+export { CONTENT_OPENGRAPH_IMAGE_SIZE as size } from "@/app/_shared/content-opengraph-image";
+
 export const contentType = "image/png";
 export const dynamic = "force-static";
 
-export async function generateStaticParams(): Promise<Array<{ book: string }>> {
+export async function generateStaticParams(): Promise<{ book: string }[]> {
   const slugs = await getBookSlugs();
   return slugs.map((book) => ({ book }));
 }

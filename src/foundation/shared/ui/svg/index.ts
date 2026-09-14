@@ -1,1 +1,1 @@
-export { default as StandardCode } from "./StandardCode";
+export { StandardCode } from "./StandardCode";

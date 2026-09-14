@@ -1,4 +1,5 @@
-import { resolveLocalizedValue, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { resolveLocalizedValue, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import Image from "next/image";
 import { Icon } from "@/shared/ui/icon";
 
@@ -60,7 +61,9 @@ export function BlogPostList({
   const withTagLinks = enableTagLinks ?? variant !== "compact";
 
   if (posts.length === 0) {
-    if (!emptyMessage) return null;
+    if (!emptyMessage) {
+      return null;
+    }
     return (
       <Card className={cn("border-transparent bg-card/40 shadow-none", className)}>
         <div className="px-5 py-6 text-sm text-muted-foreground">
@@ -83,13 +86,15 @@ export function BlogPostList({
     >
       {posts.map((variantItem, index) => {
         const post = resolveLocalizedValue(variantItem, locale);
-        if (!post) return null;
+        if (!post) {
+          return null;
+        }
         const postSlug = variantItem.slug;
         const title = post.frontmatter.title || postSlug;
         const thumbnail = resolveThumbnail(variantItem.slug, post.frontmatter.thumbnail);
         const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
         const tags = post.frontmatter.tags ?? [];
-        const category = post.frontmatter.category;
+        const { category } = post.frontmatter;
 
         if (variant === "detailed" || variant === "editorial") {
           return (
@@ -98,7 +103,7 @@ export function BlogPostList({
                 post={{
                   slug: postSlug,
                   title,
-                  date: post.frontmatter.date ?? "",
+                  date: post.frontmatter.date,
                   tags,
                   category,
                   thumbnail: post.frontmatter.thumbnail,
@@ -154,7 +159,7 @@ export function BlogPostList({
                 ) : null}
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <span>{formatDate(post.frontmatter.date ?? "", dateLocale)}</span>
+                    <span>{formatDate(post.frontmatter.date, dateLocale)}</span>
                     {category ? (
                       <Badge
                         variant="secondary"

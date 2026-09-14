@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SeriesListPageContent, type SeriesListPageContentProps } from "./ui/page-content";
+import { SeriesListPageContent } from "./ui/page-content";
+import type { SeriesListPageContentProps } from "./ui/page-content";
 
 const meta = {
   title: "Pages/Series/Index",

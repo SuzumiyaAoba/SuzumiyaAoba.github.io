@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
 
-export interface GoogleAdsenseAdProps {
+export type GoogleAdsenseAdProps = {
   slot: string;
   format?: "auto" | "fluid" | "rectangle" | "autorelaxed";
   responsive?: "true" | "false";
   style?: React.CSSProperties;
   className?: string;
-}
+};
 
 declare global {
   interface Window {
@@ -17,11 +17,13 @@ declare global {
   }
 }
 
+const DEFAULT_STYLE = { display: "block" } as const;
+
 export function GoogleAdsenseAd({
   slot,
   format = "auto",
   responsive = "true",
-  style = { display: "block" },
+  style = DEFAULT_STYLE,
   className,
 }: GoogleAdsenseAdProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -34,7 +36,9 @@ export function GoogleAdsenseAd({
   }, []);
 
   useEffect(() => {
-    if (!isMounted || !clientId) return;
+    if (!isMounted || !clientId) {
+      return;
+    }
 
     try {
       if (!pushedRef.current) {
@@ -42,9 +46,9 @@ export function GoogleAdsenseAd({
         (window.adsbygoogle ??= pendingAds).push({});
         pushedRef.current = true;
       }
-    } catch (e) {
+    } catch (error) {
       if (process.env.NODE_ENV !== "production") {
-        console.warn("Adsbygoogle push error:", e);
+        console.warn("Adsbygoogle push error:", error);
       }
     }
   }, [isMounted, clientId]);

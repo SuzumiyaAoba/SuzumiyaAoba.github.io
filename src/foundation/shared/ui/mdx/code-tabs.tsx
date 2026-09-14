@@ -1,7 +1,9 @@
 "use client";
 
-import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
-import { useEffect, useMemo, useState } from "react";
+import type { RawCode } from "codehike/code";
+import { useMemo, useState } from "react";
+
+import { useHighlightedCode } from "./use-highlighted-code";
 
 import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
@@ -20,26 +22,12 @@ export function CodeWithTabs(props: CodeWithTabsProps) {
 }
 
 function CodeTabs({ tabs }: { tabs: RawCode[] }) {
-  const [highlighted, setHighlighted] = useState<HighlightedCode[]>([]);
+  const { blocks: highlighted, hasError } = useHighlightedCode(tabs);
   const [active, setActive] = useState(0);
   const labels = useMemo(
     () => tabs.map((tab) => parseCodeMeta(tab.meta).displayMeta || tab.lang || "tab"),
     [tabs],
   );
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const result = await Promise.all(tabs.map((tab) => highlight(tab, "github-from-css")));
-      if (!cancelled) {
-        setHighlighted(result);
-      }
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [tabs]);
 
   const activeCode = highlighted[active];
 
@@ -66,7 +54,7 @@ function CodeTabs({ tabs }: { tabs: RawCode[] }) {
         <CustomCodeBlock code={activeCode} className="rounded-t-none mt-0" />
       ) : (
         <div className="rounded-b-lg bg-muted px-4 py-6 text-sm text-muted-foreground">
-          Loading code...
+          {hasError ? "Unable to highlight code." : "Loading code..."}
         </div>
       )}
     </div>

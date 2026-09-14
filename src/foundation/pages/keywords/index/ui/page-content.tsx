@@ -1,7 +1,8 @@
 import { EmptyPage } from "@/shared/ui/empty-page";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 export type KeywordsIndexPageContentProps = {
   locale: Locale;

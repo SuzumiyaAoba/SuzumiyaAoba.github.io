@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import { renderMdx } from "@/shared/lib/mdx";
 import { cn } from "@/shared/lib/utils";
 import {
   Message,
@@ -14,8 +13,8 @@ import {
   ToolHeader,
   ToolInput,
   ToolOutput,
-  type ToolState,
 } from "@/shared/ui/ai-elements";
+import type { ToolState } from "@/shared/ui/ai-elements";
 
 export type ToolInvocation = {
   toolCallId: string;
@@ -39,69 +38,73 @@ export type ChatHistoryProps = {
 };
 
 function sanitizeMdxContent(content: string): string {
-  return content.replace(/<((?:https?:\/\/)[^>]+)>/g, "$1");
+  return content.replaceAll(/<((?:https?:\/\/)[^>]+)>/gu, "$1");
 }
 
-async function renderMessageContent(content: string): Promise<ReactNode> {
-  return renderMdx(sanitizeMdxContent(content));
-}
+/** 描画関数を注入して、MDX コンポーネント一覧への循環参照を避ける。 */
+export function createChatHistory(renderContent: (content: string) => Promise<ReactNode>) {
+  async function ChatHistory({ messages, variant = "contained" }: ChatHistoryProps) {
+    const rendered = await Promise.all(
+      messages.map(async (message) => {
+        const [content, reasoning] = await Promise.all([
+          renderContent(sanitizeMdxContent(message.content)),
+          message.reasoning
+            ? renderContent(sanitizeMdxContent(message.reasoning))
+            : Promise.resolve(null),
+        ]);
+        return { ...message, content, reasoning };
+      }),
+    );
 
-export async function ChatHistory({ messages, variant = "contained" }: ChatHistoryProps) {
-  const rendered = await Promise.all(
-    messages.map(async (message) => {
-      const [content, reasoning] = await Promise.all([
-        renderMessageContent(message.content),
-        message.reasoning ? renderMessageContent(message.reasoning) : Promise.resolve(null),
-      ]);
-      return { ...message, content, reasoning };
-    }),
-  );
-
-  return (
-    <div className="not-prose flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4">
-      {rendered.map((message, index) => (
-        <Message key={`${message.role}-${index}`} from={message.role}>
-          <MessageContent
-            from={message.role}
-            variant={variant}
-            className={cn(
-              message.role === "user" ? "bg-muted/80" : "bg-background",
-              "shadow-[0_1px_0_rgba(0,0,0,0.04)]",
-            )}
-          >
-            {message.reasoning ||
-            (message.toolInvocations && message.toolInvocations.length > 0) ? (
-              <div className="flex flex-col gap-2">
-                {message.reasoning ? (
-                  <Reasoning>
-                    <ReasoningTrigger />
-                    <ReasoningContent>{message.reasoning}</ReasoningContent>
-                  </Reasoning>
-                ) : null}
-                {message.toolInvocations && message.toolInvocations.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-                    {message.toolInvocations.map((invocation) => (
-                      <Tool key={invocation.toolCallId}>
-                        <ToolHeader title={invocation.toolName} state={invocation.state} />
-                        <ToolContent>
-                          <div className={cn("space-y-3")}>
-                            <ToolInput input={invocation.input} />
-                            <ToolOutput
-                              output={invocation.output}
-                              {...(invocation.errorText ? { errorText: invocation.errorText } : {})}
-                            />
-                          </div>
-                        </ToolContent>
-                      </Tool>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-            <Response>{message.content}</Response>
-          </MessageContent>
-        </Message>
-      ))}
-    </div>
-  );
+    return (
+      <div className="not-prose flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4">
+        {rendered.map((message, index) => (
+          <Message key={`${message.role}-${index}`} from={message.role}>
+            <MessageContent
+              from={message.role}
+              variant={variant}
+              className={cn(
+                message.role === "user" ? "bg-muted/80" : "bg-background",
+                "shadow-[0_1px_0_rgba(0,0,0,0.04)]",
+              )}
+            >
+              {message.reasoning !== null ||
+              (message.toolInvocations && message.toolInvocations.length > 0) ? (
+                <div className="flex flex-col gap-2">
+                  {message.reasoning === null ? null : (
+                    <Reasoning>
+                      <ReasoningTrigger />
+                      <ReasoningContent>{message.reasoning}</ReasoningContent>
+                    </Reasoning>
+                  )}
+                  {message.toolInvocations && message.toolInvocations.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      {message.toolInvocations.map((invocation) => (
+                        <Tool key={invocation.toolCallId}>
+                          <ToolHeader title={invocation.toolName} state={invocation.state} />
+                          <ToolContent>
+                            <div className={cn("space-y-3")}>
+                              <ToolInput input={invocation.input} />
+                              <ToolOutput
+                                output={invocation.output}
+                                {...(invocation.errorText
+                                  ? { errorText: invocation.errorText }
+                                  : {})}
+                              />
+                            </div>
+                          </ToolContent>
+                        </Tool>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+              <Response>{message.content}</Response>
+            </MessageContent>
+          </Message>
+        ))}
+      </div>
+    );
+  }
+  return ChatHistory;
 }

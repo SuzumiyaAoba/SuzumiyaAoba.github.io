@@ -14,7 +14,7 @@ type AssetFormationSimulatorProps = {
   locale: Locale;
 };
 
-export default function AssetFormationSimulator({ locale }: AssetFormationSimulatorProps) {
+export function AssetFormationSimulator({ locale }: AssetFormationSimulatorProps) {
   const { t, numberFormatter, formatYenWithMan, formatYears } = useSimulatorFormatters(locale);
   const {
     scenarioList,
@@ -134,7 +134,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
                   type="text"
                   value={scenario.name}
                   onChange={(event) => {
-                    const value = event.target.value;
+                    const { value } = event.target;
                     syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id ? { ...item, name: value } : item,
@@ -156,7 +156,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
                   step={1000}
                   value={scenario.monthlyContributionInput}
                   onChange={(event) => {
-                    const value = event.target.value;
+                    const { value } = event.target;
                     syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id
@@ -179,7 +179,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
                   step={0.1}
                   value={scenario.annualRateInput}
                   onChange={(event) => {
-                    const value = event.target.value;
+                    const { value } = event.target;
                     syncScenarios((prev) =>
                       prev.map((item) =>
                         item.id === scenario.id ? { ...item, annualRateInput: value } : item,
@@ -222,7 +222,7 @@ export default function AssetFormationSimulator({ locale }: AssetFormationSimula
           type="button"
           className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-foreground text-background hover:bg-foreground/90"
           onClick={() => {
-            const url = window.location.href;
+            const url = globalThis.location.href;
             const text = t(
               "資産形成シミュレーションの結果を共有します。",
               "Sharing results from the Asset Formation Simulator.",

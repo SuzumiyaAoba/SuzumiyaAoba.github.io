@@ -15,7 +15,7 @@ export function createArticleFileLister(
 ): (slug: string) => Promise<Set<string>> {
   return cache(async (slug: string): Promise<Set<string>> => {
     const fs = await import("node:fs/promises");
-    const path = await import("node:path");
+    const { default: path } = await import("node:path");
     const root = await resolveContentRoot();
     const dir = path.join(root, collectionDir, slug);
     try {
@@ -38,7 +38,7 @@ export async function readLocaleContentFile(
   listFiles: (slug: string) => Promise<Set<string>>,
 ): Promise<ContentFile | null> {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
 
   const root = await resolveContentRoot();
   const baseDir = path.join(root, collectionDir, slug);
@@ -78,7 +78,9 @@ export async function readContentFileWithFallback(
     return file;
   }
 
-  if (!fallback) return null;
+  if (!fallback) {
+    return null;
+  }
 
   return readLocaleContentFile(collectionDir, slug, locale === "ja" ? "en" : "ja", listFiles);
 }

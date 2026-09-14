@@ -30,7 +30,7 @@ function encode(value: unknown) {
 
 describe("scenario codec", () => {
   it("既存の共有URLを読み込み、同じパラメーターを生成する", () => {
-    expect(decodeScenarios(legacyScenarios)).toEqual(scenarios);
+    expect(decodeScenarios(legacyScenarios)).toStrictEqual(scenarios);
     expect(encodeScenarios(scenarios)).toBe(legacyScenarios);
   });
 
@@ -45,7 +45,7 @@ describe("scenario codec", () => {
       { id: "second", name: "Second", monthlyContributionInput: "10000", annualRateInput: "" },
     ];
 
-    expect(decodeScenarios(encodeScenarios(inputs))).toEqual(inputs);
+    expect(decodeScenarios(encodeScenarios(inputs))).toStrictEqual(inputs);
   });
 
   it("必須入力を持つ項目だけを復元し、IDと名前を補完する", () => {
@@ -57,7 +57,7 @@ describe("scenario codec", () => {
           { monthlyContributionInput: "2000", annualRateInput: "3" },
         ]),
       ),
-    ).toEqual([
+    ).toStrictEqual([
       {
         id: "scenario-3",
         name: "パターン3",
@@ -107,7 +107,7 @@ describe("visibility codec", () => {
   const colors = { "scenario-1": "#123456" };
 
   it("既存URLの表示設定と色を復元し、同じパラメーターを生成する", () => {
-    expect(decodeVisibilityPayload(legacyVisibility, scenarios)).toEqual({ visible, colors });
+    expect(decodeVisibilityPayload(legacyVisibility, scenarios)).toStrictEqual({ visible, colors });
     expect(encodeVisibilityPayload(visible, colors, scenarios)).toBe(legacyVisibility);
   });
 
@@ -122,7 +122,7 @@ describe("visibility codec", () => {
       colors: { "scenario-1": 42, removed: "#123456" },
     });
 
-    expect(decodeVisibilityPayload(payload, scenarios)).toEqual({
+    expect(decodeVisibilityPayload(payload, scenarios)).toStrictEqual({
       visible: { "scenario-1:balance": false },
       colors: {},
     });
@@ -139,13 +139,16 @@ describe("visibility codec", () => {
   });
 
   it("省略された設定は空の状態として復元する", () => {
-    expect(decodeVisibilityPayload(encode({}), scenarios)).toEqual({ visible: {}, colors: {} });
-    expect(decodeVisibilityPayload(encode({ colors: { "scenario-1": "red" } }), scenarios)).toEqual(
-      {
-        visible: {},
-        colors: {},
-      },
-    );
+    expect(decodeVisibilityPayload(encode({}), scenarios)).toStrictEqual({
+      visible: {},
+      colors: {},
+    });
+    expect(
+      decodeVisibilityPayload(encode({ colors: { "scenario-1": "red" } }), scenarios),
+    ).toStrictEqual({
+      visible: {},
+      colors: {},
+    });
   });
 
   it.each(["", "invalid", encode(null), compressToEncodedURIComponent("{")])(

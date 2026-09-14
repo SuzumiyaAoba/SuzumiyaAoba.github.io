@@ -3,13 +3,13 @@ import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-let contentRoot = "";
-vi.mock("./content-root", () => ({
-  resolveContentRoot: () => Promise.resolve(contentRoot),
-}));
-
 import { createContentReader } from "./read-content";
 import { asDateString, asStringWithDefault } from "./frontmatter";
+
+let contentRoot = "";
+vi.mock(import("./content-root"), () => ({
+  resolveContentRoot: async () => contentRoot,
+}));
 
 const readBlog = createContentReader("blog", (data) => ({
   title: asStringWithDefault(data["title"], "Untitled"),
@@ -37,7 +37,7 @@ describe("createContentReader", () => {
   });
 
   it("本文・フォーマットと正規化したメタデータを返す", async () => {
-    expect(await readBlog("both")).toEqual({
+    await expect(readBlog("both")).resolves.toStrictEqual({
       slug: "both",
       content: "日本語の本文\n",
       format: "md",
@@ -46,7 +46,7 @@ describe("createContentReader", () => {
   });
 
   it("指定したロケールのMDXを返す", async () => {
-    expect(await readBlog("both", { locale: "en", fallback: false })).toEqual({
+    await expect(readBlog("both", { locale: "en", fallback: false })).resolves.toStrictEqual({
       slug: "both",
       content: "<Component />\n",
       format: "mdx",
@@ -55,15 +55,15 @@ describe("createContentReader", () => {
   });
 
   it("フォールバックの設定を呼び出しごとに尊重する", async () => {
-    expect(await readBlog("en-only", { fallback: false })).toBeNull();
-    expect(await readBlog("en-only")).toMatchObject({
+    await expect(readBlog("en-only", { fallback: false })).resolves.toBeNull();
+    await expect(readBlog("en-only")).resolves.toMatchObject({
       content: "English only\n",
       frontmatter: { title: "Untitled", date: "" },
     });
-    expect(await readBlog("en-only", { fallback: false })).toBeNull();
+    await expect(readBlog("en-only", { fallback: false })).resolves.toBeNull();
   });
 
   it("存在しない記事はnullになる", async () => {
-    expect(await readBlog("missing")).toBeNull();
+    await expect(readBlog("missing")).resolves.toBeNull();
   });
 });

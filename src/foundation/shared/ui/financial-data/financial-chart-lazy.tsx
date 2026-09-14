@@ -2,6 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+import type { ComponentType } from "react";
+import { isRecord } from "@/shared/lib/types/is-record";
+
+function isChartComponent(value: unknown): value is ComponentType {
+  return typeof value === "function";
+}
 
 type FinancialChartLazyProps = {
   /** 読み込むラッパーコンポーネント名（例: "Section31ChartWrapper"） */
@@ -21,14 +27,20 @@ export function FinancialChartLazy({ name }: FinancialChartLazyProps) {
   const Chart = useMemo(
     () =>
       dynamic(
-        () =>
+        async () => {
           // webpackInclude が無いと financial-data 配下の
           // *.test.ts / *.stories.tsx まで context module に含まれ、
           // vitest や storybook がバンドルへ載る。
-          import(
+          const chartModule: unknown = await import(
             /* webpackInclude: /ChartWrapper\.tsx$/ */
             `./${name}`
-          ).then((mod) => mod[name] as React.ComponentType),
+          );
+          const chart = isRecord(chartModule) ? chartModule[name] : undefined;
+          if (!isChartComponent(chart)) {
+            throw new TypeError(`Unknown chart component: ${name}`);
+          }
+          return chart;
+        },
         { ssr: false },
       ),
     [name],

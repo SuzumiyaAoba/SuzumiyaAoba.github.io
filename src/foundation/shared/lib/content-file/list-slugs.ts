@@ -6,7 +6,7 @@ import { resolveContentRoot } from "./content-root";
  */
 export async function listContentSlugs(collectionDir: string): Promise<string[]> {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
 
   const root = await resolveContentRoot();
   const dir = path.join(root, collectionDir);
@@ -16,7 +16,7 @@ export async function listContentSlugs(collectionDir: string): Promise<string[]>
     return entries
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
-      .sort();
+      .toSorted();
   } catch {
     return [];
   }

@@ -2,7 +2,8 @@
 
 import { Icon } from "@/shared/ui/icon-client";
 import { Button } from "@/shared/ui/button";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 /**
  * LanguageToggle コンポーネントのプロップス

@@ -1,4 +1,5 @@
-import { PROVIDERS, daysBetween, shiftMonth, type Release } from "./release-calendar";
+import { PROVIDERS, daysBetween, shiftMonth } from "./release-calendar";
+import type { Release } from "./release-calendar";
 
 export type ReleaseTimelineRange = {
   start: string;
@@ -18,10 +19,12 @@ export function getReleaseTimelineRange(releases: Release[]): ReleaseTimelineRan
         ? [release.date, ...release.intervals.map((interval) => interval.previousDate)]
         : [],
     )
-    .sort();
-  const firstDate = dates[0];
+    .toSorted();
+  const [firstDate] = dates;
   const lastDate = dates.at(-1);
-  if (!firstDate || !lastDate) return null;
+  if (!firstDate || !lastDate) {
+    return null;
+  }
 
   const start = `${firstDate.slice(0, 7)}-01`;
   const end = `${shiftMonth(lastDate.slice(0, 7), 1)}-01`;
@@ -53,7 +56,9 @@ export function buildTimelineRows(releases: Release[], pixelsPerDay: number, tar
     { series: string; release: Release; dates: Map<string, Release[]> }
   >();
   for (const release of releases) {
-    if (!release.date) continue;
+    if (!release.date) {
+      continue;
+    }
     for (const series of release.series) {
       const key = JSON.stringify([release.provider, release.kind, series]);
       const group = groups.get(key) ?? { series, release, dates: new Map<string, Release[]>() };
@@ -68,21 +73,21 @@ export function buildTimelineRows(releases: Release[], pixelsPerDay: number, tar
     .map((group) => {
       const lanes: string[] = [];
       const points = [...group.dates.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
+        .toSorted(([a], [b]) => a.localeCompare(b))
         .map(([date, sameDay]) => {
           const availableLane = lanes.findIndex(
             (previous) => daysBetween(previous, date) * pixelsPerDay >= targetWidth,
           );
-          const lane = availableLane < 0 ? lanes.length : availableLane;
+          const lane = availableLane === -1 ? lanes.length : availableLane;
           lanes[lane] = date;
           return { date, sameDay, lane };
         });
       return { ...group, points, laneCount: lanes.length };
     })
-    .sort(
+    .toSorted(
       (a, b) =>
         PROVIDERS.indexOf(a.release.provider) - PROVIDERS.indexOf(b.release.provider) ||
-        b.points.at(-1)!.date.localeCompare(a.points.at(-1)!.date) ||
+        (b.points.at(-1)?.date ?? "").localeCompare(a.points.at(-1)?.date ?? "") ||
         a.series.localeCompare(b.series) ||
         a.release.kind.localeCompare(b.release.kind),
     );

@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 
-const config: StorybookConfig = {
+const storybookConfig: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
     "@chromatic-com/storybook",
@@ -15,7 +15,7 @@ const config: StorybookConfig = {
   },
   framework: "@storybook/nextjs-vite",
   staticDirs: ["../public"],
-  async viteFinal(config) {
+  viteFinal(config) {
     if (config.build) {
       config.build.chunkSizeWarningLimit = 5000;
     }
@@ -23,17 +23,17 @@ const config: StorybookConfig = {
       ...config,
       build: {
         ...config.build,
-        rollupOptions: {
-          ...config.build?.rollupOptions,
-          onwarn(warning, warn) {
+        rolldownOptions: {
+          ...config.build?.rolldownOptions,
+          onLog(_level, warning, log) {
             if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
               return;
             }
-            warn(warning);
+            log(_level, warning);
           },
         },
       },
     };
   },
 };
-export default config;
+export default storybookConfig;

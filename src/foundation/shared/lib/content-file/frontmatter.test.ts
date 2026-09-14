@@ -58,15 +58,15 @@ describe("asBoolean", () => {
 
 describe("asStringArray", () => {
   it("配列であればstring要素のみフィルタして返す", () => {
-    expect(asStringArray(["a", "b", 1, null, "c"])).toEqual(["a", "b", "c"]);
+    expect(asStringArray(["a", "b", 1, null, "c"])).toStrictEqual(["a", "b", "c"]);
   });
 
   it("空配列はそのまま空配列を返す", () => {
-    expect(asStringArray([])).toEqual([]);
+    expect(asStringArray([])).toStrictEqual([]);
   });
 
   it("全要素がstring以外なら空配列を返す", () => {
-    expect(asStringArray([1, 2, 3])).toEqual([]);
+    expect(asStringArray([1, 2, 3])).toStrictEqual([]);
   });
 
   it("配列でなければundefinedを返す", () => {

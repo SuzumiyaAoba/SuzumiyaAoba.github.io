@@ -1,17 +1,17 @@
 import { cache } from "react";
-import { resolveLocalizedValue, type Locale } from "@/shared/lib/routing";
-import {
-  getBlogPostSummariesVariants,
-  type BlogPostSummary,
-  type LocalizedBlogPostSummary,
-} from "./blog";
+import { resolveLocalizedValue } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
+import { getBlogPostSummariesVariants } from "./blog";
+import type { BlogPostSummary, LocalizedBlogPostSummary } from "./blog";
 
 /** 同じ記事内の重複タグは一度だけ数え、記事の並び順を維持する。 */
 export function groupBlogPostsByTag(posts: readonly BlogPostSummary[]) {
   const index = new Map<string, BlogPostSummary[]>();
   for (const post of posts) {
     for (const tag of new Set(post.frontmatter.tags)) {
-      if (!tag) continue;
+      if (!tag) {
+        continue;
+      }
       const entries = index.get(tag);
       if (entries) {
         entries.push(post);

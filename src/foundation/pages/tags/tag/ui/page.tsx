@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
-import { getBlogTagIndex, type BlogPostSummary } from "@/entities/blog";
-import { decodePathParam, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { getBlogTagIndex } from "@/entities/blog";
+import type { BlogPostSummary } from "@/entities/blog";
+import { decodePathParam, resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { TagDetailPageContent } from "./page-content";
 
 type PageProps = {

@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section37Data from "@/content/blog/2026-01-01-kakekin/data/section37.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section37ChartWrapper: React.FC = () => {
-  if (!section37Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "収益性 | ％": "収益性",
     "利回りが良い | ％": "利回り良",
@@ -23,7 +18,7 @@ export const Section37ChartWrapper: React.FC = () => {
     "商品内容が理解しやすい | ％": "理解容易",
     "その他 | ％": "その他",
   };
-  const startYear = Number(section37Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section37Data.metadata.startYear);
 
   // グループ定義
   const groups = [

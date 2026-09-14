@@ -9,14 +9,14 @@ async function fetchShipporiMinchoBold(): Promise<ArrayBuffer> {
     headers: {
       "User-Agent": FONT_FETCH_USER_AGENT,
     },
-  }).then((res) => res.text());
+  }).then(async (res) => res.text());
 
-  const fontUrl = fontCss.match(/src: url\((.+?)\) format\(['"]?truetype['"]?\)/)?.[1];
+  const fontUrl = /src: url\((.+?)\) format\(['"]?truetype['"]?\)/u.exec(fontCss)?.[1];
   if (!fontUrl) {
     throw new Error("Failed to load font");
   }
 
-  return fetch(fontUrl).then((res) => res.arrayBuffer());
+  return fetch(fontUrl).then(async (res) => res.arrayBuffer());
 }
 
 let shipporiMinchoBoldPromise: Promise<ArrayBuffer> | null = null;
@@ -26,9 +26,7 @@ let shipporiMinchoBoldPromise: Promise<ArrayBuffer> | null = null;
  * blog/notes/series/tags/books など複数の opengraph-image ルートから
  * 呼ばれるため、同一ビルドプロセス内では一度だけ取得しキャッシュする。
  */
-export function loadShipporiMinchoBold(): Promise<ArrayBuffer> {
-  if (!shipporiMinchoBoldPromise) {
-    shipporiMinchoBoldPromise = fetchShipporiMinchoBold();
-  }
+export async function loadShipporiMinchoBold(): Promise<ArrayBuffer> {
+  shipporiMinchoBoldPromise ??= fetchShipporiMinchoBold();
   return shipporiMinchoBoldPromise;
 }

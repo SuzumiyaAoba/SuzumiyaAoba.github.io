@@ -1,9 +1,5 @@
-import {
-  LineChart,
-  type ChartConfig,
-  type MetricGroup,
-  type SheetData,
-} from "@/shared/ui/financial-charts";
+import { LineChart } from "@/shared/ui/financial-charts";
+import type { ChartConfig, MetricGroup, SheetData } from "@/shared/ui/financial-charts";
 import { NoDataFallback } from "./no-data-fallback";
 
 export type LineChartWrapperSpec = {
@@ -18,7 +14,7 @@ export type LineChartWrapperSpec = {
  * financial-data 配下の静的な LineChart ラッパーの共通ボイラープレート。
  */
 export function createLineChartWrapper(spec: LineChartWrapperSpec): React.FC {
-  return function LineChartWrapper() {
+  function LineChartWrapper() {
     if (!spec.data) {
       return <NoDataFallback />;
     }
@@ -30,5 +26,6 @@ export function createLineChartWrapper(spec: LineChartWrapperSpec): React.FC {
         config={spec.config}
       />
     );
-  };
+  }
+  return LineChartWrapper;
 }

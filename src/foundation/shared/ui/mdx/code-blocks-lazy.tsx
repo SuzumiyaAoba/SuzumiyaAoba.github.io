@@ -14,16 +14,25 @@ import dynamic from "next/dynamic";
  * 登録され、初期ロードに含まれてしまう。
  */
 export const CodeWithTabs = dynamic(
-  () => import("./code-tabs").then((mod) => mod.CodeWithTabs),
+  async () => {
+    const { CodeWithTabs: Component } = await import("./code-tabs");
+    return Component;
+  },
   { ssr: false },
 );
 
 export const CodeSwitcher = dynamic(
-  () => import("./code-switcher").then((mod) => mod.CodeSwitcher),
+  async () => {
+    const { CodeSwitcher: Component } = await import("./code-switcher");
+    return Component;
+  },
   { ssr: false },
 );
 
 export const CodeWithTooltips = dynamic(
-  () => import("./code-with-tooltips").then((mod) => mod.CodeWithTooltips),
+  async () => {
+    const { CodeWithTooltips: Component } = await import("./code-with-tooltips");
+    return Component;
+  },
   { ssr: false },
 );

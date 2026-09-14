@@ -37,8 +37,8 @@ export function TwitterWidgets() {
     const script = document.createElement("script");
     script.src = "https://platform.twitter.com/widgets.js";
     script.async = true;
-    script.onload = loadWidgets;
-    document.body.appendChild(script);
+    script.addEventListener("load", loadWidgets);
+    document.body.append(script);
   }, []);
 
   return null;

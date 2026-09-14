@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vite-plus/test";
+import { z } from "zod";
+import { assert, describe, expect, it } from "vite-plus/test";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { AiNewsEntrySchema } from "@/shared/lib/ai-news";
@@ -9,8 +10,8 @@ import {
   formatReleaseDate,
   isExactDate,
   shiftMonth,
-  type RenderedRelease,
 } from "./release-calendar";
+import type { RenderedRelease } from "./release-calendar";
 import { buildTimelineRows, getReleaseTimelineRange, timelinePosition } from "./release-timeline";
 
 function release(
@@ -73,14 +74,15 @@ describe("continuous release timeline", () => {
         release("Unknown"),
         release("Earliest", "2019-11-05"),
       ]),
-    )!;
+    );
+    assert(range);
     expect(range.start).toBe("2019-11-01");
     expect(range.end).toBe("2026-10-01");
     expect(range.firstDate).toBe("2019-11-05");
     expect(range.lastDate).toBe("2026-09-10");
     expect(range.months).toHaveLength(83);
     expect(range.months).toContain("2020-02-01");
-    expect(range.years).toEqual([2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
+    expect(range.years).toStrictEqual([2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
     expect(getReleaseTimelineRange([])).toBeNull();
     expect(getReleaseTimelineRange(buildReleases([release("Unknown")]))).toBeNull();
   });
@@ -88,7 +90,8 @@ describe("continuous release timeline", () => {
   it("uses equal distances for equal elapsed days across leap days and year boundaries", () => {
     const range = getReleaseTimelineRange(
       buildReleases([release("First", "2023-12-31"), release("Last", "2025-01-01")]),
-    )!;
+    );
+    assert(range);
     const distance = (from: string, to: string) =>
       timelinePosition(to, range) - timelinePosition(from, range);
     expect(distance("2023-12-31", "2024-01-01")).toBeCloseTo(distance("2024-02-28", "2024-02-29"));
@@ -106,8 +109,10 @@ describe("continuous release timeline", () => {
       series: "",
       kind: "",
     });
-    expect(getReleaseTimelineRange(filtered)).toEqual(getReleaseTimelineRange(releases));
-    const range = getReleaseTimelineRange(buildReleases([release("Only", "2024-02-29")]))!;
+    expect(getReleaseTimelineRange(filtered)).toStrictEqual(getReleaseTimelineRange(releases));
+
+    const range = getReleaseTimelineRange(buildReleases([release("Only", "2024-02-29")]));
+    assert(range);
     expect(range.days).toBe(29);
     expect(Number.isFinite(timelinePosition("2024-02-29", range))).toBe(true);
   });
@@ -121,13 +126,13 @@ describe("continuous release timeline", () => {
     ]);
     const compact = buildTimelineRows(releases, 3);
     expect(compact).toHaveLength(1);
-    expect(compact[0]?.points.map((point) => point.date)).toEqual([
+    expect(compact[0]?.points.map((point) => point.date)).toStrictEqual([
       "2023-12-31",
       "2024-01-01",
       "2026-01-01",
     ]);
     expect(compact[0]?.points[1]?.sameDay).toHaveLength(2);
-    expect(compact[0]?.points.map((point) => point.lane)).toEqual([0, 1, 0]);
+    expect(compact[0]?.points.map((point) => point.lane)).toStrictEqual([0, 1, 0]);
     expect(buildTimelineRows(releases, 48)[0]?.laneCount).toBe(1);
     expect(buildTimelineRows(releases, 0.01)[0]?.laneCount).toBe(3);
   });
@@ -161,7 +166,7 @@ describe("release intervals", () => {
     ];
     const result = buildReleases(source);
     expect(source[0]?.title).toBe("Third");
-    expect(result[0]?.intervals[0]).toEqual({
+    expect(result[0]?.intervals[0]).toStrictEqual({
       series: "Example",
       previousDate: "2024-02-29",
       previousTitles: ["Second A", "Second B"],
@@ -170,7 +175,7 @@ describe("release intervals", () => {
     for (const second of result.filter((item) => item.date === "2024-02-29")) {
       expect(second.intervals[0]?.days).toBe(60);
     }
-    expect(result.at(-1)?.intervals).toEqual([]);
+    expect(result.at(-1)?.intervals).toStrictEqual([]);
   });
 
   it("compares each series independently, including joint announcements", () => {
@@ -184,7 +189,7 @@ describe("release intervals", () => {
         ["Anthropic", "LLM Model"],
       ),
     ]);
-    expect(result[0]?.intervals.map(({ series, days }) => ({ series, days }))).toEqual([
+    expect(result[0]?.intervals.map(({ series, days }) => ({ series, days }))).toStrictEqual([
       { series: "Opus", days: 31 },
       { series: "Sonnet", days: 12 },
     ]);
@@ -224,17 +229,17 @@ describe("release intervals", () => {
       series: "Example",
     });
     expect(filtered).toHaveLength(1);
-    expect(filtered[0]?.intervals[0]?.previousTitles).toEqual(["Model 2"]);
+    expect(filtered[0]?.intervals[0]?.previousTitles).toStrictEqual(["Model 2"]);
     expect(filtered[0]?.intervals[0]?.days).toBe(29);
-    expect(filterReleases(result, { query: "", provider: "Google", kind: "", series: "" })).toEqual(
-      [],
-    );
+    expect(
+      filterReleases(result, { query: "", provider: "Google", kind: "", series: "" }),
+    ).toStrictEqual([]);
   });
 
   it("validates the real catalog's date and series metadata", () => {
-    const source = parse(readFileSync("content/tools/ai-news.yaml", "utf8")) as {
-      events: unknown[];
-    };
+    const source = z
+      .object({ events: z.array(z.unknown()) })
+      .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf8")));
     expect(source.events.length).toBeGreaterThan(0);
     const keys = new Set<string>();
     const dates: string[] = [];
@@ -243,13 +248,14 @@ describe("release intervals", () => {
       expect(isExactDate(event.date), event.title_ja).toBe(true);
       expect(event.series?.length, event.title_ja).toBeGreaterThan(0);
       expect(event.year, event.title_ja).toBe(Number(event.date?.slice(0, 4)));
-      expect(event.summary_ja, event.title_ja).toMatch(/\]\(https?:\/\//);
+      expect(event.summary_ja, event.title_ja).toMatch(/\]\(https?:\/\//u);
       const key = `${event.date}:${event.title_ja}`;
       expect(keys.has(key), event.title_ja).toBe(false);
       keys.add(key);
-      dates.push(event.date!);
+      assert(event.date);
+      dates.push(event.date);
     }
-    expect(dates).toEqual([...dates].sort().reverse());
+    expect(dates).toStrictEqual(dates.toSorted().toReversed());
   });
 
   it.each([
@@ -258,9 +264,9 @@ describe("release intervals", () => {
   ] as const)(
     "makes the %s history searchable by family and provider",
     (query, provider, first, date) => {
-      const source = parse(readFileSync("content/tools/ai-news.yaml", "utf8")) as {
-        events: unknown[];
-      };
+      const source = z
+        .object({ events: z.array(z.unknown()) })
+        .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf8")));
       const releases = buildReleases(
         source.events.map((raw) => {
           const event = AiNewsEntrySchema.parse(raw);

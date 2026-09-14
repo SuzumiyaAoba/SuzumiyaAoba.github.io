@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section39Data from "@/content/blog/2026-01-01-kakekin/data/section39.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section39ChartWrapper: React.FC = () => {
-  if (!section39Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "増えた | ％": "増えた",
     "非常に増えた | ％": "非常に増えた",
@@ -21,7 +16,7 @@ export const Section39ChartWrapper: React.FC = () => {
     "非常に減った | ％": "非常に減った",
     "減った割合 | 割": "減った割合",
   };
-  const startYear = Number(section39Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section39Data.metadata.startYear);
 
   return (
     <>

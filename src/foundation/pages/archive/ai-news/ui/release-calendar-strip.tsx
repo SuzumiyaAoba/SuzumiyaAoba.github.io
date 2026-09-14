@@ -1,4 +1,5 @@
-import { useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEvent } from "react";
 import { ArrowLeft, ArrowRight, CornerUpLeft } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
@@ -8,8 +9,8 @@ import {
   formatReleaseDate,
   isExactDate,
   shiftMonth,
-  type Release,
 } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
 import { shiftDate } from "../model/release-activity";
 import { dateInMonth, getMonthDays, getMonthWindow, monthsBetween } from "../model/release-months";
 import type { ReleaseTimelineRange } from "../model/release-timeline";
@@ -38,7 +39,7 @@ export function ReleaseCalendarStrip({
   popover: ReleasePopoverControls;
 }) {
   const en = locale === "en";
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLElement>(null);
   const [extent, setExtent] = useState(() => ({
     start: shiftMonth(
       (range && range.firstDate < today ? range.firstDate : today).slice(0, 7),
@@ -67,14 +68,18 @@ export function ReleaseCalendarStrip({
   const byDate = useMemo(() => {
     const dates = new Map<string, Release[]>();
     for (const release of releases) {
-      if (!release.date) continue;
+      if (!release.date) {
+        continue;
+      }
       const items = dates.get(release.date) ?? [];
       items.push(release);
       dates.set(release.date, items);
     }
     return dates;
   }, [releases]);
-  const previousDate = releases.find((release) => release.date && release.date < today)?.date;
+  const previousDate = releases.find(
+    (release) => release.date !== null && release.date < today,
+  )?.date;
   const monthFormatter = new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
@@ -86,7 +91,9 @@ export function ReleaseCalendarStrip({
 
   useLayoutEffect(() => {
     const element = scrollRef.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
     const measure = () => setViewport((current) => ({ ...current, width: element.clientWidth }));
     measure();
     const observer = new ResizeObserver(measure);
@@ -96,7 +103,9 @@ export function ReleaseCalendarStrip({
 
   useLayoutEffect(() => {
     const element = scrollRef.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
     // 前の期間の追加や画面幅の変更でも、見ていた月を保つ。
     element.scrollLeft =
       (monthsBetween(extent.start, anchorRef.current.month) + anchorRef.current.offset) * monthStep;
@@ -116,7 +125,9 @@ export function ReleaseCalendarStrip({
   }, [target, calendar.first, monthStep]);
 
   function jumpTo(date: string, focus = false) {
-    if (!isExactDate(date)) return;
+    if (!isExactDate(date)) {
+      return;
+    }
     const month = date.slice(0, 7);
     anchorRef.current = { month, offset: 0 };
     setExtent((current) => ({
@@ -192,7 +203,7 @@ export function ReleaseCalendarStrip({
               today={today}
               locale={locale}
               onSelectDate={jumpTo}
-              onOpen={popover.dismiss}
+              onOpen={() => popover.dismiss()}
             />
           </div>
           <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
@@ -217,7 +228,6 @@ export function ReleaseCalendarStrip({
       </ReleaseViewHeader>
       <ReleaseScrollArea
         ref={scrollRef}
-        role="region"
         aria-label={en ? "Scrollable release calendar" : "横スクロールカレンダー"}
         tabIndex={0}
         onScroll={(event) => {
@@ -301,7 +311,8 @@ export function ReleaseCalendarStrip({
                   <tbody>
                     {Array.from({ length: 6 }, (_, week) => (
                       <tr key={week}>
-                        {days.slice(week * 7, week * 7 + 7).map((date, weekday) => {
+                        {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
+                          const date = days[week * 7 + weekday];
                           const items = date ? (byDate.get(date) ?? []) : [];
                           const isToday = date === today;
                           const selected = date === selectedDate;
@@ -330,7 +341,7 @@ export function ReleaseCalendarStrip({
                                   data-calendar-date={date}
                                   aria-current={isToday ? "date" : undefined}
                                   aria-pressed={selected}
-                                  aria-label={`${formatReleaseDate(date, locale)}: ${items.length}${en ? " releases" : " 件"}${isToday ? (en ? " · Today" : " · 今日") : ""}${items.length ? ` · ${items.map((item) => item.title).join(" / ")}` : ""}`}
+                                  aria-label={`${formatReleaseDate(date, locale)}: ${items.length}${en ? " releases" : " 件"}${isToday ? (en ? " · Today" : " · 今日") : ""}${items.length > 0 ? ` · ${items.map((item) => item.title).join(" / ")}` : ""}`}
                                   tabIndex={
                                     selected ||
                                     (date.endsWith("-01") && selectedDate.slice(0, 7) !== month)

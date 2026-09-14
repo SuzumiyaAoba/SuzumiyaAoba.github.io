@@ -4,11 +4,16 @@ import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 
 import { SearchPanel } from "./search-panel";
-import { buildBreadcrumbList, buildListBreadcrumbItems } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+  resolveLocale,
+} from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
 
 function SearchLoading({ locale }: { locale: Locale }) {
   return (

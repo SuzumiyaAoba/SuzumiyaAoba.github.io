@@ -1,6 +1,6 @@
 import { range } from "d3";
 import { ASCII_TABLE_ATTR, THEME_COLORS } from "./StandardCode.utils";
-import Arrow from "./Arrow";
+import { Arrow } from "./Arrow";
 import { useResolvedTheme } from "./use-resolved-theme";
 
 export const B5B7Rows = () => {

@@ -1,46 +1,47 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import { isRecord } from "@/shared/lib/types";
 import type { ColorState, ScenarioInput, VisibleState } from "./types";
 
 const normalizeScenarioList = (list: ScenarioInput[]) =>
   list.map((item, index) => ({
     id: item.id || `scenario-${index + 1}`,
     name: item.name || `パターン${index + 1}`,
-    monthlyContributionInput: item.monthlyContributionInput ?? "",
-    annualRateInput: item.annualRateInput ?? "",
+    monthlyContributionInput: item.monthlyContributionInput,
+    annualRateInput: item.annualRateInput,
   }));
 
 const normalizeVisibleState = (value: unknown, scenarioList: ScenarioInput[]): VisibleState => {
-  if (!value || typeof value !== "object") {
+  if (!isRecord(value)) {
     return {};
   }
-  const raw = value as Record<string, unknown>;
+  const raw = value;
   const next: VisibleState = {};
-  scenarioList.forEach((scenario) => {
+  for (const scenario of scenarioList) {
     const baseKey = scenario.id;
     const keys = ["balance", "principal", "gain", "gainDiff"];
-    keys.forEach((suffix) => {
+    for (const suffix of keys) {
       const key = `${baseKey}:${suffix}`;
       const rawValue = raw[key];
       if (typeof rawValue === "boolean") {
         next[key] = rawValue;
       }
-    });
-  });
+    }
+  }
   return next;
 };
 
 const normalizeColorState = (value: unknown, scenarioList: ScenarioInput[]): ColorState => {
-  if (!value || typeof value !== "object") {
+  if (!isRecord(value)) {
     return {};
   }
-  const raw = value as Record<string, unknown>;
+  const raw = value;
   const next: ColorState = {};
-  scenarioList.forEach((scenario) => {
+  for (const scenario of scenarioList) {
     const rawValue = raw[scenario.id];
     if (typeof rawValue === "string" && rawValue.startsWith("#")) {
       next[scenario.id] = rawValue;
     }
-  });
+  }
   return next;
 };
 
@@ -68,13 +69,13 @@ export const decodeVisibilityPayload = (
     return null;
   }
   try {
-    const parsed = JSON.parse(json) as {
-      visible?: unknown;
-      colors?: unknown;
-    };
+    const parsed: unknown = JSON.parse(json);
+    if (!isRecord(parsed)) {
+      return null;
+    }
     return {
-      visible: normalizeVisibleState(parsed.visible, scenarioList),
-      colors: normalizeColorState(parsed.colors, scenarioList),
+      visible: normalizeVisibleState(parsed["visible"], scenarioList),
+      colors: normalizeColorState(parsed["colors"], scenarioList),
     };
   } catch {
     return null;
@@ -87,12 +88,12 @@ const normalizeScenarios = (value: unknown): ScenarioInput[] | null => {
 
   const normalized = value
     .map((item, index) => {
-      if (!item || typeof item !== "object") {
+      if (!isRecord(item)) {
         return null;
       }
-      const raw = item as Record<string, unknown>;
-      const monthlyContributionInput = raw["monthlyContributionInput"];
-      const annualRateInput = raw["annualRateInput"];
+      const raw = item;
+      const { monthlyContributionInput } = raw;
+      const { annualRateInput } = raw;
       if (typeof monthlyContributionInput !== "string" || typeof annualRateInput !== "string") {
         return null;
       }

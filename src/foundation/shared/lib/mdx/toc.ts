@@ -5,7 +5,8 @@ import remarkJoinCjkLines from "remark-join-cjk-lines";
 import remarkMath from "remark-math";
 import { remark } from "remark";
 import { cache } from "react";
-import { extractMarkdownText, walkMarkdown, type MarkdownNode } from "./markdown-tree";
+import { extractMarkdownText, walkMarkdown } from "./markdown-tree";
+import type { MarkdownNode } from "./markdown-tree";
 
 export type TocHeading = {
   id: string;
@@ -19,9 +20,13 @@ export function collectTocHeadings(tree: MarkdownNode, idPrefix?: string): TocHe
   const headings: TocHeading[] = [];
   walkMarkdown(tree, (node) => {
     const level = node.depth;
-    if (node.type !== "heading" || (level !== 2 && level !== 3)) return;
+    if (node.type !== "heading" || (level !== 2 && level !== 3)) {
+      return;
+    }
     const text = extractMarkdownText(node).trim();
-    if (!text) return;
+    if (!text) {
+      return;
+    }
     const id = slugger.slug(text);
     headings.push({ id: `${idPrefix ?? ""}${id}`, text, level });
   });
@@ -35,7 +40,7 @@ export const getTocHeadings = cache(
       .use(remarkEmoji)
       .use(remarkJoinCjkLines)
       .use(remarkMath);
-    const tree = processor.runSync(processor.parse(source));
+    const tree = await processor.run(processor.parse(source));
     return collectTocHeadings(tree, options?.idPrefix);
   },
 );

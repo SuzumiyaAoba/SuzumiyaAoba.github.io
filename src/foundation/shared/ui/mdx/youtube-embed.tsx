@@ -15,6 +15,7 @@ export function YouTubeEmbed({ id, title = "YouTube video" }: YouTubeEmbedProps)
   return (
     <div className="my-6 aspect-video w-full">
       <iframe
+        sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
         className="h-full w-full"
         src={`https://www.youtube.com/embed/${id}`}
         title={title}

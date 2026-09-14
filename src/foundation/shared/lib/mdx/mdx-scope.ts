@@ -9,9 +9,9 @@ export async function loadMdxScope(
   baseDir: string,
 ): Promise<Record<string, unknown>> {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
 
-  const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gm;
+  const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gmu;
   const matches = [...source.matchAll(importRegex)];
   if (matches.length === 0) {
     return {};
@@ -26,6 +26,7 @@ export async function loadMdxScope(
     }
     const filePath = path.join(baseDir, relPath);
     try {
+      // oxlint-disable-next-line no-await-in-loop -- 同じ識別子の再定義を文書順に処理し、同時読み込みを抑える。
       const raw = await fs.readFile(filePath, "utf8");
       scope[name] = JSON.parse(raw) as unknown;
     } catch {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isRecord } from "@/shared/lib/types";
 
 type PagefindResult = {
   url: string;
@@ -8,9 +9,9 @@ type PagefindResult = {
   meta: { title?: string };
 };
 
-type PagefindModule = {
+export type PagefindModule = {
   search: (query: string) => Promise<{
-    results: Array<{ data: () => Promise<PagefindResult> }>;
+    results: { data: () => Promise<PagefindResult> }[];
   }>;
 };
 
@@ -47,7 +48,7 @@ export function usePagefindSearch(query: string) {
       if (!window.__pagefind_loaded) {
         setLoadError({ key: "timeout" });
       }
-    }, 10000);
+    }, 10_000);
 
     function handleInitialized() {
       window.clearTimeout(timeoutId);
@@ -57,14 +58,18 @@ export function usePagefindSearch(query: string) {
 
     function handleError(event: Event) {
       window.clearTimeout(timeoutId);
-      const { detail } = event as CustomEvent<{ error?: string }>;
+      const detail: unknown = event instanceof CustomEvent ? event.detail : undefined;
+      const message =
+        isRecord(detail) && typeof detail["error"] === "string" ? detail["error"] : "";
       setPagefindLoaded(false);
-      setLoadError({ key: "loadFailed", detail: detail?.error ?? "" });
+      setLoadError({ key: "loadFailed", detail: message });
     }
 
     window.addEventListener("pagefind:initialized", handleInitialized);
     window.addEventListener("pagefind:error", handleError);
-    if (window.__pagefind_loaded) handleInitialized();
+    if (window.__pagefind_loaded) {
+      handleInitialized();
+    }
 
     return () => {
       window.clearTimeout(timeoutId);
@@ -74,13 +79,17 @@ export function usePagefindSearch(query: string) {
   }, []);
 
   useEffect(() => {
-    if (!pagefindLoaded) return;
+    if (!pagefindLoaded) {
+      return;
+    }
 
     const searchQuery = query.trim();
     setSearch({ results: [], isLoading: Boolean(searchQuery), error: null });
-    if (!searchQuery) return;
+    if (!searchQuery) {
+      return;
+    }
 
-    const pagefind = window.pagefind;
+    const { pagefind } = window;
     if (!pagefind) {
       setSearch({ results: [], isLoading: false, error: { key: "notLoaded" } });
       return;
@@ -88,12 +97,16 @@ export function usePagefindSearch(query: string) {
 
     // クエリ変更・画面離脱後に完了したリクエストは結果を反映しない。
     let cancelled = false;
-    const timeoutId = window.setTimeout(async () => {
+    const searchPagefind = pagefind.search;
+    async function runSearch() {
       try {
-        const response = await pagefind.search(searchQuery);
-        if (cancelled) return;
+        const response = await searchPagefind(searchQuery);
+        if (cancelled) {
+          return;
+        }
 
-        const results = await Promise.all(response.results.map((result) => result.data()));
+        const results = await Promise.all(response.results.map(async (result) => result.data()));
+        // oxlint-disable-next-line typescript/no-unnecessary-condition -- await 中に effect の cleanup が cancelled を変更できる。
         if (!cancelled) {
           setSearch({ results, isLoading: false, error: null });
         }
@@ -102,6 +115,9 @@ export function usePagefindSearch(query: string) {
           setSearch({ results: [], isLoading: false, error: { key: "searchError" } });
         }
       }
+    }
+    const timeoutId = window.setTimeout(() => {
+      void runSearch();
     }, 300);
 
     return () => {

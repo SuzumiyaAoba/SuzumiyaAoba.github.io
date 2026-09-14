@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import {
-  buildTagPageMetadata,
-  buildTagPageStaticParams,
-  type TagPageMetadataProps,
-} from "@/app/_shared/tag-page-metadata";
+import { buildTagPageMetadata } from "@/app/_shared/tag-page-metadata";
+import type { TagPageMetadataProps } from "@/app/_shared/tag-page-metadata";
 import TagPage from "@/pages/tags/tag";
+
+export { buildTagPageStaticParams as generateStaticParams } from "@/app/_shared/tag-page-metadata";
 
 export async function generateMetadata(props: TagPageMetadataProps): Promise<Metadata> {
   return buildTagPageMetadata(props, "en");
 }
-export const generateStaticParams = buildTagPageStaticParams;
 
 type PageComponentProps = {
   params: Promise<{ tag: string }>;

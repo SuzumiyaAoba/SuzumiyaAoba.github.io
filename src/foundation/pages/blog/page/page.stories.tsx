@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BlogPaginationPageContent, type BlogPaginationPageContentProps } from "./ui/page-content";
+import { BlogPaginationPageContent } from "./ui/page-content";
+import type { BlogPaginationPageContentProps } from "./ui/page-content";
 
 const meta = {
   title: "Pages/Blog/Pagination",

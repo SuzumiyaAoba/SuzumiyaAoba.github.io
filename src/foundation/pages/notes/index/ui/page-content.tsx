@@ -1,7 +1,8 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
-import { type SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
+import type { SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 import { SimpleIndexPageContent } from "@/shared/ui/simple-index-page-content";
 
 export type NoteListEntry = {

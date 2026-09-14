@@ -1,6 +1,7 @@
 "use client";
 
-import { LineChart, type MetricGroup } from "@/shared/ui/financial-charts";
+import { LineChart } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
@@ -14,11 +15,10 @@ export const Sheet2ChartWrapper: React.FC = () => {
 
   const excludeHeaders = ["column_8", "column_9", "column_10", "column_11"];
 
-  const availableMetrics = sheet2Data.headers.filter((header) => {
-    return (
-      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null)
-    );
-  });
+  const availableMetrics = sheet2Data.headers.filter(
+    (header) =>
+      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null),
+  );
 
   // パーセンテージデータのみを抽出
   const percentageMetrics = availableMetrics.filter((m) => m.includes("％"));
@@ -28,7 +28,7 @@ export const Sheet2ChartWrapper: React.FC = () => {
       name: "金融資産の有無（注1）",
       metrics: percentageMetrics.filter((m) => {
         const headerIdx = sheet2Data.headers.indexOf(m);
-        return headerIdx >= 0 && headerIdx < 2;
+        return headerIdx !== -1 && headerIdx < 2;
       }),
     },
     {

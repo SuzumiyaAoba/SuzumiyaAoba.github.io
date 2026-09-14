@@ -23,7 +23,7 @@ export function Mermaid({ code, className }: MermaidProps) {
   const [svg, setSvg] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
   const reactId = useId();
-  const renderId = `mermaid-${reactId.replace(/:/g, "")}`;
+  const renderId = `mermaid-${reactId.replaceAll(":", "")}`;
 
   useEffect(() => {
     let isActive = true;
@@ -45,9 +45,9 @@ export function Mermaid({ code, className }: MermaidProps) {
                   tertiaryColor: "#ffffff",
                 },
         });
-        const { svg } = await mermaid.render(renderId, code);
+        const { svg: renderedSvg } = await mermaid.render(renderId, code);
         if (isActive) {
-          setSvg(svg);
+          setSvg(renderedSvg);
           setHasError(false);
         }
       } catch {
@@ -57,7 +57,7 @@ export function Mermaid({ code, className }: MermaidProps) {
       }
     };
 
-    render();
+    void render();
 
     return () => {
       isActive = false;

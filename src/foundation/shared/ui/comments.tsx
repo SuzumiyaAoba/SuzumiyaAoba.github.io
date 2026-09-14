@@ -48,26 +48,28 @@ export function Comments({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || !mounted) return;
+    if (!container || !mounted) {
+      return;
+    }
     container.innerHTML = "";
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
     script.async = true;
     script.crossOrigin = "anonymous";
-    script.setAttribute("data-repo", repo);
-    script.setAttribute("data-repo-id", repoId);
-    script.setAttribute("data-category", category);
-    script.setAttribute("data-category-id", categoryId);
-    script.setAttribute("data-mapping", mapping);
-    script.setAttribute("data-strict", strict);
-    script.setAttribute("data-reactions-enabled", reactionsEnabled);
-    script.setAttribute("data-emit-metadata", emitMetadata);
-    script.setAttribute("data-input-position", inputPosition);
-    script.setAttribute("data-theme", giscusTheme);
-    script.setAttribute("data-lang", locale === "en" ? "en" : "ja");
-    script.setAttribute("data-loading", loading);
-    container.appendChild(script);
+    script.dataset["repo"] = repo;
+    script.dataset["repoId"] = repoId;
+    script.dataset["category"] = category;
+    script.dataset["categoryId"] = categoryId;
+    script.dataset["mapping"] = mapping;
+    script.dataset["strict"] = strict;
+    script.dataset["reactionsEnabled"] = reactionsEnabled;
+    script.dataset["emitMetadata"] = emitMetadata;
+    script.dataset["inputPosition"] = inputPosition;
+    script.dataset["theme"] = giscusTheme;
+    script.dataset["lang"] = locale === "en" ? "en" : "ja";
+    script.dataset["loading"] = loading;
+    container.append(script);
   }, [
     repo,
     repoId,
@@ -86,7 +88,9 @@ export function Comments({
 
   // テーマ変更時にGiscusにメッセージを送信
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
     const iframe = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
     if (iframe) {

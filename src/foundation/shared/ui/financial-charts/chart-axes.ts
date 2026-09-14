@@ -1,8 +1,9 @@
-import { axisBottom, axisLeft, type Axis, type AxisDomain, type AxisScale } from "d3-axis";
+import { axisBottom, axisLeft } from "d3-axis";
+import type { Axis, AxisDomain, AxisScale } from "d3-axis";
 import type { Selection } from "d3-selection";
 
 /** 各チャートのスケールを使い、年ラベル・目盛り・グリッドの表示を揃える。 */
-export function appendChartAxes<Domain extends AxisDomain>(
+export function appendChartAxes<Domain extends string | number>(
   group: Selection<SVGGElement, unknown, null, undefined>,
   {
     x,
@@ -26,10 +27,12 @@ export function appendChartAxes<Domain extends AxisDomain>(
       .attr("class", "grid")
       .attr("transform", transform)
       .call(axis.tickFormat(() => ""))
-      .call((grid) => grid.select(".domain").remove())
-      .call((grid) =>
-        grid.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1),
-      );
+      .call((grid) => {
+        grid.select(".domain").remove();
+      })
+      .call((grid) => {
+        grid.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1);
+      });
   }
 
   function createXAxis() {

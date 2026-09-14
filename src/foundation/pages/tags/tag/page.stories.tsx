@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { TagDetailPageContent, type TagDetailPageContentProps } from "./ui/page-content";
+import { TagDetailPageContent } from "./ui/page-content";
+import type { TagDetailPageContentProps } from "./ui/page-content";
 
 const meta = {
   title: "Pages/Tags/Detail",

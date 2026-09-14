@@ -1,22 +1,15 @@
 import fs from "node:fs/promises";
 
-const targets = [
-  "out/404.html",
-  "out/404/index.html",
-  "out/_not-found/index.html",
-  "out/500.html",
-];
+const targets = ["out/404.html", "out/404/index.html", "out/_not-found/index.html", "out/500.html"];
 
+/** @param {string} filePath 出力された HTML のパス */
 async function patchFile(filePath) {
   try {
     const raw = await fs.readFile(filePath, "utf8");
-    if (!raw.includes("<html") || /\blang=/.test(raw)) {
+    if (!raw.includes("<html") || /\blang=/u.test(raw)) {
       return;
     }
-    const patched = raw.replace(
-      /<html(?![^>]*\blang=)([^>]*)>/,
-      '<html$1 lang="ja">',
-    );
+    const patched = raw.replace(/<html(?![^>]*\blang=)([^>]*)>/u, '<html$1 lang="ja">');
     if (patched !== raw) {
       await fs.writeFile(filePath, patched, "utf8");
     }
@@ -25,7 +18,7 @@ async function patchFile(filePath) {
   }
 }
 
-await Promise.all(targets.map((target) => patchFile(target)));
+await Promise.all(targets.map(async (target) => patchFile(target)));
 
 const googleVerificationPath = "out/google19f820ba5c9c10b8.html";
 try {

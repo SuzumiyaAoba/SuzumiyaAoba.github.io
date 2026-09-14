@@ -3,7 +3,8 @@
 import { useEffect, useRef } from "react";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { select } from "d3-selection";
-import { arc, pie, type PieArcDatum } from "d3-shape";
+import { arc, pie } from "d3-shape";
+import type { PieArcDatum } from "d3-shape";
 import "d3-transition";
 import { createChartTooltip } from "./chart-tooltip";
 import type { ChartConfig } from "./types";
@@ -19,12 +20,16 @@ type Props = {
   config?: ChartConfig;
 };
 
-export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
+const DEFAULT_CONFIG: NonNullable<Props["config"]> = {};
+
+export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const colors = config.colors || schemeCategory10;
+  const colors = config.colors ?? schemeCategory10;
 
   useEffect(() => {
-    if (!svgRef.current || data.length === 0) return;
+    if (!svgRef.current || data.length === 0) {
+      return;
+    }
 
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
@@ -60,12 +65,12 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
       .attr("fill", (_d, i) => colors[i % colors.length] ?? "#000")
       .attr("stroke", "var(--card)")
       .attr("stroke-width", 2)
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function handleMouseOver(event: MouseEvent, d) {
         select(this).transition().duration(200).attr("opacity", 0.7);
 
         tooltip.show(event, d.data.label, `${d.data.value}%`);
       })
-      .on("mouseout", function () {
+      .on("mouseout", function handleMouseOut() {
         select(this).transition().duration(200).attr("opacity", 1);
 
         tooltip.hide();
@@ -84,7 +89,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
         const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
 
         // 値が小さいほどリーダーラインを長くする
-        const value = d.data.value;
+        const { value } = d.data;
         let radiusMultiplier = 1.4; // デフォルト
 
         if (value < 5) {
@@ -123,7 +128,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
         const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
 
         // 値が小さいほどラベルを遠くに配置（リーダーラインと同じ）
-        const value = d.data.value;
+        const { value } = d.data;
         let radiusMultiplier = 1.4;
 
         if (value < 5) {
@@ -139,7 +144,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = {} }) => {
         let horizontalMultiplier = 1.55;
 
         if (value < 5) {
-          horizontalMultiplier = 2.0; // 5%未満の場合はさらに外側に
+          horizontalMultiplier = 2; // 5%未満の場合はさらに外側に
         } else if (value < 8) {
           horizontalMultiplier = 1.75; // 8%未満の場合は少し外側に
         }

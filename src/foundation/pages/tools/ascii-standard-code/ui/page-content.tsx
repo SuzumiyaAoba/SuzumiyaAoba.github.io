@@ -4,7 +4,8 @@ import { Footer } from "@/widgets/footer";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, toLocalePath, type Locale } from "@/shared/lib/routing";
+import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 export type AsciiStandardCodePageContentProps = {
   locale: Locale;

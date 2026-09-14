@@ -2,7 +2,7 @@
  * サイト内で使用している Iconify アイコンを抽出し、描画済みの SVG データとして
  * TypeScript ファイルに書き出す。
  *
- * @iconify/react の <Icon> はクライアントコンポーネントのため、
+ * Iconify React の <Icon> はクライアントコンポーネントのため、
  *   1. 静的 HTML に SVG が出力されず、ハイドレーション後に初めてアイコンが現れる
  *   2. ローカル登録が無いアイコンは api.iconify.design へ実行時 fetch する
  * という 2 つの問題がある。生成したデータをサーバーコンポーネントから描画することで
@@ -24,10 +24,9 @@
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { getIconData, iconToSVG } from "@iconify/utils";
+import { getIconData, iconToSVG, quicklyValidateIconSet } from "@iconify/utils";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = path.resolve(import.meta.dirname, "..");
 const ICON_DIR = path.join(ROOT, "src/foundation/shared/ui/icon");
 
 /**
@@ -64,12 +63,21 @@ const CLIENT_ICONS = [
   "simple-icons:databricks",
 ];
 
-/** 指定拡張子のファイルを再帰的に集める */
+/**
+ * 指定拡張子のファイルを再帰的に集める。
+ * @param {string} dir 検索するディレクトリ
+ * @param {string[]} extensions 対象拡張子
+ * @returns {string[]} ファイルのパス
+ */
 function collectFiles(dir, extensions) {
-  if (!existsSync(dir)) return [];
+  if (!existsSync(dir)) {
+    return [];
+  }
   const files = [];
   for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry.startsWith(".")) continue;
+    if (entry === "node_modules" || entry.startsWith(".")) {
+      continue;
+    }
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) {
       files.push(...collectFiles(full, extensions));
@@ -89,10 +97,12 @@ const explicitIcons = new Set(CLIENT_ICONS);
 for (const file of collectFiles(path.join(ROOT, "src"), [".ts", ".tsx"])) {
   const source = readFileSync(file, "utf8");
   for (const match of source.matchAll(
-    /["'`](icon(?:ify)?:)?([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/g,
+    /["'`](icon(?:ify)?:)?([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/gu,
   )) {
     candidates.add(match[2]);
-    if (match[1]) explicitIcons.add(match[2]);
+    if (match[1]) {
+      explicitIcons.add(match[2]);
+    }
   }
 }
 
@@ -100,26 +110,32 @@ for (const file of collectFiles(path.join(ROOT, "src"), [".ts", ".tsx"])) {
 // 解決できなかったものは必ず報告する（黙って消すと記事から絵が消える）。
 for (const file of collectFiles(path.join(ROOT, "content"), [".mdx", ".md", ".json", ".yml"])) {
   const source = readFileSync(file, "utf8");
-  for (const match of source.matchAll(/iconify:([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)/g)) {
+  for (const match of source.matchAll(/iconify:([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)/gu)) {
     candidates.add(match[1]);
     explicitIcons.add(match[1]);
   }
 }
 
+/** @type {Map<string, import("@iconify/types").IconifyJSON | null>} */
 const collectionCache = new Map();
+/** @param {string} prefix アイコンセットの接頭辞 */
 function loadCollection(prefix) {
-  if (collectionCache.has(prefix)) return collectionCache.get(prefix);
+  if (collectionCache.has(prefix)) {
+    return collectionCache.get(prefix) ?? null;
+  }
   const file = path.join(ROOT, "node_modules", `@iconify-json/${prefix}/icons.json`);
-  const collection = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
+  const collection = existsSync(file)
+    ? quicklyValidateIconSet(JSON.parse(readFileSync(file, "utf8")))
+    : null;
   collectionCache.set(prefix, collection);
   return collection;
 }
 
-/** name -> { body, viewBox } */
+/** @type {Map<string, import("../src/foundation/shared/ui/icon/types").IconData>} */
 const icons = new Map();
 const unresolved = [];
 
-for (const full of [...candidates].sort()) {
+for (const full of [...candidates].toSorted()) {
   const [prefix, name] = full.split(":");
   const collection = loadCollection(prefix);
   if (!collection) {
@@ -153,7 +169,12 @@ const HEADER = `// このファイルは scripts/generate-icon-data.mjs が生�
 // 再生成: node scripts/generate-icon-data.mjs
 `;
 
-/** アイコン定義ファイルを書き出す */
+/**
+ * アイコン定義ファイルを書き出す。
+ * @param {string} file 出力ファイル名
+ * @param {[string, import("../src/foundation/shared/ui/icon/types").IconData][]} entries アイコンの一覧
+ * @param {string} docComment 出力する説明
+ */
 function emit(file, entries, docComment) {
   const body = `${HEADER}
 import type { IconData } from "./types";
@@ -170,13 +191,15 @@ export type IconName = keyof typeof ICONS;
 
 emit(
   "icon-data.ts",
-  [...icons].sort(([a], [b]) => a.localeCompare(b)),
+  [...icons].toSorted(([a], [b]) => a.localeCompare(b)),
   " * サイト内で使用している全アイコンの描画済み SVG データ。\n * サーバーコンポーネントから描画するため、クライアントバンドルには載らない。",
 );
 
-const clientEntries = CLIENT_ICONS.filter((name) => icons.has(name))
-  .sort()
-  .map((name) => [name, icons.get(name)]);
+/** @type {[string, import("../src/foundation/shared/ui/icon/types").IconData][]} */
+const clientEntries = CLIENT_ICONS.toSorted().flatMap((name) => {
+  const data = icons.get(name);
+  return data ? [[name, data]] : [];
+});
 
 emit(
   "icon-data.client.ts",
@@ -193,5 +216,7 @@ if (missingClient.length > 0) {
 }
 if (unresolved.length > 0) {
   console.log(`\n  警告: 解決できないアイコン指定があります（表示されません）:`);
-  for (const name of unresolved) console.log(`    - ${name}`);
+  for (const name of unresolved) {
+    console.log(`    - ${name}`);
+  }
 }

@@ -1,10 +1,9 @@
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import { buildBreadcrumbList } from "@/shared/lib/routing";
+import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath } from "@/shared/lib/routing";
 import type { AiNewsPageContentProps } from "./page-content";
 import { Tag } from "@/shared/ui/tag";
 import { Icon } from "@/shared/ui/icon";
@@ -14,27 +13,27 @@ function resolveTimelineIcon(tags?: string[]): string | null {
     return null;
   }
 
-  const normalized = tags.map((tag) => tag.toLowerCase());
-  if (normalized.includes("openai") || normalized.includes("codex") || normalized.includes("gpt")) {
+  const normalized = new Set(tags.map((tag) => tag.toLowerCase()));
+  if (normalized.has("openai") || normalized.has("codex") || normalized.has("gpt")) {
     return "logos:openai-icon";
   }
   if (
-    normalized.includes("anthropic") ||
-    normalized.includes("ahthropic") ||
-    normalized.includes("claude") ||
-    normalized.includes("claude opus") ||
-    normalized.includes("claude sonnet") ||
-    normalized.includes("claude haiku")
+    normalized.has("anthropic") ||
+    normalized.has("ahthropic") ||
+    normalized.has("claude") ||
+    normalized.has("claude opus") ||
+    normalized.has("claude sonnet") ||
+    normalized.has("claude haiku")
   ) {
     return "material-icon-theme:claude";
   }
-  if (normalized.includes("deepseek")) {
+  if (normalized.has("deepseek")) {
     return "ri:deepseek-fill";
   }
-  if (normalized.includes("gemini")) {
+  if (normalized.has("gemini")) {
     return "material-icon-theme:gemini-ai";
   }
-  if (normalized.includes("nano banana") || normalized.includes("nao banana")) {
+  if (normalized.has("nano banana") || normalized.has("nao banana")) {
     return "lucide:banana";
   }
   return null;

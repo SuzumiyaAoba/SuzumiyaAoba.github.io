@@ -10,11 +10,13 @@ export const getBookSlugs = cache(async (): Promise<string[]> => listContentSlug
 /** 書籍の概要を返す。index.md がなければ null。 */
 export const getBookMeta = cache(async (bookSlug: string): Promise<BookMeta | null> => {
   const index = await readBookIndex(bookSlug);
-  if (!index) return null;
+  if (!index) {
+    return null;
+  }
 
   const { content, frontmatter } = index;
   const separatorIndex = content.indexOf("\n---\n");
-  const lead = (separatorIndex >= 0 ? content.slice(0, separatorIndex) : content).trim();
+  const lead = (separatorIndex === -1 ? content : content.slice(0, separatorIndex)).trim();
   return { slug: bookSlug, frontmatter, lead };
 });
 
@@ -28,7 +30,9 @@ export const getBookToc = cache(async (bookSlug: string): Promise<BookChapter[]>
   const toc = await Promise.all(
     chapters.map(async (chapter): Promise<BookChapter | null> => {
       const files = await listBookSectionFiles(bookSlug, chapter);
-      if (!files) return null;
+      if (!files) {
+        return null;
+      }
 
       const sections = await Promise.all(
         files.map(async ({ filename, section }): Promise<SectionRef> => {
@@ -51,10 +55,14 @@ export const getBookSection = cache(
   async (bookSlug: string, chapter: string, section: string): Promise<BookSection | null> => {
     const files = await listBookSectionFiles(bookSlug, chapter);
     const file = files?.find((candidate) => candidate.section === section);
-    if (!file) return null;
+    if (!file) {
+      return null;
+    }
 
     const parsed = await readBookSectionFile(bookSlug, chapter, file.filename);
-    if (!parsed) return null;
+    if (!parsed) {
+      return null;
+    }
 
     const { content, frontmatter } = parsed;
     return {
@@ -63,7 +71,7 @@ export const getBookSection = cache(
       title: frontmatter.title || file.filename,
       content,
       format: file.format,
-      ...(frontmatter.llm !== undefined ? { llm: frontmatter.llm } : {}),
+      ...(frontmatter.llm === undefined ? {} : { llm: frontmatter.llm }),
       ...(frontmatter.coAuthors ? { coAuthors: frontmatter.coAuthors } : {}),
     };
   },

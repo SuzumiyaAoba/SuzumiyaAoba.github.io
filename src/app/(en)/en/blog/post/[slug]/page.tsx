@@ -9,10 +9,10 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  return buildBlogPostMetadata(resolvedParams?.slug, "en");
+  return buildBlogPostMetadata(resolvedParams.slug, "en");
 }
 
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const slugs = await getPublishedBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }

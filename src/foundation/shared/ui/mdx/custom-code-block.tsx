@@ -16,10 +16,12 @@ import {
 } from "@/shared/ui/mdx/codehike-handlers";
 import { hover } from "@/shared/ui/mdx/codehike-mentions";
 
+const DEFAULT_HANDLERS: AnnotationHandler[] = [];
+
 export function CustomCodeBlock({
   code,
   className,
-  handlers = [],
+  handlers = DEFAULT_HANDLERS,
 }: {
   code: HighlightedCode;
   className?: string;

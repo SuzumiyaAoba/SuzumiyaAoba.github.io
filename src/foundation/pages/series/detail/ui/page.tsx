@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getSeriesBySlug } from "@/entities/series-item";
 import { getBlogPost } from "@/entities/blog";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { SeriesDetailPageContent } from "./page-content";
 
 type PageProps = {
@@ -20,10 +21,14 @@ export default async function Page({ params, locale }: PageProps) {
 
   const [postsJa, postsEn] = await Promise.all([
     Promise.all(
-      series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "ja", fallback: false })),
+      series.posts.map(async (postSlug) =>
+        getBlogPost(postSlug, { locale: "ja", fallback: false }),
+      ),
     ),
     Promise.all(
-      series.posts.map((postSlug) => getBlogPost(postSlug, { locale: "en", fallback: false })),
+      series.posts.map(async (postSlug) =>
+        getBlogPost(postSlug, { locale: "en", fallback: false }),
+      ),
     ),
   ]);
   const entriesJa = postsJa

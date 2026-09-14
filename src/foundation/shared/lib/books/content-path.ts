@@ -34,6 +34,6 @@ export const BOOKS_CONTENT_BASE = "/contents/books";
  * @returns 例: `"/contents/books/java-abc"`
  */
 export function bookContentBasePath(bookSlug: string): string {
-  const normalized = bookSlug.replace(/^\/+|\/+$/g, "");
+  const normalized = bookSlug.replaceAll(/^\/+|\/+$/gu, "");
   return `${BOOKS_CONTENT_BASE}/${normalized}`;
 }

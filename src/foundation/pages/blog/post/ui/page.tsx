@@ -1,9 +1,5 @@
-import {
-  resolveLocalizedValue,
-  toLocalePath,
-  resolveLocale,
-  type Locale,
-} from "@/shared/lib/routing";
+import { resolveLocalizedValue, toLocalePath, resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import path from "node:path";
 import { notFound } from "next/navigation";
 
@@ -16,20 +12,20 @@ import {
   loadMdxScope,
   renderMdxWithToc,
 } from "@/shared/lib/mdx";
+import {
+  getAffiliateProductsByIds,
+  getAffiliateProductsByTags,
+} from "@/shared/lib/affiliate-products";
+import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
+import { getSiteUrl } from "@/shared/lib/site";
+import { BlogPostPageContent } from "./page-content";
 
 /**
  * 本文中で financial-data の Chart/Sheet ラッパーが使われているかを判定する。
  * 該当した場合のみ重い dynamic 群を MDX components マップに注入する。
  */
 const FINANCIAL_DATA_USAGE_RE =
-  /\b(?:Section\d+ChartWrapper|Sheet\d+(?:Bar|Stacked|Amount|Pie|Line)?ChartWrapper)\b/;
-import {
-  getAffiliateProductsByIds,
-  getAffiliateProductsByTags,
-  type AffiliateProduct,
-} from "@/shared/lib/affiliate-products";
-import { getSiteUrl } from "@/shared/lib/site";
-import { BlogPostPageContent } from "./page-content";
+  /\b(?:Section\d+ChartWrapper|Sheet\d+(?:Bar|Stacked|Amount|Pie|Line)?ChartWrapper)\b/u;
 
 /**
  * ブログ記事詳細ページのプロパティ
@@ -75,7 +71,7 @@ export default async function Page({ params, locale }: PageProps) {
   const postTitleJa = postJa?.frontmatter.title || post.slug;
   const postTitleEn = postEn?.frontmatter.title || postTitleJa;
   const postTitle = isEn ? postTitleEn : postTitleJa;
-  const category = post.frontmatter.category;
+  const { category } = post.frontmatter;
   const tags = post.frontmatter.tags ?? [];
   const postPath = toLocalePath(`/blog/post/${slug}`, resolvedLocale);
   const postUrl = `${getSiteUrl()}${postPath}`;
@@ -163,7 +159,7 @@ export default async function Page({ params, locale }: PageProps) {
     <BlogPostPageContent
       locale={resolvedLocale}
       postTitle={postTitle}
-      postDate={post.frontmatter.date!}
+      postDate={post.frontmatter.date}
       category={category}
       tags={tags}
       postPath={postPath}

@@ -26,7 +26,7 @@ function extractIds(value: unknown): string[] {
       try {
         return extractIds(JSON.parse(normalized) as unknown);
       } catch {
-        const quoted = [...normalized.matchAll(/"([^"]+)"|'([^']+)'/g)]
+        const quoted = [...normalized.matchAll(/"([^"]+)"|'([^']+)'/gu)]
           .map((match) => match[1] ?? match[2])
           .filter((item): item is string => Boolean(item));
         if (quoted.length > 0) {
@@ -49,7 +49,7 @@ function extractIds(value: unknown): string[] {
     return [String(value)];
   }
 
-  if (value && typeof value === "object") {
+  if (value !== null && typeof value === "object") {
     return Object.values(value).flatMap((item) => extractIds(item));
   }
 

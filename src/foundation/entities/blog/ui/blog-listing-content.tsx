@@ -3,13 +3,8 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { PaginationNav } from "@/shared/ui/pagination-nav";
 import { DEFAULT_PAGE_SIZE } from "@/shared/lib/presentation";
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  toLocalePath,
-  type BreadcrumbItem,
-  type Locale,
-} from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "./blog-post-list";
 
 export type BlogListingContentProps = {
@@ -67,11 +62,11 @@ export function BlogListingContent({
             <p className="page-count">
               {pageNumber} / {pageCount}
             </p>
-          ) : totalCount !== undefined ? (
+          ) : totalCount === undefined ? null : (
             <p className="page-count">
               {locale === "en" ? `${totalCount} posts` : `${totalCount} 件`}
             </p>
-          ) : null}
+          )}
         </section>
 
         <BlogPostList posts={posts} locale={locale} variant="detailed" showThumbnail />

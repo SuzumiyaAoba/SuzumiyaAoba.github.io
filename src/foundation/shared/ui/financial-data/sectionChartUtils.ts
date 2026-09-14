@@ -2,17 +2,17 @@
 
 import type { ChartConfig, SheetData } from "@/shared/ui/financial-charts";
 
-const UNIT_PRIORITY = ["％", "%", "万円", "円", "歳", "人", "件"] as const;
+const UNIT_PRIORITY = new Set<string>(["％", "%", "万円", "円", "歳", "人", "件"]);
 
 const normalizeUnit = (unit: string) => (unit === "%" ? "％" : unit);
 
 const extractUnit = (header: string): string | null => {
   const parts = header.split("|").map((part) => part.trim());
-  const candidate = parts[parts.length - 1];
+  const candidate = parts.at(-1);
   if (!candidate) {
     return null;
   }
-  if (UNIT_PRIORITY.includes(candidate as (typeof UNIT_PRIORITY)[number])) {
+  if (UNIT_PRIORITY.has(candidate)) {
     return normalizeUnit(candidate);
   }
   return null;
@@ -20,34 +20,38 @@ const extractUnit = (header: string): string | null => {
 
 const selectUnit = (headers: string[]): string => {
   const counts = new Map<string, number>();
-  headers.forEach((header) => {
+  for (const header of headers) {
     const unit = extractUnit(header);
-    if (!unit) return;
+    if (!unit) {
+      continue;
+    }
     counts.set(unit, (counts.get(unit) ?? 0) + 1);
-  });
+  }
   let selected = "％";
   let maxCount = -1;
-  counts.forEach((count, unit) => {
+  for (const [unit, count] of counts) {
     if (count > maxCount) {
       maxCount = count;
       selected = unit;
     }
-  });
+  }
   return selected;
 };
 
 const computeMaxValue = (data: SheetData, unit: string) => {
   let max = 0;
-  data.headers.forEach((header) => {
+  for (const header of data.headers) {
     const headerUnit = extractUnit(header);
-    if (headerUnit && headerUnit !== unit) return;
-    data.series.forEach((row) => {
+    if (headerUnit && headerUnit !== unit) {
+      continue;
+    }
+    for (const row of data.series) {
       const value = row.values[header];
       if (typeof value === "number" && value > max) {
         max = value;
       }
-    });
-  });
+    }
+  }
   return max;
 };
 
@@ -70,7 +74,7 @@ export const buildAutoChartConfig = (data: SheetData): ChartConfig => {
   );
   const maxValue = computeMaxValue(data, unit);
 
-  let yAxisMax = 100;
+  let yAxisMax: number;
   if (unit === "％") {
     yAxisMax = 100;
   } else if (unit === "万円" || unit === "円") {

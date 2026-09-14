@@ -13,7 +13,9 @@ export async function renderOpengraphImage(content: ReactElement) {
 }
 
 export function OpengraphTags({ tags, fontSize = 28 }: { tags: string[]; fontSize?: number }) {
-  if (tags.length === 0) return null;
+  if (tags.length === 0) {
+    return null;
+  }
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
       {tags.map((tag) => (

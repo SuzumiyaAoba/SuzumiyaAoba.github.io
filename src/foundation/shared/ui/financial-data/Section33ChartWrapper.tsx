@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section33Data from "@/content/blog/2026-01-01-kakekin/data/section33.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section33ChartWrapper: React.FC = () => {
-  if (!section33Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "新NISA つみたて投資枠 | 万円": "新NISA つみたて",
     "新NISA 成長投資枠 | 万円": "新NISA 成長",
@@ -25,7 +20,7 @@ export const Section33ChartWrapper: React.FC = () => {
     "外貨建株式 | 万円": "外貨建株式",
     "その他外貨建金融商品 | 万円": "その他外貨建",
   };
-  const startYear = Number(section33Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section33Data.metadata.startYear);
 
   // グループ定義
   const groups = [

@@ -4,7 +4,7 @@
  */
 export async function resolveContentRoot(): Promise<string> {
   // Use dynamic imports to prevent Storybook from trying to polyfill these in the browser
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
   const fs = await import("node:fs/promises");
 
   /**

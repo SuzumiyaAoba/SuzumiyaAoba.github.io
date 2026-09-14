@@ -5,7 +5,7 @@ export function JsonLd({ data }: { data: Record<string, unknown> }): ReactElemen
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is required for SEO.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replaceAll("<", String.raw`\u003c`) }}
     />
   );
 }

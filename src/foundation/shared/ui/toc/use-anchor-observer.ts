@@ -8,12 +8,16 @@ export function useAnchorObserver(watch: string[], single: boolean): string[] {
 
   useEffect(() => {
     const visible = new Set<string>();
+    // oxlint-disable-next-line unicorn/prefer-query-selector -- 見出し ID は数字・句読点を含むため CSS セレクターとして解釈しない。
     const elements = watch.flatMap((id) => document.getElementById(id) ?? []);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target.id);
-          else visible.delete(entry.target.id);
+          if (entry.isIntersecting) {
+            visible.add(entry.target.id);
+          } else {
+            visible.delete(entry.target.id);
+          }
         }
 
         if (visible.size > 0) {
@@ -37,7 +41,9 @@ export function useAnchorObserver(watch: string[], single: boolean): string[] {
       { rootMargin: "0px", threshold: 0.98 },
     );
 
-    for (const element of elements) observer.observe(element);
+    for (const element of elements) {
+      observer.observe(element);
+    }
     return () => observer.disconnect();
   }, [watch, single]);
 

@@ -1,6 +1,7 @@
 import { getAiNewsEntries, getAiNewsUpdated } from "@/shared/lib/ai-news";
 import { renderMdx } from "@/shared/lib/mdx";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { AiNewsPageContent } from "./page-content";
 import { AiNewsTimelinePageContent } from "./timeline-page-content";
 

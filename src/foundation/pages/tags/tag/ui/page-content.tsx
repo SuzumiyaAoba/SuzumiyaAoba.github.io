@@ -9,8 +9,8 @@ import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { BlogPostCard } from "@/entities/blog";
 
 export type TagDetailPageContentProps = {

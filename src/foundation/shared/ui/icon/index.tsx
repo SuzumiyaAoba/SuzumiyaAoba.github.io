@@ -1,6 +1,8 @@
 import { ICONS } from "./icon-data";
-import { renderIcon, type IconProps } from "./render";
+import { renderIcon } from "./render";
+import type { IconProps } from "./render";
 
+export { type IconProps } from "./render";
 /**
  * アイコンを表示する。
  *
@@ -16,5 +18,3 @@ import { renderIcon, type IconProps } from "./render";
 export function Icon(props: IconProps) {
   return renderIcon(ICONS, props);
 }
-
-export type { IconProps };

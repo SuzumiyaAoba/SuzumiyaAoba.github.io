@@ -1,4 +1,5 @@
-import { resolveLocalizedValue, type Locale } from "@/shared/lib/routing";
+import { resolveLocalizedValue } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getBlogPostVariants } from "@/entities/blog";
 import { buildLocaleAlternates } from "./locale-alternates";

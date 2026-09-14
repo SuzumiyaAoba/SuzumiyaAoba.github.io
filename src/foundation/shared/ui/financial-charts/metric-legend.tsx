@@ -19,12 +19,12 @@ export function MetricLegend({
   onToggle,
   colorOpacity,
 }: MetricLegendProps) {
-  return metrics.map((metric, metricIndex) => {
+  return metrics.map((metric) => {
     const index = availableMetrics.indexOf(metric);
     const isActive = selectedMetrics.includes(metric);
     return (
       <button
-        key={`${metric}-${metricIndex}`}
+        key={metric}
         type="button"
         aria-pressed={isActive}
         onClick={() => onToggle(metric)}

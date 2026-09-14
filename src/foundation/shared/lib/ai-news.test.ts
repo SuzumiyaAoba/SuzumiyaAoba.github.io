@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from "vite-plus/test";
-
-// Mock the content-root module (transitive dependency)
-vi.mock("@/shared/lib/content-file", () => ({
-  resolveContentRoot: () => Promise.resolve("/mock/content"),
-}));
+import { assert, describe, it, expect, vi } from "vite-plus/test";
 
 import { AiNewsEntrySchema } from "./ai-news";
+
+// Mock the content-root module (transitive dependency)
+vi.mock(import("@/shared/lib/content-file"), () => ({
+  resolveContentRoot: async () => "/mock/content",
+}));
 
 describe("AiNewsEntrySchema", () => {
   describe("有効なデータのパース", () => {
@@ -19,15 +19,15 @@ describe("AiNewsEntrySchema", () => {
       const result = AiNewsEntrySchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.year).toBe(2024);
-        expect(result.data.title_ja).toBe("GPT-4 リリース");
-        expect(result.data.summary_ja).toBe("OpenAIがGPT-4をリリースしました。");
-        expect(result.data.date).toBeUndefined();
-        expect(result.data.title_en).toBeUndefined();
-        expect(result.data.summary_en).toBeUndefined();
-        expect(result.data.tags).toBeUndefined();
-      }
+      assert(result.success);
+
+      expect(result.data.year).toBe(2024);
+      expect(result.data.title_ja).toBe("GPT-4 リリース");
+      expect(result.data.summary_ja).toBe("OpenAIがGPT-4をリリースしました。");
+      expect(result.data.date).toBeUndefined();
+      expect(result.data.title_en).toBeUndefined();
+      expect(result.data.summary_en).toBeUndefined();
+      expect(result.data.tags).toBeUndefined();
     });
 
     it("すべてのフィールドでパースできる", () => {
@@ -44,12 +44,12 @@ describe("AiNewsEntrySchema", () => {
       const result = AiNewsEntrySchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.date).toBe("2024-03-14");
-        expect(result.data.title_en).toBe("GPT-4 Release");
-        expect(result.data.summary_en).toBe("OpenAI released GPT-4.");
-        expect(result.data.tags).toEqual(["openai", "gpt", "llm"]);
-      }
+      assert(result.success);
+
+      expect(result.data.date).toBe("2024-03-14");
+      expect(result.data.title_en).toBe("GPT-4 Release");
+      expect(result.data.summary_en).toBe("OpenAI released GPT-4.");
+      expect(result.data.tags).toStrictEqual(["openai", "gpt", "llm"]);
     });
   });
 
@@ -64,10 +64,10 @@ describe("AiNewsEntrySchema", () => {
       const result = AiNewsEntrySchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.year).toBe(2024);
-        expect(typeof result.data.year).toBe("number");
-      }
+      assert(result.success);
+
+      expect(result.data.year).toBe(2024);
+      expect(result.data.year).toBeTypeOf("number");
     });
 
     it("数値の年をそのまま保持する", () => {
@@ -80,9 +80,9 @@ describe("AiNewsEntrySchema", () => {
       const result = AiNewsEntrySchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.year).toBe(2023);
-      }
+      assert(result.success);
+
+      expect(result.data.year).toBe(2023);
     });
   });
 
@@ -151,9 +151,9 @@ describe("AiNewsEntrySchema", () => {
 
       const result = AiNewsEntrySchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.tags).toEqual([]);
-      }
+      assert(result.success);
+
+      expect(result.data.tags).toStrictEqual([]);
     });
 
     it("複数のタグを許可する", () => {
@@ -166,9 +166,9 @@ describe("AiNewsEntrySchema", () => {
 
       const result = AiNewsEntrySchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.tags).toHaveLength(3);
-      }
+      assert(result.success);
+
+      expect(result.data.tags).toHaveLength(3);
     });
   });
 
@@ -183,9 +183,9 @@ describe("AiNewsEntrySchema", () => {
 
       const result = AiNewsEntrySchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.date).toBe("2024-01-15");
-      }
+      assert(result.success);
+
+      expect(result.data.date).toBe("2024-01-15");
     });
 
     it("任意形式の日付文字列を許可する", () => {
@@ -198,9 +198,9 @@ describe("AiNewsEntrySchema", () => {
 
       const result = AiNewsEntrySchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.date).toBe("January 2024");
-      }
+      assert(result.success);
+
+      expect(result.data.date).toBe("January 2024");
     });
   });
 });

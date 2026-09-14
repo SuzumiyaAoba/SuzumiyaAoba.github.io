@@ -1,14 +1,19 @@
-import { afterEach, beforeEach, describe, it, expect, vi } from "vite-plus/test";
+import type { readFile } from "node:fs/promises";
+import { assert, afterEach, beforeEach, describe, it, expect, vi } from "vite-plus/test";
 
-const files = vi.hoisted(() => ({ readFile: vi.fn(), stat: vi.fn() }));
+import { AffiliateProductSchema } from "./affiliate-products";
+
+const files = vi.hoisted(() => ({
+  readFile: vi.fn<typeof readFile>(),
+  stat: vi.fn<() => Promise<{ mtimeMs: number }>>(),
+}));
+// oxlint-disable-next-line vitest/prefer-import-in-mock -- UTF-8 読み込みと mtimeMs のみのモックは fs の全オーバーロードを実装しない。
 vi.mock("node:fs/promises", () => files);
 
 // Mock the content-root module (transitive dependency)
-vi.mock("@/shared/lib/content-file", () => ({
-  resolveContentRoot: () => Promise.resolve("/mock/content"),
+vi.mock(import("@/shared/lib/content-file"), () => ({
+  resolveContentRoot: async () => "/mock/content",
 }));
-
-import { AffiliateProductSchema } from "./affiliate-products";
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -39,20 +44,24 @@ describe("アフィリエイトリンクの読み込み", () => {
     const { getAffiliateProductUrlById, getAffiliateProductsByIds, getAffiliateProductsByTags } =
       await import("./affiliate-products");
 
-    expect(await getAffiliateProductUrlById()).toEqual(
+    await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
       new Map([
         [product.id, product.productUrl],
         [link.id, link.productUrl],
       ]),
     );
-    expect(await getAffiliateProductsByIds([product.id, link.id])).toEqual([product]);
-    expect(await getAffiliateProductsByTags(["book"])).toEqual([product]);
+    await expect(getAffiliateProductsByIds([product.id, link.id])).resolves.toStrictEqual([
+      product,
+    ]);
+    await expect(getAffiliateProductsByTags(["book"])).resolves.toStrictEqual([product]);
   });
 
   it("本文用リンクだけの定義も読み込める", async () => {
     files.readFile.mockResolvedValue(JSON.stringify({ links: [link] }));
     const { getAffiliateProductUrlById } = await import("./affiliate-products");
-    expect(await getAffiliateProductUrlById()).toEqual(new Map([[link.id, link.productUrl]]));
+    await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
+      new Map([[link.id, link.productUrl]]),
+    );
   });
 
   it.each([
@@ -70,7 +79,7 @@ describe("アフィリエイトリンクの読み込み", () => {
       JSON.stringify({ links: [{ ...link, productUrl: "invalid-url" }] }),
     );
     const { getAffiliateProductUrlById } = await import("./affiliate-products");
-    await expect(getAffiliateProductUrlById()).rejects.toThrow();
+    await expect(getAffiliateProductUrlById()).rejects.toThrow("Invalid URL");
   });
 
   it("開発時に管理ファイルを更新すると商品カードと本文用 URL を再読み込みする", async () => {
@@ -87,13 +96,13 @@ describe("アフィリエイトリンクの読み込み", () => {
       }),
     );
 
-    expect(await getAffiliateProductUrlById()).toEqual(
+    await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
       new Map([
         [product.id, updatedProduct.productUrl],
         [link.id, "https://example.com/new-text"],
       ]),
     );
-    expect(await getAffiliateProductsByIds([product.id])).toEqual([updatedProduct]);
+    await expect(getAffiliateProductsByIds([product.id])).resolves.toStrictEqual([updatedProduct]);
   });
 });
 
@@ -110,12 +119,12 @@ describe("AffiliateProductSchema", () => {
       const result = AffiliateProductSchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.id).toBe("product-1");
-        expect(result.data.title).toBe("テスト商品");
-        expect(result.data.tags).toBeUndefined();
-        expect(result.data.yahooShoppingUrl).toBeUndefined();
-      }
+      assert(result.success);
+
+      expect(result.data.id).toBe("product-1");
+      expect(result.data.title).toBe("テスト商品");
+      expect(result.data.tags).toBeUndefined();
+      expect(result.data.yahooShoppingUrl).toBeUndefined();
     });
 
     it("すべてのフィールドでパースできる", () => {
@@ -131,10 +140,10 @@ describe("AffiliateProductSchema", () => {
       const result = AffiliateProductSchema.safeParse(data);
 
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.yahooShoppingUrl).toBe("https://shopping.yahoo.co.jp/product");
-        expect(result.data.tags).toEqual(["programming", "book"]);
-      }
+      assert(result.success);
+
+      expect(result.data.yahooShoppingUrl).toBe("https://shopping.yahoo.co.jp/product");
+      expect(result.data.tags).toStrictEqual(["programming", "book"]);
     });
   });
 
@@ -226,9 +235,9 @@ describe("AffiliateProductSchema", () => {
 
       const result = AffiliateProductSchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.tags).toEqual(["programming"]);
-      }
+      assert(result.success);
+
+      expect(result.data.tags).toStrictEqual(["programming"]);
     });
 
     it("空の配列を許可する", () => {
@@ -242,9 +251,9 @@ describe("AffiliateProductSchema", () => {
 
       const result = AffiliateProductSchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.tags).toEqual([]);
-      }
+      assert(result.success);
+
+      expect(result.data.tags).toStrictEqual([]);
     });
 
     it("複数のタグを許可する", () => {
@@ -258,9 +267,9 @@ describe("AffiliateProductSchema", () => {
 
       const result = AffiliateProductSchema.safeParse(data);
       expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data.tags).toHaveLength(3);
-      }
+      assert(result.success);
+
+      expect(result.data.tags).toHaveLength(3);
     });
   });
 });

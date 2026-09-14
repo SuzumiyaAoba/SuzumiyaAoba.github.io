@@ -9,8 +9,8 @@ import {
   buildListBreadcrumbItems,
   toLocalePath,
   resolveLocale,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 type PageProps = {
   locale?: Locale;

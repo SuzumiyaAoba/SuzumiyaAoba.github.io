@@ -15,11 +15,10 @@ export const Sheet2AmountChartWrapper: React.FC = () => {
 
   const excludeHeaders = ["column_8", "column_9", "column_10", "column_11"];
 
-  const availableMetrics = sheet2Data.headers.filter((header) => {
-    return (
-      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null)
-    );
-  });
+  const availableMetrics = sheet2Data.headers.filter(
+    (header) =>
+      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null),
+  );
 
   // 万円データのみを抽出
   const amountMetrics = availableMetrics.filter((m) => m.includes("万円"));
@@ -34,7 +33,7 @@ export const Sheet2AmountChartWrapper: React.FC = () => {
       excludeHeaders={excludeHeaders}
       config={{
         yAxisMin: 0,
-        yAxisMax: yAxisMax,
+        yAxisMax,
         yAxisLabel: "万円",
         startYear: 1963,
       }}

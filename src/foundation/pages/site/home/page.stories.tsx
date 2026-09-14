@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { HomePageContent, type HomePageContentProps } from "./ui/page";
+import { HomePageContent } from "./ui/page";
+import type { HomePageContentProps } from "./ui/page";
 
 const titles = [
   ["Iterator パターン", "Iterator pattern"],

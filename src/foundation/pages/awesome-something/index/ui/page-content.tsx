@@ -1,12 +1,8 @@
 import type { AwesomeItem } from "../model/awesome-item";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  toLocalePath,
-  type Locale,
-} from "@/shared/lib/routing";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
 import { AwesomeList } from "./awesome-list";

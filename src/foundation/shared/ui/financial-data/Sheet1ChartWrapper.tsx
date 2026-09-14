@@ -1,6 +1,7 @@
 "use client";
 
-import { LineChart, type MetricGroup } from "@/shared/ui/financial-charts";
+import { LineChart } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
 import assetsData from "@/content/blog/2026-01-01-kakekin/data/assets.json";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { parseSheetData } from "./_shared/parse-sheet-data";
@@ -14,11 +15,10 @@ export const Sheet1ChartWrapper: React.FC = () => {
 
   const excludeHeaders = ["現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％"];
 
-  const availableMetrics = sheet1Data.headers.filter((header) => {
-    return (
-      !excludeHeaders.includes(header) && sheet1Data.series.some((s) => s.values[header] !== null)
-    );
-  });
+  const availableMetrics = sheet1Data.headers.filter(
+    (header) =>
+      !excludeHeaders.includes(header) && sheet1Data.series.some((s) => s.values[header] !== null),
+  );
 
   const groups: MetricGroup[] = [
     {

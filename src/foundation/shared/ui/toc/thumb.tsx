@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef, type HTMLAttributes, type RefObject } from "react";
+import { useLayoutEffect, useRef } from "react";
+import type { HTMLAttributes, RefObject } from "react";
 import { calcThumb, updateThumb } from "./geometry";
 
 type TocThumbProps = HTMLAttributes<HTMLDivElement> & {
@@ -13,7 +14,9 @@ export function TocThumb({ containerRef, active, ...props }: TocThumbProps) {
   useLayoutEffect(() => {
     const container = containerRef.current;
     const thumb = thumbRef.current;
-    if (!container || !thumb) return;
+    if (!container || !thumb) {
+      return;
+    }
     const onUpdate = () => updateThumb(thumb, calcThumb(container, active));
     const observer = new ResizeObserver(onUpdate);
     observer.observe(container);

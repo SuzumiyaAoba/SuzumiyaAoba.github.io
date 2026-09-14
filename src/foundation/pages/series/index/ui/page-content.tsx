@@ -5,14 +5,11 @@ import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { EntryCardList, type EntryCardItem } from "@/shared/ui/entry-card-list";
-import {
-  buildBreadcrumbList,
-  buildListBreadcrumbItems,
-  toLocalePath,
-  type Locale,
-} from "@/shared/lib/routing";
-import { SeriesDefinition } from "@/entities/series-item";
+import { EntryCardList } from "@/shared/ui/entry-card-list";
+import type { EntryCardItem } from "@/shared/ui/entry-card-list";
+import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
+import type { SeriesDefinition } from "@/entities/series-item";
 
 export type SeriesListPageContentProps = {
   locale: Locale;

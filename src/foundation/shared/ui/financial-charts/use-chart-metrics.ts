@@ -51,7 +51,7 @@ export function useChartMetrics({
       metric
         .split("|")
         .map((part) => part.trim())
-        .filter((part) => part && part !== "％")
+        .filter((part) => part !== "" && part !== "％")
         .join(""),
     [labelMap],
   );
@@ -59,8 +59,11 @@ export function useChartMetrics({
   const toggleMetric = useCallback((metric: string) => {
     setHiddenMetrics((previous) => {
       const next = new Set(previous);
-      if (next.has(metric)) next.delete(metric);
-      else next.add(metric);
+      if (next.has(metric)) {
+        next.delete(metric);
+      } else {
+        next.add(metric);
+      }
       return next;
     });
   }, []);
@@ -70,8 +73,11 @@ export function useChartMetrics({
       const allSelected = metrics.every((metric) => !previous.has(metric));
       const next = new Set(previous);
       for (const metric of metrics) {
-        if (allSelected) next.add(metric);
-        else next.delete(metric);
+        if (allSelected) {
+          next.add(metric);
+        } else {
+          next.delete(metric);
+        }
       }
       return next;
     });

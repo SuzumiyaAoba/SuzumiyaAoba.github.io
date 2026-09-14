@@ -5,7 +5,7 @@ describe("monthly calendars", () => {
   it("aligns dates to weekdays in six rows, including leap days and months needing six weeks", () => {
     const february = getMonthDays("2024-02");
     expect(february).toHaveLength(42);
-    expect(february.slice(0, 4)).toEqual([null, null, null, null]);
+    expect(february.slice(0, 4)).toStrictEqual([null, null, null, null]);
     expect(february[4]).toBe("2024-02-01");
     expect(february[32]).toBe("2024-02-29");
     expect(february.filter(Boolean)).toHaveLength(29);
@@ -35,7 +35,7 @@ describe("monthly calendars", () => {
     );
     expect(window.total).toBe(144);
     expect(window.months.length).toBeLessThanOrEqual(6);
-    expect(window.months.slice(0, 4)).toEqual(["2026-08", "2026-09", "2026-10", "2026-11"]);
+    expect(window.months.slice(0, 4)).toStrictEqual(["2026-08", "2026-09", "2026-10", "2026-11"]);
     expect(getMonthWindow(start, "2030-12", 0, 320, step).months[0]).toBe(start);
     expect(
       getMonthWindow(

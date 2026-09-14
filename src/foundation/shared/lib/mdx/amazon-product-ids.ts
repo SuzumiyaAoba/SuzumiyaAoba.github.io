@@ -4,12 +4,12 @@
 export function extractAmazonProductIdsFromMdx(source: string): string[] {
   const results: string[] = [];
   const seen = new Set<string>();
-  const componentRegex = /<AmazonProductSection\b[\s\S]*?>/g;
-  const idsPropRegex = /\bids\s*=\s*({[\s\S]*?}|"[^"]*"|'[^']*')/;
+  const componentRegex = /<AmazonProductSection\b[\s\S]*?>/gu;
+  const idsPropRegex = /\bids\s*=\s*(\{[\s\S]*?\}|"[^"]*"|'[^']*')/u;
 
   for (const match of source.matchAll(componentRegex)) {
-    const tag = match[0];
-    const idsMatch = tag.match(idsPropRegex);
+    const [tag] = match;
+    const idsMatch = idsPropRegex.exec(tag);
     if (!idsMatch) {
       continue;
     }
@@ -17,7 +17,7 @@ export function extractAmazonProductIdsFromMdx(source: string): string[] {
     let candidates: string[] = [];
     if (rawValue.startsWith("{") && rawValue.endsWith("}")) {
       const inner = rawValue.slice(1, -1);
-      const quoted = [...inner.matchAll(/"([^"]+)"|'([^']+)'/g)];
+      const quoted = [...inner.matchAll(/"([^"]+)"|'([^']+)'/gu)];
       candidates = quoted
         .map((quotedValue) => quotedValue[1] ?? quotedValue[2])
         .filter((value): value is string => Boolean(value));

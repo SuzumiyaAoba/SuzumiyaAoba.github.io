@@ -17,9 +17,16 @@ type Props = {
   excludeHeaders?: string[];
 };
 
-export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, excludeHeaders }) => {
+const DEFAULT_CONFIG: NonNullable<Props["config"]> = {};
+
+export const StackedBarChart: React.FC<Props> = ({
+  data,
+  groups,
+  config = DEFAULT_CONFIG,
+  excludeHeaders,
+}) => {
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
-  const colors = config.colors || schemeCategory10;
+  const colors = config.colors ?? schemeCategory10;
 
   const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", labelMap } = config;
 
@@ -49,17 +56,21 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
 
       const activeMetrics = group.metrics.filter((m) => selectedMetrics.includes(m));
 
-      if (activeMetrics.length === 0) return;
+      if (activeMetrics.length === 0) {
+        return;
+      }
 
       const parseData = data.series.map((d) => {
-        const yearData: Record<string, number> = { year: Number.parseInt(d.year) };
-        activeMetrics.forEach((metric) => {
+        const yearData: Record<string, number> = { year: Number.parseInt(d.year, 10) };
+        for (const metric of activeMetrics) {
           yearData[metric] = d.values[metric] ?? 0;
-        });
+        }
         return yearData;
       });
 
-      if (parseData.length === 0) return;
+      if (parseData.length === 0) {
+        return;
+      }
 
       const years = parseData.map((d) => d["year"]);
 
@@ -83,9 +94,9 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
         xTickValues: years.filter((_, index) => index % 2 === 0).map(String),
       });
 
-      stackedData.forEach((layer) => {
+      for (const layer of stackedData) {
         const metricIndex = availableMetrics.indexOf(layer.key);
-        const colorIndex = metricIndex >= 0 ? metricIndex : 0;
+        const colorIndex = Math.max(metricIndex, 0);
         const barColor = colors[colorIndex % colors.length] ?? "#000";
 
         g.selectAll(`.bar-${metricIndex}`)
@@ -93,7 +104,7 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
           .enter()
           .append("rect")
           .attr("class", `bar-${metricIndex}`)
-          .attr("x", (d) => x(String(d.data["year"])) || 0)
+          .attr("x", (d) => x(String(d.data["year"])) ?? 0)
           .attr("y", (d) => y(d[1]))
           .attr("height", (d) => y(d[0]) - y(d[1]))
           .attr("width", x.bandwidth())
@@ -101,24 +112,24 @@ export const StackedBarChart: React.FC<Props> = ({ data, groups, config = {}, ex
           .attr("fill-opacity", 0.7)
           .attr("stroke", barColor)
           .attr("stroke-width", 1);
-      });
+      }
     },
     [availableMetrics, colors, data.series, selectedMetrics, yAxisLabel, yAxisMax, yAxisMin],
   );
 
   useEffect(() => {
-    effectiveGroups.forEach((group, index) => {
+    for (const [index, group] of effectiveGroups.entries()) {
       const svgElement = svgRefs.current[index];
       if (svgElement) {
         renderBarChart(svgElement, group);
       }
-    });
+    }
   }, [effectiveGroups, renderBarChart]);
 
   return (
     <div className="my-8 space-y-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^[0-9]+[\s.、]*/, "")}
+        {data.metadata.title.replace(/^[0-9]+[\s.、]*/u, "")}
       </div>
 
       {effectiveGroups.map((group, groupIndex) => (

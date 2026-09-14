@@ -1,19 +1,16 @@
-import { describe, it, expect, vi } from "vite-plus/test";
-import {
-  buildBreadcrumbList,
-  buildDetailBreadcrumbItems,
-  type BreadcrumbItem,
-} from "./breadcrumbs";
+import { assert, describe, it, expect, vi } from "vite-plus/test";
+import { buildBreadcrumbList, buildDetailBreadcrumbItems } from "./breadcrumbs";
+import type { BreadcrumbItem } from "./breadcrumbs";
 
 // Mock the site-config module (transitive dependency)
-vi.mock("@/shared/lib/site/site-config", () => ({
+vi.mock(import("@/shared/lib/site/site-config"), () => ({
   getSiteConfig: () => ({
     siteUrl: "https://suzumiyaaoba.com",
   }),
 }));
 
 // Mock the site-url module
-vi.mock("@/shared/lib/site/site-url", () => ({
+vi.mock(import("@/shared/lib/site/site-url"), () => ({
   getSiteUrl: () => "https://suzumiyaaoba.com",
 }));
 
@@ -23,7 +20,7 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -47,9 +44,12 @@ describe("buildBreadcrumbList", () => {
     const result = buildBreadcrumbList(items);
 
     expect(result.itemListElement).toHaveLength(3);
-    expect(result.itemListElement[0]!.position).toBe(1);
-    expect(result.itemListElement[1]!.position).toBe(2);
-    expect(result.itemListElement[2]!.position).toBe(3);
+    assert(result.itemListElement[0]);
+    expect(result.itemListElement[0].position).toBe(1);
+    assert(result.itemListElement[1]);
+    expect(result.itemListElement[1].position).toBe(2);
+    assert(result.itemListElement[2]);
+    expect(result.itemListElement[2].position).toBe(3);
   });
 
   it("サイトURLとパスを正しく結合する", () => {
@@ -60,8 +60,10 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result.itemListElement[0]!.item).toBe("https://suzumiyaaoba.com/tags");
-    expect(result.itemListElement[1]!.item).toBe("https://suzumiyaaoba.com/tags/programming");
+    assert(result.itemListElement[0]);
+    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags");
+    assert(result.itemListElement[1]);
+    expect(result.itemListElement[1].item).toBe("https://suzumiyaaoba.com/tags/programming");
   });
 
   it("空の配列で空のitemListElementを返す", () => {
@@ -69,7 +71,7 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [],
@@ -81,8 +83,9 @@ describe("buildBreadcrumbList", () => {
 
     const result = buildBreadcrumbList(items);
 
-    expect(result.itemListElement[0]!.name).toBe("タグ一覧");
-    expect(result.itemListElement[0]!.item).toBe("https://suzumiyaaoba.com/tags/日本語");
+    assert(result.itemListElement[0]);
+    expect(result.itemListElement[0].name).toBe("タグ一覧");
+    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags/日本語");
   });
 });
 
@@ -94,7 +97,7 @@ describe("buildDetailBreadcrumbItems", () => {
       { name: "Java入門", path: "/books/java-abc" },
     );
 
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       { name: "Home", path: "/" },
       { name: "Books", path: "/books/" },
       { name: "Java入門", path: "/books/java-abc" },
@@ -108,7 +111,7 @@ describe("buildDetailBreadcrumbItems", () => {
       { name: "Java Basics", path: "/en/books/java-abc" },
     );
 
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       { name: "Home", path: "/en/" },
       { name: "Books", path: "/en/books/" },
       { name: "Java Basics", path: "/en/books/java-abc" },
@@ -122,6 +125,6 @@ describe("buildDetailBreadcrumbItems", () => {
       { name: "programming", path: "/tags/programming/" },
     );
 
-    expect(result[2]).toEqual({ name: "programming", path: "/tags/programming/" });
+    expect(result[2]).toStrictEqual({ name: "programming", path: "/tags/programming/" });
   });
 });

@@ -5,7 +5,8 @@ import { Icon } from "@/shared/ui/icon-client";
 import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { SITE_TITLE } from "@/shared/lib/site";
 import { cn } from "@/shared/lib/utils";
 
@@ -51,7 +52,7 @@ export function Header({ locale, path }: HeaderProps) {
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const en = locale === "en";
-  const currentPath = toLocalePath(path, "ja").replace(/\/$/, "");
+  const currentPath = toLocalePath(path, "ja").replace(/\/$/u, "");
   const isReading =
     currentPath.startsWith("/blog/post/") ||
     currentPath.startsWith("/notes/") ||
@@ -62,17 +63,23 @@ export function Header({ locale, path }: HeaderProps) {
     (href === "/archive" && (currentPath === "/tools" || currentPath.startsWith("/tools/")));
 
   useEffect(() => {
-    if (!isReading) return;
+    if (!isReading) {
+      return;
+    }
     let frame = 0;
     const update = () => {
-      if (!progressBarRef.current) return;
+      if (!progressBarRef.current) {
+        return;
+      }
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
       progressBarRef.current.style.transform = `scaleX(${progress})`;
     };
     const onScroll = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
+      if (frame) {
+        return;
+      }
+      frame = globalThis.requestAnimationFrame(() => {
         frame = 0;
         update();
       });
@@ -81,14 +88,18 @@ export function Header({ locale, path }: HeaderProps) {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
+      if (frame) {
+        globalThis.cancelAnimationFrame(frame);
+      }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
   }, [isReading]);
 
   useEffect(() => {
-    if (!isMenuOpen) return;
+    if (!isMenuOpen) {
+      return;
+    }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsMenuOpen(false);
@@ -96,8 +107,9 @@ export function Header({ locale, path }: HeaderProps) {
       }
     };
     const onPointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !headerRef.current?.contains(event.target))
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
         setIsMenuOpen(false);
+      }
     };
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("pointerdown", onPointerDown);
@@ -135,8 +147,9 @@ export function Header({ locale, path }: HeaderProps) {
       ref={headerRef}
       className="site-header sticky top-0 z-50 bg-background/95 backdrop-blur-md"
       onBlur={(event) => {
-        if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget))
+        if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) {
           setIsMenuOpen(false);
+        }
       }}
     >
       {isReading && (

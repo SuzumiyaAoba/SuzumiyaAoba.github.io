@@ -1,4 +1,5 @@
-import { dateTimestamp, daysBetween, type Release } from "./release-calendar";
+import { dateTimestamp, daysBetween } from "./release-calendar";
+import type { Release } from "./release-calendar";
 
 export function shiftDate(date: string, days: number): string {
   const result = new Date(dateTimestamp(date));
@@ -12,12 +13,15 @@ export function localDate(date = new Date()): string {
 
 /** 今日を含む30日間。将来の日付や日付未詳の記録は集計しない。 */
 export function getReleaseActivity(releases: Release[], today: string) {
-  const past = releases.filter((release) => release.date && release.date <= today);
-  const recent = past.filter((release) => daysBetween(release.date!, today) < 30);
+  const past = releases.filter(
+    (release): release is Release & { date: string } =>
+      release.date !== null && release.date <= today,
+  );
+  const recent = past.filter((release) => daysBetween(release.date, today) < 30);
   const previous = past.filter((release) => {
-    const days = daysBetween(release.date!, today);
+    const days = daysBetween(release.date, today);
     return days >= 30 && days < 60;
   });
-  const latest = [...past].sort((a, b) => b.date!.localeCompare(a.date!))[0];
+  const [latest] = past.toSorted((a, b) => b.date.localeCompare(a.date));
   return { recent, change: recent.length - previous.length, latest };
 }

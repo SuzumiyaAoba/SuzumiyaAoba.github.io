@@ -1,6 +1,7 @@
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { paginate } from "@/shared/lib/presentation";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { BlogListPageContent } from "./page-content";
 
 /**

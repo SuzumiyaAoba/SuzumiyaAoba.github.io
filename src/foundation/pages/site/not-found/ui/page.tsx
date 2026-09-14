@@ -3,7 +3,8 @@ import { Footer } from "@/widgets/footer";
 import { BackLink } from "@/shared/ui/back-link";
 import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { toLocalePath, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { toLocalePath, resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 type NotFoundPageProps = {
   locale?: Locale;

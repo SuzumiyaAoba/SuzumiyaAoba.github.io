@@ -1,30 +1,22 @@
 "use client";
 
-import { highlight, type HighlightedCode, type RawCode } from "codehike/code";
-import { useEffect, useMemo, useState } from "react";
+import type { RawCode } from "codehike/code";
+import { useMemo, useState } from "react";
+
+import { useHighlightedCode } from "./use-highlighted-code";
 
 import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 
-export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
-  if (code.length === 0) {
+export function CodeSwitcher({ code }: { code?: RawCode[] }) {
+  if (!code || code.length === 0) {
     return null;
   }
-  const [highlighted, setHighlighted] = useState<HighlightedCode[]>([]);
+  return <HighlightedCodeSwitcher code={code} />;
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const result = await Promise.all(code.map((block) => highlight(block, "github-from-css")));
-      if (!cancelled) {
-        setHighlighted(result);
-      }
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [code]);
+function HighlightedCodeSwitcher({ code }: { code: RawCode[] }) {
+  const { blocks: highlighted, hasError } = useHighlightedCode(code);
 
   const languages = useMemo(() => highlighted.map((block) => block.lang || "text"), [highlighted]);
   const [selected, setSelected] = useState(0);
@@ -32,7 +24,7 @@ export function CodeSwitcher({ code = [] }: { code?: RawCode[] }) {
   if (highlighted.length === 0) {
     return (
       <div className="my-6 rounded-lg border border-border bg-muted px-4 py-6 text-sm text-muted-foreground">
-        Loading code...
+        {hasError ? "Unable to highlight code." : "Loading code..."}
       </div>
     );
   }

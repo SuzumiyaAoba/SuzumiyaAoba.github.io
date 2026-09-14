@@ -5,13 +5,13 @@ const textSchema = z.string().trim().min(1);
 const httpUrlSchema = z
   .string()
   .trim()
-  .pipe(z.url({ protocol: /^https?$/ }));
+  .pipe(z.url({ protocol: /^https?$/u }));
 const relatedUrlSchema = z.union([
   httpUrlSchema,
   z
     .string()
     .trim()
-    .regex(/^\/(?!\/)[^\\\s]*$/, "サイト内の URL は / から始めてください。"),
+    .regex(/^\/(?!\/)[^\\\s]*$/u, "サイト内の URL は / から始めてください。"),
 ]);
 
 function optionalUrl(value: unknown) {
@@ -26,13 +26,13 @@ function linkSchema(url: typeof httpUrlSchema | typeof relatedUrlSchema) {
 }
 
 const awesomeItemSchema = z.strictObject({
-  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
   name: textSchema,
   category: textSchema,
   tags: z
     .array(textSchema)
     .nullish()
-    .transform((value) => [...new Set(value ?? [])]),
+    .transform((value) => [...new Set(value)]),
   description: textSchema,
   websiteUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
   githubUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
@@ -49,7 +49,7 @@ const awesomeItemSchema = z.strictObject({
 const awesomeSourceSchema = z.strictObject({
   items: z.array(awesomeItemSchema).superRefine((items, context) => {
     const ids = new Set<string>();
-    items.forEach((item, index) => {
+    for (const [index, item] of items.entries()) {
       if (ids.has(item.id)) {
         context.addIssue({
           code: "custom",
@@ -58,7 +58,7 @@ const awesomeSourceSchema = z.strictObject({
         });
       }
       ids.add(item.id);
-    });
+    }
   }),
 });
 

@@ -4,7 +4,7 @@ import { normalizeBookFrontmatter, parseSectionFilename } from "./parse-book";
 
 async function readBookFile(...segments: string[]) {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
   const root = await resolveContentRoot();
   return fs.readFile(path.join(root, "books", ...segments), "utf8");
 }
@@ -17,7 +17,7 @@ export const readBookIndex = cache(async (bookSlug: string) => {
 
 export const listBookSectionFiles = cache(async (bookSlug: string, chapter: string) => {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
   const root = await resolveContentRoot();
   const directory = path.join(root, "books", bookSlug, "parts", chapter, "chapters");
   try {
@@ -25,7 +25,7 @@ export const listBookSectionFiles = cache(async (bookSlug: string, chapter: stri
     return entries
       .filter((entry) => entry.isFile())
       .map((entry) => entry.name)
-      .sort()
+      .toSorted()
       .flatMap((filename) => {
         const section = parseSectionFilename(filename);
         return section ? [{ filename, ...section }] : [];

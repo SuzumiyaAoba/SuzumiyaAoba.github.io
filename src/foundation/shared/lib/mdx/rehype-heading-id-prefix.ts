@@ -7,10 +7,12 @@ type HtmlNode = {
 export function rehypeHeadingIdPrefix(prefix: string) {
   return () => (tree: HtmlNode) => {
     const visit = (node: HtmlNode) => {
-      if (node.type === "element" && node.properties?.id) {
+      if (node.type === "element" && node.properties && String(node.properties.id ?? "") !== "") {
         node.properties.id = `${prefix}${node.properties.id}`;
       }
-      node.children?.forEach(visit);
+      for (const child of node.children ?? []) {
+        visit(child);
+      }
     };
     visit(tree);
   };

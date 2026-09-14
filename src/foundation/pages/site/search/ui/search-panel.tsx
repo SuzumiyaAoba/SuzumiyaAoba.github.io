@@ -8,7 +8,8 @@ import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { usePagefindSearch } from "../model/use-pagefind-search";
 
 const queryParser = parseAsString.withDefault("").withOptions({
@@ -46,7 +47,9 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           ref={inputRef}
           type="search"
           value={query}
-          onChange={(event) => void setQuery(event.target.value)}
+          onChange={(event) => {
+            void setQuery(event.target.value);
+          }}
           placeholder={t("キーワードで検索...", "Search by keyword...")}
           aria-label={t("検索キーワード", "Search keyword")}
           disabled={!pagefindLoaded}
@@ -90,57 +93,59 @@ export function SearchPanel({ locale }: SearchPanelProps) {
                         "Search could not load. Please reload the page.",
                       )}
             </p>
-            <Button type="button" variant="outline" onClick={() => window.location.reload()}>
+            <Button type="button" variant="outline" onClick={() => globalThis.location.reload()}>
               {t("再読み込み", "Reload")}
             </Button>
           </div>
         </Card>
-      ) : !pagefindLoaded ? (
+      ) : pagefindLoaded ? (
+        isLoading ? (
+          <output className="block text-sm text-muted-foreground">
+            {t("検索中...", "Searching...")}
+          </output>
+        ) : results.length > 0 ? (
+          <div className="space-y-4">
+            <output className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
+                {locale === "en" ? `${results.length} results` : `${results.length} 件`}
+              </Badge>
+              <span>{t("検索結果", "Results")}</span>
+            </output>
+            <ul className="search-results">
+              {results.map((result) => (
+                <li key={result.url}>
+                  <a
+                    href={toLocalePath(result.url, locale)}
+                    className="index-link flex flex-col gap-2 px-1 py-4"
+                  >
+                    <h2 className="text-base font-medium">
+                      {result.meta.title ?? t("タイトルなし", "Untitled")}
+                    </h2>
+                    {result.excerpt ? (
+                      <div
+                        className="text-sm leading-6 text-muted-foreground"
+                        dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                      />
+                    ) : null}
+                    <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : query.trim() ? (
+          <output className="block text-sm text-muted-foreground">
+            {t(
+              "検索結果が見つかりませんでした。別のキーワードをお試しください。",
+              "No results found. Try another keyword.",
+            )}
+          </output>
+        ) : null
+      ) : (
         <output className="block text-sm text-muted-foreground">
           {t("検索エンジンを読み込み中...", "Loading search...")}
         </output>
-      ) : isLoading ? (
-        <output className="block text-sm text-muted-foreground">
-          {t("検索中...", "Searching...")}
-        </output>
-      ) : results.length > 0 ? (
-        <div className="space-y-4">
-          <output className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
-              {locale === "en" ? `${results.length} results` : `${results.length} 件`}
-            </Badge>
-            <span>{t("検索結果", "Results")}</span>
-          </output>
-          <ul className="search-results">
-            {results.map((result) => (
-              <li key={result.url}>
-                <a
-                  href={toLocalePath(result.url, locale)}
-                  className="index-link flex flex-col gap-2 px-1 py-4"
-                >
-                  <h2 className="text-base font-medium">
-                    {result.meta.title ?? t("タイトルなし", "Untitled")}
-                  </h2>
-                  {result.excerpt ? (
-                    <div
-                      className="text-sm leading-6 text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: result.excerpt }}
-                    />
-                  ) : null}
-                  <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : query.trim() ? (
-        <output className="block text-sm text-muted-foreground">
-          {t(
-            "検索結果が見つかりませんでした。別のキーワードをお試しください。",
-            "No results found. Try another keyword.",
-          )}
-        </output>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -24,13 +24,13 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           const isLast = index === items.length - 1;
           return (
             <li key={`${item.path}-${item.name}`} className="flex items-center gap-2">
-              {index !== 0 ? (
+              {index === 0 ? null : (
                 <Icon
                   icon="lucide:chevron-right"
                   className="size-3 shrink-0 text-muted-foreground"
                   aria-hidden
                 />
-              ) : null}
+              )}
               {isLast ? (
                 <span aria-current="page" className="font-medium text-foreground">
                   {item.path === "/" ? <Icon icon="lucide:home" className="size-3.5" /> : item.name}

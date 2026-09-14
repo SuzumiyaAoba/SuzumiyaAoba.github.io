@@ -20,8 +20,8 @@ import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 /**
  * ブログ記事詳細ページの表示用コンポーネントのプロパティ
@@ -170,7 +170,7 @@ export function BlogPostPageContent({
               {isEn && translationModel ? (
                 <Message title="Notes" variant="info" defaultOpen>
                   This article was translated by {translationModel}. The original is{" "}
-                  <a href={originalPath}>here</a>.
+                  <a href={originalPath}>read the original Japanese article</a>.
                 </Message>
               ) : null}
               <div>{content}</div>

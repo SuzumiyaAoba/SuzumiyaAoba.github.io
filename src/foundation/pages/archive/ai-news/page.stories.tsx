@@ -11,18 +11,23 @@ async function chooseCalendarDate(canvasElement: HTMLElement, date: string) {
   const trigger = canvas.getByRole("button", { name: "月へ移動" });
   await userEvent.click(trigger);
   const picker = within(document.getByRole("dialog", { name: "移動する日付を選択" }));
-  await userEvent.selectOptions(picker.getByRole("combobox", { name: "年を選択" }), year!);
+  await userEvent.selectOptions(
+    picker.getByRole("combobox", { name: "年を選択" }),
+    requireValue(year),
+  );
   await userEvent.selectOptions(
     picker.getByRole("combobox", { name: "月を選択" }),
     String(Number(month) - 1),
   );
   await userEvent.click(
-    picker.getByRole("button", { name: new RegExp(`${year}年${Number(month)}月${Number(day)}日`) }),
+    picker.getByRole("button", {
+      name: new RegExp(`${year}年${Number(month)}月${Number(day)}日`, "u"),
+    }),
   );
-  await waitFor(() =>
+  await waitFor(async () =>
     expect(document.queryByRole("dialog", { name: "移動する日付を選択" })).not.toBeInTheDocument(),
   );
-  await waitFor(() => expect(trigger).toHaveFocus());
+  await waitFor(async () => expect(trigger).toHaveFocus());
 }
 
 function release(
@@ -97,28 +102,30 @@ export const Japanese: Story = {
       canvas.queryByRole("region", { name: "選択日のリリース詳細" }),
     ).not.toBeInTheDocument();
     await expect(document.queryByRole("dialog")).not.toBeInTheDocument();
-    await userEvent.click(canvas.getByRole("button", { name: /GPT · 2026年3月5日/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /GPT · 2026年3月5日/u }));
     await expect(document.getByRole("article", { name: "GPT Next" })).toHaveTextContent(
       "前回から 63 日",
     );
     await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
     const scroll = canvas.getByRole("region", { name: "横スクロールカレンダー" });
-    const today = within(scroll).getByRole("button", { name: /^2026年3月6日:/ });
+    const today = within(scroll).getByRole("button", { name: /^2026年3月6日:/u });
     await expect(today).toHaveAttribute("aria-current", "date");
     await expect(today).toHaveAttribute("aria-pressed", "true");
-    const march = scroll.querySelector<HTMLElement>('[data-calendar-month="2026-03"]')!;
+    const march = requireValue(
+      scroll.querySelector<HTMLElement>('[data-calendar-month="2026-03"]'),
+    );
     await expect(within(march).getAllByRole("columnheader")).toHaveLength(7);
     await expect(march.querySelectorAll("tbody tr")).toHaveLength(6);
     await expect(march.querySelectorAll("[data-calendar-date]")).toHaveLength(31);
-    await waitFor(() =>
+    await waitFor(async () =>
       expect(
         Math.abs(march.getBoundingClientRect().left - scroll.getBoundingClientRect().left - 16),
       ).toBeLessThan(1),
     );
     await userEvent.click(today);
     await expect(document.getByText("この日のリリース記録はありません。")).toBeVisible();
-    await userEvent.click(canvas.getByRole("button", { name: /直前のリリース/ }));
-    const releaseDay = within(scroll).getByRole("button", { name: /^2026年3月5日:/ });
+    await userEvent.click(canvas.getByRole("button", { name: /直前のリリース/u }));
+    const releaseDay = within(scroll).getByRole("button", { name: /^2026年3月5日:/u });
     await userEvent.hover(releaseDay);
     await expect(document.getByRole("tooltip")).toHaveTextContent("Gemini Flash Next / GPT Next");
     await userEvent.click(releaseDay);
@@ -128,21 +135,23 @@ export const Japanese: Story = {
       "前回から 63 日",
     );
     await expect(
-      document.getAllByRole("link", { name: "Official announcement" })[0]!,
+      requireValue(document.getAllByRole("link", { name: "Official announcement" })[0]),
     ).toHaveAttribute("href", "https://example.com/release");
     await userEvent.click(canvas.getByRole("button", { name: "前の月" }));
     await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年2月");
     await chooseCalendarDate(canvasElement, "2025-12-01");
-    await userEvent.click(within(scroll).getByRole("button", { name: /^2025年12月31日:/ }));
+    await userEvent.click(within(scroll).getByRole("button", { name: /^2025年12月31日:/u }));
     await expect(document.getByRole("article", { name: "Claude Opus Previous" })).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "次の月" }));
     await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年1月");
     await userEvent.click(canvas.getByRole("button", { name: "今日に戻る" }));
     await expect(canvas.getByRole("button", { name: "月へ移動" })).toHaveTextContent("2026年3月");
-    await waitFor(() =>
+    await waitFor(async () =>
       expect(
         Math.abs(
-          scroll.querySelector('[data-calendar-month="2026-03"]')!.getBoundingClientRect().left -
+          requireValue(
+            scroll.querySelector('[data-calendar-month="2026-03"]'),
+          ).getBoundingClientRect().left -
             scroll.getBoundingClientRect().left -
             16,
         ),
@@ -161,7 +170,7 @@ export const Filtering: Story = {
       "Claude Opus",
     );
     await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 2 件");
-    await userEvent.click(canvas.getByRole("button", { name: /Claude Opus · 2026年2月5日/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /Claude Opus · 2026年2月5日/u }));
     await expect(document.getByRole("article", { name: "Claude Opus Next" })).toHaveTextContent(
       "前回から 36 日",
     );
@@ -169,7 +178,7 @@ export const Filtering: Story = {
     await userEvent.type(search, "ＮＥＸＴ");
     await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 1 件");
     await expect(document.queryByRole("dialog")).not.toBeInTheDocument();
-    await userEvent.click(canvas.getByRole("button", { name: /Claude Opus · 2026年2月5日/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /Claude Opus · 2026年2月5日/u }));
     await expect(document.getByRole("article", { name: "Claude Opus Next" })).toHaveTextContent(
       "Claude Opus Previous",
     );
@@ -182,7 +191,7 @@ export const Filtering: Story = {
       "image",
     );
     await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 1 件");
-    await userEvent.click(canvas.getByRole("button", { name: /GPT Image · 2025年12月20日/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /GPT Image · 2025年12月20日/u }));
     await expect(document.getByRole("article", { name: "GPT Image" })).toBeVisible();
   },
 };
@@ -194,16 +203,16 @@ export const Intervals: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "全期間の比較" }));
     const chart = within(canvas.getByRole("region", { name: "リリース間隔の比較チャート" }));
     await expect(
-      chart.getByRole("button", { name: /Claude Opus · 2025年12月31日/ }),
+      chart.getByRole("button", { name: /Claude Opus · 2025年12月31日/u }),
     ).toBeInTheDocument();
-    await expect(chart.getByRole("button", { name: /GPT · 2026年3月5日/ })).toBeInTheDocument();
-    await userEvent.click(chart.getByRole("button", { name: /Claude Opus · 2026年2月5日/ }));
+    await expect(chart.getByRole("button", { name: /GPT · 2026年3月5日/u })).toBeInTheDocument();
+    await userEvent.click(chart.getByRole("button", { name: /Claude Opus · 2026年2月5日/u }));
     await expect(document.getByRole("article", { name: "Claude Opus Next" })).toHaveTextContent(
       "前回から 36 日",
     );
     await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
     await expect(document.queryByRole("dialog")).not.toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: /^2026年3月6日:/ })).toHaveAttribute(
+    await expect(canvas.getByRole("button", { name: /^2026年3月6日:/u })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -215,7 +224,7 @@ export const UndatedAndEmptyMonth: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "カレンダー" }));
     await chooseCalendarDate(canvasElement, "2026-04-01");
-    await userEvent.click(canvas.getByRole("button", { name: /^2026年4月1日:/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /^2026年4月1日:/u }));
     await expect(
       within(canvasElement.ownerDocument.body).getByText("この日のリリース記録はありません。"),
     ).toBeVisible();
@@ -236,7 +245,7 @@ export const English: Story = {
     await expect(
       canvas.getByRole("heading", { name: "Release intervals · All dates" }),
     ).toBeVisible();
-    await userEvent.click(canvas.getByRole("button", { name: /GPT · March 5, 2026/ }));
+    await userEvent.click(canvas.getByRole("button", { name: /GPT · March 5, 2026/u }));
     await expect(document.getByRole("article", { name: "GPT Next" })).toHaveTextContent(
       "After 63 days",
     );
@@ -245,7 +254,7 @@ export const English: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Calendar" }));
     await expect(canvas.getByRole("heading", { name: "Monthly release calendar" })).toBeVisible();
     await expect(canvas.getByRole("table", { name: "March 2026 calendar" })).toBeVisible();
-    await expect(canvas.getByRole("button", { name: /^March 6, 2026:/ })).toHaveAttribute(
+    await expect(canvas.getByRole("button", { name: /^March 6, 2026:/u })).toHaveAttribute(
       "aria-current",
       "date",
     );
@@ -256,8 +265,8 @@ export const English: Story = {
       "2024",
     );
     await userEvent.selectOptions(picker.getByRole("combobox", { name: "Choose the Month" }), "1");
-    await userEvent.click(picker.getByRole("button", { name: /February 29.*2024/ }));
-    await expect(canvas.getByRole("button", { name: /^February 29, 2024:/ })).toHaveAttribute(
+    await userEvent.click(picker.getByRole("button", { name: /February 29.*2024/u }));
+    await expect(canvas.getByRole("button", { name: /^February 29, 2024:/u })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -282,8 +291,8 @@ export const NearbyReleases: Story = {
     const document = within(canvasElement.ownerDocument.body);
     await userEvent.click(canvas.getByRole("button", { name: "全期間の比較" }));
     const chart = within(canvas.getByRole("region", { name: "リリース間隔の比較チャート" }));
-    const first = chart.getByRole("button", { name: /GPT · 2026年1月1日/ });
-    const second = chart.getByRole("button", { name: /GPT · 2026年1月2日/ });
+    const first = chart.getByRole("button", { name: /GPT · 2026年1月1日/u });
+    const second = chart.getByRole("button", { name: /GPT · 2026年1月2日/u });
     await expect(
       second.getBoundingClientRect().top - first.getBoundingClientRect().top,
     ).toBeGreaterThanOrEqual(32);
@@ -338,15 +347,15 @@ export const FullHistory: Story = {
     const chartElement = canvas.getByRole("region", { name: "リリース間隔の比較チャート" });
     const chart = within(chartElement);
     const pointCount = chart.getAllByRole("button").length;
-    await expect(chart.getByRole("button", { name: /GPT · 2019年11月5日/ })).toBeInTheDocument();
-    await expect(chart.getByRole("button", { name: /GPT · 2026年3月5日/ })).toBeInTheDocument();
+    await expect(chart.getByRole("button", { name: /GPT · 2019年11月5日/u })).toBeInTheDocument();
+    await expect(chart.getByRole("button", { name: /GPT · 2026年3月5日/u })).toBeInTheDocument();
     await expect(canvas.queryByRole("combobox", { name: "表示年" })).not.toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "最初の記録" }));
     await expect(chartElement.scrollLeft).toBe(0);
-    await userEvent.click(chart.getByRole("button", { name: /GPT · 2019年11月5日/ }));
+    await userEvent.click(chart.getByRole("button", { name: /GPT · 2019年11月5日/u }));
     await expect(document.getByRole("article", { name: "Early GPT" })).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "最新の記録" }));
-    await userEvent.click(chart.getByRole("button", { name: /GPT · 2026年3月5日/ }));
+    await userEvent.click(chart.getByRole("button", { name: /GPT · 2026年3月5日/u }));
     await expect(document.getByRole("article", { name: "GPT Next" })).toBeVisible();
     const popup = document.getByRole("dialog");
     const popupPosition = popup.getBoundingClientRect();
@@ -363,20 +372,20 @@ export const FullHistory: Story = {
     await expect(chart.getAllByRole("button")).toHaveLength(pointCount);
     const originalWidth = chartElement.scrollWidth;
     await userEvent.click(canvas.getByRole("button", { name: "拡大" }));
-    await waitFor(() => expect(chartElement.scrollWidth).toBeGreaterThan(originalWidth));
+    await waitFor(async () => expect(chartElement.scrollWidth).toBeGreaterThan(originalWidth));
     await userEvent.click(canvas.getByRole("button", { name: "全期間を表示" }));
-    await waitFor(() =>
+    await waitFor(async () =>
       expect(chartElement.scrollWidth).toBeLessThanOrEqual(chartElement.clientWidth + 1),
     );
     await expect(chart.getAllByRole("button")).toHaveLength(pointCount);
     await userEvent.click(canvas.getByRole("button", { name: "Anthropic" }));
     await expect(chart.getByText("2019年", { exact: true })).toBeInTheDocument();
     await expect(
-      chart.getByRole("button", { name: /Claude Opus · 2025年12月31日/ }),
+      chart.getByRole("button", { name: /Claude Opus · 2025年12月31日/u }),
     ).toBeInTheDocument();
     const search = canvas.getByRole("searchbox", { name: "モデルを検索" });
     await userEvent.type(search, "Opus Next");
-    await userEvent.click(chart.getByRole("button", { name: /Claude Opus · 2026年2月5日/ }));
+    await userEvent.click(chart.getByRole("button", { name: /Claude Opus · 2026年2月5日/u }));
     await expect(document.getByRole("article", { name: "Claude Opus Next" })).toHaveTextContent(
       "前回から 36 日",
     );
@@ -399,7 +408,7 @@ export const DatePickerKeyboardAndCancel: Story = {
     await expect(picker.getByRole("combobox", { name: "月を選択" })).toHaveValue("3");
     await expect(trigger).toHaveTextContent("2026年3月");
     await userEvent.keyboard("{Escape}");
-    await waitFor(() =>
+    await waitFor(async () =>
       expect(
         document.queryByRole("dialog", { name: "移動する日付を選択" }),
       ).not.toBeInTheDocument(),
@@ -408,15 +417,15 @@ export const DatePickerKeyboardAndCancel: Story = {
     await userEvent.click(trigger);
     const reopened = within(document.getByRole("dialog", { name: "移動する日付を選択" }));
     await expect(reopened.getByRole("combobox", { name: "月を選択" })).toHaveValue("2");
-    await waitFor(() =>
-      expect(reopened.getByRole("button", { name: /2026年3月6日/ })).toHaveFocus(),
+    await waitFor(async () =>
+      expect(reopened.getByRole("button", { name: /2026年3月6日/u })).toHaveFocus(),
     );
     await userEvent.keyboard("{ArrowRight}{Enter}");
-    await expect(canvas.getByRole("button", { name: /^2026年3月7日:/ })).toHaveAttribute(
+    await expect(canvas.getByRole("button", { name: /^2026年3月7日:/u })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    await waitFor(() => expect(trigger).toHaveFocus());
+    await waitFor(async () => expect(trigger).toHaveFocus());
   },
 };
 
@@ -427,20 +436,21 @@ export const CalendarAcrossYears: Story = {
     const scroll = canvas.getByRole("region", { name: "横スクロールカレンダー" });
     const monthPicker = canvas.getByRole("button", { name: "月へ移動" });
     await chooseCalendarDate(canvasElement, "2024-02-29");
-    const leapDay = within(scroll).getByRole("button", { name: /^2024年2月29日:/ });
+    const leapDay = within(scroll).getByRole("button", { name: /^2024年2月29日:/u });
     await expect(leapDay).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(leapDay);
     await userEvent.keyboard("{ArrowRight}");
     await expect(monthPicker).toHaveTextContent("2024年3月");
-    await waitFor(() =>
-      expect(within(scroll).getByRole("button", { name: /^2024年3月1日:/ })).toHaveFocus(),
+    await waitFor(async () =>
+      expect(within(scroll).getByRole("button", { name: /^2024年3月1日:/u })).toHaveFocus(),
     );
     await userEvent.keyboard("{PageUp}");
     await expect(monthPicker).toHaveTextContent("2024年2月");
     monthPicker.focus();
     scroll.scrollLeft +=
-      scroll.querySelector('[data-calendar-month="2024-02"]')!.getBoundingClientRect().width + 16;
-    await waitFor(() => expect(monthPicker).toHaveTextContent("2024年3月"));
+      requireValue(scroll.querySelector('[data-calendar-month="2024-02"]')).getBoundingClientRect()
+        .width + 16;
+    await waitFor(async () => expect(monthPicker).toHaveTextContent("2024年3月"));
     await expect(monthPicker).toHaveFocus();
     await expect(scroll.querySelectorAll("[data-calendar-month]").length).toBeLessThan(7);
     await chooseCalendarDate(canvasElement, "2028-12-01");
@@ -449,11 +459,11 @@ export const CalendarAcrossYears: Story = {
     await expect(scroll.querySelectorAll("[data-calendar-month]").length).toBeLessThan(7);
     await userEvent.click(canvas.getByRole("button", { name: "今日に戻る" }));
     const initialLeft = scroll.scrollLeft;
-    const monthWidth = scroll
-      .querySelector('[data-calendar-month="2026-03"]')!
-      .getBoundingClientRect().width;
+    const monthWidth = requireValue(
+      scroll.querySelector('[data-calendar-month="2026-03"]'),
+    ).getBoundingClientRect().width;
     scroll.scrollLeft -= monthWidth + 16;
-    await waitFor(() => expect(monthPicker).toHaveTextContent("2026年2月"));
+    await waitFor(async () => expect(monthPicker).toHaveTextContent("2026年2月"));
     await expect(scroll.scrollLeft).toBeLessThan(initialLeft);
     await userEvent.click(canvas.getByRole("button", { name: "OpenAI" }));
     await expect(monthPicker).toHaveTextContent("2026年2月");
@@ -461,8 +471,8 @@ export const CalendarAcrossYears: Story = {
     await expect(monthPicker).toHaveTextContent("2026年3月");
     await chooseCalendarDate(canvasElement, "2010-01-01");
     scroll.scrollLeft = 0;
-    await waitFor(() => expect(monthPicker).toHaveTextContent("2009年1月"));
-    await waitFor(() => expect(scroll.scrollLeft).toBeGreaterThan(0));
+    await waitFor(async () => expect(monthPicker).toHaveTextContent("2009年1月"));
+    await waitFor(async () => expect(scroll.scrollLeft).toBeGreaterThan(0));
   },
 };
 
@@ -498,3 +508,10 @@ export const Empty: Story = {
     await expect(canvas.queryByRole("searchbox")).not.toBeInTheDocument();
   },
 };
+
+function requireValue<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) {
+    throw new Error("Required story fixture was not found");
+  }
+  return value;
+}

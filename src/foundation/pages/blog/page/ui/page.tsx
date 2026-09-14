@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getPageCount, paginate } from "@/shared/lib/presentation";
-import { resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { BlogPaginationPageContent } from "./page-content";
 
 type PageProps = {

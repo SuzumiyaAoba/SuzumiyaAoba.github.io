@@ -1,5 +1,6 @@
 import { cn } from "@/shared/lib/utils";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import type { BookChapter } from "@/entities/book";
 
 type BookNavProps = {
@@ -31,12 +32,11 @@ export function BookNav({
         {chapters.map((ch) => (
           <section key={ch.chapter} className="space-y-1">
             <p className="text-xs font-semibold text-foreground/70">
-              第{parseInt(ch.chapter, 10)}章 — {ch.title}
+              第{Number.parseInt(ch.chapter, 10)}章 — {ch.title}
             </p>
             <ol className="space-y-1">
               {ch.sections.map((sec) => {
-                const isCurrent =
-                  sec.chapter === currentChapter && sec.section === currentSection;
+                const isCurrent = sec.chapter === currentChapter && sec.section === currentSection;
                 return (
                   <li key={`${sec.chapter}-${sec.section}`}>
                     <a

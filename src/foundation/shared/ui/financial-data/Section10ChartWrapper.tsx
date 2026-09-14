@@ -1,6 +1,6 @@
 "use client";
 
-import { type MetricGroup } from "@/shared/ui/financial-charts";
+import type { MetricGroup } from "@/shared/ui/financial-charts";
 import { createLineChartWrapper } from "./_shared/line-chart-wrapper";
 import section10Data from "@/content/blog/2026-01-01-kakekin/data/section10.json";
 
@@ -47,7 +47,7 @@ const groups: MetricGroup[] = [
 
 export const Section10ChartWrapper = createLineChartWrapper({
   data: section10Data,
-  groups: groups,
+  groups,
   config: {
     yAxisMin: 0,
     yAxisMax: 65,

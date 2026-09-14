@@ -40,7 +40,11 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "scripts/**/*.mjs",
+    "next.config.mjs",
+    "postcss.config.mjs",
+    "public/pagefind-adapter.js"
   ],
   "exclude": ["node_modules"]
 }

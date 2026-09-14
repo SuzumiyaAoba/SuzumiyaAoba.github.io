@@ -142,6 +142,10 @@ npm run build
 
 `vite.config.ts` に Vite+ のテスト・lint・整形設定をまとめています。`npm run lint` は `vp lint` と Steiger、`npm run test` は `vp test run`、`npm run format` は `vp fmt` を実行します。テストを監視しながら実行するには `npm run test:watch` を使用します。型検査は `npm run typecheck` で TypeScript を実行します。
 
+Oxlint は全カテゴリを `error` にし、TypeScript の型情報を使った検査、React / Next.js、アクセシビリティ、import、Promise、Node.js、JSDoc のルールを有効にしています。Vitest のルールは単体テストに適用します。警告と不要になった無効化コメントも lint を失敗させます。
+
+競合するルールやフレームワークの規約に合わない制限は、`vite.config.ts` に理由を記載して調整しています。生成ファイルは対象から除外し、生成元を検査します。新たな例外は必要なファイル・行に限定し、理由をコメントに残してください。`nursery` を含むため、Vite+ の更新時は追加ルールの指摘と自動修正後の整形結果も確認します。
+
 Vite+ の `vp dev` / `vp build` は Vite 向けのコマンドです。このサイトの開発・静的出力は Next.js を使用するため、`npm run dev` / `npm run build` を使います。
 
 Vite+ は Storybook 10.6 の対応範囲に合わせて 0.2.9 に固定しています。更新するときは Storybook の対応範囲を確認し、`vite` のエイリアスと overrides、`vitest`・`@vitest/browser-playwright`・`@vitest/coverage-v8` も同梱バージョンに揃えてください。これらの直接依存は Storybook の peer dependency とブラウザテスト・カバレッジに必要です。TypeScript のパスエイリアスは Vite の `resolve.tsconfigPaths` で解決します。

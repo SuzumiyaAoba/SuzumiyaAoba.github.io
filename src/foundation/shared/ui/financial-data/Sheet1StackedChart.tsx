@@ -2,16 +2,17 @@
 
 import { useMemo } from "react";
 
-import { StackedAreaChart, type SheetData } from "@/shared/ui/financial-charts";
+import { StackedAreaChart } from "@/shared/ui/financial-charts";
+import type { SheetData } from "@/shared/ui/financial-charts";
 
 type Props = {
   data: SheetData;
 };
 
-const GROUP_HEADERS = [
+const GROUP_HEADERS = new Set([
   "口座の有無 （注１） | 口座を保有 している | ％",
   "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％",
-];
+]);
 
 /**
  * Sheet1(預貯金口座または証券会社等の口座の有無、現在保有している金融商品)を
@@ -20,15 +21,18 @@ const GROUP_HEADERS = [
  */
 export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
   // データがあるメトリクスを取得（グループヘッダーを除外）
-  const availableMetrics = useMemo(() => {
-    return data.headers.filter((header) => {
-      return !GROUP_HEADERS.includes(header) && data.series.some((s) => s.values[header] !== null);
-    });
-  }, [data]);
+  const availableMetrics = useMemo(
+    () =>
+      data.headers.filter(
+        (header) =>
+          !GROUP_HEADERS.has(header) && data.series.some((s) => s.values[header] !== null),
+      ),
+    [data],
+  );
 
   // グループ情報を作成
-  const groups = useMemo(() => {
-    return [
+  const groups = useMemo(
+    () => [
       {
         name: "口座の有無（注１）",
         metrics: availableMetrics.filter((m) => {
@@ -43,12 +47,18 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
           return headerIdx >= 6;
         }),
       },
-    ];
-  }, [availableMetrics, data.headers]);
+    ],
+    [availableMetrics, data.headers],
+  );
 
-  const title = `${data.metadata.title.replace(/^1[\s.、]*/, "")}（帯グラフ）`;
+  const title = `${data.metadata.title.replace(/^1[\s.、]*/u, "")}（帯グラフ）`;
 
   return (
-    <StackedAreaChart data={data} groups={groups} availableMetrics={availableMetrics} title={title} />
+    <StackedAreaChart
+      data={data}
+      groups={groups}
+      availableMetrics={availableMetrics}
+      title={title}
+    />
   );
 };

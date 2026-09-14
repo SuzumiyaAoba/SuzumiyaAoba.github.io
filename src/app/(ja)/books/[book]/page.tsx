@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return buildBooksPageMetadata(book);
 }
 
-export async function generateStaticParams(): Promise<Array<{ book: string }>> {
+export async function generateStaticParams(): Promise<{ book: string }[]> {
   const slugs = await getBookSlugs();
   return slugs.map((book) => ({ book }));
 }

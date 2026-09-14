@@ -1,3 +1,4 @@
+import { annotationContent, annotationData } from "./annotation-data";
 import type { AnnotationHandler, BlockAnnotation, InlineAnnotation } from "codehike/code";
 import { InnerLine } from "codehike/code";
 import { ChevronDown } from "lucide-react";
@@ -38,7 +39,7 @@ export const mark: AnnotationHandler = {
     );
   },
   Inline: ({ annotation, children }) => {
-    const color = annotation?.query || "oklch(0.7 0.15 250)";
+    const color = annotation.query || "oklch(0.7 0.15 250)";
     return (
       <span
         className="rounded px-0.5 py-0 -mx-0.5"
@@ -72,17 +73,18 @@ export const diff: AnnotationHandler = {
 export const callout: AnnotationHandler = {
   name: "callout",
   transform: (annotation: InlineAnnotation) => {
-    const { name, query, lineNumber, fromColumn, toColumn, data } = annotation;
+    const { name, query, lineNumber, fromColumn, toColumn } = annotation;
     return {
       name,
       query,
       fromLineNumber: lineNumber,
       toLineNumber: lineNumber,
-      data: { ...data, column: (fromColumn + toColumn) / 2 },
+      data: { ...annotationData(annotation.data), column: (fromColumn + toColumn) / 2 },
     };
   },
   Block: ({ annotation, children }) => {
-    const { column } = annotation.data;
+    const rawColumn = annotationData(annotation.data)["column"];
+    const column = typeof rawColumn === "number" ? rawColumn : 0;
     return (
       <>
         {children}
@@ -147,7 +149,7 @@ export const collapseTrigger: AnnotationHandler = {
   name: "CollapseTrigger",
   onlyIfAnnotated: true,
   AnnotatedLine: ({ lineNumber, totalLines, children }) => {
-    const width = (totalLines ?? 1).toString().length + 1;
+    const width = totalLines.toString().length + 1;
     return (
       <summary className="flex w-full cursor-pointer list-none items-start font-normal [&::-webkit-details-marker]:hidden">
         <span
@@ -173,7 +175,8 @@ export const collapseContent: AnnotationHandler = {
 export const tooltip: AnnotationHandler = {
   name: "tooltip",
   Inline: ({ children, annotation }) => {
-    const { query, data } = annotation;
+    const { query } = annotation;
+    const content = annotationContent(annotationData(annotation.data)["children"]);
     return (
       <span className="relative inline-flex group">
         <span className="underline decoration-dotted underline-offset-4">{children}</span>
@@ -185,7 +188,7 @@ export const tooltip: AnnotationHandler = {
             color: "var(--codehike-tooltip-text)",
           }}
         >
-          {data?.children || query}
+          {content ?? query}
         </span>
       </span>
     );
@@ -200,14 +203,12 @@ export const classNameHandler: AnnotationHandler = {
 
 export const footnotes: AnnotationHandler = {
   name: "ref",
-  AnnotatedLine: ({ annotation, ...props }) => {
-    return (
-      <div className="flex items-start gap-2">
-        <InnerLine merge={props} />
-        <FootnoteNumber n={annotation.data.n} />
-      </div>
-    );
-  },
+  AnnotatedLine: ({ annotation, ...props }) => (
+    <div className="flex items-start gap-2">
+      <InnerLine merge={props} />
+      <FootnoteNumber n={Number(annotationData(annotation.data)["n"] ?? 0)} />
+    </div>
+  ),
 };
 
 export function FootnoteNumber({ n }: { n: number }) {

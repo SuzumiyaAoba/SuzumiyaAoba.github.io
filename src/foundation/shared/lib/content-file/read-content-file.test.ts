@@ -3,13 +3,13 @@ import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { createArticleFileLister, readContentFileWithFallback } from "./read-content-file";
+
 let contentRoot = "";
 
-vi.mock("./content-root", () => ({
-  resolveContentRoot: () => Promise.resolve(contentRoot),
+vi.mock(import("./content-root"), () => ({
+  resolveContentRoot: async () => contentRoot,
 }));
-
-import { createArticleFileLister, readContentFileWithFallback } from "./read-content-file";
 
 describe("createArticleFileLister / readContentFileWithFallback", () => {
   beforeAll(async () => {
@@ -37,7 +37,7 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
     const file = await readContentFileWithFallback("blog", "both-locales", listFiles, {
       locale: "ja",
     });
-    expect(file).toEqual({ raw: "ja content", format: "md" });
+    expect(file).toStrictEqual({ raw: "ja content", format: "md" });
   });
 
   it("mdxもフォーマットとして認識する", async () => {
@@ -45,13 +45,13 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
     const file = await readContentFileWithFallback("blog", "ja-only-mdx", listFiles, {
       locale: "ja",
     });
-    expect(file).toEqual({ raw: "ja mdx content", format: "mdx" });
+    expect(file).toStrictEqual({ raw: "ja mdx content", format: "mdx" });
   });
 
   it("指定localeが無くfallback有効ならもう一方を読む", async () => {
     const listFiles = createArticleFileLister("blog");
     const file = await readContentFileWithFallback("blog", "en-only", listFiles, { locale: "ja" });
-    expect(file).toEqual({ raw: "en only content", format: "md" });
+    expect(file).toStrictEqual({ raw: "en only content", format: "md" });
   });
 
   it("fallback無効なら別言語を読まない", async () => {
@@ -65,15 +65,15 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
 
   it("英語版がなければ日本語のMDXにフォールバックする", async () => {
     const listFiles = createArticleFileLister("blog");
-    expect(
-      await readContentFileWithFallback("blog", "ja-only-mdx", listFiles, { locale: "en" }),
-    ).toEqual({ raw: "ja mdx content", format: "mdx" });
-    expect(
-      await readContentFileWithFallback("blog", "ja-only-mdx", listFiles, {
+    await expect(
+      readContentFileWithFallback("blog", "ja-only-mdx", listFiles, { locale: "en" }),
+    ).resolves.toStrictEqual({ raw: "ja mdx content", format: "mdx" });
+    await expect(
+      readContentFileWithFallback("blog", "ja-only-mdx", listFiles, {
         locale: "en",
         fallback: false,
       }),
-    ).toBeNull();
+    ).resolves.toBeNull();
   });
 
   it("どちらの言語も存在しなければnullを返す", async () => {
@@ -85,6 +85,6 @@ describe("createArticleFileLister / readContentFileWithFallback", () => {
   it("optionsを省略した場合はja+fallbackが既定になる", async () => {
     const listFiles = createArticleFileLister("blog");
     const file = await readContentFileWithFallback("blog", "en-only", listFiles);
-    expect(file).toEqual({ raw: "en only content", format: "md" });
+    expect(file).toStrictEqual({ raw: "en only content", format: "md" });
   });
 });

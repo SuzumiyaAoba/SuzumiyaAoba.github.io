@@ -3,13 +3,13 @@ import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { listContentSlugs } from "./list-slugs";
+
 let contentRoot = "";
 
-vi.mock("./content-root", () => ({
-  resolveContentRoot: () => Promise.resolve(contentRoot),
+vi.mock(import("./content-root"), () => ({
+  resolveContentRoot: async () => contentRoot,
 }));
-
-import { listContentSlugs } from "./list-slugs";
 
 describe("listContentSlugs", () => {
   beforeAll(async () => {
@@ -24,7 +24,7 @@ describe("listContentSlugs", () => {
   });
 
   it("ディレクトリ名を昇順で返す", async () => {
-    expect(await listContentSlugs("blog")).toEqual(["post-a", "post-b"]);
+    await expect(listContentSlugs("blog")).resolves.toStrictEqual(["post-a", "post-b"]);
   });
 
   it("ファイルはslugとして含めない", async () => {
@@ -33,6 +33,6 @@ describe("listContentSlugs", () => {
   });
 
   it("存在しないcollectionDirは空配列を返す", async () => {
-    expect(await listContentSlugs("does-not-exist")).toEqual([]);
+    await expect(listContentSlugs("does-not-exist")).resolves.toStrictEqual([]);
   });
 });

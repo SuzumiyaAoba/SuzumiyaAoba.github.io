@@ -10,13 +10,13 @@ const DESCRIPTION_MAX_LENGTH = 120;
  */
 function extractDescription(lead: string): string {
   const plain = lead
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/^#{1,6}\s+/gm, "")
-    .replace(/[*_`>#]/g, "")
-    .replace(/\{#[^}]+\}/g, "")
-    .replace(/\s+/g, " ")
+    .replaceAll(/```[\s\S]*?```/gu, "")
+    .replaceAll(/!\[[^\]]*\]\([^)]*\)/gu, "")
+    .replaceAll(/\[([^\]]*)\]\([^)]*\)/gu, "$1")
+    .replaceAll(/^#{1,6}\s+/gmu, "")
+    .replaceAll(/[*_`>#]/gu, "")
+    .replaceAll(/\{#[^}]+\}/gu, "")
+    .replaceAll(/\s+/gu, " ")
     .trim();
 
   if (plain.length <= DESCRIPTION_MAX_LENGTH) {

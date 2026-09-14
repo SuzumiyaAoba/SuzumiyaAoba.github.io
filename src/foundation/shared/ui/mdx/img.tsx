@@ -38,7 +38,7 @@ export function Img({ basePath, src, width, height, className, ...props }: MdxIm
   const resolvedSrc =
     typeof src === "string"
       ? basePath && src.startsWith("./")
-        ? `${basePath}/${src.replace(/^\.\//, "").replace(/\.(png|jpg|jpeg)$/i, ".webp")}`
+        ? `${basePath}/${src.replace(/^\.\//u, "").replace(/\.(png|jpg|jpeg)$/iu, ".webp")}`
         : src
       : "";
   const resolvedWidth = toNumber(width) ?? 1200;

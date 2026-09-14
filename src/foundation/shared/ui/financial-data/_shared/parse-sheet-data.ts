@@ -1,4 +1,5 @@
-import { SheetDataSchema, type SheetData } from "@/shared/ui/financial-charts";
+import { SheetDataSchema } from "@/shared/ui/financial-charts";
+import type { SheetData } from "@/shared/ui/financial-charts";
 
 type AssetsDataWithSheets = { sheets: Record<string, unknown> };
 

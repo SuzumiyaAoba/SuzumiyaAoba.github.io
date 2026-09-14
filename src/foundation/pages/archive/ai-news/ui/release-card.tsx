@@ -2,7 +2,8 @@ import { useId } from "react";
 import { ArrowRight, ChevronDown, Clock3 } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
-import { dateTimestamp, formatReleaseDate, type Release } from "../model/release-calendar";
+import { dateTimestamp, formatReleaseDate } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
 import { ProviderIcon, providerStyles, providerLabel, kindLabel } from "./provider-identity";
 
 export function ReleaseCard({
@@ -20,9 +21,9 @@ export function ReleaseCard({
   const dateLabel = release.date
     ? formatReleaseDate(release.date, locale)
     : `${release.entry.date || release.entry.year} · ${en ? "Exact date unknown" : "日付未詳"}`;
-  const primaryInterval = release.intervals[0];
+  const [primaryInterval] = release.intervals;
   const noIntervalLabel =
-    release.date && release.series.length
+    release.date && release.series.length > 0
       ? en
         ? "First recorded release in this series"
         : "この系列で最初に記録されたリリース"
@@ -64,15 +65,16 @@ export function ReleaseCard({
       ))}
     </div>
   );
-  const tags = release.entry.tags?.length ? (
-    <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
-      {release.entry.tags.map((tag) => (
-        <span key={tag}>#{tag}</span>
-      ))}
-    </div>
-  ) : null;
+  const tags =
+    (release.entry.tags?.length ?? 0) > 0 ? (
+      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+        {(release.entry.tags ?? []).map((tag) => (
+          <span key={tag}>#{tag}</span>
+        ))}
+      </div>
+    ) : null;
 
-  if (compact)
+  if (compact) {
     return (
       <article
         aria-labelledby={titleId}
@@ -135,7 +137,7 @@ export function ReleaseCard({
               </div>
             ) : (
               <span className="rounded-lg bg-muted px-3 py-2 text-[11px] text-muted-foreground">
-                {release.date && release.series.length
+                {release.date && release.series.length > 0
                   ? en
                     ? "First recorded"
                     : "系列の初回記録"
@@ -159,6 +161,7 @@ export function ReleaseCard({
         </details>
       </article>
     );
+  }
 
   return (
     <article

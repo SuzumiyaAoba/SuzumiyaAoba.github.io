@@ -1,4 +1,5 @@
-import { decodePathParam, type Locale } from "@/shared/lib/routing";
+import { decodePathParam } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import type { Metadata } from "next";
 import { getAllBlogTags, getBlogTagIndex } from "@/entities/blog";
 import { buildLocaleAlternates } from "./locale-alternates";
@@ -48,7 +49,7 @@ export async function buildTagPageMetadata(
 /**
  * タグ詳細ページの generateStaticParams。ja/en で完全に共通。
  */
-export async function buildTagPageStaticParams(): Promise<Array<{ tag: string }>> {
+export async function buildTagPageStaticParams(): Promise<{ tag: string }[]> {
   const tags = await getAllBlogTags();
   return tags.flatMap(({ name: tag }) => {
     const encoded = encodeURIComponent(tag);

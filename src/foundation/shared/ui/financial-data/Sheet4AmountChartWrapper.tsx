@@ -14,10 +14,11 @@ export const Sheet4AmountChartWrapper: React.FC = () => {
   }
 
   // パーセンテージデータをすべて除外し、平均と中央値のみを表示
-  const excludeHeaders = sheet4Data.headers.filter((header) => {
-    // 平均と中央値以外をすべて除外
-    return header !== "平均 | 万円" && header !== "中央値 | 万円";
-  });
+  const excludeHeaders = sheet4Data.headers.filter(
+    (header) =>
+      // 平均と中央値以外をすべて除外
+      header !== "平均 | 万円" && header !== "中央値 | 万円",
+  );
 
   // 万円データのみを抽出（平均と中央値）
   const amountMetrics = ["平均 | 万円", "中央値 | 万円"].filter((header) =>
@@ -40,7 +41,7 @@ export const Sheet4AmountChartWrapper: React.FC = () => {
       excludeHeaders={excludeHeaders}
       config={{
         yAxisMin: 0,
-        yAxisMax: yAxisMax,
+        yAxisMax,
         yAxisLabel: "万円",
         startYear: 2004,
         labelMap,

@@ -1,14 +1,12 @@
 import { getSeriesBySlug, getSeriesSlugs } from "@/entities/series-item";
-import {
-  CONTENT_OPENGRAPH_IMAGE_SIZE,
-  renderContentOpengraphImage,
-} from "@/app/_shared/content-opengraph-image";
+import { renderContentOpengraphImage } from "@/app/_shared/content-opengraph-image";
 
-export const size = CONTENT_OPENGRAPH_IMAGE_SIZE;
+export { CONTENT_OPENGRAPH_IMAGE_SIZE as size } from "@/app/_shared/content-opengraph-image";
+
 export const contentType = "image/png";
 export const dynamic = "force-static";
 
-export async function generateStaticParams(): Promise<Array<{ series: string }>> {
+export async function generateStaticParams(): Promise<{ series: string }[]> {
   const slugs = await getSeriesSlugs();
   return slugs.map((series) => ({ series }));
 }

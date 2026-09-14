@@ -18,7 +18,7 @@ const dummySeriesRaw = {
   description: "Series A Description",
   posts: ["post-1", "post-2"],
   thumbnail: "iconify:mdi:react",
-} as any;
+};
 
 const dummyEntries = [
   {

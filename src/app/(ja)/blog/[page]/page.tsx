@@ -1,11 +1,9 @@
-import {
-  buildBlogPageMetadata,
-  buildBlogPageStaticParams,
-} from "@/app/_shared/blog-page-static-params";
 import BlogPage from "@/pages/blog/page";
 
-export const generateMetadata = buildBlogPageMetadata;
-export const generateStaticParams = buildBlogPageStaticParams;
+export {
+  buildBlogPageMetadata as generateMetadata,
+  buildBlogPageStaticParams as generateStaticParams,
+} from "@/app/_shared/blog-page-static-params";
 
 type PageComponentProps = {
   params: Promise<{ page: string }>;

@@ -1,6 +1,7 @@
 import type { Locale } from "@/shared/lib/routing";
 import { getBookMeta, getBookSlugs } from "@/entities/book";
-import { BooksIndexPageContent, type BookListEntry } from "./page-content";
+import { BooksIndexPageContent } from "./page-content";
+import type { BookListEntry } from "./page-content";
 
 type PageProps = {
   locale?: Locale;
@@ -8,7 +9,7 @@ type PageProps = {
 
 export default async function Page({ locale = "ja" }: PageProps) {
   const slugs = await getBookSlugs();
-  const metas = await Promise.all(slugs.map((slug) => getBookMeta(slug)));
+  const metas = await Promise.all(slugs.map(async (slug) => getBookMeta(slug)));
 
   const books: BookListEntry[] = metas
     .flatMap((meta) => (meta ? [meta] : []))

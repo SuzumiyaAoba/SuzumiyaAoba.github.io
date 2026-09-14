@@ -7,8 +7,8 @@ import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { BackLink } from "@/shared/ui/back-link";
 import { Badge } from "@/shared/ui/badge";
@@ -91,7 +91,7 @@ export function NotesDetailPageContent({
           {isEn && translationModel ? (
             <Message title="Translation" variant="info" defaultOpen>
               This note was translated by {translationModel}. The original is{" "}
-              <a href={originalPath}>here</a>.
+              <a href={originalPath}>read the original Japanese article</a>.
             </Message>
           ) : null}
           <div>{content}</div>

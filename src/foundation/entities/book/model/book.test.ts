@@ -5,9 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vite-plus/test";
 import { getAdjacentSections, getBookMeta, getBookSection, getBookSlugs, getBookToc } from "./book";
 
 let contentRoot = "";
-vi.mock("@/shared/lib/content-file/content-root", () => ({
-  resolveContentRoot: () => Promise.resolve(contentRoot),
-}));
+let fixtureDirectory = "";
 
 async function write(relativePath: string, content: string) {
   const filename = path.join(contentRoot, "books", relativePath);
@@ -16,7 +14,9 @@ async function write(relativePath: string, content: string) {
 }
 
 beforeAll(async () => {
-  contentRoot = await mkdtemp(path.join(tmpdir(), "book-test-"));
+  fixtureDirectory = await mkdtemp(path.join(tmpdir(), "book-test-"));
+  contentRoot = path.join(fixtureDirectory, "content");
+  vi.spyOn(process, "cwd").mockReturnValue(fixtureDirectory);
   await write(
     "sample/index.md",
     `---
@@ -54,13 +54,16 @@ co-author: Author A
 });
 
 afterAll(async () => {
-  await rm(contentRoot, { recursive: true, force: true });
+  vi.restoreAllMocks();
+  if (fixtureDirectory) {
+    await rm(fixtureDirectory, { recursive: true, force: true });
+  }
 });
 
 describe("書籍の公開API", () => {
   it("書籍を並べ、frontmatterと最初の区切りまでの概要を読み込む", async () => {
-    expect(await getBookSlugs()).toEqual(["another", "sample"]);
-    expect(await getBookMeta("sample")).toEqual({
+    await expect(getBookSlugs()).resolves.toStrictEqual(["another", "sample"]);
+    await expect(getBookMeta("sample")).resolves.toStrictEqual({
       slug: "sample",
       frontmatter: {
         title: "サンプル書籍",
@@ -74,7 +77,7 @@ describe("書籍の公開API", () => {
   });
 
   it("章と節を番号順に並べ、画像やディレクトリを目次に含めない", async () => {
-    expect(await getBookToc("sample")).toEqual([
+    await expect(getBookToc("sample")).resolves.toStrictEqual([
       {
         chapter: "01",
         title: "はじめに",
@@ -97,7 +100,7 @@ describe("書籍の公開API", () => {
   });
 
   it("MDXの本文・形式・著者情報を保ち、falseのフラグを省略しない", async () => {
-    expect(await getBookSection("sample", "01", "02")).toEqual({
+    await expect(getBookSection("sample", "01", "02")).resolves.toStrictEqual({
       chapter: "01",
       section: "02",
       title: "次の節",
@@ -110,31 +113,34 @@ describe("書籍の公開API", () => {
 
   it("通常のファイルと番号のみのファイルを、目次と同じ規則で読み込む", async () => {
     expect((await getBookSection("sample", "01", "01"))?.title).toBe("最初の節");
-    expect(await getBookSection("sample", "02", "01")).toEqual({
+    await expect(getBookSection("sample", "02", "01")).resolves.toStrictEqual({
       chapter: "02",
       section: "01",
       title: "01.md",
       content: "番号だけの節。\n",
       format: "md",
     });
-    expect(await getBookSection("sample", "01", "03")).toBeNull();
+    await expect(getBookSection("sample", "01", "03")).resolves.toBeNull();
   });
 
   it("前後の節を章をまたいで返し、先頭・末尾・未登録の節を扱う", async () => {
-    expect(await getAdjacentSections("sample", "01", "02")).toEqual({
+    await expect(getAdjacentSections("sample", "01", "02")).resolves.toStrictEqual({
       prev: { chapter: "01", section: "01", title: "最初の節" },
       next: { chapter: "02", section: "01", title: "01.md" },
     });
     expect((await getAdjacentSections("sample", "01", "01")).prev).toBeNull();
     expect((await getAdjacentSections("sample", "03", "01")).next).toBeNull();
-    expect(await getAdjacentSections("sample", "99", "99")).toEqual({ prev: null, next: null });
+    await expect(getAdjacentSections("sample", "99", "99")).resolves.toStrictEqual({
+      prev: null,
+      next: null,
+    });
   });
 
   it("存在しない書籍・章・節や壊れた本文は公開用データとして返さない", async () => {
-    expect(await getBookMeta("missing")).toBeNull();
-    expect(await getBookToc("missing")).toEqual([]);
-    expect(await getBookSection("sample", "missing", "01")).toBeNull();
-    expect(await getBookSection("sample", "01", "missing")).toBeNull();
-    expect(await getBookSection("sample", "03", "01")).toBeNull();
+    await expect(getBookMeta("missing")).resolves.toBeNull();
+    await expect(getBookToc("missing")).resolves.toStrictEqual([]);
+    await expect(getBookSection("sample", "missing", "01")).resolves.toBeNull();
+    await expect(getBookSection("sample", "01", "missing")).resolves.toBeNull();
+    await expect(getBookSection("sample", "03", "01")).resolves.toBeNull();
   });
 });

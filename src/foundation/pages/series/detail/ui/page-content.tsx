@@ -11,9 +11,9 @@ import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
-  type Locale,
 } from "@/shared/lib/routing";
-import { SeriesDefinition } from "@/entities/series-item";
+import type { Locale } from "@/shared/lib/routing";
+import type { SeriesDefinition } from "@/entities/series-item";
 
 export type SeriesDetailPageContentProps = {
   locale: Locale;

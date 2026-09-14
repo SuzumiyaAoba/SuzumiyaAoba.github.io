@@ -6,8 +6,8 @@ import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
-  type Locale,
 } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import type { BookChapter } from "@/entities/book";
 
@@ -56,7 +56,7 @@ export function BookDetailPageContent({
             {chapters.map((ch) => (
               <section key={ch.chapter} className="space-y-2">
                 <h3 className="text-sm font-semibold text-foreground">
-                  第{parseInt(ch.chapter, 10)}章 — {ch.title}
+                  第{Number.parseInt(ch.chapter, 10)}章 — {ch.title}
                 </h3>
                 <ol className="space-y-1 pl-4">
                   {ch.sections.map((sec) => (

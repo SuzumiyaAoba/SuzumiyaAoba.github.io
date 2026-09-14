@@ -8,8 +8,8 @@ import { resolveLocalizedValue } from "@/shared/lib/routing";
 import {
   buildContentSitemapEntries,
   buildTranslatedSitemapEntries,
-  type SitemapPage,
 } from "./_shared/sitemap-entries";
+import type { SitemapPage } from "./_shared/sitemap-entries";
 
 export const dynamic = "force-static";
 
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const staticPages = buildTranslatedSitemapEntries(
     [
-      { path: "/", changeFrequency: "daily", priority: 1.0 },
+      { path: "/", changeFrequency: "daily", priority: 1 },
       { path: "/about", changeFrequency: "monthly", priority: 0.8 },
       { path: "/awesome-something", changeFrequency: "weekly", priority: 0.7 },
       { path: "/blog", changeFrequency: "daily", priority: 0.9 },
@@ -68,10 +68,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const bookSlugs = await getBookSlugs();
-  const bookMetas = await Promise.all(bookSlugs.map((slug) => getBookMeta(slug)));
+  const bookMetas = await Promise.all(bookSlugs.map(async (slug) => getBookMeta(slug)));
   const bookLastModified = new Map<string, Date>();
   for (const meta of bookMetas) {
-    if (meta && meta.frontmatter.date) {
+    if (meta?.frontmatter.date) {
       bookLastModified.set(meta.slug, new Date(meta.frontmatter.date));
     }
   }
@@ -92,8 +92,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
   const bookSectionPages: MetadataRoute.Sitemap = [];
-  for (const slug of bookSlugs) {
-    const toc = await getBookToc(slug);
+  const booksWithToc = await Promise.all(
+    bookSlugs.map(async (slug) => ({ slug, toc: await getBookToc(slug) })),
+  );
+  for (const { slug, toc } of booksWithToc) {
     for (const ch of toc) {
       for (const sec of ch.sections) {
         bookSectionPages.push({
@@ -108,7 +110,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const postLastModifiedBySlug = new Map<string, Date>();
   for (const post of postsForDates) {
-    if (post && post.frontmatter.date) {
+    if (post.frontmatter.date) {
       postLastModifiedBySlug.set(post.slug, new Date(post.frontmatter.date));
     }
   }

@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section28Data from "@/content/blog/2026-01-01-kakekin/data/section28.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section28ChartWrapper: React.FC = () => {
-  if (!section28Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "50万円未満 | ％": "50万円未満",
     "50～100万円未満 | ％": "50～100万円",

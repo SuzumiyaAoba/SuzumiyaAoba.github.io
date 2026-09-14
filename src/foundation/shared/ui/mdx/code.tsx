@@ -1,5 +1,7 @@
 "use client";
 
+import { annotationData } from "./annotation-data";
+
 import { useEffect, useState } from "react";
 import type { HighlightedCode } from "codehike/code";
 
@@ -36,7 +38,7 @@ export function Code({ codeblock }: CodeProps) {
     noteIndex += 1;
     return {
       ...annotation,
-      data: { ...annotation.data, n: noteIndex },
+      data: { ...annotationData(annotation.data), n: noteIndex },
     };
   });
   const { displayMeta } = parseCodeMeta(codeblock.meta);

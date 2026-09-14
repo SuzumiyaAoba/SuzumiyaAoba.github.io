@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
-import { Cell, ASCII_TABLE_ATTR, ASCII_TABLE, THEME_COLORS } from "./StandardCode.utils";
+import type { Cell } from "./StandardCode.utils";
+import { ASCII_TABLE_ATTR, ASCII_TABLE, THEME_COLORS } from "./StandardCode.utils";
 import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
 import { useResolvedTheme } from "./use-resolved-theme";
 
@@ -23,7 +24,7 @@ export const AsciiTable = ({
       const isHoveredRow = hoveredCell?.[1] === py;
       const isHoveredCol = hoveredCell?.[0] === px;
       const isHovered = isHoveredRow && isHoveredCol;
-      const isClicked = clickedCell?.[0] === px && clickedCell?.[1] === py;
+      const isClicked = clickedCell?.[0] === px && clickedCell[1] === py;
 
       const cellValue = ASCII_TABLE[py]?.[px] ?? "";
       return (

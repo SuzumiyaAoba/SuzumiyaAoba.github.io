@@ -14,7 +14,7 @@ const meta: Meta<typeof Response> = {
           <li>List item 2</li>
         </ul>
         <pre>
-          <code>console.log("Hello");</code>
+          <code>console.log(&quot;Hello&quot;);</code>
         </pre>
       </>
     ),

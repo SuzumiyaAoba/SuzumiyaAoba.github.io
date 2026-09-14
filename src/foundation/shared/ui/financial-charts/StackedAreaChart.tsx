@@ -6,7 +6,8 @@ import { scaleLinear } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import { select } from "d3-selection";
 import { appendChartAxes } from "./chart-axes";
-import { area, stack, stackOrderNone, stackOffsetNone, type SeriesPoint } from "d3-shape";
+import { area, stack, stackOrderNone, stackOffsetNone } from "d3-shape";
+import type { SeriesPoint } from "d3-shape";
 import { appendChartPatterns } from "./chart-patterns";
 
 import type { SheetData, MetricGroup } from "./types";
@@ -64,17 +65,19 @@ export const StackedAreaChart: React.FC<Props> = ({
 
       // データを変換
       const parseData = data.series.map((d) => {
-        const yearData: StackedDatum = { year: Number.parseInt(d.year) };
-        group.metrics.forEach((metric) => {
-          yearData[metric] = d.values[metric] || 0;
-        });
+        const yearData: StackedDatum = { year: Number.parseInt(d.year, 10) };
+        for (const metric of group.metrics) {
+          yearData[metric] = d.values[metric] ?? 0;
+        }
         return yearData;
       });
 
-      if (parseData.length === 0) return;
+      if (parseData.length === 0) {
+        return;
+      }
 
       // スケール設定
-      const maxYear = max(parseData, (d) => d.year) || 2025;
+      const maxYear = max(parseData, (d) => d.year) ?? 2025;
       const x = scaleLinear().domain([2006, maxYear]).range([0, width]);
 
       const y = scaleLinear().domain([0, 100]).range([height, 0]);
@@ -93,12 +96,12 @@ export const StackedAreaChart: React.FC<Props> = ({
         .y0((d) => y(d[0]))
         .y1((d) => y(d[1]));
 
-      appendChartAxes(g, { x, y, width, height });
+      appendChartAxes<number>(g, { x, y, width, height });
 
       // 帯グラフを描画
-      stackedData.forEach((layer) => {
+      for (const layer of stackedData) {
         const metricIndex = availableMetrics.indexOf(layer.key);
-        const patternIndex = metricIndex >= 0 ? metricIndex : 0;
+        const patternIndex = Math.max(metricIndex, 0);
         const strokeColor = colors[patternIndex % colors.length] ?? "#000";
 
         g.append("path")
@@ -107,7 +110,7 @@ export const StackedAreaChart: React.FC<Props> = ({
           .attr("stroke", strokeColor)
           .attr("stroke-width", 1)
           .attr("d", areaGenerator);
-      });
+      }
 
       // レジェンド
       const legend = g
@@ -128,12 +131,12 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("height", 15)
         .attr("fill", (d) => {
           const index = availableMetrics.indexOf(d);
-          const patternIndex = index >= 0 ? index : 0;
+          const patternIndex = Math.max(index, 0);
           return patternFill(patternIndex);
         })
         .attr("stroke", (d) => {
           const index = availableMetrics.indexOf(d);
-          const colorIndex = index >= 0 ? index : 0;
+          const colorIndex = Math.max(index, 0);
           return colors[colorIndex % colors.length] ?? "#000";
         })
         .attr("stroke-width", 1);
@@ -143,18 +146,18 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("x", 20)
         .attr("y", 9)
         .attr("dy", "0.35em")
-        .text((d) => d?.split("|")[0]?.trim() ?? "");
+        .text((d) => d.split("|")[0]?.trim() ?? "");
     },
     [availableMetrics, chartId, colors, data.series],
   );
 
   useEffect(() => {
-    groups.forEach((group, index) => {
+    for (const [index, group] of groups.entries()) {
       const svgElement = svgRefs.current[index];
       if (svgElement) {
         renderStackedChart(svgElement, group, index);
       }
-    });
+    }
   }, [groups, renderStackedChart]);
 
   return (

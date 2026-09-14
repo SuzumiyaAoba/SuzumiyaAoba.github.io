@@ -4,7 +4,8 @@ import { createPortal } from "react-dom";
 import { Pin, X } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
-import { formatReleaseDate, type Release } from "../model/release-calendar";
+import { formatReleaseDate } from "../model/release-calendar";
+import type { Release } from "../model/release-calendar";
 import { ProviderIcon } from "./provider-identity";
 import { ReleaseCard } from "./release-card";
 
@@ -57,7 +58,9 @@ export function useReleasePopover(locale: Locale) {
     const current = active?.id === target.id;
     const pinned = current && active.pinned;
     const preview = (anchor: HTMLButtonElement) => {
-      if (restoringFocus.current) return;
+      if (restoringFocus.current) {
+        return;
+      }
       setActive((previous) =>
         previous?.pinned
           ? previous
@@ -75,7 +78,7 @@ export function useReleasePopover(locale: Locale) {
     };
     return {
       "aria-haspopup": "dialog",
-      "aria-expanded": Boolean(pinned),
+      "aria-expanded": pinned,
       "aria-controls": pinned ? id : undefined,
       "aria-describedby": current && !pinned ? id : undefined,
       onMouseEnter: (event) => preview(event.currentTarget),
@@ -83,8 +86,11 @@ export function useReleasePopover(locale: Locale) {
       onFocus: (event) => preview(event.currentTarget),
       onBlur: hidePreview,
       onClick: (event) => {
-        if (pinned) dismiss();
-        else showDetails(target, event.currentTarget, event.detail === 0);
+        if (pinned) {
+          dismiss();
+        } else {
+          showDetails(target, event.currentTarget, event.detail === 0);
+        }
       },
       onKeyDown: (event) => {
         if (pinned && event.key === "Tab" && !event.shiftKey) {
@@ -96,7 +102,9 @@ export function useReleasePopover(locale: Locale) {
   }
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      return;
+    }
     const onPointerDown = (event: PointerEvent) => {
       if (
         event.target instanceof Node &&
@@ -160,25 +168,35 @@ function ReleasePopover({
 
   useLayoutEffect(() => {
     const panel = panelRef.current;
-    if (!panel) return;
+    if (!panel) {
+      return;
+    }
     const update = () => {
       // 選択後は画面上の位置を保ち、カレンダーの仮想スクロールでも詳細を読めるようにする。
       const rect = active.pinned ? active.bounds : active.anchor.getBoundingClientRect();
       if (!active.pinned) {
-        const region = active.anchor.closest<HTMLElement>('[role="region"]');
+        const region = active.anchor.closest<HTMLElement>("[data-release-viewport]");
         const bounds = region?.getBoundingClientRect();
         const style = region ? getComputedStyle(region) : null;
         if (
           !active.anchor.isConnected ||
           (bounds &&
             (rect.right <=
-              Math.max(0, bounds.left + (parseFloat(style?.scrollPaddingLeft ?? "0") || 0)) ||
+              Math.max(
+                0,
+                bounds.left + (Number.parseFloat(style?.scrollPaddingLeft ?? "0") || 0),
+              ) ||
               rect.left >= Math.min(window.innerWidth, bounds.right) ||
               rect.bottom <=
-                Math.max(0, bounds.top + (parseFloat(style?.scrollPaddingTop ?? "0") || 0)) ||
+                Math.max(
+                  0,
+                  bounds.top + (Number.parseFloat(style?.scrollPaddingTop ?? "0") || 0),
+                ) ||
               rect.top >= Math.min(window.innerHeight, bounds.bottom)))
-        )
-          return onClose();
+        ) {
+          onClose();
+          return;
+        }
       }
       const top =
         rect.top > window.innerHeight / 2 ? rect.top - panel.offsetHeight - 8 : rect.bottom + 8;
@@ -196,7 +214,9 @@ function ReleasePopover({
     update();
     const observer = new ResizeObserver(update);
     observer.observe(panel);
-    if (!active.pinned) window.addEventListener("scroll", update, true);
+    if (!active.pinned) {
+      window.addEventListener("scroll", update, true);
+    }
     window.addEventListener("resize", update);
     return () => {
       observer.disconnect();
@@ -206,7 +226,9 @@ function ReleasePopover({
   }, [active, panelRef, onClose]);
 
   useLayoutEffect(() => {
-    if (active.pinned && active.focusOnOpen) panelRef.current?.focus({ preventScroll: true });
+    if (active.pinned && active.focusOnOpen) {
+      panelRef.current?.focus({ preventScroll: true });
+    }
   }, [active.pinned, active.focusOnOpen, panelRef]);
 
   return createPortal(
@@ -250,7 +272,7 @@ function ReleasePopover({
             </button>
           </div>
           <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3">
-            {active.releases.length ? (
+            {active.releases.length > 0 ? (
               active.releases.map((release) => (
                 <ReleaseCard key={release.id} release={release} locale={locale} />
               ))

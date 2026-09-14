@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
 import { act, StrictMode } from "react";
-import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
+import { afterEach, beforeEach, describe, expect, it, vi, test } from "vite-plus/test";
 import { LineChart } from "./LineChart";
 import { StackedBarChart } from "./StackedBarChart";
 import type { SheetData } from "./types";
@@ -36,7 +37,9 @@ function button(label: string) {
   const target = [...container.querySelectorAll("button")].find(
     (item) => item.textContent === label,
   );
-  if (!target) throw new Error(`Button not found: ${label}`);
+  if (!target) {
+    throw new Error(`Button not found: ${label}`);
+  }
   return target;
 }
 
@@ -63,11 +66,9 @@ describe.each([
 
   it("実数値がある項目だけを表示し、ゼロの値は有効なデータとして扱う", async () => {
     await render(data, true);
-    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toEqual([
-      "All",
-      "A",
-      "B",
-    ]);
+    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toStrictEqual(
+      ["All", "A", "B"],
+    );
     expect(button("B").getAttribute("aria-pressed")).toBe("true");
   });
 
@@ -107,14 +108,13 @@ describe.each([
     });
     expect(button("A").getAttribute("aria-pressed")).toBe("false");
     expect(button("C").getAttribute("aria-pressed")).toBe("true");
-    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toEqual([
-      "A",
-      "C",
-    ]);
+    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toStrictEqual(
+      ["A", "C"],
+    );
   });
 });
 
-it("折れ線の欠損値をゼロのデータ点として描画しない", async () => {
+test("折れ線の欠損値をゼロのデータ点として描画しない", async () => {
   await act(async () => root.render(<LineChart data={data} />));
   expect(container.querySelectorAll("circle")).toHaveLength(3);
 });

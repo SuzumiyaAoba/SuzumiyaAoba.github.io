@@ -1,11 +1,7 @@
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
-import {
-  formatReleaseDate,
-  type Provider,
-  type Release,
-  type ReleaseInterval,
-} from "../model/release-calendar";
+import { formatReleaseDate } from "../model/release-calendar";
+import type { Provider, Release, ReleaseInterval } from "../model/release-calendar";
 import { ProviderIcon, providerStyles } from "./provider-identity";
 import type { ReleasePopoverControls } from "./release-popover";
 

@@ -1,6 +1,8 @@
-import { resolveLocalizedValue, resolveLocale, type Locale } from "@/shared/lib/routing";
+import { resolveLocalizedValue, resolveLocale } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { getNoteSummariesVariants } from "@/entities/note";
-import { NotesIndexPageContent, type NoteListEntry } from "./page-content";
+import { NotesIndexPageContent } from "./page-content";
+import type { NoteListEntry } from "./page-content";
 
 type PageProps = {
   locale?: Locale;

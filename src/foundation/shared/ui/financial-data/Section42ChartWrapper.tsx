@@ -2,7 +2,6 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section42Data from "@/content/blog/2026-01-01-kakekin/data/section42.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 const HEADERS = {
@@ -14,10 +13,6 @@ const HEADERS = {
 } as const;
 
 export const Section42ChartWrapper: React.FC = () => {
-  if (!section42Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     [HEADERS.overallCost]: "全体 生活費",
     [HEADERS.overallAssets]: "全体 必要資産",

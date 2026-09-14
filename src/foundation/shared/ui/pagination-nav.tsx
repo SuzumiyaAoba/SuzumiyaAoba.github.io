@@ -1,4 +1,5 @@
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 
 export type PaginationNavProps = {
@@ -16,7 +17,9 @@ export function PaginationNav({
   hrefForPage,
   showPrevNext = true,
 }: PaginationNavProps) {
-  if (pageCount <= 1) return null;
+  if (pageCount <= 1) {
+    return null;
+  }
 
   const en = locale === "en";
   const resolvedHref = (page: number) => toLocalePath(hrefForPage(page), locale);

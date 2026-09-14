@@ -1,4 +1,5 @@
 import packageJson from "../../../../../package.json";
+import { isRecord } from "../types/is-record";
 
 /**
  * サイト設定の型定義
@@ -29,11 +30,8 @@ function optionalString(value: unknown): string | undefined {
  * @returns サイト設定オブジェクト
  */
 export function getSiteConfig(): SiteConfig {
-  const siteConfig: unknown = (packageJson as { siteConfig?: unknown }).siteConfig;
-  const raw: Record<string, unknown> =
-    typeof siteConfig === "object" && siteConfig !== null
-      ? (siteConfig as Record<string, unknown>)
-      : {};
+  const siteConfig: unknown = packageJson.siteConfig;
+  const raw = isRecord(siteConfig) ? siteConfig : {};
 
   return {
     siteUrl: optionalString(raw["siteUrl"]),

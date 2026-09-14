@@ -1,4 +1,4 @@
-const LINE_NUMBERS_PATTERN = /(?:^|\s)line-numbers=(true|false)(?=\s|$)/g;
+const LINE_NUMBERS_PATTERN = /(?:^|\s)line-numbers=(true|false)(?=\s|$)/gu;
 
 export function parseCodeMeta(meta?: string): {
   displayMeta: string;
@@ -10,7 +10,7 @@ export function parseCodeMeta(meta?: string): {
       showLineNumbers = value === "true";
       return " ";
     })
-    .replace(/\s+/g, " ")
+    .replaceAll(/\s+/gu, " ")
     .trim();
 
   return { displayMeta, showLineNumbers };

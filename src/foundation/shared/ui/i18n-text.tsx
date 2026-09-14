@@ -28,7 +28,7 @@ export function I18nText<T extends ElementType = "span">({
   as,
   className,
 }: I18nTextProps<T>) {
-  const Component = (as ?? "span") as ElementType;
+  const Component = as ?? "span";
   const text = locale === "en" ? en : ja;
   return <Component className={className}>{text}</Component>;
 }

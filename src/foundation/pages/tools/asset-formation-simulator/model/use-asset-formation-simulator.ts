@@ -72,34 +72,36 @@ export function useAssetFormationSimulator(locale: Locale) {
         const next = updater(prev);
         const encoded = encodeScenarios(next);
         lastEncodedRef.current = encoded;
-        setCompressedParam(encoded);
+        void setCompressedParam(encoded);
         return next;
       });
     },
     [setCompressedParam],
   );
 
-  const scenarioData = useMemo<ScenarioData[]>(() => {
-    return scenarioList.map((scenario, index) => {
-      const monthlyContribution = Number(scenario.monthlyContributionInput) || 0;
-      const annualRate = Number(scenario.annualRateInput) || 0;
-      const schedule = calculateSchedule(monthlyContribution, annualRate, years);
-      const tableRows = toYearlyRows(schedule);
+  const scenarioData = useMemo<ScenarioData[]>(
+    () =>
+      scenarioList.map((scenario, index) => {
+        const monthlyContribution = Number(scenario.monthlyContributionInput) || 0;
+        const annualRate = Number(scenario.annualRateInput) || 0;
+        const schedule = calculateSchedule(monthlyContribution, annualRate, years);
+        const tableRows = toYearlyRows(schedule);
 
-      const baseColor = scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
-      const color = colorOverrides[scenario.id] ?? baseColor;
+        const baseColor = scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
+        const color = colorOverrides[scenario.id] ?? baseColor;
 
-      return {
-        id: scenario.id,
-        monthlyContribution,
-        annualRate,
-        schedule,
-        tableRows,
-        color,
-        label: scenario.name || defaultPatternName(index + 1),
-      };
-    });
-  }, [scenarioList, years, colorOverrides, defaultPatternName]);
+        return {
+          id: scenario.id,
+          monthlyContribution,
+          annualRate,
+          schedule,
+          tableRows,
+          color,
+          label: scenario.name || defaultPatternName(index + 1),
+        };
+      }),
+    [scenarioList, years, colorOverrides, defaultPatternName],
+  );
 
   const selectedScenario =
     scenarioData.find((scenario) => scenario.id === selectedScenarioId) ?? scenarioData[0];
@@ -115,20 +117,18 @@ export function useAssetFormationSimulator(locale: Locale) {
   useEffect(() => {
     setVisibleSeries((prev) => {
       const next: VisibleState = { ...prev };
-      scenarioList.forEach((scenario) => {
+      for (const scenario of scenarioList) {
         const defaults: Record<string, boolean> = {
           balance: true,
           principal: true,
           gain: false,
           gainDiff: false,
         };
-        Object.entries(defaults).forEach(([suffix, defaultValue]) => {
+        for (const [suffix, defaultValue] of Object.entries(defaults)) {
           const key = `${scenario.id}:${suffix}`;
-          if (next[key] === undefined) {
-            next[key] = defaultValue;
-          }
-        });
-      });
+          next[key] ??= defaultValue;
+        }
+      }
       return next;
     });
   }, [scenarioList]);
@@ -151,7 +151,7 @@ export function useAssetFormationSimulator(locale: Locale) {
     }
     const encoded = encodeVisibilityPayload(visibleSeries, colorOverrides, scenarioList);
     if (encoded !== visibleSeriesParam) {
-      setVisibleSeriesParam(encoded);
+      void setVisibleSeriesParam(encoded);
     }
   }, [visibleSeries, colorOverrides, scenarioList, visibleSeriesParam, setVisibleSeriesParam]);
 
@@ -177,13 +177,13 @@ export function useAssetFormationSimulator(locale: Locale) {
     const encoded = encodeScenarios(scenarioList);
     if (compressedParam !== encoded) {
       lastEncodedRef.current = encoded;
-      setCompressedParam(encoded);
+      void setCompressedParam(encoded);
     }
   }, [scenarioList, compressedParam, setCompressedParam]);
 
   useEffect(() => {
     if (!selectedScenarioId && scenarioList[0]) {
-      const firstScenarioId = scenarioList[0]?.id;
+      const firstScenarioId = scenarioList[0].id;
       if (firstScenarioId) {
         setSelectedScenarioId(firstScenarioId);
       }

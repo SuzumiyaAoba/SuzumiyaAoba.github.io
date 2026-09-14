@@ -1,12 +1,14 @@
+import type { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { stringify } from "yaml";
 import { parseAwesomeItems } from "./awesome-item";
 import { getAwesomeItems } from "./awesome-items";
 
-const files = vi.hoisted(() => ({ readFile: vi.fn() }));
+const files = vi.hoisted(() => ({ readFile: vi.fn<typeof readFile>() }));
+// oxlint-disable-next-line vitest/prefer-import-in-mock -- UTF-8 読み込みのみのモックは fs の全オーバーロードを実装しない。
 vi.mock("node:fs/promises", () => files);
-vi.mock("@/shared/lib/content-file", () => ({
-  resolveContentRoot: () => Promise.resolve("/mock/content"),
+vi.mock(import("@/shared/lib/content-file"), () => ({
+  resolveContentRoot: async () => "/mock/content",
 }));
 
 const item = {
@@ -43,7 +45,7 @@ items:
     category: サービス
     description: 次に見つけたツール。
 `);
-    expect(items.map((entry) => entry.id)).toEqual(["example-tool", "another-tool"]);
+    expect(items.map((entry) => entry.id)).toStrictEqual(["example-tool", "another-tool"]);
     expect(items[0]).toMatchObject({
       tags: ["TypeScript", "自動化"],
       description: "作業を便利にするツール。\n気になった点のメモ。",
@@ -76,7 +78,7 @@ items:
     const [entry] = parseAwesomeItems(
       stringify({ items: [{ ...item, tags: [" TypeScript ", "自動化", "TypeScript"] }] }),
     );
-    expect(entry?.tags).toEqual(["TypeScript", "自動化"]);
+    expect(entry?.tags).toStrictEqual(["TypeScript", "自動化"]);
   });
 
   it.each(["TypeScript", [""], ["  "], [null], [123]])(
@@ -89,7 +91,7 @@ items:
   );
 
   it("記録がない場合は明示的な空リストを使える", () => {
-    expect(parseAwesomeItems("items: []")).toEqual([]);
+    expect(parseAwesomeItems("items: []")).toStrictEqual([]);
   });
 
   it("重複する ID の位置がわかるエラーを返す", () => {
@@ -104,7 +106,7 @@ items:
     { articles: ["/blog/post/example/"] },
     { articles: [{ url: "ftp://example.com/file" }] },
     { relatedPosts: ["//example.com/post"] },
-    { relatedPosts: ["/\\example.com/post"] },
+    { relatedPosts: [String.raw`/\example.com/post`] },
     { relatedPosts: ["blog/post/example/"] },
     { relatedPosts: ["javascript:alert(1)"] },
   ])("不正な URL を含む記録を拒否する: %j", (invalid) => {
@@ -134,11 +136,11 @@ items:
 
   it("管理ファイルの更新を次の読み込みに反映する", async () => {
     files.readFile.mockResolvedValueOnce(stringify({ items: [item] }));
-    expect(await getAwesomeItems()).toHaveLength(1);
+    await expect(getAwesomeItems()).resolves.toHaveLength(1);
     expect(files.readFile).toHaveBeenLastCalledWith("/mock/content/awesome-something.yaml", "utf8");
 
     files.readFile.mockResolvedValueOnce("items: []");
-    expect(await getAwesomeItems()).toEqual([]);
+    await expect(getAwesomeItems()).resolves.toStrictEqual([]);
   });
 
   it("読み込みに失敗したときはエラーを隠さない", async () => {

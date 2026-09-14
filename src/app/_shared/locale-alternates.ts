@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/shared/lib/site/site-url";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 
 const ALL_LOCALES: Locale[] = ["ja", "en"];
 
@@ -37,8 +38,9 @@ export function buildLocaleAlternates(
   }
 
   const hasMultipleLocales = Object.keys(languages).length > 1;
-  if (hasMultipleLocales) {
-    languages["x-default"] = languages["ja"] ?? languages["en"]!;
+  const defaultLanguage = languages["ja"] ?? languages["en"];
+  if (hasMultipleLocales && defaultLanguage) {
+    languages["x-default"] = defaultLanguage;
   }
 
   return {

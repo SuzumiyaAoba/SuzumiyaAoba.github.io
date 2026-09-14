@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section38Data from "@/content/blog/2026-01-01-kakekin/data/section38.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section38ChartWrapper: React.FC = () => {
-  if (!section38Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "元本割れ経験あり | ％": "経験あり",
     "元本割れ経験なし | ％": "経験なし",
@@ -18,7 +13,7 @@ export const Section38ChartWrapper: React.FC = () => {
     "金融機関の説明不足 | ％": "金融機関説明不足",
     "誤解招く広告・勧誘 | ％": "誤解招く広告",
   };
-  const startYear = Number(section38Data.metadata?.startYear ?? 2006);
+  const startYear = Number(section38Data.metadata.startYear);
 
   return (
     <>

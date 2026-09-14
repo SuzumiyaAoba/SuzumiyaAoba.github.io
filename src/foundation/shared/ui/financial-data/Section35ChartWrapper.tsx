@@ -8,7 +8,7 @@ const labelMap: Record<string, string> = {
   "長期運用・リスク資産→現金・流動性預貯金 | ％": "安全資産へ移行",
   "いずれにもあてはまらない | ％": "変更なし",
 };
-const startYear = Number(section35Data.metadata?.startYear ?? 2006);
+const startYear = Number(section35Data.metadata.startYear);
 
 export const Section35ChartWrapper = createLineChartWrapper({
   data: section35Data,

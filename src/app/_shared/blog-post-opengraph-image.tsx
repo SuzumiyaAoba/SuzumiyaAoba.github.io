@@ -1,6 +1,7 @@
 import { getBlogPost, getPublishedBlogSlugs } from "@/entities/blog";
 import type { Locale } from "@/shared/lib/routing";
 import { ArticleOpengraphImage, OpengraphTags, renderOpengraphImage } from "./opengraph-image";
+
 export { OPENGRAPH_IMAGE_SIZE as BLOG_POST_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
 /**
@@ -17,7 +18,7 @@ export async function generateBlogPostOpengraphStaticParams() {
 export async function renderBlogPostOpengraphImage(slug: string, locale: Locale) {
   const post = await getBlogPost(slug, { locale, fallback: true });
   const title = post?.frontmatter.title || slug;
-  const tags = post?.frontmatter.tags || [];
+  const tags = post?.frontmatter.tags ?? [];
 
   return renderOpengraphImage(
     <ArticleOpengraphImage

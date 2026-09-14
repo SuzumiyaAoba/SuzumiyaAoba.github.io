@@ -1,3 +1,5 @@
+const DEFAULT_OFFSETS = { prevOffset: 1, nextOffset: -1 };
+
 /**
  * items 内で predicate に一致する要素の前後を offset で取得する。
  * 見つからなければ両方 null。範囲外の offset も自然に null になる。
@@ -5,9 +7,9 @@
 export function findAdjacentByIndex<T>(
   items: readonly T[],
   predicate: (item: T) => boolean,
-  offsets: { prevOffset: number; nextOffset: number } = { prevOffset: 1, nextOffset: -1 },
+  offsets: { prevOffset: number; nextOffset: number } = DEFAULT_OFFSETS,
 ): { prev: T | null; next: T | null } {
-  const index = items.findIndex(predicate);
+  const index = items.findIndex((item) => predicate(item));
   if (index === -1) {
     return { prev: null, next: null };
   }

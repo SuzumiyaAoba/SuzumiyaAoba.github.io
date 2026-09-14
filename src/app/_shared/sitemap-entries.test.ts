@@ -16,7 +16,7 @@ describe("sitemap entries", () => {
         siteUrl,
         buildTime,
       ),
-    ).toEqual([
+    ).toStrictEqual([
       {
         url: "https://example.com/",
         lastModified: buildTime,
@@ -46,7 +46,7 @@ describe("sitemap entries", () => {
       ],
       { basePath: "/blog/post", siteUrl, priority: 0.7, buildTime },
     );
-    expect(entries.map((entry) => entry.url)).toEqual([
+    expect(entries.map((entry) => entry.url)).toStrictEqual([
       "https://example.com/blog/post/both/",
       "https://example.com/blog/post/ja-only/",
       "https://example.com/blog/post/en-only/",
@@ -54,7 +54,7 @@ describe("sitemap entries", () => {
       "https://example.com/en/blog/post/both/",
       "https://example.com/en/blog/post/en-only/",
     ]);
-    expect(entries.map((entry) => entry.lastModified)).toEqual([
+    expect(entries.map((entry) => entry.lastModified)).toStrictEqual([
       new Date("2025-01-01"),
       new Date("2025-01-01"),
       new Date("2025-02-01"),

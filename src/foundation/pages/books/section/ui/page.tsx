@@ -1,14 +1,10 @@
 import { notFound } from "next/navigation";
 
-import {
-  getAdjacentSections,
-  getBookMeta,
-  getBookSection,
-  getBookToc,
-} from "@/entities/book";
+import { getAdjacentSections, getBookMeta, getBookSection, getBookToc } from "@/entities/book";
 import { bookContentBasePath } from "@/shared/lib/books";
 import { renderMdxWithToc } from "@/shared/lib/mdx";
-import { toLocalePath, type Locale } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
+import type { Locale } from "@/shared/lib/routing";
 import { BookSectionPageContent } from "./page-content";
 
 type PageProps = {
@@ -36,12 +32,12 @@ export default async function Page({ params, locale = "ja" }: PageProps) {
 
   // 現在の章情報を chapters から取得
   const currentChapterData = chapters.find((ch) => ch.chapter === chapter);
-  const chapterTitle = currentChapterData?.title ?? `第${parseInt(chapter, 10)}章`;
-  const chapterNum = parseInt(chapter, 10);
+  const chapterTitle = currentChapterData?.title ?? `第${Number.parseInt(chapter, 10)}章`;
+  const chapterNum = Number.parseInt(chapter, 10);
 
   // MDX は {#id} を JavaScript 式として解釈するため、見出しのカスタム ID アノテーションを事前に除去する
-  const sanitizedContent = sectionData.content.replace(
-    /^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gm,
+  const sanitizedContent = sectionData.content.replaceAll(
+    /^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gmu,
     "$1",
   );
 

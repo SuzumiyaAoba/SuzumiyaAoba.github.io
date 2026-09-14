@@ -10,7 +10,7 @@ export function useSimulatorFormatters(locale: Locale) {
   const formatYenWithMan = useCallback(
     (value: number) => {
       const yen = Math.round(value);
-      const man = Math.floor(yen / 10000);
+      const man = Math.floor(yen / 10_000);
       return t(
         `${numberFormatter.format(yen)} 円 (${numberFormatter.format(man)} 万円)`,
         `¥${numberFormatter.format(yen)} (${numberFormatter.format(man)} x10k JPY)`,

@@ -19,9 +19,16 @@ type Props = {
   excludeHeaders?: string[];
 };
 
-export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeHeaders }) => {
+const DEFAULT_CONFIG: NonNullable<Props["config"]> = {};
+
+export const LineChart: React.FC<Props> = ({
+  data,
+  groups,
+  config = DEFAULT_CONFIG,
+  excludeHeaders,
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const colors = config.colors || schemeCategory10;
+  const colors = config.colors ?? schemeCategory10;
 
   const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", startYear = 2006, labelMap } = config;
 
@@ -35,11 +42,15 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
   } = useChartMetrics({ data, groups, excludeHeaders, labelMap });
 
   useEffect(() => {
-    if (!svgRef.current) return;
+    if (!svgRef.current) {
+      return;
+    }
 
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
-    if (selectedMetrics.length === 0) return;
+    if (selectedMetrics.length === 0) {
+      return;
+    }
 
     const margin = { top: 20, right: 20, bottom: 60, left: 80 };
     const width = 700 - margin.left - margin.right;
@@ -58,19 +69,21 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
         values: d.values,
       }));
 
-    if (parseData.length === 0) return;
+    if (parseData.length === 0) {
+      return;
+    }
 
-    const maxYear = max(parseData, (d) => d.year) || 2025;
+    const maxYear = max(parseData, (d) => d.year) ?? 2025;
     const x = scaleLinear().domain([startYear, maxYear]).range([0, width]);
 
     const y = scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
-    appendChartAxes(g, { x, y, width, height, yAxisLabel });
+    appendChartAxes<number>(g, { x, y, width, height, yAxisLabel });
 
     const tooltip = createChartTooltip();
-    selectedMetrics.forEach((metric) => {
+    for (const metric of selectedMetrics) {
       const metricIndex = availableMetrics.indexOf(metric);
-      const colorIndex = metricIndex >= 0 ? metricIndex : 0;
+      const colorIndex = Math.max(metricIndex, 0);
       const strokeColor = colors[colorIndex % colors.length] ?? "#000";
       const metricData = parseData.filter((d) => Number.isFinite(d.values[metric]));
 
@@ -86,27 +99,27 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
         .attr("stroke-width", 2)
         .attr("d", lineGenerator);
 
-      metricData.forEach((d) => {
+      for (const d of metricData) {
         g.append("circle")
           .attr("cx", x(d.year))
           .attr("cy", y(d.values[metric] ?? 0))
           .attr("r", 4)
           .attr("fill", strokeColor)
-          .on("mouseover", function (event) {
+          .on("mouseover", function handleMouseOver(event: MouseEvent) {
             tooltip.show(
               event,
               `${d.year}年`,
               `${getLabel(metric)}: ${d.values[metric]}${yAxisLabel}`,
             );
 
-            select(this as SVGCircleElement).attr("r", 6);
+            select(this).attr("r", 6);
           })
-          .on("mouseout", function () {
+          .on("mouseout", function handleMouseOut() {
             tooltip.hide();
-            select(this as SVGCircleElement).attr("r", 4);
+            select(this).attr("r", 4);
           });
-      });
-    });
+      }
+    }
     return tooltip.hide;
   }, [
     data,
@@ -123,7 +136,7 @@ export const LineChart: React.FC<Props> = ({ data, groups, config = {}, excludeH
   return (
     <div className="my-8">
       <div className="text-center font-bold text-base mb-4">
-        {data.metadata.title.replace(/^[0-9]+[\s.、]*/, "")}
+        {data.metadata.title.replace(/^[0-9]+[\s.、]*/u, "")}
       </div>
       <div className="overflow-x-auto">
         <svg ref={svgRef} />

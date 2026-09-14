@@ -16,12 +16,11 @@ export const Sheet3PieChartWrapper: React.FC = () => {
   }
 
   // パーセンテージデータのみを抽出（平均・中央値以外）
-  const percentageMetrics = sheet3Data.headers.filter((header) => {
-    return (
+  const percentageMetrics = sheet3Data.headers.filter(
+    (header) =>
       !SHEET3_EXCLUDE_HEADERS.includes(header) &&
-      sheet3Data.series.some((s) => s.values[header] !== null)
-    );
-  });
+      sheet3Data.series.some((s) => s.values[header] !== null),
+  );
 
   const yearlyPieSeries = buildYearlyPieSeries(
     sheet3Data,

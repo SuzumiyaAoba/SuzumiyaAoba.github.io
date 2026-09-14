@@ -1,5 +1,5 @@
 import { Icon } from "@/shared/ui/icon";
-import { type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
 
 import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";

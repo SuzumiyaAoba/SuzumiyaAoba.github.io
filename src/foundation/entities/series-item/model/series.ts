@@ -63,18 +63,18 @@ function resolveSeriesDefinition(
     return {
       name: definition.nameEn ?? definition.name,
       slug: definition.slug,
-      ...(thumbnail !== undefined ? { thumbnail } : {}),
+      ...(thumbnail === undefined ? {} : { thumbnail }),
       posts: definition.posts,
-      ...(description !== undefined ? { description } : {}),
+      ...(description === undefined ? {} : { description }),
     };
   }
 
   return {
     name: definition.name,
     slug: definition.slug,
-    ...(definition.thumbnail !== undefined ? { thumbnail: definition.thumbnail } : {}),
+    ...(definition.thumbnail === undefined ? {} : { thumbnail: definition.thumbnail }),
     posts: definition.posts,
-    ...(definition.description !== undefined ? { description: definition.description } : {}),
+    ...(definition.description === undefined ? {} : { description: definition.description }),
   };
 }
 
@@ -84,7 +84,7 @@ function resolveSeriesDefinition(
  */
 async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
   const fs = await import("node:fs/promises");
-  const path = await import("node:path");
+  const { default: path } = await import("node:path");
 
   const root = await resolveContentRoot();
   const seriesRoot = path.join(root, "series");
@@ -98,7 +98,7 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
         const filePath = path.join(seriesRoot, entry.name);
         try {
           const raw = await fs.readFile(filePath, "utf8");
-          const data = JSON.parse(raw);
+          const data: unknown = JSON.parse(raw);
           const parsed = SeriesDefinitionRawSchema.safeParse(data);
 
           if (!parsed.success) {
@@ -126,7 +126,7 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
 export async function getSeriesList(locale: Locale = "ja"): Promise<SeriesDefinition[]> {
   const list = await readSeriesDefinitions();
   const resolved = list.map((definition) => resolveSeriesDefinition(definition, locale));
-  return resolved.sort((a, b) => a.name.localeCompare(b.name, toIntlLocaleTag(locale)));
+  return resolved.toSorted((a, b) => a.name.localeCompare(b.name, toIntlLocaleTag(locale)));
 }
 
 /**

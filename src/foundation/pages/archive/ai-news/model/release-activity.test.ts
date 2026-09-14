@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
-import { buildReleases, type RenderedRelease } from "./release-calendar";
+import { buildReleases } from "./release-calendar";
+import type { RenderedRelease } from "./release-calendar";
 import { getReleaseActivity, localDate, shiftDate } from "./release-activity";
 
 function release(title: string, date?: string): RenderedRelease {
@@ -40,9 +41,13 @@ describe("release activity", () => {
       release("Unknown"),
     ]);
     const activity = getReleaseActivity(releases, today);
-    expect(activity.recent.map((item) => item.title)).toEqual(["Today", "Recent boundary"]);
+    expect(activity.recent.map((item) => item.title)).toStrictEqual(["Today", "Recent boundary"]);
     expect(activity.change).toBe(0);
     expect(activity.latest?.title).toBe("Today");
-    expect(getReleaseActivity([], today)).toEqual({ recent: [], change: 0, latest: undefined });
+    expect(getReleaseActivity([], today)).toStrictEqual({
+      recent: [],
+      change: 0,
+      latest: undefined,
+    });
   });
 });

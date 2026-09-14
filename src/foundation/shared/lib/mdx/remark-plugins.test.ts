@@ -58,6 +58,6 @@ describe("remark plugins", () => {
     const processor = remark().use(remarkCollectHeadings(headings));
     processor.runSync(processor.parse("## Intro\n\n## Intro"));
     processor.runSync(processor.parse("## Intro"));
-    expect(headings.map((heading) => heading.id)).toEqual(["intro", "intro-1", "intro"]);
+    expect(headings.map((heading) => heading.id)).toStrictEqual(["intro", "intro-1", "intro"]);
   });
 });

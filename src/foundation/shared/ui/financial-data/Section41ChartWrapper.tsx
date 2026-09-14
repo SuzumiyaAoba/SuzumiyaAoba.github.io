@@ -2,14 +2,9 @@
 
 import { LineChart } from "@/shared/ui/financial-charts";
 import section41Data from "@/content/blog/2026-01-01-kakekin/data/section41.json";
-import { NoDataFallback } from "./_shared/no-data-fallback";
 import { ChartSection } from "./_shared/chart-section";
 
 export const Section41ChartWrapper: React.FC = () => {
-  if (!section41Data) {
-    return <NoDataFallback />;
-  }
-
   const labelMap: Record<string, string> = {
     "取得ないし増改築 総額 | 万円": "取得・増改築 総額",
     "取得ないし増改築 自己資金 | 万円": "取得・増改築 自己資金",

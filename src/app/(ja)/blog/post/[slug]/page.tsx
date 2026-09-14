@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: MetadataProps): Promise<Metad
   return buildBlogPostMetadata(resolvedParams?.slug, "ja");
 }
 
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const slugs = await getPublishedBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }

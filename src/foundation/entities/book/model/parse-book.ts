@@ -4,8 +4,8 @@ import {
   asDateString,
   asBoolean,
   asStringArray,
-  type ContentFormat,
 } from "@/shared/lib/content-file";
+import type { ContentFormat } from "@/shared/lib/content-file";
 import type { BookFrontmatter } from "./types";
 
 export function normalizeBookFrontmatter(data: Record<string, unknown>): BookFrontmatter {
@@ -21,9 +21,9 @@ export function normalizeBookFrontmatter(data: Record<string, unknown>): BookFro
   return {
     title: asStringWithDefault(data["title"], ""),
     ...(date ? { date } : {}),
-    ...(category !== undefined ? { category } : {}),
-    ...(tags !== undefined ? { tags } : {}),
-    ...(llm !== undefined ? { llm } : {}),
+    ...(category === undefined ? {} : { category }),
+    ...(tags === undefined ? {} : { tags }),
+    ...(llm === undefined ? {} : { llm }),
     ...(coAuthors && coAuthors.length > 0 ? { coAuthors } : {}),
   };
 }
@@ -35,11 +35,15 @@ export function normalizeBookFrontmatter(data: Record<string, unknown>): BookFro
 export function parseChapterTitles(content: string): Map<string, string> {
   const map = new Map<string, string>();
   // "## 第1章: タイトル {#...}" や "## 第1章：タイトル" に対応
-  const regex = /^##\s+第(\d+)章[:：]\s+(.+?)(?:\s*\{#[^}]*\})?$/gm;
+  const regex = /^##\s+第(\d+)章[:：]\s+(.+?)(?:\s*\{#[^}]*\})?$/gmu;
   for (const match of content.matchAll(regex)) {
-    const num = parseInt(match[1]!, 10);
+    const [, chapter, title] = match;
+    if (chapter === undefined || title === undefined) {
+      continue;
+    }
+    const num = Number.parseInt(chapter, 10);
     const chapterKey = String(num).padStart(2, "0");
-    const chapterTitle = match[2]!.trim();
+    const chapterTitle = title.trim();
     map.set(chapterKey, chapterTitle);
   }
   return map;
@@ -50,7 +54,10 @@ export function parseSectionFilename(filename: string): {
   section: string;
   format: ContentFormat;
 } | null {
-  const match = /^(\d+)(?:-.+)?\.(md|mdx)$/.exec(filename);
-  if (!match) return null;
-  return { section: match[1]!, format: match[2] === "mdx" ? "mdx" : "md" };
+  const match = /^(\d+)(?:-.+)?\.(md|mdx)$/u.exec(filename);
+  const section = match?.[1];
+  if (section === undefined) {
+    return null;
+  }
+  return { section, format: match?.[2] === "mdx" ? "mdx" : "md" };
 }

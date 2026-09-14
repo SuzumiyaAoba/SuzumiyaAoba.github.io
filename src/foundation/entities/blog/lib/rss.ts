@@ -35,7 +35,7 @@ export async function buildRssXml(locale: Locale): Promise<string> {
   const localizedPosts = posts
     .map((post) => (locale === "en" ? post.en : post.ja))
     .filter((post): post is NonNullable<typeof post> => Boolean(post))
-    .sort(compareContentByDate);
+    .toSorted(compareContentByDate);
 
   const items = localizedPosts.map((post) => {
     const link = `${siteUrl}${basePath}/blog/post/${post.slug}/`;
