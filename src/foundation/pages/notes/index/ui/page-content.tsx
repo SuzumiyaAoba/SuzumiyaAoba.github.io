@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
@@ -27,8 +26,7 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
   }));
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <SimpleIndexPageContent
         locale={locale}
         path="/notes"
@@ -40,7 +38,6 @@ export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentPr
         }}
         items={items}
       />
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

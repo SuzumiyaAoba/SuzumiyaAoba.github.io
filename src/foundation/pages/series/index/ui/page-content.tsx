@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 
 import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
@@ -37,8 +36,7 @@ export function SeriesListPageContent({ locale, seriesList }: SeriesListPageCont
   }));
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
@@ -62,7 +60,6 @@ export function SeriesListPageContent({ locale, seriesList }: SeriesListPageCont
           }
         />
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

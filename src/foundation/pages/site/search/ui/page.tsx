@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Script from "next/script";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 
 import { SearchPanel } from "./search-panel";
 import {
@@ -35,23 +34,23 @@ export function SearchPageContent({ locale }: SearchPageContentProps) {
   const pagePath = toLocalePath("/search", locale);
   const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Search", path: "/search" });
   return (
-    <div className="site-page">
+    <>
       <Script src="/pagefind-adapter.js" strategy="afterInteractive" />
-      <Header locale={locale} path={pagePath} />
-      <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main page-stack">
-        <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja="検索" en="Search" />
-          </h1>
-        </section>
-        <Suspense fallback={<SearchLoading locale={locale} />}>
-          <SearchPanel locale={locale} />
-        </Suspense>
-      </main>
-      <Footer locale={locale} />
-    </div>
+      <SiteLayout locale={locale} path={pagePath}>
+        <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
+        <main className="site-main page-stack">
+          <Breadcrumbs items={breadcrumbItems} />
+          <section className="page-heading">
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="検索" en="Search" />
+            </h1>
+          </section>
+          <Suspense fallback={<SearchLoading locale={locale} />}>
+            <SearchPanel locale={locale} />
+          </Suspense>
+        </main>
+      </SiteLayout>
+    </>
   );
 }
 

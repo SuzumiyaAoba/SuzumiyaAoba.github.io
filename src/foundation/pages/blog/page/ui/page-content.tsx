@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { BlogListingContent } from "@/entities/blog";
@@ -21,8 +20,7 @@ export function BlogPaginationPageContent({
   const pagePath = toLocalePath(pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`, locale);
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <BlogListingContent
         locale={locale}
         posts={posts}
@@ -30,7 +28,6 @@ export function BlogPaginationPageContent({
         pageCount={pageCount}
         variant="paginated"
       />
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

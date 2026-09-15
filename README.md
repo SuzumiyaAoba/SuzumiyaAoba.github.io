@@ -35,6 +35,10 @@ npm run pagefind:dev:force
 
 依存方向は `pages → widgets / entities → shared` を基本とし、Steiger で確認します。スライス外からの参照には各 `index.ts` の公開APIを使います。
 
+各ページの外枠は `widgets/site-layout` の `SiteLayout` を使います。ヘッダー・フッターとナビゲーションの定義はこのスライス内で管理し、メニュー操作と読書進捗の監視は個別のフックに分離しています。ページ固有の本文・パンくず・構造化データは各ページが担当します。
+
+トップページは `pages/site/home/ui/page.tsx` でデータを取得し、`page-content.tsx` で概要・最新記事・連載・ノートとツールのセクションを組み立てます。各セクションの表示は独立したコンポーネントで管理します。
+
 ブログとノートは `shared/lib/content-file` の共通コレクション処理を使用し、frontmatter の正規化と永続キャッシュの方針は各エンティティが管理します。翻訳のフォールバックは `shared/lib/routing` に集約しています。公開一覧は日本語版の下書き状態・日付を基準にし、日本語版がない場合は英語版を使います。
 
 ブログとノートの共通 frontmatter は `shared/lib/content-file/article-frontmatter.ts` で型定義と正規化を共有し、ブログ固有の日付の必須化とレイアウトはブログモデルが扱います。詳細ページのタイトル・説明・OGP・言語別URLは `app/_shared/page-metadata.ts` で組み立て、説明文の選択とデータ取得は各ページが担当します。

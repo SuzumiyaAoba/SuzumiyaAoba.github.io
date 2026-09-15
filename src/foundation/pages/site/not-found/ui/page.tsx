@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { BackLink } from "@/shared/ui/back-link";
 import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
@@ -17,8 +16,7 @@ export type NotFoundPageContentProps = {
 export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
   const pagePath = toLocalePath("/", locale);
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <main className="site-main page-stack">
         <section className="flex flex-col items-center justify-center gap-6 py-8">
           <div className="text-center space-y-4">
@@ -45,8 +43,7 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
           </Card>
         </section>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }
 

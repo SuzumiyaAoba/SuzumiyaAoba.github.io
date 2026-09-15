@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -23,8 +22,7 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
   const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Tags", path: "/tags" });
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
@@ -64,7 +62,6 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
           </ul>
         )}
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

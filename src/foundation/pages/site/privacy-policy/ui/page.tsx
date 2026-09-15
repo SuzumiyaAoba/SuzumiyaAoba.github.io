@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -28,8 +27,7 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
     path: "/privacy-policy",
   });
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
@@ -211,8 +209,7 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
           </div>
         </section>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }
 

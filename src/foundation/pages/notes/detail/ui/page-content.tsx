@@ -1,7 +1,6 @@
 import type { ReactElement } from "react";
 
-import { Footer } from "@/widgets/footer";
-import { Header } from "@/widgets/header";
+import { SiteLayout } from "@/widgets/site-layout";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import {
   buildBreadcrumbList,
@@ -53,8 +52,7 @@ export function NotesDetailPageContent({
   );
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={notePath} />
+    <SiteLayout locale={locale} path={notePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main min-w-0">
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
@@ -106,7 +104,6 @@ export function NotesDetailPageContent({
           </div>
         ) : null}
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { AssetFormationSimulator as AssetFormationSimulatorClient } from "./asset-formation-simulator-client";
@@ -23,8 +22,7 @@ export function AssetFormationSimulatorPageContent({
     { name: pageName, path: pagePath },
   ];
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <div className="site-container pt-6 sm:pt-8">
         <Breadcrumbs items={breadcrumbItems} />
@@ -32,7 +30,6 @@ export function AssetFormationSimulatorPageContent({
       <Suspense>
         <AssetFormationSimulatorClient locale={locale} />
       </Suspense>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

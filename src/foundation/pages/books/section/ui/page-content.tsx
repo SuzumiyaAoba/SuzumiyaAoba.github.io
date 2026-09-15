@@ -1,6 +1,5 @@
 import type { ReactElement } from "react";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
@@ -56,8 +55,7 @@ export function BookSectionPageContent({
   coAuthors,
 }: BookSectionPageContentProps) {
   return (
-    <div className="site-page">
-      <Header locale={locale} path={sectionPath} />
+    <SiteLayout locale={locale} path={sectionPath}>
       <JsonLd
         data={buildBreadcrumbList([
           { name: "Home", path: toLocalePath("/", locale) },
@@ -185,7 +183,6 @@ export function BookSectionPageContent({
           <Toc headings={headings} />
         </aside>
       </div>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

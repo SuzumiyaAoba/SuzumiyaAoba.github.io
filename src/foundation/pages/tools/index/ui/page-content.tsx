@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { buildDetailBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
@@ -30,8 +29,7 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
   ];
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <SimpleIndexPageContent
         locale={locale}
         path="/tools"
@@ -41,7 +39,6 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
         emptyMessage={{ ja: "ツールがありません。", en: "No tools yet." }}
         items={items}
       />
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

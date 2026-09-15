@@ -1,6 +1,5 @@
 import { EmptyPage } from "@/shared/ui/empty-page";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 
@@ -11,10 +10,8 @@ export type KeywordsIndexPageContentProps = {
 export function KeywordsIndexPageContent({ locale }: KeywordsIndexPageContentProps) {
   const pagePath = toLocalePath("/keywords", locale);
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <EmptyPage />
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

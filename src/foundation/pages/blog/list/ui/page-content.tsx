@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { getPageCount } from "@/shared/lib/presentation";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
@@ -32,8 +31,7 @@ export function BlogListPageContent({
   const pagePath = toLocalePath("/blog", locale);
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <BlogListingContent
         locale={locale}
         posts={posts}
@@ -42,7 +40,6 @@ export function BlogListPageContent({
         totalCount={totalCount}
         variant="list"
       />
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

@@ -1,5 +1,4 @@
-import { Footer } from "@/widgets/footer";
-import { Header } from "@/widgets/header";
+import { SiteLayout } from "@/widgets/site-layout";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 
@@ -12,8 +11,7 @@ export function PostsIndexPageContent({ locale, slugs }: PostsIndexPageContentPr
   const pagePath = toLocalePath("/posts", locale);
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <main className="site-main">
         <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">Posts</h1>
         <ul className="mt-6 space-y-2">
@@ -29,7 +27,6 @@ export function PostsIndexPageContent({ locale, slugs }: PostsIndexPageContentPr
           ))}
         </ul>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

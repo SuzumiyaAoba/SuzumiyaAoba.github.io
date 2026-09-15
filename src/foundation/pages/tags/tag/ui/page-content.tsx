@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { BackLink } from "@/shared/ui/back-link";
 import { Badge } from "@/shared/ui/badge";
 import { JsonLd } from "@/shared/ui/seo";
@@ -35,8 +34,7 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
   );
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
@@ -65,7 +63,6 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
           ))}
         </ul>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

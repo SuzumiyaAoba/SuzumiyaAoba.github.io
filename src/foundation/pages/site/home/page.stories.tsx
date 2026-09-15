@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, within } from "storybook/test";
 
-import { HomePageContent } from "./ui/page";
-import type { HomePageContentProps } from "./ui/page";
+import { HomePageContent } from "./ui/page-content";
+import type { HomePageContentProps } from "./ui/page-content";
 
 const titles = [
   ["Iterator パターン", "Iterator pattern"],
@@ -74,6 +75,22 @@ export const Japanese: Story = {
   args: {
     locale: "ja",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const writing = within(canvas.getByRole("region", { name: "最新の記事" }));
+    await expect(
+      writing.getAllByRole("heading", { level: 3 }).map((item) => item.textContent),
+    ).toEqual(titles.map(([ja]) => ja));
+    await expect(writing.getByRole("link", { name: /Iterator パターン/u })).toHaveAttribute(
+      "href",
+      "/blog/post/post-1/",
+    );
+    const overview = within(canvas.getByRole("navigation", { name: "コンテンツ" }));
+    await expect(overview.getByRole("link", { name: /ブログ/u })).toHaveTextContent("6記事");
+    await expect(canvasElement.querySelectorAll(".site-page > header.site-header")).toHaveLength(1);
+    await expect(canvas.getAllByRole("main")).toHaveLength(1);
+    await expect(canvas.getAllByRole("contentinfo")).toHaveLength(1);
+  },
 };
 
 export const English: Story = {
@@ -84,6 +101,40 @@ export const English: Story = {
       name: ["Design patterns", "Local AI agents", "Scala", "Nix"][index] ?? item.name,
     })),
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const main = within(canvas.getByRole("main"));
+    const writing = within(main.getByRole("region", { name: "Latest articles" }));
+    await expect(
+      writing.getAllByRole("heading", { level: 3 }).map((item) => item.textContent),
+    ).toEqual(titles.map(([, en]) => en));
+    await expect(writing.getByRole("link", { name: /Iterator pattern/u })).toHaveAttribute(
+      "href",
+      "/en/blog/post/post-1/",
+    );
+    const notes = within(main.getByRole("region", { name: "Notes" }));
+    await expect(notes.getByRole("link", { name: "Java" })).toHaveAttribute(
+      "href",
+      "/en/notes/java/",
+    );
+    await expect(notes.getByRole("link", { name: "Books (Japanese)" })).toHaveAttribute(
+      "href",
+      "/books/",
+    );
+    await expect(notes.getByRole("link", { name: "Books (Japanese)" })).toHaveAttribute(
+      "hreflang",
+      "ja",
+    );
+    await expect(main.getByRole("link", { name: /ASCII reference/u })).toHaveAttribute(
+      "href",
+      "/en/tools/ascii-standard-code/",
+    );
+    const topics = within(main.getByRole("navigation", { name: "Browse by tag" }));
+    await expect(topics.getByRole("link", { name: /Java/u })).toHaveAttribute(
+      "href",
+      "/en/tags/Java/",
+    );
+  },
 };
 
 export const Empty: Story = {
@@ -93,5 +144,54 @@ export const Empty: Story = {
     series: [],
     notes: [],
     topics: [],
+  },
+  play: async ({ canvasElement }) => {
+    const main = within(within(canvasElement).getByRole("main"));
+    await expect(main.getByText("記事はまだありません。")).toBeVisible();
+    await expect(main.getByText("ノートはまだありません。")).toBeVisible();
+    await expect(main.queryByRole("region", { name: "連載" })).not.toBeInTheDocument();
+    await expect(
+      main.queryByRole("navigation", { name: "タグから記事を探す" }),
+    ).not.toBeInTheDocument();
+    await expect(main.queryAllByRole("article")).toHaveLength(0);
+  },
+};
+
+export const TranslationFallback: Story = {
+  args: {
+    locale: "en",
+    latestPosts: [
+      {
+        slug: "japanese-only",
+        ja: {
+          slug: "japanese-only",
+          frontmatter: { title: "日本語のみの記事", date: "2026-05-27" },
+        },
+        en: null,
+      },
+      { slug: "missing", ja: null, en: null },
+      {
+        slug: "english-only",
+        ja: null,
+        en: {
+          slug: "english-only",
+          frontmatter: { title: "English only", date: "2026-05-26" },
+        },
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const writing = within(within(canvasElement).getByRole("region", { name: "Latest articles" }));
+    await expect(
+      writing.getAllByRole("heading", { level: 3 }).map((item) => item.textContent),
+    ).toEqual(["日本語のみの記事", "English only"]);
+    await expect(writing.getByRole("link", { name: /日本語のみの記事/u })).toHaveAttribute(
+      "href",
+      "/en/blog/post/japanese-only/",
+    );
+    await expect(writing.getByRole("link", { name: /English only/u })).toHaveAttribute(
+      "href",
+      "/en/blog/post/english-only/",
+    );
   },
 };

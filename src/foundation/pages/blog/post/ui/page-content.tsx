@@ -1,6 +1,5 @@
 import type { ReactElement } from "react";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 
 import { Comments } from "@/shared/ui/comments";
 import { Badge } from "@/shared/ui/badge";
@@ -101,8 +100,7 @@ export function BlogPostPageContent({
   );
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={postPath} />
+    <SiteLayout locale={locale} path={postPath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <JsonLd
         data={{
@@ -260,7 +258,6 @@ export function BlogPostPageContent({
         </div>
         <Comments locale={locale} />
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

@@ -1,6 +1,5 @@
 import type { ReactElement } from "react";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import {
   buildBreadcrumbList,
@@ -35,8 +34,7 @@ export function BookDetailPageContent({
   );
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={bookPath} />
+    <SiteLayout locale={locale} path={bookPath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main-reading page-stack">
         <div>
@@ -78,7 +76,6 @@ export function BookDetailPageContent({
           </div>
         </nav>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

@@ -1,6 +1,5 @@
 import type { AwesomeItem } from "../model/awesome-item";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -17,8 +16,7 @@ export function AwesomeSomethingPageContent({ locale, items }: AwesomeSomethingP
   const breadcrumbs = buildListBreadcrumbItems(locale, { name: "Awesome Something", path });
 
   return (
-    <div className="site-page">
-      <Header locale={locale} path={toLocalePath(path, locale)} />
+    <SiteLayout locale={locale} path={toLocalePath(path, locale)}>
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
@@ -30,7 +28,6 @@ export function AwesomeSomethingPageContent({ locale, items }: AwesomeSomethingP
         </section>
         <AwesomeList locale={locale} items={items} />
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

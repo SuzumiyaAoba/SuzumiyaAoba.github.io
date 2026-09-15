@@ -1,6 +1,5 @@
 import { StandardCode } from "@/shared/ui/svg";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
@@ -20,8 +19,7 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
     { name: "ASCII Standard Code", path: pagePath },
   ];
   return (
-    <div className="site-page">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
@@ -76,7 +74,6 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
           <StandardCode />
         </section>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }

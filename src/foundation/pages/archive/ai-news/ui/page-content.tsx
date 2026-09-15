@@ -1,5 +1,4 @@
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import { SiteLayout } from "@/widgets/site-layout";
 import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
@@ -24,8 +23,7 @@ export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPag
   ];
 
   return (
-    <div className="site-page @container">
-      <Header locale={locale} path={pagePath} />
+    <SiteLayout locale={locale} path={pagePath} className="@container">
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main min-w-0 font-noto bg-muted/20">
         <div className="page-stack min-w-0">
@@ -51,7 +49,6 @@ export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPag
           <ReleaseExplorer entries={entries} locale={locale} {...(today ? { today } : {})} />
         </div>
       </main>
-      <Footer locale={locale} />
-    </div>
+    </SiteLayout>
   );
 }
