@@ -5,10 +5,10 @@
   "packageManager": "npm@10.9.8",
   "scripts": {
     "dev": "run-s build:icons dev:next",
-    "dev:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next dev --webpack",
+    "dev:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next dev",
     "build": "run-s build:icons build:next build:pagefind",
     "build:icons": "node scripts/generate-icon-data.mjs",
-    "build:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next build --webpack",
+    "build:next": "cross-env NODE_OPTIONS=--max-old-space-size=65536 next build",
     "build:pagefind": "node scripts/patch-pagefind-lang.mjs && pagefind --site out --output-path out/pagefind --glob \"**/*.html\"",
     "pagefind:dev": "node scripts/pagefind-dev.mjs",
     "pagefind:dev:force": "node scripts/pagefind-dev.mjs --force",
