@@ -279,15 +279,26 @@ export function Tag({
   const icon = resolveTagIcon(tag);
   const content = (
     <>
-      <Icon icon={icon} className={cn("size-3.5 shrink-0", iconClassName)} aria-hidden />
+      <Icon
+        icon={icon}
+        className={cn("size-3.5 shrink-0", iconClassName)}
+        aria-hidden
+      />
       <span>{normalizeLabel(tag, label)}</span>
     </>
   );
-  const tagClassName = cn(badgeVariants({ variant }), "gap-1.5 font-medium", className);
+  const tagClassName = cn(
+    badgeVariants({ variant }),
+    "gap-1.5 font-medium",
+    className
+  );
 
   if (href) {
     return (
-      <a href={href} className={cn(tagClassName, "transition-colors hover:text-foreground")}>
+      <a
+        href={href}
+        className={cn(tagClassName, "transition-colors hover:text-foreground")}
+      >
         {content}
       </a>
     );

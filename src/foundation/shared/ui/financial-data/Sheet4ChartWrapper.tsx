@@ -19,11 +19,15 @@ export const Sheet4ChartWrapper: React.FC = () => {
   // パーセンテージデータのみを抽出（平均・中央値以外）
   const percentageMetrics = sheet4Data.headers.filter(
     (header) =>
-      !excludeHeaders.includes(header) && sheet4Data.series.some((s) => s.values[header] !== null),
+      !excludeHeaders.includes(header) &&
+      sheet4Data.series.some((s) => s.values[header] !== null)
   );
 
   // Y軸の最大値を計算(5の倍数に切り上げ)
-  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(sheet4Data, percentageMetrics), 5);
+  const yAxisMax = roundUpToStep(
+    computeMaxValueForMetrics(sheet4Data, percentageMetrics),
+    5
+  );
 
   return (
     <LineChart

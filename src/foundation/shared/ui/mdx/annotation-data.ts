@@ -7,8 +7,14 @@ export function annotationData(value: unknown): Record<string, unknown> {
   return isRecord(value) ? value : {};
 }
 
-export function annotationContent(value: unknown): Exclude<ReactNode, Promise<unknown>> {
-  if (typeof value === "string" || typeof value === "number" || isValidElement(value)) {
+export function annotationContent(
+  value: unknown
+): Exclude<ReactNode, Promise<unknown>> {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    isValidElement(value)
+  ) {
     return value;
   }
   if (Array.isArray(value)) {

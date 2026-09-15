@@ -21,7 +21,10 @@ export type ContactPageContentProps = {
 
 export function ContactPageContent({ locale }: ContactPageContentProps) {
   const pagePath = toLocalePath("/contact", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Contact", path: "/contact" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "Contact",
+    path: "/contact",
+  });
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
@@ -29,10 +32,10 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+            <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
               <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </p>
-            <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+            <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
               <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </h1>
           </div>

@@ -13,7 +13,7 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Archive", path: "/archive" },
-    { name: "Tools", path: pagePath },
+    { name: "Tools", path: pagePath }
   );
   const items: SimpleEntryListItem[] = [
     {
@@ -23,7 +23,10 @@ export function ToolsIndexPageContent({ locale }: ToolsIndexPageContentProps) {
     },
     {
       slug: "asset-formation-simulator",
-      title: locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション",
+      title:
+        locale === "en"
+          ? "Asset Formation Simulator"
+          : "資産形成シミュレーション",
       href: toLocalePath("/tools/asset-formation-simulator/", locale),
     },
   ];

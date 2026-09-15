@@ -19,7 +19,10 @@ export function HomeSeries({ locale, series }: HomeSeriesProps) {
           <h2 id="series-title" className="home-section-title">
             {t("連載", "Series")}
           </h2>
-          <a href={toLocalePath("/series", locale)} className="home-inline-link">
+          <a
+            href={toLocalePath("/series", locale)}
+            className="home-inline-link"
+          >
             {t("連載の一覧", "All series")}
             <Arrow />
           </a>
@@ -27,7 +30,10 @@ export function HomeSeries({ locale, series }: HomeSeriesProps) {
         <ul className="home-series-list">
           {series.slice(0, 4).map((item) => (
             <li key={item.slug}>
-              <a href={toLocalePath(`/series/${item.slug}`, locale)} className="home-series-link">
+              <a
+                href={toLocalePath(`/series/${item.slug}`, locale)}
+                className="home-series-link"
+              >
                 <span className="home-series-count">
                   {item.posts.length}
                   <span>{t("記事", "articles")}</span>

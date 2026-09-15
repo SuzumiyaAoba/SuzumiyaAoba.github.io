@@ -13,7 +13,7 @@ import { buildPageMetadata } from "./page-metadata";
  */
 export async function buildNotesPageMetadata(
   slug: string | undefined,
-  locale: Locale,
+  locale: Locale
 ): Promise<Metadata> {
   if (!slug) {
     return { title: "Notes" };
@@ -43,7 +43,9 @@ export async function buildNotesPageMetadata(
     },
     openGraph: {
       type: "article",
-      ...(note.frontmatter.date ? { publishedTime: note.frontmatter.date } : {}),
+      ...(note.frontmatter.date
+        ? { publishedTime: note.frontmatter.date }
+        : {}),
     },
   });
 }

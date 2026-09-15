@@ -45,7 +45,12 @@ export const Section39ChartWrapper: React.FC = () => {
         <LineChart
           data={section39Data}
           groups={[]}
-          excludeHeaders={["増えた | ％", "増えた割合 | 割", "減った | ％", "減った割合 | 割"]}
+          excludeHeaders={[
+            "増えた | ％",
+            "増えた割合 | 割",
+            "減った | ％",
+            "減った割合 | 割",
+          ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 100,

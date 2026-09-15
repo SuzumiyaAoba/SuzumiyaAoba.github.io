@@ -10,8 +10,11 @@ type PageProps = {
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
   const index = await getBlogTagIndex(resolvedLocale);
-  const tags = Array.from(index, ([name, posts]) => ({ name, count: posts.length })).toSorted(
-    (a, b) => b.count - a.count || a.name.localeCompare(b.name, resolvedLocale),
+  const tags = Array.from(index, ([name, posts]) => ({
+    name,
+    count: posts.length,
+  })).toSorted(
+    (a, b) => b.count - a.count || a.name.localeCompare(b.name, resolvedLocale)
   );
 
   return <TagsListPageContent locale={resolvedLocale} tags={tags} />;

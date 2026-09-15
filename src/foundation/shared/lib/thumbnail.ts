@@ -40,7 +40,7 @@ type ResolveThumbnailOptions = {
 export function resolveThumbnail(
   slug: string,
   thumbnail?: string,
-  options: ResolveThumbnailOptions = {},
+  options: ResolveThumbnailOptions = {}
 ): ResolvedThumbnail {
   if (!thumbnail) {
     return { type: "image", src: "/icon.svg", isFallback: true };
@@ -54,7 +54,10 @@ export function resolveThumbnail(
     }
   }
 
-  const basePath = (options.basePath ?? `/contents/blog/${slug}`).replace(/\/$/u, "");
+  const basePath = (options.basePath ?? `/contents/blog/${slug}`).replace(
+    /\/$/u,
+    ""
+  );
   let resolvedPath =
     normalized.startsWith("http://") ||
     normalized.startsWith("https://") ||
@@ -67,5 +70,9 @@ export function resolveThumbnail(
     resolvedPath = resolvedPath.replace(/\.(png|jpe?g)$/iu, ".webp");
   }
 
-  return { type: "image", src: resolvedPath, isFallback: resolvedPath === "/icon.svg" };
+  return {
+    type: "image",
+    src: resolvedPath,
+    isFallback: resolvedPath === "/icon.svg",
+  };
 }

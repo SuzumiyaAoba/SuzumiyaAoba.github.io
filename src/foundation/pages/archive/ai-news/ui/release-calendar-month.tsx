@@ -31,7 +31,10 @@ export function ReleaseCalendarMonth({
   const en = locale === "en";
   const showTitles = monthWidth >= 600;
   const days = getMonthDays(month);
-  const count = days.reduce((sum, date) => sum + (date ? (byDate.get(date)?.length ?? 0) : 0), 0);
+  const count = days.reduce(
+    (sum, date) => sum + (date ? (byDate.get(date)?.length ?? 0) : 0),
+    0
+  );
   const current = month === today.slice(0, 7);
   const label = new Intl.DateTimeFormat(locale, {
     year: "numeric",
@@ -58,7 +61,7 @@ export function ReleaseCalendarMonth({
             </span>
           )}
         </div>
-        <span className="text-[11px] tabular-nums text-muted-foreground">
+        <span className="text-[11px] text-muted-foreground tabular-nums">
           {count}
           {en ? " releases" : " 件"}
         </span>
@@ -76,7 +79,7 @@ export function ReleaseCalendarMonth({
                 className={cn(
                   "h-8 border-b bg-muted/20 text-center text-[11px] font-medium text-muted-foreground",
                   weekday === 0 && "text-rose-600 dark:text-rose-400",
-                  weekday === 6 && "text-blue-600 dark:text-blue-400",
+                  weekday === 6 && "text-blue-600 dark:text-blue-400"
                 )}
               >
                 {day}
@@ -92,7 +95,9 @@ export function ReleaseCalendarMonth({
                 const items = date ? (byDate.get(date) ?? []) : [];
                 const isToday = date === today;
                 const selected = date === selectedDate;
-                const providers = [...new Set(items.map((item) => item.provider))];
+                const providers = [
+                  ...new Set(items.map((item) => item.provider)),
+                ];
                 const iconLimit = monthWidth < 294 || items.length > 2 ? 1 : 2;
                 const triggerProps = date
                   ? popover.getTriggerProps({
@@ -105,9 +110,9 @@ export function ReleaseCalendarMonth({
                   <td
                     key={weekday}
                     className={cn(
-                      "border-b border-r p-0 last:border-r-0",
+                      "border-r border-b p-0 last:border-r-0",
                       week === 5 && "border-b-0",
-                      !date && "bg-muted/20",
+                      !date && "bg-muted/20"
                     )}
                   >
                     {date ? (
@@ -119,7 +124,9 @@ export function ReleaseCalendarMonth({
                         aria-pressed={selected}
                         aria-label={`${formatReleaseDate(date, locale)}: ${items.length}${en ? " releases" : " 件"}${isToday ? (en ? " · Today" : " · 今日") : ""}${items.length > 0 ? ` · ${items.map((item) => item.title).join(" / ")}` : ""}`}
                         tabIndex={
-                          selected || (date.endsWith("-01") && selectedDate.slice(0, 7) !== month)
+                          selected ||
+                          (date.endsWith("-01") &&
+                            selectedDate.slice(0, 7) !== month)
                             ? 0
                             : -1
                         }
@@ -135,7 +142,7 @@ export function ReleaseCalendarMonth({
                           "flex w-full cursor-pointer flex-col gap-1 p-1 text-left transition-colors hover:bg-muted/50 focus-visible:relative focus-visible:z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                           showTitles ? "h-24" : "h-16",
                           selected &&
-                            "bg-teal-50/60 ring-2 ring-inset ring-teal-600 dark:bg-teal-950/40 dark:ring-teal-400",
+                            "bg-teal-50/60 ring-2 ring-teal-600 ring-inset dark:bg-teal-950/40 dark:ring-teal-400"
                         )}
                       >
                         <span
@@ -147,7 +154,7 @@ export function ReleaseCalendarMonth({
                                 ? "text-rose-600 dark:text-rose-400"
                                 : weekday === 6
                                   ? "text-blue-600 dark:text-blue-400"
-                                  : "text-foreground",
+                                  : "text-foreground"
                           )}
                         >
                           {Number(date.slice(-2))}
@@ -159,10 +166,14 @@ export function ReleaseCalendarMonth({
                                 key={item.id}
                                 className={cn(
                                   "flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-[10px]",
-                                  providerStyles[item.provider].badge,
+                                  providerStyles[item.provider].badge
                                 )}
                               >
-                                <ProviderIcon provider={item.provider} className="size-4" plain />
+                                <ProviderIcon
+                                  provider={item.provider}
+                                  className="size-4"
+                                  plain
+                                />
                                 <span className="truncate">{item.title}</span>
                               </span>
                             ))}
@@ -181,8 +192,9 @@ export function ReleaseCalendarMonth({
                                 className="size-4 rounded [&_svg]:size-3"
                               />
                             ))}
-                            {items.length > Math.min(providers.length, iconLimit) && (
-                              <span className="text-[9px] tabular-nums text-muted-foreground">
+                            {items.length >
+                              Math.min(providers.length, iconLimit) && (
+                              <span className="text-[9px] text-muted-foreground tabular-nums">
                                 {items.length}
                               </span>
                             )}

@@ -6,5 +6,5 @@ export const contentType = "image/png";
 export const dynamic = "force-static";
 
 export default async function Image() {
-  return renderDefaultOpengraphImage();
+  return await renderDefaultOpengraphImage();
 }

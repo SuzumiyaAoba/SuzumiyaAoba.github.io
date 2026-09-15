@@ -9,7 +9,11 @@ type HomeWritingProps = {
   postCount: number;
 };
 
-export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps) {
+export function HomeWriting({
+  locale,
+  latestPosts,
+  postCount,
+}: HomeWritingProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
   const posts = latestPosts.flatMap((variant) => {
@@ -21,7 +25,11 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
   const earlierPosts = otherPosts.slice(2, 5);
 
   return (
-    <section id="writing" className="home-writing site-container" aria-labelledby="writing-title">
+    <section
+      id="writing"
+      className="home-writing site-container"
+      aria-labelledby="writing-title"
+    >
       <div className="home-section-heading">
         <h2 id="writing-title" className="home-section-title">
           {t("最新の記事", "Latest articles")}
@@ -33,7 +41,9 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
         </a>
       </div>
       {featured ? (
-        <div className={`home-lead-grid${recentPosts.length === 0 ? " home-lead-solo" : ""}`}>
+        <div
+          className={`home-lead-grid${recentPosts.length === 0 ? " home-lead-solo" : ""}`}
+        >
           <article className="home-feature">
             <a
               href={toLocalePath(`/blog/post/${featured.slug}`, locale)}
@@ -42,14 +52,20 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
               <div className="home-feature-meta">
                 <span>{t("最新の記事", "Latest entry")}</span>
                 {featured.date && (
-                  <time dateTime={featured.date}>{featured.date.replaceAll("-", ".")}</time>
+                  <time dateTime={featured.date}>
+                    {featured.date.replaceAll("-", ".")}
+                  </time>
                 )}
               </div>
               <div className="home-feature-copy">
-                {featured.category && <p className="home-feature-category">{featured.category}</p>}
+                {featured.category && (
+                  <p className="home-feature-category">{featured.category}</p>
+                )}
                 <h3 className="home-feature-title">{featured.title}</h3>
                 {featured.description && (
-                  <p className="home-feature-description">{featured.description}</p>
+                  <p className="home-feature-description">
+                    {featured.description}
+                  </p>
                 )}
               </div>
               <div className="home-feature-footer">
@@ -69,13 +85,17 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
                     >
                       <div className="home-entry-meta">
                         {post.date && (
-                          <time dateTime={post.date}>{post.date.replaceAll("-", ".")}</time>
+                          <time dateTime={post.date}>
+                            {post.date.replaceAll("-", ".")}
+                          </time>
                         )}
                         {post.category && <span>{post.category}</span>}
                       </div>
                       <h3>{post.title}</h3>
                       {post.description && (
-                        <p className="home-entry-description">{post.description}</p>
+                        <p className="home-entry-description">
+                          {post.description}
+                        </p>
                       )}
                       <span className="home-recent-footer">
                         {t("記事を読む", "Read article")}
@@ -89,7 +109,9 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
           )}
         </div>
       ) : (
-        <p className="home-empty">{t("記事はまだありません。", "No articles yet.")}</p>
+        <p className="home-empty">
+          {t("記事はまだありません。", "No articles yet.")}
+        </p>
       )}
 
       {earlierPosts.length > 0 && (
@@ -98,7 +120,11 @@ export function HomeWriting({ locale, latestPosts, postCount }: HomeWritingProps
             <li key={post.slug}>
               <a href={toLocalePath(`/blog/post/${post.slug}`, locale)}>
                 <div className="home-entry-meta">
-                  {post.date && <time dateTime={post.date}>{post.date.replaceAll("-", ".")}</time>}
+                  {post.date && (
+                    <time dateTime={post.date}>
+                      {post.date.replaceAll("-", ".")}
+                    </time>
+                  )}
                   {post.category && <span>{post.category}</span>}
                 </div>
                 <h3>{post.title}</h3>

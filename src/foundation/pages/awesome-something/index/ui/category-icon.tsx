@@ -46,7 +46,10 @@ const CATEGORY_ICONS = new Map<string, LucideIcon>([
 ]);
 
 export function CategoryIcon({ category }: { category?: string }) {
-  const Icon = category === undefined ? LayoutGrid : (CATEGORY_ICONS.get(category) ?? Folder);
+  const Icon =
+    category === undefined
+      ? LayoutGrid
+      : (CATEGORY_ICONS.get(category) ?? Folder);
 
   return <Icon className="size-4 shrink-0" aria-hidden="true" />;
 }

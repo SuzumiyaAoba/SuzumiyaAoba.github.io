@@ -7,7 +7,7 @@ const DEFAULT_OFFSETS = { prevOffset: 1, nextOffset: -1 };
 export function findAdjacentByIndex<T>(
   items: readonly T[],
   predicate: (item: T) => boolean,
-  offsets: { prevOffset: number; nextOffset: number } = DEFAULT_OFFSETS,
+  offsets: { prevOffset: number; nextOffset: number } = DEFAULT_OFFSETS
 ): { prev: T | null; next: T | null } {
   const index = items.findIndex((item) => predicate(item));
   if (index === -1) {

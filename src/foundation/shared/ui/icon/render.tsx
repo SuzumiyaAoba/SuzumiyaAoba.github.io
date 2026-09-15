@@ -2,7 +2,10 @@ import type { SVGProps } from "react";
 
 import type { IconData } from "./types";
 
-export type IconProps = Omit<SVGProps<SVGSVGElement>, "children" | "dangerouslySetInnerHTML"> & {
+export type IconProps = Omit<
+  SVGProps<SVGSVGElement>,
+  "children" | "dangerouslySetInnerHTML"
+> & {
   /** "prefix:name" 形式のアイコン名 */
   icon: string;
 };
@@ -16,7 +19,7 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, "children" | "dangerouslyS
  */
 export function renderIcon(
   icons: Record<string, IconData>,
-  { icon, ...props }: IconProps,
+  { icon, ...props }: IconProps
 ) {
   const data = icons[icon];
   if (!data) {

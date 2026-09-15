@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
-import { buildContentSitemapEntries, buildTranslatedSitemapEntries } from "./sitemap-entries";
+import {
+  buildContentSitemapEntries,
+  buildTranslatedSitemapEntries,
+} from "./sitemap-entries";
 
 const siteUrl = "https://example.com";
 const buildTime = new Date("2026-01-01");
@@ -14,8 +17,8 @@ describe("sitemap entries", () => {
           { path: "/tags/C%2B%2B/", lastModified: updated, priority: 0.6 },
         ],
         siteUrl,
-        buildTime,
-      ),
+        buildTime
+      )
     ).toStrictEqual([
       {
         url: "https://example.com/",
@@ -23,14 +26,22 @@ describe("sitemap entries", () => {
         priority: 1,
         changeFrequency: "daily",
       },
-      { url: "https://example.com/tags/C%2B%2B/", lastModified: updated, priority: 0.6 },
+      {
+        url: "https://example.com/tags/C%2B%2B/",
+        lastModified: updated,
+        priority: 0.6,
+      },
       {
         url: "https://example.com/en/",
         lastModified: buildTime,
         priority: 1,
         changeFrequency: "daily",
       },
-      { url: "https://example.com/en/tags/C%2B%2B/", lastModified: updated, priority: 0.6 },
+      {
+        url: "https://example.com/en/tags/C%2B%2B/",
+        lastModified: updated,
+        priority: 0.6,
+      },
     ]);
   });
 
@@ -44,7 +55,7 @@ describe("sitemap entries", () => {
         { slug: "en-only", ja: null, en },
         { slug: "undated", ja: { frontmatter: {} }, en: null },
       ],
-      { basePath: "/blog/post", siteUrl, priority: 0.7, buildTime },
+      { basePath: "/blog/post", siteUrl, priority: 0.7, buildTime }
     );
     expect(entries.map((entry) => entry.url)).toStrictEqual([
       "https://example.com/blog/post/both/",

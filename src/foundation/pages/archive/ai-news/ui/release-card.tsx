@@ -4,7 +4,12 @@ import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { dateTimestamp, formatReleaseDate } from "../model/release-calendar";
 import type { Release } from "../model/release-calendar";
-import { ProviderIcon, providerStyles, providerLabel, kindLabel } from "./provider-identity";
+import {
+  ProviderIcon,
+  providerStyles,
+  providerLabel,
+  kindLabel,
+} from "./provider-identity";
 
 export function ReleaseCard({
   release,
@@ -31,7 +36,7 @@ export function ReleaseCard({
         ? "No dated predecessor recorded"
         : "比較できる前回の記録なし";
   const description = (
-    <div className="prose prose-sm max-w-none text-muted-foreground [&_a]:font-medium [&_a]:text-foreground [&_p]:my-2 [&_p]:text-sm [&_p]:leading-7">
+    <div className="prose max-w-none text-muted-foreground [&_a]:font-medium [&_a]:text-foreground [&_p]:my-2 [&_p]:text-sm [&_p]:leading-7">
       {release.summary}
     </div>
   );
@@ -52,14 +57,21 @@ export function ReleaseCard({
               {en ? " days" : " 日"}
             </span>
           </div>
-          <p className="mt-3 text-xs leading-5">{interval.previousTitles.join(" / ")}</p>
+          <p className="mt-3 text-xs leading-5">
+            {interval.previousTitles.join(" / ")}
+          </p>
           <div className="mt-2 flex items-center gap-2 text-[11px] tabular-nums opacity-75">
             <time dateTime={interval.previousDate}>
               {interval.previousDate.replaceAll("-", ".")}
             </time>
-            <span className="h-px flex-1 bg-current opacity-25" aria-hidden="true" />
+            <span
+              className="h-px flex-1 bg-current opacity-25"
+              aria-hidden="true"
+            />
             <ArrowRight className="size-3" aria-hidden="true" />
-            <time dateTime={release.date ?? undefined}>{release.date?.replaceAll("-", ".")}</time>
+            <time dateTime={release.date ?? undefined}>
+              {release.date?.replaceAll("-", ".")}
+            </time>
           </div>
         </div>
       ))}
@@ -86,22 +98,26 @@ export function ReleaseCard({
               <>
                 <time
                   dateTime={release.date}
-                  className="whitespace-nowrap text-lg font-semibold tabular-nums text-foreground sm:text-3xl"
+                  className="text-lg font-semibold whitespace-nowrap text-foreground tabular-nums sm:text-3xl"
                 >
                   <span className="sm:hidden">{release.date.slice(5, 7)}.</span>
                   {release.date.slice(-2)}
                 </time>
                 <span className="sm:mt-1">
-                  {new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }).format(
-                    dateTimestamp(release.date),
-                  )}
+                  {new Intl.DateTimeFormat(locale, {
+                    weekday: "short",
+                    timeZone: "UTC",
+                  }).format(dateTimestamp(release.date))}
                 </span>
               </>
             ) : (
               <span>{dateLabel}</span>
             )}
           </div>
-          <ProviderIcon provider={release.provider} className="size-11 rounded-xl" />
+          <ProviderIcon
+            provider={release.provider}
+            className="size-11 rounded-xl"
+          />
           <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
               <span className={cn("font-semibold", style.ink)}>
@@ -112,18 +128,20 @@ export function ReleaseCard({
             </div>
             <h3
               id={titleId}
-              className="text-base font-semibold leading-6 tracking-tight sm:text-lg"
+              className="text-base leading-6 font-semibold tracking-tight sm:text-lg"
             >
               {release.title}
             </h3>
-            <p className="text-xs leading-5 text-muted-foreground">{release.series.join(" · ")}</p>
+            <p className="text-xs leading-5 text-muted-foreground">
+              {release.series.join(" · ")}
+            </p>
           </div>
           <div className="col-start-2 sm:col-start-auto sm:pt-1 sm:text-right">
             {primaryInterval ? (
               <div
                 className={cn(
                   "inline-flex items-baseline gap-1.5 rounded-lg px-3 py-1.5 text-[11px]",
-                  style.badge,
+                  style.badge
                 )}
               >
                 {en ? "After " : "前回から "}
@@ -171,23 +189,33 @@ export function ReleaseCard({
       <div className="space-y-5 p-5 sm:p-6">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <ProviderIcon provider={release.provider} className="size-11 rounded-xl" />
+            <ProviderIcon
+              provider={release.provider}
+              className="size-11 rounded-xl"
+            />
             <div>
-              <p className="text-sm font-semibold">{providerLabel(release.provider, locale)}</p>
+              <p className="text-sm font-semibold">
+                {providerLabel(release.provider, locale)}
+              </p>
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {kindLabel(release.kind, locale)}
               </p>
             </div>
           </div>
-          <span className="text-right text-[11px] tabular-nums text-muted-foreground">
+          <span className="text-right text-[11px] text-muted-foreground tabular-nums">
             {release.date ? (
-              <time dateTime={release.date}>{release.date.replaceAll("-", ".")}</time>
+              <time dateTime={release.date}>
+                {release.date.replaceAll("-", ".")}
+              </time>
             ) : (
               dateLabel
             )}
           </span>
         </div>
-        <h3 id={titleId} className="text-xl font-semibold leading-8 tracking-tight">
+        <h3
+          id={titleId}
+          className="text-xl leading-8 font-semibold tracking-tight"
+        >
           {release.title}
         </h3>
         {release.intervals.length > 0 ? (

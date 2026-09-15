@@ -10,9 +10,7 @@ description: Explaining why ^ and $ are unnecessary in the regexp of Bean Valida
 
 ## Introduction
 
-This article explains the specification of Java Bean Validation's `@Pattern`.
-I keep seeing many explanations that use incorrect examples, and reviewing code that references them is exhausting,
-so I decided to stop expecting the world to provide correct information and to publish it myself.
+This article explains the specification of Java Bean Validation's `@Pattern`. I keep seeing many explanations that use incorrect examples, and reviewing code that references them is exhausting, so I decided to stop expecting the world to provide correct information and to publish it myself.
 
 The recent [article](../2024-08-08-java-to-list) is also part of that effort.
 
@@ -38,23 +36,17 @@ public class Example {
 }
 ```
 
-You can find examples that use both `^` and `$`, or only one of them, but they write regex for `@Pattern`'s `regexp` in the form `^<regex>$`.
-This works and is not incorrect, but you do not need to use `^` and `$`.
+You can find examples that use both `^` and `$`, or only one of them, but they write regex for `@Pattern`'s `regexp` in the form `^<regex>$`. This works and is not incorrect, but you do not need to use `^` and `$`.
 
 People who deliberately add `^` and `$` may not understand the `@Pattern` specification.
 
 ## Jakarta Bean Validation
 
-If you want to implement validation in Java, it is common to use a library compliant with [Jakarta Bean Validation](https://beanvalidation.org/).
-Jakarta Bean Validation is the specification for Bean Validation, transferred from
-[JSR 303](https://www.jcp.org/en/jsr/detail?id=303), [JSR 349](https://www.jcp.org/en/jsr/detail?id=349), and [JSR 380](https://www.jcp.org/en/jsr/detail?id=380),
-and managed by the Eclipse Foundation. [^1]
+If you want to implement validation in Java, it is common to use a library compliant with [Jakarta Bean Validation](https://beanvalidation.org/). Jakarta Bean Validation is the specification for Bean Validation, transferred from [JSR 303](https://www.jcp.org/en/jsr/detail?id=303), [JSR 349](https://www.jcp.org/en/jsr/detail?id=349), and [JSR 380](https://www.jcp.org/en/jsr/detail?id=380), and managed by the Eclipse Foundation. [^1]
 
 [^1]: For Java EE and Jakarta EE, see [From Java EE to Jakarta EE](https://blogs.oracle.com/otnjp/post/transition-from-java-ee-to-jakarta-ee-ja).
 
-In Java, there are cases where only the specification is defined independently, and multiple libraries implement it.
-For example, [Hibernate Validator](https://hibernate.org/validator/) is the reference implementation for Jakarta Bean Validation.
-Hibernate Validator is commonly used, but there is also [Apache BVal](https://bval.apache.org/) as a Jakarta Bean Validation-compliant implementation.
+In Java, there are cases where only the specification is defined independently, and multiple libraries implement it. For example, [Hibernate Validator](https://hibernate.org/validator/) is the reference implementation for Jakarta Bean Validation. Hibernate Validator is commonly used, but there is also [Apache BVal](https://bval.apache.org/) as a Jakarta Bean Validation-compliant implementation.
 
 ## Hibernate Validator
 
@@ -133,15 +125,11 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
   skipPath={4}
 />
 
-Whether validation succeeds is determined by the [`Matcher#matches`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/regex/Matcher.html#matches()>) method.
-`Matcher#matches` checks whether the **entire string** matches the regular expression.
-If only part of the string matches, validation fails.
-Therefore, for the `@Pattern` annotation, validation succeeds if the entire string matches the regex even without `^` and `$`.
+Whether validation succeeds is determined by the [`Matcher#matches`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/regex/Matcher.html#matches()>) method. `Matcher#matches` checks whether the **entire string** matches the regular expression. If only part of the string matches, validation fails. Therefore, for the `@Pattern` annotation, validation succeeds if the entire string matches the regex even without `^` and `$`.
 
 ## Correct (?) implementation
 
-Even though adding `^` and `$` does not change behavior, it is just noise, so it should be avoided.
-Thus the earlier example can be rewritten like this.
+Even though adding `^` and `$` does not change behavior, it is just noise, so it should be avoided. Thus the earlier example can be rewritten like this.
 
 ```java
 @Value
@@ -155,8 +143,6 @@ public class Example {
 
 ## Conclusion
 
-When specifying a regular expression for `@Pattern`'s `regexp`, you do not need to add `^` and `$`.
-Older articles do not use `^$`, but many recent articles seem to add them.
+When specifying a regular expression for `@Pattern`'s `regexp`, you do not need to add `^` and `$`. Older articles do not use `^$`, but many recent articles seem to add them.
 
-At some point incorrect information was written, and many people likely use code they find online as-is.
-Do not blindly trust information found online; it is important to read official documentation and confirm the specification.
+At some point incorrect information was written, and many people likely use code they find online as-is. Do not blindly trust information found online; it is important to read official documentation and confirm the specification.

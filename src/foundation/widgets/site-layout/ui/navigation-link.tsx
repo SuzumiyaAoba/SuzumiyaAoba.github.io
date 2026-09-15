@@ -24,12 +24,17 @@ export function NavigationLink({
       href={toLocalePath(item.href, item.japaneseOnly ? "ja" : locale)}
       hrefLang={item.japaneseOnly ? "ja" : undefined}
       aria-current={active ? "page" : undefined}
-      className={cn(index ? "site-index-link" : "site-nav-link", active && "font-semibold")}
+      className={cn(
+        index ? "site-index-link" : "site-nav-link",
+        active && "font-semibold"
+      )}
       onClick={onNavigate}
     >
       <span>
         {en ? item.en : item.ja}
-        {en && item.japaneseOnly && <small className="site-link-language">JA</small>}
+        {en && item.japaneseOnly && (
+          <small className="site-link-language">JA</small>
+        )}
       </span>
       {index && <span aria-hidden="true">↗</span>}
     </a>

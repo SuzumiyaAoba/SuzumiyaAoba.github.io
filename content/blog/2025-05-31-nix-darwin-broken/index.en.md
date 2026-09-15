@@ -14,9 +14,7 @@ It sounds like something an engineer should never say, but my computer (environm
 
 ## Nix
 
-I use a package management system called [Nix](https://nixos.org/) to set up my PC environment.
-I'll leave the passionate explanations of why Nix is great to others on the internet, but in the past few weeks,
-my Nix-managed environment broke. To be precise, package updates stopped working.
+I use a package management system called [Nix](https://nixos.org/) to set up my PC environment. I'll leave the passionate explanations of why Nix is great to others on the internet, but in the past few weeks, my Nix-managed environment broke. To be precise, package updates stopped working.
 
 I said Nix, but since I'm on macOS, the exact stack is:
 
@@ -113,14 +111,9 @@ This was about to affect my work, so I investigated and found relevant GitHub is
 
 It seems the root cause was a PR in NixOS/nixpkgs: [lib/systems: use Darwin architecture names for `config` and `uname` by emilazy · Pull Request #393213 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/pull/393213).
 
-Previously, ARM 64-bit macOS (Apple Silicon) was treated as `aarch64-apple-darwin`,
-but this PR changed it to `arm64-apple-darwin`.
-This change itself is to align with LLVM 20 changes, so the biggest culprit is LLVM.
+Previously, ARM 64-bit macOS (Apple Silicon) was treated as `aarch64-apple-darwin`, but this PR changed it to `arm64-apple-darwin`. This change itself is to align with LLVM 20 changes, so the biggest culprit is LLVM.
 
-I hadn't been conscious of the naming differences between AArch64 and arm64, but in the LLVM context,
-as [LLVM backend differences between aarch64 and arm64 - Embedded person](https://embedded.hatenadiary.org/entry/20140427/p2) explains,
-AArch64 is created by ARM, while ARM64 is created by Apple.
-That article mentions a move to unify on AArch64, but perhaps time passed and they diverged again.
+I hadn't been conscious of the naming differences between AArch64 and arm64, but in the LLVM context, as [LLVM backend differences between aarch64 and arm64 - Embedded person](https://embedded.hatenadiary.org/entry/20140427/p2) explains, AArch64 is created by ARM, while ARM64 is created by Apple. That article mentions a move to unify on AArch64, but perhaps time passed and they diverged again.
 
 Indeed, running `uname -m` locally shows `arm64`.
 
@@ -136,8 +129,7 @@ This mismatch is likely what they wanted to resolve, but it caused packages to f
 - [Nix standalone on MacOS's system string is `arm64-apple-darwin` and not `aarch64-darwin` · Issue #401364 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/401364)
 - [copilot-language-server-fhs: Can't build on darwin · Issue #408666 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/408666)
 
-Looking at these PRs and issues, packages that hard-coded architecture strings instead of using `stdenv.hostPlatform.config`,
-or packages using `stdenv.hostPlatform.darwinArch`, seem to be affected.
+Looking at these PRs and issues, packages that hard-coded architecture strings instead of using `stdenv.hostPlatform.config`, or packages using `stdenv.hostPlatform.darwinArch`, seem to be affected.
 
 ## Solution
 
@@ -149,8 +141,7 @@ Cause found: I had installed copilot-language-server. This matches the issue bel
 
 - [copilot-language-server-fhs: Can't build on darwin · Issue #408666 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/408666)
 
-Since I manage Emacs packages with Nix, copilot-language-server was pulled in along with [copilot.el](https://github.com/copilot-emacs/copilot.el).
-Temporarily removing copilot.el resolved the issue.
+Since I manage Emacs packages with Nix, copilot-language-server was pulled in along with [copilot.el](https://github.com/copilot-emacs/copilot.el). Temporarily removing copilot.el resolved the issue.
 
 ## Conclusion
 

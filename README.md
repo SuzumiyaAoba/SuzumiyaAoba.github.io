@@ -21,17 +21,17 @@ npm run pagefind:dev:force
 
 ## 構成
 
-| パス                        | 役割                                                        |
-| --------------------------- | ----------------------------------------------------------- |
-| `src/app`                   | ルーティング、レイアウト、メタデータ、OGP画像、サイトマップ |
-| `src/foundation/pages`      | 各ページのデータ取得と表示                                  |
-| `src/foundation/widgets`    | ヘッダー・フッターなどのページ共通領域                      |
-| `src/foundation/entities`   | ブログ、ノート、書籍、シリーズのモデルと公開API             |
-| `src/foundation/shared/lib` | コンテンツ読み込み、MDX変換、言語選択、URL・日付処理        |
-| `src/foundation/shared/ui`  | 共通UI、目次、グラフ、MDXコンポーネント                     |
-| `content`                   | Markdown / MDX本文、記事データ、シリーズ定義                |
-| `src/i18n/messages`         | 日本語・英語のUIメッセージ                                  |
-| `scripts`                   | アイコン生成と検索インデックスのビルド補助                  |
+| パス | 役割 |
+| --- | --- |
+| `src/app` | ルーティング、レイアウト、メタデータ、OGP画像、サイトマップ |
+| `src/foundation/pages` | 各ページのデータ取得と表示 |
+| `src/foundation/widgets` | ヘッダー・フッターなどのページ共通領域 |
+| `src/foundation/entities` | ブログ、ノート、書籍、シリーズのモデルと公開API |
+| `src/foundation/shared/lib` | コンテンツ読み込み、MDX変換、言語選択、URL・日付処理 |
+| `src/foundation/shared/ui` | 共通UI、目次、グラフ、MDXコンポーネント |
+| `content` | Markdown / MDX本文、記事データ、シリーズ定義 |
+| `src/i18n/messages` | 日本語・英語のUIメッセージ |
+| `scripts` | アイコン生成と検索インデックスのビルド補助 |
 
 依存方向は `pages → widgets / entities → shared` を基本とし、Steiger で確認します。スライス外からの参照には各 `index.ts` の公開APIを使います。
 
@@ -75,17 +75,17 @@ items:
         url: /blog/post/example-tool/
 ```
 
-| フィールド     | 必須 | 内容                                                                                    |
-| -------------- | ---- | --------------------------------------------------------------------------------------- |
-| `id`           | ○    | 重複しない英小文字・数字・ハイフンの ID。項目のアンカー `#awesome-<id>` にも使用        |
-| `name`         | ○    | 名称                                                                                    |
-| `category`     | ○    | 自由なカテゴリ名。例: サービス、ライブラリ、フレームワーク、アプリケーション            |
-| `tags`         |      | 用途・技術・特徴を表すタグの文字列リスト。例: `[CLI, 自動化]`                           |
-| `description`  | ○    | 簡単な説明。複数行は YAML の `\|` や `>` で記入可能                                     |
-| `websiteUrl`   |      | 公式サイトの HTTP(S) URL                                                                |
-| `githubUrl`    |      | GitHub リポジトリの HTTP(S) URL                                                         |
-| `articles`     |      | 紹介記事のリスト。HTTP(S) URL、または `url` と任意の `title` を持つオブジェクト         |
-| `relatedPosts` |      | サイト内の関連記事のリスト。`articles` と同形式で、`/` から始まるサイト内パスも指定可能 |
+| フィールド | 必須 | 内容 |
+| --- | --- | --- |
+| `id` | ○ | 重複しない英小文字・数字・ハイフンの ID。項目のアンカー `#awesome-<id>` にも使用 |
+| `name` | ○ | 名称 |
+| `category` | ○ | 自由なカテゴリ名。例: サービス、ライブラリ、フレームワーク、アプリケーション |
+| `tags` |  | 用途・技術・特徴を表すタグの文字列リスト。例: `[CLI, 自動化]` |
+| `description` | ○ | 簡単な説明。複数行は YAML の `\|` や `>` で記入可能 |
+| `websiteUrl` |  | 公式サイトの HTTP(S) URL |
+| `githubUrl` |  | GitHub リポジトリの HTTP(S) URL |
+| `articles` |  | 紹介記事のリスト。HTTP(S) URL、または `url` と任意の `title` を持つオブジェクト |
+| `relatedPosts` |  | サイト内の関連記事のリスト。`articles` と同形式で、`/` から始まるサイト内パスも指定可能 |
 
 任意の URL は省略・空欄、記事リストとタグは省略・空欄・`[]` にできます。未設定のリンクや見出し、タグ欄は表示しません。タグは前後の空白と重複を除き、記載順に表示します。空文字や文字列以外のタグはエラーになります。カテゴリの選択肢は記録から自動生成され、名称・説明・カテゴリ・タグのキーワード検索と組み合わせて絞り込めます。
 
@@ -125,9 +125,7 @@ Qwen・Kimi・Llama・Mistral・Grok・GLM・MiniMax などの海外モデルと
 本文では、`affiliate://` の後に管理ファイルの `id` を完全一致で指定します。表示名は記事ごとに自由に設定できます。次の例はいずれも登録済みの ID を参照しています。
 
 ```md
-[Clean Code](affiliate://clean-code)
-[Clean Architecture](affiliate://clean-architecture-reference)
-[現場で活用するためのAIエージェント実践入門](affiliate://ai-agent-practical-introduction)
+[Clean Code](affiliate://clean-code) [Clean Architecture](affiliate://clean-architecture-reference) [現場で活用するためのAIエージェント実践入門](affiliate://ai-agent-practical-introduction)
 ```
 
 新しい ID は `clean-code` のような英小文字・数字・ハイフンによる kebab-case にします。リンクは管理ファイルに一度だけ登録し、本文に URL を直接書かず ID を参照してください。ID は `products` と `links` を通して一意にします。ID の重複・未登録の参照・不正な定義はビルド時にエラーになります。

@@ -15,9 +15,9 @@ export function Tabs({ children }: TabsProps) {
   const tabs = useMemo(
     () =>
       (Array.isArray(children) ? children : [children]).filter(
-        (child): child is ReactElement<TabProps> => isValidElement(child),
+        (child): child is ReactElement<TabProps> => isValidElement(child)
       ),
-    [children],
+    [children]
   );
 
   if (tabs.length === 0) {
@@ -38,7 +38,9 @@ export function Tabs({ children }: TabsProps) {
               onClick={() => setActiveTab(index)}
               className={cn(
                 "rounded-full px-3 py-1 transition-colors",
-                isActive ? "bg-background text-foreground" : "hover:text-foreground",
+                isActive
+                  ? "bg-background text-foreground"
+                  : "hover:text-foreground"
               )}
             >
               {title}
@@ -46,7 +48,9 @@ export function Tabs({ children }: TabsProps) {
           );
         })}
       </div>
-      <div className="rounded-b-lg bg-muted/30 px-3 py-4">{tabs[activeTab]}</div>
+      <div className="rounded-b-lg bg-muted/30 px-3 py-4">
+        {tabs[activeTab]}
+      </div>
     </div>
   );
 }

@@ -69,7 +69,9 @@ describe("resolveThumbnail", () => {
     });
 
     it("カスタムベースパスを使用できる", () => {
-      const result = resolveThumbnail(slug, "cover.jpg", { basePath: "/custom/path" });
+      const result = resolveThumbnail(slug, "cover.jpg", {
+        basePath: "/custom/path",
+      });
       expect(result).toStrictEqual({
         type: "image",
         src: "/custom/path/cover.webp",

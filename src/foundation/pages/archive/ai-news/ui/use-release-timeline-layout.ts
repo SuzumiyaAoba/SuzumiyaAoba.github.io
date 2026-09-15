@@ -24,12 +24,18 @@ export function useReleaseTimelineLayout({
   const [viewportWidth, setViewportWidth] = useState(0);
   const showLabels = viewportWidth >= 640 && zoom !== "fit" && zoom >= 2;
   const endPadding = showLabels ? 144 : AXIS_PADDING;
-  const availableWidth = Math.max(1, viewportWidth - SERIES_WIDTH - AXIS_PADDING - endPadding);
-  const plotWidth = zoom === "fit" ? availableWidth : Math.max(availableWidth, range.days * zoom);
+  const availableWidth = Math.max(
+    1,
+    viewportWidth - SERIES_WIDTH - AXIS_PADDING - endPadding
+  );
+  const plotWidth =
+    zoom === "fit"
+      ? availableWidth
+      : Math.max(availableWidth, range.days * zoom);
   const pixelsPerDay = plotWidth / range.days;
   const rows = useMemo(
     () => buildTimelineRows(releases, pixelsPerDay, showLabels ? 144 : 48),
-    [releases, pixelsPerDay, showLabels],
+    [releases, pixelsPerDay, showLabels]
   );
   const hasRows = rows.length > 0;
   const centerDayRef = useRef<number | null>(null);
@@ -45,7 +51,9 @@ export function useReleaseTimelineLayout({
     if (!element) {
       return;
     }
-    const observer = new ResizeObserver(() => setViewportWidth(element.clientWidth));
+    const observer = new ResizeObserver(() =>
+      setViewportWidth(element.clientWidth)
+    );
     setViewportWidth(element.clientWidth);
     observer.observe(element);
     return () => observer.disconnect();
@@ -60,19 +68,36 @@ export function useReleaseTimelineLayout({
     const visibleWidth = viewportWidth - SERIES_WIDTH;
     if (!previous || previous.start !== range.start) {
       element.scrollLeft =
-        AXIS_PADDING + daysBetween(range.start, selectedDate) * pixelsPerDay - visibleWidth / 2;
-    } else if (previous.pixelsPerDay !== pixelsPerDay || previous.viewportWidth !== viewportWidth) {
+        AXIS_PADDING +
+        daysBetween(range.start, selectedDate) * pixelsPerDay -
+        visibleWidth / 2;
+    } else if (
+      previous.pixelsPerDay !== pixelsPerDay ||
+      previous.viewportWidth !== viewportWidth
+    ) {
       // 拡大・縮小や画面幅の変更では、見ていた時点を画面中央に保つ。
-      const centerDay = centerDayRef.current ?? daysBetween(range.start, selectedDate);
-      element.scrollLeft = AXIS_PADDING + centerDay * pixelsPerDay - visibleWidth / 2;
+      const centerDay =
+        centerDayRef.current ?? daysBetween(range.start, selectedDate);
+      element.scrollLeft =
+        AXIS_PADDING + centerDay * pixelsPerDay - visibleWidth / 2;
     } else if (previous.selectedDate !== selectedDate) {
-      const position = AXIS_PADDING + daysBetween(range.start, selectedDate) * pixelsPerDay;
-      if (position < element.scrollLeft + 24 || position > element.scrollLeft + visibleWidth - 24) {
+      const position =
+        AXIS_PADDING + daysBetween(range.start, selectedDate) * pixelsPerDay;
+      if (
+        position < element.scrollLeft + 24 ||
+        position > element.scrollLeft + visibleWidth - 24
+      ) {
         element.scrollLeft = position - visibleWidth / 2;
       }
     }
-    centerDayRef.current = (element.scrollLeft + visibleWidth / 2 - AXIS_PADDING) / pixelsPerDay;
-    previousLayout.current = { pixelsPerDay, viewportWidth, start: range.start, selectedDate };
+    centerDayRef.current =
+      (element.scrollLeft + visibleWidth / 2 - AXIS_PADDING) / pixelsPerDay;
+    previousLayout.current = {
+      pixelsPerDay,
+      viewportWidth,
+      start: range.start,
+      selectedDate,
+    };
   }, [pixelsPerDay, viewportWidth, range.start, selectedDate, hasRows]);
 
   function scrollToDate(date: string) {
@@ -89,17 +114,23 @@ export function useReleaseTimelineLayout({
   function scrollPage(direction: number) {
     const element = scrollRef.current;
     if (element) {
-      element.scrollLeft += direction * (element.clientWidth - SERIES_WIDTH) * 0.8;
+      element.scrollLeft +=
+        direction * (element.clientWidth - SERIES_WIDTH) * 0.8;
     }
   }
 
-  const smallerZoom = ZOOM_LEVELS.findLast((value) => value < pixelsPerDay - 0.001);
+  const smallerZoom = ZOOM_LEVELS.findLast(
+    (value) => value < pixelsPerDay - 0.001
+  );
   const largerZoom = ZOOM_LEVELS.find((value) => value > pixelsPerDay + 0.001);
 
   function handleScroll(event: UIEvent<HTMLElement>) {
     const element = event.currentTarget;
     centerDayRef.current =
-      (element.scrollLeft + (element.clientWidth - SERIES_WIDTH) / 2 - AXIS_PADDING) / pixelsPerDay;
+      (element.scrollLeft +
+        (element.clientWidth - SERIES_WIDTH) / 2 -
+        AXIS_PADDING) /
+      pixelsPerDay;
   }
 
   return {

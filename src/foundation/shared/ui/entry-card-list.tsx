@@ -49,7 +49,7 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
                       sizes="(min-width: 640px) 64px, 56px"
                       className={
                         isFallback
-                          ? "object-contain p-3 opacity-70 dark:invert dark:opacity-80"
+                          ? "object-contain p-3 opacity-70 dark:opacity-80 dark:invert"
                           : "object-cover"
                       }
                     />
@@ -65,14 +65,18 @@ export function EntryCardList({ items, emptyState }: EntryCardListProps) {
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-3 self-stretch">
                   <div className="space-y-1.5">
-                    <h2 className="collection-card-title text-base font-medium leading-normal">
+                    <h2 className="collection-card-title text-base leading-normal font-medium">
                       {item.title}
                     </h2>
                     {item.description ? (
-                      <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        {item.description}
+                      </p>
                     ) : null}
                   </div>
-                  <span className="collection-card-cta mt-auto text-sm">{item.cta}</span>
+                  <span className="collection-card-cta mt-auto text-sm">
+                    {item.cta}
+                  </span>
                 </div>
               </a>
             </article>

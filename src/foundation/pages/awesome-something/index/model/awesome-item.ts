@@ -15,13 +15,15 @@ const relatedUrlSchema = z.union([
 ]);
 
 function optionalUrl(value: unknown) {
-  return value === null || (typeof value === "string" && value.trim() === "") ? undefined : value;
+  return value === null || (typeof value === "string" && value.trim() === "")
+    ? undefined
+    : value;
 }
 
 function linkSchema(url: typeof httpUrlSchema | typeof relatedUrlSchema) {
   return z.preprocess(
     (value) => (typeof value === "string" ? { url: value } : value),
-    z.strictObject({ url, title: textSchema.optional() }),
+    z.strictObject({ url, title: textSchema.optional() })
   );
 }
 
@@ -71,10 +73,14 @@ export function parseAwesomeItems(source: string): AwesomeItem[] {
   } catch (error) {
     const detail =
       error instanceof z.ZodError
-        ? error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("\n")
+        ? error.issues
+            .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+            .join("\n")
         : error instanceof Error
           ? error.message
           : String(error);
-    throw new Error(`awesome-something.yaml の形式が不正です。\n${detail}`, { cause: error });
+    throw new Error(`awesome-something.yaml の形式が不正です。\n${detail}`, {
+      cause: error,
+    });
   }
 }

@@ -10,7 +10,9 @@ export type AsciiStandardCodePageContentProps = {
   locale: Locale;
 };
 
-export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageContentProps) {
+export function AsciiStandardCodePageContent({
+  locale,
+}: AsciiStandardCodePageContentProps) {
   const pagePath = toLocalePath("/tools/ascii-standard-code", locale);
   const breadcrumbItems = [
     { name: "Home", path: toLocalePath("/", locale) },
@@ -24,10 +26,10 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+          <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             <I18nText locale={locale} ja="ツール" en="Tools" />
           </p>
-          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
             ASCII Standard Code
           </h1>
           <p className="text-sm leading-6 text-muted-foreground">
@@ -43,8 +45,8 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
                   >
                     RFC 20
                   </a>{" "}
-                  の Standard Code にあるテーブルの SVG バージョン。ASCII コードから 16 進数、2
-                  進数への変換表。
+                  の Standard Code にあるテーブルの SVG バージョン。ASCII
+                  コードから 16 進数、2 進数への変換表。
                 </>
               }
               en={
@@ -58,7 +60,8 @@ export function AsciiStandardCodePageContent({ locale }: AsciiStandardCodePageCo
                   >
                     RFC 20
                   </a>
-                  . A conversion table from ASCII codes to hexadecimal and binary.
+                  . A conversion table from ASCII codes to hexadecimal and
+                  binary.
                 </>
               }
             />

@@ -12,12 +12,17 @@ export type ReleaseTimelineRange = {
 };
 
 /** 全件から範囲を決め、絞り込みや年の移動でも同じ時間軸を使う。 */
-export function getReleaseTimelineRange(releases: Release[]): ReleaseTimelineRange | null {
+export function getReleaseTimelineRange(
+  releases: Release[]
+): ReleaseTimelineRange | null {
   const dates = releases
     .flatMap((release) =>
       release.date
-        ? [release.date, ...release.intervals.map((interval) => interval.previousDate)]
-        : [],
+        ? [
+            release.date,
+            ...release.intervals.map((interval) => interval.previousDate),
+          ]
+        : []
     )
     .toSorted();
   const [firstDate] = dates;
@@ -29,7 +34,11 @@ export function getReleaseTimelineRange(releases: Release[]): ReleaseTimelineRan
   const start = `${firstDate.slice(0, 7)}-01`;
   const end = `${shiftMonth(lastDate.slice(0, 7), 1)}-01`;
   const months: string[] = [];
-  for (let month = start.slice(0, 7); `${month}-01` < end; month = shiftMonth(month, 1)) {
+  for (
+    let month = start.slice(0, 7);
+    `${month}-01` < end;
+    month = shiftMonth(month, 1)
+  ) {
     months.push(`${month}-01`);
   }
   const firstYear = Number(firstDate.slice(0, 4));
@@ -41,16 +50,29 @@ export function getReleaseTimelineRange(releases: Release[]): ReleaseTimelineRan
     lastDate,
     days: daysBetween(start, end),
     months,
-    years: Array.from({ length: lastYear - firstYear + 1 }, (_, index) => firstYear + index),
+    years: Array.from(
+      { length: lastYear - firstYear + 1 },
+      (_, index) => firstYear + index
+    ),
   };
 }
 
-export function timelinePosition(date: string, range: ReleaseTimelineRange): number {
-  return Math.max(0, Math.min(100, (daysBetween(range.start, date) / range.days) * 100));
+export function timelinePosition(
+  date: string,
+  range: ReleaseTimelineRange
+): number {
+  return Math.max(
+    0,
+    Math.min(100, (daysBetween(range.start, date) / range.days) * 100)
+  );
 }
 
 /** 日付の間隔を描画幅に換算し、縮尺が変わっても点の操作領域が重ならないようにする。 */
-export function buildTimelineRows(releases: Release[], pixelsPerDay: number, targetWidth = 48) {
+export function buildTimelineRows(
+  releases: Release[],
+  pixelsPerDay: number,
+  targetWidth = 48
+) {
   const groups = new Map<
     string,
     { series: string; release: Release; dates: Map<string, Release[]> }
@@ -61,7 +83,11 @@ export function buildTimelineRows(releases: Release[], pixelsPerDay: number, tar
     }
     for (const series of release.series) {
       const key = JSON.stringify([release.provider, release.kind, series]);
-      const group = groups.get(key) ?? { series, release, dates: new Map<string, Release[]>() };
+      const group = groups.get(key) ?? {
+        series,
+        release,
+        dates: new Map<string, Release[]>(),
+      };
       const sameDay = group.dates.get(release.date) ?? [];
       sameDay.push(release);
       group.dates.set(release.date, sameDay);
@@ -76,7 +102,8 @@ export function buildTimelineRows(releases: Release[], pixelsPerDay: number, tar
         .toSorted(([a], [b]) => a.localeCompare(b))
         .map(([date, sameDay]) => {
           const availableLane = lanes.findIndex(
-            (previous) => daysBetween(previous, date) * pixelsPerDay >= targetWidth,
+            (previous) =>
+              daysBetween(previous, date) * pixelsPerDay >= targetWidth
           );
           const lane = availableLane === -1 ? lanes.length : availableLane;
           lanes[lane] = date;
@@ -86,9 +113,12 @@ export function buildTimelineRows(releases: Release[], pixelsPerDay: number, tar
     })
     .toSorted(
       (a, b) =>
-        PROVIDERS.indexOf(a.release.provider) - PROVIDERS.indexOf(b.release.provider) ||
-        (b.points.at(-1)?.date ?? "").localeCompare(a.points.at(-1)?.date ?? "") ||
+        PROVIDERS.indexOf(a.release.provider) -
+          PROVIDERS.indexOf(b.release.provider) ||
+        (b.points.at(-1)?.date ?? "").localeCompare(
+          a.points.at(-1)?.date ?? ""
+        ) ||
         a.series.localeCompare(b.series) ||
-        a.release.kind.localeCompare(b.release.kind),
+        a.release.kind.localeCompare(b.release.kind)
     );
 }

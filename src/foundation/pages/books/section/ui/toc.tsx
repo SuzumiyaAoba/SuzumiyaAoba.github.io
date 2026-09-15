@@ -21,7 +21,7 @@ export function Toc({ headings }: TocProps) {
   return (
     <TOCProvider toc={toc}>
       <aside className="sticky top-28 flex max-h-[calc(100vh-8rem)] flex-col gap-3 overflow-hidden text-sm">
-        <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+        <p className="shrink-0 text-xs font-semibold tracking-[0.3em] text-muted-foreground uppercase">
           目次
         </p>
         <TOCScrollArea className="min-h-0 flex-1">

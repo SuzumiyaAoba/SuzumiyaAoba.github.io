@@ -3,7 +3,11 @@ import { SiteLayout } from "@/widgets/site-layout";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+} from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { Card } from "@/shared/ui/card";
 import { EntryCardList } from "@/shared/ui/entry-card-list";
@@ -15,7 +19,10 @@ export type ArchivePageContentProps = {
 
 export function ArchivePageContent({ locale }: ArchivePageContentProps) {
   const pagePath = toLocalePath("/archive", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Archive", path: "/archive" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "Archive",
+    path: "/archive",
+  });
   const archives = [
     {
       slug: "ai-news",
@@ -48,7 +55,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
   const items: EntryCardItem[] = archives.map((archive) => ({
     slug: archive.slug,
     title: locale === "en" ? archive.title.en : archive.title.ja,
-    description: locale === "en" ? archive.description.en : archive.description.ja,
+    description:
+      locale === "en" ? archive.description.en : archive.description.ja,
     thumbnail: archive.thumbnail,
     thumbnailBasePath: `/contents/archive/${archive.slug}`,
     href: toLocalePath(archive.path, locale),
@@ -74,7 +82,11 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
           emptyState={
             <Card className="border-transparent bg-card/40 shadow-none">
               <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText locale={locale} ja="項目がありません。" en="No archive items." />
+                <I18nText
+                  locale={locale}
+                  ja="項目がありません。"
+                  en="No archive items."
+                />
               </div>
             </Card>
           }

@@ -11,7 +11,12 @@ type SiteLayoutProps = {
   className?: string;
 };
 
-export function SiteLayout({ locale, path, children, className }: SiteLayoutProps) {
+export function SiteLayout({
+  locale,
+  path,
+  children,
+  className,
+}: SiteLayoutProps) {
   return (
     <div className={cn("site-page", className)}>
       <Header locale={locale} path={path} />

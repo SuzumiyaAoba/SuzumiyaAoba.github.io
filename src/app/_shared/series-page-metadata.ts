@@ -11,7 +11,7 @@ import { buildPageMetadata } from "./page-metadata";
  */
 export async function buildSeriesPageMetadata(
   slug: string | undefined,
-  locale: Locale,
+  locale: Locale
 ): Promise<Metadata> {
   if (!slug) {
     return { title: "Series" };

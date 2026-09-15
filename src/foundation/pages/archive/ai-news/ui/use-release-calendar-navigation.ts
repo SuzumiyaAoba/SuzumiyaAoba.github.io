@@ -1,8 +1,16 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { KeyboardEvent, UIEvent } from "react";
-import { dateTimestamp, isExactDate, shiftMonth } from "../model/release-calendar";
+import {
+  dateTimestamp,
+  isExactDate,
+  shiftMonth,
+} from "../model/release-calendar";
 import { shiftDate } from "../model/release-activity";
-import { dateInMonth, getMonthWindow, monthsBetween } from "../model/release-months";
+import {
+  dateInMonth,
+  getMonthWindow,
+  monthsBetween,
+} from "../model/release-months";
 import type { ReleaseTimelineRange } from "../model/release-timeline";
 
 export const CALENDAR_MONTH_GAP = 16;
@@ -23,9 +31,12 @@ export function useReleaseCalendarNavigation({
   const [extent, setExtent] = useState(() => ({
     start: shiftMonth(
       (range && range.firstDate < today ? range.firstDate : today).slice(0, 7),
-      -12,
+      -12
     ),
-    end: shiftMonth((range && range.lastDate > today ? range.lastDate : today).slice(0, 7), 24),
+    end: shiftMonth(
+      (range && range.lastDate > today ? range.lastDate : today).slice(0, 7),
+      24
+    ),
   }));
   const [viewport, setViewport] = useState({ left: 0, width: 0 });
   const monthWidth =
@@ -41,16 +52,20 @@ export function useReleaseCalendarNavigation({
     extent.end,
     viewport.left,
     viewport.width,
-    monthStep,
+    monthStep
   );
-  const visibleMonth = shiftMonth(extent.start, Math.round(viewport.left / monthStep));
+  const visibleMonth = shiftMonth(
+    extent.start,
+    Math.round(viewport.left / monthStep)
+  );
 
   useLayoutEffect(() => {
     const element = scrollRef.current;
     if (!element) {
       return;
     }
-    const measure = () => setViewport((current) => ({ ...current, width: element.clientWidth }));
+    const measure = () =>
+      setViewport((current) => ({ ...current, width: element.clientWidth }));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
@@ -64,14 +79,16 @@ export function useReleaseCalendarNavigation({
     }
     // 前の期間の追加や画面幅の変更でも、見ていた月を保つ。
     element.scrollLeft =
-      (monthsBetween(extent.start, anchorRef.current.month) + anchorRef.current.offset) * monthStep;
+      (monthsBetween(extent.start, anchorRef.current.month) +
+        anchorRef.current.offset) *
+      monthStep;
     setViewport({ left: element.scrollLeft, width: element.clientWidth });
   }, [target, extent.start, monthStep]);
 
   useLayoutEffect(() => {
     if (pendingFocusRef.current) {
       const button = scrollRef.current?.querySelector<HTMLButtonElement>(
-        `[data-calendar-date="${pendingFocusRef.current}"]`,
+        `[data-calendar-date="${pendingFocusRef.current}"]`
       );
       if (button) {
         button.focus({ preventScroll: true });
@@ -116,8 +133,11 @@ export function useReleaseCalendarNavigation({
     } else if (event.key === "PageUp" || event.key === "PageDown") {
       event.preventDefault();
       jumpTo(
-        dateInMonth(date, shiftMonth(date.slice(0, 7), event.key === "PageUp" ? -1 : 1)),
-        true,
+        dateInMonth(
+          date,
+          shiftMonth(date.slice(0, 7), event.key === "PageUp" ? -1 : 1)
+        ),
+        true
       );
     }
   }
@@ -131,9 +151,18 @@ export function useReleaseCalendarNavigation({
     };
     setViewport({ left: element.scrollLeft, width: element.clientWidth });
     if (element.scrollLeft < monthStep * 2) {
-      setExtent((current) => ({ ...current, start: shiftMonth(current.start, -12) }));
-    } else if (element.scrollWidth - element.scrollLeft - element.clientWidth < monthStep * 2) {
-      setExtent((current) => ({ ...current, end: shiftMonth(current.end, 12) }));
+      setExtent((current) => ({
+        ...current,
+        start: shiftMonth(current.start, -12),
+      }));
+    } else if (
+      element.scrollWidth - element.scrollLeft - element.clientWidth <
+      monthStep * 2
+    ) {
+      setExtent((current) => ({
+        ...current,
+        end: shiftMonth(current.end, 12),
+      }));
     }
   }
 

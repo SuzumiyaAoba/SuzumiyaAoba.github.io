@@ -17,7 +17,10 @@ export function useHeaderMenu() {
       }
     };
     const onPointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
+      if (
+        event.target instanceof Node &&
+        !headerRef.current?.contains(event.target)
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -32,10 +35,20 @@ export function useHeaderMenu() {
   const closeMenu = () => setIsMenuOpen(false);
   const toggleMenu = () => setIsMenuOpen((open) => !open);
   const handleBlur = (event: FocusEvent<HTMLElement>) => {
-    if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) {
+    if (
+      event.relatedTarget &&
+      !event.currentTarget.contains(event.relatedTarget)
+    ) {
       closeMenu();
     }
   };
 
-  return { headerRef, menuButtonRef, isMenuOpen, closeMenu, toggleMenu, handleBlur };
+  return {
+    headerRef,
+    menuButtonRef,
+    isMenuOpen,
+    closeMenu,
+    toggleMenu,
+    handleBlur,
+  };
 }

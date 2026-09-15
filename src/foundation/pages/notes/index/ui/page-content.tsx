@@ -15,7 +15,10 @@ export type NotesIndexPageContentProps = {
   notes: NoteListEntry[];
 };
 
-export function NotesIndexPageContent({ locale, notes }: NotesIndexPageContentProps) {
+export function NotesIndexPageContent({
+  locale,
+  notes,
+}: NotesIndexPageContentProps) {
   const pagePath = toLocalePath("/notes", locale);
 
   const items: SimpleEntryListItem[] = notes.map((note) => ({

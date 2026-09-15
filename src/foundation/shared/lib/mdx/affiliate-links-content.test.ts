@@ -12,7 +12,10 @@ const processor = remark().use(remarkGfm);
 function collectAffiliateIds(source: string): string[] {
   const ids: string[] = [];
   walkMarkdown(processor.parse(source), (node) => {
-    if ((node.type !== "link" && node.type !== "definition") || !("url" in node)) {
+    if (
+      (node.type !== "link" && node.type !== "definition") ||
+      !("url" in node)
+    ) {
       return;
     }
     if (typeof node.url === "string" && node.url.startsWith("affiliate://")) {
@@ -26,7 +29,7 @@ async function readArticles(root: string, files: string[]) {
   const articles = [];
   for (const file of files) {
     // oxlint-disable-next-line no-await-in-loop -- 記事数に比例してファイルを同時に開かない。
-    const source = await readFile(path.join(root, file), "utf8");
+    const source = await readFile(path.join(root, file), "utf-8");
     articles.push({ file, source, ids: collectAffiliateIds(source) });
   }
   return articles;
@@ -39,7 +42,7 @@ describe("記事のアフィリエイトリンク", () => {
     const affiliateById = await getAffiliateProductUrlById();
     const affiliateUrls = new Set(affiliateById.values());
     const files = (await readdir(root, { recursive: true })).filter((file) =>
-      /\.mdx?$/u.test(file),
+      /\.mdx?$/u.test(file)
     );
     const articles = await readArticles(root, files);
     expect(articles.length).toBeGreaterThan(0);

@@ -13,10 +13,7 @@ description: nix-darwin と Home Manager で管理していた macOS 環境が�
 
 ## Nix
 
-PC の環境構築に [Nix](https://nixos.org/) と呼ばれるパッケージ管理システムを使っている。
-Nix を使っていると何が嬉しいのか、はインターネット上に熱い思いを語っている人たちに任せるとして、
-ここ数週間この Nix によって管理していた環境が壊れてしまった。
-壊れたというのは語弊があり、正確にはパッケージの更新ができない状態に陥っている。
+PC の環境構築に [Nix](https://nixos.org/) と呼ばれるパッケージ管理システムを使っている。Nix を使っていると何が嬉しいのか、はインターネット上に熱い思いを語っている人たちに任せるとして、ここ数週間この Nix によって管理していた環境が壊れてしまった。壊れたというのは語弊があり、正確にはパッケージの更新ができない状態に陥っている。
 
 Nix とは言ったが、macOS を使っているので正確には
 
@@ -109,18 +106,15 @@ error:
 
 原因はエラーメッセージにもあるように現在の環境が `arm64-apple-darwin` として認識されていることだろう。
 
-これのせいで業務にも支障が出そうだったので調べていたら GitHub で関連する Issue が見つかったのでメモしておく。
-関連する Issue の様子を見ると解消には時間がかかりそうだ。
+これのせいで業務にも支障が出そうだったので調べていたら GitHub で関連する Issue が見つかったのでメモしておく。関連する Issue の様子を見ると解消には時間がかかりそうだ。
 
 ## システム名称の変更
 
 どうやら事の発端は NixOS/nixpkgs に [lib/systems: use Darwin architecture names for `config` and `uname` by emilazy · Pull Request #393213 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/pull/393213) という PR が入ったことのようだ。
 
-これまで ARM 64 ビット macOS (Apple Silicon) は `aarch64-apple-darwin` という名称で扱われていたがこの PR から `arm64-apple-darwin` という名称に変更されている。
-この変更自体も LLVM 20 での変更に対応するための修正であるため、一番悪いのは LLVM。
+これまで ARM 64 ビット macOS (Apple Silicon) は `aarch64-apple-darwin` という名称で扱われていたがこの PR から `arm64-apple-darwin` という名称に変更されている。この変更自体も LLVM 20 での変更に対応するための修正であるため、一番悪いのは LLVM。
 
-AArch64 と arm64 という名称の使い分けについて意識していなかったが、LLVM の文脈では [LLVM のバックエンドの aarch64 と arm64 の違い - 組み込みの人。](https://embedded.hatenadiary.org/entry/20140427/p2) に書かれているように AArch64 は ARM によって作られたもので、ARM64 は Apple が作ったものらしい。
-この記事では AArch64 の方に統一する動きがあったようだけど、月日が流れてまた別れることになったということなのかな…。
+AArch64 と arm64 という名称の使い分けについて意識していなかったが、LLVM の文脈では [LLVM のバックエンドの aarch64 と arm64 の違い - 組み込みの人。](https://embedded.hatenadiary.org/entry/20140427/p2) に書かれているように AArch64 は ARM によって作られたもので、ARM64 は Apple が作ったものらしい。この記事では AArch64 の方に統一する動きがあったようだけど、月日が流れてまた別れることになったということなのかな…。
 
 確かに手元で `uname -m` を実行すると `arm64` と表示される。
 
@@ -144,13 +138,11 @@ arm64
 
 <s>全てのパッケージが使えない状態ということはないはずなので原因となっているパッケージを特定するしかないかもしれない。</s>
 
-原因判明。何と copilot-language-server をインストールしていたのが原因。
-以下の PR と原因としては同じ。
+原因判明。何と copilot-language-server をインストールしていたのが原因。以下の PR と原因としては同じ。
 
 - [copilot-language-server-fhs: Can't build on darwin · Issue #408666 · NixOS/nixpkgs](https://github.com/NixOS/nixpkgs/issues/408666)
 
-Emacs のパッケージも Nix で管理するようにしていたので [copilot.el](https://github.com/copilot-emacs/copilot.el) と一緒に入ってきていた copilot-language-server が原因だったという落ち。
-一時的に copilot.el をインストールしないようにしたら解決した。
+Emacs のパッケージも Nix で管理するようにしていたので [copilot.el](https://github.com/copilot-emacs/copilot.el) と一緒に入ってきていた copilot-language-server が原因だったという落ち。一時的に copilot.el をインストールしないようにしたら解決した。
 
 ## おわりに
 

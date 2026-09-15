@@ -5,13 +5,17 @@ function subscribe(onChange: () => void) {
   let timer: ReturnType<typeof setTimeout>;
   function schedule() {
     const now = new Date();
-    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const midnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1
+    );
     timer = setTimeout(
       () => {
         onChange();
         schedule();
       },
-      midnight.getTime() - now.getTime() + 100,
+      midnight.getTime() - now.getTime() + 100
     );
   }
   schedule();

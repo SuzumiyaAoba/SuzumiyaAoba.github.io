@@ -17,7 +17,7 @@ export type TagPageMetadataProps = {
  */
 export async function buildTagPageMetadata(
   { params }: TagPageMetadataProps,
-  locale: Locale,
+  locale: Locale
 ): Promise<Metadata> {
   const { tag: tagParam } = await params;
   if (!tagParam) {

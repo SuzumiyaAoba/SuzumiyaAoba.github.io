@@ -25,9 +25,10 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
     () =>
       data.headers.filter(
         (header) =>
-          !GROUP_HEADERS.has(header) && data.series.some((s) => s.values[header] !== null),
+          !GROUP_HEADERS.has(header) &&
+          data.series.some((s) => s.values[header] !== null)
       ),
-    [data],
+    [data]
   );
 
   // グループ情報を作成
@@ -48,7 +49,7 @@ export const Sheet1StackedChart: React.FC<Props> = ({ data }) => {
         }),
       },
     ],
-    [availableMetrics, data.headers],
+    [availableMetrics, data.headers]
   );
 
   const title = `${data.metadata.title.replace(/^1[\s.、]*/u, "")}（帯グラフ）`;

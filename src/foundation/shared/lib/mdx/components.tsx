@@ -48,7 +48,7 @@ const placeholderNames = [
  * 動的に生成されたプレースホルダーコンポーネントのマップ
  */
 const placeholders = Object.fromEntries(
-  placeholderNames.map((name) => [name, createPlaceholder(name)]),
+  placeholderNames.map((name) => [name, createPlaceholder(name)])
 );
 
 /**

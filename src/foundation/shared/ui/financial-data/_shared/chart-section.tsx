@@ -10,7 +10,11 @@ export type ChartSectionProps = {
  * 見出し(h4)+チャート本体のペアを描画するだけで、チャートの種類・データ加工は
  * 呼び出し側にそのまま残す。
  */
-export function ChartSection({ title, marginBottom = false, children }: ChartSectionProps) {
+export function ChartSection({
+  title,
+  marginBottom = false,
+  children,
+}: ChartSectionProps) {
   return (
     <div style={marginBottom ? { marginBottom: "2rem" } : undefined}>
       <h4>{title}</h4>

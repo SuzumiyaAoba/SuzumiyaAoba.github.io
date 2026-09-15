@@ -25,12 +25,16 @@ export type SeriesDetailPageContentProps = {
   }[];
 };
 
-export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetailPageContentProps) {
+export function SeriesDetailPageContent({
+  locale,
+  series,
+  entries,
+}: SeriesDetailPageContentProps) {
   const pagePath = toLocalePath(`/series/${series.slug}`, locale);
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Series", path: "/series" },
-    { name: series.name, path: pagePath },
+    { name: series.name, path: pagePath }
   );
 
   return (
@@ -39,17 +43,30 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
-          <BackLink locale={locale} href="/series" ja="← シリーズ一覧" en="← Back to series" />
-          <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">{series.name}</h1>
+          <BackLink
+            locale={locale}
+            href="/series"
+            ja="← シリーズ一覧"
+            en="← Back to series"
+          />
+          <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
+            {series.name}
+          </h1>
           {series.description ? (
-            <p className="text-sm leading-6 text-muted-foreground">{series.description}</p>
+            <p className="text-sm leading-6 text-muted-foreground">
+              {series.description}
+            </p>
           ) : null}
         </section>
 
         {entries.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText locale={locale} ja="まだ記事がありません。" en="No posts yet." />
+              <I18nText
+                locale={locale}
+                ja="まだ記事がありません。"
+                en="No posts yet."
+              />
             </div>
           </Card>
         ) : (
@@ -59,7 +76,7 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
                 <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+                    className="pointer-events-none absolute -inset-1 scale-95 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
                   />
                   <a
                     href={toLocalePath(`/blog/post/${post.slug}`, locale)}
@@ -75,7 +92,9 @@ export function SeriesDetailPageContent({ locale, series, entries }: SeriesDetai
                       </Badge>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-base font-semibold text-foreground">{post.title}</p>
+                      <p className="text-base font-semibold text-foreground">
+                        {post.title}
+                      </p>
                       {post.tags.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                           {post.tags.map((tag) => (

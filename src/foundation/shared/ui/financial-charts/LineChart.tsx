@@ -30,7 +30,13 @@ export const LineChart: React.FC<Props> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const colors = config.colors ?? schemeCategory10;
 
-  const { yAxisMin = 0, yAxisMax = 100, yAxisLabel = "%", startYear = 2006, labelMap } = config;
+  const {
+    yAxisMin = 0,
+    yAxisMax = 100,
+    yAxisLabel = "%",
+    startYear = 2006,
+    labelMap,
+  } = config;
 
   const {
     availableMetrics,
@@ -63,7 +69,9 @@ export const LineChart: React.FC<Props> = ({
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const parseData = data.series
-      .filter((d) => selectedMetrics.some((metric) => Number.isFinite(d.values[metric])))
+      .filter((d) =>
+        selectedMetrics.some((metric) => Number.isFinite(d.values[metric]))
+      )
       .map((d) => ({
         year: Number.parseInt(d.year, 10),
         values: d.values,
@@ -85,7 +93,9 @@ export const LineChart: React.FC<Props> = ({
       const metricIndex = availableMetrics.indexOf(metric);
       const colorIndex = Math.max(metricIndex, 0);
       const strokeColor = colors[colorIndex % colors.length] ?? "#000";
-      const metricData = parseData.filter((d) => Number.isFinite(d.values[metric]));
+      const metricData = parseData.filter((d) =>
+        Number.isFinite(d.values[metric])
+      );
 
       const lineGenerator = line<(typeof parseData)[0]>()
         .defined((d) => Number.isFinite(d.values[metric]))
@@ -109,7 +119,7 @@ export const LineChart: React.FC<Props> = ({
             tooltip.show(
               event,
               `${d.year}年`,
-              `${getLabel(metric)}: ${d.values[metric]}${yAxisLabel}`,
+              `${getLabel(metric)}: ${d.values[metric]}${yAxisLabel}`
             );
 
             select(this).attr("r", 6);
@@ -135,7 +145,7 @@ export const LineChart: React.FC<Props> = ({
 
   return (
     <div className="my-8">
-      <div className="text-center font-bold text-base mb-4">
+      <div className="mb-4 text-center text-base font-bold">
         {data.metadata.title.replace(/^[0-9]+[\s.、]*/u, "")}
       </div>
       <div className="overflow-x-auto">
@@ -148,7 +158,7 @@ export const LineChart: React.FC<Props> = ({
             {group.name && (
               <button
                 type="button"
-                className="font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 text-left"
+                className="mb-2 cursor-pointer border-none bg-transparent p-0 text-left text-sm font-semibold hover:text-blue-600"
                 onClick={() => toggleGroup(group.metrics)}
               >
                 {group.name}

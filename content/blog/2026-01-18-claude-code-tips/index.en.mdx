@@ -12,7 +12,8 @@ A collection of tips I've learned about Claude Code. This will be updated over t
 
 <Message title="Note" variant="warning" defaultOpen>
   Some features are listed but unverified because I hit Claude Code rate limits.
-  Unverified items are marked with <MdxLabel variant="warning">Unverified</MdxLabel>.
+  Unverified items are marked with{" "}
+  <MdxLabel variant="warning">Unverified</MdxLabel>.
 </Message>
 
 ## Best practices
@@ -21,16 +22,15 @@ A collection of tips I've learned about Claude Code. This will be updated over t
 
 ## Documentation about Skills
 
-| Document                                                                                                                                                                                 | Description        |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills)                                                                                              | Official Skills    |
+| Document | Description |
+| --- | --- |
+| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills) | Official Skills |
 | [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills) | Awesome repository |
-| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills)                                              | Awesome repository |
+| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills) | Awesome repository |
 
 ## Language settings
 
-To set Claude Code to Japanese, run `/config` and set `Language` to `Japanese` or `日本語`.
-You can also use `Language` to set a tone in addition to the language.
+To set Claude Code to Japanese, run `/config` and set `Language` to `Japanese` or `日本語`. You can also use `Language` to set a tone in addition to the language.
 
 This only changes the language Claude uses; the config UI itself stays in English.
 
@@ -53,14 +53,21 @@ Launch Claude Code, type `/config`, and press <kbd>Enter</kbd>.
 
 When the settings screen appears, move the cursor to `Language` with <kbd>↓</kbd> and press <kbd>Enter</kbd>.
 
-<Img src="./images/claude-code_config.png" alt="Claude Code settings screen" width="600" />
+<Img
+  src="./images/claude-code_config.png"
+  alt="Claude Code settings screen"
+  width="600"
+/>
 
 An input field appears. Enter `Japanese` or `日本語` and press <kbd>Enter</kbd>.
 
-<Img src="./images/claude-code_language.png" alt="Claude Code language settings" width="600" />
+<Img
+  src="./images/claude-code_language.png"
+  alt="Claude Code language settings"
+  width="600"
+/>
 
-Now the default language for Claude Code is Japanese.
-Press <kbd>Esc</kbd> to exit the settings screen.
+Now the default language for Claude Code is Japanese. Press <kbd>Esc</kbd> to exit the settings screen.
 
 ### ~/.claude/settings.json
 
@@ -78,8 +85,7 @@ This has the same effect as setting it via `/config`.
 
 ## Hide account info shown at startup
 
-When Claude Code starts, it shows your email address and session history.
-If you want to hide that, set the environment variable `CLAUDE_CODE_HIDE_ACCOUNT_INFO` to `1`.
+When Claude Code starts, it shows your email address and session history. If you want to hide that, set the environment variable `CLAUDE_CODE_HIDE_ACCOUNT_INFO` to `1`.
 
 ```json ~/.claude/settings.json
 {
@@ -93,8 +99,7 @@ If you only want to hide it for a specific repository, add the same setting to `
 
 ## Play a notification sound when tasks finish
 
-To detect when a task finishes, add a hook to play a sound.
-Add the following to `~/.claude/settings.json` (macOS example).
+To detect when a task finishes, add a hook to play a sound. Add the following to `~/.claude/settings.json` (macOS example).
 
 ```json ~/.claude/settings.json
 {
@@ -124,8 +129,7 @@ Add the following to `~/.claude/settings.json` (macOS example).
 }
 ```
 
-On macOS, pick any file from `/System/Library/Sounds/` and update the path after `afplay`.
-If you use both Codex and Claude Code, it might be nice to set different sounds for each.
+On macOS, pick any file from `/System/Library/Sounds/` and update the path after `afplay`. If you use both Codex and Claude Code, it might be nice to set different sounds for each.
 
 ```shell
 $ ls -la /System/Library/Sounds/

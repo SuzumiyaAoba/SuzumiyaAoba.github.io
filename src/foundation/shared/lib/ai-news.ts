@@ -87,7 +87,9 @@ function normalizeEntry(raw: unknown): AiNewsEntry | null {
       ...(data.summary_en ? { en: data.summary_en } : {}),
     },
     ...(data.tags && data.tags.length > 0 ? { tags: data.tags } : {}),
-    ...(data.series && data.series.length > 0 ? { series: [...new Set(data.series)] } : {}),
+    ...(data.series && data.series.length > 0
+      ? { series: [...new Set(data.series)] }
+      : {}),
   };
 }
 
@@ -145,7 +147,7 @@ async function loadAiNews(): Promise<AiNewsIndex> {
       }
     }
 
-    const raw = await fs.readFile(filePath, "utf8");
+    const raw = await fs.readFile(filePath, "utf-8");
     const data: unknown = parse(raw);
     const result = AiNewsSourceSchema.safeParse(data);
 
@@ -160,7 +162,8 @@ async function loadAiNews(): Promise<AiNewsIndex> {
       .filter((entry): entry is AiNewsEntry => Boolean(entry));
     const sorted = sortEntries(entries);
 
-    const updated = typeof parsed.updated === "string" ? parsed.updated : undefined;
+    const updated =
+      typeof parsed.updated === "string" ? parsed.updated : undefined;
     const index: AiNewsIndex = {
       entries: sorted,
       ...(updated ? { updated } : {}),

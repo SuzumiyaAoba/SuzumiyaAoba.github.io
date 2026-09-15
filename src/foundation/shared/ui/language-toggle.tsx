@@ -23,7 +23,8 @@ type LanguageToggleProps = {
 export function LanguageToggle({ locale, path }: LanguageToggleProps) {
   const targetLocale: Locale = locale === "ja" ? "en" : "ja";
   const targetPath = toLocalePath(path, targetLocale);
-  const label = targetLocale === "en" ? "Switch to English" : "日本語に切り替え";
+  const label =
+    targetLocale === "en" ? "Switch to English" : "日本語に切り替え";
 
   return (
     <Button

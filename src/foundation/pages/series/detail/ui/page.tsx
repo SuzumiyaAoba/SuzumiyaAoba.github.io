@@ -21,14 +21,16 @@ export default async function Page({ params, locale }: PageProps) {
 
   const [postsJa, postsEn] = await Promise.all([
     Promise.all(
-      series.posts.map(async (postSlug) =>
-        getBlogPost(postSlug, { locale: "ja", fallback: false }),
-      ),
+      series.posts.map(
+        async (postSlug) =>
+          await getBlogPost(postSlug, { locale: "ja", fallback: false })
+      )
     ),
     Promise.all(
-      series.posts.map(async (postSlug) =>
-        getBlogPost(postSlug, { locale: "en", fallback: false }),
-      ),
+      series.posts.map(
+        async (postSlug) =>
+          await getBlogPost(postSlug, { locale: "en", fallback: false })
+      )
     ),
   ]);
   const entriesJa = postsJa
@@ -49,5 +51,11 @@ export default async function Page({ params, locale }: PageProps) {
     }));
   const entries = resolvedLocale === "en" ? entriesEn : entriesJa;
 
-  return <SeriesDetailPageContent locale={resolvedLocale} series={series} entries={entries} />;
+  return (
+    <SeriesDetailPageContent
+      locale={resolvedLocale}
+      series={series}
+      entries={entries}
+    />
+  );
 }

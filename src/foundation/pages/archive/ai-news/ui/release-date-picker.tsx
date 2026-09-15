@@ -29,7 +29,9 @@ export function ReleaseDatePicker({
 }) {
   const en = locale === "en";
   const [open, setOpen] = useState(false);
-  const [pickerMonth, setPickerMonth] = useState(() => new Date(dateTimestamp(`${month}-01`)));
+  const [pickerMonth, setPickerMonth] = useState(
+    () => new Date(dateTimestamp(`${month}-01`))
+  );
   const todayYear = Number(today.slice(0, 4));
   const visibleYear = Number(month.slice(0, 4));
   const monthFormatter = new Intl.DateTimeFormat(locale, {
@@ -56,20 +58,25 @@ export function ReleaseDatePicker({
           aria-label={en ? "Jump to month" : "月へ移動"}
           className={cn(
             releaseActionClass,
-            "w-0 min-w-0 flex-1 justify-between tabular-nums sm:w-40 sm:flex-none",
+            "w-0 min-w-0 flex-1 justify-between tabular-nums sm:w-40 sm:flex-none"
           )}
         >
-          <span className="truncate">{monthFormatter.format(dateTimestamp(`${month}-01`))}</span>
-          <CalendarDays className="size-4 text-muted-foreground" aria-hidden="true" />
+          <span className="truncate">
+            {monthFormatter.format(dateTimestamp(`${month}-01`))}
+          </span>
+          <CalendarDays
+            className="size-4 text-muted-foreground"
+            aria-hidden="true"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
         collisionPadding={12}
         aria-label={en ? "Choose a date to navigate to" : "移動する日付を選択"}
-        className="w-auto max-w-[calc(100vw-24px)] p-0 font-noto"
+        className="font-noto w-auto max-w-[calc(100vw-24px)] p-0"
       >
-        {/* oxlint-disable jsx-a11y/no-autofocus -- 開く操作に応じて、ダイアログ内の選択日へフォーカスを移す。 */}
+        {/* 開く操作に応じて、ダイアログ内の選択日へフォーカスを移す。 */}
         <Calendar
           mode="single"
           required
@@ -80,20 +87,26 @@ export function ReleaseDatePicker({
           month={pickerMonth}
           onMonthChange={setPickerMonth}
           captionLayout="dropdown"
-          startMonth={new Date(Date.UTC(Math.min(todayYear - 100, visibleYear), 0, 1))}
-          endMonth={new Date(Date.UTC(Math.max(todayYear + 100, visibleYear), 11, 1))}
+          startMonth={
+            new Date(Date.UTC(Math.min(todayYear - 100, visibleYear), 0, 1))
+          }
+          endMonth={
+            new Date(Date.UTC(Math.max(todayYear + 100, visibleYear), 11, 1))
+          }
           onSelect={(date) => {
             onSelectDate(date.toISOString().slice(0, 10));
             setOpen(false);
           }}
           formatters={{
             formatMonthDropdown: (date) =>
-              new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" }).format(date),
+              new Intl.DateTimeFormat(locale, {
+                month: "short",
+                timeZone: "UTC",
+              }).format(date),
           }}
           className="[--cell-size:2.25rem]"
           autoFocus
         />
-        {/* oxlint-enable jsx-a11y/no-autofocus */}
       </PopoverContent>
     </Popover>
   );

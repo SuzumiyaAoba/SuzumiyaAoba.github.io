@@ -50,12 +50,12 @@ export function StandardCode() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className="text-xl mb-2 font-bold">Hover</div>
+              <div className="mb-2 text-xl font-bold">Hover</div>
               <AsciiInfo {...cellToInfo(hoveredCell)} />
             </div>
 
             <div>
-              <div className="text-xl mb-2 font-bold">Clicked</div>
+              <div className="mb-2 text-xl font-bold">Clicked</div>
               <AsciiInfo {...cellToInfo(clickedCell)} />
             </div>
           </div>

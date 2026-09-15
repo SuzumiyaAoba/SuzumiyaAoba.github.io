@@ -19,7 +19,9 @@ export type PrivacyPolicyPageContentProps = {
   locale: Locale;
 };
 
-export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentProps) {
+export function PrivacyPolicyPageContent({
+  locale,
+}: PrivacyPolicyPageContentProps) {
   const isEn = locale === "en";
   const pagePath = toLocalePath("/privacy-policy", locale);
   const breadcrumbItems = buildListBreadcrumbItems(locale, {
@@ -32,32 +34,40 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+          <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             <I18nText locale={locale} ja="プライバシー" en="Privacy Policy" />
           </p>
-          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
-            <I18nText locale={locale} ja="プライバシーポリシー" en="Privacy Policy" />
+          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
+            <I18nText
+              locale={locale}
+              ja="プライバシーポリシー"
+              en="Privacy Policy"
+            />
           </h1>
         </section>
 
         <section className="space-y-5 text-sm leading-6 text-muted-foreground">
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={locale} ja="個人情報の利用目的" en="Purpose of Personal Data Use" />
+              <I18nText
+                locale={locale}
+                ja="個人情報の利用目的"
+                en="Purpose of Personal Data Use"
+              />
             </h2>
             {isEn ? (
               <>
                 <p>
-                  We use personal information collected from visitors (such as names and email
-                  addresses) for the following purposes.
+                  We use personal information collected from visitors (such as
+                  names and email addresses) for the following purposes.
                 </p>
                 <ul className="list-disc space-y-1 pl-6 text-sm">
                   <li>Responding to inquiries</li>
                   <li>Analysis to improve the service</li>
                 </ul>
                 <p>
-                  Collected personal information is managed appropriately and protected in
-                  accordance with applicable laws.
+                  Collected personal information is managed appropriately and
+                  protected in accordance with applicable laws.
                 </p>
               </>
             ) : (
@@ -69,7 +79,9 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
                   <li>お問い合わせへの対応</li>
                   <li>サービス向上のための分析</li>
                 </ul>
-                <p>取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。</p>
+                <p>
+                  取得した個人情報は、適切な方法で管理し、法令に基づいて安全に保護されます。
+                </p>
               </>
             )}
           </div>
@@ -81,9 +93,10 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
             {isEn ? (
               <>
                 <p>
-                  We use third-party advertising services (Google AdSense, A8.net). Cookies are used
-                  to display ads based on user interests. Cookies allow us to recognize your
-                  computer, but they do not identify you personally.
+                  We use third-party advertising services (Google AdSense,
+                  A8.net). Cookies are used to display ads based on user
+                  interests. Cookies allow us to recognize your computer, but
+                  they do not identify you personally.
                 </p>
                 <p>
                   For details on disabling cookies and Google AdSense, see{" "}
@@ -124,14 +137,19 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
 
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
-              <I18nText locale={locale} ja="アクセス解析ツールについて" en="Analytics" />
+              <I18nText
+                locale={locale}
+                ja="アクセス解析ツールについて"
+                en="Analytics"
+              />
             </h2>
             {isEn ? (
               <>
                 <p>
-                  We use Google Analytics. It collects data via cookies. The data is collected
-                  anonymously and does not identify individuals. You can disable cookies in your
-                  browser settings to opt out of data collection.
+                  We use Google Analytics. It collects data via cookies. The
+                  data is collected anonymously and does not identify
+                  individuals. You can disable cookies in your browser settings
+                  to opt out of data collection.
                 </p>
                 <p>
                   See{" "}
@@ -195,9 +213,10 @@ export function PrivacyPolicyPageContent({ locale }: PrivacyPolicyPageContentPro
             </h2>
             {isEn ? (
               <p>
-                We strive for accuracy, but we do not guarantee the reliability or safety of the
-                information on this site. The site operator is not responsible for any actions taken
-                based on the information provided. Use at your own risk.
+                We strive for accuracy, but we do not guarantee the reliability
+                or safety of the information on this site. The site operator is
+                not responsible for any actions taken based on the information
+                provided. Use at your own risk.
               </p>
             ) : (
               <p>

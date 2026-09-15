@@ -11,7 +11,10 @@ export type YouTubeEmbedProps = {
 /**
  * YouTube 動画を MDX コンテンツ内に埋め込むためのコンポーネント。
  */
-export function YouTubeEmbed({ id, title = "YouTube video" }: YouTubeEmbedProps) {
+export function YouTubeEmbed({
+  id,
+  title = "YouTube video",
+}: YouTubeEmbedProps) {
   return (
     <div className="my-6 aspect-video w-full">
       <iframe

@@ -18,12 +18,18 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   }
 
   return (
-    <nav className={cn("text-[13px] text-muted-foreground", className)} aria-label="Breadcrumb">
+    <nav
+      className={cn("text-[13px] text-muted-foreground", className)}
+      aria-label="Breadcrumb"
+    >
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li key={`${item.path}-${item.name}`} className="flex items-center gap-2">
+            <li
+              key={`${item.path}-${item.name}`}
+              className="flex items-center gap-2"
+            >
               {index === 0 ? null : (
                 <Icon
                   icon="lucide:chevron-right"
@@ -32,8 +38,15 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                 />
               )}
               {isLast ? (
-                <span aria-current="page" className="font-medium text-foreground">
-                  {item.path === "/" ? <Icon icon="lucide:home" className="size-3.5" /> : item.name}
+                <span
+                  aria-current="page"
+                  className="font-medium text-foreground"
+                >
+                  {item.path === "/" ? (
+                    <Icon icon="lucide:home" className="size-3.5" />
+                  ) : (
+                    item.name
+                  )}
                 </span>
               ) : item.path === "/" ? (
                 <a

@@ -1,5 +1,9 @@
 import { LineChart } from "@/shared/ui/financial-charts";
-import type { ChartConfig, MetricGroup, SheetData } from "@/shared/ui/financial-charts";
+import type {
+  ChartConfig,
+  MetricGroup,
+  SheetData,
+} from "@/shared/ui/financial-charts";
 import { NoDataFallback } from "./no-data-fallback";
 
 export type LineChartWrapperSpec = {

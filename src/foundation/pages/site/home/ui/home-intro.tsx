@@ -12,13 +12,19 @@ type HomeIntroProps = {
   topics: HomeTopic[];
 };
 
-export function HomeIntro({ locale, postCount, noteCount, seriesCount, topics }: HomeIntroProps) {
+export function HomeIntro({
+  locale,
+  postCount,
+  noteCount,
+  seriesCount,
+  topics,
+}: HomeIntroProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
 
   return (
     <header className="home-intro site-container">
-      <div className="home-intro-title">
+      <div>
         <h1 className="home-headline" lang="la">
           <span>{SITE_TITLE}</span>
         </h1>
@@ -50,12 +56,18 @@ export function HomeIntro({ locale, postCount, noteCount, seriesCount, topics }:
         </a>
       </nav>
       {topics.length > 0 && (
-        <nav className="home-topics" aria-label={t("タグから記事を探す", "Browse by tag")}>
+        <nav
+          className="home-topics"
+          aria-label={t("タグから記事を探す", "Browse by tag")}
+        >
           <span className="home-topics-label">{t("タグ", "Tags")}</span>
           {topics.map((topic) => (
             <a
               key={topic.name}
-              href={toLocalePath(`/tags/${encodeURIComponent(topic.name)}`, locale)}
+              href={toLocalePath(
+                `/tags/${encodeURIComponent(topic.name)}`,
+                locale
+              )}
             >
               <span>{topic.name}</span>
               <span className="home-topic-count">{topic.count}</span>

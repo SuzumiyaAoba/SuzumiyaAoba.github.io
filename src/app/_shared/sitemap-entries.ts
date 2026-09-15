@@ -10,14 +10,14 @@ export type SitemapPage = Omit<SitemapEntry, "url"> & { path: string };
 export function buildTranslatedSitemapEntries(
   pages: SitemapPage[],
   siteUrl: string,
-  buildTime: Date,
+  buildTime: Date
 ): MetadataRoute.Sitemap {
   return (["ja", "en"] as const).flatMap((locale) =>
     pages.map(({ path, ...metadata }) => ({
       lastModified: buildTime,
       ...metadata,
       url: `${siteUrl}${toLocalePath(path, locale)}`,
-    })),
+    }))
   );
 }
 
@@ -36,7 +36,7 @@ export function buildContentSitemapEntries(
     siteUrl: string;
     priority: number;
     buildTime: Date;
-  },
+  }
 ): MetadataRoute.Sitemap {
   const pagesForLocale = (locale: Locale) =>
     entries.flatMap((entry): MetadataRoute.Sitemap => {

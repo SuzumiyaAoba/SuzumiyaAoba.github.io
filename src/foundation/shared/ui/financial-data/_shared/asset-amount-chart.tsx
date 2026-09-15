@@ -21,18 +21,29 @@ export function AssetAmountChart({
     return <NoDataFallback />;
   }
 
-  const excludeHeaders = data.headers.filter((header) => !AMOUNT_METRICS.includes(header));
-  const amountMetrics = AMOUNT_METRICS.filter((header) =>
-    data.series.some((series) => series.values[header] !== null),
+  const excludeHeaders = data.headers.filter(
+    (header) => !AMOUNT_METRICS.includes(header)
   );
-  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(data, amountMetrics), 500);
+  const amountMetrics = AMOUNT_METRICS.filter((header) =>
+    data.series.some((series) => series.values[header] !== null)
+  );
+  const yAxisMax = roundUpToStep(
+    computeMaxValueForMetrics(data, amountMetrics),
+    500
+  );
 
   return (
     <LineChart
       data={data}
       groups={[]}
       excludeHeaders={excludeHeaders}
-      config={{ yAxisMin: 0, yAxisMax, yAxisLabel: "万円", startYear, labelMap: AMOUNT_LABELS }}
+      config={{
+        yAxisMin: 0,
+        yAxisMax,
+        yAxisLabel: "万円",
+        startYear,
+        labelMap: AMOUNT_LABELS,
+      }}
     />
   );
 }

@@ -3,7 +3,7 @@ import type { ScheduleRow, YearlyRow } from "./types";
 export function calculateSchedule(
   monthlyContribution: number,
   annualRate: number,
-  years: number,
+  years: number
 ): ScheduleRow[] {
   const monthsCount = Math.max(0, Math.floor(years * 12));
   const schedule: ScheduleRow[] = [];

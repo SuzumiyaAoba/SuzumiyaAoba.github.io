@@ -25,7 +25,10 @@ export default async function Page({ params, locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
   const { tag } = await params;
   const decodedTag = decodePathParam(tag);
-  const [indexJa, indexEn] = await Promise.all([getBlogTagIndex("ja"), getBlogTagIndex("en")]);
+  const [indexJa, indexEn] = await Promise.all([
+    getBlogTagIndex("ja"),
+    getBlogTagIndex("en"),
+  ]);
   const entriesJa = buildTagEntries(indexJa.get(decodedTag) ?? [], decodedTag);
   const entriesEn = buildTagEntries(indexEn.get(decodedTag) ?? [], decodedTag);
 
@@ -34,5 +37,11 @@ export default async function Page({ params, locale }: PageProps) {
   }
   const entries = resolvedLocale === "en" ? entriesEn : entriesJa;
 
-  return <TagDetailPageContent locale={resolvedLocale} tag={decodedTag} entries={entries} />;
+  return (
+    <TagDetailPageContent
+      locale={resolvedLocale}
+      tag={decodedTag}
+      entries={entries}
+    />
+  );
 }

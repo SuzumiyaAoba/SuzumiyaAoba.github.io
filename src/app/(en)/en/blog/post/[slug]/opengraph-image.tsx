@@ -5,7 +5,11 @@ export {
   generateBlogPostOpengraphStaticParams as generateStaticParams,
 } from "@/app/_shared/blog-post-opengraph-image";
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
-  return renderBlogPostOpengraphImage(slug, "en");
+  return await renderBlogPostOpengraphImage(slug, "en");
 }

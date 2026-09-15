@@ -15,9 +15,11 @@ export function localDate(date = new Date()): string {
 export function getReleaseActivity(releases: Release[], today: string) {
   const past = releases.filter(
     (release): release is Release & { date: string } =>
-      release.date !== null && release.date <= today,
+      release.date !== null && release.date <= today
   );
-  const recent = past.filter((release) => daysBetween(release.date, today) < 30);
+  const recent = past.filter(
+    (release) => daysBetween(release.date, today) < 30
+  );
   const previous = past.filter((release) => {
     const days = daysBetween(release.date, today);
     return days >= 30 && days < 60;

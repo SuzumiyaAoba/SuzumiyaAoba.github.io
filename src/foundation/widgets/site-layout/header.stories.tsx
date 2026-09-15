@@ -36,8 +36,13 @@ export const Default: Story = {
     await userEvent.click(menu);
     await expect(menu).toHaveAccessibleName("メニューを閉じる");
     await expect(panel).not.toHaveAttribute("inert");
-    const index = within(canvas.getByRole("navigation", { name: "サイトの目次" }));
-    await expect(index.getByRole("link", { name: "記事" })).toHaveAttribute("href", "/blog/");
+    const index = within(
+      canvas.getByRole("navigation", { name: "サイトの目次" })
+    );
+    await expect(index.getByRole("link", { name: "記事" })).toHaveAttribute(
+      "href",
+      "/blog/"
+    );
 
     await userEvent.keyboard("{Escape}");
     await expect(menu).toHaveAttribute("aria-expanded", "false");
@@ -50,11 +55,15 @@ export const Default: Story = {
 
     await userEvent.click(menu);
     outside.focus();
-    await waitFor(async () => expect(menu).toHaveAttribute("aria-expanded", "false"));
+    await waitFor(
+      async () => await expect(menu).toHaveAttribute("aria-expanded", "false")
+    );
 
     await userEvent.click(menu);
     const blog = index.getByRole("link", { name: "記事" });
-    blog.addEventListener("click", (event) => event.preventDefault(), { once: true });
+    blog.addEventListener("click", (event) => event.preventDefault(), {
+      once: true,
+    });
     await userEvent.click(blog);
     await expect(menu).toHaveAttribute("aria-expanded", "false");
   },
@@ -64,22 +73,32 @@ export const English: Story = {
   args: { locale: "en", path: "/en/tools/ascii-standard-code/" },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const primary = within(canvas.getByRole("navigation", { name: "Main navigation" }));
-    await expect(primary.getAllByRole("link")).toHaveLength(4);
-    await expect(primary.getByRole("link", { name: "Archive & tools" })).toHaveAttribute(
-      "aria-current",
-      "page",
+    const primary = within(
+      canvas.getByRole("navigation", { name: "Main navigation" })
     );
-    await expect(primary.getByRole("link", { name: "Blog" })).not.toHaveAttribute("aria-current");
-    await expect(canvasElement.querySelector(".reading-progress")).not.toBeInTheDocument();
+    await expect(primary.getAllByRole("link")).toHaveLength(4);
+    await expect(
+      primary.getByRole("link", { name: "Archive & tools" })
+    ).toHaveAttribute("aria-current", "page");
+    await expect(
+      primary.getByRole("link", { name: "Blog" })
+    ).not.toHaveAttribute("aria-current");
+    await expect(
+      canvasElement.querySelector(".reading-progress")
+    ).not.toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Open menu" }));
-    const index = within(canvas.getByRole("navigation", { name: "Site index" }));
+    const index = within(
+      canvas.getByRole("navigation", { name: "Site index" })
+    );
     const books = index.getByRole("link", { name: /Books/u });
     await expect(books).toHaveAttribute("href", "/books/");
     await expect(books).toHaveAttribute("hreflang", "ja");
     await expect(books).toHaveTextContent("JA");
-    await expect(index.getByRole("link", { name: "RSS" })).toHaveAttribute("href", "/en/rss.xml");
+    await expect(index.getByRole("link", { name: "RSS" })).toHaveAttribute(
+      "href",
+      "/en/rss.xml"
+    );
     await userEvent.keyboard("{Escape}");
   },
 };
@@ -93,13 +112,20 @@ export const ReadingProgress: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const progress = canvasElement.querySelector<HTMLElement>(".reading-progress");
+    const progress =
+      canvasElement.querySelector<HTMLElement>(".reading-progress");
     await expect(progress).not.toBeNull();
     globalThis.scrollTo(0, 0);
-    await waitFor(async () => expect(progress?.style.transform).toBe("scaleX(0)"));
+    await waitFor(
+      async () => await expect(progress?.style.transform).toBe("scaleX(0)")
+    );
     globalThis.scrollTo(0, document.documentElement.scrollHeight);
-    await waitFor(async () => expect(progress?.style.transform).toBe("scaleX(1)"));
+    await waitFor(
+      async () => await expect(progress?.style.transform).toBe("scaleX(1)")
+    );
     globalThis.scrollTo(0, 0);
-    await waitFor(async () => expect(progress?.style.transform).toBe("scaleX(0)"));
+    await waitFor(
+      async () => await expect(progress?.style.transform).toBe("scaleX(0)")
+    );
   },
 };

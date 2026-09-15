@@ -57,8 +57,9 @@
 :root {
   /* 欧文は Source Sans 3、和文は端末内の書体を使い、日本語 Web フォントの追加取得を避ける。 */
   --font-ui:
-    var(--font-source-sans-3, "Source Sans 3"), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-    "Noto Sans JP", "Noto Sans CJK JP", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    var(--font-source-sans-3, "Source Sans 3"), "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans CJK JP",
+    "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
   --radius: 0.375rem;
   --site-header-height: 4rem;
   --space-page: clamp(1.25rem, 2vw, 1.5rem);
@@ -244,7 +245,15 @@
     background: var(--brand);
     color: var(--brand-contrast);
   }
-  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [tabindex]
+  ):focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 4px;
   }
@@ -279,10 +288,10 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6;
   }
   .site-main {
-    @apply mx-auto w-full min-w-0 max-w-7xl flex-1 px-5 pt-6 pb-12 sm:px-8 sm:pt-8 sm:pb-16 lg:px-12;
+    @apply mx-auto w-full max-w-7xl min-w-0 flex-1 px-5 pt-6 pb-12 sm:px-8 sm:pt-8 sm:pb-16 lg:px-12;
   }
   .site-main-reading {
-    @apply mx-auto w-full min-w-0 max-w-3xl flex-1 px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16;
+    @apply mx-auto w-full max-w-3xl min-w-0 flex-1 px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16;
   }
   .page-stack {
     @apply flex flex-col;
@@ -293,12 +302,12 @@
     border-bottom: 1px solid var(--rule);
   }
   .page-title {
-    @apply font-serif font-medium leading-snug tracking-tight text-foreground;
+    @apply font-serif leading-snug font-medium tracking-tight text-foreground;
     font-size: clamp(1.625rem, 2.5vw, 2rem);
     text-wrap: balance;
   }
   .page-count {
-    @apply text-sm tabular-nums text-muted-foreground;
+    @apply text-sm text-muted-foreground tabular-nums;
     font-family: var(--font-source-code-pro), monospace;
   }
   .prose {
@@ -319,22 +328,22 @@
     @apply text-xs text-muted-foreground;
   }
   .prose h1 {
-    @apply mt-8 text-2xl font-semibold leading-snug tracking-[0.02em];
+    @apply mt-8 text-2xl leading-snug font-semibold tracking-[0.02em];
   }
   .prose h2 {
-    @apply mt-7 text-xl font-semibold leading-snug tracking-[0.02em];
+    @apply mt-7 text-xl leading-snug font-semibold tracking-[0.02em];
   }
   .prose h3 {
-    @apply mt-6 text-lg font-semibold leading-snug tracking-[0.015em];
+    @apply mt-6 text-lg leading-snug font-semibold tracking-[0.015em];
   }
   .prose h4 {
-    @apply mt-6 text-base font-semibold leading-snug tracking-[0.01em];
+    @apply mt-6 text-base leading-snug font-semibold tracking-[0.01em];
   }
   .prose h5 {
-    @apply mt-5 text-sm font-semibold leading-snug;
+    @apply mt-5 text-sm leading-snug font-semibold;
   }
   .prose h6 {
-    @apply mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground;
+    @apply mt-6 text-sm font-semibold tracking-[0.18em] text-muted-foreground uppercase;
   }
   .prose a {
     @apply underline underline-offset-4;
@@ -350,7 +359,7 @@
     @apply font-semibold;
   }
   .prose em {
-    @apply not-italic text-foreground/80;
+    @apply text-foreground/80 not-italic;
   }
   .prose del {
     @apply text-muted-foreground line-through;
@@ -418,7 +427,7 @@
     @apply overflow-x-auto;
   }
   .prose table {
-    @apply my-5 min-w-full w-max border-collapse text-sm;
+    @apply my-5 w-max min-w-full border-collapse text-sm;
   }
   .prose thead {
     @apply border-b border-border/60;

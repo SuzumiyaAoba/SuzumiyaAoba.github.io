@@ -27,12 +27,14 @@ const Mermaid = dynamic(
   },
   {
     ssr: false,
-  },
+  }
 );
 
 /**
  * Mermaid 図を描画する。図を含む記事でのみ読み込まれる。
  */
 export function MermaidLazy({ code, className }: MermaidLazyProps) {
-  return <Mermaid code={code} {...(className === undefined ? {} : { className })} />;
+  return (
+    <Mermaid code={code} {...(className === undefined ? {} : { className })} />
+  );
 }

@@ -25,7 +25,7 @@ describe("formatDate", () => {
           year: "numeric",
           month: "short",
           day: "numeric",
-        }),
+        })
       );
     });
 
@@ -35,7 +35,7 @@ describe("formatDate", () => {
           year: "numeric",
           month: "short",
           day: "numeric",
-        }),
+        })
       );
     });
   });
@@ -44,7 +44,11 @@ describe("formatDate", () => {
 describe("formatDatePlain", () => {
   it("オプション無しでロケール既定の形式にフォーマットする", () => {
     const date = new Date("2024-01-15");
-    expect(formatDatePlain(date, "ja-JP")).toBe(date.toLocaleDateString("ja-JP"));
-    expect(formatDatePlain(date, "en-US")).toBe(date.toLocaleDateString("en-US"));
+    expect(formatDatePlain(date, "ja-JP")).toBe(
+      date.toLocaleDateString("ja-JP")
+    );
+    expect(formatDatePlain(date, "en-US")).toBe(
+      date.toLocaleDateString("en-US")
+    );
   });
 });

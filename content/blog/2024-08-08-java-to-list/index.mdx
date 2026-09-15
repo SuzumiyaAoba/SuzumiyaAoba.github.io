@@ -12,14 +12,9 @@ description: Java 16 で導入された Stream#toList() と Collectors.toList() 
 
 ## はじめに
 
-本記事では [`Stream#toList()`](<https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()>) の注意点について記す。
-`Stream#toList()` は、Java 16 から導入された新しいメソッドで、`Stream#collect(Collectors.toList())` と同じように `Stream` から `List` への変換を行う。
-しかし、ここには罠がある。
-それにもかかわらず、単に `Stream#collect(Collectors.toList())` を `Stream#toList()` に書き換えるということだけに留まる記事がある。
+本記事では [`Stream#toList()`](<https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()>) の注意点について記す。 `Stream#toList()` は、Java 16 から導入された新しいメソッドで、`Stream#collect(Collectors.toList())` と同じように `Stream` から `List` への変換を行う。しかし、ここには罠がある。それにもかかわらず、単に `Stream#collect(Collectors.toList())` を `Stream#toList()` に書き換えるということだけに留まる記事がある。
 
-そこで、注意喚起として本記事を書くことにした。
-問題提起や結論については [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000) と重複するが、
-本記事ではより詳細な実装と類似の動作をするコードを確認する。
+そこで、注意喚起として本記事を書くことにした。問題提起や結論については [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000) と重複するが、本記事ではより詳細な実装と類似の動作をするコードを確認する。
 
 ## **LITERALLY** TL;DL
 
@@ -30,16 +25,13 @@ description: Java 16 で導入された Stream#toList() と Collectors.toList() 
 
 ## `Stream` から `List` への変換
 
-Java で `Stream` を `List` への変換するコードを考えてみよう。
-ここでは、件の `Stream#toList()` が JDK に追加される前後での動作の違いを確認する。
+Java で `Stream` を `List` への変換するコードを考えてみよう。ここでは、件の `Stream#toList()` が JDK に追加される前後での動作の違いを確認する。
 
 ### Java 8
 
-Java 8 以降、`Stream` から `List` への変換は`Stream#collect(Collectors.toList())` で行える。
-ここでは `jshell` を使用してコードの実行結果を確認する。
+Java 8 以降、`Stream` から `List` への変換は`Stream#collect(Collectors.toList())` で行える。ここでは `jshell` を使用してコードの実行結果を確認する。
 
-`Stream#collect(Collectors.toList())` の動作を理解するため、
-`List<Integer>` を受け取って `n` 倍して新しい `List` を返すユーティリティメソッド `timesN` を定義する。
+`Stream#collect(Collectors.toList())` の動作を理解するため、 `List<Integer>` を受け取って `n` 倍して新しい `List` を返すユーティリティメソッド `timesN` を定義する。
 
 ```java
 jshell> class ListUtils {
@@ -70,17 +62,14 @@ jshell> $1
 $1 ==> [2, 4, 6, 8]
 ```
 
-問題なく要素を追加することができた。
-これは `Collectors.toList()` は `ArrayList` を返すからだ。
+問題なく要素を追加することができた。これは `Collectors.toList()` は `ArrayList` を返すからだ。
 
 ```java
 jshell> $1.getClass();
 $3 ==> class java.util.ArrayList
 ```
 
-しかし、`ArrayList` が返されることは [Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()>) に明記されていない。
-また、可変性についても何も保証されないことが書いてある。
-しかし、**Open JDK** の実装を確認すると `ArrayList` が返されることがわかる。
+しかし、`ArrayList` が返されることは [Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()>) に明記されていない。また、可変性についても何も保証されないことが書いてある。しかし、**Open JDK** の実装を確認すると `ArrayList` が返されることがわかる。
 
 ```java
 public class Collectors {
@@ -113,19 +102,13 @@ public class Collectors {
   skipPath={1}
 />
 
-Open JDK の実装としては `ArrayList` が返されるが、`Collectors.toList()` が返すリストが `ArrayList` であることを前提にコードを書くべきではない。
-Java 標準ライブラリの Javadoc に従うと、仕様としては `$1.add(8)` のようなコードを書いたとき、その動作は***未定義***ということになる。
-もしかしたら他の JDK では `ArrayList` を使っていないかもしれない。
+Open JDK の実装としては `ArrayList` が返されるが、`Collectors.toList()` が返すリストが `ArrayList` であることを前提にコードを書くべきではない。Java 標準ライブラリの Javadoc に従うと、仕様としては `$1.add(8)` のようなコードを書いたとき、その動作は***未定義***ということになる。もしかしたら他の JDK では `ArrayList` を使っていないかもしれない。
 
-さて、現実として `Stream#collect(Collectors.toList())` の結果に要素を追加してしまうようなコードは書かれてしまっているのではないだろうか。
-そんなことはしない、と思う人が多いかもしれない。
-確かに `Stream#collect(Collectors.toList())` で `List` に変換した後、その場で `List#add()` を呼ぶことは少ないだろう (その手のコードを見たことあるが…)。
-`List` に変換したその場で呼び出すことはなくとも、今回のように変換した後に `List` としてメソッドから返されると `List#add()` を呼んでしまう可能性が高い。
+さて、現実として `Stream#collect(Collectors.toList())` の結果に要素を追加してしまうようなコードは書かれてしまっているのではないだろうか。そんなことはしない、と思う人が多いかもしれない。確かに `Stream#collect(Collectors.toList())` で `List` に変換した後、その場で `List#add()` を呼ぶことは少ないだろう (その手のコードを見たことあるが…)。 `List` に変換したその場で呼び出すことはなくとも、今回のように変換した後に `List` としてメソッドから返されると `List#add()` を呼んでしまう可能性が高い。
 
 ### Java 16
 
-次に Java 16 で追加された `Stream#toList()` を使ってみる。
-`Stream#collect(Collectors.toList())` と同じように `List` に変換できる。
+次に Java 16 で追加された `Stream#toList()` を使ってみる。 `Stream#collect(Collectors.toList())` と同じように `List` に変換できる。
 
 ```java
 jshell> class ListUtils {
@@ -191,9 +174,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
 >
 > `Collections.unmodifiableList(new ArrayList<>(Arrays.asList(this.toArray())))`
 
-話は単純で `Stream#toList()` は `Stream#collect(Collectors.toList())` の代わりではないのだ。
-`Stream#collect(Collectors.toList())` は可変性について保証されていなかったが、
-`Stream#toList()` では不変であることが `Collections#unmodifiableList` によって保証されている。
+話は単純で `Stream#toList()` は `Stream#collect(Collectors.toList())` の代わりではないのだ。 `Stream#collect(Collectors.toList())` は可変性について保証されていなかったが、 `Stream#toList()` では不変であることが `Collections#unmodifiableList` によって保証されている。
 
 `Stream#toList()` の動作を理解するためには、
 
@@ -226,9 +207,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-つまり、`Stream` を実装したクラスがどのように書かれているかに依存する。
-`List` インターフェースを実装するクラスの中で使われることが多いのは `ArrayList` のインスタンスだろう。
-[`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) の実装は `AbstractCollection` クラスでされている。
+つまり、`Stream` を実装したクラスがどのように書かれているかに依存する。 `List` インターフェースを実装するクラスの中で使われることが多いのは `ArrayList` のインスタンスだろう。 [`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) の実装は `AbstractCollection` クラスでされている。
 
 ```java
     /**
@@ -272,8 +251,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-実装としては `Iterator` を使って配列に要素をコピーしている。
-つまり、ここで一度リストの要素を先頭から末尾まで走査していることになる。
+実装としては `Iterator` を使って配列に要素をコピーしている。つまり、ここで一度リストの要素を先頭から末尾まで走査していることになる。
 
 ##### `Arrays#asList`
 
@@ -357,8 +335,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-`ArrayList` の実装を見るとコンストラクタでは引数で渡された配列をフィールドに持つだけであり、渡された配列に対しては `null` チェックだけを行っている。
-また、`add` のようなミュータブルな操作は `ArrayList` 内で実装されておらず、継承している `AbstractList` の方で定義されている。
+`ArrayList` の実装を見るとコンストラクタでは引数で渡された配列をフィールドに持つだけであり、渡された配列に対しては `null` チェックだけを行っている。また、`add` のようなミュータブルな操作は `ArrayList` 内で実装されておらず、継承している `AbstractList` の方で定義されている。
 
 ```java
     /**
@@ -421,12 +398,9 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-引数では任意のコレクションを受け取って`Collection#toArray()` で配列に変換していることがわかる。
-コレクションが `java.util.ArrayList` の場合は、配列に変換した結果をそのままフィールドに持ち、
-そうでない場合は `Arrays#copyOf` で配列を複製している。
+引数では任意のコレクションを受け取って`Collection#toArray()` で配列に変換していることがわかる。コレクションが `java.util.ArrayList` の場合は、配列に変換した結果をそのままフィールドに持ち、そうでない場合は `Arrays#copyOf` で配列を複製している。
 
-今回の場合、コンストラクタに渡されるのは `java.util.Arrays$ArrayList` (≠ `java.util.ArrayList`) であるため、
-`Arrays#copyOf` によって配列が複製されることになる。
+今回の場合、コンストラクタに渡されるのは `java.util.Arrays$ArrayList` (≠ `java.util.ArrayList`) であるため、 `Arrays#copyOf` によって配列が複製されることになる。
 
 `Arrays#copyOf` を見る前に `Arrays#asList()` で返される `ArrayList` の `toArray` メソッドがどのように実装されているか見てみよう。
 
@@ -442,11 +416,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-`Arrays#asList` の内部では `Arrays#copyOf` が呼ばれている。
-なんと、この実装だと `ArrayList` のコンストラクタで `Arrays#copyOf` が **2 回**も呼ばれている。
-何かを見落しているのだろうか。
-`ArrayList` の場合を追っているから配列が 2 回コピーされてしまっているだけで、
-他のデータ構造であれば最初の `this.toArray()` は異なる動作になっているだろう。
+`Arrays#asList` の内部では `Arrays#copyOf` が呼ばれている。なんと、この実装だと `ArrayList` のコンストラクタで `Arrays#copyOf` が **2 回**も呼ばれている。何かを見落しているのだろうか。 `ArrayList` の場合を追っているから配列が 2 回コピーされてしまっているだけで、他のデータ構造であれば最初の `this.toArray()` は異なる動作になっているだろう。
 
 `Arrays#copyOf` の実装を見てみよう。
 
@@ -493,10 +463,7 @@ Java の `Stream#collect()` は [可変リダクション](https://docs.oracle.c
   skipPath={1}
 />
 
-同じサイズの配列を宣言してコピーしている。
-Java で実装されたコードとして追えるのはここまでとなる。
-配列のコピーで [`System.arraycopy`](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/lang/System.java#L553-L648) を使っているが、
-このメソッドは JVM によって提供されるナイティブメソッドのため Java による実装ではない。
+同じサイズの配列を宣言してコピーしている。Java で実装されたコードとして追えるのはここまでとなる。配列のコピーで [`System.arraycopy`](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/lang/System.java#L553-L648) を使っているが、このメソッドは JVM によって提供されるナイティブメソッドのため Java による実装ではない。
 
 `ArrayList` のコンストラクタでは、内部的に配列でデータを保持するコレクションが渡された場合は、効率的に配列を複製して返していることがわかった。
 
@@ -539,8 +506,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
   skipPath={1}
 />
 
-`Collections#unmodifiableList()` には `java.util.ArrayList` のインスタンスが渡されるため、
-`new UnmodifiableRandomAccessList<>(list)` が返される。
+`Collections#unmodifiableList()` には `java.util.ArrayList` のインスタンスが渡されるため、 `new UnmodifiableRandomAccessList<>(list)` が返される。
 
 `UnmodifiableRandomAccesList` の実装の大部分は `UnmodifiableList` の方でされている。
 
@@ -582,8 +548,7 @@ Java で実装されたコードとして追えるのはここまでとなる。
   skipPath={1}
 />
 
-`UnmodifiableList` は引数で受け取ったリストをフィールドに持ち、
-ミュータブルな操作を行うメソッドは `UnsupportedOperationException` を返すようになラッパーとなっている。
+`UnmodifiableList` は引数で受け取ったリストをフィールドに持ち、ミュータブルな操作を行うメソッドは `UnsupportedOperationException` を返すようになラッパーとなっている。
 
 ```java
     /**
@@ -622,15 +587,11 @@ Java で実装されたコードとして追えるのはここまでとなる。
   skipPath={1}
 />
 
-`Collections#unmodifiableList()` では、データの複製はされずに元のリストをラップして返している。
-結論として、`Stream#toList()` では `Stream` の元となっているコレクションが`ArrayList` の場合は、
-**配列の複製を 2 回行うだけでリストの先頭から末尾までの走査は行なわれない**。
+`Collections#unmodifiableList()` では、データの複製はされずに元のリストをラップして返している。結論として、`Stream#toList()` では `Stream` の元となっているコレクションが`ArrayList` の場合は、 **配列の複製を 2 回行うだけでリストの先頭から末尾までの走査は行なわれない**。
 
 #### `Collectors#unmodifiableList()`
 
-さて、ここで Java 11 以降の `Stream` が提供するメソッドを眺めたことがある人は思いました。
-`Collectors#unmodifiableList()` があるではないか。
-つまり、`Stream#toList()` は `Stream#collect(Collectors.unmodifiableList())` の代わりなのではないか？、と。
+さて、ここで Java 11 以降の `Stream` が提供するメソッドを眺めたことがある人は思いました。 `Collectors#unmodifiableList()` があるではないか。つまり、`Stream#toList()` は `Stream#collect(Collectors.unmodifiableList())` の代わりなのではないか？、と。
 
 それでは `Collectors#unmodifiableList()` の実装を見てみよう。
 
@@ -671,9 +632,7 @@ public class Collectors {
   skipPath={1}
 />
 
-`Collector` の動作について触れると更に長くなってしまうため、`CollectorImpl`がどのように振る舞うのか詳細は説明しない。
-ここで定義された `CollectorImpl` のインスタンスでは、各要素を一度 `ArrayList` に追加してシングルトンリストを生成する。
-そして、先頭のリストに対して各リストを蓄積していき、最終的に `listFromTrustedArray` によって変更不可能なリストへ変換する。
+`Collector` の動作について触れると更に長くなってしまうため、`CollectorImpl`がどのように振る舞うのか詳細は説明しない。ここで定義された `CollectorImpl` のインスタンスでは、各要素を一度 `ArrayList` に追加してシングルトンリストを生成する。そして、先頭のリストに対して各リストを蓄積していき、最終的に `listFromTrustedArray` によって変更不可能なリストへ変換する。
 
 ここで気になるのは `SharedSecrets` だ。実装の詳細を見ていこう。
 
@@ -711,8 +670,7 @@ public class SharedSecrets {
   skipPath={1}
 />
 
-何故このような書き方がされているかは、Javadoc にも書かれているが [StackOverflow でされている回答](https://stackoverflow.com/questions/46722452/how-does-the-sharedsecrets-mechanism-work)も参考になる。
-Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合にも触れている。
+何故このような書き方がされているかは、Javadoc にも書かれているが [StackOverflow でされている回答](https://stackoverflow.com/questions/46722452/how-does-the-sharedsecrets-mechanism-work)も参考になる。Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合にも触れている。
 
 ここでは `java.util.ImmutableCollections$Access` が `JavaUtilCollectionAccess` の実装を提供しているのでそちらを見てみよう。
 
@@ -736,9 +694,7 @@ Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合�
   skipPath={1}
 />
 
-配列から `ImmutableCollections#listFromTrustedArray` で変更不可能なリストに変換している。
-`listFromTrustedArray` の実装は次のようになっており、**各要素に対する明示的な `null` チェックが `List` への変換の前に行われている**。
-そのため、**リストの先頭から末尾までの走査が一度行われる**。
+配列から `ImmutableCollections#listFromTrustedArray` で変更不可能なリストに変換している。 `listFromTrustedArray` の実装は次のようになっており、**各要素に対する明示的な `null` チェックが `List` への変換の前に行われている**。そのため、**リストの先頭から末尾までの走査が一度行われる**。
 
 ```java
     /**
@@ -782,13 +738,11 @@ Java 9 で導入された JPMS (Java 9 Platform Module System) を使う場合�
 - `List12`
 - `ListN`
 
-のいずれかのインスタンスであることがわかった。
-それぞれの[実装](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/util/ImmutableCollections.java#L249-L740)は `UnmodifiableList` と似ているためここでは省略して別の機会に確認する。
+のいずれかのインスタンスであることがわかった。それぞれの[実装](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/util/ImmutableCollections.java#L249-L740)は `UnmodifiableList` と似ているためここでは省略して別の機会に確認する。
 
 ### `Stream#collect(Collectors.toList())` と `Stream#toList()` の違い
 
-`Stream#collect(Collectors.toList())` と `Stream#toList()` はどちらも変更不可能なリストを返す。
-二つは同じように見えるが、ここまでの実装を追った人ならば明らかに異なる点が二つあることがわかるだろう。
+`Stream#collect(Collectors.toList())` と `Stream#toList()` はどちらも変更不可能なリストを返す。二つは同じように見えるが、ここまでの実装を追った人ならば明らかに異なる点が二つあることがわかるだろう。
 
 #### 要素に `null` が含まれているとき
 
@@ -810,20 +764,15 @@ jshell> Stream.of(1, null, 3).collect(Collectors.toUnmodifiableList());
 |        at (#13:1)
 ```
 
-`Stream#toList()` は `null` を含むリストを返すが、`Stream#collect(Collectors.toUnmodifiableList())` は `null` を含むリストでは例外を投げる。
-これは大きな違いだろう。
+`Stream#toList()` は `null` を含むリストを返すが、`Stream#collect(Collectors.toUnmodifiableList())` は `null` を含むリストでは例外を投げる。これは大きな違いだろう。
 
 #### 実行時のオーバーヘッド
 
-既に触れているが `Stream#collect(Collectors.toUnmodifiableList())` では、配列に値を蓄積するために先頭から末尾まで一度走査した後、
-更に明示的な `null` チェックのためにもう一度先頭から末尾まで走査している。
-結果的にリストを 2 回走査しているため実行時のオーバーヘッドが大きい。
+既に触れているが `Stream#collect(Collectors.toUnmodifiableList())` では、配列に値を蓄積するために先頭から末尾まで一度走査した後、更に明示的な `null` チェックのためにもう一度先頭から末尾まで走査している。結果的にリストを 2 回走査しているため実行時のオーバーヘッドが大きい。
 
-また、`Collectors.toList()` は `ArrayList` に値を詰め直すような実装となっており、こちらもリストを先頭から末尾まで走査しているが、
-`null` チェックをしていないためリストの走査は 1 回で済んでいる。
+また、`Collectors.toList()` は `ArrayList` に値を詰め直すような実装となっており、こちらもリストを先頭から末尾まで走査しているが、 `null` チェックをしていないためリストの走査は 1 回で済んでいる。
 
-一方、`Stream#toList()` は配列の複製を 2 回行うが `ArrayList` に値を詰め直すことなく、`Collections.unmodifiableList()` でラップしているだけである。
-これにより、他の二つの方法と比べるとコード上は実行時間にかなり有利に働くように見える実装となっている。
+一方、`Stream#toList()` は配列の複製を 2 回行うが `ArrayList` に値を詰め直すことなく、`Collections.unmodifiableList()` でラップしているだけである。これにより、他の二つの方法と比べるとコード上は実行時間にかなり有利に働くように見える実装となっている。
 
 - [java - Would Stream.toList() perform better than Collectors.toList() - Stack Overflow](https://stackoverflow.com/questions/65741773/would-stream-tolist-perform-better-than-collectors-tolist)
 
@@ -831,11 +780,11 @@ jshell> Stream.of(1, null, 3).collect(Collectors.toUnmodifiableList());
 
 ここまで調べた結果をまとめると次の表のようになる。
 
-| 記述                                              | 可変性/不変性 |  null   |    効率    |
-| ------------------------------------------------- | :-----------: | :-----: | :--------: |
-| `Stream#collect(Collectors.toList())`             |   :-1: 可変   | :+1: OK |  :-1: Bad  |
-| `Stream#collect(Collectors.toUnmodifiableList())` |   :+1: 不変   | :-1: NG | :-1: Worst |
-| `Stream#toList()`                                 |   :+1: 不変   | :+1: OK | :+1: Best  |
+| 記述 | 可変性/不変性 | null | 効率 |
+| --- | :-: | :-: | :-: |
+| `Stream#collect(Collectors.toList())` | :-1: 可変 | :+1: OK | :-1: Bad |
+| `Stream#collect(Collectors.toUnmodifiableList())` | :+1: 不変 | :-1: NG | :-1: Worst |
+| `Stream#toList()` | :+1: 不変 | :+1: OK | :+1: Best |
 
 この記事書くまで関係性について知らなかった。
 
@@ -845,64 +794,43 @@ jshell> Stream.of(1, null, 3).collect(Collectors.toUnmodifiableList());
 
 ### Naming is important
 
-そもそもの問題は、命名の一貫性が欠如していることにある。
-Java はこれまで伝統的に `List` と言えば基本的には可変なリストを指していた [要出典]。
-現に `Collectors#toList()` は可変なリストを返す。
-そして、不変なコレクションを扱う場合は `Collectors#toUnmodifiableList()` のように _unmodifiable-_ という接頭辞が付けられていたはずだ。
+そもそもの問題は、命名の一貫性が欠如していることにある。Java はこれまで伝統的に `List` と言えば基本的には可変なリストを指していた [要出典]。現に `Collectors#toList()` は可変なリストを返す。そして、不変なコレクションを扱う場合は `Collectors#toUnmodifiableList()` のように _unmodifiable-_ という接頭辞が付けられていたはずだ。
 
-つまり、`Stream#toList()` は `Stream#toUnmodifiableList()` という名前で実装されるべきだったのではないだろうか。
-どのような経緯で `Stream#toList()` が追加されたのか追えていないが、`toList` という命名をした人の罪は重い (個人の感想)。
+つまり、`Stream#toList()` は `Stream#toUnmodifiableList()` という名前で実装されるべきだったのではないだろうか。どのような経緯で `Stream#toList()` が追加されたのか追えていないが、`toList` という命名をした人の罪は重い (個人の感想)。
 
 ### 中途半端な実装
 
-今日においてコレクションがメソッドやクラスのようなスコープを越えて可変であることを誰が喜ぶのだろうか。
-コレクションが可変であることは、処理を追うの t 難しくし、バグを生み出す原因となる。
+今日においてコレクションがメソッドやクラスのようなスコープを越えて可変であることを誰が喜ぶのだろうか。コレクションが可変であることは、処理を追うの t 難しくし、バグを生み出す原因となる。
 
-その需要に応える形として Java 10 で [`Collections#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>) が追加されたのだろう。
-`Collections#toUnmodifiableList()` は[変更不可能な List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable)を返す。
+その需要に応える形として Java 10 で [`Collections#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>) が追加されたのだろう。 `Collections#toUnmodifiableList()` は[変更不可能な List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable)を返す。
 
 しかし、実装を追うと `Collectiors#unmodifiableList()` は明らかに他の二つの方法よりも実行時間がかかるため使うのは躊躇われる。
 
 ### 教訓
 
-この話は API 設計の難しさを示している。
-標準ライブラリの API 設計の難しさだけではなく、標準ライブラリを利用したコードの API 設計の難しさにも話が及ぶ。
-我々は必要以上の情報を外部に公開してはいけないし、内部実装を API 利用者が知らなければならないような設計は避けるべきだ。
-本来、標準ライブラリであれば外部に公開されることに過度に慎重にならなければならないという場面は少ないはずだが、
-Java のコレクションではその**責任を標準ライブラリではなく利用者が負う**形となっている。
+この話は API 設計の難しさを示している。標準ライブラリの API 設計の難しさだけではなく、標準ライブラリを利用したコードの API 設計の難しさにも話が及ぶ。我々は必要以上の情報を外部に公開してはいけないし、内部実装を API 利用者が知らなければならないような設計は避けるべきだ。本来、標準ライブラリであれば外部に公開されることに過度に慎重にならなければならないという場面は少ないはずだが、Java のコレクションではその**責任を標準ライブラリではなく利用者が負う**形となっている。
 
 そのため、**コレクション回りのコードを変更する場合はインターフェースでなく、そのインスタンスが何であるのかを意識しなければならない**。
 
 ## おわりに
 
-本記事では、`Stream#toList()` の注意点について記したが、実際には `Stream#collect(Collectors.toList())` と Java 標準ライブラリの問題点について触れたと言う方が正しいだろうか。
-まさかこんなに長い旅になるとは思わなかった。
+本記事では、`Stream#toList()` の注意点について記したが、実際には `Stream#collect(Collectors.toList())` と Java 標準ライブラリの問題点について触れたと言う方が正しいだろうか。まさかこんなに長い旅になるとは思わなかった。
 
-一般論としてプログラミングではデータ構造を理解し、用途によって使い分けなければならないが、プログラミングが広く普及した現在において
-API 設計やデータ構造を学ぶことなくコーディングをしている人は少なくないだろう。
-また、プログラミングを始めたての初心者に限らず、公式ドキュメントを読んで仕様を理解した上でクラスやメソッドを利用している人は少ないように感じる。
-今回の問題については、Java 標準ライブラリの命名と API 設計の責任が大きいように思えた。
+一般論としてプログラミングではデータ構造を理解し、用途によって使い分けなければならないが、プログラミングが広く普及した現在において API 設計やデータ構造を学ぶことなくコーディングをしている人は少なくないだろう。また、プログラミングを始めたての初心者に限らず、公式ドキュメントを読んで仕様を理解した上でクラスやメソッドを利用している人は少ないように感じる。今回の問題については、Java 標準ライブラリの命名と API 設計の責任が大きいように思えた。
 
-Java に限った話ではないかもしれないが、私の (少ないプログラミング) 経験からすると Java のコレクションは難しいだ。
-[不正な操作に対しては実行時例外を投げることを良しとする Java のやり方](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#Collection.15X1lc)が拍車をかけている。
+Java に限った話ではないかもしれないが、私の (少ないプログラミング) 経験からすると Java のコレクションは難しいだ。 [不正な操作に対しては実行時例外を投げることを良しとする Java のやり方](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#Collection.15X1lc)が拍車をかけている。
 
 今回の可変性・不変性に対する Q&A は [Collections Framework](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/index.html) の FAQ に記載されている。
 
 - [オプションのオペレーション (および UnsupportedOperationException)を排除できるように、コア・コレクション・インタフェースで不変性を直接サポートしてはどうでしょうか。](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/designfaq.html#a1)
 
-長々と書かれているが可変性・不変性によって API を分けてもよかったのではないかと素人ながら考えてしまう。
-メソッドを呼び出すまで可変か不変かわからないコレクションと戦うのは辛い。
-中途半端な不変性を持つコレクションがあるからこそ `Stream#toList()` のような罠にはまるのだろう。
-これならば不変なコレクションを作らずに、可変なコレクションを使ってしまえばいいのではないかと思ってしまう。
-Java においては不変なコレクションを使ったとしても静的解析 (型検証) で得られる恩恵はほぼ無いということが今回の件でよくわかった。
+長々と書かれているが可変性・不変性によって API を分けてもよかったのではないかと素人ながら考えてしまう。メソッドを呼び出すまで可変か不変かわからないコレクションと戦うのは辛い。中途半端な不変性を持つコレクションがあるからこそ `Stream#toList()` のような罠にはまるのだろう。これならば不変なコレクションを作らずに、可変なコレクションを使ってしまえばいいのではないかと思ってしまう。Java においては不変なコレクションを使ったとしても静的解析 (型検証) で得られる恩恵はほぼ無いということが今回の件でよくわかった。
 
-Scala のような言語では不変コレクションが中心的に使われているが、
-Java のような可変コレクションをベースに構築された言語が不変コレクションに移行することは難しいということだろう。
+Scala のような言語では不変コレクションが中心的に使われているが、Java のような可変コレクションをベースに構築された言語が不変コレクションに移行することは難しいということだろう。
 
 あぁ、Java のコレクションが再構築される日が待ち遠しい。
 
-少なくともこの記事を最後まで読めば、`Stream#toList()` が怖くて夜しか眠れないということはないだろう。
-安心してお昼寝して欲しい。
+少なくともこの記事を最後まで読めば、`Stream#toList()` が怖くて夜しか眠れないということはないだろう。安心してお昼寝して欲しい。
 
 安心できた人は Giscuss のリアクションで :+1: してくれると喜びます。
 

@@ -7,8 +7,10 @@ import { ChartSection } from "./_shared/chart-section";
 const HEADERS = {
   overallCost: "老後のひと月当たり 最低予想生活費 | 万円",
   overallAssets: "年金支給時に 最低準備しておく 金融資産残高 | 万円",
-  under60Cost: "世帯主の年令が60歳未満 老後のひと月 当たり最低予想 生活費 | 万円",
-  under60Assets: "世帯主の年令が60歳未満 年金支給時に 最低準備 しておく 金融資産残高 | 万円",
+  under60Cost:
+    "世帯主の年令が60歳未満 老後のひと月 当たり最低予想 生活費 | 万円",
+  under60Assets:
+    "世帯主の年令が60歳未満 年金支給時に 最低準備 しておく 金融資産残高 | 万円",
   over60Cost: "世帯主の年令が 60歳以上 ひと月当たり 最低生活費 | 万円",
 } as const;
 
@@ -41,7 +43,11 @@ export const Section42ChartWrapper: React.FC = () => {
         <LineChart
           data={section42Data}
           groups={[]}
-          excludeHeaders={[HEADERS.overallCost, HEADERS.under60Cost, HEADERS.over60Cost]}
+          excludeHeaders={[
+            HEADERS.overallCost,
+            HEADERS.under60Cost,
+            HEADERS.over60Cost,
+          ]}
           config={{
             yAxisMin: 0,
             yAxisMax: 3000,

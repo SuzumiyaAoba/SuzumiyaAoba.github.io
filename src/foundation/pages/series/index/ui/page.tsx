@@ -10,5 +10,7 @@ type PageProps = {
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
   const seriesList = await getSeriesList(resolvedLocale);
-  return <SeriesListPageContent locale={resolvedLocale} seriesList={seriesList} />;
+  return (
+    <SeriesListPageContent locale={resolvedLocale} seriesList={seriesList} />
+  );
 }

@@ -15,8 +15,7 @@ Cursor ターミナルを開くと正常に表示されるが AI エージェン
 
 ## 原因
 
-ターミナルのプロンプトを [starship](https://starship.rs/ja-JP/) から [powerlevel10k](https://github.com/romkatv/powerlevel10k) に移行したのが原因だった。
-検証できていないが Zellij も影響している可能性がある。
+ターミナルのプロンプトを [starship](https://starship.rs/ja-JP/) から [powerlevel10k](https://github.com/romkatv/powerlevel10k) に移行したのが原因だった。検証できていないが Zellij も影響している可能性がある。
 
 Cursor の Forum にもこの問題のトピックが立っている。
 
@@ -24,8 +23,7 @@ Cursor の Forum にもこの問題のトピックが立っている。
 
 ## 解決策
 
-Cursor のトピックではいくつか解決方法が示されている。
-ここでは、現時点で私の環境で上手く動いている設定を記す。
+Cursor のトピックではいくつか解決方法が示されている。ここでは、現時点で私の環境で上手く動いている設定を記す。
 
 余計な設定が入っている気がする検証できていない。
 

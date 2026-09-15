@@ -28,7 +28,7 @@ export type BreadcrumbItem = {
 export function buildDetailBreadcrumbItems(
   locale: Locale,
   section: BreadcrumbItem,
-  item: BreadcrumbItem,
+  item: BreadcrumbItem
 ): BreadcrumbItem[] {
   return [
     { name: "Home", path: toLocalePath("/", locale) },
@@ -43,7 +43,10 @@ export function buildDetailBreadcrumbItems(
  * @param locale 表示ロケール
  * @param item セクション名とロケール非依存のパス(例: `{ name: "Blog", path: "/blog" }`)
  */
-export function buildListBreadcrumbItems(locale: Locale, item: BreadcrumbItem): BreadcrumbItem[] {
+export function buildListBreadcrumbItems(
+  locale: Locale,
+  item: BreadcrumbItem
+): BreadcrumbItem[] {
   return [
     { name: "Home", path: toLocalePath("/", locale) },
     { name: item.name, path: toLocalePath(item.path, locale) },

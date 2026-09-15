@@ -8,11 +8,24 @@ export async function renderOpengraphImage(content: ReactElement) {
   const fontBuffer = await loadShipporiMinchoBold();
   return new ImageResponse(content, {
     ...OPENGRAPH_IMAGE_SIZE,
-    fonts: [{ name: "Shippori Mincho", data: fontBuffer, style: "normal", weight: 700 }],
+    fonts: [
+      {
+        name: "Shippori Mincho",
+        data: fontBuffer,
+        style: "normal",
+        weight: 700,
+      },
+    ],
   });
 }
 
-export function OpengraphTags({ tags, fontSize = 28 }: { tags: string[]; fontSize?: number }) {
+export function OpengraphTags({
+  tags,
+  fontSize = 28,
+}: {
+  tags: string[];
+  fontSize?: number;
+}) {
   if (tags.length === 0) {
     return null;
   }
@@ -79,7 +92,12 @@ export function ArticleOpengraphImage({
         {afterTitle}
       </div>
       <div
-        style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "flex-end" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          justifyContent: "flex-end",
+        }}
       >
         <div
           style={{

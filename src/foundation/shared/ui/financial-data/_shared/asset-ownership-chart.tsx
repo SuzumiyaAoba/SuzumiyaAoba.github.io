@@ -5,7 +5,9 @@ import { NoDataFallback } from "./no-data-fallback";
 const OWNERSHIP_SHEETS = {
   "1": {
     startYear: 2006,
-    excludeHeaders: ["現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％"],
+    excludeHeaders: [
+      "現在保有している金融商品 | 預貯金 （ゆうちょ銀行の貯金を含む） | ％",
+    ],
     groups: [
       { name: "口座の有無（注１）", from: 1, to: 5 },
       { name: "現在保有している金融商品", from: 6, to: Infinity },
@@ -39,7 +41,7 @@ export function AssetOwnershipChart({
     (header) =>
       !excludeHeaders.includes(header) &&
       data.series.some((series) => series.values[header] !== null) &&
-      (sheetKey === "1" || header.includes("％")),
+      (sheetKey === "1" || header.includes("％"))
   );
   const metricGroups = groups.map(({ name, from, to }) => ({
     name,

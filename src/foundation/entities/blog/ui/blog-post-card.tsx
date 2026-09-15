@@ -42,7 +42,7 @@ export function BlogPostCard({
 
   const content = (
     <div className="journal-card-content">
-      <div className={cn("journal-thumbnail", isGraphic && "journal-thumbnail-art")}>
+      <div className="journal-thumbnail">
         {layout === "featured" && isGraphic && (
           <span className="journal-featured-label eyebrow" aria-hidden="true">
             LATEST ENTRY
@@ -59,7 +59,9 @@ export function BlogPostCard({
                 : "(min-width: 768px) 96px, 64px"
             }
             className={
-              isFallback ? "object-contain p-4 opacity-70 dark:invert sm:p-6" : "object-cover"
+              isFallback
+                ? "object-contain p-4 opacity-70 sm:p-6 dark:invert"
+                : "object-cover"
             }
           />
         ) : (
@@ -69,7 +71,7 @@ export function BlogPostCard({
               className={cn(
                 layout === "featured"
                   ? "size-20 text-(--brand)"
-                  : cn(thumbnailIconClassName, "text-muted-foreground"),
+                  : cn(thumbnailIconClassName, "text-muted-foreground")
               )}
               aria-hidden
             />
@@ -79,7 +81,10 @@ export function BlogPostCard({
       <div className="journal-card-copy min-w-0 space-y-1.5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {post.date && (
-            <time dateTime={post.date} className="font-mono text-[11px] tabular-nums">
+            <time
+              dateTime={post.date}
+              className="font-mono text-[11px] tabular-nums"
+            >
               {formatDate(post.date, toIntlLocaleTag(locale))}
             </time>
           )}
@@ -109,11 +114,16 @@ export function BlogPostCard({
               key={tag}
               tag={tag}
               {...(interactive
-                ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
+                ? {
+                    href: toLocalePath(
+                      `/tags/${encodeURIComponent(tag)}`,
+                      locale
+                    ),
+                  }
                 : {})}
               className={cn(
                 "font-noto min-h-8 rounded-sm bg-transparent px-0 text-[11px] font-medium text-muted-foreground",
-                interactive && "relative z-10",
+                interactive && "relative z-10"
               )}
             />
           ))}

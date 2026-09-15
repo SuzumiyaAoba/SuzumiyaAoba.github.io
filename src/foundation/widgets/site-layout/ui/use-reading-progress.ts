@@ -12,8 +12,10 @@ export function useReadingProgress(isReading: boolean) {
       if (!progressBarRef.current) {
         return;
       }
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress =
+        maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
       progressBarRef.current.style.transform = `scaleX(${progress})`;
     };
     const onScroll = () => {

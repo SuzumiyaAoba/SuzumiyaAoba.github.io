@@ -7,8 +7,7 @@ model: GPT-5.4
 description: Fixing a build failure when running a Java (Gradle) repository in Codex Web, via a setup script configuration.
 ---
 
-When I had Codex Web work on a Java (Gradle) repository, the build failed.
-I figured out how to fix it, so I am leaving a note here.
+When I had Codex Web work on a Java (Gradle) repository, the build failed. I figured out how to fix it, so I am leaving a note here.
 
 ## Settings
 
@@ -16,8 +15,7 @@ The solution was posted on the OpenAI Developer Community forum.
 
 - [Issue with Running Java Maven Tests in Codex - Dependency Resolution Failure - Codex / Codex CLI - OpenAI Developer Community](https://community.openai.com/t/issue-with-running-java-maven-tests-in-codex-dependency-resolution-failure/1283045)
 
-Open [Codex environment settings](https://chatgpt.com/codex/settings/environments) and select the environment you use for Java repository development.
-Click "Edit" and paste the following script into "Setup script."
+Open [Codex environment settings](https://chatgpt.com/codex/settings/environments) and select the environment you use for Java repository development. Click "Edit" and paste the following script into "Setup script."
 
 ```shell
 #!/usr/bin/env bash
@@ -47,5 +45,4 @@ cat > ~/.m2/settings.xml <<'EOF'
 EOF
 ```
 
-I removed step 4 from the referenced post. If I left it in, it caused an error instead.
-With this, I can now do Java development from Codex Web :tada:
+I removed step 4 from the referenced post. If I left it in, it caused an error instead. With this, I can now do Java development from Codex Web :tada:

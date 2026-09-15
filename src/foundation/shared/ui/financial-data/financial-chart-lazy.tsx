@@ -41,9 +41,9 @@ export function FinancialChartLazy({ name }: FinancialChartLazyProps) {
           }
           return chart;
         },
-        { ssr: false },
+        { ssr: false }
       ),
-    [name],
+    [name]
   );
 
   return <Chart />;

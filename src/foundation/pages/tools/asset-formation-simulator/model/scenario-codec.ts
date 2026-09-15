@@ -1,4 +1,7 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from "lz-string";
 import { isRecord } from "@/shared/lib/types";
 import type { ColorState, ScenarioInput, VisibleState } from "./types";
 
@@ -10,7 +13,10 @@ const normalizeScenarioList = (list: ScenarioInput[]) =>
     annualRateInput: item.annualRateInput,
   }));
 
-const normalizeVisibleState = (value: unknown, scenarioList: ScenarioInput[]): VisibleState => {
+const normalizeVisibleState = (
+  value: unknown,
+  scenarioList: ScenarioInput[]
+): VisibleState => {
   if (!isRecord(value)) {
     return {};
   }
@@ -30,7 +36,10 @@ const normalizeVisibleState = (value: unknown, scenarioList: ScenarioInput[]): V
   return next;
 };
 
-const normalizeColorState = (value: unknown, scenarioList: ScenarioInput[]): ColorState => {
+const normalizeColorState = (
+  value: unknown,
+  scenarioList: ScenarioInput[]
+): ColorState => {
   if (!isRecord(value)) {
     return {};
   }
@@ -48,7 +57,7 @@ const normalizeColorState = (value: unknown, scenarioList: ScenarioInput[]): Col
 export const encodeVisibilityPayload = (
   visible: VisibleState,
   colors: ColorState,
-  scenarioList: ScenarioInput[],
+  scenarioList: ScenarioInput[]
 ) => {
   const normalizedVisible = normalizeVisibleState(visible, scenarioList);
   const normalizedColors = normalizeColorState(colors, scenarioList);
@@ -56,13 +65,13 @@ export const encodeVisibilityPayload = (
     JSON.stringify({
       visible: normalizedVisible,
       colors: normalizedColors,
-    }),
+    })
   );
 };
 
 export const decodeVisibilityPayload = (
   value: string,
-  scenarioList: ScenarioInput[],
+  scenarioList: ScenarioInput[]
 ): { visible: VisibleState; colors: ColorState } | null => {
   const json = decompressFromEncodedURIComponent(value);
   if (!json) {
@@ -94,11 +103,16 @@ const normalizeScenarios = (value: unknown): ScenarioInput[] | null => {
       const raw = item;
       const { monthlyContributionInput } = raw;
       const { annualRateInput } = raw;
-      if (typeof monthlyContributionInput !== "string" || typeof annualRateInput !== "string") {
+      if (
+        typeof monthlyContributionInput !== "string" ||
+        typeof annualRateInput !== "string"
+      ) {
         return null;
       }
-      const id = typeof raw["id"] === "string" ? raw["id"] : `scenario-${index + 1}`;
-      const name = typeof raw["name"] === "string" ? raw["name"] : `パターン${index + 1}`;
+      const id =
+        typeof raw["id"] === "string" ? raw["id"] : `scenario-${index + 1}`;
+      const name =
+        typeof raw["name"] === "string" ? raw["name"] : `パターン${index + 1}`;
 
       return {
         id,
@@ -116,7 +130,8 @@ export const encodeScenarios = (value: ScenarioInput[]) =>
   compressToEncodedURIComponent(JSON.stringify(normalizeScenarioList(value)));
 
 export const isSameScenarios = (a: ScenarioInput[], b: ScenarioInput[]) =>
-  JSON.stringify(normalizeScenarioList(a)) === JSON.stringify(normalizeScenarioList(b));
+  JSON.stringify(normalizeScenarioList(a)) ===
+  JSON.stringify(normalizeScenarioList(b));
 
 export const decodeScenarios = (value: string): ScenarioInput[] | null => {
   const json = decompressFromEncodedURIComponent(value);

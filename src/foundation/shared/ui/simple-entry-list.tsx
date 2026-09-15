@@ -31,11 +31,11 @@ export function SimpleEntryList({ items, emptyState }: SimpleEntryListProps) {
               {String(index + 1).padStart(2, "0")}
             </span>
             <span className="min-w-0 flex-1 space-y-1">
-              <span className="simple-entry-title block text-base font-medium leading-normal break-words">
+              <span className="simple-entry-title block text-base leading-normal font-medium break-words">
                 {item.title}
               </span>
               {item.date ? (
-                <span className="block text-xs tabular-nums text-muted-foreground">
+                <span className="block text-xs text-muted-foreground tabular-nums">
                   {item.date}
                 </span>
               ) : null}

@@ -15,18 +15,20 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
   const getSkyColor = () => (isDark ? "#38bdf8" : "#0284c7");
 
   return (
-    <div className="grid grid-cols-3 gap-4 mb-4">
+    <div className="mb-4 grid grid-cols-3 gap-4">
       <div>
-        <div className="font-bold text-lg mb-1">Character</div>
+        <div className="mb-1 text-lg font-bold">Character</div>
         <div className="font-mono text-lg">{char ?? "--"}</div>
       </div>
       <div>
-        <div className="font-bold text-lg mb-1">Binary</div>
+        <div className="mb-1 text-lg font-bold">Binary</div>
         <div className="font-mono text-lg">
           {binary ? (
             <>
               <span style={{ color: getMutedColor() }}>0b</span>
-              <span style={{ color: getGreenColor() }}>{binary.slice(0, 3)}</span>
+              <span style={{ color: getGreenColor() }}>
+                {binary.slice(0, 3)}
+              </span>
               <span style={{ color: getSkyColor() }}>{binary.slice(3, 7)}</span>
             </>
           ) : (
@@ -35,13 +37,17 @@ export const AsciiInfo = ({ char, binary, hex }: AsciiInfoProps) => {
         </div>
       </div>
       <div>
-        <div className="font-bold text-lg mb-1">Hex</div>
+        <div className="mb-1 text-lg font-bold">Hex</div>
         <div className="font-mono text-lg">
           {hex ? (
             <>
               <span style={{ color: getMutedColor() }}>0x</span>
-              <span style={{ color: getGreenColor() }}>{hex.slice(0, 1).toUpperCase()}</span>
-              <span style={{ color: getSkyColor() }}>{hex.slice(1, 2).toUpperCase()}</span>
+              <span style={{ color: getGreenColor() }}>
+                {hex.slice(0, 1).toUpperCase()}
+              </span>
+              <span style={{ color: getSkyColor() }}>
+                {hex.slice(1, 2).toUpperCase()}
+              </span>
             </>
           ) : (
             "--"

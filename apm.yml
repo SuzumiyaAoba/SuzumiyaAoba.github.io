@@ -4,6 +4,6 @@ description: APM project for SuzumiyaAoba.github.io
 author: suzumiyaaoba
 dependencies:
   apm:
-  - vercel-labs/agent-skills
+    - vercel-labs/agent-skills
   mcp: []
 scripts: {}

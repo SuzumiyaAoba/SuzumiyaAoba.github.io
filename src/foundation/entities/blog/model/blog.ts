@@ -52,9 +52,9 @@ export type BlogPostSummary = ContentSummary<BlogPost>;
  */
 export const getBlogSlugs = cache(
   unstable_cache(
-    async (): Promise<string[]> => listContentSlugs(BLOG_COLLECTION_DIR),
-    ["blog-slugs"],
-  ),
+    async (): Promise<string[]> => await listContentSlugs(BLOG_COLLECTION_DIR),
+    ["blog-slugs"]
+  )
 );
 
 /**
@@ -63,9 +63,15 @@ export const getBlogSlugs = cache(
  * @param options 読み込みオプション
  * @returns 記事データ。存在しない場合は null
  */
-export const getBlogPost = createContentReader(BLOG_COLLECTION_DIR, normalizeFrontmatter);
+export const getBlogPost = createContentReader(
+  BLOG_COLLECTION_DIR,
+  normalizeFrontmatter
+);
 
-const collection = createContentCollection({ getSlugs: getBlogSlugs, getContent: getBlogPost });
+const collection = createContentCollection({
+  getSlugs: getBlogSlugs,
+  getContent: getBlogPost,
+});
 
 /**
  * 指定したスラッグの記事サマリーを取得する
@@ -103,12 +109,14 @@ export const getBlogPosts = collection.getAll;
  * @returns 前後の記事。存在しない場合は null
  */
 export const getAdjacentPosts = cache(
-  async (slug: string): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
+  async (
+    slug: string
+  ): Promise<{ prev: BlogPost | null; next: BlogPost | null }> => {
     const posts = await getBlogPosts();
     // posts are sorted by date desc (newest first)
     // next is newer (index - 1), prev is older (index + 1)
     return findAdjacentByIndex(posts, (post) => post.slug === slug);
-  },
+  }
 );
 
 /**
@@ -133,7 +141,7 @@ export const getBlogPostVariants = collection.getVariants;
  * @returns 多言語対応記事の配列
  */
 export const getBlogPostsVariants = cache(
-  unstable_cache(collection.getAllVariants, ["blog-posts-variants"]),
+  unstable_cache(collection.getAllVariants, ["blog-posts-variants"])
 );
 
 /**
@@ -148,7 +156,9 @@ export const getBlogPostSummaryVariants = collection.getSummaryVariants;
  * @returns 多言語対応記事サマリーの配列
  */
 export const getBlogPostSummariesVariants = cache(
-  unstable_cache(collection.getAllSummaryVariants, ["blog-post-summaries-variants"]),
+  unstable_cache(collection.getAllSummaryVariants, [
+    "blog-post-summaries-variants",
+  ])
 );
 
 /**
@@ -158,11 +168,14 @@ export const getBlogPostSummariesVariants = cache(
  */
 export const getAdjacentPostsVariants = cache(
   async (
-    slug: string,
-  ): Promise<{ prev: LocalizedBlogPost | null; next: LocalizedBlogPost | null }> => {
+    slug: string
+  ): Promise<{
+    prev: LocalizedBlogPost | null;
+    next: LocalizedBlogPost | null;
+  }> => {
     const posts = await getBlogPostsVariants();
     return findAdjacentByIndex(posts, (post) => post.slug === slug);
-  },
+  }
 );
 
 /**
@@ -172,11 +185,14 @@ export const getAdjacentPostsVariants = cache(
  */
 export const getAdjacentPostSummariesVariants = cache(
   async (
-    slug: string,
-  ): Promise<{ prev: LocalizedBlogPostSummary | null; next: LocalizedBlogPostSummary | null }> => {
+    slug: string
+  ): Promise<{
+    prev: LocalizedBlogPostSummary | null;
+    next: LocalizedBlogPostSummary | null;
+  }> => {
     const posts = await getBlogPostSummariesVariants();
     return findAdjacentByIndex(posts, (post) => post.slug === slug);
-  },
+  }
 );
 
 /**

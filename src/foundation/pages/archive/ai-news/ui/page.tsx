@@ -12,22 +12,37 @@ type PageProps = {
 
 export default async function Page({ locale, view = "calendar" }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
-  const [entries, updated] = await Promise.all([getAiNewsEntries(), getAiNewsUpdated()]);
+  const [entries, updated] = await Promise.all([
+    getAiNewsEntries(),
+    getAiNewsUpdated(),
+  ]);
   const renderedEntries = await Promise.all(
     entries.map(async (entry) => {
-      const title = resolvedLocale === "en" ? (entry.title.en ?? entry.title.ja) : entry.title.ja;
+      const title =
+        resolvedLocale === "en"
+          ? (entry.title.en ?? entry.title.ja)
+          : entry.title.ja;
       const summary =
-        resolvedLocale === "en" ? (entry.summary.en ?? entry.summary.ja) : entry.summary.ja;
+        resolvedLocale === "en"
+          ? (entry.summary.en ?? entry.summary.ja)
+          : entry.summary.ja;
       const content = await renderMdx(summary);
       return {
         entry,
         title,
         summary: content,
       };
-    }),
+    })
   );
 
-  const Content = view === "timeline" ? AiNewsTimelinePageContent : AiNewsPageContent;
+  const Content =
+    view === "timeline" ? AiNewsTimelinePageContent : AiNewsPageContent;
 
-  return <Content locale={resolvedLocale} updated={updated ?? null} entries={renderedEntries} />;
+  return (
+    <Content
+      locale={resolvedLocale}
+      updated={updated ?? null}
+      entries={renderedEntries}
+    />
+  );
 }

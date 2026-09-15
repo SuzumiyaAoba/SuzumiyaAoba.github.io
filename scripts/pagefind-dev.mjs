@@ -7,7 +7,7 @@ const target = path.join(process.cwd(), "out", "pagefind");
 
 if (!force && existsSync(target)) {
   console.log(
-    "[pagefind:dev] out/pagefind already exists — skipping build. Use 'npm run pagefind:dev:force' to rebuild.",
+    "[pagefind:dev] out/pagefind already exists — skipping build. Use 'npm run pagefind:dev:force' to rebuild."
   );
   process.exit(0);
 }

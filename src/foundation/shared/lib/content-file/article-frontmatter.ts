@@ -21,7 +21,9 @@ export type ArticleFrontmatter = {
 };
 
 /** 空欄の日付と未設定の項目は省略し、それ以外の空文字・false・空配列は保つ。 */
-export function normalizeArticleFrontmatter(data: Record<string, unknown>): ArticleFrontmatter {
+export function normalizeArticleFrontmatter(
+  data: Record<string, unknown>
+): ArticleFrontmatter {
   const date = asDateString(data["date"]);
   const category = asString(data["category"]);
   const description = asString(data["description"]);

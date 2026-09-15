@@ -7,12 +7,10 @@ const nextConfig = {
     unoptimized: true,
   },
   turbopack: {},
-  serverExternalPackages: [
-    "codehike",
-    "@code-hike/lighter",
-    "next-mdx-remote",
-  ],
-  webpack: (/** @type {{ watchOptions?: Record<string, unknown> }} */ config) => {
+  serverExternalPackages: ["codehike", "@code-hike/lighter", "next-mdx-remote"],
+  webpack: (
+    /** @type {{ watchOptions?: Record<string, unknown> }} */ config
+  ) => {
     config.watchOptions = {
       ...config.watchOptions,
       ignored: ["**/node_modules/**", "**/.git/**", "**/out/**", "**/.next/**"],

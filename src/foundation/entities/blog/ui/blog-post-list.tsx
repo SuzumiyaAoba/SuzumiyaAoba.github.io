@@ -65,7 +65,9 @@ export function BlogPostList({
       return null;
     }
     return (
-      <Card className={cn("border-transparent bg-card/40 shadow-none", className)}>
+      <Card
+        className={cn("border-transparent bg-card/40 shadow-none", className)}
+      >
         <div className="px-5 py-6 text-sm text-muted-foreground">
           <I18nText locale={locale} ja={emptyMessage.ja} en={emptyMessage.en} />
         </div>
@@ -81,7 +83,7 @@ export function BlogPostList({
           : variant === "detailed"
             ? "post-list"
             : "space-y-5",
-        className,
+        className
       )}
     >
       {posts.map((variantItem, index) => {
@@ -91,7 +93,10 @@ export function BlogPostList({
         }
         const postSlug = variantItem.slug;
         const title = post.frontmatter.title || postSlug;
-        const thumbnail = resolveThumbnail(variantItem.slug, post.frontmatter.thumbnail);
+        const thumbnail = resolveThumbnail(
+          variantItem.slug,
+          post.frontmatter.thumbnail
+        );
         const isFallback = thumbnail.type === "image" && thumbnail.isFallback;
         const tags = post.frontmatter.tags ?? [];
         const { category } = post.frontmatter;
@@ -110,7 +115,13 @@ export function BlogPostList({
                 }}
                 locale={locale}
                 interactive
-                layout={variant === "editorial" ? (index === 0 ? "featured" : "compact") : "list"}
+                layout={
+                  variant === "editorial"
+                    ? index === 0
+                      ? "featured"
+                      : "compact"
+                    : "list"
+                }
                 headingLevel={variant === "editorial" ? "h3" : "h2"}
               />
             </li>
@@ -122,13 +133,13 @@ export function BlogPostList({
             <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
               <span
                 aria-hidden
-                className="pointer-events-none absolute -inset-1 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out scale-95 group-hover:opacity-100 group-hover:scale-100"
+                className="pointer-events-none absolute -inset-1 scale-95 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
               />
               <a
                 href={toLocalePath(`/blog/post/${postSlug}`, locale)}
                 className={cn(
                   "relative z-10 flex gap-3 px-5 py-5",
-                  withThumbnail ? "flex-row items-start" : "flex-col",
+                  withThumbnail ? "flex-row items-start" : "flex-col"
                 )}
               >
                 {withThumbnail ? (
@@ -141,7 +152,7 @@ export function BlogPostList({
                         sizes="96px"
                         className={
                           isFallback
-                            ? "object-contain p-3 opacity-70 dark:invert dark:opacity-80"
+                            ? "object-contain p-3 opacity-70 dark:opacity-80 dark:invert"
                             : "object-cover"
                         }
                       />
@@ -149,7 +160,7 @@ export function BlogPostList({
                       <span className="flex h-full w-full items-center justify-center">
                         <Icon
                           icon={thumbnail.icon}
-                          className="size-16 sm:size-6 text-muted-foreground/70 dark:text-muted-foreground/80"
+                          className="size-16 text-muted-foreground/70 sm:size-6 dark:text-muted-foreground/80"
                           aria-hidden
                         />
                         <span className="sr-only">{title}</span>
@@ -170,7 +181,9 @@ export function BlogPostList({
                     ) : null}
                   </div>
                   <div className="space-y-2">
-                    <p className="text-base font-semibold text-foreground">{title}</p>
+                    <p className="text-base font-semibold text-foreground">
+                      {title}
+                    </p>
                     {tags.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {tags.slice(0, 3).map((tag) => (
@@ -178,7 +191,12 @@ export function BlogPostList({
                             key={tag}
                             tag={tag}
                             {...(withTagLinks
-                              ? { href: toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale) }
+                              ? {
+                                  href: toLocalePath(
+                                    `/tags/${encodeURIComponent(tag)}`,
+                                    locale
+                                  ),
+                                }
                               : {})}
                             className="bg-muted text-[11px] font-medium text-muted-foreground"
                           />

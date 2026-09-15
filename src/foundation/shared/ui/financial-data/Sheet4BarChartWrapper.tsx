@@ -3,7 +3,10 @@
 import { StackedBarChart } from "@/shared/ui/financial-charts";
 import { NoDataFallback } from "./_shared/no-data-fallback";
 import { getAssetSheet } from "./_shared/asset-sheets";
-import { SHEET4_EXCLUDE_HEADERS, SHEET4_LABEL_MAP } from "./_shared/sheet4-asset-labels";
+import {
+  SHEET4_EXCLUDE_HEADERS,
+  SHEET4_LABEL_MAP,
+} from "./_shared/sheet4-asset-labels";
 
 export const Sheet4BarChartWrapper: React.FC = () => {
   const sheet4Data = getAssetSheet("4");

@@ -2,7 +2,15 @@
 
 import type { ChartConfig, SheetData } from "@/shared/ui/financial-charts";
 
-const UNIT_PRIORITY = new Set<string>(["％", "%", "万円", "円", "歳", "人", "件"]);
+const UNIT_PRIORITY = new Set<string>([
+  "％",
+  "%",
+  "万円",
+  "円",
+  "歳",
+  "人",
+  "件",
+]);
 
 const normalizeUnit = (unit: string) => (unit === "%" ? "％" : unit);
 
@@ -61,8 +69,13 @@ const roundUp = (value: number, step: number) => Math.ceil(value / step) * step;
  * 指定したmetrics(ヘッダー名)群の中での最大値を算出する。
  * Sheet2AmountChartWrapper 等のY軸最大値算出で共通利用する。
  */
-export const computeMaxValueForMetrics = (data: SheetData, metrics: string[]): number =>
-  Math.max(...data.series.flatMap((s) => metrics.map((m) => (s.values[m] ?? 0) || 0)));
+export const computeMaxValueForMetrics = (
+  data: SheetData,
+  metrics: string[]
+): number =>
+  Math.max(
+    ...data.series.flatMap((s) => metrics.map((m) => (s.values[m] ?? 0) || 0))
+  );
 
 /** stepの倍数に切り上げる */
 export const roundUpToStep = roundUp;
@@ -70,7 +83,7 @@ export const roundUpToStep = roundUp;
 export const buildAutoChartConfig = (data: SheetData): ChartConfig => {
   const unit = selectUnit(data.headers);
   const startYear = Math.min(
-    ...data.series.map((s) => Number(s.year)).filter((n) => Number.isFinite(n)),
+    ...data.series.map((s) => Number(s.year)).filter((n) => Number.isFinite(n))
   );
   const maxValue = computeMaxValue(data, unit);
 

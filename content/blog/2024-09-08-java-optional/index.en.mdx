@@ -22,17 +22,9 @@ description: Framing Java's Optional as part of the lineage of Haskell's Maybe, 
 
 ## Optional
 
-[Optional](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html) was introduced to the Java standard library in Java 8.
-`Optional` represents a value that either exists or does not exist.
-In Java, "no value" means `null`.
-Before Java 8, when a variable had no value to assign, you represented that by assigning `null`.
-With `Optional`, the official way is to represent "no value" with an object that represents the absence of a value.
+[Optional](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Optional.html) was introduced to the Java standard library in Java 8. `Optional` represents a value that either exists or does not exist. In Java, "no value" means `null`. Before Java 8, when a variable had no value to assign, you represented that by assigning `null`. With `Optional`, the official way is to represent "no value" with an object that represents the absence of a value.
 
-The idea of representing a value that might not exist with a data structure is not new.
-Many languages, starting with [Haskell](https://www.haskell.org/), provide it in their standard libraries.
-I don't know whether it existed as early as [Miranda](https://ja.wikipedia.org/wiki/Miranda), a predecessor of Haskell, but by the 1990s, there were already references to the `Maybe` type constructor.
-In other words, a concept from the 1990s finally made it into Java.
-Haskell itself was released in 1990, before Java (1995).
+The idea of representing a value that might not exist with a data structure is not new. Many languages, starting with [Haskell](https://www.haskell.org/), provide it in their standard libraries. I don't know whether it existed as early as [Miranda](https://ja.wikipedia.org/wiki/Miranda), a predecessor of Haskell, but by the 1990s, there were already references to the `Maybe` type constructor. In other words, a concept from the 1990s finally made it into Java. Haskell itself was released in 1990, before Java (1995).
 
 ### `Optional` instances
 
@@ -82,9 +74,7 @@ $5 ==> Optional.empty
 
 ## Example using `Optional`
 
-To understand `Optional`, let's consider converting a string to an integer.
-This is a simple example of a computation that can fail.
-If the string is a valid integer format, we expect an `Integer` value.
+To understand `Optional`, let's consider converting a string to an integer. This is a simple example of a computation that can fail. If the string is a valid integer format, we expect an `Integer` value.
 
 In Java, it is common to use `Integer#parseInt(String)`.
 
@@ -93,8 +83,7 @@ jshell> Integer.parseInt("123")
 $6 ==> 123
 ```
 
-If the string is not an integer, what happens?
-`Integer#parseInt(String)` throws an unchecked exception `NumberFormatException`.
+If the string is not an integer, what happens? `Integer#parseInt(String)` throws an unchecked exception `NumberFormatException`.
 
 ```java
 jshell> Integer.parseInt("abc")
@@ -117,13 +106,11 @@ try {
 }
 ```
 
-Writing this every time is tedious, so you'd want a utility.
-Here we consider two implementations: one without `Optional`, and one with `Optional`.
+Writing this every time is tedious, so you'd want a utility. Here we consider two implementations: one without `Optional`, and one with `Optional`.
 
 ### Represent failure with `null`
 
-In Java, if a computation fails, it's common to throw an exception or return `null`.
-`Integer#parseInt(String)` throws, but then you must always catch it.
+In Java, if a computation fails, it's common to throw an exception or return `null`. `Integer#parseInt(String)` throws, but then you must always catch it.
 
 So let's write a utility method that returns `null` instead of throwing.
 
@@ -161,8 +148,7 @@ Now you can write:
 Integer number = NumberUtils.parseInt(str);
 ```
 
-This looks nicer than `try`/`catch`.
-But is it really safe?
+This looks nicer than `try`/`catch`. But is it really safe?
 
 Let's consider a slightly more complex example: given a tax-excluded price string, compute a tax-included price (10%).
 
@@ -213,8 +199,7 @@ jshell> public class Price {
 |  次を作成しました: クラス Price
 ```
 
-We'll round down the tax because we're kind.[^tax-calc]
-If the format is neither `未定` nor `XXX円`, return `null`.
+We'll round down the tax because we're kind.[^tax-calc] If the format is neither `未定` nor `XXX円`, return `null`.
 
 [^tax-calc]: [(Q9) How should we handle rounding when setting tax-included prices?](https://www.mof.go.jp/tax_policy/summary/consumption/a_001.htm#9)
 
@@ -238,8 +223,7 @@ jshell> Price.taxIncluded("1,000円")
 
 Oops :dizzy_face:
 
-`NumberUtils#parseInt(String)` returns `null` when conversion fails.
-We forgot to handle that, so fix it.
+`NumberUtils#parseInt(String)` returns `null` when conversion fails. We forgot to handle that, so fix it.
 
 ```java
 jshell> public class Price {
@@ -269,8 +253,7 @@ jshell> public class Price {
 |  次を変更しました: クラス Price
 ```
 
-This is fine now. But the code contains things we don't want to care about in the main logic.
-Specifically:
+This is fine now. But the code contains things we don't want to care about in the main logic. Specifically:
 
 - When `jpPrice` is `null`
 - When `priceInt` is `null`
@@ -311,8 +294,7 @@ jshell> NumberUtils.parseIntOptional("123")
 $19 ==> Optional[123]
 ```
 
-Now let's write `Price#taxIncluded(String)` using this and `Optional`.
-Different people may write it differently, but here's one approach.
+Now let's write `Price#taxIncluded(String)` using this and `Optional`. Different people may write it differently, but here's one approach.
 
 ```java
 jshell> public class Price {
@@ -423,18 +405,13 @@ public class Price {
 }
 ```
 
-The `Optional` version is shorter in lines, but that's not the point.
-The key is that the `Optional` version focuses on what we want to do (convert string to int and compute tax) without worrying about `null` along the way.
+The `Optional` version is shorter in lines, but that's not the point. The key is that the `Optional` version focuses on what we want to do (convert string to int and compute tax) without worrying about `null` along the way.
 
-In the non-Optional version, we forgot `NumberUtils#parseInt(String)` can return `null` and got a `NullPointerException`.
-With `Optional`, if conversion fails, `Optional.empty()` is returned, so no `NullPointerException`.
+In the non-Optional version, we forgot `NumberUtils#parseInt(String)` can return `null` and got a `NullPointerException`. With `Optional`, if conversion fails, `Optional.empty()` is returned, so no `NullPointerException`.
 
-If a computation returns `Optional`, you can flatten it with `flatMap`.
-Then you can write downstream processing in `map`, which only runs on success.
+If a computation returns `Optional`, you can flatten it with `flatMap`. Then you can write downstream processing in `map`, which only runs on success.
 
-This means you can consider failure only at the end (`Optional#orElse(T)`), not at every step.
-In this requirement, if computation fails, return "something else", so I returned `null`,
-but I was following the non-Optional example. If failure is possible, why not return `Optional` itself?
+This means you can consider failure only at the end (`Optional#orElse(T)`), not at every step. In this requirement, if computation fails, return "something else", so I returned `null`, but I was following the non-Optional example. If failure is possible, why not return `Optional` itself?
 
 ```java
 jshell> public class Price {
@@ -456,24 +433,19 @@ jshell> public class Price {
 |  次を置換しました: クラス Price
 ```
 
-If you think, "Returning `null` is fine," you might have forgotten the earlier mistake with `NumberUtils#parseInt(String)`.
-When using that static method, are you confident you will always remember to `null`-check the return value?
+If you think, "Returning `null` is fine," you might have forgotten the earlier mistake with `NumberUtils#parseInt(String)`. When using that static method, are you confident you will always remember to `null`-check the return value?
 
 ## `Optional` represents computations that may fail
 
-We've compared code with and without `Optional`.
-Now let's look at the Javadoc again.
+We've compared code with and without `Optional`. Now let's look at the Javadoc again.
 
 > A container object which may or may not contain a non-null value.
 >
 > ...
 >
-> API Note:
-> Optional is intended primarily for use as a method return type where there is a clear need to represent "no result", and where using null is likely to cause errors. A variable whose type is Optional should never itself be null; it should always point to an Optional instance.
+> API Note: Optional is intended primarily for use as a method return type where there is a clear need to represent "no result", and where using null is likely to cause errors. A variable whose type is Optional should never itself be null; it should always point to an Optional instance.
 
-As an object, `Optional` is "a container that may or may not contain a non-null value."
-But if we return `Optional.empty()` on failure and `Optional.of(T)` on success,
-it becomes not just "some value or not", but a way to express success/failure.[^success-failure]
+As an object, `Optional` is "a container that may or may not contain a non-null value." But if we return `Optional.empty()` on failure and `Optional.of(T)` on success, it becomes not just "some value or not", but a way to express success/failure.[^success-failure]
 
 [^success-failure]: In languages without `null`, types like `Optional` (e.g., Haskell's `Maybe`) are often explained as representing success/failure of computations.
 
@@ -500,8 +472,7 @@ public class Price {
 }
 ```
 
-In the `Optional` version, only the success path is highlighted, and failure branches are not explicit.
-You can focus on success without explicit `null` checks.
+In the `Optional` version, only the success path is highlighted, and failure branches are not explicit. You can focus on success without explicit `null` checks.
 
 In contrast, the non-Optional version has failure handling in the main flow, fragmenting the tax logic.
 
@@ -532,9 +503,7 @@ public class Price {
 }
 ```
 
-This shows that `Optional` lets you keep the intended logic together.
-In this example, failure was only possible for `null` input or invalid formats,
-but even with more possible failures, `Optional` can keep the code focused on the desired processing.
+This shows that `Optional` lets you keep the intended logic together. In this example, failure was only possible for `null` input or invalid formats, but even with more possible failures, `Optional` can keep the code focused on the desired processing.
 
 ## Benefits of using `Optional`
 
@@ -556,16 +525,11 @@ So far I've described the good parts, but `Optional` also has issues.
 
 ### It expresses success/failure but not the reason
 
-`Optional` can return a value on success, but all failures collapse into `Optional.empty()`.
-So you cannot handle different failure reasons differently.
+`Optional` can return a value on success, but all failures collapse into `Optional.empty()`. So you cannot handle different failure reasons differently.
 
-To express failure reasons, you usually need types like `Either` (`Left`, `Right`) or `Result` (`Ok`, `Err`).
-In `Either`, `Right` holds the success value (right is "correct"), and `Left` holds the failure value.
-Then you can return error values and still use methods like `map` and `filter` that operate on `Right` only.
+To express failure reasons, you usually need types like `Either` (`Left`, `Right`) or `Result` (`Ok`, `Err`). In `Either`, `Right` holds the success value (right is "correct"), and `Left` holds the failure value. Then you can return error values and still use methods like `map` and `filter` that operate on `Right` only.
 
-I hope Java will provide something like this in the standard library one day, but as of Java 21 it does not.
-The most practical option is to use a functional library like [vavr](https://github.com/vavr-io/vavr),
-but introducing such a library in production is hard.
+I hope Java will provide something like this in the standard library one day, but as of Java 21 it does not. The most practical option is to use a functional library like [vavr](https://github.com/vavr-io/vavr), but introducing such a library in production is hard.
 
 It's partly a skill issue, but minor libraries also carry a [maintenance risk](https://github.com/vavr-io/vavr/issues/2756).
 

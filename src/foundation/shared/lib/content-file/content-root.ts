@@ -20,7 +20,7 @@ export async function resolveContentRoot(): Promise<string> {
     "..",
     "SuzumiyaAoba.github.io",
     "src",
-    "contents",
+    "contents"
   );
 
   try {

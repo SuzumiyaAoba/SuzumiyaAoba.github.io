@@ -17,7 +17,10 @@ export function BlogPaginationPageContent({
   pageCount,
   posts,
 }: BlogPaginationPageContentProps) {
-  const pagePath = toLocalePath(pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`, locale);
+  const pagePath = toLocalePath(
+    pageNumber === 1 ? "/blog" : `/blog/${pageNumber}`,
+    locale
+  );
 
   return (
     <SiteLayout locale={locale} path={pagePath}>

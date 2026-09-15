@@ -4,51 +4,50 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "vite-plus/test/browser-playwright";
+import ultraciteCore from "ultracite/oxlint/core";
+import ultraciteReact from "ultracite/oxlint/react";
+import ultraciteNext from "ultracite/oxlint/next";
+import ultraciteVitest from "ultracite/oxlint/vitest";
+import ultraciteFmt from "ultracite/oxfmt";
 
 const dirname =
-  typeof __dirname === "undefined" ? path.dirname(fileURLToPath(import.meta.url)) : __dirname;
+  typeof __dirname === "undefined"
+    ? path.dirname(fileURLToPath(import.meta.url))
+    : __dirname;
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   lint: {
-    plugins: [
-      "typescript",
-      "unicorn",
-      "oxc",
-      "nextjs",
-      "react",
-      "jsx-a11y",
-      "import",
-      "jsdoc",
-      "promise",
-      "node",
-    ],
-    categories: {
-      correctness: "error",
-      suspicious: "error",
-      pedantic: "error",
-      perf: "error",
-      style: "error",
-      restriction: "error",
-      nursery: "error",
-    },
+    // Ultracite のプリセットを Baseline とし、rules / overrides でプロジェクト固有の調整を行う。
+    // plugins / categories はプリセット側で定義済みのためここでは指定しない。
+    extends: [ultraciteCore, ultraciteReact, ultraciteNext, ultraciteVitest],
+    // @shadcn/lint は Oxlint の JS プラグインとして読み込む（Knip 等のためルートでも宣言）。
+    jsPlugins: [{ name: "shadcn", specifier: "@shadcn/lint" }],
     options: {
       typeAware: true,
-      denyWarnings: true,
+      // @shadcn/lint のデザイン規約系ルールは段階適用のため warn で運用し、警告は失敗にしない。
+      denyWarnings: false,
       reportUnusedDisableDirectives: "error",
     },
     env: { browser: true, node: true },
     // 生成物の修正は生成元で行う。
     ignorePatterns: [
+      ...(ultraciteCore.ignorePatterns ?? []),
       "src/foundation/shared/ui/icon/icon-data.ts",
       "src/foundation/shared/ui/icon/icon-data.client.ts",
-      "next-env.d.ts",
     ],
+    // 共有 UI は @/shared/ui/* エイリアスで import される（components.json の @/components/ui は未使用）。
+    settings: {
+      shadcn: { ui: "@/shared/ui" },
+    },
     rules: {
       // App Router と react-jsx は従来の Pages Router / React import を要求しない。
       "nextjs/no-html-link-for-pages": "off",
       "react/react-in-jsx-scope": "off",
-      "react/jsx-filename-extension": ["error", { extensions: [".jsx", ".tsx"] }],
+      "react/jsx-filename-extension": [
+        "error",
+        { extensions: [".jsx", ".tsx"] },
+      ],
       "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
       "react/only-export-components": [
         "error",
@@ -87,7 +86,10 @@ export default defineConfig({
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
       "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
       // 空文字へのフォールバックと nullish のフォールバックを区別して使う。
-      "typescript/prefer-nullish-coalescing": ["error", { ignorePrimitives: { string: true } }],
+      "typescript/prefer-nullish-coalescing": [
+        "error",
+        { ignorePrimitives: { string: true } },
+      ],
       "import/no-namespace": "off",
       "import/no-relative-parent-imports": "off",
       "import/no-unassigned-import": [
@@ -109,7 +111,11 @@ export default defineConfig({
       "react/function-component-definition": [
         "error",
         {
-          namedComponents: ["function-declaration", "arrow-function", "function-expression"],
+          namedComponents: [
+            "function-declaration",
+            "arrow-function",
+            "function-expression",
+          ],
           unnamedComponents: "arrow-function",
         },
       ],
@@ -165,6 +171,17 @@ export default defineConfig({
       "jsdoc/require-param-type": "off",
       "jsdoc/require-returns": "off",
       "jsdoc/require-returns-type": "off",
+      // ultracite/oxlint/shadcn プリセット相当。@shadcn/lint でデザインシステムの
+      // クラス使用を検査する。allow: ["layout"] でページ側のレイアウト調整は許容する。
+      // デザイン規約系は既存コードへの段階適用のため warn から始める。
+      "shadcn/no-arbitrary-values": ["warn", { allow: ["layout"] }],
+      "shadcn/no-inline-styles": "warn",
+      "shadcn/no-raw-colors": "warn",
+      "shadcn/no-restyle": ["warn", { allow: ["layout"] }],
+      // Tailwind が生成しないクラスは実バグ（タイポ・死んだクラス）のため error を維持。
+      // adsbygoogle は Google AdSense が実行時に付与するクラス。
+      "shadcn/no-unknown-classes": ["error", { allow: ["adsbygoogle"] }],
+      "shadcn/require-static-classes": "warn",
     },
     overrides: [
       {
@@ -224,7 +241,10 @@ export default defineConfig({
       {
         // Vite+ は設定を CommonJS に変換して読み込むため、両形式に対応する。
         files: ["vite.config.ts"],
-        rules: { "unicorn/prefer-module": "off", "unicorn/prefer-import-meta-properties": "off" },
+        rules: {
+          "unicorn/prefer-module": "off",
+          "unicorn/prefer-import-meta-properties": "off",
+        },
       },
       {
         // ブラウザー SDK の拡張プロパティは Window の型宣言を使う。
@@ -262,12 +282,27 @@ export default defineConfig({
           ".storybook/**",
           "**/*.d.ts",
         ],
-        rules: { "import/no-default-export": "off", "react/only-export-components": "off" },
+        rules: {
+          "import/no-default-export": "off",
+          "react/only-export-components": "off",
+        },
+      },
+      {
+        // Satori による OGP 画像描画はインラインスタイルが必須。
+        files: ["**/*opengraph-image.tsx", "**/*twitter-image.tsx"],
+        rules: { "shadcn/no-inline-styles": "off" },
       },
       {
         files: ["**/*.test.ts", "**/*.test.tsx"],
         plugins: ["vitest"],
         rules: {
+          // テストのクラス名フィクスチャはデザインシステムの対象外。
+          "shadcn/no-arbitrary-values": "off",
+          "shadcn/no-inline-styles": "off",
+          "shadcn/no-raw-colors": "off",
+          "shadcn/no-restyle": "off",
+          "shadcn/no-unknown-classes": "off",
+          "shadcn/require-static-classes": "off",
           // 入力検証が javascript: URL を拒否することを確認するフィクスチャ。
           "no-script-url": "off",
           // 明示 import を使い、hooks で各テストの状態を初期化・破棄する。
@@ -281,7 +316,10 @@ export default defineConfig({
           "vitest/prefer-called-once": "off",
           "vitest/require-test-timeout": "off",
           "vitest/max-expects": "off",
-          "vitest/prefer-expect-assertions": ["error", { onlyFunctionsWithExpectInCallback: true }],
+          "vitest/prefer-expect-assertions": [
+            "error",
+            { onlyFunctionsWithExpectInCallback: true },
+          ],
           "vitest/valid-expect": ["error", { maxArgs: 2 }],
           // Promise を返す API のモックは非同期の契約を維持する。
           "typescript/require-await": "off",
@@ -291,17 +329,36 @@ export default defineConfig({
       },
       {
         files: ["**/*.d.ts"],
-        rules: { "import/unambiguous": "off", "unicorn/require-module-specifiers": "off" },
+        rules: {
+          "import/unambiguous": "off",
+          "unicorn/require-module-specifiers": "off",
+        },
       },
       {
         files: ["scripts/**"],
         rules: { "no-console": "off", "unicorn/no-process-exit": "off" },
       },
+      {
+        // デザインシステム本体は自身の見た目を定義するため、Ultracite の
+        // **/components/ui/** と同じ緩和を共有 UI ディレクトリに適用する。
+        files: ["src/foundation/shared/ui/**"],
+        rules: {
+          "shadcn/no-arbitrary-values": "off",
+          "shadcn/no-restyle": "off",
+          "shadcn/require-static-classes": "off",
+        },
+      },
     ],
   },
   fmt: {
+    ...ultraciteFmt,
+    // import 並べ替えと package.json ソートは既存の判断で無効のままにする。
     sortImports: false,
     sortPackageJson: false,
+    sortTailwindcss: {
+      functions: ["clsx", "cva", "tw", "twMerge", "cn", "twJoin", "tv"],
+      stylesheet: "./src/app/styles/globals.css",
+    },
   },
   plugins: [react()],
   resolve: {

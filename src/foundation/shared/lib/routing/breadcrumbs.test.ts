@@ -61,9 +61,13 @@ describe("buildBreadcrumbList", () => {
     const result = buildBreadcrumbList(items);
 
     assert(result.itemListElement[0]);
-    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags");
+    expect(result.itemListElement[0].item).toBe(
+      "https://suzumiyaaoba.com/tags"
+    );
     assert(result.itemListElement[1]);
-    expect(result.itemListElement[1].item).toBe("https://suzumiyaaoba.com/tags/programming");
+    expect(result.itemListElement[1].item).toBe(
+      "https://suzumiyaaoba.com/tags/programming"
+    );
   });
 
   it("空の配列で空のitemListElementを返す", () => {
@@ -79,13 +83,17 @@ describe("buildBreadcrumbList", () => {
   });
 
   it("日本語のパス名を正しく処理する", () => {
-    const items: BreadcrumbItem[] = [{ name: "タグ一覧", path: "/tags/日本語" }];
+    const items: BreadcrumbItem[] = [
+      { name: "タグ一覧", path: "/tags/日本語" },
+    ];
 
     const result = buildBreadcrumbList(items);
 
     assert(result.itemListElement[0]);
     expect(result.itemListElement[0].name).toBe("タグ一覧");
-    expect(result.itemListElement[0].item).toBe("https://suzumiyaaoba.com/tags/日本語");
+    expect(result.itemListElement[0].item).toBe(
+      "https://suzumiyaaoba.com/tags/日本語"
+    );
   });
 });
 
@@ -94,7 +102,7 @@ describe("buildDetailBreadcrumbItems", () => {
     const result = buildDetailBreadcrumbItems(
       "ja",
       { name: "Books", path: "/books" },
-      { name: "Java入門", path: "/books/java-abc" },
+      { name: "Java入門", path: "/books/java-abc" }
     );
 
     expect(result).toStrictEqual([
@@ -108,7 +116,7 @@ describe("buildDetailBreadcrumbItems", () => {
     const result = buildDetailBreadcrumbItems(
       "en",
       { name: "Books", path: "/books" },
-      { name: "Java Basics", path: "/en/books/java-abc" },
+      { name: "Java Basics", path: "/en/books/java-abc" }
     );
 
     expect(result).toStrictEqual([
@@ -122,9 +130,12 @@ describe("buildDetailBreadcrumbItems", () => {
     const result = buildDetailBreadcrumbItems(
       "ja",
       { name: "Tags", path: "/tags" },
-      { name: "programming", path: "/tags/programming/" },
+      { name: "programming", path: "/tags/programming/" }
     );
 
-    expect(result[2]).toStrictEqual({ name: "programming", path: "/tags/programming/" });
+    expect(result[2]).toStrictEqual({
+      name: "programming",
+      path: "/tags/programming/",
+    });
   });
 });

@@ -1,6 +1,10 @@
 import type { AwesomeItem } from "../model/awesome-item";
 import { SiteLayout } from "@/widgets/site-layout";
-import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+} from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
@@ -11,9 +15,15 @@ export type AwesomeSomethingPageContentProps = {
   items: AwesomeItem[];
 };
 
-export function AwesomeSomethingPageContent({ locale, items }: AwesomeSomethingPageContentProps) {
+export function AwesomeSomethingPageContent({
+  locale,
+  items,
+}: AwesomeSomethingPageContentProps) {
   const path = "/awesome-something";
-  const breadcrumbs = buildListBreadcrumbItems(locale, { name: "Awesome Something", path });
+  const breadcrumbs = buildListBreadcrumbItems(locale, {
+    name: "Awesome Something",
+    path,
+  });
 
   return (
     <SiteLayout locale={locale} path={toLocalePath(path, locale)}>

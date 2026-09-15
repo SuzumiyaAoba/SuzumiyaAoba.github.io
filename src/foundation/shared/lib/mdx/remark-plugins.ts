@@ -3,7 +3,10 @@ import type { TocHeading } from "./toc";
 import { walkMarkdown } from "./markdown-tree";
 import type { MarkdownNode } from "./markdown-tree";
 
-export function remarkCollectHeadings(headings: TocHeading[], idPrefix?: string) {
+export function remarkCollectHeadings(
+  headings: TocHeading[],
+  idPrefix?: string
+) {
   return () => (tree: MarkdownNode) => {
     headings.push(...collectTocHeadings(tree, idPrefix));
   };
@@ -23,7 +26,8 @@ export function remarkUnwrapImages() {
           node.children.length > 0 &&
           node.children.every(
             (child) =>
-              child.type === "image" || (child.type === "text" && /^\s*$/u.test(child.value ?? "")),
+              child.type === "image" ||
+              (child.type === "text" && /^\s*$/u.test(child.value ?? ""))
           )
         ) {
           return node.children.filter((child) => child.type === "image");
@@ -46,10 +50,12 @@ export function remarkMermaid() {
           ? {
               type: "mdxJsxFlowElement",
               name: "Mermaid",
-              attributes: [{ type: "mdxJsxAttribute", name: "code", value: child.value }],
+              attributes: [
+                { type: "mdxJsxAttribute", name: "code", value: child.value },
+              ],
               children: [],
             }
-          : child,
+          : child
       );
     });
   };

@@ -58,9 +58,12 @@ export function usePagefindSearch(query: string) {
 
     function handleError(event: Event) {
       window.clearTimeout(timeoutId);
-      const detail: unknown = event instanceof CustomEvent ? event.detail : undefined;
+      const detail: unknown =
+        event instanceof CustomEvent ? event.detail : undefined;
       const message =
-        isRecord(detail) && typeof detail["error"] === "string" ? detail["error"] : "";
+        isRecord(detail) && typeof detail["error"] === "string"
+          ? detail["error"]
+          : "";
       setPagefindLoaded(false);
       setLoadError({ key: "loadFailed", detail: message });
     }
@@ -105,14 +108,19 @@ export function usePagefindSearch(query: string) {
           return;
         }
 
-        const results = await Promise.all(response.results.map(async (result) => result.data()));
-        // oxlint-disable-next-line typescript/no-unnecessary-condition -- await 中に effect の cleanup が cancelled を変更できる。
+        const results = await Promise.all(
+          response.results.map(async (result) => await result.data())
+        );
         if (!cancelled) {
           setSearch({ results, isLoading: false, error: null });
         }
       } catch {
         if (!cancelled) {
-          setSearch({ results: [], isLoading: false, error: { key: "searchError" } });
+          setSearch({
+            results: [],
+            isLoading: false,
+            error: { key: "searchError" },
+          });
         }
       }
     }

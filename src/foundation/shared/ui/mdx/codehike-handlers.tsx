@@ -1,5 +1,9 @@
 import { annotationContent, annotationData } from "./annotation-data";
-import type { AnnotationHandler, BlockAnnotation, InlineAnnotation } from "codehike/code";
+import type {
+  AnnotationHandler,
+  BlockAnnotation,
+  InlineAnnotation,
+} from "codehike/code";
 import { InnerLine } from "codehike/code";
 import { ChevronDown } from "lucide-react";
 
@@ -10,7 +14,7 @@ export const lineNumbers: AnnotationHandler = {
     return (
       <div className="flex items-start">
         <span
-          className="mr-4 select-none text-right text-muted-foreground"
+          className="mr-4 text-right text-muted-foreground select-none"
           style={{ minWidth: `${width}ch` }}
         >
           {props.lineNumber}
@@ -29,9 +33,11 @@ export const mark: AnnotationHandler = {
       <div
         className="flex w-full"
         style={{
-          backgroundColor: annotation && `color-mix(in oklch, ${color} 12%, transparent)`,
+          backgroundColor:
+            annotation && `color-mix(in oklch, ${color} 12%, transparent)`,
           borderWidth: annotation && "0 0 0 2px",
-          borderColor: annotation && `color-mix(in oklch, ${color} 60%, transparent)`,
+          borderColor:
+            annotation && `color-mix(in oklch, ${color} 60%, transparent)`,
         }}
       >
         <InnerLine merge={props} className="flex-1 px-2" />
@@ -42,7 +48,7 @@ export const mark: AnnotationHandler = {
     const color = annotation.query || "oklch(0.7 0.15 250)";
     return (
       <span
-        className="rounded px-0.5 py-0 -mx-0.5"
+        className="-mx-0.5 rounded px-0.5 py-0"
         style={{
           outline: `solid 1px color-mix(in oklch, ${color} 55%, transparent)`,
           background: `color-mix(in oklch, ${color} 16%, transparent)`,
@@ -59,12 +65,16 @@ export const diff: AnnotationHandler = {
   onlyIfAnnotated: true,
   transform: (annotation: BlockAnnotation) => {
     const color =
-      annotation.query === "-" ? "var(--codehike-diff-remove)" : "var(--codehike-diff-add)";
+      annotation.query === "-"
+        ? "var(--codehike-diff-remove)"
+        : "var(--codehike-diff-add)";
     return [annotation, { ...annotation, name: "mark", query: color }];
   },
   Line: ({ annotation, ...props }) => (
     <>
-      <div className="min-w-[1ch] select-none pl-2 opacity-70">{annotation?.query}</div>
+      <div className="min-w-[1ch] pl-2 opacity-70 select-none">
+        {annotation?.query}
+      </div>
       <InnerLine merge={props} />
     </>
   ),
@@ -79,7 +89,10 @@ export const callout: AnnotationHandler = {
       query,
       fromLineNumber: lineNumber,
       toLineNumber: lineNumber,
-      data: { ...annotationData(annotation.data), column: (fromColumn + toColumn) / 2 },
+      data: {
+        ...annotationData(annotation.data),
+        column: (fromColumn + toColumn) / 2,
+      },
     };
   },
   Block: ({ annotation, children }) => {
@@ -95,7 +108,7 @@ export const callout: AnnotationHandler = {
             backgroundColor: "var(--codehike-callout-bg)",
             borderColor: "var(--codehike-callout-border)",
           }}
-          className="relative -ml-[1ch] mt-2 w-fit rounded border px-2 py-1 text-xs text-foreground"
+          className="relative mt-2 -ml-[1ch] w-fit rounded border px-2 py-1 text-xs text-foreground"
         >
           <div
             style={{
@@ -103,7 +116,7 @@ export const callout: AnnotationHandler = {
               backgroundColor: "var(--codehike-callout-bg)",
               borderColor: "var(--codehike-callout-border)",
             }}
-            className="absolute -top-[1px] h-2 w-2 -translate-y-1/2 rotate-45 border-l border-t"
+            className="absolute -top-[1px] h-2 w-2 -translate-y-1/2 rotate-45 border-t border-l"
           />
           {annotation.query}
         </div>
@@ -137,7 +150,7 @@ export const collapse: AnnotationHandler = {
   },
   Block: ({ annotation, children }) => (
     <details
-      className="group not-prose my-0 rounded-none border-0 bg-transparent px-0 py-0"
+      className="group my-0 rounded-none border-0 bg-transparent px-0 py-0"
       open={annotation.query !== "collapsed"}
     >
       {children}
@@ -153,7 +166,7 @@ export const collapseTrigger: AnnotationHandler = {
     return (
       <summary className="flex w-full cursor-pointer list-none items-start font-normal [&::-webkit-details-marker]:hidden">
         <span
-          className="mr-4 select-none text-right text-muted-foreground"
+          className="mr-4 text-right text-muted-foreground select-none"
           style={{ minWidth: `${width}ch` }}
         >
           {lineNumber}
@@ -176,12 +189,16 @@ export const tooltip: AnnotationHandler = {
   name: "tooltip",
   Inline: ({ children, annotation }) => {
     const { query } = annotation;
-    const content = annotationContent(annotationData(annotation.data)["children"]);
+    const content = annotationContent(
+      annotationData(annotation.data)["children"]
+    );
     return (
-      <span className="relative inline-flex group">
-        <span className="underline decoration-dotted underline-offset-4">{children}</span>
+      <span className="group relative inline-flex">
+        <span className="underline decoration-dotted underline-offset-4">
+          {children}
+        </span>
         <span
-          className="pointer-events-none absolute left-0 top-full z-10 mt-2 w-max max-w-[260px] rounded border px-2 py-1 text-xs opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
+          className="pointer-events-none absolute top-full left-0 z-10 mt-2 w-max max-w-[260px] rounded border px-2 py-1 text-xs opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
           style={{
             backgroundColor: "var(--codehike-tooltip-bg)",
             borderColor: "var(--codehike-tooltip-border)",
@@ -197,8 +214,12 @@ export const tooltip: AnnotationHandler = {
 
 export const classNameHandler: AnnotationHandler = {
   name: "className",
-  Block: ({ annotation, children }) => <div className={annotation.query}>{children}</div>,
-  Inline: ({ annotation, children }) => <span className={annotation.query}>{children}</span>,
+  Block: ({ annotation, children }) => (
+    <div className={annotation.query}>{children}</div>
+  ),
+  Inline: ({ annotation, children }) => (
+    <span className={annotation.query}>{children}</span>
+  ),
 };
 
 export const footnotes: AnnotationHandler = {
@@ -216,7 +237,7 @@ export function FootnoteNumber({ n }: { n: number }) {
     <span
       data-value={n}
       style={{ borderColor: "var(--codehike-footnote-border)" }}
-      className="inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-mono leading-none text-muted-foreground"
+      className="inline-flex h-4 w-4 items-center justify-center rounded-full border font-mono text-[10px] leading-none text-muted-foreground"
     />
   );
 }

@@ -2,7 +2,11 @@ import { useContext } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
 import type { Cell } from "./StandardCode.utils";
-import { ASCII_TABLE_ATTR, ASCII_TABLE, THEME_COLORS } from "./StandardCode.utils";
+import {
+  ASCII_TABLE_ATTR,
+  ASCII_TABLE,
+  THEME_COLORS,
+} from "./StandardCode.utils";
 import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
 import { useResolvedTheme } from "./use-resolved-theme";
 
@@ -13,7 +17,8 @@ export const AsciiTable = ({
   onClick: (cell: Cell) => void;
   onMouseOver: (cell: Cell) => void;
 }) => {
-  const { colNum, rowNum, x, y, cellWidth, cellHeight, offsetX } = ASCII_TABLE_ATTR;
+  const { colNum, rowNum, x, y, cellWidth, cellHeight, offsetX } =
+    ASCII_TABLE_ATTR;
   const hoveredCell = useContext(HoveredCellContext);
   const clickedCell = useContext(ClickedCellContext);
   const theme = useResolvedTheme();
@@ -59,6 +64,6 @@ export const AsciiTable = ({
           {cellValue}
         </RectText>
       );
-    }),
+    })
   );
 };

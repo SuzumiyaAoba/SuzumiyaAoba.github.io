@@ -5,93 +5,92 @@ category: プログラミング
 tags: ["Java", "プログラミング", "入門"]
 ---
 
-プログラミングをまったく知らない状態から始め、Java を使って実務で通用するエンジニアを目指す入門書です。
-Java 25 を対象とし、言語の基礎から最新機能、設計・テスト・API 設計まで幅広く解説します。
+プログラミングをまったく知らない状態から始め、Java を使って実務で通用するエンジニアを目指す入門書です。Java 25 を対象とし、言語の基礎から最新機能、設計・テスト・API 設計まで幅広く解説します。
 
 ---
 
 ## 第1部: プログラミングと Java の基礎
 
-| 章 | タイトル |
-|---|---|
-| 第1章 | [プログラミングとは・Java とは](#chapter1) |
-| 第2章 | [環境構築](#chapter2) |
-| 第3章 | [はじめてのプログラム](#chapter3) |
-| 第4章 | [変数とデータ型](#chapter4) |
-| 第5章 | [演算子と式](#chapter5) |
-| 第6章 | [制御構文（if / switch 式）](#chapter6) |
-| 第7章 | [繰り返し（for / while / do-while）](#chapter7) |
-| 第8章 | [配列](#chapter8) |
-| 第9章 | [メソッド](#chapter9) |
-| 第10章 | [文字列の操作](#chapter10) |
+| 章     | タイトル                                        |
+| ------ | ----------------------------------------------- |
+| 第1章  | [プログラミングとは・Java とは](#chapter1)      |
+| 第2章  | [環境構築](#chapter2)                           |
+| 第3章  | [はじめてのプログラム](#chapter3)               |
+| 第4章  | [変数とデータ型](#chapter4)                     |
+| 第5章  | [演算子と式](#chapter5)                         |
+| 第6章  | [制御構文（if / switch 式）](#chapter6)         |
+| 第7章  | [繰り返し（for / while / do-while）](#chapter7) |
+| 第8章  | [配列](#chapter8)                               |
+| 第9章  | [メソッド](#chapter9)                           |
+| 第10章 | [文字列の操作](#chapter10)                      |
 
 ---
 
 ## 第2部: オブジェクト指向と Java の型システム
 
-| 章 | タイトル |
-|---|---|
-| 第11章 | [クラスとオブジェクト](#chapter11) |
-| 第12章 | [カプセル化とアクセス修飾子](#chapter12) |
-| 第13章 | [コンストラクタと初期化](#chapter13) |
-| 第14章 | [継承](#chapter14) |
-| 第15章 | [ポリモーフィズム](#chapter15) |
+| 章     | タイトル                                   |
+| ------ | ------------------------------------------ |
+| 第11章 | [クラスとオブジェクト](#chapter11)         |
+| 第12章 | [カプセル化とアクセス修飾子](#chapter12)   |
+| 第13章 | [コンストラクタと初期化](#chapter13)       |
+| 第14章 | [継承](#chapter14)                         |
+| 第15章 | [ポリモーフィズム](#chapter15)             |
 | 第16章 | [抽象クラスとインターフェース](#chapter16) |
-| 第17章 | [レコード](#chapter17) |
-| 第18章 | [列挙型](#chapter18) |
-| 第19章 | [ジェネリクス](#chapter19) |
-| 第20章 | [例外処理](#chapter20) |
+| 第17章 | [レコード](#chapter17)                     |
+| 第18章 | [列挙型](#chapter18)                       |
+| 第19章 | [ジェネリクス](#chapter19)                 |
+| 第20章 | [例外処理](#chapter20)                     |
 
 ---
 
 ## 第3部: モダン Java と標準ライブラリ
 
-| 章 | タイトル |
-|---|---|
-| 第21章 | [コレクション（List / Map / Set）](#chapter21) |
-| 第22章 | [ラムダ式と関数型インターフェース](#chapter22) |
-| 第23章 | [ストリーム API](#chapter23) |
-| 第24章 | [Optional](#chapter24) |
-| 第25章 | [日付・時刻 API](#chapter25) |
-| 第26章 | [パターンマッチング](#chapter26) |
-| 第27章 | [シールドクラス](#chapter27) |
+| 章     | タイトル                                           |
+| ------ | -------------------------------------------------- |
+| 第21章 | [コレクション（List / Map / Set）](#chapter21)     |
+| 第22章 | [ラムダ式と関数型インターフェース](#chapter22)     |
+| 第23章 | [ストリーム API](#chapter23)                       |
+| 第24章 | [Optional](#chapter24)                             |
+| 第25章 | [日付・時刻 API](#chapter25)                       |
+| 第26章 | [パターンマッチング](#chapter26)                   |
+| 第27章 | [シールドクラス](#chapter27)                       |
 | 第28章 | [テキストブロック・文字列フォーマット](#chapter28) |
-| 第29章 | [並行処理入門（Virtual Threads）](#chapter29) |
-| 第30章 | [ファイル入出力](#chapter30) |
+| 第29章 | [並行処理入門（Virtual Threads）](#chapter29)      |
+| 第30章 | [ファイル入出力](#chapter30)                       |
 
 ---
 
 ## 第4部: 実務で必要な知識
 
-| 章 | タイトル |
-|---|---|
-| 第31章 | [ビルドツール（Maven / Gradle）](#chapter31) |
-| 第32章 | [ユニットテスト（JUnit 5）](#chapter32) |
-| 第33章 | [モックとテスト設計（Mockito）](#chapter33) |
-| 第34章 | [デザインパターン入門](#chapter34) |
-| 第35章 | [SOLID 原則](#chapter35) |
-| 第36章 | [依存性の注入（DI）と Spring](#chapter36) |
-| 第37章 | [ORM とデータベースアクセス](#chapter37) |
+| 章     | タイトル                                         |
+| ------ | ------------------------------------------------ |
+| 第31章 | [ビルドツール（Maven / Gradle）](#chapter31)     |
+| 第32章 | [ユニットテスト（JUnit 5）](#chapter32)          |
+| 第33章 | [モックとテスト設計（Mockito）](#chapter33)      |
+| 第34章 | [デザインパターン入門](#chapter34)               |
+| 第35章 | [SOLID 原則](#chapter35)                         |
+| 第36章 | [依存性の注入（DI）と Spring](#chapter36)        |
+| 第37章 | [ORM とデータベースアクセス](#chapter37)         |
 | 第38章 | [REST API 設計と実装（Spring Boot）](#chapter38) |
-| 第39章 | [エラーハンドリングと例外設計](#chapter39) |
-| 第40章 | [ロギング](#chapter40) |
+| 第39章 | [エラーハンドリングと例外設計](#chapter39)       |
+| 第40章 | [ロギング](#chapter40)                           |
 
 ---
 
 ## 第5部: Java をさらに深く ― JVM と言語の内側
 
-| 章 | タイトル |
-|---|---|
-| 第41章 | [JVM の仕組み](#chapter41) |
-| 第42章 | [ガベージコレクション](#chapter42) |
-| 第43章 | [メモリモデルとスレッド安全性](#chapter43) |
+| 章     | タイトル                                            |
+| ------ | --------------------------------------------------- |
+| 第41章 | [JVM の仕組み](#chapter41)                          |
+| 第42章 | [ガベージコレクション](#chapter42)                  |
+| 第43章 | [メモリモデルとスレッド安全性](#chapter43)          |
 | 第44章 | [並行処理の応用（StructuredTaskScope）](#chapter44) |
-| 第45章 | [モジュールシステム（JPMS）](#chapter45) |
-| 第46章 | [リフレクションと MethodHandle](#chapter46) |
-| 第47章 | [アノテーション処理](#chapter47) |
-| 第48章 | [JFR とプロファイリング](#chapter48) |
-| 第49章 | [GraalVM ネイティブイメージ](#chapter49) |
-| 第50章 | [パフォーマンスチューニング実践](#chapter50) |
+| 第45章 | [モジュールシステム（JPMS）](#chapter45)            |
+| 第46章 | [リフレクションと MethodHandle](#chapter46)         |
+| 第47章 | [アノテーション処理](#chapter47)                    |
+| 第48章 | [JFR とプロファイリング](#chapter48)                |
+| 第49章 | [GraalVM ネイティブイメージ](#chapter49)            |
+| 第50章 | [パフォーマンスチューニング実践](#chapter50)        |
 
 ---
 
@@ -101,41 +100,41 @@ GoF（Gang of Four）の23パターンを1章ずつ解説します。生成・�
 
 ### 生成パターン（Creational Patterns）
 
-| 章 | タイトル |
-|---|---|
-| 第51章 | [Singleton パターン](#chapter51) |
-| 第52章 | [Factory Method パターン](#chapter52) |
+| 章     | タイトル                                |
+| ------ | --------------------------------------- |
+| 第51章 | [Singleton パターン](#chapter51)        |
+| 第52章 | [Factory Method パターン](#chapter52)   |
 | 第53章 | [Abstract Factory パターン](#chapter53) |
-| 第54章 | [Builder パターン](#chapter54) |
-| 第55章 | [Prototype パターン](#chapter55) |
+| 第54章 | [Builder パターン](#chapter54)          |
+| 第55章 | [Prototype パターン](#chapter55)        |
 
 ### 構造パターン（Structural Patterns）
 
-| 章 | タイトル |
-|---|---|
-| 第56章 | [Adapter パターン](#chapter56) |
-| 第57章 | [Facade パターン](#chapter57) |
+| 章     | タイトル                         |
+| ------ | -------------------------------- |
+| 第56章 | [Adapter パターン](#chapter56)   |
+| 第57章 | [Facade パターン](#chapter57)    |
 | 第58章 | [Decorator パターン](#chapter58) |
-| 第59章 | [Proxy パターン](#chapter59) |
+| 第59章 | [Proxy パターン](#chapter59)     |
 | 第60章 | [Composite パターン](#chapter60) |
-| 第61章 | [Bridge パターン](#chapter61) |
+| 第61章 | [Bridge パターン](#chapter61)    |
 | 第62章 | [Flyweight パターン](#chapter62) |
 
 ### 振る舞いパターン（Behavioral Patterns）
 
-| 章 | タイトル |
-|---|---|
-| 第63章 | [Iterator パターン](#chapter63) |
-| 第64章 | [Strategy パターン](#chapter64) |
-| 第65章 | [Template Method パターン](#chapter65) |
-| 第66章 | [Observer パターン](#chapter66) |
-| 第67章 | [Command パターン](#chapter67) |
-| 第68章 | [State パターン](#chapter68) |
+| 章     | タイトル                                       |
+| ------ | ---------------------------------------------- |
+| 第63章 | [Iterator パターン](#chapter63)                |
+| 第64章 | [Strategy パターン](#chapter64)                |
+| 第65章 | [Template Method パターン](#chapter65)         |
+| 第66章 | [Observer パターン](#chapter66)                |
+| 第67章 | [Command パターン](#chapter67)                 |
+| 第68章 | [State パターン](#chapter68)                   |
 | 第69章 | [Chain of Responsibility パターン](#chapter69) |
-| 第70章 | [Mediator パターン](#chapter70) |
-| 第71章 | [Memento パターン](#chapter71) |
-| 第72章 | [Visitor パターン](#chapter72) |
-| 第73章 | [Interpreter パターン](#chapter73) |
+| 第70章 | [Mediator パターン](#chapter70)                |
+| 第71章 | [Memento パターン](#chapter71)                 |
+| 第72章 | [Visitor パターン](#chapter72)                 |
+| 第73章 | [Interpreter パターン](#chapter73)             |
 
 ---
 

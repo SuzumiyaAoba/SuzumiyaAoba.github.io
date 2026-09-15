@@ -4,7 +4,11 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+} from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 
 export type TagEntry = {
@@ -17,9 +21,15 @@ export type TagsListPageContentProps = {
   tags: TagEntry[];
 };
 
-export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) {
+export function TagsListPageContent({
+  locale,
+  tags,
+}: TagsListPageContentProps) {
   const pagePath = toLocalePath("/tags", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Tags", path: "/tags" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "Tags",
+    path: "/tags",
+  });
 
   return (
     <SiteLayout locale={locale} path={pagePath}>
@@ -38,7 +48,11 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
         {tags.length === 0 ? (
           <Card className="border-transparent bg-card/40 shadow-none">
             <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText locale={locale} ja="タグがまだありません。" en="No tags yet." />
+              <I18nText
+                locale={locale}
+                ja="タグがまだありません。"
+                en="No tags yet."
+              />
             </div>
           </Card>
         ) : (
@@ -46,14 +60,17 @@ export function TagsListPageContent({ locale, tags }: TagsListPageContentProps) 
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
                 <a
-                  href={toLocalePath(`/tags/${encodeURIComponent(tag.name)}`, locale)}
+                  href={toLocalePath(
+                    `/tags/${encodeURIComponent(tag.name)}`,
+                    locale
+                  )}
                   className="index-link flex min-h-14 items-center justify-between gap-3 px-1 py-3"
                 >
                   <Tag
                     tag={tag.name}
-                    className="min-w-0 whitespace-normal border-0 bg-transparent p-0 text-sm font-medium text-inherit"
+                    className="min-w-0 border-0 bg-transparent p-0 text-sm font-medium whitespace-normal text-inherit"
                   />
-                  <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+                  <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
                     {tag.count}
                   </span>
                 </a>

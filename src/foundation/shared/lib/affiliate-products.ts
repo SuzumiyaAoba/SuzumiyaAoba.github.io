@@ -99,8 +99,10 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
   }
 
   // 定義の破損や ID の重複は、リンク切れを公開する前にエラーにする。
-  const raw = await fs.readFile(filePath, "utf8");
-  const { products, links } = AffiliateProductSourceSchema.parse(JSON.parse(raw));
+  const raw = await fs.readFile(filePath, "utf-8");
+  const { products, links } = AffiliateProductSourceSchema.parse(
+    JSON.parse(raw)
+  );
   const byId = new Map<string, AffiliateProduct>();
   const byTag = new Map<string, AffiliateProduct[]>();
   const urlById = new Map<string, string>();
@@ -136,7 +138,9 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
  * 商品カードと本文用リンクの ID → productUrl のマップを返す
  * @returns ID をキー、productUrl を値とした Map
  */
-export async function getAffiliateProductUrlById(): Promise<Map<string, string>> {
+export async function getAffiliateProductUrlById(): Promise<
+  Map<string, string>
+> {
   const index = await loadAffiliateProducts();
   return new Map(index.urlById);
 }
@@ -146,7 +150,9 @@ export async function getAffiliateProductUrlById(): Promise<Map<string, string>>
  * @param ids 商品 ID の配列
  * @returns 商品データの配列。存在しない ID は除外される
  */
-export async function getAffiliateProductsByIds(ids: string[]): Promise<AffiliateProduct[]> {
+export async function getAffiliateProductsByIds(
+  ids: string[]
+): Promise<AffiliateProduct[]> {
   const index = await loadAffiliateProducts();
   return ids
     .map((id) => index.byId.get(id))
@@ -172,7 +178,7 @@ type AffiliateProductTagOptions = {
  */
 export async function getAffiliateProductsByTags(
   tags: string[],
-  options?: AffiliateProductTagOptions,
+  options?: AffiliateProductTagOptions
 ): Promise<AffiliateProduct[]> {
   if (tags.length === 0) {
     return [];

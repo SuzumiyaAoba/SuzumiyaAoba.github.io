@@ -5,8 +5,10 @@ import TagPage from "@/pages/tags/tag";
 
 export { buildTagPageStaticParams as generateStaticParams } from "@/app/_shared/tag-page-metadata";
 
-export async function generateMetadata(props: TagPageMetadataProps): Promise<Metadata> {
-  return buildTagPageMetadata(props, "ja");
+export async function generateMetadata(
+  props: TagPageMetadataProps
+): Promise<Metadata> {
+  return await buildTagPageMetadata(props, "ja");
 }
 
 type PageComponentProps = {

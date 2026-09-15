@@ -33,8 +33,7 @@ Claude Code の公式ドキュメントは `CLAUDE.md` 内で `@AGENTS.md` を�
 
 ## AGENTS.md
 
-OpenAI が 2025/08/20 に [AGENTS.md](https://agents.md/) を公開した。
-このサイトでは、コーディングエージェント向けの標準フォーマットの普及を目的としている。
+OpenAI が 2025/08/20 に [AGENTS.md](https://agents.md/) を公開した。このサイトでは、コーディングエージェント向けの標準フォーマットの普及を目的としている。
 
 フォーマットといっても決まっていることとしては、
 
@@ -68,15 +67,11 @@ OpenAI が 2025/08/20 に [AGENTS.md](https://agents.md/) を公開した。
 
 ## Anthropic の不在
 
-現時点における AGENTS.md エコシステムの問題点は、最もユーザが多いと思われる CLI ツールである [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview) を開発している Anthropic の不在だろう。
-Claude Code では `CLAUDE.md` に `AGENTS.md` 相当のドキュメントを記述する。
-Gemini CLI も同様に `GEMINI.md` だけを見ていたが、AGENTS.md に対応した。
-しかし、Claude Code は現時点では `AGENTS.md` に対応するような動きは見られない。
+現時点における AGENTS.md エコシステムの問題点は、最もユーザが多いと思われる CLI ツールである [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview) を開発している Anthropic の不在だろう。Claude Code では `CLAUDE.md` に `AGENTS.md` 相当のドキュメントを記述する。Gemini CLI も同様に `GEMINI.md` だけを見ていたが、AGENTS.md に対応した。しかし、Claude Code は現時点では `AGENTS.md` に対応するような動きは見られない。
 
 ## Claude Code の AGENTS.md 対応
 
-[Feature Request: Support AGENTS.md. · Issue #6235 · anthropics/claude-code](https://github.com/anthropics/claude-code/issues/6235) で議論されているが、
-対応に向けた動きは見られない。
+[Feature Request: Support AGENTS.md. · Issue #6235 · anthropics/claude-code](https://github.com/anthropics/claude-code/issues/6235) で議論されているが、対応に向けた動きは見られない。
 
 ## ワークアラウンド
 
@@ -90,8 +85,7 @@ Issue のコメントを見てもらえればそれぞれ難しいことをし�
 
 ### `AGENTS.md` を読むように指示する
 
-Claude Code は `@` の後にファイルパスを書くとそのファイルを参照してくれる機能がある。
-これを利用して `CLAUDE.md` に以下のように記述しておくことで `AGENTS.md` を参照させる。
+Claude Code は `@` の後にファイルパスを書くとそのファイルを参照してくれる機能がある。これを利用して `CLAUDE.md` に以下のように記述しておくことで `AGENTS.md` を参照させる。
 
 ```markdown CLAUDE.md
 @AGENTS.md
@@ -111,8 +105,7 @@ mv CLAUDE.md AGENTS.md && ln -s AGENTS.md CLAUDE.md
 
 ### フック
 
-Claude Code には[フック](https://docs.claude.com/ja/docs/claude-code/hooks)と呼ばれる機能がある。
-これは、Claude Code の起動時やツールの利用やファイルの編集の前後といったタイミングで任意の処理を実行するための機能となっている。
+Claude Code には[フック](https://docs.claude.com/ja/docs/claude-code/hooks)と呼ばれる機能がある。これは、Claude Code の起動時やツールの利用やファイルの編集の前後といったタイミングで任意の処理を実行するための機能となっている。
 
 フックの活用例としては、
 
@@ -179,17 +172,13 @@ done
 
 ## おわりに
 
-この記事では 2025/09/17 現在において Claude Code で AGENTS.md を利用する方法を 3 つ紹介した。
-フックを利用する方法はやりたいことに対してやらないといけないことが見合っていないように思えた。
-Claude Code は `CLAUDE.md` を読み込むときに特別扱いしている場合（Claude Code のコードを読めばわかりそうだが…）、
-フックを使う方法は恩恵が受けられない可能性が高い。
+この記事では 2025/09/17 現在において Claude Code で AGENTS.md を利用する方法を 3 つ紹介した。フックを利用する方法はやりたいことに対してやらないといけないことが見合っていないように思えた。Claude Code は `CLAUDE.md` を読み込むときに特別扱いしている場合（Claude Code のコードを読めばわかりそうだが…）、フックを使う方法は恩恵が受けられない可能性が高い。
 
 そのため、`CLAUDE.md` で `AGENTS.md` を読み込むように指示するか、リンクを作成するのが今のところは良さそうだ。
 
 ### 追記
 
-`CLAUDE.md` に `@AGENTS.md` を書く対応は `/init` を実行したとき `CLAUDE.md` に指示内容を書いてしまうため、その度に `AGENTS.md` に変更を反映して `CLAUDE.md` を戻す作業が発生した。
-`/init` を実行する頻度は高くないが、それでも手間ではあるのでシンボリックリンクを作る対応が無難に感じた。
+`CLAUDE.md` に `@AGENTS.md` を書く対応は `/init` を実行したとき `CLAUDE.md` に指示内容を書いてしまうため、その度に `AGENTS.md` に変更を反映して `CLAUDE.md` を戻す作業が発生した。 `/init` を実行する頻度は高くないが、それでも手間ではあるのでシンボリックリンクを作る対応が無難に感じた。
 
 ## 参考文献
 

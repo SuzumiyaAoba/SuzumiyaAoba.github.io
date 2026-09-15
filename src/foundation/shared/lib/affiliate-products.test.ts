@@ -1,5 +1,13 @@
 import type { readFile } from "node:fs/promises";
-import { assert, afterEach, beforeEach, describe, it, expect, vi } from "vite-plus/test";
+import {
+  assert,
+  afterEach,
+  beforeEach,
+  describe,
+  it,
+  expect,
+  vi,
+} from "vite-plus/test";
 
 import { AffiliateProductSchema } from "./affiliate-products";
 
@@ -37,30 +45,37 @@ describe("アフィリエイトリンクの読み込み", () => {
     files.stat.mockReset().mockResolvedValue({ mtimeMs: 1 });
     files.readFile
       .mockReset()
-      .mockResolvedValue(JSON.stringify({ products: [product], links: [link] }));
+      .mockResolvedValue(
+        JSON.stringify({ products: [product], links: [link] })
+      );
   });
 
   it("商品と画像のないリンクを本文で参照でき、商品カードには商品のみ返す", async () => {
-    const { getAffiliateProductUrlById, getAffiliateProductsByIds, getAffiliateProductsByTags } =
-      await import("./affiliate-products");
+    const {
+      getAffiliateProductUrlById,
+      getAffiliateProductsByIds,
+      getAffiliateProductsByTags,
+    } = await import("./affiliate-products");
 
     await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
       new Map([
         [product.id, product.productUrl],
         [link.id, link.productUrl],
-      ]),
+      ])
     );
-    await expect(getAffiliateProductsByIds([product.id, link.id])).resolves.toStrictEqual([
+    await expect(
+      getAffiliateProductsByIds([product.id, link.id])
+    ).resolves.toStrictEqual([product]);
+    await expect(getAffiliateProductsByTags(["book"])).resolves.toStrictEqual([
       product,
     ]);
-    await expect(getAffiliateProductsByTags(["book"])).resolves.toStrictEqual([product]);
   });
 
   it("本文用リンクだけの定義も読み込める", async () => {
     files.readFile.mockResolvedValue(JSON.stringify({ links: [link] }));
     const { getAffiliateProductUrlById } = await import("./affiliate-products");
     await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
-      new Map([[link.id, link.productUrl]]),
+      new Map([[link.id, link.productUrl]])
     );
   });
 
@@ -71,12 +86,14 @@ describe("アフィリエイトリンクの読み込み", () => {
   ])("重複する ID を拒否する: %j", async (source) => {
     files.readFile.mockResolvedValue(JSON.stringify(source));
     const { getAffiliateProductUrlById } = await import("./affiliate-products");
-    await expect(getAffiliateProductUrlById()).rejects.toThrow("ID が重複しています");
+    await expect(getAffiliateProductUrlById()).rejects.toThrow(
+      "ID が重複しています"
+    );
   });
 
   it("不正な URL を含む定義を黙って空のデータにしない", async () => {
     files.readFile.mockResolvedValue(
-      JSON.stringify({ links: [{ ...link, productUrl: "invalid-url" }] }),
+      JSON.stringify({ links: [{ ...link, productUrl: "invalid-url" }] })
     );
     const { getAffiliateProductUrlById } = await import("./affiliate-products");
     await expect(getAffiliateProductUrlById()).rejects.toThrow("Invalid URL");
@@ -87,22 +104,27 @@ describe("アフィリエイトリンクの読み込み", () => {
       await import("./affiliate-products");
     await getAffiliateProductUrlById();
 
-    const updatedProduct = { ...product, productUrl: "https://example.com/new-card" };
+    const updatedProduct = {
+      ...product,
+      productUrl: "https://example.com/new-card",
+    };
     files.stat.mockResolvedValue({ mtimeMs: 2 });
     files.readFile.mockResolvedValue(
       JSON.stringify({
         products: [updatedProduct],
         links: [{ ...link, productUrl: "https://example.com/new-text" }],
-      }),
+      })
     );
 
     await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
       new Map([
         [product.id, updatedProduct.productUrl],
         [link.id, "https://example.com/new-text"],
-      ]),
+      ])
     );
-    await expect(getAffiliateProductsByIds([product.id])).resolves.toStrictEqual([updatedProduct]);
+    await expect(
+      getAffiliateProductsByIds([product.id])
+    ).resolves.toStrictEqual([updatedProduct]);
   });
 });
 
@@ -142,7 +164,9 @@ describe("AffiliateProductSchema", () => {
       expect(result.success).toBe(true);
       assert(result.success);
 
-      expect(result.data.yahooShoppingUrl).toBe("https://shopping.yahoo.co.jp/product");
+      expect(result.data.yahooShoppingUrl).toBe(
+        "https://shopping.yahoo.co.jp/product"
+      );
       expect(result.data.tags).toStrictEqual(["programming", "book"]);
     });
   });

@@ -55,7 +55,7 @@ type SeriesDefinitionRaw = z.infer<typeof SeriesDefinitionRawSchema>;
  */
 function resolveSeriesDefinition(
   definition: SeriesDefinitionRaw,
-  locale: Locale,
+  locale: Locale
 ): SeriesDefinition {
   if (locale === "en") {
     const description = definition.descriptionEn ?? definition.description;
@@ -72,9 +72,13 @@ function resolveSeriesDefinition(
   return {
     name: definition.name,
     slug: definition.slug,
-    ...(definition.thumbnail === undefined ? {} : { thumbnail: definition.thumbnail }),
+    ...(definition.thumbnail === undefined
+      ? {}
+      : { thumbnail: definition.thumbnail }),
     posts: definition.posts,
-    ...(definition.description === undefined ? {} : { description: definition.description }),
+    ...(definition.description === undefined
+      ? {}
+      : { description: definition.description }),
   };
 }
 
@@ -91,13 +95,15 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
 
   try {
     const entries = await fs.readdir(seriesRoot, { withFileTypes: true });
-    const files = entries.filter((entry) => entry.isFile() && entry.name.endsWith(".json"));
+    const files = entries.filter(
+      (entry) => entry.isFile() && entry.name.endsWith(".json")
+    );
 
     const results = await Promise.all(
       files.map(async (entry) => {
         const filePath = path.join(seriesRoot, entry.name);
         try {
-          const raw = await fs.readFile(filePath, "utf8");
+          const raw = await fs.readFile(filePath, "utf-8");
           const data: unknown = JSON.parse(raw);
           const parsed = SeriesDefinitionRawSchema.safeParse(data);
 
@@ -109,7 +115,7 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
         } catch {
           return null;
         }
-      }),
+      })
     );
 
     return results.filter((item): item is SeriesDefinitionRaw => item !== null);
@@ -123,10 +129,16 @@ async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
  * @param locale ロケール。デフォルトは 'ja'
  * @returns シリーズ定義の配列
  */
-export async function getSeriesList(locale: Locale = "ja"): Promise<SeriesDefinition[]> {
+export async function getSeriesList(
+  locale: Locale = "ja"
+): Promise<SeriesDefinition[]> {
   const list = await readSeriesDefinitions();
-  const resolved = list.map((definition) => resolveSeriesDefinition(definition, locale));
-  return resolved.toSorted((a, b) => a.name.localeCompare(b.name, toIntlLocaleTag(locale)));
+  const resolved = list.map((definition) =>
+    resolveSeriesDefinition(definition, locale)
+  );
+  return resolved.toSorted((a, b) =>
+    a.name.localeCompare(b.name, toIntlLocaleTag(locale))
+  );
 }
 
 /**
@@ -137,7 +149,7 @@ export async function getSeriesList(locale: Locale = "ja"): Promise<SeriesDefini
  */
 export async function getSeriesBySlug(
   slug: string,
-  locale: Locale = "ja",
+  locale: Locale = "ja"
 ): Promise<SeriesDefinition | null> {
   const list = await readSeriesDefinitions();
   const matched = list.find((item) => item.slug === slug);
@@ -162,7 +174,7 @@ export async function getSeriesSlugs(): Promise<string[]> {
  */
 export async function getSeriesForPostSlug(
   postSlug: string,
-  locale: Locale = "ja",
+  locale: Locale = "ja"
 ): Promise<SeriesDefinition | null> {
   const list = await readSeriesDefinitions();
   const matched = list.find((item) => item.posts.includes(postSlug));

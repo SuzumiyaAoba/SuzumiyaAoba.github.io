@@ -54,14 +54,18 @@ export const StackedBarChart: React.FC<Props> = ({
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      const activeMetrics = group.metrics.filter((m) => selectedMetrics.includes(m));
+      const activeMetrics = group.metrics.filter((m) =>
+        selectedMetrics.includes(m)
+      );
 
       if (activeMetrics.length === 0) {
         return;
       }
 
       const parseData = data.series.map((d) => {
-        const yearData: Record<string, number> = { year: Number.parseInt(d.year, 10) };
+        const yearData: Record<string, number> = {
+          year: Number.parseInt(d.year, 10),
+        };
         for (const metric of activeMetrics) {
           yearData[metric] = d.values[metric] ?? 0;
         }
@@ -74,7 +78,10 @@ export const StackedBarChart: React.FC<Props> = ({
 
       const years = parseData.map((d) => d["year"]);
 
-      const x = scaleBand().domain(years.map(String)).range([0, width]).padding(0.3);
+      const x = scaleBand()
+        .domain(years.map(String))
+        .range([0, width])
+        .padding(0.3);
 
       const y = scaleLinear().domain([yAxisMin, yAxisMax]).range([height, 0]);
 
@@ -114,7 +121,15 @@ export const StackedBarChart: React.FC<Props> = ({
           .attr("stroke-width", 1);
       }
     },
-    [availableMetrics, colors, data.series, selectedMetrics, yAxisLabel, yAxisMax, yAxisMin],
+    [
+      availableMetrics,
+      colors,
+      data.series,
+      selectedMetrics,
+      yAxisLabel,
+      yAxisMax,
+      yAxisMin,
+    ]
   );
 
   useEffect(() => {
@@ -128,7 +143,7 @@ export const StackedBarChart: React.FC<Props> = ({
 
   return (
     <div className="my-8 space-y-8">
-      <div className="text-center font-bold text-base mb-4">
+      <div className="mb-4 text-center text-base font-bold">
         {data.metadata.title.replace(/^[0-9]+[\s.、]*/u, "")}
       </div>
 
@@ -137,7 +152,7 @@ export const StackedBarChart: React.FC<Props> = ({
           {group.name && (
             <button
               type="button"
-              className="text-center font-semibold text-sm mb-2 cursor-pointer hover:text-blue-600 bg-transparent border-none p-0 w-full"
+              className="mb-2 w-full cursor-pointer border-none bg-transparent p-0 text-center text-sm font-semibold hover:text-blue-600"
               onClick={() => toggleGroup(group.metrics)}
             >
               {group.name}

@@ -70,7 +70,9 @@ export function CodeWithTooltips({
       {displayMeta ? (
         <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
           <span className="truncate">{displayMeta}</span>
-          <span className="text-[10px] uppercase tracking-[0.12em]">{highlighted.lang}</span>
+          <span className="text-[10px] tracking-[0.12em] uppercase">
+            {highlighted.lang}
+          </span>
         </div>
       ) : null}
       <CustomCodeBlock

@@ -14,7 +14,8 @@ export function AssetFormationSimulatorPageContent({
   locale,
 }: AssetFormationSimulatorPageContentProps) {
   const pagePath = toLocalePath("/tools/asset-formation-simulator", locale);
-  const pageName = locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション";
+  const pageName =
+    locale === "en" ? "Asset Formation Simulator" : "資産形成シミュレーション";
   const breadcrumbItems = [
     { name: "Home", path: toLocalePath("/", locale) },
     { name: "Archive", path: toLocalePath("/archive", locale) },

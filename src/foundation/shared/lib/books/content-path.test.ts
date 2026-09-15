@@ -13,6 +13,8 @@ describe("bookContentBasePath", () => {
   });
 
   it("ベースのプレフィックスを共有している", () => {
-    expect(bookContentBasePath("any").startsWith(BOOKS_CONTENT_BASE)).toBe(true);
+    expect(bookContentBasePath("any").startsWith(BOOKS_CONTENT_BASE)).toBe(
+      true
+    );
   });
 });

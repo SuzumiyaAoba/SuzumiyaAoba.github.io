@@ -79,7 +79,9 @@ export function AppRootLayout({
               <GoogleAnalytics gaId={siteConfig.googleAnalyticsId} />
             ) : null}
             {siteConfig.googleAdsenseClientId ? (
-              <GoogleAdsenseScript clientId={siteConfig.googleAdsenseClientId} />
+              <GoogleAdsenseScript
+                clientId={siteConfig.googleAdsenseClientId}
+              />
             ) : null}
           </>
         ) : null}

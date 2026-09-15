@@ -62,7 +62,7 @@ export async function buildRssXml(locale: Locale): Promise<string> {
       <guid>${escapeXml(item.guid)}</guid>
       <pubDate>${item.pubDate}</pubDate>
       <description>${escapeXml(item.description)}</description>
-    </item>`,
+    </item>`
     )
     .join("");
 

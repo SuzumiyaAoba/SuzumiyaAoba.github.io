@@ -27,8 +27,7 @@ Squash and merge した後にコンフリクトが発生する問題について
 - [Git で squash merge 後に merge されたコミットを含む branch がコンフリクトするのを解決する #onto - Qiita](https://qiita.com/nakamasato/items/680f3908437b72eb7186)
 - [squash merge の環境で Cascading PRs でコンフリクトした時 - oinume journal](https://journal.lampetty.net/entry/resolve-squash-merge-conflict)
 
-しかし、マージ済みブランチを削除するとき `-d` ではなく `-D` で消さなければいけない。
-定期的に `git pull --prune` してローカルのマージ済みブランチも掃除しているのでコマンド一発でマージ済みブランチを消せないのは不便に感じる。
+しかし、マージ済みブランチを削除するとき `-d` ではなく `-D` で消さなければいけない。定期的に `git pull --prune` してローカルのマージ済みブランチも掃除しているのでコマンド一発でマージ済みブランチを消せないのは不便に感じる。
 
 ## `--no-ff` の場合
 
@@ -55,14 +54,11 @@ Create a merge commit でマージしたときは次の alias を `~/.config/git
 - [teppeis/git-delete-squashed: Delete branches that have been squashed and merged into master](https://github.com/teppeis/git-delete-squashed)
 - [GitHub で Squash merge されたブランチを削除する · ryym.log](https://ryym.tokyo/posts/delete-squash-merged-branch/)
 
-一つ目は `gh` コマンドの拡張として開発されている poi、
-二つ目と三つ目は npx を使って実行できる Node パッケージとして配布されている git-delete-squashed、
-四つ目は git-delete-squashed をシェルスクリプトで実装したものになっている。
+一つ目は `gh` コマンドの拡張として開発されている poi、二つ目と三つ目は npx を使って実行できる Node パッケージとして配布されている git-delete-squashed、四つ目は git-delete-squashed をシェルスクリプトで実装したものになっている。
 
 ## gh-poi
 
-今回は poi を試してみる。
-gh コマンドを使うので最初にログインする。
+今回は poi を試してみる。gh コマンドを使うので最初にログインする。
 
 ```shell
 $ gh auth login
@@ -112,8 +108,6 @@ Branches not deleted
     └─ #24  https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/pull/24 SuzumiyaAoba
 ```
 
-確かに Squash マージしたブランチを削除できた。
-git-delete-squashed と違って GitHub の PR 情報を元に Squash マージ済みのブランチか否かを判定しているようだ。
+確かに Squash マージしたブランチを削除できた。git-delete-squashed と違って GitHub の PR 情報を元に Squash マージ済みのブランチか否かを判定しているようだ。
 
-GitHub からデータを取得するのはいまいちな気もするがしばらく使ってみる。
-問題があれば git-delete-squashed も試してみたい。
+GitHub からデータを取得するのはいまいちな気もするがしばらく使ってみる。問題があれば git-delete-squashed も試してみたい。

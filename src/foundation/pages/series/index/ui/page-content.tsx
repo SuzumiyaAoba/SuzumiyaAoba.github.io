@@ -6,7 +6,11 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { EntryCardList } from "@/shared/ui/entry-card-list";
 import type { EntryCardItem } from "@/shared/ui/entry-card-list";
-import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+} from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { SeriesDefinition } from "@/entities/series-item";
 
@@ -15,9 +19,15 @@ export type SeriesListPageContentProps = {
   seriesList: SeriesDefinition[];
 };
 
-export function SeriesListPageContent({ locale, seriesList }: SeriesListPageContentProps) {
+export function SeriesListPageContent({
+  locale,
+  seriesList,
+}: SeriesListPageContentProps) {
   const pagePath = toLocalePath("/series", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Series", path: "/series" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "Series",
+    path: "/series",
+  });
 
   const items: EntryCardItem[] = seriesList.map((series) => ({
     slug: series.slug,
@@ -54,7 +64,11 @@ export function SeriesListPageContent({ locale, seriesList }: SeriesListPageCont
           emptyState={
             <Card className="border-transparent bg-card/40 shadow-none">
               <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText locale={locale} ja="まだシリーズがありません。" en="No series yet." />
+                <I18nText
+                  locale={locale}
+                  ja="まだシリーズがありません。"
+                  en="No series yet."
+                />
               </div>
             </Card>
           }

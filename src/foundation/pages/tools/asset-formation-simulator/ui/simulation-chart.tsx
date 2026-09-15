@@ -4,7 +4,12 @@ import * as d3 from "d3";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { Locale } from "@/shared/lib/routing";
-import type { ScheduleRow, YearlyRow, ScenarioData, VisibleState } from "../model/types";
+import type {
+  ScheduleRow,
+  YearlyRow,
+  ScenarioData,
+  VisibleState,
+} from "../model/types";
 import { useSimulatorFormatters } from "./use-simulator-formatters";
 
 const chartConfig = {
@@ -19,7 +24,14 @@ const chartConfig = {
 };
 
 const chartSeries = [
-  { key: "balance", ja: "評価額", en: "Balance", width: 2, highlightedWidth: 2.8, dashArray: null },
+  {
+    key: "balance",
+    ja: "評価額",
+    en: "Balance",
+    width: 2,
+    highlightedWidth: 2.8,
+    dashArray: null,
+  },
   {
     key: "principal",
     ja: "元本",
@@ -28,7 +40,14 @@ const chartSeries = [
     highlightedWidth: 2.2,
     dashArray: "18 6",
   },
-  { key: "gain", ja: "運用益", en: "Gain", width: 1.6, highlightedWidth: 2.2, dashArray: "2 6" },
+  {
+    key: "gain",
+    ja: "運用益",
+    en: "Gain",
+    width: 1.6,
+    highlightedWidth: 2.2,
+    dashArray: "2 6",
+  },
   {
     key: "gainDiff",
     ja: "前年差",
@@ -58,7 +77,10 @@ export function SimulationChart({
   const chartRef = useRef<SVGSVGElement | null>(null);
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
-  const tableRows = useMemo(() => selectedScenario?.tableRows ?? [], [selectedScenario]);
+  const tableRows = useMemo(
+    () => selectedScenario?.tableRows ?? [],
+    [selectedScenario]
+  );
   const [tooltip, setTooltip] = useState<{
     x: number;
     y: number;
@@ -97,14 +119,23 @@ export function SimulationChart({
 
     const lastMonth = selectedScenario.schedule.at(-1)?.month ?? 1;
     const maxValue = d3.max(scenarioData, (scenario) =>
-      d3.max(scenario.schedule, (row) => Math.max(row.balance, row.principal, row.gain)),
+      d3.max(scenario.schedule, (row) =>
+        Math.max(row.balance, row.principal, row.gain)
+      )
     );
     const maxDiff = d3.max(tableRows, (row) => row.gainDiff);
     const yMax = (maxValue ?? 0) * 1.05;
-    const yMaxWithDiff = maxDiff !== undefined && maxDiff > yMax ? maxDiff * 1.05 : yMax;
+    const yMaxWithDiff =
+      maxDiff !== undefined && maxDiff > yMax ? maxDiff * 1.05 : yMax;
 
-    const xScale = d3.scaleLinear().domain([1, lastMonth]).range([0, innerWidth]);
-    const yScale = d3.scaleLinear().domain([0, yMaxWithDiff]).range([innerHeight, 0]);
+    const xScale = d3
+      .scaleLinear()
+      .domain([1, lastMonth])
+      .range([0, innerWidth]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, yMaxWithDiff])
+      .range([innerHeight, 0]);
 
     const tickValues = (() => {
       if (lastMonth <= 12) {
@@ -141,7 +172,10 @@ export function SimulationChart({
       .tickFormat(() => "");
 
     const gridGroup = chartGroup.append("g").call(gridAxis);
-    gridGroup.selectAll("line").attr("stroke", colors.grid).attr("stroke-opacity", 0.6);
+    gridGroup
+      .selectAll("line")
+      .attr("stroke", colors.grid)
+      .attr("stroke-opacity", 0.6);
     gridGroup.selectAll(".domain").remove();
 
     const xAxis = d3
@@ -161,23 +195,32 @@ export function SimulationChart({
       .tickFormat((value) =>
         locale === "en"
           ? `¥${d3.format(",")(Number(value) / 10_000)} x10k`
-          : `${d3.format(",")(Number(value) / 10_000)}万円`,
+          : `${d3.format(",")(Number(value) / 10_000)}万円`
       );
 
     const xAxisGroup = chartGroup
       .append("g")
       .attr("transform", `translate(0,${innerHeight})`)
       .call(xAxis);
-    xAxisGroup.selectAll("text").attr("fill", colors.axis).attr("font-size", 11);
+    xAxisGroup
+      .selectAll("text")
+      .attr("fill", colors.axis)
+      .attr("font-size", 11);
     xAxisGroup.selectAll("line").attr("stroke", colors.axis);
 
     const yAxisGroup = chartGroup.append("g").call(yAxis);
-    yAxisGroup.selectAll("text").attr("fill", colors.axis).attr("font-size", 11);
+    yAxisGroup
+      .selectAll("text")
+      .attr("fill", colors.axis)
+      .attr("font-size", 11);
     yAxisGroup.selectAll("line").attr("stroke", colors.axis);
 
     chartGroup.selectAll("path.domain").attr("stroke", colors.axis);
 
-    const drawSeries = (scenario: ScenarioData, series: (typeof chartSeries)[number]) => {
+    const drawSeries = (
+      scenario: ScenarioData,
+      series: (typeof chartSeries)[number]
+    ) => {
       if (!visibleSeries[`${scenario.id}:${series.key}`]) {
         return;
       }
@@ -188,7 +231,9 @@ export function SimulationChart({
         .attr("stroke", scenario.color)
         .attr(
           "stroke-width",
-          scenario.id === selectedScenario.id ? series.highlightedWidth : series.width,
+          scenario.id === selectedScenario.id
+            ? series.highlightedWidth
+            : series.width
         )
         .attr("stroke-dasharray", series.dashArray)
         .attr("stroke-linecap", series.dashArray ? "round" : null);
@@ -227,7 +272,7 @@ export function SimulationChart({
             label: scenario.label,
             color: scenario.color,
           }))
-        : [],
+        : []
     );
 
     const points = chartGroup
@@ -271,16 +316,25 @@ export function SimulationChart({
       .on("mouseleave", () => {
         setTooltip(null);
       });
-  }, [scenarioData, selectedScenario, tableRows, visibleSeries, locale, formatYears]);
+  }, [
+    scenarioData,
+    selectedScenario,
+    tableRows,
+    visibleSeries,
+    locale,
+    formatYears,
+  ]);
 
   return (
     <div
       ref={chartContainerRef}
-      className="mb-8 border rounded-md p-4 relative"
+      className="relative mb-8 rounded-md border p-4"
       style={{ backgroundColor: "var(--card)" }}
     >
-      <div className="text-sm mb-3 text-foreground/70">{t("推移グラフ", "Trend chart")}</div>
-      <svg ref={chartRef} className="w-full h-auto" />
+      <div className="mb-3 text-sm text-foreground/70">
+        {t("推移グラフ", "Trend chart")}
+      </div>
+      <svg ref={chartRef} className="h-auto w-full" />
       <div className="mt-4 grid gap-4 text-xs text-foreground/70 md:grid-cols-2">
         {scenarioData.map((scenario) => (
           <div key={scenario.id} className="space-y-2">
@@ -288,7 +342,9 @@ export function SimulationChart({
               type="button"
               className="flex items-center gap-2 text-left text-foreground/80"
               onClick={() => {
-                const keys = chartSeries.map((series) => `${scenario.id}:${series.key}`);
+                const keys = chartSeries.map(
+                  (series) => `${scenario.id}:${series.key}`
+                );
                 setVisibleSeries((prev) => {
                   const allOn = keys.every((key) => prev[key] !== false);
                   const next = { ...prev };
@@ -300,7 +356,7 @@ export function SimulationChart({
               }}
             >
               <span
-                className="inline-block w-2.5 h-2.5 rounded-full"
+                className="inline-block h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: scenario.color }}
               />
               <span>{scenario.label}</span>
@@ -312,7 +368,9 @@ export function SimulationChart({
                   key={series.key}
                   type="button"
                   className="flex items-center gap-2 text-left"
-                  onClick={() => setVisibleSeries((prev) => ({ ...prev, [key]: !prev[key] }))}
+                  onClick={() =>
+                    setVisibleSeries((prev) => ({ ...prev, [key]: !prev[key] }))
+                  }
                   aria-pressed={Boolean(visibleSeries[key])}
                 >
                   <svg width="18" height="6" viewBox="0 0 18 6">
@@ -339,7 +397,7 @@ export function SimulationChart({
       {tooltip && (
         <div
           ref={tooltipRef}
-          className="absolute pointer-events-none text-xs border rounded-md px-3 py-2 shadow"
+          className="pointer-events-none absolute rounded-md border px-3 py-2 text-xs shadow"
           style={{
             left: (() => {
               const container = chartContainerRef.current;
@@ -365,19 +423,23 @@ export function SimulationChart({
             {tooltip.label} · {formatYears(tooltip.row.month)}
           </div>
           <div>
-            {t("元本", "Principal")}: {numberFormatter.format(Math.round(tooltip.row.principal))}{" "}
+            {t("元本", "Principal")}:{" "}
+            {numberFormatter.format(Math.round(tooltip.row.principal))}{" "}
             {t("円", "JPY")}
           </div>
           <div>
-            {t("運用益", "Gain")}: {numberFormatter.format(Math.round(tooltip.row.gain))}{" "}
+            {t("運用益", "Gain")}:{" "}
+            {numberFormatter.format(Math.round(tooltip.row.gain))}{" "}
             {t("円", "JPY")}
           </div>
           <div>
-            {t("評価額", "Balance")}: {numberFormatter.format(Math.round(tooltip.row.balance))}{" "}
+            {t("評価額", "Balance")}:{" "}
+            {numberFormatter.format(Math.round(tooltip.row.balance))}{" "}
             {t("円", "JPY")}
           </div>
           <div>
-            {t("前年差", "YoY gain")}: {numberFormatter.format(Math.round(tooltip.row.gainDiff))}{" "}
+            {t("前年差", "YoY gain")}:{" "}
+            {numberFormatter.format(Math.round(tooltip.row.gainDiff))}{" "}
             {t("円", "JPY")}
           </div>
         </div>

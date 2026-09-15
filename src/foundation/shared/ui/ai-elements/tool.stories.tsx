@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Tool, ToolHeader, ToolContent, ToolInput, ToolOutput } from "@/shared/ui/ai-elements/tool";
+import {
+  Tool,
+  ToolHeader,
+  ToolContent,
+  ToolInput,
+  ToolOutput,
+} from "@/shared/ui/ai-elements/tool";
 
 const meta: Meta<typeof Tool> = {
   title: "shared/ai-elements/Tool",

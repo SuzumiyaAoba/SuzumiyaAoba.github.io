@@ -41,7 +41,10 @@ describe("release activity", () => {
       release("Unknown"),
     ]);
     const activity = getReleaseActivity(releases, today);
-    expect(activity.recent.map((item) => item.title)).toStrictEqual(["Today", "Recent boundary"]);
+    expect(activity.recent.map((item) => item.title)).toStrictEqual([
+      "Today",
+      "Recent boundary",
+    ]);
     expect(activity.change).toBe(0);
     expect(activity.latest?.title).toBe("Today");
     expect(getReleaseActivity([], today)).toStrictEqual({

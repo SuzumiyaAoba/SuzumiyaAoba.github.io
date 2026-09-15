@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vite-plus/test";
-import { dateInMonth, getMonthDays, getMonthWindow, monthsBetween } from "./release-months";
+import {
+  dateInMonth,
+  getMonthDays,
+  getMonthWindow,
+  monthsBetween,
+} from "./release-months";
 
 describe("monthly calendars", () => {
   it("aligns dates to weekdays in six rows, including leap days and months needing six weeks", () => {
@@ -31,20 +36,27 @@ describe("monthly calendars", () => {
       "2030-12",
       monthsBetween(start, "2026-09") * step,
       1400,
-      step,
+      step
     );
     expect(window.total).toBe(144);
     expect(window.months.length).toBeLessThanOrEqual(6);
-    expect(window.months.slice(0, 4)).toStrictEqual(["2026-08", "2026-09", "2026-10", "2026-11"]);
-    expect(getMonthWindow(start, "2030-12", 0, 320, step).months[0]).toBe(start);
+    expect(window.months.slice(0, 4)).toStrictEqual([
+      "2026-08",
+      "2026-09",
+      "2026-10",
+      "2026-11",
+    ]);
+    expect(getMonthWindow(start, "2030-12", 0, 320, step).months[0]).toBe(
+      start
+    );
     expect(
       getMonthWindow(
         start,
         "2030-12",
         monthsBetween(start, "2030-12") * step,
         1400,
-        step,
-      ).months.at(-1),
+        step
+      ).months.at(-1)
     ).toBe("2030-12");
   });
 });

@@ -45,7 +45,9 @@ export const navigationGroups: NavigationGroup[] = [
 ];
 export const primaryItems = navigationGroups
   .flatMap((group) => group.items)
-  .filter((item) => ["/blog", "/notes", "/archive", "/about"].includes(item.href));
+  .filter((item) =>
+    ["/blog", "/notes", "/archive", "/about"].includes(item.href)
+  );
 
 export function getNavigationState(path: string) {
   const currentPath = toLocalePath(path, "ja").replace(/\/$/u, "");
@@ -56,7 +58,8 @@ export function getNavigationState(path: string) {
   const isActive = (href: string) =>
     currentPath === href ||
     currentPath.startsWith(`${href}/`) ||
-    (href === "/archive" && (currentPath === "/tools" || currentPath.startsWith("/tools/")));
+    (href === "/archive" &&
+      (currentPath === "/tools" || currentPath.startsWith("/tools/")));
 
   return { isReading, isActive };
 }

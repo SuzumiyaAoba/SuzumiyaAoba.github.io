@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 
 import BookSectionPage from "@/pages/books/section";
-import { getBookMeta, getBookSection, getBookSlugs, getBookToc } from "@/entities/book";
+import {
+  getBookMeta,
+  getBookSection,
+  getBookSlugs,
+  getBookToc,
+} from "@/entities/book";
 
 type PageProps = {
   params: Promise<{ book: string; chapter: string; section: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { book, chapter, section } = await params;
   const [sectionData, meta] = await Promise.all([
     getBookSection(book, chapter, section),
@@ -23,7 +30,7 @@ export async function generateStaticParams(): Promise<
 > {
   const slugs = await getBookSlugs();
   const books = await Promise.all(
-    slugs.map(async (book) => ({ book, toc: await getBookToc(book) })),
+    slugs.map(async (book) => ({ book, toc: await getBookToc(book) }))
   );
   const results: { book: string; chapter: string; section: string }[] = [];
 

@@ -15,7 +15,7 @@ import { buildPageMetadata } from "./page-metadata";
  */
 export async function buildBlogPostMetadata(
   slug: string | undefined,
-  locale: Locale,
+  locale: Locale
 ): Promise<Metadata> {
   if (!slug) {
     return { title: "Blog" };

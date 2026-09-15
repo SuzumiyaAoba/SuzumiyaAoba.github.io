@@ -13,19 +13,17 @@ model: GPT-5.2-Codex
 description: Reviewing the "Server-Side Performance" category of the react-best-practices Skills, including rules added since launch.
 ---
 
-Following [Eliminating Waterfalls](../2026-01-16-react-best-practices/) and [Bundle Size Optimization](../2026-01-17-react-best-practices-bundle-size-optimization/), this article looks at Server-Side Performance.
-About a week has passed since the skill was published, and new rules have already been added that weren't in the initial table.
-More rules will likely continue to appear, so I'll review the rules that existed at release and then look at the differences later.
+Following [Eliminating Waterfalls](../2026-01-16-react-best-practices/) and [Bundle Size Optimization](../2026-01-17-react-best-practices-bundle-size-optimization/), this article looks at Server-Side Performance. About a week has passed since the skill was published, and new rules have already been added that weren't in the initial table. More rules will likely continue to appear, so I'll review the rules that existed at release and then look at the differences later.
 
 ## Rule table
 
-| Category (English)       | Category (Japanese)          | Rule (English)                                     | Rule (Japanese)                                |
-| ------------------------ | ---------------------------- | ------------------------------------------------- | ---------------------------------------------- |
-| Server-Side Performance  | サーバーサイドパフォーマンス | Cross-Request LRU Caching                         | リクエスト間で LRU キャッシュする              |
-|                          |                              | Minimize Serialization at RSC Boundaries          | RSC 境界でのシリアライズを最小化する           |
-|                          |                              | Parallel Data Fetching with Component Composition | コンポーネント合成でデータフェッチを並列化する |
-|                          |                              | Per-Request Deduplication with React.cache()      | React.cache() でリクエスト内の重複を排除する   |
-|                          |                              | Use after() for Non-Blocking Operations           | after() で非ブロッキングに後処理を実行する     |
+| Category (English) | Category (Japanese) | Rule (English) | Rule (Japanese) |
+| --- | --- | --- | --- |
+| Server-Side Performance | サーバーサイドパフォーマンス | Cross-Request LRU Caching | リクエスト間で LRU キャッシュする |
+|  |  | Minimize Serialization at RSC Boundaries | RSC 境界でのシリアライズを最小化する |
+|  |  | Parallel Data Fetching with Component Composition | コンポーネント合成でデータフェッチを並列化する |
+|  |  | Per-Request Deduplication with React.cache() | React.cache() でリクエスト内の重複を排除する |
+|  |  | Use after() for Non-Blocking Operations | after() で非ブロッキングに後処理を実行する |
 
 ### Cross-Request LRU Caching
 
@@ -33,9 +31,7 @@ https://github.com/vercel-labs/agent-skills/blob/main/skills/react-best-practice
 
 > `React.cache()` is only effective within a single request. For data shared across multiple requests, use an LRU cache.
 
-`React.cache()` is effective when the same data is fetched multiple times within a single request, but it does not help much across requests.
-In that case, you need an in-process LRU cache and memory caching.
-The rule mentions [isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache) and [Redis](https://redis.io/).
+`React.cache()` is effective when the same data is fetched multiple times within a single request, but it does not help much across requests. In that case, you need an in-process LRU cache and memory caching. The rule mentions [isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache) and [Redis](https://redis.io/).
 
 ### Minimize Serialization at RSC Boundaries
 
@@ -62,9 +58,7 @@ https://github.com/vercel-labs/agent-skills/blob/main/skills/react-best-practice
 
 > Use `React.cache()` to memoize the results of the same async operation within a request.
 
-Because `React.cache()` uses shallow comparison via `Object.is`, it won't cache unless you use it correctly.
-When passing objects, references must be identical.
-Also, Next.js `fetch` already caches requests automatically, so `React.cache()` is unnecessary there, but it still helps for DB access, heavy computation, auth, file ops, or any async work other than fetch.
+Because `React.cache()` uses shallow comparison via `Object.is`, it won't cache unless you use it correctly. When passing objects, references must be identical. Also, Next.js `fetch` already caches requests automatically, so `React.cache()` is unnecessary there, but it still helps for DB access, heavy computation, auth, file ops, or any async work other than fetch.
 
 ### Use after() for Non-Blocking Operations
 
@@ -76,6 +70,4 @@ For side effects unrelated to the response, such as log shipping, use Next.js [`
 
 ## Closing
 
-I read the Server-Side Performance rules in react-best-practices.
-Because this category is server-side performance, many of the rules are specific to Next.js and React rather than general best practices.
-This is only the third category, so I'll keep going through the remaining five in the same way.
+I read the Server-Side Performance rules in react-best-practices. Because this category is server-side performance, many of the rules are specific to Next.js and React rather than general best practices. This is only the third category, so I'll keep going through the remaining five in the same way.

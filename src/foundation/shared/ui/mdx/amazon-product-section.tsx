@@ -59,7 +59,10 @@ function extractIds(value: unknown): string[] {
 /**
  * MDX から Amazon 商品カードを表示するためのラッパー
  */
-export async function AmazonProductSection({ ids, ...props }: MdxAmazonProductSectionProps) {
+export async function AmazonProductSection({
+  ids,
+  ...props
+}: MdxAmazonProductSectionProps) {
   const uniqueIds: string[] = [];
   const seen = new Set<string>();
 

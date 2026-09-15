@@ -8,14 +8,16 @@ const baseProviderStyles = {
   OpenAI: {
     icon: "logos:openai-icon",
     dot: "bg-emerald-600 dark:bg-emerald-400",
-    badge: "bg-emerald-50 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
+    badge:
+      "bg-emerald-50 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
     border: "border-emerald-200 dark:border-emerald-800",
     ink: "text-emerald-700 dark:text-emerald-300",
   },
   Anthropic: {
     icon: "material-icon-theme:claude",
     dot: "bg-orange-600 dark:bg-orange-400",
-    badge: "bg-orange-50 text-orange-950 dark:bg-orange-950 dark:text-orange-200",
+    badge:
+      "bg-orange-50 text-orange-950 dark:bg-orange-950 dark:text-orange-200",
     border: "border-orange-200 dark:border-orange-800",
     ink: "text-orange-700 dark:text-orange-300",
   },
@@ -29,7 +31,8 @@ const baseProviderStyles = {
   DeepSeek: {
     icon: "ri:deepseek-fill",
     dot: "bg-violet-600 dark:bg-violet-400",
-    badge: "bg-violet-50 text-violet-950 dark:bg-violet-950 dark:text-violet-200",
+    badge:
+      "bg-violet-50 text-violet-950 dark:bg-violet-950 dark:text-violet-200",
     border: "border-violet-200 dark:border-violet-800",
     ink: "text-violet-700 dark:text-violet-300",
   },
@@ -47,7 +50,10 @@ export const providerStyles = {
   Alibaba: { ...baseProviderStyles.DeepSeek, icon: "ri:qwen-ai-fill" },
   "Moonshot AI": { ...baseProviderStyles.Other, icon: "simple-icons:kimi" },
   Meta: { ...baseProviderStyles.Google, icon: "logos:meta" },
-  "Mistral AI": { ...baseProviderStyles.Anthropic, icon: "logos:mistral-ai-icon" },
+  "Mistral AI": {
+    ...baseProviderStyles.Anthropic,
+    icon: "logos:mistral-ai-icon",
+  },
   xAI: { ...baseProviderStyles.Other, icon: "ri:grok-ai-fill" },
   "Z.ai": { ...baseProviderStyles.Google, icon: "ri:zhipu-ai-fill" },
   MiniMax: { ...baseProviderStyles.Anthropic, icon: "simple-icons:minimax" },
@@ -58,19 +64,31 @@ export const providerStyles = {
   NVIDIA: { ...baseProviderStyles.OpenAI, icon: "simple-icons:nvidia" },
   IBM: { ...baseProviderStyles.Google, icon: "simple-icons:ibm" },
   Ai2: { ...baseProviderStyles.OpenAI, icon: null },
-  "Hugging Face": { ...baseProviderStyles.Anthropic, icon: "logos:hugging-face-icon" },
+  "Hugging Face": {
+    ...baseProviderStyles.Anthropic,
+    icon: "logos:hugging-face-icon",
+  },
   Tencent: { ...baseProviderStyles.Google, icon: null },
   Baidu: { ...baseProviderStyles.Google, icon: "ri:baidu-fill" },
   "01.AI": { ...baseProviderStyles.DeepSeek, icon: null },
   TII: { ...baseProviderStyles.OpenAI, icon: null },
-  Databricks: { ...baseProviderStyles.Anthropic, icon: "simple-icons:databricks" },
+  Databricks: {
+    ...baseProviderStyles.Anthropic,
+    icon: "simple-icons:databricks",
+  },
   "Preferred Networks": { ...baseProviderStyles.OpenAI, icon: null },
   ELYZA: { ...baseProviderStyles.Google, icon: null },
   "SB Intuitions": { ...baseProviderStyles.Other, icon: null },
   "LLM-jp": { ...baseProviderStyles.DeepSeek, icon: null },
 } satisfies Record<
   Provider,
-  { icon: string | null; dot: string; badge: string; border: string; ink: string }
+  {
+    icon: string | null;
+    dot: string;
+    badge: string;
+    border: string;
+    ink: string;
+  }
 >;
 
 export function ProviderIcon({
@@ -90,7 +108,7 @@ export function ProviderIcon({
       className={cn(
         "inline-flex size-9 shrink-0 items-center justify-center rounded-xl",
         !plain && style.badge,
-        className,
+        className
       )}
     >
       {style.icon ? (
@@ -103,7 +121,11 @@ export function ProviderIcon({
 }
 
 export function providerLabel(provider: Provider, locale: Locale) {
-  return provider === "Other" ? (locale === "en" ? "Other" : "その他") : provider;
+  return provider === "Other"
+    ? locale === "en"
+      ? "Other"
+      : "その他"
+    : provider;
 }
 
 export function kindLabel(kind: ReleaseKind, locale: Locale) {

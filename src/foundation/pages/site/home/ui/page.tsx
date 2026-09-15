@@ -15,10 +15,12 @@ export default async function Page({ locale }: PageProps) {
     getNoteSummariesVariants(),
     getBlogTagIndex(resolvedLocale),
   ]);
-  const topics = ["Java", "Scala", "Nix", "AI", "関数型プログラミング"].flatMap((name) => {
-    const count = tagIndex.get(name)?.length ?? 0;
-    return count > 0 ? [{ name, count }] : [];
-  });
+  const topics = ["Java", "Scala", "Nix", "AI", "関数型プログラミング"].flatMap(
+    (name) => {
+      const count = tagIndex.get(name)?.length ?? 0;
+      return count > 0 ? [{ name, count }] : [];
+    }
+  );
 
   return (
     <HomePageContent
@@ -28,7 +30,14 @@ export default async function Page({ locale }: PageProps) {
       series={series.filter((item) => item.posts.length > 0)}
       notes={notes.flatMap((variant) => {
         const note = resolveLocalizedValue(variant, resolvedLocale);
-        return note ? [{ slug: variant.slug, title: note.frontmatter.title || variant.slug }] : [];
+        return note
+          ? [
+              {
+                slug: variant.slug,
+                title: note.frontmatter.title || variant.slug,
+              },
+            ]
+          : [];
       })}
       topics={topics}
     />

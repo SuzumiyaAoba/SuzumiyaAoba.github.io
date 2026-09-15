@@ -37,7 +37,12 @@ export function Message({
 }: MessageProps) {
   return (
     <details
-      className={cn("my-6 rounded-md border px-4 py-3", variantStyles[variant], "group", className)}
+      className={cn(
+        "my-6 rounded-md border px-4 py-3",
+        variantStyles[variant],
+        "group",
+        className
+      )}
       open={defaultOpen}
     >
       {title ? (
@@ -50,7 +55,7 @@ export function Message({
           />
         </summary>
       ) : null}
-      <div className={cn("prose prose-sm max-w-none font-serif", title ? "mt-2" : "")}>
+      <div className={cn("prose max-w-none font-serif", title ? "mt-2" : "")}>
         {children}
       </div>
     </details>

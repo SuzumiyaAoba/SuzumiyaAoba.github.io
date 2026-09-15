@@ -7,9 +7,11 @@ type PageProps = {
   params: Promise<{ series?: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  return buildSeriesPageMetadata(resolvedParams.series, "en");
+  return await buildSeriesPageMetadata(resolvedParams.series, "en");
 }
 
 export async function generateStaticParams(): Promise<{ series: string }[]> {

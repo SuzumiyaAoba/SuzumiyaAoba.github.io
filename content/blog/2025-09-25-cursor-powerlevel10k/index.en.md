@@ -16,8 +16,7 @@ The Cursor terminal opens and displays normally, but when the AI agent tries to 
 
 ## Cause
 
-The issue appeared after switching the prompt from [starship](https://starship.rs/ja-JP/) to [powerlevel10k](https://github.com/romkatv/powerlevel10k).
-I haven't confirmed it, but Zellij might also be involved.
+The issue appeared after switching the prompt from [starship](https://starship.rs/ja-JP/) to [powerlevel10k](https://github.com/romkatv/powerlevel10k). I haven't confirmed it, but Zellij might also be involved.
 
 There is also a topic about this on the Cursor forum.
 
@@ -25,8 +24,7 @@ There is also a topic about this on the Cursor forum.
 
 ## Solution
 
-The Cursor topic lists several approaches.
-Here is the configuration that works in my environment at the moment.
+The Cursor topic lists several approaches. Here is the configuration that works in my environment at the moment.
 
 It might include unnecessary settings; I haven't fully verified.
 

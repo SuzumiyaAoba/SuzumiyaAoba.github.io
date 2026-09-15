@@ -1,4 +1,8 @@
-import { resolveLocalizedValue, toLocalePath, resolveLocale } from "@/shared/lib/routing";
+import {
+  resolveLocalizedValue,
+  toLocalePath,
+  resolveLocale,
+} from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import path from "node:path";
 import { notFound } from "next/navigation";
@@ -44,7 +48,9 @@ type PageProps = {
 export default async function Page({ params, locale }: PageProps) {
   const shouldLogPerf = process.env["NEXT_DEBUG_PERF"] === "1";
   if (shouldLogPerf) {
-    console.time(`[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`);
+    console.time(
+      `[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`
+    );
   }
   const resolvedLocale = resolveLocale(locale);
   const isEn = resolvedLocale === "en";
@@ -62,7 +68,10 @@ export default async function Page({ params, locale }: PageProps) {
     console.timeEnd(`[blog] load posts:${slug}`);
   }
 
-  const post = resolveLocalizedValue({ ja: postJa, en: postEn }, resolvedLocale);
+  const post = resolveLocalizedValue(
+    { ja: postJa, en: postEn },
+    resolvedLocale
+  );
 
   if (!post) {
     notFound();
@@ -76,7 +85,7 @@ export default async function Page({ params, locale }: PageProps) {
   const postPath = toLocalePath(`/blog/post/${slug}`, resolvedLocale);
   const postUrl = `${getSiteUrl()}${postPath}`;
   const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
-    postTitle,
+    postTitle
   )}&url=${encodeURIComponent(postUrl)}`;
   const primaryContent = isEn ? postEn?.content : postJa?.content;
   const fallbackContent = isEn ? postJa?.content : postEn?.content;
@@ -99,7 +108,7 @@ export default async function Page({ params, locale }: PageProps) {
   const explicitProductIds = post.frontmatter.amazonProductIds ?? [];
   const excludedIdsInContent = new Set(productIdsInContent);
   const explicitProductIdsForFooter = explicitProductIds.filter(
-    (id) => !excludedIdsInContent.has(id),
+    (id) => !excludedIdsInContent.has(id)
   );
   if (shouldLogPerf) {
     console.time(`[blog] mdx render:${slug}`);
@@ -112,7 +121,9 @@ export default async function Page({ params, locale }: PageProps) {
   const mdxPromise = renderMdxWithToc(contentSource, {
     basePath: `/contents/blog/${slug}`,
     scope,
-    ...(financialDataComponents ? { extraComponents: financialDataComponents } : {}),
+    ...(financialDataComponents
+      ? { extraComponents: financialDataComponents }
+      : {}),
   });
   if (shouldLogPerf) {
     console.time(`[blog] amazon explicit:${slug}`);
@@ -137,7 +148,10 @@ export default async function Page({ params, locale }: PageProps) {
   const tagProducts =
     remainingSlots > 0 && tags.length > 0
       ? await getAffiliateProductsByTags(tags, {
-          excludeIds: [...prioritizedProducts.map((product) => product.id), ...productIdsInContent],
+          excludeIds: [
+            ...prioritizedProducts.map((product) => product.id),
+            ...productIdsInContent,
+          ],
           limit: remainingSlots,
         })
       : [];
@@ -146,13 +160,16 @@ export default async function Page({ params, locale }: PageProps) {
     console.timeEnd(`[blog] ${resolvedLocale}:${slug}`);
   }
   const amazonProducts = [...prioritizedProducts, ...tagProducts];
-  const shouldShowAmazonAssociate = amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
+  const shouldShowAmazonAssociate =
+    amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
 
   const prevTitle = prev
-    ? (resolveLocalizedValue(prev, resolvedLocale)?.frontmatter.title ?? prev.slug)
+    ? (resolveLocalizedValue(prev, resolvedLocale)?.frontmatter.title ??
+      prev.slug)
     : "";
   const nextTitle = next
-    ? (resolveLocalizedValue(next, resolvedLocale)?.frontmatter.title ?? next.slug)
+    ? (resolveLocalizedValue(next, resolvedLocale)?.frontmatter.title ??
+      next.slug)
     : "";
 
   return (

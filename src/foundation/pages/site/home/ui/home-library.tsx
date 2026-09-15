@@ -12,21 +12,27 @@ export function HomeLibrary({ locale, notes }: HomeLibraryProps) {
     {
       href: "/tools/ascii-standard-code",
       name: t("ASCII コード表", "ASCII reference"),
-      description: t("文字コードとビットの対応表", "Character codes and their binary values"),
+      description: t(
+        "文字コードとビットの対応表",
+        "Character codes and their binary values"
+      ),
     },
     {
       href: "/tools/asset-formation-simulator",
       name: t("資産形成シミュレーター", "Savings simulator"),
       description: t(
         "積立額・利回り・期間から資産の推移を計算",
-        "Calculate growth from contributions, return, and duration",
+        "Calculate growth from contributions, return, and duration"
       ),
     },
   ];
 
   return (
-    <section className="home-library site-container" aria-labelledby="library-title">
-      <div className="home-library-notes">
+    <section
+      className="home-library site-container"
+      aria-labelledby="library-title"
+    >
+      <div>
         <div className="home-section-heading">
           <h2 id="library-title" className="home-section-title">
             {t("ノート", "Notes")}
@@ -48,7 +54,9 @@ export function HomeLibrary({ locale, notes }: HomeLibraryProps) {
             ))}
           </ul>
         ) : (
-          <p className="home-empty">{t("ノートはまだありません。", "No notes yet.")}</p>
+          <p className="home-empty">
+            {t("ノートはまだありません。", "No notes yet.")}
+          </p>
         )}
         <a href="/books/" hrefLang="ja" className="home-books-link">
           <span>{t("書籍一覧", "Books (Japanese)")}</span>
@@ -65,7 +73,9 @@ export function HomeLibrary({ locale, notes }: HomeLibraryProps) {
               <a href={toLocalePath(tool.href, locale)}>
                 <span>
                   <strong>{tool.name}</strong>
-                  <span className="home-tool-description">{tool.description}</span>
+                  <span className="home-tool-description">
+                    {tool.description}
+                  </span>
                 </span>
                 <Arrow />
               </a>

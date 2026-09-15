@@ -9,14 +9,16 @@ async function fetchShipporiMinchoBold(): Promise<ArrayBuffer> {
     headers: {
       "User-Agent": FONT_FETCH_USER_AGENT,
     },
-  }).then(async (res) => res.text());
+  }).then(async (res) => await res.text());
 
-  const fontUrl = /src: url\((.+?)\) format\(['"]?truetype['"]?\)/u.exec(fontCss)?.[1];
+  const fontUrl = /src: url\((.+?)\) format\(['"]?truetype['"]?\)/u.exec(
+    fontCss
+  )?.[1];
   if (!fontUrl) {
     throw new Error("Failed to load font");
   }
 
-  return fetch(fontUrl).then(async (res) => res.arrayBuffer());
+  return await fetch(fontUrl).then(async (res) => await res.arrayBuffer());
 }
 
 let shipporiMinchoBoldPromise: Promise<ArrayBuffer> | null = null;
@@ -28,5 +30,5 @@ let shipporiMinchoBoldPromise: Promise<ArrayBuffer> | null = null;
  */
 export async function loadShipporiMinchoBold(): Promise<ArrayBuffer> {
   shipporiMinchoBoldPromise ??= fetchShipporiMinchoBold();
-  return shipporiMinchoBoldPromise;
+  return await shipporiMinchoBoldPromise;
 }

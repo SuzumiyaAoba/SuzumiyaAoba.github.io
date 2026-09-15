@@ -539,8 +539,10 @@
       transform var(--duration-normal) var(--ease-out);
   }
 
-  .simple-entry-link:focus-visible :is(.simple-entry-title, .simple-entry-arrow),
-  .collection-card-link:focus-visible :is(.collection-card-title, .collection-card-cta),
+  .simple-entry-link:focus-visible
+    :is(.simple-entry-title, .simple-entry-arrow),
+  .collection-card-link:focus-visible
+    :is(.collection-card-title, .collection-card-cta),
   .index-link:focus-visible {
     color: var(--brand);
   }
@@ -584,9 +586,11 @@
 
     .journal-text-link:hover,
     .journal-text-link:hover .journal-link-arrow,
-    .journal-card:has(.journal-card-link:hover) :is(.journal-card-title, .journal-card-arrow),
+    .journal-card:has(.journal-card-link:hover)
+      :is(.journal-card-title, .journal-card-arrow),
     .simple-entry-link:hover :is(.simple-entry-title, .simple-entry-arrow),
-    .collection-card-link:hover :is(.collection-card-title, .collection-card-cta),
+    .collection-card-link:hover
+      :is(.collection-card-title, .collection-card-cta),
     .index-link:hover {
       color: var(--brand);
     }
@@ -597,7 +601,9 @@
       transform: translateX(3px);
     }
 
-    .journal-card:has(.journal-card-link:hover) .journal-thumbnail :is(svg, img) {
+    .journal-card:has(.journal-card-link:hover)
+      .journal-thumbnail
+      :is(svg, img) {
       transform: scale(1.025);
     }
   }

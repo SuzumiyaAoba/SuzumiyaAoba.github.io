@@ -15,7 +15,10 @@ export type TocHeading = {
 };
 
 /** コンパイル中の AST と単独の目次取得で同じ見出し抽出を使う。 */
-export function collectTocHeadings(tree: MarkdownNode, idPrefix?: string): TocHeading[] {
+export function collectTocHeadings(
+  tree: MarkdownNode,
+  idPrefix?: string
+): TocHeading[] {
   const slugger = new GithubSlugger();
   const headings: TocHeading[] = [];
   walkMarkdown(tree, (node) => {
@@ -34,7 +37,10 @@ export function collectTocHeadings(tree: MarkdownNode, idPrefix?: string): TocHe
 }
 
 export const getTocHeadings = cache(
-  async (source: string, options?: { idPrefix?: string }): Promise<TocHeading[]> => {
+  async (
+    source: string,
+    options?: { idPrefix?: string }
+  ): Promise<TocHeading[]> => {
     const processor = remark()
       .use(remarkGfm)
       .use(remarkEmoji)
@@ -42,5 +48,5 @@ export const getTocHeadings = cache(
       .use(remarkMath);
     const tree = await processor.run(processor.parse(source));
     return collectTocHeadings(tree, options?.idPrefix);
-  },
+  }
 );

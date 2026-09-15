@@ -8,7 +8,10 @@ export type AmazonProductSectionProps = {
   className?: string;
 };
 
-export function AmazonProductSection({ products, className }: AmazonProductSectionProps) {
+export function AmazonProductSection({
+  products,
+  className,
+}: AmazonProductSectionProps) {
   if (products.length === 0) {
     return null;
   }
@@ -20,7 +23,7 @@ export function AmazonProductSection({ products, className }: AmazonProductSecti
           key={product.id}
           className="border border-border/60 bg-card/40 shadow-none transition-colors hover:bg-card/60"
         >
-          <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:gap-6 font-noto">
+          <div className="font-noto flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:gap-6">
             <a
               href={product.productUrl}
               target="_blank"
@@ -37,13 +40,15 @@ export function AmazonProductSection({ products, className }: AmazonProductSecti
               />
             </a>
             <div className="flex flex-1 flex-col gap-3 sm:min-h-[140px] sm:justify-between">
-              <p className="text-sm font-semibold text-foreground">{product.title}</p>
+              <p className="text-sm font-semibold text-foreground">
+                {product.title}
+              </p>
               <div className="flex flex-col gap-2">
                 <a
                   href={product.productUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-md bg-foreground px-4 py-2 text-xs font-semibold text-background sm:w-fit font-noto"
+                  className="font-noto inline-flex w-full items-center justify-center rounded-md bg-foreground px-4 py-2 text-xs font-semibold text-background sm:w-fit"
                 >
                   Amazon.co.jp で購入する
                 </a>
@@ -52,7 +57,7 @@ export function AmazonProductSection({ products, className }: AmazonProductSecti
                     href={product.yahooShoppingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-700 sm:w-fit font-noto"
+                    className="font-noto inline-flex w-full items-center justify-center rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-700 sm:w-fit"
                   >
                     Yahoo!ショッピングで購入する
                   </a>

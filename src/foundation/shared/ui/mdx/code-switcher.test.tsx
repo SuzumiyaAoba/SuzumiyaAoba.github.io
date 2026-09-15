@@ -2,18 +2,36 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { highlight } from "codehike/code";
 import type { HighlightedCode, RawCode } from "codehike/code";
 import { CodeSwitcher } from "./code-switcher";
 
-vi.mock(import("codehike/code"), () => ({ highlight: vi.fn<typeof highlight>() }));
+vi.mock(import("codehike/code"), () => ({
+  highlight: vi.fn<typeof highlight>(),
+}));
 vi.mock(import("./custom-code-block"), () => ({
-  CustomCodeBlock: ({ code }: { code: HighlightedCode }) => <pre>{code.code}</pre>,
+  CustomCodeBlock: ({ code }: { code: HighlightedCode }) => (
+    <pre>{code.code}</pre>
+  ),
 }));
 
 function highlighted(code: RawCode): HighlightedCode {
-  return { ...code, code: code.value, tokens: [], annotations: [], themeName: "test", style: {} };
+  return {
+    ...code,
+    code: code.value,
+    tokens: [],
+    annotations: [],
+    themeName: "test",
+    style: {},
+  };
 }
 
 let root: Root;
@@ -39,7 +57,9 @@ describe("CodeSwitcher", () => {
     await act(async () => root.render(<CodeSwitcher code={[]} />));
     expect(container.textContent).toBe("");
     await act(async () =>
-      root.render(<CodeSwitcher code={[{ value: "first", lang: "ts", meta: "" }]} />),
+      root.render(
+        <CodeSwitcher code={[{ value: "first", lang: "ts", meta: "" }]} />
+      )
     );
     expect(container.querySelector("pre")?.textContent).toBe("first");
     await act(async () => root.render(<CodeSwitcher code={[]} />));
@@ -47,9 +67,15 @@ describe("CodeSwitcher", () => {
   });
 
   it("ハイライト失敗を処理してエラーを表示する", async () => {
-    vi.mocked(highlight).mockRejectedValueOnce(new Error("Unsupported language"));
+    vi.mocked(highlight).mockRejectedValueOnce(
+      new Error("Unsupported language")
+    );
     await act(async () =>
-      root.render(<CodeSwitcher code={[{ value: "invalid", lang: "unknown", meta: "" }]} />),
+      root.render(
+        <CodeSwitcher
+          code={[{ value: "invalid", lang: "unknown", meta: "" }]}
+        />
+      )
     );
     expect(container.textContent).toBe("Unable to highlight code.");
   });
@@ -60,7 +86,9 @@ describe("CodeSwitcher", () => {
     const previous = { value: "previous", lang: "ts", meta: "" };
     await act(async () => root.render(<CodeSwitcher code={[previous]} />));
     await act(async () =>
-      root.render(<CodeSwitcher code={[{ value: "current", lang: "ts", meta: "" }]} />),
+      root.render(
+        <CodeSwitcher code={[{ value: "current", lang: "ts", meta: "" }]} />
+      )
     );
     await act(async () => {
       pending.resolve(highlighted(previous));

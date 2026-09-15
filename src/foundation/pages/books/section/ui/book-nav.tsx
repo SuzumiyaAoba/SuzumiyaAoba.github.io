@@ -24,7 +24,7 @@ export function BookNav({
     <nav aria-label="書籍ナビゲーション" className="space-y-4">
       <a
         href={toLocalePath(`/books/${bookSlug}`, locale)}
-        className="block text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground hover:text-foreground transition-colors"
+        className="block text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase transition-colors hover:text-foreground"
       >
         {bookTitle}
       </a>
@@ -36,19 +36,21 @@ export function BookNav({
             </p>
             <ol className="space-y-1">
               {ch.sections.map((sec) => {
-                const isCurrent = sec.chapter === currentChapter && sec.section === currentSection;
+                const isCurrent =
+                  sec.chapter === currentChapter &&
+                  sec.section === currentSection;
                 return (
                   <li key={`${sec.chapter}-${sec.section}`}>
                     <a
                       href={toLocalePath(
                         `/books/${bookSlug}/${sec.chapter}/${sec.section}`,
-                        locale,
+                        locale
                       )}
                       className={cn(
                         "block rounded px-2 py-0.5 text-sm transition-colors",
                         isCurrent
                           ? "bg-muted font-medium text-foreground"
-                          : "text-muted-foreground hover:text-foreground",
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                       aria-current={isCurrent ? "page" : undefined}
                     >

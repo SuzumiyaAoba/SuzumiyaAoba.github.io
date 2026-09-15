@@ -14,7 +14,10 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { buildReleases, filterReleases } from "../model/release-calendar";
-import type { ReleaseFilters, RenderedRelease } from "../model/release-calendar";
+import type {
+  ReleaseFilters,
+  RenderedRelease,
+} from "../model/release-calendar";
 import { getReleaseTimelineRange } from "../model/release-timeline";
 import { useCurrentDate } from "../model/use-current-date";
 import { ReleaseCalendarStrip } from "./release-calendar-strip";
@@ -24,7 +27,12 @@ import { ProviderFilters, ReleaseHighlights } from "./release-highlights";
 import { releaseSelectClass } from "./release-view-layout";
 import { useReleasePopover } from "./release-popover";
 
-const INITIAL_FILTERS: ReleaseFilters = { query: "", provider: "", series: "", kind: "" };
+const INITIAL_FILTERS: ReleaseFilters = {
+  query: "",
+  provider: "",
+  series: "",
+  kind: "",
+};
 
 export function ReleaseExplorer({
   entries,
@@ -41,21 +49,31 @@ export function ReleaseExplorer({
   const currentDate = useCurrentDate();
   const today = referenceDate ?? currentDate;
   const [filters, setFilters] = useState(INITIAL_FILTERS);
-  const [view, setView] = useState<"calendar" | "intervals" | "list">("intervals");
+  const [view, setView] = useState<"calendar" | "intervals" | "list">(
+    "intervals"
+  );
   const [timelineDate, setTimelineDate] = useState<string | null>(null);
   const [calendarDate, setCalendarDate] = useState<string | null>(null);
   const releases = useMemo(() => buildReleases(entries), [entries]);
-  const timelineRange = useMemo(() => getReleaseTimelineRange(releases), [releases]);
-  const filtered = useMemo(() => filterReleases(releases, filters), [releases, filters]);
+  const timelineRange = useMemo(
+    () => getReleaseTimelineRange(releases),
+    [releases]
+  );
+  const filtered = useMemo(
+    () => filterReleases(releases, filters),
+    [releases, filters]
+  );
   const dated = filtered.filter((item) => item.date !== null);
   const latestDate = dated[0]?.date;
   const selectedDate =
-    view === "calendar" ? (calendarDate ?? today) : (timelineDate ?? latestDate ?? today);
+    view === "calendar"
+      ? (calendarDate ?? today)
+      : (timelineDate ?? latestDate ?? today);
   const availableSeries = [
     ...new Set(
       filterReleases(releases, { ...filters, query: "", series: "" }).flatMap(
-        (item) => item.series,
-      ),
+        (item) => item.series
+      )
     ),
   ].toSorted();
   const hasFilters = Object.values(filters).some(Boolean);
@@ -87,7 +105,7 @@ export function ReleaseExplorer({
       <div
         className={cn(
           "rounded-2xl border bg-background",
-          (view === "list" || filtered.length === 0) && "overflow-hidden",
+          (view === "list" || filtered.length === 0) && "overflow-hidden"
         )}
       >
         <div data-pagefind-ignore className="overflow-hidden rounded-t-2xl">
@@ -106,7 +124,7 @@ export function ReleaseExplorer({
                   releases: releases.filter((release) => release.date === date),
                 },
                 anchor,
-                true,
+                true
               );
             }}
           />
@@ -125,15 +143,21 @@ export function ReleaseExplorer({
                   {en ? "Search models" : "モデルを検索"}
                 </label>
                 <Search
-                  className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground"
+                  className="pointer-events-none absolute top-3 left-3 size-4 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <Input
                   id={`${id}-search`}
                   type="search"
                   value={filters.query}
-                  onChange={(event) => updateFilters({ query: event.target.value })}
-                  placeholder={en ? "Find a model, series, or provider…" : "モデル名・系列で検索…"}
+                  onChange={(event) =>
+                    updateFilters({ query: event.target.value })
+                  }
+                  placeholder={
+                    en
+                      ? "Find a model, series, or provider…"
+                      : "モデル名・系列で検索…"
+                  }
                   className="h-11 rounded-lg bg-background pl-10 shadow-none"
                 />
               </search>
@@ -141,7 +165,9 @@ export function ReleaseExplorer({
                 aria-label={en ? "Release type" : "リリースの種類"}
                 className={releaseSelectClass}
                 value={filters.kind}
-                onChange={(event) => updateFilters({ kind: event.target.value, series: "" })}
+                onChange={(event) =>
+                  updateFilters({ kind: event.target.value, series: "" })
+                }
               >
                 {kindOptions.map(([value, label]) => (
                   <option key={value} value={value}>
@@ -153,7 +179,9 @@ export function ReleaseExplorer({
                 aria-label={en ? "Model series" : "モデル系列"}
                 className={releaseSelectClass}
                 value={filters.series}
-                onChange={(event) => updateFilters({ series: event.target.value })}
+                onChange={(event) =>
+                  updateFilters({ series: event.target.value })
+                }
               >
                 <option value="">{en ? "All series" : "すべての系列"}</option>
                 {availableSeries.map((series) => (
@@ -166,7 +194,7 @@ export function ReleaseExplorer({
             <div className="flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 sm:px-6">
               <fieldset
                 aria-label={en ? "Display mode" : "表示形式"}
-                className="min-w-0 flex max-w-full gap-1 rounded-lg bg-muted/50 p-1"
+                className="flex max-w-full min-w-0 gap-1 rounded-lg bg-muted/50 p-1"
               >
                 {(
                   [
@@ -198,7 +226,7 @@ export function ReleaseExplorer({
                       "relative flex h-11 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4 sm:text-sm",
                       view === value
                         ? "bg-background font-semibold text-teal-800 shadow-sm dark:text-teal-200"
-                        : "text-muted-foreground hover:text-foreground",
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     <Icon className="size-4" aria-hidden="true" />
@@ -207,8 +235,11 @@ export function ReleaseExplorer({
                 ))}
               </fieldset>
               <div className="flex min-h-10 items-center gap-3">
-                <output className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground">
-                  <SlidersHorizontal className="hidden size-3 sm:block" aria-hidden="true" />
+                <output className="flex items-center gap-1.5 text-xs text-muted-foreground tabular-nums">
+                  <SlidersHorizontal
+                    className="hidden size-3 sm:block"
+                    aria-hidden="true"
+                  />
                   <span className="sm:hidden">
                     {filtered.length}/{releases.length}
                   </span>
@@ -236,9 +267,14 @@ export function ReleaseExplorer({
 
         {filtered.length === 0 ? (
           <div className="space-y-2 p-12 text-center">
-            <Search className="mx-auto mb-4 size-6 text-muted-foreground" aria-hidden="true" />
+            <Search
+              className="mx-auto mb-4 size-6 text-muted-foreground"
+              aria-hidden="true"
+            />
             <p className="font-medium">
-              {en ? "No matching releases." : "条件に一致するリリースがありません。"}
+              {en
+                ? "No matching releases."
+                : "条件に一致するリリースがありません。"}
             </p>
             <p className="text-sm text-muted-foreground">
               {en
@@ -266,7 +302,9 @@ export function ReleaseExplorer({
                 timelineRange && (
                   <section
                     className="min-w-0"
-                    aria-label={en ? "All release intervals" : "全期間のリリース比較"}
+                    aria-label={
+                      en ? "All release intervals" : "全期間のリリース比較"
+                    }
                   >
                     <ReleaseTimeline
                       locale={locale}

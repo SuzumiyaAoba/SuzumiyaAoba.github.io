@@ -34,7 +34,10 @@ describe("findAdjacentByIndex", () => {
 
   it("逆順offset(昇順リスト向け: prev=-1, next=+1)を指定できる", () => {
     expect(
-      findAdjacentByIndex(items, (item) => item === "b", { prevOffset: -1, nextOffset: 1 }),
+      findAdjacentByIndex(items, (item) => item === "b", {
+        prevOffset: -1,
+        nextOffset: 1,
+      })
     ).toStrictEqual({
       prev: "a",
       next: "c",

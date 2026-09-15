@@ -7,7 +7,10 @@ export type MarkdownNode = {
   children?: MarkdownNode[] | undefined;
 };
 
-export function walkMarkdown(node: MarkdownNode, visit: (node: MarkdownNode) => void): void {
+export function walkMarkdown(
+  node: MarkdownNode,
+  visit: (node: MarkdownNode) => void
+): void {
   visit(node);
   for (const child of node.children ?? []) {
     walkMarkdown(child, visit);

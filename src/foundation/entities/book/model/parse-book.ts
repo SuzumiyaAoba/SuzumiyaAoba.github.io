@@ -8,7 +8,9 @@ import {
 import type { ContentFormat } from "@/shared/lib/content-file";
 import type { BookFrontmatter } from "./types";
 
-export function normalizeBookFrontmatter(data: Record<string, unknown>): BookFrontmatter {
+export function normalizeBookFrontmatter(
+  data: Record<string, unknown>
+): BookFrontmatter {
   const date = asDateString(data["date"]);
   const category = asString(data["category"]);
   const tags = asStringArray(data["tags"]);
@@ -16,7 +18,10 @@ export function normalizeBookFrontmatter(data: Record<string, unknown>): BookFro
 
   // co-author は YAML の文字列配列。書籍ルールでは `["Claude Opus 4.7"]` のように複数可。
   const rawCoAuthors = data["co-author"];
-  const coAuthors = typeof rawCoAuthors === "string" ? [rawCoAuthors] : asStringArray(rawCoAuthors);
+  const coAuthors =
+    typeof rawCoAuthors === "string"
+      ? [rawCoAuthors]
+      : asStringArray(rawCoAuthors);
 
   return {
     title: asStringWithDefault(data["title"], ""),

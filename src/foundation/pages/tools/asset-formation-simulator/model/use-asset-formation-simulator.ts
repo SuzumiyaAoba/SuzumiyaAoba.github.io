@@ -11,7 +11,12 @@ import {
   isSameScenarios,
 } from "./scenario-codec";
 import { calculateSchedule, toYearlyRows } from "./simulation";
-import type { ColorState, ScenarioData, ScenarioInput, VisibleState } from "./types";
+import type {
+  ColorState,
+  ScenarioData,
+  ScenarioInput,
+  VisibleState,
+} from "./types";
 
 const scenarioPalette = [
   "#5B4EAD",
@@ -36,18 +41,25 @@ const defaultScenarios: ScenarioInput[] = [
 ];
 
 export function useAssetFormationSimulator(locale: Locale) {
-  const [compressedParam, setCompressedParam] = useQueryState("p", parseAsString);
+  const [compressedParam, setCompressedParam] = useQueryState(
+    "p",
+    parseAsString
+  );
   const [scenarios, setScenarios] = useState<ScenarioInput[]>(defaultScenarios);
   const [selectedScenarioId, setSelectedScenarioId] = useState("scenario-1");
   const [yearsInput, setYearsInput] = useState("20");
   const lastEncodedRef = useRef<string | null>(null);
-  const [visibleSeriesParam, setVisibleSeriesParam] = useQueryState("v", parseAsString);
+  const [visibleSeriesParam, setVisibleSeriesParam] = useQueryState(
+    "v",
+    parseAsString
+  );
   const [visibleSeries, setVisibleSeries] = useState<VisibleState>({});
   const [colorOverrides, setColorOverrides] = useState<ColorState>({});
 
   const defaultPatternName = useCallback(
-    (index: number) => (locale === "en" ? `Pattern ${index}` : `パターン${index}`),
-    [locale],
+    (index: number) =>
+      locale === "en" ? `Pattern ${index}` : `パターン${index}`,
+    [locale]
   );
 
   useEffect(() => {
@@ -59,7 +71,7 @@ export function useAssetFormationSimulator(locale: Locale) {
           return { ...scenario, name: defaultPatternName(index + 1) };
         }
         return scenario;
-      }),
+      })
     );
   }, [defaultPatternName]);
 
@@ -76,18 +88,24 @@ export function useAssetFormationSimulator(locale: Locale) {
         return next;
       });
     },
-    [setCompressedParam],
+    [setCompressedParam]
   );
 
   const scenarioData = useMemo<ScenarioData[]>(
     () =>
       scenarioList.map((scenario, index) => {
-        const monthlyContribution = Number(scenario.monthlyContributionInput) || 0;
+        const monthlyContribution =
+          Number(scenario.monthlyContributionInput) || 0;
         const annualRate = Number(scenario.annualRateInput) || 0;
-        const schedule = calculateSchedule(monthlyContribution, annualRate, years);
+        const schedule = calculateSchedule(
+          monthlyContribution,
+          annualRate,
+          years
+        );
         const tableRows = toYearlyRows(schedule);
 
-        const baseColor = scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
+        const baseColor =
+          scenarioPalette[index % scenarioPalette.length] ?? "#5B4EAD";
         const color = colorOverrides[scenario.id] ?? baseColor;
 
         return {
@@ -100,11 +118,12 @@ export function useAssetFormationSimulator(locale: Locale) {
           label: scenario.name || defaultPatternName(index + 1),
         };
       }),
-    [scenarioList, years, colorOverrides, defaultPatternName],
+    [scenarioList, years, colorOverrides, defaultPatternName]
   );
 
   const selectedScenario =
-    scenarioData.find((scenario) => scenario.id === selectedScenarioId) ?? scenarioData[0];
+    scenarioData.find((scenario) => scenario.id === selectedScenarioId) ??
+    scenarioData[0];
 
   const summary = selectedScenario?.schedule.at(-1) ?? {
     principal: 0,
@@ -112,7 +131,10 @@ export function useAssetFormationSimulator(locale: Locale) {
     balance: 0,
   };
 
-  const tableRows = useMemo(() => selectedScenario?.tableRows ?? [], [selectedScenario]);
+  const tableRows = useMemo(
+    () => selectedScenario?.tableRows ?? [],
+    [selectedScenario]
+  );
 
   useEffect(() => {
     setVisibleSeries((prev) => {
@@ -149,11 +171,21 @@ export function useAssetFormationSimulator(locale: Locale) {
     if (Object.keys(visibleSeries).length === 0) {
       return;
     }
-    const encoded = encodeVisibilityPayload(visibleSeries, colorOverrides, scenarioList);
+    const encoded = encodeVisibilityPayload(
+      visibleSeries,
+      colorOverrides,
+      scenarioList
+    );
     if (encoded !== visibleSeriesParam) {
       void setVisibleSeriesParam(encoded);
     }
-  }, [visibleSeries, colorOverrides, scenarioList, visibleSeriesParam, setVisibleSeriesParam]);
+  }, [
+    visibleSeries,
+    colorOverrides,
+    scenarioList,
+    visibleSeriesParam,
+    setVisibleSeriesParam,
+  ]);
 
   useEffect(() => {
     if (!compressedParam) {
@@ -189,7 +221,10 @@ export function useAssetFormationSimulator(locale: Locale) {
       }
       return;
     }
-    if (scenarioList.length > 0 && !scenarioList.some((s) => s.id === selectedScenarioId)) {
+    if (
+      scenarioList.length > 0 &&
+      !scenarioList.some((s) => s.id === selectedScenarioId)
+    ) {
       const firstScenarioId = scenarioList[0]?.id;
       if (firstScenarioId) {
         setSelectedScenarioId(firstScenarioId);

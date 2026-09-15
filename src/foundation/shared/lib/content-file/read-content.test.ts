@@ -22,14 +22,17 @@ describe("createContentReader", () => {
     await mkdir(path.join(contentRoot, "blog", "both"), { recursive: true });
     await writeFile(
       path.join(contentRoot, "blog", "both", "index.md"),
-      "---\ntitle: 日本語の記事\ndate: 2026-01-01\n---\n日本語の本文\n",
+      "---\ntitle: 日本語の記事\ndate: 2026-01-01\n---\n日本語の本文\n"
     );
     await writeFile(
       path.join(contentRoot, "blog", "both", "index.en.mdx"),
-      "---\ntitle: English article\ndate: 2026-01-02\n---\n<Component />\n",
+      "---\ntitle: English article\ndate: 2026-01-02\n---\n<Component />\n"
     );
     await mkdir(path.join(contentRoot, "blog", "en-only"), { recursive: true });
-    await writeFile(path.join(contentRoot, "blog", "en-only", "index.en.md"), "English only\n");
+    await writeFile(
+      path.join(contentRoot, "blog", "en-only", "index.en.md"),
+      "English only\n"
+    );
   });
 
   afterAll(async () => {
@@ -46,7 +49,9 @@ describe("createContentReader", () => {
   });
 
   it("指定したロケールのMDXを返す", async () => {
-    await expect(readBlog("both", { locale: "en", fallback: false })).resolves.toStrictEqual({
+    await expect(
+      readBlog("both", { locale: "en", fallback: false })
+    ).resolves.toStrictEqual({
       slug: "both",
       content: "<Component />\n",
       format: "mdx",

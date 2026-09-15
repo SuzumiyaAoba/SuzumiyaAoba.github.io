@@ -40,11 +40,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { path: "/series", changeFrequency: "weekly", priority: 0.8 },
       { path: "/tags", changeFrequency: "weekly", priority: 0.7 },
       { path: "/tools", changeFrequency: "monthly", priority: 0.6 },
-      { path: "/tools/asset-formation-simulator", changeFrequency: "monthly", priority: 0.5 },
-      { path: "/tools/ascii-standard-code", changeFrequency: "monthly", priority: 0.5 },
+      {
+        path: "/tools/asset-formation-simulator",
+        changeFrequency: "monthly",
+        priority: 0.5,
+      },
+      {
+        path: "/tools/ascii-standard-code",
+        changeFrequency: "monthly",
+        priority: 0.5,
+      },
     ],
     siteUrl,
-    buildTime,
+    buildTime
   );
 
   const [posts, notes, seriesList, tags] = await Promise.all([
@@ -53,7 +61,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getSeriesList(),
     getAllBlogTags(),
   ]);
-  const postsForDates = posts.flatMap((post) => resolveLocalizedValue(post, "ja") ?? []);
+  const postsForDates = posts.flatMap(
+    (post) => resolveLocalizedValue(post, "ja") ?? []
+  );
   const blogPages = buildContentSitemapEntries(posts, {
     basePath: "/blog/post",
     siteUrl,
@@ -68,14 +78,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const bookSlugs = await getBookSlugs();
-  const bookMetas = await Promise.all(bookSlugs.map(async (slug) => getBookMeta(slug)));
+  const bookMetas = await Promise.all(
+    bookSlugs.map(async (slug) => await getBookMeta(slug))
+  );
   const bookLastModified = new Map<string, Date>();
   for (const meta of bookMetas) {
     if (meta?.frontmatter.date) {
       bookLastModified.set(meta.slug, new Date(meta.frontmatter.date));
     }
   }
-  const lastModifiedForBook = (slug: string) => bookLastModified.get(slug) ?? buildTime;
+  const lastModifiedForBook = (slug: string) =>
+    bookLastModified.get(slug) ?? buildTime;
 
   const bookIndexPages: MetadataRoute.Sitemap = [
     {
@@ -93,7 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
   const bookSectionPages: MetadataRoute.Sitemap = [];
   const booksWithToc = await Promise.all(
-    bookSlugs.map(async (slug) => ({ slug, toc: await getBookToc(slug) })),
+    bookSlugs.map(async (slug) => ({ slug, toc: await getBookToc(slug) }))
   );
   for (const { slug, toc } of booksWithToc) {
     for (const ch of toc) {
@@ -137,7 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     })),
     siteUrl,
-    buildTime,
+    buildTime
   );
 
   const tagPages = buildTranslatedSitemapEntries(
@@ -148,7 +161,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     })),
     siteUrl,
-    buildTime,
+    buildTime
   );
 
   return [

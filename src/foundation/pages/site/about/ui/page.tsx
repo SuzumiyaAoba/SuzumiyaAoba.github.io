@@ -32,7 +32,10 @@ export type AboutPageContentProps = {
  */
 export function AboutPageContent({ locale }: AboutPageContentProps) {
   const pagePath = toLocalePath("/about", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "About", path: "/about" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "About",
+    path: "/about",
+  });
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
@@ -40,7 +43,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
         <Breadcrumbs items={breadcrumbItems} />
         <section className="page-heading">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+            <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
               <I18nText locale={locale} ja="概要" en="About" />
             </p>
             <h1 className="page-title">SuzumiyaAoba</h1>
@@ -54,7 +57,10 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href={toLocalePath("/blog", locale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/blog", locale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={locale} ja="ブログ" en="Blog" />
                 </a>
                 <I18nText
@@ -65,7 +71,10 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
                 />
               </li>
               <li>
-                <a href={toLocalePath("/series", locale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/series", locale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={locale} ja="シリーズ" en="Series" />
                 </a>
                 <I18nText
@@ -76,7 +85,10 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
                 />
               </li>
               <li>
-                <a href={toLocalePath("/tools", locale)} className="font-medium text-foreground">
+                <a
+                  href={toLocalePath("/tools", locale)}
+                  className="font-medium text-foreground"
+                >
                   <I18nText locale={locale} ja="ツール" en="Tools" />
                 </a>
                 <I18nText

@@ -7,7 +7,9 @@ export type KeywordsIndexPageContentProps = {
   locale: Locale;
 };
 
-export function KeywordsIndexPageContent({ locale }: KeywordsIndexPageContentProps) {
+export function KeywordsIndexPageContent({
+  locale,
+}: KeywordsIndexPageContentProps) {
   const pagePath = toLocalePath("/keywords", locale);
   return (
     <SiteLayout locale={locale} path={pagePath}>

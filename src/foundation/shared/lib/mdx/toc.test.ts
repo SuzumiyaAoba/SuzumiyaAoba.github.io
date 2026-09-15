@@ -18,8 +18,16 @@ describe("getTocHeadings", () => {
       const result = await getTocHeadings(source);
 
       expect(result).toHaveLength(2);
-      expect(result[0]).toStrictEqual({ id: "セクション1", text: "セクション1", level: 2 });
-      expect(result[1]).toStrictEqual({ id: "セクション2", text: "セクション2", level: 2 });
+      expect(result[0]).toStrictEqual({
+        id: "セクション1",
+        text: "セクション1",
+        level: 2,
+      });
+      expect(result[1]).toStrictEqual({
+        id: "セクション2",
+        text: "セクション2",
+        level: 2,
+      });
     });
 
     it("h3 ヘッダーを抽出する", async () => {
@@ -99,7 +107,9 @@ describe("getTocHeadings", () => {
   describe("idPrefix オプション", () => {
     it("プレフィックスをIDに追加する", async () => {
       const source = `## セクション`;
-      const result = await getTocHeadings(source, { idPrefix: "user-content-" });
+      const result = await getTocHeadings(source, {
+        idPrefix: "user-content-",
+      });
 
       assert(result[0]);
       expect(result[0].id).toBe("user-content-セクション");

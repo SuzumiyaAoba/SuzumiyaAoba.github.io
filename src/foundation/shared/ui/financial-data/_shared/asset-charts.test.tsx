@@ -1,7 +1,12 @@
 import type { ComponentProps } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
-import type { LineChart, PieChart, SheetData, StackedBarChart } from "@/shared/ui/financial-charts";
+import type {
+  LineChart,
+  PieChart,
+  SheetData,
+  StackedBarChart,
+} from "@/shared/ui/financial-charts";
 import { Sheet1ChartWrapper } from "../Sheet1ChartWrapper";
 import { Sheet1BarLineChartWrapper } from "../Sheet1BarLineChartWrapper";
 import { Sheet2ChartWrapper } from "../Sheet2ChartWrapper";
@@ -13,7 +18,9 @@ import { AssetDistributionPieCharts } from "./asset-distribution-pie-charts";
 
 const { line, bar, pie } = vi.hoisted(() => ({
   line: vi.fn<(props: ComponentProps<typeof LineChart>) => null>(() => null),
-  bar: vi.fn<(props: ComponentProps<typeof StackedBarChart>) => null>(() => null),
+  bar: vi.fn<(props: ComponentProps<typeof StackedBarChart>) => null>(
+    () => null
+  ),
   pie: vi.fn<(props: ComponentProps<typeof PieChart>) => null>(() => null),
 }));
 vi.mock(import("@/shared/ui/financial-charts"), async (importOriginal) => ({
@@ -25,7 +32,13 @@ vi.mock(import("@/shared/ui/financial-charts"), async (importOriginal) => ({
 
 const data: SheetData = {
   metadata: { title: "金融資産の分布" },
-  headers: ["少額 | ％", "高額 | ％", "未回答 | ％", "平均 | 万円", "中央値 | 万円"],
+  headers: [
+    "少額 | ％",
+    "高額 | ％",
+    "未回答 | ％",
+    "平均 | 万円",
+    "中央値 | 万円",
+  ],
   series: [
     {
       year: "2023",
@@ -105,7 +118,10 @@ describe("金融資産グラフの表示用データ", () => {
     expect(props?.groups).toStrictEqual([
       {
         name: "金融資産の有無（注1）",
-        metrics: ["金融資産の有無（注1） | 保有している | ％", "保有して いない | ％"],
+        metrics: [
+          "金融資産の有無（注1） | 保有している | ％",
+          "保有して いない | ％",
+        ],
       },
       {
         name: "金融資産非保有世帯の預貯金口座の有無（注2）",
@@ -137,16 +153,27 @@ describe("金融資産グラフの表示用データ", () => {
   it("異なる世帯範囲のグラフでデータ・開始年・軸の最大値を区別する", () => {
     renderToStaticMarkup(<Sheet3AmountChartWrapper />);
     renderToStaticMarkup(<Sheet4AmountChartWrapper />);
-    expect(line.mock.calls[0]?.[0].config).toMatchObject({ startYear: 1963, yAxisMax: 2500 });
-    expect(line.mock.calls[1]?.[0].config).toMatchObject({ startYear: 2004, yAxisMax: 2000 });
+    expect(line.mock.calls[0]?.[0].config).toMatchObject({
+      startYear: 1963,
+      yAxisMax: 2500,
+    });
+    expect(line.mock.calls[1]?.[0].config).toMatchObject({
+      startYear: 2004,
+      yAxisMax: 2000,
+    });
     expect(line.mock.calls[0]?.[0].data).not.toBe(line.mock.calls[1]?.[0].data);
   });
 
   it("年別の円グラフは欠損値を除外し、ゼロと年・項目の順序を保つ", () => {
-    const html = renderToStaticMarkup(<AssetDistributionPieCharts data={data} {...pieProps} />);
+    const html = renderToStaticMarkup(
+      <AssetDistributionPieCharts data={data} {...pieProps} />
+    );
     expect(html).toContain("分布の比較");
     expect(
-      pie.mock.calls.map(([props]) => ({ title: props.title, data: props.data })),
+      pie.mock.calls.map(([props]) => ({
+        title: props.title,
+        data: props.data,
+      }))
     ).toStrictEqual([
       { title: "2023年", data: [{ label: "少額", value: 25 }] },
       {
@@ -167,19 +194,26 @@ describe("金融資産グラフの表示用データ", () => {
   });
 
   it("比較する年が欠けているときは部分的な円グラフを表示しない", () => {
-    const incomplete = { ...data, series: data.series.filter((series) => series.year !== "2024") };
+    const incomplete = {
+      ...data,
+      series: data.series.filter((series) => series.year !== "2024"),
+    };
     expect(
-      renderToStaticMarkup(<AssetDistributionPieCharts data={incomplete} {...pieProps} />),
+      renderToStaticMarkup(
+        <AssetDistributionPieCharts data={incomplete} {...pieProps} />
+      )
     ).toContain("2023年、2024年、または2025年のデータが見つかりません");
     expect(pie).not.toHaveBeenCalled();
   });
 
   it("シートが読み込めなければ共通の空表示を使う", () => {
-    expect(renderToStaticMarkup(<AssetAmountChart data={null} startYear={1963} />)).toContain(
-      "データが見つかりません",
-    );
     expect(
-      renderToStaticMarkup(<AssetDistributionPieCharts data={null} {...pieProps} />),
+      renderToStaticMarkup(<AssetAmountChart data={null} startYear={1963} />)
+    ).toContain("データが見つかりません");
+    expect(
+      renderToStaticMarkup(
+        <AssetDistributionPieCharts data={null} {...pieProps} />
+      )
     ).toContain("データが見つかりません");
     expect(line).not.toHaveBeenCalled();
     expect(pie).not.toHaveBeenCalled();

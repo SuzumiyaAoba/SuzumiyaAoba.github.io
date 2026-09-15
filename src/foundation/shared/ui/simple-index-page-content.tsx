@@ -1,4 +1,7 @@
-import { buildBreadcrumbList, buildListBreadcrumbItems } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+} from "@/shared/lib/routing";
 import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
@@ -31,7 +34,10 @@ export function SimpleIndexPageContent({
   locale,
   path,
   breadcrumbName,
-  breadcrumbItems = buildListBreadcrumbItems(locale, { name: breadcrumbName, path }),
+  breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: breadcrumbName,
+    path,
+  }),
   heading,
   emptyMessage,
   items,
@@ -55,7 +61,11 @@ export function SimpleIndexPageContent({
           emptyState={
             <Card className="border-transparent bg-card/40 shadow-none">
               <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText locale={locale} ja={emptyMessage.ja} en={emptyMessage.en} />
+                <I18nText
+                  locale={locale}
+                  ja={emptyMessage.ja}
+                  en={emptyMessage.en}
+                />
               </div>
             </Card>
           }

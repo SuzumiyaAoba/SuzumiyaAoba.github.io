@@ -23,7 +23,9 @@
     window.__pagefind_loading = true;
     try {
       /** @type {unknown} */
-      const pagefind = await import(/* webpackIgnore: true */ "/pagefind/pagefind.js");
+      const pagefind = await import(
+        /* webpackIgnore: true */ "/pagefind/pagefind.js"
+      );
       if (!isPagefindModule(pagefind)) {
         throw new TypeError("Pagefind search API is unavailable");
       }
@@ -34,8 +36,10 @@
       window.__pagefind_loading = false;
       window.dispatchEvent(
         new CustomEvent("pagefind:error", {
-          detail: { error: error instanceof Error ? error.message : "Unknown error" },
-        }),
+          detail: {
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+        })
       );
     }
   }
@@ -45,7 +49,10 @@
   }
 
   document.addEventListener("DOMContentLoaded", initializePagefind);
-  if (document.readyState === "complete" || document.readyState === "interactive") {
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
     setTimeout(initializePagefind, 1);
   }
 })();

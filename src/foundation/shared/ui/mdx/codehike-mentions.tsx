@@ -4,14 +4,18 @@ import { InnerLine } from "codehike/code";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 export function HoverContainer({ children }: { children: ReactNode }) {
-  return <div className="hover-container">{children}</div>;
+  return <div>{children}</div>;
 }
 
 export const hover: AnnotationHandler = {
   name: "hover",
   onlyIfAnnotated: true,
   Line: ({ annotation, ...props }) => (
-    <InnerLine merge={props} className="transition-opacity" data-line={annotation?.query || ""} />
+    <InnerLine
+      merge={props}
+      className="transition-opacity"
+      data-line={annotation?.query || ""}
+    />
   ),
 };
 
@@ -44,7 +48,13 @@ export function MdxLink({ href, children, className, ...rest }: MdxLinkProps) {
     const isExternal = href.startsWith("http") || href.startsWith("mailto:");
     if (isExternal) {
       return (
-        <a href={href} className={className} target="_blank" rel="noopener noreferrer" {...rest}>
+        <a
+          href={href}
+          className={className}
+          target="_blank"
+          rel="noopener noreferrer"
+          {...rest}
+        >
           {children}
         </a>
       );

@@ -6,8 +6,7 @@ tags: ["Codex", "Java"]
 description: Codex Web で Java (Gradle) リポジトリのビルドが失敗する問題を、セットアップスクリプトの設定で解決する方法をメモする。
 ---
 
-Codex Web で Java (Gradle) リポジトリの実装をさせたところビルドでエラーが発生し、
-その解決方法がわかったのでメモ。
+Codex Web で Java (Gradle) リポジトリの実装をさせたところビルドでエラーが発生し、その解決方法がわかったのでメモ。
 
 ## 設定
 
@@ -15,8 +14,7 @@ Codex Web で Java (Gradle) リポジトリの実装をさせたところビル�
 
 - [Issue with Running Java Maven Tests in Codex - Dependency Resolution Failure - Codex / Codex CLI - OpenAI Developer Community](https://community.openai.com/t/issue-with-running-java-maven-tests-in-codex-dependency-resolution-failure/1283045)
 
-[Codex の環境設定](https://chatgpt.com/codex/settings/environments) を開いて Java リポジトリの開発で使うときの環境を選択。
-「編集」をクリックし、「セットアップ スクリプト」に以下のスクリプトを貼り付ける。
+[Codex の環境設定](https://chatgpt.com/codex/settings/environments) を開いて Java リポジトリの開発で使うときの環境を選択。「編集」をクリックし、「セットアップ スクリプト」に以下のスクリプトを貼り付ける。
 
 ```shell
 #!/usr/bin/env bash
@@ -46,5 +44,4 @@ cat > ~/.m2/settings.xml <<'EOF'
 EOF
 ```
 
-参考にした投稿の 4 番目のステップは消している。それがあると逆にエラーが発生してしまった。
-これで Codex Web から Java の開発ができるようになった :tada:
+参考にした投稿の 4 番目のステップは消している。それがあると逆にエラーが発生してしまった。これで Codex Web から Java の開発ができるようになった :tada:

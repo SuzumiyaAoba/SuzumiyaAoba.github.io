@@ -27,7 +27,10 @@ describe("parseSheetData", () => {
 describe("createSheetDataReader", () => {
   it("同じシートの参照を再利用し、異なるシートを混同しない", () => {
     const read = createSheetDataReader({
-      sheets: { "1": validSheet, "2": { ...validSheet, metadata: { title: "別のシート" } } },
+      sheets: {
+        "1": validSheet,
+        "2": { ...validSheet, metadata: { title: "別のシート" } },
+      },
     });
     const first = read("1");
     expect(first).toStrictEqual(validSheet);
@@ -37,7 +40,9 @@ describe("createSheetDataReader", () => {
   });
 
   it("欠落・不正なシートはnullとし、有効なシートの読み込みを妨げない", () => {
-    const read = createSheetDataReader({ sheets: { valid: validSheet, invalid: {} } });
+    const read = createSheetDataReader({
+      sheets: { valid: validSheet, invalid: {} },
+    });
     expect(read("missing")).toBeNull();
     expect(read("invalid")).toBeNull();
     expect(read("valid")).toStrictEqual(validSheet);
@@ -46,7 +51,10 @@ describe("createSheetDataReader", () => {
 
   it("別のデータセットに以前の解析結果を持ち越さない", () => {
     const first = createSheetDataReader({ sheets: { "1": validSheet } });
-    const updated = { ...validSheet, series: [{ year: "2025", values: { 値: 200 } }] };
+    const updated = {
+      ...validSheet,
+      series: [{ year: "2025", values: { 値: 200 } }],
+    };
     const second = createSheetDataReader({ sheets: { "1": updated } });
     expect(first("1")).toStrictEqual(validSheet);
     expect(second("1")).toStrictEqual(updated);

@@ -42,13 +42,17 @@ const variantIcons: Record<NonNullable<MdxLabelProps["variant"]>, string> = {
 /**
  * MDX コンテンツ内で強調表示や状態を示すためのラベルコンポーネント。
  */
-export function MdxLabel({ children, variant = "note", className }: MdxLabelProps) {
+export function MdxLabel({
+  children,
+  variant = "note",
+  className,
+}: MdxLabelProps) {
   return (
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-semibold",
         variantStyles[variant],
-        className,
+        className
       )}
     >
       <Icon icon={variantIcons[variant]} className="size-3.5" aria-hidden />

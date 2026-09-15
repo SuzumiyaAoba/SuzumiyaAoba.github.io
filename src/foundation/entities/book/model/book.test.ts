@@ -2,7 +2,13 @@ import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vite-plus/test";
-import { getAdjacentSections, getBookMeta, getBookSection, getBookSlugs, getBookToc } from "./book";
+import {
+  getAdjacentSections,
+  getBookMeta,
+  getBookSection,
+  getBookSlugs,
+  getBookToc,
+} from "./book";
 
 let contentRoot = "";
 let fixtureDirectory = "";
@@ -31,7 +37,7 @@ co-author: [Author A, Author B]
 
 ## 第1章: はじめに {#intro}
 ## 第2章： 応用
-`,
+`
   );
   await write(
     "sample/parts/01/chapters/02-second.mdx",
@@ -41,14 +47,22 @@ llm: false
 co-author: Author A
 ---
 <Example />
-`,
+`
   );
-  await write("sample/parts/01/chapters/01-first.md", "---\ntitle: 最初の節\n---\n本文\n");
+  await write(
+    "sample/parts/01/chapters/01-first.md",
+    "---\ntitle: 最初の節\n---\n本文\n"
+  );
   await write("sample/parts/01/chapters/01-image.png", "image");
   await write("sample/parts/01/chapters/03-image.png", "image");
   await write("sample/parts/02/chapters/01.md", "番号だけの節。\n");
-  await write("sample/parts/03/chapters/01-broken.md", "---\ntitle: [broken\n---\n");
-  await mkdir(path.join(contentRoot, "books/sample/parts/01/chapters/04-directory.md"));
+  await write(
+    "sample/parts/03/chapters/01-broken.md",
+    "---\ntitle: [broken\n---\n"
+  );
+  await mkdir(
+    path.join(contentRoot, "books/sample/parts/01/chapters/04-directory.md")
+  );
   await mkdir(path.join(contentRoot, "books/sample/parts/04"));
   await write("another/index.md", "前書きのみ。\n");
 });
@@ -112,7 +126,9 @@ describe("書籍の公開API", () => {
   });
 
   it("通常のファイルと番号のみのファイルを、目次と同じ規則で読み込む", async () => {
-    expect((await getBookSection("sample", "01", "01"))?.title).toBe("最初の節");
+    expect((await getBookSection("sample", "01", "01"))?.title).toBe(
+      "最初の節"
+    );
     await expect(getBookSection("sample", "02", "01")).resolves.toStrictEqual({
       chapter: "02",
       section: "01",
@@ -124,13 +140,17 @@ describe("書籍の公開API", () => {
   });
 
   it("前後の節を章をまたいで返し、先頭・末尾・未登録の節を扱う", async () => {
-    await expect(getAdjacentSections("sample", "01", "02")).resolves.toStrictEqual({
+    await expect(
+      getAdjacentSections("sample", "01", "02")
+    ).resolves.toStrictEqual({
       prev: { chapter: "01", section: "01", title: "最初の節" },
       next: { chapter: "02", section: "01", title: "01.md" },
     });
     expect((await getAdjacentSections("sample", "01", "01")).prev).toBeNull();
     expect((await getAdjacentSections("sample", "03", "01")).next).toBeNull();
-    await expect(getAdjacentSections("sample", "99", "99")).resolves.toStrictEqual({
+    await expect(
+      getAdjacentSections("sample", "99", "99")
+    ).resolves.toStrictEqual({
       prev: null,
       next: null,
     });

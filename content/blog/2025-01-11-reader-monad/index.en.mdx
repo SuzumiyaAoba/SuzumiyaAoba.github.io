@@ -8,8 +8,7 @@ model: GPT-5.2-Codex
 description: Reimplementing the Reader monad sample from "All About Monads" in Scala using Cats.
 ---
 
-This time I looked at the Reader monad and implemented the sample from the Reader monad page of [All About Monads](https://www.sampou.org/haskell/a-a-monads/html/index.html) using [Cats](https://typelevel.org/cats/).
-I just started using Cats so there may be a better way to write it, but it works for now, so I’ll just post the code.
+This time I looked at the Reader monad and implemented the sample from the Reader monad page of [All About Monads](https://www.sampou.org/haskell/a-a-monads/html/index.html) using [Cats](https://typelevel.org/cats/). I just started using Cats so there may be a better way to write it, but it works for now, so I’ll just post the code.
 
 I think [Cats MTL](https://typelevel.org/cats-mtl/) could make some parts more readable.
 
@@ -96,5 +95,4 @@ Compared to the Haskell code, the following points were different.
     ```
 - Type inference doesn't work as well as in Haskell (maybe my style is not great) :cry:
 
-Since I rarely write this kind of code after starting work, I can’t help but think that procedural code might be clearer.
-So I plan to implement the same logic without the Reader monad and compare.
+Since I rarely write this kind of code after starting work, I can’t help but think that procedural code might be clearer. So I plan to implement the same logic without the Reader monad and compare.

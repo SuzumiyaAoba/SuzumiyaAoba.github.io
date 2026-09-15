@@ -96,7 +96,7 @@ export function BlogPostPageContent({
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Blog", path: "/blog" },
-    { name: postTitle, path: postPath },
+    { name: postTitle, path: postPath }
   );
 
   return (
@@ -128,7 +128,7 @@ export function BlogPostPageContent({
         <Breadcrumbs items={breadcrumbItems} className="mb-4" />
         <header className="article-heading mb-6 space-y-3 pt-2 pb-5 sm:mb-8 sm:pb-6">
           <p className="font-mono text-xs text-muted-foreground">{postDate}</p>
-          <h1 className="max-w-4xl text-2xl font-medium leading-snug tracking-tight break-words sm:text-3xl">
+          <h1 className="max-w-4xl text-2xl leading-snug font-medium tracking-tight break-words sm:text-3xl">
             {postTitle}
           </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -138,7 +138,10 @@ export function BlogPostPageContent({
               </Badge>
             ) : null}
             {series ? (
-              <a href={toLocalePath(`/series/${series.slug}`, locale)} className="inline-flex">
+              <a
+                href={toLocalePath(`/series/${series.slug}`, locale)}
+                className="inline-flex"
+              >
                 <Badge
                   variant="secondary"
                   className="gap-1 text-[11px] font-medium transition-colors hover:text-foreground"
@@ -154,7 +157,10 @@ export function BlogPostPageContent({
                   <Tag
                     key={tag}
                     tag={tag}
-                    href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)}
+                    href={toLocalePath(
+                      `/tags/${encodeURIComponent(tag)}`,
+                      locale
+                    )}
                     className="bg-muted text-[11px] font-medium text-muted-foreground"
                   />
                 ))}
@@ -163,11 +169,12 @@ export function BlogPostPageContent({
           </div>
         </header>
         <div className="grid w-full min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-8">
-          <div className="flex flex-col w-full min-w-0">
-            <article className="prose prose-neutral min-w-0 max-w-none font-serif">
+          <div className="flex w-full min-w-0 flex-col">
+            <article className="prose max-w-none min-w-0 font-serif">
               {isEn && translationModel ? (
                 <Message title="Notes" variant="info" defaultOpen>
-                  This article was translated by {translationModel}. The original is{" "}
+                  This article was translated by {translationModel}. The
+                  original is{" "}
                   <a href={originalPath}>read the original Japanese article</a>.
                 </Message>
               ) : null}
@@ -176,7 +183,10 @@ export function BlogPostPageContent({
             </article>
             <div>
               {amazonProducts.length > 0 ? (
-                <AmazonProductSection products={amazonProducts} className="mt-8" />
+                <AmazonProductSection
+                  products={amazonProducts}
+                  className="mt-8"
+                />
               ) : null}
               {shouldShowAmazonAssociate ? (
                 <div className="mt-6">
@@ -184,7 +194,7 @@ export function BlogPostPageContent({
                 </div>
               ) : null}
             </div>
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="mt-4 flex justify-end gap-2">
               <Button asChild variant="outline" size="sm">
                 <a
                   href={shareUrl}
@@ -217,9 +227,13 @@ export function BlogPostPageContent({
                     href={toLocalePath(`/blog/post/${prev.slug}`, locale)}
                     className="w-full min-w-0"
                   >
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                    <span className="flex items-center gap-1 text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
                       <Icon icon="lucide:chevron-left" className="size-3" />
-                      <I18nText locale={locale} ja="前の記事" en="Previous Post" />
+                      <I18nText
+                        locale={locale}
+                        ja="前の記事"
+                        en="Previous Post"
+                      />
                     </span>
                     <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
                       {prev.title}
@@ -241,7 +255,7 @@ export function BlogPostPageContent({
                     href={toLocalePath(`/blog/post/${next.slug}`, locale)}
                     className="w-full min-w-0"
                   >
-                    <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider text-right">
+                    <span className="flex items-center justify-end gap-1 text-right text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
                       <I18nText locale={locale} ja="次の記事" en="Next Post" />
                       <Icon icon="lucide:chevron-right" className="size-3" />
                     </span>

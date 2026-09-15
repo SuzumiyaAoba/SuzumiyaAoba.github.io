@@ -13,7 +13,7 @@ export function buildYearlyPieSeries(
   data: SheetData,
   years: string[],
   metrics: string[],
-  labelMap: Record<string, string>,
+  labelMap: Record<string, string>
 ): YearlyPieSeries[] | null {
   const result: YearlyPieSeries[] = [];
   for (const year of years) {

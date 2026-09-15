@@ -9,7 +9,9 @@ type PageProps = {
 
 export default async function Page({ locale = "ja" }: PageProps) {
   const slugs = await getBookSlugs();
-  const metas = await Promise.all(slugs.map(async (slug) => getBookMeta(slug)));
+  const metas = await Promise.all(
+    slugs.map(async (slug) => await getBookMeta(slug))
+  );
 
   const books: BookListEntry[] = metas
     .flatMap((meta) => (meta ? [meta] : []))

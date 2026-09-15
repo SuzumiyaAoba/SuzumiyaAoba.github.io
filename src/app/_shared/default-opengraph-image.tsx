@@ -7,7 +7,7 @@ export { OPENGRAPH_IMAGE_SIZE as DEFAULT_OPENGRAPH_IMAGE_SIZE } from "./opengrap
  * サイトルート用の既定 OGP 画像を描画する。ja/en で完全に共通。
  */
 export async function renderDefaultOpengraphImage() {
-  return renderOpengraphImage(
+  return await renderOpengraphImage(
     <div
       style={{
         background: "white",
@@ -40,6 +40,6 @@ export async function renderDefaultOpengraphImage() {
       >
         suzumiyaaoba.com
       </div>
-    </div>,
+    </div>
   );
 }

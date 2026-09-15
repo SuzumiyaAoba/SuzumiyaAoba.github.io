@@ -28,7 +28,9 @@ export function Footer({ locale }: FooterProps) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="eyebrow text-muted-foreground">© {year} SuzumiyaAoba</p>
           <nav
-            aria-label={locale === "en" ? "Footer navigation" : "フッターナビゲーション"}
+            aria-label={
+              locale === "en" ? "Footer navigation" : "フッターナビゲーション"
+            }
             className="font-noto flex flex-wrap gap-x-5 text-xs text-muted-foreground"
           >
             <a

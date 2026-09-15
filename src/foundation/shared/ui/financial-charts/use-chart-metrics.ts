@@ -19,30 +19,34 @@ export function useChartMetrics({
   labelMap: ChartConfig["labelMap"];
 }) {
   // 非表示にした項目だけを保持し、全解除と初期状態を区別する。
-  const [hiddenMetrics, setHiddenMetrics] = useState<Set<string>>(() => new Set());
+  const [hiddenMetrics, setHiddenMetrics] = useState<Set<string>>(
+    () => new Set()
+  );
   const availableMetrics = useMemo(
     () =>
       data.headers.filter(
         (header) =>
           !excludeHeaders.includes(header) &&
-          data.series.some((row) => Number.isFinite(row.values[header])),
+          data.series.some((row) => Number.isFinite(row.values[header]))
       ),
-    [data.headers, data.series, excludeHeaders],
+    [data.headers, data.series, excludeHeaders]
   );
   const effectiveGroups = useMemo(
     () =>
       groups.length > 0
         ? groups.map((group) => ({
             ...group,
-            metrics: group.metrics.filter((metric) => availableMetrics.includes(metric)),
+            metrics: group.metrics.filter((metric) =>
+              availableMetrics.includes(metric)
+            ),
           }))
         : [{ name: "", metrics: availableMetrics }],
-    [groups, availableMetrics],
+    [groups, availableMetrics]
   );
 
   const selectedMetrics = useMemo(
     () => availableMetrics.filter((metric) => !hiddenMetrics.has(metric)),
-    [availableMetrics, hiddenMetrics],
+    [availableMetrics, hiddenMetrics]
   );
 
   const getLabel = useCallback(
@@ -53,7 +57,7 @@ export function useChartMetrics({
         .map((part) => part.trim())
         .filter((part) => part !== "" && part !== "％")
         .join(""),
-    [labelMap],
+    [labelMap]
   );
 
   const toggleMetric = useCallback((metric: string) => {

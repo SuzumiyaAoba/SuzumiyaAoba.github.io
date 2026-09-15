@@ -15,7 +15,7 @@ function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
     <a
       href={url}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="inline-block min-h-8 break-words py-1 text-sm text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+      className="inline-block min-h-8 py-1 text-sm break-words text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
     >
       {children}
       {external && <span aria-hidden="true"> ↗</span>}
@@ -23,7 +23,13 @@ function ResourceLink({ url, children }: { url: string; children: ReactNode }) {
   );
 }
 
-function ArticleLinks({ title, links }: { title: string; links: AwesomeLink[] }) {
+function ArticleLinks({
+  title,
+  links,
+}: {
+  title: string;
+  links: AwesomeLink[];
+}) {
   if (links.length === 0) {
     return null;
   }
@@ -42,15 +48,23 @@ function ArticleLinks({ title, links }: { title: string; links: AwesomeLink[] })
   );
 }
 
-export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeItem[] }) {
+export function AwesomeList({
+  locale,
+  items,
+}: {
+  locale: Locale;
+  items: AwesomeItem[];
+}) {
   const searchId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const isEnglish = locale === "en";
-  const hasFilters = query.length > 0 || category !== null || selectedTag !== null;
-  const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase(locale);
+  const hasFilters =
+    query.length > 0 || category !== null || selectedTag !== null;
+  const normalize = (value: string) =>
+    value.normalize("NFKC").toLocaleLowerCase(locale);
   const terms = normalize(query).trim().split(/\s+/u).filter(Boolean);
   const categories = new Map<string, AwesomeItem[]>();
   for (const item of items) {
@@ -70,13 +84,16 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
           return false;
         }
         const text = normalize(
-          [item.name, item.category, ...item.tags, item.description].join(" "),
+          [item.name, item.category, ...item.tags, item.description].join(" ")
         );
         return terms.every((term) => text.includes(term));
       }),
     }))
     .filter((group) => group.items.length > 0);
-  const filteredCount = filteredGroups.reduce((count, group) => count + group.items.length, 0);
+  const filteredCount = filteredGroups.reduce(
+    (count, group) => count + group.items.length,
+    0
+  );
 
   if (items.length === 0) {
     return (
@@ -97,7 +114,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                 : "名称・説明・カテゴリ・タグで検索"}
             </label>
             <Search
-              className="pointer-events-none absolute left-0 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              className="pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <Input
@@ -107,13 +124,15 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={
-                isEnglish ? "Search by name, category, or tag…" : "名称・カテゴリ・タグで検索…"
+                isEnglish
+                  ? "Search by name, category, or tag…"
+                  : "名称・カテゴリ・タグで検索…"
               }
               className="rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0"
             />
           </search>
           <div className={hasFilters ? "flex items-center gap-4" : "sr-only"}>
-            <output className="text-xs tabular-nums text-muted-foreground">
+            <output className="text-xs text-muted-foreground tabular-nums">
               {isEnglish
                 ? `${filteredCount} of ${items.length} items`
                 : `${items.length} 件中 ${filteredCount} 件を表示`}
@@ -171,7 +190,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                   : `タグ「${selectedTag}」の絞り込みを解除`
               }
               onClick={() => setSelectedTag(null)}
-              className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <Tag
                 tag={selectedTag}
@@ -185,7 +204,9 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
 
       {filteredCount === 0 ? (
         <p className="border-t border-border py-8 text-sm text-muted-foreground">
-          {isEnglish ? "No matching discoveries." : "条件に一致する項目がありません。"}
+          {isEnglish
+            ? "No matching discoveries."
+            : "条件に一致する項目がありません。"}
         </p>
       ) : (
         <div className="space-y-8">
@@ -201,12 +222,15 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                 <div className="flex items-baseline gap-3">
                   <h2
                     id={headingId}
-                    className="flex min-w-0 items-center gap-2 text-sm font-medium leading-7"
+                    className="flex min-w-0 items-center gap-2 text-sm leading-7 font-medium"
                   >
                     <CategoryIcon category={name} />
                     <span className="min-w-0 break-words">{name}</span>
                   </h2>
-                  <span className="text-xs tabular-nums text-muted-foreground" data-pagefind-ignore>
+                  <span
+                    className="text-xs text-muted-foreground tabular-nums"
+                    data-pagefind-ignore
+                  >
                     {categoryItems.length}
                   </span>
                 </div>
@@ -221,7 +245,7 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                           <h3
                             id={`awesome-${item.id}-title`}
-                            className="min-w-0 break-words text-base font-semibold leading-7 tracking-tight"
+                            className="min-w-0 text-base leading-7 font-semibold tracking-tight break-words"
                           >
                             {item.name}
                           </h3>
@@ -229,16 +253,20 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                             <div className="flex flex-wrap gap-x-4">
                               {item.websiteUrl && (
                                 <ResourceLink url={item.websiteUrl}>
-                                  {isEnglish ? "Official website" : "公式サイト"}
+                                  {isEnglish
+                                    ? "Official website"
+                                    : "公式サイト"}
                                 </ResourceLink>
                               )}
                               {item.githubUrl && (
-                                <ResourceLink url={item.githubUrl}>GitHub</ResourceLink>
+                                <ResourceLink url={item.githubUrl}>
+                                  GitHub
+                                </ResourceLink>
                               )}
                             </div>
                           )}
                         </div>
-                        <p className="whitespace-pre-line break-words text-sm leading-7 text-muted-foreground">
+                        <p className="text-sm leading-7 break-words whitespace-pre-line text-muted-foreground">
                           {item.description}
                         </p>
                         {item.tags.length > 0 && (
@@ -247,14 +275,16 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                             className="flex flex-wrap gap-2"
                           >
                             {item.tags.map((tag) => (
-                              <li key={tag} className="min-w-0 max-w-full">
+                              <li key={tag} className="max-w-full min-w-0">
                                 <button
                                   type="button"
                                   aria-pressed={selectedTag === tag}
                                   onClick={() =>
-                                    setSelectedTag((current) => (current === tag ? null : tag))
+                                    setSelectedTag((current) =>
+                                      current === tag ? null : tag
+                                    )
                                   }
-                                  className="group inline-flex min-h-9 max-w-full items-center rounded-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                  className="group inline-flex min-h-9 max-w-full items-center rounded-full text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                 >
                                   <Tag
                                     tag={tag}
@@ -270,7 +300,11 @@ export function AwesomeList({ locale, items }: { locale: Locale; items: AwesomeI
                           links={item.articles}
                         />
                         <ArticleLinks
-                          title={isEnglish ? "Related posts on this site" : "サイト内の関連記事"}
+                          title={
+                            isEnglish
+                              ? "Related posts on this site"
+                              : "サイト内の関連記事"
+                          }
                           links={item.relatedPosts}
                         />
                       </article>

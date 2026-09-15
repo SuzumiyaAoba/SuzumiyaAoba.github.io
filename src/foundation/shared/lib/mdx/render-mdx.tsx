@@ -27,7 +27,11 @@ import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
 import { createRehypeAffiliateLinks } from "./rehype-affiliate-links";
 import type { TocHeading } from "./toc";
 
-import { remarkCollectHeadings, remarkMermaid, remarkUnwrapImages } from "./remark-plugins";
+import {
+  remarkCollectHeadings,
+  remarkMermaid,
+  remarkUnwrapImages,
+} from "./remark-plugins";
 import { rehypeHeadingIdPrefix } from "./rehype-heading-id-prefix";
 
 type RenderOptions = {
@@ -46,7 +50,8 @@ type RenderOptions = {
 const MERMAID_USAGE = /^[ \t]*(?:```|~~~)[ \t]*mermaid\b|<Mermaid[\s/>]/mu;
 
 /** codehike の highlight（Shiki + TextMate 文法）を伴うコードブロックの使用判定 */
-const CODE_BLOCK_USAGE = /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/u;
+const CODE_BLOCK_USAGE =
+  /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/u;
 
 /**
  * 重量級コンポーネントを、実際に使う記事にだけ注入する。
@@ -76,22 +81,24 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
 type RenderResult = { content: ReactElement; headings: TocHeading[] };
 const devRenderCache = new Map<string, RenderResult>();
 
-export const renderMdx = cache(async (source: string, options: RenderOptions = {}) => {
-  const { content } = await compileContent(source, options, false);
-  return content;
-});
+export const renderMdx = cache(
+  async (source: string, options: RenderOptions = {}) => {
+    const { content } = await compileContent(source, options, false);
+    return content;
+  }
+);
 
 /** MDX のコンパイルと目次抽出を同じパースで実行する。 */
 export const renderMdxWithToc = cache(
   async (source: string, options: RenderOptions = {}): Promise<RenderResult> =>
-    compileContent(source, options, true),
+    await compileContent(source, options, true)
 );
 
 function buildCompileOptions(
   source: string,
   { basePath, scope, idPrefix, extraComponents }: RenderOptions,
   extraRemarkPlugins: PluggableList = [],
-  affiliateById = new Map<string, string>(),
+  affiliateById = new Map<string, string>()
 ): Parameters<typeof compileMDX>[0] {
   const codeHikeConfig: CodeHikeConfig = {
     components: { code: "Code", inlineCode: "InlineCode" },
@@ -106,8 +113,12 @@ function buildCompileOptions(
   const components = basePath
     ? {
         ...baseComponents,
-        Img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
-        img: (props: ComponentProps<typeof Img>) => <Img {...props} basePath={basePath} />,
+        Img: (props: ComponentProps<typeof Img>) => (
+          <Img {...props} basePath={basePath} />
+        ),
+        img: (props: ComponentProps<typeof Img>) => (
+          <Img {...props} basePath={basePath} />
+        ),
       }
     : baseComponents;
 
@@ -134,10 +145,18 @@ function buildCompileOptions(
           ...(idPrefix ? [rehypeHeadingIdPrefix(idPrefix)] : []),
           [rehypeAutolinkHeadings, { behavior: "append" }],
           createRehypeAffiliateLinks(affiliateById),
-          [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
+          [
+            rehypeExternalLinks,
+            { target: "_blank", rel: ["noopener", "noreferrer"] },
+          ],
           [
             rehypeKatex,
-            { output: "mathml", throwOnError: false, errorColor: "#cc0000", trust: true },
+            {
+              output: "mathml",
+              throwOnError: false,
+              errorColor: "#cc0000",
+              trust: true,
+            },
           ],
         ],
       },
@@ -148,14 +167,15 @@ function buildCompileOptions(
 async function compileContent(
   source: string,
   options: RenderOptions,
-  collectHeadings: boolean,
+  collectHeadings: boolean
 ): Promise<RenderResult> {
   const [affiliateById, heavyComponents] = await Promise.all([
     getAffiliateProductUrlById(),
     loadHeavyComponents(source),
   ]);
   // コンポーネント関数はシリアライズできないため、追加マップがある場合は開発キャッシュを使わない。
-  const useDevCache = process.env.NODE_ENV === "development" && !options.extraComponents;
+  const useDevCache =
+    process.env.NODE_ENV === "development" && !options.extraComponents;
   const cacheKey = useDevCache
     ? JSON.stringify([
         collectHeadings,
@@ -177,10 +197,15 @@ async function compileContent(
   const { content } = await compileMDX(
     buildCompileOptions(
       source,
-      { ...options, extraComponents: { ...options.extraComponents, ...heavyComponents } },
-      collectHeadings ? [remarkCollectHeadings(headings, options.idPrefix)] : [],
-      affiliateById,
-    ),
+      {
+        ...options,
+        extraComponents: { ...options.extraComponents, ...heavyComponents },
+      },
+      collectHeadings
+        ? [remarkCollectHeadings(headings, options.idPrefix)]
+        : [],
+      affiliateById
+    )
   );
   const result = { content, headings };
   if (useDevCache) {

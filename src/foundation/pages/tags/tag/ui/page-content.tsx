@@ -25,12 +25,16 @@ export type TagDetailPageContentProps = {
   }[];
 };
 
-export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageContentProps) {
+export function TagDetailPageContent({
+  locale,
+  tag,
+  entries,
+}: TagDetailPageContentProps) {
   const pagePath = toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale);
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Tags", path: "/tags" },
-    { name: tag, path: pagePath },
+    { name: tag, path: pagePath }
   );
 
   return (
@@ -39,9 +43,16 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
-          <BackLink locale={locale} href="/tags" ja="← タグ一覧" en="← Back to tags" />
+          <BackLink
+            locale={locale}
+            href="/tags"
+            ja="← タグ一覧"
+            en="← Back to tags"
+          />
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">#{tag}</h1>
+            <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
+              #{tag}
+            </h1>
             <Badge
               variant="secondary"
               className="bg-muted text-xs font-medium text-muted-foreground"
@@ -58,7 +69,11 @@ export function TagDetailPageContent({ locale, tag, entries }: TagDetailPageCont
         <ul className="post-list">
           {entries.map((post) => (
             <li key={`${locale}-${post.slug}`}>
-              <BlogPostCard post={post} locale={locale} thumbnailIconClassName="size-10" />
+              <BlogPostCard
+                post={post}
+                locale={locale}
+                thumbnailIconClassName="size-10"
+              />
             </li>
           ))}
         </ul>

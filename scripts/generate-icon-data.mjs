@@ -22,7 +22,13 @@
  *
  * 使い方: node scripts/generate-icon-data.mjs
  */
-import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import {
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+  existsSync,
+} from "node:fs";
 import path from "node:path";
 import { getIconData, iconToSVG, quicklyValidateIconSet } from "@iconify/utils";
 
@@ -95,9 +101,9 @@ const explicitIcons = new Set(CLIENT_ICONS);
 // アイコンコレクションでないもの（node:path など）は黙って除外してよい。
 // `icon:` / `iconify:` 付きのサムネイル指定は明示的なアイコンとして扱う。
 for (const file of collectFiles(path.join(ROOT, "src"), [".ts", ".tsx"])) {
-  const source = readFileSync(file, "utf8");
+  const source = readFileSync(file, "utf-8");
   for (const match of source.matchAll(
-    /["'`](icon(?:ify)?:)?([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/gu,
+    /["'`](icon(?:ify)?:)?([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)["'`]/gu
   )) {
     candidates.add(match[2]);
     if (match[1]) {
@@ -108,9 +114,16 @@ for (const file of collectFiles(path.join(ROOT, "src"), [".ts", ".tsx"])) {
 
 // content の `iconify:` は曖昧さのない明示的なアイコン指定。
 // 解決できなかったものは必ず報告する（黙って消すと記事から絵が消える）。
-for (const file of collectFiles(path.join(ROOT, "content"), [".mdx", ".md", ".json", ".yml"])) {
-  const source = readFileSync(file, "utf8");
-  for (const match of source.matchAll(/iconify:([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)/gu)) {
+for (const file of collectFiles(path.join(ROOT, "content"), [
+  ".mdx",
+  ".md",
+  ".json",
+  ".yml",
+])) {
+  const source = readFileSync(file, "utf-8");
+  for (const match of source.matchAll(
+    /iconify:([a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*)/gu
+  )) {
     candidates.add(match[1]);
     explicitIcons.add(match[1]);
   }
@@ -123,9 +136,13 @@ function loadCollection(prefix) {
   if (collectionCache.has(prefix)) {
     return collectionCache.get(prefix) ?? null;
   }
-  const file = path.join(ROOT, "node_modules", `@iconify-json/${prefix}/icons.json`);
+  const file = path.join(
+    ROOT,
+    "node_modules",
+    `@iconify-json/${prefix}/icons.json`
+  );
   const collection = existsSync(file)
-    ? quicklyValidateIconSet(JSON.parse(readFileSync(file, "utf8")))
+    ? quicklyValidateIconSet(JSON.parse(readFileSync(file, "utf-8")))
     : null;
   collectionCache.set(prefix, collection);
   return collection;
@@ -141,7 +158,9 @@ for (const full of [...candidates].toSorted()) {
   if (!collection) {
     // 明示指定なのにコレクションが無い＝コレクション名の誤りか未導入。必ず知らせる。
     if (explicitIcons.has(full)) {
-      unresolved.push(`${full} (@iconify-json/${prefix} が未導入、またはコレクション名が誤り)`);
+      unresolved.push(
+        `${full} (@iconify-json/${prefix} が未導入、またはコレクション名が誤り)`
+      );
     }
     continue; // src の文字列リテラルはアイコンでないものを含むため黙って除外
   }
@@ -192,7 +211,7 @@ export type IconName = keyof typeof ICONS;
 emit(
   "icon-data.ts",
   [...icons].toSorted(([a], [b]) => a.localeCompare(b)),
-  " * サイト内で使用している全アイコンの描画済み SVG データ。\n * サーバーコンポーネントから描画するため、クライアントバンドルには載らない。",
+  " * サイト内で使用している全アイコンの描画済み SVG データ。\n * サーバーコンポーネントから描画するため、クライアントバンドルには載らない。"
 );
 
 /** @type {[string, import("../src/foundation/shared/ui/icon/types").IconData][]} */
@@ -204,7 +223,7 @@ const clientEntries = CLIENT_ICONS.toSorted().flatMap((name) => {
 emit(
   "icon-data.client.ts",
   clientEntries,
-  " * クライアントコンポーネントで使うアイコンだけの部分集合。\n * ここに載せた分だけがクライアントバンドルへ含まれる。",
+  " * クライアントコンポーネントで使うアイコンだけの部分集合。\n * ここに載せた分だけがクライアントバンドルへ含まれる。"
 );
 
 console.log(`generated icon-data.ts (${icons.size} icons)`);
@@ -212,10 +231,14 @@ console.log(`generated icon-data.client.ts (${clientEntries.length} icons)`);
 
 const missingClient = CLIENT_ICONS.filter((name) => !icons.has(name));
 if (missingClient.length > 0) {
-  console.log(`\n  CLIENT_ICONS に解決できない指定があります: ${missingClient.join(", ")}`);
+  console.log(
+    `\n  CLIENT_ICONS に解決できない指定があります: ${missingClient.join(", ")}`
+  );
 }
 if (unresolved.length > 0) {
-  console.log(`\n  警告: 解決できないアイコン指定があります（表示されません）:`);
+  console.log(
+    `\n  警告: 解決できないアイコン指定があります（表示されません）:`
+  );
   for (const name of unresolved) {
     console.log(`    - ${name}`);
   }

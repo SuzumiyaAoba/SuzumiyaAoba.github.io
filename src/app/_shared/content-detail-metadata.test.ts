@@ -13,7 +13,9 @@ let contentRoot = "";
 vi.mock(import("@/shared/lib/content-file/content-root"), () => ({
   resolveContentRoot: async () => contentRoot,
 }));
-vi.mock(import("@/shared/lib/site/site-url"), () => ({ getSiteUrl: () => "https://example.com" }));
+vi.mock(import("@/shared/lib/site/site-url"), () => ({
+  getSiteUrl: () => "https://example.com",
+}));
 
 beforeAll(async () => {
   contentRoot = await mkdtemp(path.join(tmpdir(), "content-metadata-test-"));
@@ -22,10 +24,12 @@ beforeAll(async () => {
       "---\ntitle: 日本語タイトル\ndescription: 日本語の説明\ndate: 2026-01-02\ncategory: Testing\n---\n日本語の本文\n",
     "translated/index.en.mdx":
       "---\ntitle: English title\ndescription: English description\ndate: 2026-02-03\ncategory: Testing\n---\nEnglish body\n",
-    "fallback/index.md": "---\ntitle: 翻訳なし\ncategory: Testing\nlayout: article\n---\n本文\n",
+    "fallback/index.md":
+      "---\ntitle: 翻訳なし\ncategory: Testing\nlayout: article\n---\n本文\n",
     "english-only/index.en.md":
       "---\ntitle: English only\ndescription: English description\n---\nBody\n",
-    "empty/index.md": '---\ntitle: ""\ndate: ""\ncategory: ""\ndescription: ""\n---\n本文\n',
+    "empty/index.md":
+      '---\ntitle: ""\ndate: ""\ncategory: ""\ndescription: ""\n---\n本文\n',
     "typed/index.md":
       '---\ntitle: 42\ncategory: 42\ndescription: false\ndate: 2026-01-02\ndraft: false\namazonAssociate: false\ntags: [one, 2, null]\namazonProductIds: []\nthumbnail: ""\nmodel: ""\nlayout: ""\n---\n本文\n',
   };
@@ -49,7 +53,7 @@ beforeAll(async () => {
       const target = path.join(contentRoot, filename);
       await mkdir(path.dirname(target), { recursive: true });
       await writeFile(target, content);
-    }),
+    })
   );
 });
 
@@ -126,10 +130,18 @@ describe.each([
               "x-default": `https://example.com${pagePath}`,
             },
           },
-          openGraph: { title, description, type: "article", publishedTime: date },
+          openGraph: {
+            title,
+            description,
+            type: "article",
+            publishedTime: date,
+          },
         });
-        await expect(read("translated", { locale })).resolves.toMatchObject({ format, content });
-      },
+        await expect(read("translated", { locale })).resolves.toMatchObject({
+          format,
+          content,
+        });
+      }
     );
 
     it("翻訳がなくてもcanonicalは閲覧言語を指し、存在しないhreflangを作らない", async () => {
@@ -138,7 +150,9 @@ describe.each([
         description: categoryDescription,
         alternates: { canonical: `/en${basePath}/fallback/` },
       });
-      expect((await build("fallback", "en")).alternates).not.toHaveProperty("languages");
+      expect((await build("fallback", "en")).alternates).not.toHaveProperty(
+        "languages"
+      );
       expect((await build("english-only", "ja")).alternates).toStrictEqual({
         canonical: `${basePath}/english-only/`,
       });
@@ -180,10 +194,12 @@ describe.each([
     it.each([undefined, "missing"])(
       "記事が解決できない場合は一覧名だけを返す (%s)",
       async (slug) => {
-        await expect(build(slug, "ja")).resolves.toStrictEqual({ title: fallbackTitle });
-      },
+        await expect(build(slug, "ja")).resolves.toStrictEqual({
+          title: fallbackTitle,
+        });
+      }
     );
-  },
+  }
 );
 
 describe("書籍とシリーズの詳細メタデータ", () => {
@@ -192,13 +208,21 @@ describe("書籍とシリーズの詳細メタデータ", () => {
       title: "ハンドブック",
       description: "概要 リンク と強調。",
       alternates: { canonical: "/books/handbook/" },
-      openGraph: { type: "book", title: "ハンドブック", description: "概要 リンク と強調。" },
+      openGraph: {
+        type: "book",
+        title: "ハンドブック",
+        description: "概要 リンク と強調。",
+      },
     });
-    await expect(buildBooksPageMetadata("missing")).resolves.toStrictEqual({ title: "Books" });
+    await expect(buildBooksPageMetadata("missing")).resolves.toStrictEqual({
+      title: "Books",
+    });
   });
 
   it("シリーズは言語別タイトルと記事数、両言語への参照を設定する", async () => {
-    await expect(buildSeriesPageMetadata("example", "en")).resolves.toStrictEqual({
+    await expect(
+      buildSeriesPageMetadata("example", "en")
+    ).resolves.toStrictEqual({
       title: "Series title",
       description: "Series title — a series of 2 posts.",
       alternates: {
@@ -216,9 +240,11 @@ describe("書籍とシリーズの詳細メタデータ", () => {
       },
     });
     expect((await buildSeriesPageMetadata("example", "ja")).description).toBe(
-      "「連載」シリーズの記事一覧（全2件）。",
+      "「連載」シリーズの記事一覧（全2件）。"
     );
-    await expect(buildSeriesPageMetadata("missing", "ja")).resolves.toStrictEqual({
+    await expect(
+      buildSeriesPageMetadata("missing", "ja")
+    ).resolves.toStrictEqual({
       title: "Series",
     });
   });

@@ -11,10 +11,14 @@ export async function generateStaticParams(): Promise<{ series: string }[]> {
   return slugs.map((series) => ({ series }));
 }
 
-export default async function Image({ params }: { params: Promise<{ series: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ series: string }>;
+}) {
   const { series: slug } = await params;
   const series = await getSeriesBySlug(slug, "ja");
-  return renderContentOpengraphImage({
+  return await renderContentOpengraphImage({
     eyebrow: "シリーズ",
     title: series?.name || slug,
   });

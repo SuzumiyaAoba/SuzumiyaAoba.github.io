@@ -4,7 +4,9 @@ import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
 
 export const metadata: Metadata = {
   title: "Books",
-  alternates: buildLocaleAlternates("/books", "ja", { availability: { ja: true } }),
+  alternates: buildLocaleAlternates("/books", "ja", {
+    availability: { ja: true },
+  }),
 };
 
 export default function Page() {

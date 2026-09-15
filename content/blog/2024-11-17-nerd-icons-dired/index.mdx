@@ -24,16 +24,13 @@ description: Emacs の dired で nerd-icons-dired を使ってアイコン表示
 
 ## 動機
 
-このブログでは基本的に [MDX](https://mdxjs.com/) で記事を書いて [Next.js](https://nextjs.org/) を使って HTML を生成している。
-記事を書くときは [Emacs](https://www.gnu.org/software/emacs/) を使っている。
+このブログでは基本的に [MDX](https://mdxjs.com/) で記事を書いて [Next.js](https://nextjs.org/) を使って HTML を生成している。記事を書くときは [Emacs](https://www.gnu.org/software/emacs/) を使っている。
 
-Emacs でファイルのアイコンを表示するために [nerd-icons-dired](https://github.com/rainstormstudio/nerd-icons-dired) を使っているがデフォルトの設定では MDX ファイルのアイコンが表示されない。
-特別困るというわけではないがバッファーの切り替えや dired で表示されるときに白い四角のアイコンが表示されるだけでは味気ないと思ったので設定方法を調べた。
+Emacs でファイルのアイコンを表示するために [nerd-icons-dired](https://github.com/rainstormstudio/nerd-icons-dired) を使っているがデフォルトの設定では MDX ファイルのアイコンが表示されない。特別困るというわけではないがバッファーの切り替えや dired で表示されるときに白い四角のアイコンが表示されるだけでは味気ないと思ったので設定方法を調べた。
 
 ## 設定
 
-設定は `nerd-icons-dired` ではなく `nerd-icons` の `nerd-icons-extension-icon-alist` に値を追加することで実現できる。
-`nerd-icons` や `nerd-icons-dired` のインストールは自身の使っているパッケージマネージャに合わせた方法で記述する。
+設定は `nerd-icons-dired` ではなく `nerd-icons` の `nerd-icons-extension-icon-alist` に値を追加することで実現できる。 `nerd-icons` や `nerd-icons-dired` のインストールは自身の使っているパッケージマネージャに合わせた方法で記述する。
 
 パッケージマネージャに依らない書き方をすると次のようになる。
 
@@ -44,8 +41,7 @@ Emacs でファイルのアイコンを表示するために [nerd-icons-dired](
     '("mdx" nerd-icons-octicon "nf-oct-markdown" :face nerd-icons-lblue))
 ```
 
-アイコンは `M-x nerd-icon-insert` を実行するとアイコンの一覧が表示されるのでそこからアイコンの名前を探せる。
-既存のアイコンに合わせるのであれば `nerd-icons` の[コード](https://github.com/rainstormstudio/nerd-icons.el/blob/0.1.0/nerd-icons.el#L86-L899)を参考にするとよい。
+アイコンは `M-x nerd-icon-insert` を実行するとアイコンの一覧が表示されるのでそこからアイコンの名前を探せる。既存のアイコンに合わせるのであれば `nerd-icons` の[コード](https://github.com/rainstormstudio/nerd-icons.el/blob/0.1.0/nerd-icons.el#L86-L899)を参考にするとよい。
 
 ## 参考 URL
 

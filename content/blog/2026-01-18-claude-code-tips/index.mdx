@@ -10,8 +10,9 @@ description: Claude Code を使う中で学んだ Tips やベストプラクテ�
 Claude Code について学んだ Tips をまとめる。随時更新する。
 
 <Message title="注意" variant="warning" defaultOpen>
-  Claude Code のレート制限に到達し、検証できていない機能も載せています。 未検証の機能には{" "}
-  <MdxLabel variant="warning">未検証</MdxLabel> を表示しています。
+  Claude Code のレート制限に到達し、検証できていない機能も載せています。
+  未検証の機能には <MdxLabel variant="warning">未検証</MdxLabel>{" "}
+  を表示しています。
 </Message>
 
 ## ベストプラクティス
@@ -20,16 +21,15 @@ Claude Code について学んだ Tips をまとめる。随時更新する。
 
 ## Skills についてのドキュメント
 
-| ドキュメント                                                                                                                                                                               | 説明                  |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
-| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills)                                                                                              | Anthropic 公式 Skills |
-| [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills) | Awesome リポジトリ    |
-| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills)                                              | Awesome リポジトリ    |
+| ドキュメント | 説明 |
+| --- | --- |
+| [anthropics/skills: Public repository for Agent Skills](https://github.com/anthropics/skills) | Anthropic 公式 Skills |
+| [ComposioHQ/awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills) | Awesome リポジトリ |
+| [VoltAgent/awesome-claude-skills: The awesome collection of Claude Skills and resources.](https://github.com/VoltAgent/awesome-claude-skills) | Awesome リポジトリ |
 
 ## 言語設定
 
-Claude Code の言語設定を日本語にするには `/config` コマンドを実行し、`Language` で `Japanese` や `日本語` と設定する。
-`Language` には、言語の他に口調を指定してもよい。
+Claude Code の言語設定を日本語にするには `/config` コマンドを実行し、`Language` で `Japanese` や `日本語` と設定する。 `Language` には、言語の他に口調を指定してもよい。
 
 この設定で日本語になるのは、Claude が扱う言語であって設定メニュー等は英語のまま。
 
@@ -52,14 +52,21 @@ Claude Code を起動し、`/config` と入力し、<kbd>Enter</kbd>を押す。
 
 設定画面が表示されるので十字キーの <kbd>↓</kbd> で `Language` までカーソルを移動し、<kbd>Enter</kbd> を押す。
 
-<Img src="./images/claude-code_config.png" alt="Claude Code の設定画面" width="600" />
+<Img
+  src="./images/claude-code_config.png"
+  alt="Claude Code の設定画面"
+  width="600"
+/>
 
 言語を入力するフォームが現れるので、`Japanese` や `日本語` と入力し、<kbd>Enter</kbd> を押す。
 
-<Img src="./images/claude-code_language.png" alt="Claude Code の言語設定画面" width="600" />
+<Img
+  src="./images/claude-code_language.png"
+  alt="Claude Code の言語設定画面"
+  width="600"
+/>
 
-これで Claude Code のデフォルト言語が日本語になる。
-設定画面は <kbd>Esc</kbd> を押して終了。
+これで Claude Code のデフォルト言語が日本語になる。設定画面は <kbd>Esc</kbd> を押して終了。
 
 ### ~/.claude/settings.json
 
@@ -77,8 +84,7 @@ Claude Code を起動し、`/config` と入力し、<kbd>Enter</kbd>を押す。
 
 ## 起動時に表示されるアカウント情報を隠す
 
-Claude Code を起動するとメールアドレスやセッションの履歴などの情報が表示される。
-これらの情報が表示されると困る場合は、環境変数 `CLAUDE_CODE_HIDE_ACCOUNT_INFO` に `1` を設定すると表示を抑制できる。
+Claude Code を起動するとメールアドレスやセッションの履歴などの情報が表示される。これらの情報が表示されると困る場合は、環境変数 `CLAUDE_CODE_HIDE_ACCOUNT_INFO` に `1` を設定すると表示を抑制できる。
 
 ```json ~/.claude/settings.json
 {
@@ -92,9 +98,7 @@ Claude Code を起動するとメールアドレスやセッションの履歴�
 
 ## タスク完了時に通知音を鳴らす
 
-タスクが完了したことを検知するため、Hooks で通知音を鳴らす設定を入れる。
-`~/.claude/settings.json` に次のような設定を追加する。
-この設定は macOS の場合。
+タスクが完了したことを検知するため、Hooks で通知音を鳴らす設定を入れる。 `~/.claude/settings.json` に次のような設定を追加する。この設定は macOS の場合。
 
 ```json ~/.claude/settings.json
 {
@@ -124,8 +128,7 @@ Claude Code を起動するとメールアドレスやセッションの履歴�
 }
 ```
 
-macOS であれば、`/System/Library/Sounds/` にあるファイルから好きな音を選んで上記の設定にある `afplay` 以降のパスを変更すればよい。
-Codex と Claude Code の両方を使っているようであれば、それぞれ違う音を設定するのがいいだろう。
+macOS であれば、`/System/Library/Sounds/` にあるファイルから好きな音を選んで上記の設定にある `afplay` 以降のパスを変更すればよい。Codex と Claude Code の両方を使っているようであれば、それぞれ違う音を設定するのがいいだろう。
 
 ```shell
 $ ls -la /System/Library/Sounds/
@@ -172,10 +175,7 @@ $ tree ~/.claude/plans/
 }
 ```
 
-開発チーム内で Claude Code を使い、他の人がどのような実装計画で実装をさせたのか確認したいのであれば、
-ディレクトリごとに置く `.claude/settings.json` で設定し、PR のレビューに含めるようにすると
-Claude Code の使い方（計画の詰めが甘い状態で実装をさせてしまっている問題）についてもレビューできて便利だし、
-知見を共有する機会として PR を活用できるようになる。
+開発チーム内で Claude Code を使い、他の人がどのような実装計画で実装をさせたのか確認したいのであれば、ディレクトリごとに置く `.claude/settings.json` で設定し、PR のレビューに含めるようにすると Claude Code の使い方（計画の詰めが甘い状態で実装をさせてしまっている問題）についてもレビューできて便利だし、知見を共有する機会として PR を活用できるようになる。
 
 ## 話題になった Skills
 

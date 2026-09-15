@@ -5,12 +5,21 @@ import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { NuqsTestingAdapter } from "nuqs/adapters/testing";
 import type { OnUrlUpdateFunction } from "nuqs/adapters/testing";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { SearchPanel } from "./search-panel";
 
 type Search = NonNullable<Window["pagefind"]>["search"];
 type SearchResponse = Awaited<ReturnType<Search>>;
-type ResultData = Awaited<ReturnType<SearchResponse["results"][number]["data"]>>;
+type ResultData = Awaited<
+  ReturnType<SearchResponse["results"][number]["data"]>
+>;
 
 const search = vi.fn<Search>();
 const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
@@ -36,7 +45,7 @@ async function render(query = "") {
         >
           <SearchPanel locale="en" />
         </NuqsTestingAdapter>
-      </StrictMode>,
+      </StrictMode>
     );
   });
 }
@@ -52,7 +61,10 @@ function input() {
 async function typeQuery(value: string) {
   await act(async () => {
     // React の入力値トラッカーを経由せず、ブラウザーの入力イベントを再現する。
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input(), value);
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value"
+    )?.set?.call(input(), value);
     input().dispatchEvent(new Event("input", { bubbles: true }));
   });
 }
@@ -112,13 +124,21 @@ describe("SearchPanel", () => {
     const update = onUrlUpdate.mock.lastCall?.[0];
     expect(update?.searchParams.get("q")).toBe("react");
     expect(update?.searchParams.get("other")).toBe("keep");
-    expect(update?.options).toMatchObject({ history: "replace", shallow: true, scroll: false });
+    expect(update?.options).toMatchObject({
+      history: "replace",
+      shallow: true,
+      scroll: false,
+    });
   });
 
   it("古い検索応答が後から届いても、新しい結果を上書きせず詳細も取得しない", async () => {
     const old = Promise.withResolvers<SearchResponse>();
-    const oldData = vi.fn<() => Promise<ResultData>>(async () => result("old-result"));
-    search.mockReturnValueOnce(old.promise).mockResolvedValue(response("new-result"));
+    const oldData = vi.fn<() => Promise<ResultData>>(async () =>
+      result("old-result")
+    );
+    search
+      .mockReturnValueOnce(old.promise)
+      .mockResolvedValue(response("new-result"));
     await render("old");
     await advance();
     await typeQuery("new");
@@ -132,7 +152,9 @@ describe("SearchPanel", () => {
   it("古い検索結果の詳細取得が遅れても、新しい結果を維持する", async () => {
     const oldData = Promise.withResolvers<ResultData>();
     search
-      .mockResolvedValueOnce({ results: [{ data: async () => oldData.promise }] })
+      .mockResolvedValueOnce({
+        results: [{ data: async () => await oldData.promise }],
+      })
       .mockResolvedValue(response("new-result"));
     await render("old");
     await advance();
@@ -162,12 +184,16 @@ describe("SearchPanel", () => {
       .mockResolvedValue(response("recovered"));
     await render("failure");
     await advance();
-    expect(container.textContent).toContain("An error occurred while searching.");
+    expect(container.textContent).toContain(
+      "An error occurred while searching."
+    );
     expect(input().disabled).toBe(false);
     await typeQuery("retry");
     await advance();
     expect(container.textContent).toContain("recovered");
-    expect(container.textContent).not.toContain("An error occurred while searching.");
+    expect(container.textContent).not.toContain(
+      "An error occurred while searching."
+    );
   });
 
   it("画面離脱時は予約した検索を実行しない", async () => {

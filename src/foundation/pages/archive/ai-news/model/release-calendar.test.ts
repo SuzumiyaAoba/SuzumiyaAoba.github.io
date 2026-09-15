@@ -12,13 +12,17 @@ import {
   shiftMonth,
 } from "./release-calendar";
 import type { RenderedRelease } from "./release-calendar";
-import { buildTimelineRows, getReleaseTimelineRange, timelinePosition } from "./release-timeline";
+import {
+  buildTimelineRows,
+  getReleaseTimelineRange,
+  timelinePosition,
+} from "./release-timeline";
 
 function release(
   title: string,
   date?: string,
   series = ["Example"],
-  tags = ["OpenAI", "LLM Model"],
+  tags = ["OpenAI", "LLM Model"]
 ): RenderedRelease {
   return {
     title,
@@ -73,7 +77,7 @@ describe("continuous release timeline", () => {
         release("Latest", "2026-09-10"),
         release("Unknown"),
         release("Earliest", "2019-11-05"),
-      ]),
+      ])
     );
     assert(range);
     expect(range.start).toBe("2019-11-01");
@@ -82,36 +86,54 @@ describe("continuous release timeline", () => {
     expect(range.lastDate).toBe("2026-09-10");
     expect(range.months).toHaveLength(83);
     expect(range.months).toContain("2020-02-01");
-    expect(range.years).toStrictEqual([2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]);
+    expect(range.years).toStrictEqual([
+      2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026,
+    ]);
     expect(getReleaseTimelineRange([])).toBeNull();
-    expect(getReleaseTimelineRange(buildReleases([release("Unknown")]))).toBeNull();
+    expect(
+      getReleaseTimelineRange(buildReleases([release("Unknown")]))
+    ).toBeNull();
   });
 
   it("uses equal distances for equal elapsed days across leap days and year boundaries", () => {
     const range = getReleaseTimelineRange(
-      buildReleases([release("First", "2023-12-31"), release("Last", "2025-01-01")]),
+      buildReleases([
+        release("First", "2023-12-31"),
+        release("Last", "2025-01-01"),
+      ])
     );
     assert(range);
     const distance = (from: string, to: string) =>
       timelinePosition(to, range) - timelinePosition(from, range);
-    expect(distance("2023-12-31", "2024-01-01")).toBeCloseTo(distance("2024-02-28", "2024-02-29"));
-    expect(distance("2024-02-28", "2024-03-01")).toBeCloseTo(distance("2024-12-30", "2025-01-01"));
+    expect(distance("2023-12-31", "2024-01-01")).toBeCloseTo(
+      distance("2024-02-28", "2024-02-29")
+    );
+    expect(distance("2024-02-28", "2024-03-01")).toBeCloseTo(
+      distance("2024-12-30", "2025-01-01")
+    );
     expect(timelinePosition(range.start, range)).toBe(0);
     expect(timelinePosition(range.end, range)).toBe(100);
     expect(timelinePosition("2023-12-31", range)).toBeGreaterThan(0);
   });
 
   it("keeps a single-release range usable and retains predecessors hidden by search", () => {
-    const releases = buildReleases([release("First", "2023-12-31"), release("Last", "2026-01-02")]);
+    const releases = buildReleases([
+      release("First", "2023-12-31"),
+      release("Last", "2026-01-02"),
+    ]);
     const filtered = filterReleases(releases, {
       query: "Last",
       provider: "",
       series: "",
       kind: "",
     });
-    expect(getReleaseTimelineRange(filtered)).toStrictEqual(getReleaseTimelineRange(releases));
+    expect(getReleaseTimelineRange(filtered)).toStrictEqual(
+      getReleaseTimelineRange(releases)
+    );
 
-    const range = getReleaseTimelineRange(buildReleases([release("Only", "2024-02-29")]));
+    const range = getReleaseTimelineRange(
+      buildReleases([release("Only", "2024-02-29")])
+    );
     assert(range);
     expect(range.days).toBe(29);
     expect(Number.isFinite(timelinePosition("2024-02-29", range))).toBe(true);
@@ -132,7 +154,9 @@ describe("continuous release timeline", () => {
       "2026-01-01",
     ]);
     expect(compact[0]?.points[1]?.sameDay).toHaveLength(2);
-    expect(compact[0]?.points.map((point) => point.lane)).toStrictEqual([0, 1, 0]);
+    expect(compact[0]?.points.map((point) => point.lane)).toStrictEqual([
+      0, 1, 0,
+    ]);
     expect(buildTimelineRows(releases, 48)[0]?.laneCount).toBe(1);
     expect(buildTimelineRows(releases, 0.01)[0]?.laneCount).toBe(3);
   });
@@ -145,14 +169,24 @@ describe("release intervals", () => {
     ["Llama", "Meta"],
     ["Grok", "xAI"],
     ["ChatGLM", "Z.ai"],
-  ])("recognizes the provider of %s without an explicit company tag", (family, provider) => {
-    const [item] = buildReleases([release("Model", "2024-01-01", [family], [family, "LLM Model"])]);
-    expect(item?.provider).toBe(provider);
-  });
+  ])(
+    "recognizes the provider of %s without an explicit company tag",
+    (family, provider) => {
+      const [item] = buildReleases([
+        release("Model", "2024-01-01", [family], [family, "LLM Model"]),
+      ]);
+      expect(item?.provider).toBe(provider);
+    }
+  );
 
   it("uses a derivative model's developer when its base-model family is also tagged", () => {
     const [item] = buildReleases([
-      release("Japanese Llama", "2024-06-26", ["ELYZA"], ["Llama", "ELYZA", "LLM Model"]),
+      release(
+        "Japanese Llama",
+        "2024-06-26",
+        ["ELYZA"],
+        ["Llama", "ELYZA", "LLM Model"]
+      ),
     ]);
     expect(item?.provider).toBe("ELYZA");
   });
@@ -186,10 +220,12 @@ describe("release intervals", () => {
         "Opus / Sonnet",
         "2024-02-01",
         ["Opus", "Sonnet", "Sonnet"],
-        ["Anthropic", "LLM Model"],
+        ["Anthropic", "LLM Model"]
       ),
     ]);
-    expect(result[0]?.intervals.map(({ series, days }) => ({ series, days }))).toStrictEqual([
+    expect(
+      result[0]?.intervals.map(({ series, days }) => ({ series, days }))
+    ).toStrictEqual([
       { series: "Opus", days: 31 },
       { series: "Sonnet", days: 12 },
     ]);
@@ -198,7 +234,12 @@ describe("release intervals", () => {
   it("never compares a series across different providers or model types", () => {
     const result = buildReleases([
       release("Image", "2024-01-01", ["Example"], ["OpenAI", "Image Model"]),
-      release("Other provider", "2024-01-02", ["Example"], ["Google", "LLM Model"]),
+      release(
+        "Other provider",
+        "2024-01-02",
+        ["Example"],
+        ["Google", "LLM Model"]
+      ),
       release("Language", "2024-01-03"),
     ]);
     expect(result.every((item) => item.intervals.length === 0)).toBe(true);
@@ -229,17 +270,24 @@ describe("release intervals", () => {
       series: "Example",
     });
     expect(filtered).toHaveLength(1);
-    expect(filtered[0]?.intervals[0]?.previousTitles).toStrictEqual(["Model 2"]);
+    expect(filtered[0]?.intervals[0]?.previousTitles).toStrictEqual([
+      "Model 2",
+    ]);
     expect(filtered[0]?.intervals[0]?.days).toBe(29);
     expect(
-      filterReleases(result, { query: "", provider: "Google", kind: "", series: "" }),
+      filterReleases(result, {
+        query: "",
+        provider: "Google",
+        kind: "",
+        series: "",
+      })
     ).toStrictEqual([]);
   });
 
   it("validates the real catalog's date and series metadata", () => {
     const source = z
       .object({ events: z.array(z.unknown()) })
-      .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf8")));
+      .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf-8")));
     expect(source.events.length).toBeGreaterThan(0);
     const keys = new Set<string>();
     const dates: string[] = [];
@@ -266,18 +314,23 @@ describe("release intervals", () => {
     (query, provider, first, date) => {
       const source = z
         .object({ events: z.array(z.unknown()) })
-        .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf8")));
+        .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf-8")));
       const releases = buildReleases(
         source.events.map((raw) => {
           const event = AiNewsEntrySchema.parse(raw);
           return release(event.title_ja, event.date, event.series, event.tags);
-        }),
+        })
       );
-      const matches = filterReleases(releases, { query, provider, kind: "llm", series: "" });
+      const matches = filterReleases(releases, {
+        query,
+        provider,
+        kind: "llm",
+        series: "",
+      });
       expect(matches.length).toBeGreaterThan(1);
       expect(matches.every((item) => item.provider === provider)).toBe(true);
       expect(matches.at(-1)).toMatchObject({ title: first, date });
       expect(matches.some((item) => item.date?.startsWith("2026-"))).toBe(true);
-    },
+    }
   );
 });

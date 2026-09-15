@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Reasoning, ReasoningTrigger, ReasoningContent } from "@/shared/ui/ai-elements/reasoning";
+import {
+  Reasoning,
+  ReasoningTrigger,
+  ReasoningContent,
+} from "@/shared/ui/ai-elements/reasoning";
 
 const meta: Meta<typeof Reasoning> = {
   title: "shared/ai-elements/Reasoning",

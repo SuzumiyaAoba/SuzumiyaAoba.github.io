@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { ButtonHTMLAttributes } from "react";
 import { createPortal } from "react-dom";
 import { Pin, X } from "lucide-react";
@@ -41,10 +48,14 @@ export function useReleasePopover(locale: Locale) {
         restoringFocus.current = false;
       }
     },
-    [active],
+    [active]
   );
 
-  function showDetails(target: PopoverTarget, anchor: HTMLButtonElement, focusOnOpen = false) {
+  function showDetails(
+    target: PopoverTarget,
+    anchor: HTMLButtonElement,
+    focusOnOpen = false
+  ) {
     setActive({
       ...target,
       anchor,
@@ -54,7 +65,9 @@ export function useReleasePopover(locale: Locale) {
     });
   }
 
-  function getTriggerProps(target: PopoverTarget): ButtonHTMLAttributes<HTMLButtonElement> {
+  function getTriggerProps(
+    target: PopoverTarget
+  ): ButtonHTMLAttributes<HTMLButtonElement> {
     const current = active?.id === target.id;
     const pinned = current && active.pinned;
     const preview = (anchor: HTMLButtonElement) => {
@@ -70,11 +83,13 @@ export function useReleasePopover(locale: Locale) {
               bounds: anchor.getBoundingClientRect(),
               pinned: false,
               focusOnOpen: false,
-            },
+            }
       );
     };
     const hidePreview = () => {
-      setActive((previous) => (previous?.id === target.id && !previous.pinned ? null : previous));
+      setActive((previous) =>
+        previous?.id === target.id && !previous.pinned ? null : previous
+      );
     };
     return {
       "aria-haspopup": "dialog",
@@ -161,9 +176,11 @@ function ReleasePopover({
   const en = locale === "en";
   const [position, setPosition] = useState({ left: 12, top: 12 });
   const dateLabel = formatReleaseDate(active.date, locale);
-  const providers = [...new Set(active.releases.map((release) => release.provider))];
+  const providers = [
+    ...new Set(active.releases.map((release) => release.provider)),
+  ];
   const interval = active.releases[0]?.intervals.find(
-    (item) => !active.series || item.series === active.series,
+    (item) => !active.series || item.series === active.series
   );
 
   useLayoutEffect(() => {
@@ -173,9 +190,13 @@ function ReleasePopover({
     }
     const update = () => {
       // 選択後は画面上の位置を保ち、カレンダーの仮想スクロールでも詳細を読めるようにする。
-      const rect = active.pinned ? active.bounds : active.anchor.getBoundingClientRect();
+      const rect = active.pinned
+        ? active.bounds
+        : active.anchor.getBoundingClientRect();
       if (!active.pinned) {
-        const region = active.anchor.closest<HTMLElement>("[data-release-viewport]");
+        const region = active.anchor.closest<HTMLElement>(
+          "[data-release-viewport]"
+        );
         const bounds = region?.getBoundingClientRect();
         const style = region ? getComputedStyle(region) : null;
         if (
@@ -184,13 +205,15 @@ function ReleasePopover({
             (rect.right <=
               Math.max(
                 0,
-                bounds.left + (Number.parseFloat(style?.scrollPaddingLeft ?? "0") || 0),
+                bounds.left +
+                  (Number.parseFloat(style?.scrollPaddingLeft ?? "0") || 0)
               ) ||
               rect.left >= Math.min(window.innerWidth, bounds.right) ||
               rect.bottom <=
                 Math.max(
                   0,
-                  bounds.top + (Number.parseFloat(style?.scrollPaddingTop ?? "0") || 0),
+                  bounds.top +
+                    (Number.parseFloat(style?.scrollPaddingTop ?? "0") || 0)
                 ) ||
               rect.top >= Math.min(window.innerHeight, bounds.bottom)))
         ) {
@@ -199,16 +222,21 @@ function ReleasePopover({
         }
       }
       const top =
-        rect.top > window.innerHeight / 2 ? rect.top - panel.offsetHeight - 8 : rect.bottom + 8;
+        rect.top > window.innerHeight / 2
+          ? rect.top - panel.offsetHeight - 8
+          : rect.bottom + 8;
       setPosition({
         left: Math.max(
           12,
           Math.min(
             rect.left + rect.width / 2 - panel.offsetWidth / 2,
-            window.innerWidth - panel.offsetWidth - 12,
-          ),
+            window.innerWidth - panel.offsetWidth - 12
+          )
         ),
-        top: Math.max(12, Math.min(top, window.innerHeight - panel.offsetHeight - 12)),
+        top: Math.max(
+          12,
+          Math.min(top, window.innerHeight - panel.offsetHeight - 12)
+        ),
       });
     };
     update();
@@ -240,8 +268,8 @@ function ReleasePopover({
       tabIndex={active.pinned ? -1 : undefined}
       data-pagefind-ignore
       className={cn(
-        "font-noto fixed z-[60] flex max-h-[min(40rem,calc(100dvh-24px))] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-xl [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-ring",
-        active.pinned ? "w-[26rem]" : "pointer-events-none w-72 p-4 text-xs",
+        "font-noto fixed z-[60] flex max-h-[min(40rem,calc(100dvh-24px))] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-xl border bg-popover [overflow-wrap:anywhere] text-popover-foreground shadow-xl focus-visible:outline-2 focus-visible:outline-ring",
+        active.pinned ? "w-[26rem]" : "pointer-events-none w-72 p-4 text-xs"
       )}
       style={position}
     >
@@ -265,7 +293,9 @@ function ReleasePopover({
             <button
               type="button"
               onClick={() => onClose(true)}
-              aria-label={en ? "Close release details" : "リリースの詳細を閉じる"}
+              aria-label={
+                en ? "Close release details" : "リリースの詳細を閉じる"
+              }
               className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             >
               <X className="size-4" aria-hidden="true" />
@@ -274,11 +304,17 @@ function ReleasePopover({
           <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3">
             {active.releases.length > 0 ? (
               active.releases.map((release) => (
-                <ReleaseCard key={release.id} release={release} locale={locale} />
+                <ReleaseCard
+                  key={release.id}
+                  release={release}
+                  locale={locale}
+                />
               ))
             ) : (
               <p className="p-3 text-sm text-muted-foreground">
-                {en ? "No releases recorded on this date." : "この日のリリース記録はありません。"}
+                {en
+                  ? "No releases recorded on this date."
+                  : "この日のリリース記録はありません。"}
               </p>
             )}
           </div>
@@ -287,21 +323,27 @@ function ReleasePopover({
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             {providers.map((provider) => (
-              <ProviderIcon key={provider} provider={provider} className="size-7 rounded-lg" />
+              <ProviderIcon
+                key={provider}
+                provider={provider}
+                className="size-7 rounded-lg"
+              />
             ))}
             <p className="text-muted-foreground">
               {dateLabel}
               {active.series && ` · ${active.series}`}
             </p>
           </div>
-          <p className="font-semibold leading-5">
+          <p className="leading-5 font-semibold">
             {active.releases.map((release) => release.title).join(" / ") ||
               (en ? "No releases recorded" : "リリース記録なし")}
           </p>
           {interval && (
             <div className="space-y-1 border-t pt-2">
               <p className="font-medium">
-                {en ? `After ${interval.days} days` : `前回から ${interval.days} 日`}
+                {en
+                  ? `After ${interval.days} days`
+                  : `前回から ${interval.days} 日`}
               </p>
               <p className="leading-5 text-muted-foreground">
                 {interval.previousDate} · {interval.previousTitles.join(" / ")}
@@ -314,6 +356,6 @@ function ReleasePopover({
         </div>
       )}
     </div>,
-    document.body,
+    document.body
   );
 }

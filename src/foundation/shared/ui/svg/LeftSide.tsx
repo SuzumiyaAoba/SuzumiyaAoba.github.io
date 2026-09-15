@@ -1,7 +1,11 @@
 import { useContext } from "react";
 import { range } from "d3";
 import { RectText } from "./RectText";
-import { LEFT_SIDE_ATTR, ASCII_TABLE, THEME_COLORS } from "./StandardCode.utils";
+import {
+  LEFT_SIDE_ATTR,
+  ASCII_TABLE,
+  THEME_COLORS,
+} from "./StandardCode.utils";
 import { HoveredCellContext } from "./StandardCode.context";
 import { useResolvedTheme } from "./use-resolved-theme";
 

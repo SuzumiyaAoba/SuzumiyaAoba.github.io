@@ -11,7 +11,14 @@ type ArrowProps = {
   strokeWidth?: number;
 };
 
-export const Arrow: FC<ArrowProps> = ({ startX, startY, endX, endY, color, strokeWidth = 2 }) => {
+export const Arrow: FC<ArrowProps> = ({
+  startX,
+  startY,
+  endX,
+  endY,
+  color,
+  strokeWidth = 2,
+}) => {
   const theme = useResolvedTheme();
   const themeColors = theme === "dark" ? THEME_COLORS.dark : THEME_COLORS.light;
   const arrowColor = color || themeColors.stroke;

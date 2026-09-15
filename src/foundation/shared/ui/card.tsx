@@ -9,7 +9,10 @@ function Card({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
-      className={cn("rounded-xl border bg-card text-card-foreground shadow-xs", className)}
+      className={cn(
+        "rounded-xl border bg-card text-card-foreground shadow-xs",
+        className
+      )}
       {...props}
     >
       {children}
@@ -20,9 +23,17 @@ function Card({ className, children, ...props }: React.ComponentProps<"div">) {
 /**
  * カードのヘッダー部分
  */
-function CardHeader({ className, children, ...props }: React.ComponentProps<"div">) {
+function CardHeader({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div data-slot="card-header" className={cn("flex flex-col gap-1.5 p-5", className)} {...props}>
+    <div
+      data-slot="card-header"
+      className={cn("flex flex-col gap-1.5 p-5", className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -31,11 +42,15 @@ function CardHeader({ className, children, ...props }: React.ComponentProps<"div
 /**
  * カードのタイトル
  */
-function CardTitle({ className, children, ...props }: React.ComponentProps<"h3">) {
+function CardTitle({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"h3">) {
   return (
     <h3
       data-slot="card-title"
-      className={cn("text-lg font-semibold leading-none", className)}
+      className={cn("text-lg leading-none font-semibold", className)}
       {...props}
     >
       {children}
@@ -46,7 +61,11 @@ function CardTitle({ className, children, ...props }: React.ComponentProps<"h3">
 /**
  * カードの説明文
  */
-function CardDescription({ className, children, ...props }: React.ComponentProps<"p">) {
+function CardDescription({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="card-description"
@@ -61,9 +80,17 @@ function CardDescription({ className, children, ...props }: React.ComponentProps
 /**
  * カードのメインコンテンツ部分
  */
-function CardContent({ className, children, ...props }: React.ComponentProps<"div">) {
+function CardContent({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div data-slot="card-content" className={cn("p-5 pt-0", className)} {...props}>
+    <div
+      data-slot="card-content"
+      className={cn("p-5 pt-0", className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -72,12 +99,27 @@ function CardContent({ className, children, ...props }: React.ComponentProps<"di
 /**
  * カードのフッター部分
  */
-function CardFooter({ className, children, ...props }: React.ComponentProps<"div">) {
+function CardFooter({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div data-slot="card-footer" className={cn("flex items-center p-5 pt-0", className)} {...props}>
+    <div
+      data-slot="card-footer"
+      className={cn("flex items-center p-5 pt-0", className)}
+      {...props}
+    >
       {children}
     </div>
   );
 }
 
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+};

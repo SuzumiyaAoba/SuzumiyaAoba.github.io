@@ -34,7 +34,14 @@ const toNumber = (value?: number | string): number | undefined => {
  * - `react-medium-image-zoom` による拡大表示機能
  * - `.png`, `.jpg`, `.jpeg` ファイルの `.webp` への自動変換（ベースパスが指定されている場合）
  */
-export function Img({ basePath, src, width, height, className, ...props }: MdxImgProps) {
+export function Img({
+  basePath,
+  src,
+  width,
+  height,
+  className,
+  ...props
+}: MdxImgProps) {
   const resolvedSrc =
     typeof src === "string"
       ? basePath && src.startsWith("./")

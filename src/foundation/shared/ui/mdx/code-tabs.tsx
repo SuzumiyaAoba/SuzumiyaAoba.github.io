@@ -25,8 +25,11 @@ function CodeTabs({ tabs }: { tabs: RawCode[] }) {
   const { blocks: highlighted, hasError } = useHighlightedCode(tabs);
   const [active, setActive] = useState(0);
   const labels = useMemo(
-    () => tabs.map((tab) => parseCodeMeta(tab.meta).displayMeta || tab.lang || "tab"),
-    [tabs],
+    () =>
+      tabs.map(
+        (tab) => parseCodeMeta(tab.meta).displayMeta || tab.lang || "tab"
+      ),
+    [tabs]
   );
 
   const activeCode = highlighted[active];
@@ -40,18 +43,22 @@ function CodeTabs({ tabs }: { tabs: RawCode[] }) {
             type="button"
             onClick={() => setActive(index)}
             className={`rounded-full px-3 py-1 transition-colors ${
-              index === active ? "bg-background text-foreground" : "hover:text-foreground"
+              index === active
+                ? "bg-background text-foreground"
+                : "hover:text-foreground"
             }`}
           >
             {label}
           </button>
         ))}
         {activeCode?.lang ? (
-          <span className="ml-auto text-[10px] uppercase tracking-[0.12em]">{activeCode.lang}</span>
+          <span className="ml-auto text-[10px] tracking-[0.12em] uppercase">
+            {activeCode.lang}
+          </span>
         ) : null}
       </div>
       {activeCode ? (
-        <CustomCodeBlock code={activeCode} className="rounded-t-none mt-0" />
+        <CustomCodeBlock code={activeCode} className="mt-0 rounded-t-none" />
       ) : (
         <div className="rounded-b-lg bg-muted px-4 py-6 text-sm text-muted-foreground">
           {hasError ? "Unable to highlight code." : "Loading code..."}

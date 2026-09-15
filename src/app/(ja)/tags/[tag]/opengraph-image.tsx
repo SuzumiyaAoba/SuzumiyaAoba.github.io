@@ -8,9 +8,13 @@ export { buildTagPageStaticParams as generateStaticParams } from "@/app/_shared/
 export const contentType = "image/png";
 export const dynamic = "force-static";
 
-export default async function Image({ params }: { params: Promise<{ tag: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ tag: string }>;
+}) {
   const { tag } = await params;
-  return renderContentOpengraphImage({
+  return await renderContentOpengraphImage({
     eyebrow: "タグ",
     title: `#${decodeTag(tag)}`,
   });

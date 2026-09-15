@@ -11,10 +11,14 @@ export async function generateStaticParams(): Promise<{ book: string }[]> {
   return slugs.map((book) => ({ book }));
 }
 
-export default async function Image({ params }: { params: Promise<{ book: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ book: string }>;
+}) {
   const { book } = await params;
   const meta = await getBookMeta(book);
-  return renderContentOpengraphImage({
+  return await renderContentOpengraphImage({
     eyebrow: "書籍",
     title: meta?.frontmatter.title || book,
   });

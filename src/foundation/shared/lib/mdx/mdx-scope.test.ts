@@ -10,7 +10,10 @@ describe("loadMdxScope", () => {
   beforeAll(async () => {
     baseDir = await mkdtemp(path.join(tmpdir(), "mdx-scope-test-"));
     await mkdir(path.join(baseDir, "data"), { recursive: true });
-    await writeFile(path.join(baseDir, "data", "sample.json"), JSON.stringify({ hello: "world" }));
+    await writeFile(
+      path.join(baseDir, "data", "sample.json"),
+      JSON.stringify({ hello: "world" })
+    );
   });
 
   afterAll(async () => {
@@ -24,7 +27,9 @@ describe("loadMdxScope", () => {
   });
 
   it("import文が無ければ空オブジェクトを返す", async () => {
-    await expect(loadMdxScope("# タイトルのみ", baseDir)).resolves.toStrictEqual({});
+    await expect(
+      loadMdxScope("# タイトルのみ", baseDir)
+    ).resolves.toStrictEqual({});
   });
 
   it("存在しないJSONへのimportは無視する", async () => {

@@ -22,7 +22,7 @@ export function TwitterWidgets() {
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://platform.twitter.com/widgets.js"]',
+      'script[src="https://platform.twitter.com/widgets.js"]'
     );
 
     if (existingScript) {

@@ -11,7 +11,7 @@ export type ReadContentOptions = { locale?: Locale; fallback?: boolean };
  * try/catch で逐次ファイルを試すより readdir 1回で済む。
  */
 export function createArticleFileLister(
-  collectionDir: string,
+  collectionDir: string
 ): (slug: string) => Promise<Set<string>> {
   return cache(async (slug: string): Promise<Set<string>> => {
     const fs = await import("node:fs/promises");
@@ -35,7 +35,7 @@ export async function readLocaleContentFile(
   collectionDir: string,
   slug: string,
   locale: Locale,
-  listFiles: (slug: string) => Promise<Set<string>>,
+  listFiles: (slug: string) => Promise<Set<string>>
 ): Promise<ContentFile | null> {
   const fs = await import("node:fs/promises");
   const { default: path } = await import("node:path");
@@ -50,11 +50,11 @@ export async function readLocaleContentFile(
   const mdxFile = `${baseName}.mdx`;
 
   if (files.has(mdFile)) {
-    const raw = await fs.readFile(path.join(baseDir, mdFile), "utf8");
+    const raw = await fs.readFile(path.join(baseDir, mdFile), "utf-8");
     return { raw, format: "md" };
   }
   if (files.has(mdxFile)) {
-    const raw = await fs.readFile(path.join(baseDir, mdxFile), "utf8");
+    const raw = await fs.readFile(path.join(baseDir, mdxFile), "utf-8");
     return { raw, format: "mdx" };
   }
   return null;
@@ -68,12 +68,17 @@ export async function readContentFileWithFallback(
   collectionDir: string,
   slug: string,
   listFiles: (slug: string) => Promise<Set<string>>,
-  options?: ReadContentOptions,
+  options?: ReadContentOptions
 ): Promise<ContentFile | null> {
   const locale = options?.locale ?? "ja";
   const fallback = options?.fallback ?? true;
 
-  const file = await readLocaleContentFile(collectionDir, slug, locale, listFiles);
+  const file = await readLocaleContentFile(
+    collectionDir,
+    slug,
+    locale,
+    listFiles
+  );
   if (file) {
     return file;
   }
@@ -82,5 +87,10 @@ export async function readContentFileWithFallback(
     return null;
   }
 
-  return readLocaleContentFile(collectionDir, slug, locale === "ja" ? "en" : "ja", listFiles);
+  return await readLocaleContentFile(
+    collectionDir,
+    slug,
+    locale === "ja" ? "en" : "ja",
+    listFiles
+  );
 }

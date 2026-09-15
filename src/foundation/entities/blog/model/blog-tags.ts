@@ -26,19 +26,26 @@ export function groupBlogPostsByTag(posts: readonly BlogPostSummary[]) {
 /** 翻訳がない記事には、一覧表示と同じフォールバックを適用する。 */
 export const getBlogTagIndex = cache(async (locale: Locale) => {
   const posts = await getBlogPostSummariesVariants();
-  return groupBlogPostsByTag(posts.flatMap((post) => resolveLocalizedValue(post, locale) ?? []));
+  return groupBlogPostsByTag(
+    posts.flatMap((post) => resolveLocalizedValue(post, locale) ?? [])
+  );
 });
 
 /** 静的ルートとサイトマップで、日本語・英語双方のタグと最新日付を共有する。 */
 export function summarizeBlogTags(posts: readonly LocalizedBlogPostSummary[]) {
   const index = groupBlogPostsByTag(
-    posts.flatMap((post) => [post.ja, post.en].filter((variant) => variant !== null)),
+    posts.flatMap((post) =>
+      [post.ja, post.en].filter((variant) => variant !== null)
+    )
   );
   return Array.from(index, ([name, entries]) => {
     let lastModified: Date | undefined;
     for (const entry of entries) {
       const date = new Date(entry.frontmatter.date);
-      if (!Number.isNaN(date.getTime()) && (!lastModified || date > lastModified)) {
+      if (
+        !Number.isNaN(date.getTime()) &&
+        (!lastModified || date > lastModified)
+      ) {
         lastModified = date;
       }
     }
@@ -47,5 +54,5 @@ export function summarizeBlogTags(posts: readonly LocalizedBlogPostSummary[]) {
 }
 
 export const getAllBlogTags = cache(async () =>
-  summarizeBlogTags(await getBlogPostSummariesVariants()),
+  summarizeBlogTags(await getBlogPostSummariesVariants())
 );

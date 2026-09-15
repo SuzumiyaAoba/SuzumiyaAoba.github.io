@@ -137,7 +137,8 @@
     min-width: 0;
     background: var(--feature-ink);
     color: var(--feature-foreground);
-    border: 1px solid color-mix(in srgb, var(--feature-foreground) 12%, var(--feature-ink));
+    border: 1px solid
+      color-mix(in srgb, var(--feature-foreground) 12%, var(--feature-ink));
     border-radius: 0.125rem;
   }
   .home-feature-link {
@@ -193,7 +194,8 @@
     justify-content: space-between;
     gap: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px solid color-mix(in srgb, var(--feature-muted) 30%, transparent);
+    border-top: 1px solid
+      color-mix(in srgb, var(--feature-muted) 30%, transparent);
     color: var(--feature-accent);
     font-size: 0.75rem;
   }

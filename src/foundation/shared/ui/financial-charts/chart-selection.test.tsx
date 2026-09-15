@@ -3,7 +3,15 @@
 import { act, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi, test } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+  test,
+} from "vite-plus/test";
 import { LineChart } from "./LineChart";
 import { StackedBarChart } from "./StackedBarChart";
 import type { SheetData } from "./types";
@@ -35,7 +43,7 @@ afterEach(async () => {
 
 function button(label: string) {
   const target = [...container.querySelectorAll("button")].find(
-    (item) => item.textContent === label,
+    (item) => item.textContent === label
   );
   if (!target) {
     throw new Error(`Button not found: ${label}`);
@@ -57,18 +65,20 @@ describe.each([
         <StrictMode>
           <Chart
             data={chartData}
-            {...(grouped ? { groups: [{ name: "All", metrics: chartData.headers }] } : {})}
+            {...(grouped
+              ? { groups: [{ name: "All", metrics: chartData.headers }] }
+              : {})}
           />
-        </StrictMode>,
-      ),
+        </StrictMode>
+      )
     );
   }
 
   it("実数値がある項目だけを表示し、ゼロの値は有効なデータとして扱う", async () => {
     await render(data, true);
-    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toStrictEqual(
-      ["All", "A", "B"],
-    );
+    expect(
+      [...container.querySelectorAll("button")].map((item) => item.textContent)
+    ).toStrictEqual(["All", "A", "B"]);
     expect(button("B").getAttribute("aria-pressed")).toBe("true");
   });
 
@@ -82,7 +92,9 @@ describe.each([
     expect(container.querySelectorAll("circle, rect")).toHaveLength(0);
     await click("A");
     expect(button("A").getAttribute("aria-pressed")).toBe("true");
-    expect(container.querySelectorAll("circle, rect").length).toBeGreaterThan(0);
+    expect(container.querySelectorAll("circle, rect").length).toBeGreaterThan(
+      0
+    );
   });
 
   it("最後のグループも一括で非表示にし、再び表示できる", async () => {
@@ -108,9 +120,9 @@ describe.each([
     });
     expect(button("A").getAttribute("aria-pressed")).toBe("false");
     expect(button("C").getAttribute("aria-pressed")).toBe("true");
-    expect([...container.querySelectorAll("button")].map((item) => item.textContent)).toStrictEqual(
-      ["A", "C"],
-    );
+    expect(
+      [...container.querySelectorAll("button")].map((item) => item.textContent)
+    ).toStrictEqual(["A", "C"]);
   });
 });
 

@@ -6,7 +6,10 @@ export const releaseSelectClass =
 export const releaseActionClass = "h-11 rounded-lg px-3 text-sm shadow-none";
 
 /** ページの @container を基準に、スクロールバーを除く画面幅まで表示枠を広げる。 */
-export function ReleaseScrollArea({ children, ...props }: ComponentProps<"section">) {
+export function ReleaseScrollArea({
+  children,
+  ...props
+}: ComponentProps<"section">) {
   return (
     <div className="mx-[calc(50%_-_50cqw)] w-[100cqw] border-y bg-background">
       <section data-release-viewport {...props}>
@@ -36,7 +39,10 @@ export function ReleaseViewHeader({
         <div className="space-y-1.5">
           <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
           {description && (
-            <p id={descriptionId} className="text-xs leading-6 text-muted-foreground">
+            <p
+              id={descriptionId}
+              className="text-xs leading-6 text-muted-foreground"
+            >
               {description}
             </p>
           )}

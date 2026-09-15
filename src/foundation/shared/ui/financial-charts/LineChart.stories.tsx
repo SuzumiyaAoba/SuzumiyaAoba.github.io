@@ -39,10 +39,14 @@ export const Default: Story = {
     const pointsBefore = canvasElement.querySelectorAll("circle").length;
     await userEvent.click(revenue);
     await expect(revenue).toHaveAttribute("aria-pressed", "false");
-    await expect(canvasElement.querySelectorAll("circle").length).toBeLessThan(pointsBefore);
+    await expect(canvasElement.querySelectorAll("circle").length).toBeLessThan(
+      pointsBefore
+    );
     await userEvent.click(revenue);
     await expect(revenue).toHaveAttribute("aria-pressed", "true");
-    await expect(canvasElement.querySelectorAll("circle")).toHaveLength(pointsBefore);
+    await expect(canvasElement.querySelectorAll("circle")).toHaveLength(
+      pointsBefore
+    );
   },
 };
 
@@ -53,7 +57,9 @@ export const WithExcludedHeaders: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const revenue = canvas.getByRole("button", { name: "Revenue" });
-    await expect(canvas.queryByRole("button", { name: "Year" })).not.toBeInTheDocument();
+    await expect(
+      canvas.queryByRole("button", { name: "Year" })
+    ).not.toBeInTheDocument();
     await userEvent.click(revenue);
     await expect(revenue).toHaveAttribute("aria-pressed", "false");
     await expect(canvasElement.querySelectorAll("circle")).toHaveLength(0);

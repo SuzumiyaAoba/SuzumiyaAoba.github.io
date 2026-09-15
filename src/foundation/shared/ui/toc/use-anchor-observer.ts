@@ -30,7 +30,9 @@ export function useAnchorObserver(watch: string[], single: boolean): string[] {
         let closest: HTMLElement | undefined;
         let distance = Infinity;
         for (const element of elements) {
-          const candidate = Math.abs(viewTop - element.getBoundingClientRect().top);
+          const candidate = Math.abs(
+            viewTop - element.getBoundingClientRect().top
+          );
           if (candidate < distance) {
             closest = element;
             distance = candidate;
@@ -38,7 +40,7 @@ export function useAnchorObserver(watch: string[], single: boolean): string[] {
         }
         setActiveAnchors(closest ? [closest.id] : []);
       },
-      { rootMargin: "0px", threshold: 0.98 },
+      { rootMargin: "0px", threshold: 0.98 }
     );
 
     for (const element of elements) {

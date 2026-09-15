@@ -17,7 +17,11 @@ import { I18nText } from "@/shared/ui/i18n-text";
 function SearchLoading({ locale }: { locale: Locale }) {
   return (
     <div className="px-4 py-6 text-sm text-muted-foreground">
-      <I18nText locale={locale} ja="検索機能を読み込み中..." en="Loading search..." />
+      <I18nText
+        locale={locale}
+        ja="検索機能を読み込み中..."
+        en="Loading search..."
+      />
     </div>
   );
 }
@@ -32,7 +36,10 @@ export type SearchPageContentProps = {
 
 export function SearchPageContent({ locale }: SearchPageContentProps) {
   const pagePath = toLocalePath("/search", locale);
-  const breadcrumbItems = buildListBreadcrumbItems(locale, { name: "Search", path: "/search" });
+  const breadcrumbItems = buildListBreadcrumbItems(locale, {
+    name: "Search",
+    path: "/search",
+  });
   return (
     <>
       <Script src="/pagefind-adapter.js" strategy="afterInteractive" />

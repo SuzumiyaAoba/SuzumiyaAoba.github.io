@@ -25,13 +25,19 @@ export type Note = {
 
 export type NoteSummary = ContentSummary<Note>;
 
-export const getNoteSlugs = cache(async (): Promise<string[]> =>
-  listContentSlugs(NOTE_COLLECTION_DIR),
+export const getNoteSlugs = cache(
+  async (): Promise<string[]> => await listContentSlugs(NOTE_COLLECTION_DIR)
 );
 
-export const getNote = createContentReader(NOTE_COLLECTION_DIR, normalizeArticleFrontmatter);
+export const getNote = createContentReader(
+  NOTE_COLLECTION_DIR,
+  normalizeArticleFrontmatter
+);
 
-const collection = createContentCollection({ getSlugs: getNoteSlugs, getContent: getNote });
+const collection = createContentCollection({
+  getSlugs: getNoteSlugs,
+  getContent: getNote,
+});
 
 export const getNoteSummary = collection.getSummary;
 

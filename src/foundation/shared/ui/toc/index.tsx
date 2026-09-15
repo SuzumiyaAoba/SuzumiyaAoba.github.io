@@ -25,7 +25,9 @@ export type TOCItemType = {
 export type TableOfContents = TOCItemType[];
 
 const ActiveAnchorContext = createContext<string[]>([]);
-const ScrollContext = createContext<RefObject<HTMLElement | null>>({ current: null });
+const ScrollContext = createContext<RefObject<HTMLElement | null>>({
+  current: null,
+});
 const TOCContext = createContext<TOCItemType[]>([]);
 
 export function useActiveAnchors(): string[] {
@@ -40,7 +42,9 @@ export function useTOCItems(): TOCItemType[] {
   return useContext(TOCContext);
 }
 
-function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]): React.RefCallback<T> {
+function mergeRefs<T>(
+  ...refs: (React.Ref<T> | undefined)[]
+): React.RefCallback<T> {
   return (value) => {
     for (const ref of refs) {
       if (typeof ref === "function") {
@@ -58,31 +62,46 @@ export type TOCProviderProps = {
   children?: ReactNode;
 };
 
-export function TOCProvider({ toc, single = false, children }: TOCProviderProps) {
-  const headings = useMemo(() => toc.flatMap((item) => item.url.split("#")[1] || []), [toc]);
+export function TOCProvider({
+  toc,
+  single = false,
+  children,
+}: TOCProviderProps) {
+  const headings = useMemo(
+    () => toc.flatMap((item) => item.url.split("#")[1] || []),
+    [toc]
+  );
 
   const activeAnchors = useAnchorObserver(headings, single);
 
   return (
     <TOCContext.Provider value={toc}>
-      <ActiveAnchorContext.Provider value={activeAnchors}>{children}</ActiveAnchorContext.Provider>
+      <ActiveAnchorContext.Provider value={activeAnchors}>
+        {children}
+      </ActiveAnchorContext.Provider>
     </TOCContext.Provider>
   );
 }
 
-export function TOCScrollArea({ ref, className, ...props }: ComponentProps<"div">) {
+export function TOCScrollArea({
+  ref,
+  className,
+  ...props
+}: ComponentProps<"div">) {
   const viewRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
       ref={mergeRefs(viewRef, ref)}
       className={cn(
-        "relative min-h-0 text-sm ms-px overflow-auto [scrollbar-width:none] [mask-image:linear-gradient(to_bottom,transparent,white_16px,white_calc(100%-16px),transparent)] py-3",
-        className,
+        "relative ms-px min-h-0 overflow-auto [mask-image:linear-gradient(to_bottom,transparent,white_16px,white_calc(100%-16px),transparent)] py-3 text-sm [scrollbar-width:none]",
+        className
       )}
       {...props}
     >
-      <ScrollContext.Provider value={viewRef}>{props.children}</ScrollContext.Provider>
+      <ScrollContext.Provider value={viewRef}>
+        {props.children}
+      </ScrollContext.Provider>
     </div>
   );
 }
@@ -115,7 +134,8 @@ export function TOCItem({ ref, onActiveChange, ...props }: TOCItemProps) {
     const isBelow = anchorRect.bottom > containerRect.bottom;
 
     if (isAbove || isBelow) {
-      const anchorCenter = anchor.offsetTop - container.offsetTop + anchor.offsetHeight / 2;
+      const anchorCenter =
+        anchor.offsetTop - container.offsetTop + anchor.offsetHeight / 2;
       const containerCenter = container.clientHeight / 2;
       const scrollTop = anchorCenter - containerCenter;
 
@@ -141,14 +161,21 @@ export type TOCItemsProps = {
   emptyText?: string;
 } & ComponentProps<"div">;
 
-export function TOCItems({ ref, className, emptyText = "No Headings", ...props }: TOCItemsProps) {
+export function TOCItems({
+  ref,
+  className,
+  emptyText = "No Headings",
+  ...props
+}: TOCItemsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = useTOCItems();
   const active = useActiveAnchors();
 
   if (items.length === 0) {
     return (
-      <div className="rounded-lg border bg-card p-3 text-xs text-muted-foreground">{emptyText}</div>
+      <div className="rounded-lg border bg-card p-3 text-xs text-muted-foreground">
+        {emptyText}
+      </div>
     );
   }
 
@@ -177,10 +204,10 @@ function SimpleTOCItem({ item }: { item: TOCItemType }) {
     <TOCItem
       href={item.url}
       className={cn(
-        "prose leading-snug py-1.5 text-sm text-muted-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary hover:text-accent-foreground",
+        "prose py-1.5 text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary",
         item.depth <= 2 && "ps-3",
         item.depth === 3 && "ps-6",
-        item.depth >= 4 && "ps-8",
+        item.depth >= 4 && "ps-8"
       )}
     >
       {item.title}
@@ -246,12 +273,17 @@ export function ClerkTOCItems({
         const offset = getLineOffset(items[i]?.depth ?? 2) + 1;
         const top = element.offsetTop + Number.parseFloat(styles.paddingTop);
         const bottom =
-          element.offsetTop + element.clientHeight - Number.parseFloat(styles.paddingBottom);
+          element.offsetTop +
+          element.clientHeight -
+          Number.parseFloat(styles.paddingBottom);
 
         w = Math.max(offset, w);
         h = Math.max(h, bottom);
 
-        d.push(`${i === 0 ? "M" : "L"}${offset} ${top}`, `L${offset} ${bottom}`);
+        d.push(
+          `${i === 0 ? "M" : "L"}${offset} ${top}`,
+          `L${offset} ${bottom}`
+        );
       }
 
       setSvg({
@@ -272,7 +304,9 @@ export function ClerkTOCItems({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-lg border bg-card p-3 text-xs text-muted-foreground">{emptyText}</div>
+      <div className="rounded-lg border bg-card p-3 text-xs text-muted-foreground">
+        {emptyText}
+      </div>
     );
   }
 
@@ -285,7 +319,7 @@ export function ClerkTOCItems({
             width: svg.width,
             height: svg.height,
             maskImage: `url("data:image/svg+xml,${encodeURIComponent(
-              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`,
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
             )}")`,
           }}
         >
@@ -296,7 +330,11 @@ export function ClerkTOCItems({
           />
         </div>
       ) : null}
-      <div ref={mergeRefs(containerRef, ref)} className={cn("flex flex-col", className)} {...props}>
+      <div
+        ref={mergeRefs(containerRef, ref)}
+        className={cn("flex flex-col", className)}
+        {...props}
+      >
         {items.map((item, i) => {
           const prev = items[i - 1];
           const next = items[i + 1];
@@ -333,13 +371,13 @@ function ClerkTOCItemElement({
       style={{
         paddingInlineStart: getItemOffset(item.depth),
       }}
-      className="prose leading-snug relative py-1.5 text-sm text-muted-foreground hover:text-accent-foreground transition-colors [overflow-wrap:anywhere] first:pt-0 last:pb-0 data-[active=true]:text-primary"
+      className="prose relative py-1.5 text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary"
     >
       {offset === upperOffset ? null : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
-          className="absolute -top-1.5 start-0 size-4 rtl:-scale-x-100"
+          className="absolute start-0 -top-1.5 size-4 rtl:-scale-x-100"
         >
           <line
             x1={upperOffset}
@@ -355,7 +393,7 @@ function ClerkTOCItemElement({
         className={cn(
           "absolute inset-y-0 w-px bg-foreground/10",
           offset !== upperOffset && "top-1.5",
-          offset !== lowerOffset && "bottom-1.5",
+          offset !== lowerOffset && "bottom-1.5"
         )}
         style={{
           insetInlineStart: offset,
@@ -383,7 +421,11 @@ export type PageTOCItemsProps = {
   emptyText?: string;
 } & ComponentProps<"div">;
 
-export function PageTOCItems({ variant = "default", emptyText, ...props }: PageTOCItemsProps) {
+export function PageTOCItems({
+  variant = "default",
+  emptyText,
+  ...props
+}: PageTOCItemsProps) {
   const emptyTextProp = emptyText === undefined ? {} : { emptyText };
   return (
     <TOCScrollArea>

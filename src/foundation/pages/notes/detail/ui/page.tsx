@@ -6,7 +6,11 @@ import { getNoteVariants } from "@/entities/note";
 import { getAffiliateProductsByIds } from "@/shared/lib/affiliate-products";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { resolveContentRoot } from "@/shared/lib/content-file";
-import { extractAmazonProductIdsFromMdx, loadMdxScope, renderMdx } from "@/shared/lib/mdx";
+import {
+  extractAmazonProductIdsFromMdx,
+  loadMdxScope,
+  renderMdx,
+} from "@/shared/lib/mdx";
 import { toLocalePath, resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { NotesDetailPageContent } from "./page-content";
@@ -42,7 +46,7 @@ export default async function Page({ params, locale }: PageProps) {
   const explicitProductIds = note.frontmatter.amazonProductIds ?? [];
   const excludedIdsInContent = new Set(productIdsInContent);
   const explicitProductIdsForFooter = explicitProductIds.filter(
-    (id) => !excludedIdsInContent.has(id),
+    (id) => !excludedIdsInContent.has(id)
   );
 
   const noteDir = path.join(await resolveContentRoot(), "notes", slug);
@@ -60,10 +64,8 @@ export default async function Page({ params, locale }: PageProps) {
     explicitProductIdsForFooter.length > 0
       ? getAffiliateProductsByIds(explicitProductIdsForFooter)
       : Promise.resolve([]);
-  const [content, amazonProducts]: [ReactElement, AffiliateProduct[]] = await Promise.all([
-    contentPromise,
-    amazonProductsPromise,
-  ]);
+  const [content, amazonProducts]: [ReactElement, AffiliateProduct[]] =
+    await Promise.all([contentPromise, amazonProductsPromise]);
   const shouldShowAmazonAssociate =
     productIdsInContent.length > 0 ||
     amazonProducts.length > 0 ||

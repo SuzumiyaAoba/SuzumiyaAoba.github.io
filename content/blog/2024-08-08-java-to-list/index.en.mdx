@@ -13,14 +13,9 @@ description: A detailed look at the difference between Stream#toList() and Colle
 
 ## Introduction
 
-This article notes the caveats of [`Stream#toList()`](<https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()>).
-`Stream#toList()` is a new method introduced in Java 16, and like `Stream#collect(Collectors.toList())`, it converts a `Stream` to a `List`.
-However, there is a trap.
-Even so, some articles merely say "replace `Stream#collect(Collectors.toList())` with `Stream#toList()`" and stop there.
+This article notes the caveats of [`Stream#toList()`](<https://docs.oracle.com/javase/jp/16/docs/api/java.base/java/util/stream/Stream.html#toList()>). `Stream#toList()` is a new method introduced in Java 16, and like `Stream#collect(Collectors.toList())`, it converts a `Stream` to a `List`. However, there is a trap. Even so, some articles merely say "replace `Stream#collect(Collectors.toList())` with `Stream#toList()`" and stop there.
 
-So I wrote this as a warning.
-The problem statement and conclusion overlap with [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000),
-but here I look at more detailed implementations and code with similar behavior.
+So I wrote this as a warning. The problem statement and conclusion overlap with [JDK 16 : stream.toList() に見る API 設計の難しさ - A Memorandum](https://blog1.mammb.com/entry/2021/06/07/000000), but here I look at more detailed implementations and code with similar behavior.
 
 ## **LITERALLY** TL;DL
 
@@ -31,16 +26,13 @@ but here I look at more detailed implementations and code with similar behavior.
 
 ## Converting `Stream` to `List`
 
-Let's think about code that converts a `Stream` to a `List` in Java.
-Here, we compare behavior before and after `Stream#toList()` was added to the JDK.
+Let's think about code that converts a `Stream` to a `List` in Java. Here, we compare behavior before and after `Stream#toList()` was added to the JDK.
 
 ### Java 8
 
-Since Java 8, you can convert `Stream` to `List` with `Stream#collect(Collectors.toList())`.
-Here we use `jshell` to check behavior.
+Since Java 8, you can convert `Stream` to `List` with `Stream#collect(Collectors.toList())`. Here we use `jshell` to check behavior.
 
-To understand `Stream#collect(Collectors.toList())`, define a utility method `timesN` that takes a `List<Integer>`
-and returns a new `List` with each element multiplied by `n`.
+To understand `Stream#collect(Collectors.toList())`, define a utility method `timesN` that takes a `List<Integer>` and returns a new `List` with each element multiplied by `n`.
 
 ```java
 jshell> class ListUtils {
@@ -71,17 +63,14 @@ jshell> $1
 $1 ==> [2, 4, 6, 8]
 ```
 
-You can add elements without issue.
-This is because `Collectors.toList()` returns an `ArrayList`.
+You can add elements without issue. This is because `Collectors.toList()` returns an `ArrayList`.
 
 ```java
 jshell> $1.getClass();
 $3 ==> class java.util.ArrayList
 ```
 
-However, [the Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()>) does not state that it returns an `ArrayList`.
-It also says nothing is guaranteed about mutability.
-But if you check the **OpenJDK** implementation, you can see it returns `ArrayList`.
+However, [the Javadoc](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toList()>) does not state that it returns an `ArrayList`. It also says nothing is guaranteed about mutability. But if you check the **OpenJDK** implementation, you can see it returns `ArrayList`.
 
 ```java
 public class Collectors {
@@ -114,19 +103,13 @@ public class Collectors {
   skipPath={1}
 />
 
-OpenJDK returns `ArrayList`, but you should not write code assuming `Collectors.toList()` returns `ArrayList`.
-According to the standard Javadoc, the behavior of code like `$1.add(8)` is **_undefined_**.
-Another JDK might not use `ArrayList`.
+OpenJDK returns `ArrayList`, but you should not write code assuming `Collectors.toList()` returns `ArrayList`. According to the standard Javadoc, the behavior of code like `$1.add(8)` is **_undefined_**. Another JDK might not use `ArrayList`.
 
-In reality, code that adds elements to the result of `Stream#collect(Collectors.toList())` is probably being written.
-Many people might think they never do that.
-It's true that you rarely call `List#add()` immediately after collecting,
-but if you return the `List` from a method (as here), someone could easily call `add()` later.
+In reality, code that adds elements to the result of `Stream#collect(Collectors.toList())` is probably being written. Many people might think they never do that. It's true that you rarely call `List#add()` immediately after collecting, but if you return the `List` from a method (as here), someone could easily call `add()` later.
 
 ### Java 16
 
-Now try `Stream#toList()` added in Java 16.
-It converts to `List` similarly.
+Now try `Stream#toList()` added in Java 16. It converts to `List` similarly.
 
 ```java
 jshell> class ListUtils {
@@ -192,9 +175,7 @@ It also says:
 >
 > `Collections.unmodifiableList(new ArrayList<>(Arrays.asList(this.toArray())))`
 
-The point is simple: `Stream#toList()` is **not** a replacement for `Stream#collect(Collectors.toList())`.
-`Stream#collect(Collectors.toList())` does not guarantee mutability,
-but `Stream#toList()` guarantees immutability via `Collections#unmodifiableList`.
+The point is simple: `Stream#toList()` is **not** a replacement for `Stream#collect(Collectors.toList())`. `Stream#collect(Collectors.toList())` does not guarantee mutability, but `Stream#toList()` guarantees immutability via `Collections#unmodifiableList`.
 
 To understand `Stream#toList()`, you need to know:
 
@@ -225,9 +206,7 @@ Looking at the source, `Stream#toArray()` is abstract.
   skipPath={1}
 />
 
-So it depends on how the `Stream` implementation is written.
-The most common implementation used in classes implementing `List` is probably `ArrayList`.
-[`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) implements `toArray()` in `AbstractCollection`.
+So it depends on how the `Stream` implementation is written. The most common implementation used in classes implementing `List` is probably `ArrayList`. [`ArrayList`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/ArrayList.html#toArray()>) implements `toArray()` in `AbstractCollection`.
 
 ```java
     /**
@@ -271,8 +250,7 @@ The most common implementation used in classes implementing `List` is probably `
   skipPath={1}
 />
 
-It copies elements into an array using an `Iterator`.
-So it scans the list from beginning to end once.
+It copies elements into an array using an `Iterator`. So it scans the list from beginning to end once.
 
 ##### `Arrays#asList`
 
@@ -356,8 +334,7 @@ The `ArrayList` here is not `java.util.ArrayList`, but `Arrays.ArrayList`, an in
   skipPath={1}
 />
 
-The constructor just keeps the passed array after a null check.
-Mutable operations like `add` are not implemented in this `ArrayList`, but in its parent `AbstractList`.
+The constructor just keeps the passed array after a null check. Mutable operations like `add` are not implemented in this `ArrayList`, but in its parent `AbstractList`.
 
 ```java
     /**
@@ -420,12 +397,9 @@ As you can see, it always throws `UnsupportedOperationException`, so `Arrays#asL
   skipPath={1}
 />
 
-It takes any collection and converts it to an array with `Collection#toArray()`.
-If the collection is `java.util.ArrayList`, it keeps the array as-is;
-otherwise it copies it with `Arrays#copyOf`.
+It takes any collection and converts it to an array with `Collection#toArray()`. If the collection is `java.util.ArrayList`, it keeps the array as-is; otherwise it copies it with `Arrays#copyOf`.
 
-In our case, the constructor receives `java.util.Arrays$ArrayList` (not `java.util.ArrayList`),
-so the array is copied via `Arrays#copyOf`.
+In our case, the constructor receives `java.util.Arrays$ArrayList` (not `java.util.ArrayList`), so the array is copied via `Arrays#copyOf`.
 
 Before checking `Arrays#copyOf`, let's see how `toArray` is implemented in the `ArrayList` returned by `Arrays#asList()`.
 
@@ -441,10 +415,7 @@ Before checking `Arrays#copyOf`, let's see how `toArray` is implemented in the `
   skipPath={1}
 />
 
-Inside `Arrays#asList`, `Arrays#copyOf` is already called.
-Surprisingly, in this flow, `ArrayList`'s constructor calls `Arrays#copyOf` **twice**.
-Maybe I'm missing something.
-This double copy only happens for `ArrayList`; for other data structures, `this.toArray()` might behave differently.
+Inside `Arrays#asList`, `Arrays#copyOf` is already called. Surprisingly, in this flow, `ArrayList`'s constructor calls `Arrays#copyOf` **twice**. Maybe I'm missing something. This double copy only happens for `ArrayList`; for other data structures, `this.toArray()` might behave differently.
 
 Now let's check `Arrays#copyOf`.
 
@@ -491,10 +462,7 @@ Now let's check `Arrays#copyOf`.
   skipPath={1}
 />
 
-It allocates a same-size array and copies it.
-This is as far as we can follow in Java.
-It uses [`System.arraycopy`](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/lang/System.java#L553-L648),
-which is a JVM native method, not Java code.
+It allocates a same-size array and copies it. This is as far as we can follow in Java. It uses [`System.arraycopy`](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java.base/share/classes/java/lang/System.java#L553-L648), which is a JVM native method, not Java code.
 
 So in `ArrayList`'s constructor, if the collection stores data in an array, it copies it efficiently.
 
@@ -537,8 +505,7 @@ Finally, let's check `Collections#unmodifiableList()`.
   skipPath={1}
 />
 
-Since `Collections#unmodifiableList()` receives a `java.util.ArrayList` instance,
-it returns `new UnmodifiableRandomAccessList<>(list)`.
+Since `Collections#unmodifiableList()` receives a `java.util.ArrayList` instance, it returns `new UnmodifiableRandomAccessList<>(list)`.
 
 Most of `UnmodifiableRandomAccessList` is implemented in `UnmodifiableList`.
 
@@ -619,14 +586,11 @@ Most of `UnmodifiableRandomAccessList` is implemented in `UnmodifiableList`.
   skipPath={1}
 />
 
-`Collections#unmodifiableList()` wraps the original list without copying data.
-Therefore, in `Stream#toList()`, if the source collection is `ArrayList`,
-**there is no scan from head to tail—only two array copies**.
+`Collections#unmodifiableList()` wraps the original list without copying data. Therefore, in `Stream#toList()`, if the source collection is `ArrayList`, **there is no scan from head to tail—only two array copies**.
 
 #### `Collectors#toUnmodifiableList()`
 
-If you've looked at `Stream` methods since Java 11, you might think:
-"There is `Collectors#toUnmodifiableList()`. So isn't `Stream#toList()` a replacement for `Stream#collect(Collectors.toUnmodifiableList())`?"
+If you've looked at `Stream` methods since Java 11, you might think: "There is `Collectors#toUnmodifiableList()`. So isn't `Stream#toList()` a replacement for `Stream#collect(Collectors.toUnmodifiableList())`?"
 
 Let's look at the implementation.
 
@@ -667,8 +631,7 @@ public class Collectors {
   skipPath={1}
 />
 
-Going into `Collector` behavior would make this even longer, so I won't explain `CollectorImpl` in detail.
-This `CollectorImpl` accumulates elements into an `ArrayList`, merges lists, and finally converts to an unmodifiable list via `listFromTrustedArray`.
+Going into `Collector` behavior would make this even longer, so I won't explain `CollectorImpl` in detail. This `CollectorImpl` accumulates elements into an `ArrayList`, merges lists, and finally converts to an unmodifiable list via `listFromTrustedArray`.
 
 The interesting part is `SharedSecrets`. Let's look at it.
 
@@ -730,9 +693,7 @@ Here `java.util.ImmutableCollections$Access` provides a `JavaUtilCollectionAcces
   skipPath={1}
 />
 
-It converts an array to an unmodifiable list via `ImmutableCollections#listFromTrustedArray`.
-The implementation is below, and **it explicitly checks for `null` on each element before conversion**.
-So it **scans the list from beginning to end once**.
+It converts an array to an unmodifiable list via `ImmutableCollections#listFromTrustedArray`. The implementation is below, and **it explicitly checks for `null` on each element before conversion**. So it **scans the list from beginning to end once**.
 
 ```java
     /**
@@ -780,8 +741,7 @@ Their [implementations](https://github.com/openjdk/jdk/blob/jdk-17%2B35/src/java
 
 ### Differences between `Stream#collect(Collectors.toList())` and `Stream#toList()`
 
-`Stream#collect(Collectors.toList())` and `Stream#toList()` both return unmodifiable lists.
-They look the same, but if you followed the implementation, you should see two clear differences.
+`Stream#collect(Collectors.toList())` and `Stream#toList()` both return unmodifiable lists. They look the same, but if you followed the implementation, you should see two clear differences.
 
 #### When elements include `null`
 
@@ -803,20 +763,15 @@ jshell> Stream.of(1, null, 3).collect(Collectors.toUnmodifiableList());
 |        at (#13:1)
 ```
 
-`Stream#toList()` allows `null`, but `Stream#collect(Collectors.toUnmodifiableList())` throws when `null` is present.
-That's a big difference.
+`Stream#toList()` allows `null`, but `Stream#collect(Collectors.toUnmodifiableList())` throws when `null` is present. That's a big difference.
 
 #### Runtime overhead
 
-As mentioned, `Stream#collect(Collectors.toUnmodifiableList())` first scans the list to accumulate into an array,
-then scans again to perform explicit `null` checks.
-So it scans the list twice, causing more overhead.
+As mentioned, `Stream#collect(Collectors.toUnmodifiableList())` first scans the list to accumulate into an array, then scans again to perform explicit `null` checks. So it scans the list twice, causing more overhead.
 
-`Collectors.toList()` also scans once to fill an `ArrayList`,
-but since it doesn't do `null` checks, it scans once.
+`Collectors.toList()` also scans once to fill an `ArrayList`, but since it doesn't do `null` checks, it scans once.
 
-`Stream#toList()` copies the array twice, but does not refill an `ArrayList`; it just wraps it with `Collections.unmodifiableList()`.
-So in code, it looks much faster than the other two.
+`Stream#toList()` copies the array twice, but does not refill an `ArrayList`; it just wraps it with `Collections.unmodifiableList()`. So in code, it looks much faster than the other two.
 
 - [java - Would Stream.toList() perform better than Collectors.toList() - Stack Overflow](https://stackoverflow.com/questions/65741773/would-stream-tolist-perform-better-than-collectors-tolist)
 
@@ -824,11 +779,11 @@ So in code, it looks much faster than the other two.
 
 Summarizing the findings:
 
-| Expression                                        |   Mutability   |  Null   | Efficiency |
-| ------------------------------------------------- | :------------: | :-----: | :--------: |
-| `Stream#collect(Collectors.toList())`             |  :-1: Mutable  | :+1: OK |  :-1: Bad  |
+| Expression | Mutability | Null | Efficiency |
+| --- | :-: | :-: | :-: |
+| `Stream#collect(Collectors.toList())` | :-1: Mutable | :+1: OK | :-1: Bad |
 | `Stream#collect(Collectors.toUnmodifiableList())` | :+1: Immutable | :-1: NG | :-1: Worst |
-| `Stream#toList()`                                 | :+1: Immutable | :+1: OK | :+1: Best  |
+| `Stream#toList()` | :+1: Immutable | :+1: OK | :+1: Best |
 
 I did not know this relationship before writing the article.
 
@@ -838,63 +793,43 @@ I did not know this relationship before writing the article.
 
 ### Naming is important
 
-The core problem is lack of naming consistency.
-Traditionally in Java, `List` typically meant a mutable list [citation needed].
-Indeed, `Collectors#toList()` returns a mutable list.
-And for unmodifiable collections, methods were named with the _unmodifiable-_ prefix, like `Collectors#toUnmodifiableList()`.
+The core problem is lack of naming consistency. Traditionally in Java, `List` typically meant a mutable list [citation needed]. Indeed, `Collectors#toList()` returns a mutable list. And for unmodifiable collections, methods were named with the _unmodifiable-_ prefix, like `Collectors#toUnmodifiableList()`.
 
-So perhaps `Stream#toList()` should have been named `Stream#toUnmodifiableList()`.
-I haven't traced why `Stream#toList()` was added, but the person who chose the name bears a heavy sin (personal opinion).
+So perhaps `Stream#toList()` should have been named `Stream#toUnmodifiableList()`. I haven't traced why `Stream#toList()` was added, but the person who chose the name bears a heavy sin (personal opinion).
 
 ### A half-baked implementation
 
-Who is happy about collections being mutable across method/class boundaries today?
-Mutability makes code harder to follow and causes bugs.
+Who is happy about collections being mutable across method/class boundaries today? Mutability makes code harder to follow and causes bugs.
 
-To meet that need, Java 10 added [`Collectors#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>).
-It returns an [unmodifiable List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable).
+To meet that need, Java 10 added [`Collectors#toUnmodifiableList()`](<https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/stream/Collectors.html#toUnmodifiableList()>). It returns an [unmodifiable List](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/List.html#unmodifiable).
 
-But looking at its implementation, `Collectors#toUnmodifiableList()` is clearly slower than the other two methods,
-so it is hard to recommend.
+But looking at its implementation, `Collectors#toUnmodifiableList()` is clearly slower than the other two methods, so it is hard to recommend.
 
 ### Lesson
 
-This shows the difficulty of API design.
-Not only standard library API design, but also API design in code that uses the standard library.
-We should not expose more information than necessary, and we should avoid APIs that require users to know internal details.
-In a standard library, you would think you could be less careful, but with Java collections, **the burden falls on users**.
+This shows the difficulty of API design. Not only standard library API design, but also API design in code that uses the standard library. We should not expose more information than necessary, and we should avoid APIs that require users to know internal details. In a standard library, you would think you could be less careful, but with Java collections, **the burden falls on users**.
 
 Therefore, **when changing collection-related code, you must pay attention not just to the interface but the concrete instance**.
 
 ## Conclusion
 
-This article was about `Stream#toList()`'s caveats, but it is more accurate to say it is about `Stream#collect(Collectors.toList())`
-and the issues in the Java standard library. I didn't expect it to become such a long journey.
+This article was about `Stream#toList()`'s caveats, but it is more accurate to say it is about `Stream#collect(Collectors.toList())` and the issues in the Java standard library. I didn't expect it to become such a long journey.
 
-In general, programmers must understand data structures and choose appropriately, but today many people code without learning API design or data structures.
-And not only beginners, but even experienced developers often do not read official docs before using classes and methods.
-For this issue, the naming and API design of the Java standard library seem responsible.
+In general, programmers must understand data structures and choose appropriately, but today many people code without learning API design or data structures. And not only beginners, but even experienced developers often do not read official docs before using classes and methods. For this issue, the naming and API design of the Java standard library seem responsible.
 
-This may not be unique to Java, but in my (limited) experience, Java collections are hard.
-The [Java practice of throwing runtime exceptions for invalid operations](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#Collection.15X1lc) makes it worse.
+This may not be unique to Java, but in my (limited) experience, Java collections are hard. The [Java practice of throwing runtime exceptions for invalid operations](https://docs.oracle.com/javase/jp/21/docs/api/java.base/java/util/Collection.html#Collection.15X1lc) makes it worse.
 
 This mutability Q&A is described in the [Collections Framework FAQ](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/index.html).
 
 - [Why not directly support immutability in core collection interfaces to eliminate optional operations (and UnsupportedOperationException)?](https://docs.oracle.com/javase/jp/8/docs/technotes/guides/collections/designfaq.html#a1)
 
-It is long, but I still think it might have been better to separate APIs by mutability.
-Fighting collections where mutability is unknown until you call a method is painful.
-Half-baked immutability leads to traps like `Stream#toList()`.
-At that point, you might think: why not just always use mutable collections?
-This case shows that in Java, immutable collections give almost no static-analysis benefit.
+It is long, but I still think it might have been better to separate APIs by mutability. Fighting collections where mutability is unknown until you call a method is painful. Half-baked immutability leads to traps like `Stream#toList()`. At that point, you might think: why not just always use mutable collections? This case shows that in Java, immutable collections give almost no static-analysis benefit.
 
-Languages like Scala center on immutable collections,
-but it seems hard for a language built around mutable collections like Java to transition.
+Languages like Scala center on immutable collections, but it seems hard for a language built around mutable collections like Java to transition.
 
 I look forward to the day Java collections are rebuilt.
 
-At least after reading this article, you won't be so afraid of `Stream#toList()` that you can only sleep at night.
-Please nap peacefully.
+At least after reading this article, you won't be so afraid of `Stream#toList()` that you can only sleep at night. Please nap peacefully.
 
 If you feel relieved, I'd be happy if you react with :+1: in Giscus.
 

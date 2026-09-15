@@ -23,10 +23,13 @@ const contentTypeMap: Record<string, string> = {
  * Turbopack の過剰なディレクトリ解析を避けるためにラップする
  */
 async function readFileHelper(filePath: string): Promise<Buffer> {
-  return fs.readFile(filePath);
+  return await fs.readFile(filePath);
 }
 
-async function collectFilePaths(root: string, current: string): Promise<string[]> {
+async function collectFilePaths(
+  root: string,
+  current: string
+): Promise<string[]> {
   const entries = await fs.readdir(current, { withFileTypes: true });
   const files: string[] = [];
 
@@ -74,7 +77,10 @@ async function findWebpSource(filePath: string): Promise<string | null> {
   return null;
 }
 
-export async function GET(_request: Request, { params }: { params: Promise<{ path: string[] }> }) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   const { path: segments } = await params;
   const root = await resolveContentRoot();
   const filePath = path.join(root, ...segments);
@@ -93,7 +99,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
         },
       });
     } catch (error: unknown) {
-      if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
+      if (
+        !(error instanceof Error) ||
+        !("code" in error) ||
+        error.code !== "ENOENT"
+      ) {
         throw error;
       }
 

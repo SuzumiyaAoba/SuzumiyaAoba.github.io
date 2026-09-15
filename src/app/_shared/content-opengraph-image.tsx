@@ -1,4 +1,8 @@
-import { ArticleOpengraphImage, OpengraphTags, renderOpengraphImage } from "./opengraph-image";
+import {
+  ArticleOpengraphImage,
+  OpengraphTags,
+  renderOpengraphImage,
+} from "./opengraph-image";
 
 export { OPENGRAPH_IMAGE_SIZE as CONTENT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
@@ -15,7 +19,7 @@ export async function renderContentOpengraphImage({
   title,
   tags = [],
 }: RenderContentOpengraphImageOptions) {
-  return renderOpengraphImage(
+  return await renderOpengraphImage(
     <ArticleOpengraphImage
       title={title}
       beforeTitle={
@@ -32,6 +36,6 @@ export async function renderContentOpengraphImage({
         </div>
       }
       afterTitle={<OpengraphTags tags={tags} />}
-    />,
+    />
   );
 }

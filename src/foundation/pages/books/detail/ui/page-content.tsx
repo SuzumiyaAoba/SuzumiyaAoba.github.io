@@ -30,7 +30,7 @@ export function BookDetailPageContent({
   const breadcrumbItems = buildDetailBreadcrumbItems(
     locale,
     { name: "Books", path: "/books" },
-    { name: bookTitle, path: bookPath },
+    { name: bookTitle, path: bookPath }
   );
 
   return (
@@ -39,15 +39,17 @@ export function BookDetailPageContent({
       <main className="site-main-reading page-stack">
         <div>
           <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-          <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">{bookTitle}</h1>
+          <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
+            {bookTitle}
+          </h1>
         </div>
 
         {leadContent ? (
-          <div className="prose prose-neutral max-w-none font-serif">{leadContent}</div>
+          <div className="prose max-w-none font-serif">{leadContent}</div>
         ) : null}
 
         <nav aria-label="目次" className="space-y-4">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+          <h2 className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             目次
           </h2>
           <div className="space-y-5">
@@ -62,7 +64,7 @@ export function BookDetailPageContent({
                       <a
                         href={toLocalePath(
                           `/books/${bookSlug}/${sec.chapter}/${sec.section}`,
-                          locale,
+                          locale
                         )}
                         className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                       >

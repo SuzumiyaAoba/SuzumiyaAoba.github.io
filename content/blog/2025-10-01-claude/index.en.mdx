@@ -12,9 +12,7 @@ model: GPT-5.2-Codex
 description: Looking at what's new in Claude Sonnet 4.5 and Claude Code 2.0, with a comparison against Codex.
 ---
 
-> Do not hold meetings
-> The conclusion is already decided before any discussion
-> -- Humanity Has Declined
+> Do not hold meetings The conclusion is already decided before any discussion -- Humanity Has Declined
 
 ## Claude Sonnet 4.5
 
@@ -22,13 +20,11 @@ Claude Sonnet 4.5 has been released.
 
 [Introducing Claude Sonnet 4.5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-5)
 
-People had started saying Codex (OpenAI) is better than Claude Code (Anthropic),
-so one highlight is whether Anthropic can catch up with Sonnet 4.5.
+People had started saying Codex (OpenAI) is better than Claude Code (Anthropic), so one highlight is whether Anthropic can catch up with Sonnet 4.5.
 
 Within a week, articles evaluating the latest models will likely appear on Zenn and Qiita.
 
-If you are using Claude Code, you probably switched from Sonnet 4 to 4.5 automatically.
-You can check the active model with the `/model` command.
+If you are using Claude Code, you probably switched from Sonnet 4 to 4.5 automatically. You can check the active model with the `/model` command.
 
 ![Claude Code Model](./images/claude_code_model.png)
 
@@ -36,8 +32,7 @@ You might need Claude Code version 2.0 or higher.
 
 ## Changes
 
-Others have already summarized changes comprehensively, so I will focus only on what might matter for subscription users of Claude Code.
-I will skip the obvious "performance is better" points.
+Others have already summarized changes comprehensively, so I will focus only on what might matter for subscription users of Claude Code. I will skip the obvious "performance is better" points.
 
 ### Usage status
 
@@ -45,15 +40,13 @@ The `/usage` command in Claude Code now shows current session usage, weekly usag
 
 ![CLI usage command](./images/cli_usage.png)
 
-It does not show usage in real time like [calude-code-monoitor](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor),
-so you must run `/usage` when you want to check.
+It does not show usage in real time like [calude-code-monoitor](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor), so you must run `/usage` when you want to check.
 
 You can also view usage in the web UI.
 
 ![Web usage](./images/web_usage.png)
 
-It's nice that the official tool provides this.
-Compared to claude-code-monitor, it is more accurate and lets you see remaining quota across devices.
+It's nice that the official tool provides this. Compared to claude-code-monitor, it is more accurate and lets you see remaining quota across devices.
 
 I wish it showed input/output token counts instead of vague percentages, but that will probably come later.
 
@@ -69,8 +62,7 @@ Previously you had to include those keywords in the prompt, but from Claude Code
 
 ![ultrathink](./images/ultrathink.png)
 
-When enabled, it shows "Thinking on".
-Press <kbd>Tab</kbd> again to disable.
+When enabled, it shows "Thinking on". Press <kbd>Tab</kbd> again to disable.
 
 ### [Checkpointing](https://docs.claude.com/en/docs/claude-code/checkpointing)
 
@@ -82,23 +74,17 @@ You can choose from three options:
 - Code
 - Both conversation and code
 
-Checkpoints are created automatically for each prompt, but changes made outside Claude Code
-(Finder, terminal, editor, etc.) cannot be rewound.
-If you want to rewind, you should perform all operations through Claude Code.
-In general, changing files outside Claude Code while using it is not recommended because those changes are not in context and can confuse the agent.
+Checkpoints are created automatically for each prompt, but changes made outside Claude Code (Finder, terminal, editor, etc.) cannot be rewound. If you want to rewind, you should perform all operations through Claude Code. In general, changing files outside Claude Code while using it is not recommended because those changes are not in context and can confuse the agent.
 
 Checkpoints are for quick rollback within a session; they do not replace VCS (Version Control System).
 
 ### VS Code extension
 
-The Claude Code VS Code extension used to just launch Claude Code in the terminal,
-but now it works with a VS Code-native (?) UI.
+The Claude Code VS Code extension used to just launch Claude Code in the terminal, but now it works with a VS Code-native (?) UI.
 
 ![Claude Code on VSCode](./images/vscode_claude_code.png)
 
-When you enter a prompt, it shows a view like this.
-It looks similar to the terminal version, but clicking files opens them properly, which is convenient.
-However, code navigation sometimes fails, so it may still be unstable.
+When you enter a prompt, it shows a view like this. It looks similar to the terminal version, but clicking files opens them properly, which is convenient. However, code navigation sometimes fails, so it may still be unstable.
 
 ![Claude Code UI on VSCode](./images/vscode_claude_code_ui.png)
 
@@ -108,8 +94,6 @@ The slash command list is also shown in a richer UI.
 
 ## Conclusion
 
-There are other topics, like a Chrome extension opening to waitlisted users and Claude Agent SDK updates,
-but they don't matter to CLI-only Claude Code users, so I omitted them.
+There are other topics, like a Chrome extension opening to waitlisted users and Claude Agent SDK updates, but they don't matter to CLI-only Claude Code users, so I omitted them.
 
-For more details, see the [official announcement](https://www.anthropic.com/news/claude-sonnet-4-5)
-and the [Zenn article](https://zenn.dev/schroneko/articles/claude-sonnet-4-5).
+For more details, see the [official announcement](https://www.anthropic.com/news/claude-sonnet-4-5) and the [Zenn article](https://zenn.dev/schroneko/articles/claude-sonnet-4-5).

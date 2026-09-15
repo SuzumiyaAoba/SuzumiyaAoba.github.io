@@ -22,20 +22,27 @@ export function PaginationNav({
   }
 
   const en = locale === "en";
-  const resolvedHref = (page: number) => toLocalePath(hrefForPage(page), locale);
-  const visiblePages = Array.from({ length: pageCount }, (_, index) => index + 1).filter(
+  const resolvedHref = (page: number) =>
+    toLocalePath(hrefForPage(page), locale);
+  const visiblePages = Array.from(
+    { length: pageCount },
+    (_, index) => index + 1
+  ).filter(
     (page) =>
       page === 1 ||
       page === pageCount ||
       Math.abs(page - currentPage) <= 1 ||
       (currentPage <= 3 && page <= 5) ||
-      (currentPage >= pageCount - 2 && page >= pageCount - 4),
+      (currentPage >= pageCount - 2 && page >= pageCount - 4)
   );
   const controlClass =
     "inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted";
 
   return (
-    <nav aria-label={en ? "Pagination" : "ページ送り"} className="space-y-3 pt-4">
+    <nav
+      aria-label={en ? "Pagination" : "ページ送り"}
+      className="space-y-3 pt-4"
+    >
       <ol className="flex flex-wrap items-center justify-center gap-1">
         {visiblePages.map((page, index) => {
           const previousPage = visiblePages[index - 1];
@@ -54,7 +61,7 @@ export function PaginationNav({
                   "inline-flex h-11 w-9 items-center justify-center rounded-full font-mono text-xs tabular-nums transition-colors sm:w-11",
                   page === currentPage
                     ? "bg-[var(--brand)] font-semibold text-[var(--brand-contrast)]"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 {page}
@@ -66,7 +73,11 @@ export function PaginationNav({
       {showPrevNext && (
         <div className="flex items-center justify-between gap-2">
           {currentPage > 1 ? (
-            <a href={resolvedHref(currentPage - 1)} rel="prev" className={controlClass}>
+            <a
+              href={resolvedHref(currentPage - 1)}
+              rel="prev"
+              className={controlClass}
+            >
               {en ? "← Previous" : "← 前のページ"}
             </a>
           ) : (
@@ -78,7 +89,7 @@ export function PaginationNav({
             </span>
           )}
           <span
-            className="text-sm tabular-nums text-muted-foreground"
+            className="text-sm text-muted-foreground tabular-nums"
             aria-label={
               en
                 ? `Page ${currentPage} of ${pageCount}`
@@ -88,7 +99,11 @@ export function PaginationNav({
             {currentPage} / {pageCount}
           </span>
           {currentPage < pageCount ? (
-            <a href={resolvedHref(currentPage + 1)} rel="next" className={controlClass}>
+            <a
+              href={resolvedHref(currentPage + 1)}
+              rel="next"
+              className={controlClass}
+            >
               {en ? "Next →" : "次のページ →"}
             </a>
           ) : (

@@ -1,13 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { getBlogPostSummariesVariants } from "./blog";
 import type { BlogPostSummary } from "./blog";
-import { getAllBlogTags, getBlogTagIndex, groupBlogPostsByTag } from "./blog-tags";
+import {
+  getAllBlogTags,
+  getBlogTagIndex,
+  groupBlogPostsByTag,
+} from "./blog-tags";
 
 vi.mock(import("./blog"), () => ({
   getBlogPostSummariesVariants: vi.fn<typeof getBlogPostSummariesVariants>(),
 }));
 
-function post(slug: string, tags: string[], date = "2026-01-01"): BlogPostSummary {
+function post(
+  slug: string,
+  tags: string[],
+  date = "2026-01-01"
+): BlogPostSummary {
   return { slug, frontmatter: { title: slug, date, tags } };
 }
 
@@ -51,7 +59,11 @@ describe("ブログのタグ集計", () => {
         ja: post("translated", ["共通", "日本語"], "2026-01-01"),
         en: post("translated", ["共通", "English"], "2026-03-01"),
       },
-      { slug: "invalid", ja: post("invalid", ["共通", "日付なし"], "invalid"), en: null },
+      {
+        slug: "invalid",
+        ja: post("invalid", ["共通", "日付なし"], "invalid"),
+        en: null,
+      },
       { slug: "older", ja: post("older", ["共通"], "2025-01-01"), en: null },
     ]);
     await expect(getAllBlogTags()).resolves.toStrictEqual([

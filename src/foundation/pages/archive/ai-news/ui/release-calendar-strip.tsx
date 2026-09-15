@@ -9,7 +9,11 @@ import type { ReleaseTimelineRange } from "../model/release-timeline";
 import { ReleaseCalendarMonth } from "./release-calendar-month";
 import { ReleaseDatePicker } from "./release-date-picker";
 import type { ReleasePopoverControls } from "./release-popover";
-import { ReleaseScrollArea, ReleaseViewHeader, releaseActionClass } from "./release-view-layout";
+import {
+  ReleaseScrollArea,
+  ReleaseViewHeader,
+  releaseActionClass,
+} from "./release-view-layout";
 import {
   CALENDAR_MONTH_GAP,
   useReleaseCalendarNavigation,
@@ -43,7 +47,12 @@ export function ReleaseCalendarStrip({
     jumpToMonth,
     handleDayKey,
     handleScroll,
-  } = useReleaseCalendarNavigation({ range, today, selectedDate, onSelectDate });
+  } = useReleaseCalendarNavigation({
+    range,
+    today,
+    selectedDate,
+    onSelectDate,
+  });
   const byDate = useMemo(() => {
     const dates = new Map<string, Release[]>();
     for (const release of releases) {
@@ -57,7 +66,7 @@ export function ReleaseCalendarStrip({
     return dates;
   }, [releases]);
   const previousDate = releases.find(
-    (release) => release.date !== null && release.date < today,
+    (release) => release.date !== null && release.date < today
   )?.date;
   return (
     <section
@@ -67,7 +76,9 @@ export function ReleaseCalendarStrip({
       <ReleaseViewHeader
         title={en ? "Monthly release calendar" : "月別リリースカレンダー"}
         description={
-          en ? "Select a date for release details." : "日付を選択してリリースの詳細を表示"
+          en
+            ? "Select a date for release details."
+            : "日付を選択してリリースの詳細を表示"
         }
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -100,7 +111,11 @@ export function ReleaseCalendarStrip({
             />
           </div>
           <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-            <Button variant="outline" className={releaseActionClass} onClick={() => jumpTo(today)}>
+            <Button
+              variant="outline"
+              className={releaseActionClass}
+              onClick={() => jumpTo(today)}
+            >
               {en ? "Today" : "今日に戻る"}
             </Button>
             {previousDate && (
@@ -121,7 +136,9 @@ export function ReleaseCalendarStrip({
       </ReleaseViewHeader>
       <ReleaseScrollArea
         ref={scrollRef}
-        aria-label={en ? "Scrollable release calendar" : "横スクロールカレンダー"}
+        aria-label={
+          en ? "Scrollable release calendar" : "横スクロールカレンダー"
+        }
         tabIndex={0}
         onScroll={handleScroll}
         className="overflow-x-auto overscroll-x-contain bg-muted/20 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
@@ -151,9 +168,15 @@ export function ReleaseCalendarStrip({
         </div>
       </ReleaseScrollArea>
       <div className="flex items-center justify-between gap-2 border-t px-4 py-3 text-[10px] text-muted-foreground sm:px-6 sm:text-[11px]">
-        <span className="shrink-0 whitespace-nowrap">← {en ? "Past" : "過去"}</span>
-        <span>{en ? "Logos mark release days" : "ロゴのある日がリリース日"}</span>
-        <span className="shrink-0 whitespace-nowrap">{en ? "Future" : "未来"} →</span>
+        <span className="shrink-0 whitespace-nowrap">
+          ← {en ? "Past" : "過去"}
+        </span>
+        <span>
+          {en ? "Logos mark release days" : "ロゴのある日がリリース日"}
+        </span>
+        <span className="shrink-0 whitespace-nowrap">
+          {en ? "Future" : "未来"} →
+        </span>
       </div>
     </section>
   );

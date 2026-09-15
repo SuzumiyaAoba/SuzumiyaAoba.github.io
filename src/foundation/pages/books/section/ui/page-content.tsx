@@ -66,7 +66,7 @@ export function BookSectionPageContent({
       />
       <div className="site-container-wide flex flex-1 gap-0">
         {/* 左: 章節ナビ */}
-        <aside className="hidden xl:block w-60 shrink-0 pt-6 pb-10">
+        <aside className="hidden w-60 shrink-0 pt-6 pb-10 xl:block">
           <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4">
             <BookNav
               locale={locale}
@@ -80,7 +80,7 @@ export function BookSectionPageContent({
         </aside>
 
         {/* 中央: 本文 */}
-        <main className="flex-1 min-w-0 px-0 xl:px-8 pt-6 pb-10">
+        <main className="min-w-0 flex-1 px-0 pt-6 pb-10 xl:px-8">
           <Breadcrumbs
             items={[
               { name: "Home", path: toLocalePath("/", locale) },
@@ -98,17 +98,22 @@ export function BookSectionPageContent({
             <h1 className="text-2xl font-semibold">{sectionTitle}</h1>
           </header>
 
-          <article className="prose prose-neutral max-w-none font-serif">
+          <article className="prose max-w-none font-serif">
             {llm ? (
-              <Message variant="info" title="この節は LLM を活用して執筆しています">
+              <Message
+                variant="info"
+                title="この節は LLM を活用して執筆しています"
+              >
                 <p>
                   本節の本文は LLM（大規模言語モデル）を活用して執筆しています。
-                  技術的な内容は執筆者が検証していますが、誤りに気付かれた際は リポジトリの Issue
+                  技術的な内容は執筆者が検証していますが、誤りに気付かれた際は
+                  リポジトリの Issue
                   やプルリクエストでご指摘いただけると助かります。
                 </p>
                 {coAuthors.length > 0 ? (
                   <p>
-                    <strong>執筆に使用したモデル:</strong> {coAuthors.join(" / ")}
+                    <strong>執筆に使用したモデル:</strong>{" "}
+                    {coAuthors.join(" / ")}
                   </p>
                 ) : null}
               </Message>
@@ -130,15 +135,18 @@ export function BookSectionPageContent({
                     <a
                       href={toLocalePath(
                         `/books/${bookSlug}/${prev.chapter}/${prev.section}`,
-                        locale,
+                        locale
                       )}
                       className="w-full min-w-0"
                     >
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Icon icon="lucide:chevron-left" className="size-3 shrink-0" />
+                        <Icon
+                          icon="lucide:chevron-left"
+                          className="size-3 shrink-0"
+                        />
                         前の節
                       </span>
-                      <span className="w-full min-w-0 break-words text-left text-sm font-medium">
+                      <span className="w-full min-w-0 text-left text-sm font-medium break-words">
                         {prev.title}
                       </span>
                     </a>
@@ -157,15 +165,18 @@ export function BookSectionPageContent({
                     <a
                       href={toLocalePath(
                         `/books/${bookSlug}/${next.chapter}/${next.section}`,
-                        locale,
+                        locale
                       )}
                       className="w-full min-w-0"
                     >
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         次の節
-                        <Icon icon="lucide:chevron-right" className="size-3 shrink-0" />
+                        <Icon
+                          icon="lucide:chevron-right"
+                          className="size-3 shrink-0"
+                        />
                       </span>
-                      <span className="w-full min-w-0 break-words text-right text-sm font-medium">
+                      <span className="w-full min-w-0 text-right text-sm font-medium break-words">
                         {next.title}
                       </span>
                     </a>
@@ -179,7 +190,7 @@ export function BookSectionPageContent({
         </main>
 
         {/* 右: 節内 ToC */}
-        <aside className="hidden lg:block w-56 shrink-0 pt-6 pb-10">
+        <aside className="hidden w-56 shrink-0 pt-6 pb-10 lg:block">
           <Toc headings={headings} />
         </aside>
       </div>

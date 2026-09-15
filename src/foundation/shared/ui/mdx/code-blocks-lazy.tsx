@@ -18,7 +18,7 @@ export const CodeWithTabs = dynamic(
     const { CodeWithTabs: Component } = await import("./code-tabs");
     return Component;
   },
-  { ssr: false },
+  { ssr: false }
 );
 
 export const CodeSwitcher = dynamic(
@@ -26,13 +26,14 @@ export const CodeSwitcher = dynamic(
     const { CodeSwitcher: Component } = await import("./code-switcher");
     return Component;
   },
-  { ssr: false },
+  { ssr: false }
 );
 
 export const CodeWithTooltips = dynamic(
   async () => {
-    const { CodeWithTooltips: Component } = await import("./code-with-tooltips");
+    const { CodeWithTooltips: Component } =
+      await import("./code-with-tooltips");
     return Component;
   },
-  { ssr: false },
+  { ssr: false }
 );

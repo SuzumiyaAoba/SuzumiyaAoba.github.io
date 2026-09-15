@@ -16,14 +16,18 @@ export const Sheet2AmountChartWrapper: React.FC = () => {
 
   const availableMetrics = sheet2Data.headers.filter(
     (header) =>
-      !excludeHeaders.includes(header) && sheet2Data.series.some((s) => s.values[header] !== null),
+      !excludeHeaders.includes(header) &&
+      sheet2Data.series.some((s) => s.values[header] !== null)
   );
 
   // 万円データのみを抽出
   const amountMetrics = availableMetrics.filter((m) => m.includes("万円"));
 
   // Y軸の最大値を計算(100の倍数に切り上げ)
-  const yAxisMax = roundUpToStep(computeMaxValueForMetrics(sheet2Data, amountMetrics), 100);
+  const yAxisMax = roundUpToStep(
+    computeMaxValueForMetrics(sheet2Data, amountMetrics),
+    100
+  );
 
   return (
     <LineChart

@@ -11,7 +11,7 @@ const patternLine = (
   y1: number,
   x2: number,
   y2: number,
-  width: number,
+  width: number
 ): PatternShape => ({
   tag: "line",
   paint: "stroke",
@@ -32,8 +32,20 @@ const PATTERNS: PatternShape[][] = [
       attributes: { width: 8, height: 8, fill: "none", "stroke-width": 1 },
     },
   ],
-  [{ tag: "rect", paint: "fill", attributes: { x: 0, y: 0, width: 8, height: 3 } }],
-  [{ tag: "rect", paint: "fill", attributes: { x: 0, y: 0, width: 3, height: 8 } }],
+  [
+    {
+      tag: "rect",
+      paint: "fill",
+      attributes: { x: 0, y: 0, width: 8, height: 3 },
+    },
+  ],
+  [
+    {
+      tag: "rect",
+      paint: "fill",
+      attributes: { x: 0, y: 0, width: 3, height: 8 },
+    },
+  ],
   [patternLine(0, 0, 8, 8, 1), patternLine(0, 8, 8, 0, 1)],
 ];
 
@@ -41,10 +53,11 @@ const PATTERNS: PatternShape[][] = [
 export function appendChartPatterns(
   svg: SVGSVGElement,
   colors: readonly string[],
-  namespace: string,
+  namespace: string
 ) {
   const defs = select(svg).append("defs");
-  const patternId = (index: number) => `${namespace}-pattern-${index % PATTERNS.length}`;
+  const patternId = (index: number) =>
+    `${namespace}-pattern-${index % PATTERNS.length}`;
 
   for (const [index, shapes] of PATTERNS.entries()) {
     const pattern = defs

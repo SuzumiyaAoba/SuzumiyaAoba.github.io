@@ -2,4 +2,6 @@
 
 import { AssetOwnershipChart } from "./_shared/asset-ownership-chart";
 
-export const Sheet1ChartWrapper: React.FC = () => <AssetOwnershipChart sheetKey="1" kind="line" />;
+export const Sheet1ChartWrapper: React.FC = () => (
+  <AssetOwnershipChart sheetKey="1" kind="line" />
+);

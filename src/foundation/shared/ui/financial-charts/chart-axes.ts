@@ -19,9 +19,12 @@ export function appendChartAxes<Domain extends string | number>(
     height: number;
     yAxisLabel?: string;
     xTickValues?: Domain[];
-  },
+  }
 ) {
-  function appendGrid<T extends AxisDomain>(axis: Axis<T>, transform: string | null) {
+  function appendGrid<T extends AxisDomain>(
+    axis: Axis<T>,
+    transform: string | null
+  ) {
     group
       .append("g")
       .attr("class", "grid")
@@ -31,7 +34,10 @@ export function appendChartAxes<Domain extends string | number>(
         grid.select(".domain").remove();
       })
       .call((grid) => {
-        grid.selectAll(".tick line").attr("stroke", "currentColor").attr("stroke-opacity", 0.1);
+        grid
+          .selectAll(".tick line")
+          .attr("stroke", "currentColor")
+          .attr("stroke-opacity", 0.1);
       });
   }
 
@@ -50,5 +56,7 @@ export function appendChartAxes<Domain extends string | number>(
     .style("text-anchor", "end");
 
   appendGrid(axisLeft(y).tickSize(-width), null);
-  group.append("g").call(axisLeft(y).tickFormat((value) => `${value}${yAxisLabel}`));
+  group
+    .append("g")
+    .call(axisLeft(y).tickFormat((value) => `${value}${yAxisLabel}`));
 }

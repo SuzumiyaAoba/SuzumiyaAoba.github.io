@@ -8,9 +8,11 @@ type PageProps = {
   params: Promise<{ book: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { book } = await params;
-  return buildBooksPageMetadata(book);
+  return await buildBooksPageMetadata(book);
 }
 
 export async function generateStaticParams(): Promise<{ book: string }[]> {

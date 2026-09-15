@@ -9,8 +9,12 @@ describe("resolveLocalizedValue", () => {
   });
 
   it("欠けている言語をもう一方で補い、両方なければnullを返す", () => {
-    expect(resolveLocalizedValue({ ja: null, en: "English" }, "ja")).toBe("English");
-    expect(resolveLocalizedValue({ ja: "日本語", en: null }, "en")).toBe("日本語");
+    expect(resolveLocalizedValue({ ja: null, en: "English" }, "ja")).toBe(
+      "English"
+    );
+    expect(resolveLocalizedValue({ ja: "日本語", en: null }, "en")).toBe(
+      "日本語"
+    );
     expect(resolveLocalizedValue({ ja: null, en: null }, "en")).toBeNull();
   });
 

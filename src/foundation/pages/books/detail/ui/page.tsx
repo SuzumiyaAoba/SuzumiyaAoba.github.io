@@ -15,7 +15,10 @@ type PageProps = {
 export default async function Page({ params, locale = "ja" }: PageProps) {
   const { book: bookSlug } = await params;
 
-  const [meta, chapters] = await Promise.all([getBookMeta(bookSlug), getBookToc(bookSlug)]);
+  const [meta, chapters] = await Promise.all([
+    getBookMeta(bookSlug),
+    getBookToc(bookSlug),
+  ]);
 
   if (!meta) {
     notFound();
@@ -25,7 +28,10 @@ export default async function Page({ params, locale = "ja" }: PageProps) {
   const bookPath = toLocalePath(`/books/${bookSlug}`, locale);
 
   // MDX は {#id} を JavaScript 式として解釈するため、見出しのカスタム ID アノテーションを事前に除去する
-  const sanitizedLead = meta.lead.replaceAll(/^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gmu, "$1");
+  const sanitizedLead = meta.lead.replaceAll(
+    /^(#{1,6}[^\n]*?)\s*\{#[^}]+\}\s*$/gmu,
+    "$1"
+  );
 
   // リード文を MDX レンダリング（bookContentBasePath で ./images/... を解決）
   const leadContent = sanitizedLead

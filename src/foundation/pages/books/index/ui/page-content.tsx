@@ -15,7 +15,10 @@ export type BooksIndexPageContentProps = {
   books: BookListEntry[];
 };
 
-export function BooksIndexPageContent({ locale, books }: BooksIndexPageContentProps) {
+export function BooksIndexPageContent({
+  locale,
+  books,
+}: BooksIndexPageContentProps) {
   const pagePath = toLocalePath("/books", locale);
 
   const items: SimpleEntryListItem[] = books.map((book) => ({

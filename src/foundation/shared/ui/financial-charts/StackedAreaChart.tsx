@@ -43,7 +43,7 @@ export const StackedAreaChart: React.FC<Props> = ({
 
   const availableMetrics = useMemo(
     () => availableMetricsProp ?? groups.flatMap((g) => g.metrics),
-    [availableMetricsProp, groups],
+    [availableMetricsProp, groups]
   );
 
   const renderStackedChart = useCallback(
@@ -55,7 +55,11 @@ export const StackedAreaChart: React.FC<Props> = ({
       const width = 700 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
-      const patternFill = appendChartPatterns(svgElement, colors, `${chartId}-${groupIndex}`);
+      const patternFill = appendChartPatterns(
+        svgElement,
+        colors,
+        `${chartId}-${groupIndex}`
+      );
 
       const g = svg
         .attr("width", width + margin.left + margin.right)
@@ -148,7 +152,7 @@ export const StackedAreaChart: React.FC<Props> = ({
         .attr("dy", "0.35em")
         .text((d) => d.split("|")[0]?.trim() ?? "");
     },
-    [availableMetrics, chartId, colors, data.series],
+    [availableMetrics, chartId, colors, data.series]
   );
 
   useEffect(() => {
@@ -162,11 +166,13 @@ export const StackedAreaChart: React.FC<Props> = ({
 
   return (
     <div className="my-8 space-y-8">
-      <div className="text-center font-bold text-base mb-4">{title}</div>
+      <div className="mb-4 text-center text-base font-bold">{title}</div>
 
       {groups.map((group, index) => (
         <div key={group.name || `group-${index}`}>
-          <div className="text-center font-semibold text-sm mb-2">{group.name}</div>
+          <div className="mb-2 text-center text-sm font-semibold">
+            {group.name}
+          </div>
           <div className="overflow-x-auto">
             <svg
               ref={(el) => {

@@ -16,8 +16,7 @@ When you merge branches on GitHub, there are three options.
 - Rebase and merge
 - Squash and merge
 
-At work I often use Create a merge commit, but in personal projects I sometimes use Squash and merge to avoid keeping small fix commits on `master`,
-since the problems that arise are usually less troublesome.
+At work I often use Create a merge commit, but in personal projects I sometimes use Squash and merge to avoid keeping small fix commits on `master`, since the problems that arise are usually less troublesome.
 
 For the common issues with Squash and merge, please refer to articles you can find by searching.
 
@@ -29,8 +28,7 @@ The conflict issue after squash merge can apparently be solved with a rebase opt
 - [Resolve conflicts for branches containing squash-merged commits in Git #onto - Qiita](https://qiita.com/nakamasato/items/680f3908437b72eb7186)
 - [When Cascading PRs conflict in a squash merge environment - oinume journal](https://journal.lampetty.net/entry/resolve-squash-merge-conflict)
 
-However, when deleting merged branches, you must use `-D` instead of `-d`.
-I regularly run `git pull --prune` to clean up merged local branches, so it is inconvenient that I can't delete them with a single command.
+However, when deleting merged branches, you must use `-D` instead of `-d`. I regularly run `git pull --prune` to clean up merged local branches, so it is inconvenient that I can't delete them with a single command.
 
 ## For `--no-ff`
 
@@ -57,9 +55,7 @@ When I searched, I found four methods.
 - [teppeis/git-delete-squashed: Delete branches that have been squashed and merged into master](https://github.com/teppeis/git-delete-squashed)
 - [Delete branches squashed on GitHub · ryym.log](https://ryym.tokyo/posts/delete-squash-merged-branch/)
 
-The first is poi, developed as a `gh` extension.
-The second and third are Node packages that can be run with npx.
-The fourth is a shell-script implementation of git-delete-squashed.
+The first is poi, developed as a `gh` extension. The second and third are Node packages that can be run with npx. The fourth is a shell-script implementation of git-delete-squashed.
 
 ## gh-poi
 
@@ -113,8 +109,6 @@ Branches not deleted
     └─ #24  https://github.com/SuzumiyaAoba/SuzumiyaAoba.github.io/pull/24 SuzumiyaAoba
 ```
 
-It did delete squash-merged branches.
-Unlike git-delete-squashed, it seems to determine whether a branch is squash-merged based on GitHub PR information.
+It did delete squash-merged branches. Unlike git-delete-squashed, it seems to determine whether a branch is squash-merged based on GitHub PR information.
 
-Fetching data from GitHub might not be ideal, but I'll try it for a while.
-If I run into problems, I may also try git-delete-squashed.
+Fetching data from GitHub might not be ideal, but I'll try it for a while. If I run into problems, I may also try git-delete-squashed.

@@ -9,7 +9,11 @@ import type { Locale } from "@/shared/lib/routing";
 import { SITE_TITLE } from "@/shared/lib/site";
 import { cn } from "@/shared/lib/utils";
 
-import { getNavigationState, navigationGroups, primaryItems } from "../model/navigation";
+import {
+  getNavigationState,
+  navigationGroups,
+  primaryItems,
+} from "../model/navigation";
 import { NavigationLink } from "./navigation-link";
 import { useHeaderMenu } from "./use-header-menu";
 import { useReadingProgress } from "./use-reading-progress";
@@ -17,8 +21,14 @@ import { useReadingProgress } from "./use-reading-progress";
 type HeaderProps = { locale: Locale; path: string };
 
 export function Header({ locale, path }: HeaderProps) {
-  const { headerRef, menuButtonRef, isMenuOpen, closeMenu, toggleMenu, handleBlur } =
-    useHeaderMenu();
+  const {
+    headerRef,
+    menuButtonRef,
+    isMenuOpen,
+    closeMenu,
+    toggleMenu,
+    handleBlur,
+  } = useHeaderMenu();
   const { isReading, isActive } = getNavigationState(path);
   const progressBarRef = useReadingProgress(isReading);
   const en = locale === "en";
@@ -30,7 +40,10 @@ export function Header({ locale, path }: HeaderProps) {
       onBlur={handleBlur}
     >
       {isReading && (
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-0.5"
+          aria-hidden="true"
+        >
           <div
             ref={progressBarRef}
             className="reading-progress h-full origin-left"
@@ -86,7 +99,11 @@ export function Header({ locale, path }: HeaderProps) {
               href={toLocalePath("/search", locale)}
               aria-current={isActive("/search") ? "page" : undefined}
             >
-              <Icon icon="lucide:search" className="size-4" aria-hidden="true" />
+              <Icon
+                icon="lucide:search"
+                className="size-4"
+                aria-hidden="true"
+              />
             </a>
           </Button>
           <div className="hidden items-center lg:flex">
@@ -123,16 +140,23 @@ export function Header({ locale, path }: HeaderProps) {
         inert={!isMenuOpen}
         className={cn(
           "site-mobile-nav grid",
-          isMenuOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+          isMenuOpen
+            ? "grid-rows-[1fr] opacity-100"
+            : "grid-rows-[0fr] opacity-0"
         )}
       >
         <div className="min-h-0 overflow-hidden">
           <div className="site-index-scroll">
             <div className="site-container site-index-inner">
-              <nav className="site-index-grid" aria-label={en ? "Site index" : "サイトの目次"}>
+              <nav
+                className="site-index-grid"
+                aria-label={en ? "Site index" : "サイトの目次"}
+              >
                 {navigationGroups.map((group) => (
                   <div key={group.en} className="site-index-group">
-                    <p className="site-index-heading">{en ? group.en : group.ja}</p>
+                    <p className="site-index-heading">
+                      {en ? group.en : group.ja}
+                    </p>
                     <ul>
                       {group.items.map((item) => (
                         <li key={item.href}>

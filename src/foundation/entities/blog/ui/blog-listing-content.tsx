@@ -3,7 +3,11 @@ import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { PaginationNav } from "@/shared/ui/pagination-nav";
 import { DEFAULT_PAGE_SIZE } from "@/shared/lib/presentation";
-import { buildBreadcrumbList, buildListBreadcrumbItems, toLocalePath } from "@/shared/lib/routing";
+import {
+  buildBreadcrumbList,
+  buildListBreadcrumbItems,
+  toLocalePath,
+} from "@/shared/lib/routing";
 import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
 import { BlogPostList } from "./blog-post-list";
 
@@ -38,7 +42,8 @@ export function BlogListingContent({
   variant,
 }: BlogListingContentProps) {
   const pagePath = toLocalePath(hrefForPage(pageNumber), locale);
-  const pageLabel = locale === "en" ? `Page ${pageNumber}` : `ページ ${pageNumber}`;
+  const pageLabel =
+    locale === "en" ? `Page ${pageNumber}` : `ページ ${pageNumber}`;
 
   const breadcrumbItems: BreadcrumbItem[] =
     variant === "paginated"
@@ -69,7 +74,12 @@ export function BlogListingContent({
           )}
         </section>
 
-        <BlogPostList posts={posts} locale={locale} variant="detailed" showThumbnail />
+        <BlogPostList
+          posts={posts}
+          locale={locale}
+          variant="detailed"
+          showThumbnail
+        />
 
         {variant === "paginated" ? (
           <PaginationNav

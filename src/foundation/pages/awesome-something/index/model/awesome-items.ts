@@ -7,6 +7,9 @@ export async function getAwesomeItems(): Promise<AwesomeItem[]> {
   const fs = await import("node:fs/promises");
   const { default: path } = await import("node:path");
   const root = await resolveContentRoot();
-  const source = await fs.readFile(path.join(root, "awesome-something.yaml"), "utf8");
+  const source = await fs.readFile(
+    path.join(root, "awesome-something.yaml"),
+    "utf-8"
+  );
   return parseAwesomeItems(source);
 }

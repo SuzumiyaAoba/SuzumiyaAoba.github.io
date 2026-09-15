@@ -23,13 +23,13 @@ export function AssetDistributionPieCharts({
   const percentageMetrics = data.headers.filter(
     (header) =>
       !excludeHeaders.includes(header) &&
-      data.series.some((series) => series.values[header] !== null),
+      data.series.some((series) => series.values[header] !== null)
   );
   const yearlyPieSeries = buildYearlyPieSeries(
     data,
     DISTRIBUTION_YEARS,
     percentageMetrics,
-    labelMap,
+    labelMap
   );
   if (!yearlyPieSeries) {
     return <div>2023年、2024年、または2025年のデータが見つかりません</div>;
@@ -37,7 +37,7 @@ export function AssetDistributionPieCharts({
 
   return (
     <div className="my-8">
-      <div className="text-center font-bold text-base mb-4">{title}</div>
+      <div className="mb-4 text-center text-base font-bold">{title}</div>
       <div className="flex flex-col gap-4">
         {yearlyPieSeries.map(({ year, pieData }) => (
           <PieChart key={year} data={pieData} title={`${year}年`} config={{}} />

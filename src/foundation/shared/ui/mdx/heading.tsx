@@ -8,7 +8,7 @@ function HeadingPrefix({ children }: { children: string }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-flex select-none items-center text-[1em] font-semibold tracking-[0.12em] text-muted-foreground leading-none"
+      className="inline-flex items-center text-[1em] leading-none font-semibold tracking-[0.12em] text-muted-foreground select-none"
     >
       {children}
     </span>
@@ -22,7 +22,10 @@ function HeadingPrefix({ children }: { children: string }) {
  */
 export function MdxH1({ className, children, ...props }: HeadingProps) {
   return (
-    <h2 className={cn("mdx-heading flex flex-wrap items-baseline gap-2", className)} {...props}>
+    <h2
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
+      {...props}
+    >
       <HeadingPrefix>#</HeadingPrefix>
       <span className="min-w-0 flex-1">{children}</span>
     </h2>
@@ -31,7 +34,10 @@ export function MdxH1({ className, children, ...props }: HeadingProps) {
 
 export function MdxH2({ className, children, ...props }: HeadingProps) {
   return (
-    <h2 className={cn("mdx-heading flex flex-wrap items-baseline gap-2", className)} {...props}>
+    <h2
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
+      {...props}
+    >
       <HeadingPrefix>##</HeadingPrefix>
       <span className="min-w-0 flex-1">{children}</span>
     </h2>
@@ -40,7 +46,10 @@ export function MdxH2({ className, children, ...props }: HeadingProps) {
 
 export function MdxH3({ className, children, ...props }: HeadingProps) {
   return (
-    <h3 className={cn("mdx-heading flex flex-wrap items-baseline gap-2", className)} {...props}>
+    <h3
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
+      {...props}
+    >
       <HeadingPrefix>###</HeadingPrefix>
       <span className="min-w-0 flex-1">{children}</span>
     </h3>
@@ -49,7 +58,10 @@ export function MdxH3({ className, children, ...props }: HeadingProps) {
 
 export function MdxH4({ className, children, ...props }: HeadingProps) {
   return (
-    <h4 className={cn("mdx-heading flex flex-wrap items-baseline gap-2", className)} {...props}>
+    <h4
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
+      {...props}
+    >
       <HeadingPrefix>####</HeadingPrefix>
       <span className="min-w-0 flex-1">{children}</span>
     </h4>
@@ -58,7 +70,10 @@ export function MdxH4({ className, children, ...props }: HeadingProps) {
 
 export function MdxH5({ className, children, ...props }: HeadingProps) {
   return (
-    <h5 className={cn("mdx-heading flex flex-wrap items-baseline gap-2", className)} {...props}>
+    <h5
+      className={cn("flex flex-wrap items-baseline gap-2", className)}
+      {...props}
+    >
       <HeadingPrefix>#####</HeadingPrefix>
       <span className="min-w-0 flex-1">{children}</span>
     </h5>

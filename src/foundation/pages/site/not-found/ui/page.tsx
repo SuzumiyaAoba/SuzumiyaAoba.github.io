@@ -19,10 +19,14 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
     <SiteLayout locale={locale} path={pagePath}>
       <main className="site-main page-stack">
         <section className="flex flex-col items-center justify-center gap-6 py-8">
-          <div className="text-center space-y-4">
+          <div className="space-y-4 text-center">
             <h1 className="text-6xl font-bold text-muted-foreground">404</h1>
             <h2 className="text-2xl font-semibold">
-              <I18nText locale={locale} ja="ページが見つかりません" en="Page not found" />
+              <I18nText
+                locale={locale}
+                ja="ページが見つかりません"
+                en="Page not found"
+              />
             </h2>
             <p className="text-muted-foreground">
               <I18nText

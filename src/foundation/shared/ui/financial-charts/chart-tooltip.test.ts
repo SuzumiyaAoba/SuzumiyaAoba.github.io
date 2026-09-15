@@ -29,7 +29,7 @@ describe("chart tooltip ownership", () => {
     tooltip.show(
       new MouseEvent("mouseover", { clientX: 100, clientY: 50 }),
       "<img src=x>",
-      "<b>10%</b>",
+      "<b>10%</b>"
     );
     expect(document.querySelector("img, b")).toBeNull();
     expect(document.body.textContent).toBe("<img src=x><b>10%</b>");

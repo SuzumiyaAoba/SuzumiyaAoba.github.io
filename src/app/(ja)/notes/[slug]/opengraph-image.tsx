@@ -11,10 +11,14 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const note = await getNoteSummary(slug, { locale: "ja", fallback: true });
-  return renderContentOpengraphImage({
+  return await renderContentOpengraphImage({
     eyebrow: "ノート",
     title: note?.frontmatter.title || slug,
     tags: note?.frontmatter.tags ?? [],

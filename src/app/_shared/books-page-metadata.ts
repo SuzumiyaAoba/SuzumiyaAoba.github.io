@@ -29,7 +29,9 @@ function extractDescription(lead: string): string {
  * 書籍トップページの Metadata を構築する。
  * books は ja 版のみ存在するため hreflang は付与せず、canonical のみ設定する。
  */
-export async function buildBooksPageMetadata(book: string | undefined): Promise<Metadata> {
+export async function buildBooksPageMetadata(
+  book: string | undefined
+): Promise<Metadata> {
   if (!book) {
     return { title: "Books" };
   }

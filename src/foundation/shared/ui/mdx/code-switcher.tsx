@@ -18,7 +18,10 @@ export function CodeSwitcher({ code }: { code?: RawCode[] }) {
 function HighlightedCodeSwitcher({ code }: { code: RawCode[] }) {
   const { blocks: highlighted, hasError } = useHighlightedCode(code);
 
-  const languages = useMemo(() => highlighted.map((block) => block.lang || "text"), [highlighted]);
+  const languages = useMemo(
+    () => highlighted.map((block) => block.lang || "text"),
+    [highlighted]
+  );
   const [selected, setSelected] = useState(0);
 
   if (highlighted.length === 0) {
@@ -39,7 +42,10 @@ function HighlightedCodeSwitcher({ code }: { code: RawCode[] }) {
   return (
     <div className="my-6">
       <div className="flex items-center gap-3 rounded-t-lg border border-border bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
-        <label htmlFor="code-switcher-select" className="text-[10px] uppercase tracking-[0.12em]">
+        <label
+          htmlFor="code-switcher-select"
+          className="text-[10px] tracking-[0.12em] uppercase"
+        >
           Lang
         </label>
         <select
@@ -55,12 +61,12 @@ function HighlightedCodeSwitcher({ code }: { code: RawCode[] }) {
           ))}
         </select>
         {displayMeta ? (
-          <span className="ml-auto truncate text-[10px] uppercase tracking-[0.12em]">
+          <span className="ml-auto truncate text-[10px] tracking-[0.12em] uppercase">
             {displayMeta}
           </span>
         ) : null}
       </div>
-      <CustomCodeBlock code={activeCode} className="rounded-t-none mt-0" />
+      <CustomCodeBlock code={activeCode} className="mt-0 rounded-t-none" />
     </div>
   );
 }

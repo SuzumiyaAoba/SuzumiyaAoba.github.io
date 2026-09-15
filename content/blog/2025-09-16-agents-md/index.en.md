@@ -34,8 +34,7 @@ The official Claude Code docs recommend referencing `@AGENTS.md` inside `CLAUDE.
 
 ## AGENTS.md
 
-OpenAI published [AGENTS.md](https://agents.md/) on 2025/08/20.
-The site aims to promote a standard format for coding-agent instructions.
+OpenAI published [AGENTS.md](https://agents.md/) on 2025/08/20. The site aims to promote a standard format for coding-agent instructions.
 
 As far as I can tell, the format only specifies:
 
@@ -67,16 +66,11 @@ The AI coding agents and tools that support `AGENTS.md` as of 2025/08/20 are:
 
 ## Anthropic's absence
 
-A current problem in the AGENTS.md ecosystem is the absence of Anthropic,
-which develops [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview), arguably the most widely used CLI tool.
-In Claude Code, instructions equivalent to AGENTS.md are written in `CLAUDE.md`.
-Gemini CLI had also only read `GEMINI.md`, but it now supports AGENTS.md.
-Claude Code, however, shows no signs of supporting AGENTS.md yet.
+A current problem in the AGENTS.md ecosystem is the absence of Anthropic, which develops [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview), arguably the most widely used CLI tool. In Claude Code, instructions equivalent to AGENTS.md are written in `CLAUDE.md`. Gemini CLI had also only read `GEMINI.md`, but it now supports AGENTS.md. Claude Code, however, shows no signs of supporting AGENTS.md yet.
 
 ## AGENTS.md support in Claude Code
 
-The feature request is discussed in [Feature Request: Support AGENTS.md. · Issue #6235 · anthropics/claude-code](https://github.com/anthropics/claude-code/issues/6235),
-but there are no visible moves toward support.
+The feature request is discussed in [Feature Request: Support AGENTS.md. · Issue #6235 · anthropics/claude-code](https://github.com/anthropics/claude-code/issues/6235), but there are no visible moves toward support.
 
 ## Workarounds
 
@@ -90,8 +84,7 @@ They are easy to try, so here is a brief explanation of each.
 
 ### Instruct Claude Code to read `AGENTS.md`
 
-Claude Code can reference a file by writing its path after `@`.
-Use that in `CLAUDE.md` like this.
+Claude Code can reference a file by writing its path after `@`. Use that in `CLAUDE.md` like this.
 
 ```markdown CLAUDE.md
 @AGENTS.md
@@ -111,8 +104,7 @@ This workaround is also listed on the official AGENTS.md site.
 
 ### Hooks
 
-Claude Code has a feature called [hooks](https://docs.claude.com/ja/docs/claude-code/hooks).
-It lets you run arbitrary actions on events such as startup, tool usage, or before/after file edits.
+Claude Code has a feature called [hooks](https://docs.claude.com/ja/docs/claude-code/hooks). It lets you run arbitrary actions on events such as startup, tool usage, or before/after file edits.
 
 Common examples include:
 
@@ -177,18 +169,13 @@ So the goal of including `AGENTS.md` in Claude Code's context is achieved.
 
 ## Conclusion
 
-As of 2025/09/17, this article introduced three ways to use AGENTS.md with Claude Code.
-Using hooks seems like too much work for the benefit.
-Claude Code may be treating `CLAUDE.md` specially (you can probably tell by reading its code),
-so the hook method may not get the same benefits.
+As of 2025/09/17, this article introduced three ways to use AGENTS.md with Claude Code. Using hooks seems like too much work for the benefit. Claude Code may be treating `CLAUDE.md` specially (you can probably tell by reading its code), so the hook method may not get the same benefits.
 
 Therefore, it seems best for now to either instruct `CLAUDE.md` to read `AGENTS.md` or create a symlink.
 
 ### Addendum
 
-When using the `@AGENTS.md` approach in `CLAUDE.md`, running `/init` writes instructions into `CLAUDE.md`,
-so you must reflect changes from `AGENTS.md` and then revert `CLAUDE.md` each time.
-I don’t run `/init` often, but it’s still a hassle, so a symlink feels safer.
+When using the `@AGENTS.md` approach in `CLAUDE.md`, running `/init` writes instructions into `CLAUDE.md`, so you must reflect changes from `AGENTS.md` and then revert `CLAUDE.md` each time. I don’t run `/init` often, but it’s still a hassle, so a symlink feels safer.
 
 ## References
 

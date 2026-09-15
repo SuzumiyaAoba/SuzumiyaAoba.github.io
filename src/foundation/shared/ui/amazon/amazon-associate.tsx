@@ -11,7 +11,7 @@ export function AmazonAssociate({ className }: AmazonAssociateProps) {
     <div
       className={cn(
         "rounded-lg border border-blue-200/70 bg-blue-50/70 px-4 py-3 text-sm text-blue-900 dark:border-blue-900/30 dark:bg-blue-950/30 dark:text-blue-200",
-        className,
+        className
       )}
     >
       <div className="flex items-start gap-2">

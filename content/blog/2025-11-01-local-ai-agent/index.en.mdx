@@ -1,7 +1,15 @@
 ---
 title: Do Local AI Agents Dream of Electric Sheep? (Improving Web Search)
 date: 2025-11-01
-tags: ["Generative AI", "AI Agents", "Local LLM", "mastra", "LM Studio", "TypeScript"]
+tags:
+  [
+    "Generative AI",
+    "AI Agents",
+    "Local LLM",
+    "mastra",
+    "LM Studio",
+    "TypeScript",
+  ]
 category: "Generative AI"
 description: "Improve the AI agent's web search"
 thumbnail: images/gpt-oss_change-reasoning-effort.png
@@ -19,8 +27,7 @@ import chatImprovedPrompt from "./chat-improved-prompt.json";
 
 ## Quick recap
 
-In the [previous article](../2025-10-25-local-ai-agent/), we implemented a `web_search` tool using DuckDuckGo in mastra, and enabled `gpt-oss:20b` to recognize and use it.
-However, with a simple prompt like the following, the search did not behave as expected.
+In the [previous article](../2025-10-25-local-ai-agent/), we implemented a `web_search` tool using DuckDuckGo in mastra, and enabled `gpt-oss:20b` to recognize and use it. However, with a simple prompt like the following, the search did not behave as expected.
 
 <CodeWithTabs>
 
@@ -33,8 +40,7 @@ When the user asks for information, you should use the webSearchTool to search t
 
 ## Toward improving the web search agent
 
-In this article, we will try several system prompts to learn how to control LLM behavior.
-Right now, the agent passes the user's question directly to `web_search`, so we will implement logic that derives better queries and answers based on the results.
+In this article, we will try several system prompts to learn how to control LLM behavior. Right now, the agent passes the user's question directly to `web_search`, so we will implement logic that derives better queries and answers based on the results.
 
 For the time being, the goal of this series is to make the agent produce answers following the prompt below.
 
@@ -106,12 +112,9 @@ Please begin your research process, documenting each step carefully.
 
 [_reading-plus-ai/mcp-server-deep-research_](https://github.com/reading-plus-ai/mcp-server-deep-research/blob/ce57e9f8e7848ba47acd37887808e9b37de95436/src/mcp_server_deep_research/server.py)
 
-To make the prompt above work, it's not enough to just search with better keywords.
-We also need to access web pages from search results, parse HTML, and provide the main text to the LLM.
+To make the prompt above work, it's not enough to just search with better keywords. We also need to access web pages from search results, parse HTML, and provide the main text to the LLM.
 
-It might be easy to do this in Python with existing frameworks, but this series aims to avoid ready‑made solutions.
-We want to build it ourselves to experience the difficulties and necessary tricks of LLM‑based development.
-So **please don't say "just use XXX, it's easy"** :rage:
+It might be easy to do this in Python with existing frameworks, but this series aims to avoid ready‑made solutions. We want to build it ourselves to experience the difficulties and necessary tricks of LLM‑based development. So **please don't say "just use XXX, it's easy"** :rage:
 
 ## Generating better search queries
 
@@ -119,11 +122,7 @@ First, let's make sure the `web_search` tool receives appropriate queries derive
 
 ### Reasoning Effort
 
-The most obvious lever is improving the system prompt, but `gpt-oss:20b` has a setting called _Reasoning Effort_, so let's try that first.
-Reasoning Effort has three levels: low, medium, high. The higher it is, the deeper the model's "thinking."
-"Deeper thinking" means it consumes tokens to insert intermediate reasoning steps before producing the final answer.
-It sounds like high would be best, but with maximum context length and high Reasoning Effort, I observed the model getting stuck in an infinite reasoning loop.
-So we'll compare low and medium here.
+The most obvious lever is improving the system prompt, but `gpt-oss:20b` has a setting called _Reasoning Effort_, so let's try that first. Reasoning Effort has three levels: low, medium, high. The higher it is, the deeper the model's "thinking." "Deeper thinking" means it consumes tokens to insert intermediate reasoning steps before producing the final answer. It sounds like high would be best, but with maximum context length and high Reasoning Effort, I observed the model getting stuck in an infinite reasoning loop. So we'll compare low and medium here.
 
 The comparison uses this prompt:
 
@@ -136,11 +135,17 @@ Use webSearchTool to search the web, and based on the results, provide accurate 
 
 In LM Studio, open the model list, click the gear icon, and open the model settings tab.
 
-<Img src="./images/lm-studio_models.png" alt="Gear icon in the model list that opens the settings tab" />
+<Img
+  src="./images/lm-studio_models.png"
+  alt="Gear icon in the model list that opens the settings tab"
+/>
 
 Select "Custom Fields" and change "Reasoning Effort" from Low to Medium using the dropdown.
 
-<Img src="./images/gpt-oss_change-reasoning-effort.png" alt="Dropdown for changing Reasoning Effort from Low to Medium" />
+<Img
+  src="./images/gpt-oss_change-reasoning-effort.png"
+  alt="Dropdown for changing Reasoning Effort from Low to Medium"
+/>
 
 Reload the model for the change to take effect.
 
@@ -157,8 +162,7 @@ Even from the visible part, there are four problems:
 3. The answer contains hallucinations
 4. The prompt's "accurate and concise answer" instruction is not followed
 
-For point `3`, the answer lists news that have nothing to do with the `RESULT` shown in `webSearchTool`.
-Worse, it outputs plausible past events (likely from training data), not pure nonsense.
+For point `3`, the answer lists news that have nothing to do with the `RESULT` shown in `webSearchTool`. Worse, it outputs plausible past events (likely from training data), not pure nonsense.
 
 ### Reasoning Effort: high
 
@@ -166,16 +170,14 @@ Now let's set Reasoning Effort to high and try the same prompt.
 
 <ChatHistory messages={chatReasoningHigh.messages} />
 
-A major difference is that `webSearchTool` is called four times.
-The `query` strings were:
+A major difference is that `webSearchTool` is called four times. The `query` strings were:
 
 - 今日の日本のニュース
 - 2025-11-02 日本 ニュース 今日
 - 2025年11月2日 日本 ニュース
 - 2025-11-02 site:news.yahoo.co.jp 日本
 
-These tool calls are not executed all at once; they happen when the model decides they are needed while generating reasoning tokens.
-Let's look at the Reasoning content.
+These tool calls are not executed all at once; they happen when the model decides they are needed while generating reasoning tokens. Let's look at the Reasoning content.
 
 <CodeWithTabs>
 
@@ -199,21 +201,15 @@ We should summarize top stories. Provide links. Use Japanese language.
 
 </CodeWithTabs>
 
-In the Japanese translation, there are lines that look like silly tautologies, but if you check the English you can see the model reinterprets the Japanese prompt into English.
-`gpt-oss` seems to think in English even when the prompt is Japanese.
-It tries to fetch details, but it only has `webSearchTool`, so it keeps changing the prompt and re‑querying.
-Later it switches to targeting specific websites and lands on domain‑restricted searches, then summarizes results.
+In the Japanese translation, there are lines that look like silly tautologies, but if you check the English you can see the model reinterprets the Japanese prompt into English. `gpt-oss` seems to think in English even when the prompt is Japanese. It tries to fetch details, but it only has `webSearchTool`, so it keeps changing the prompt and re‑querying. Later it switches to targeting specific websites and lands on domain‑restricted searches, then summarizes results.
 
-This is the effect of changing Reasoning Effort from low to medium.
-However, it still fails to fetch news newer than 2025‑11‑02.
-This is probably because we don't have a tool to fetch web page contents.
+This is the effect of changing Reasoning Effort from low to medium. However, it still fails to fetch news newer than 2025‑11‑02. This is probably because we don't have a tool to fetch web page contents.
 
 For translating the reasoning, I used [PLaMo Translation](https://tech.preferred.jp/ja/blog/plamo-translate/).
 
 ### Improving the prompt
 
-Next, we improve the prompt.
-The implementation up to the previous article is in the [GitHub repository](https://github.com/SuzumiyaAoba/how-to-use-mastra/blob/f5df54c348c5b69c999d1a9b17b28ef8f07ac531/src/mastra/agents/web-search-agent.ts).
+Next, we improve the prompt. The implementation up to the previous article is in the [GitHub repository](https://github.com/SuzumiyaAoba/how-to-use-mastra/blob/f5df54c348c5b69c999d1a9b17b28ef8f07ac531/src/mastra/agents/web-search-agent.ts).
 
 Here we re‑quote only the web search agent part.
 
@@ -236,8 +232,7 @@ export const webSearchAgent = new Agent({
     tools: { webSearchTool },
 ```
 
-Improving the system prompt means changing the `instructions` string in this code.
-Many problems come from not being able to inspect page content, so here we change the prompt to say that if you can't answer, you must say so.
+Improving the system prompt means changing the `instructions` string in this code. Many problems come from not being able to inspect page content, so here we change the prompt to say that if you can't answer, you must say so.
 
 <CodeWithTabs>
 
@@ -266,26 +261,16 @@ With this prompt, the conversation looked like this:
 
 <ChatHistory messages={chatImprovedPrompt.messages} />
 
-This is much better, I think.
-It provides fewer news items, but they are real news from November 2, 2025.
-It also showed a caution note based on the instructions.
-That behavior is nice, but it also means the model is not fully faithful to the instructions, so it's not always good.
-Still, the goal of producing "accurate" answers was achieved.
+This is much better, I think. It provides fewer news items, but they are real news from November 2, 2025. It also showed a caution note based on the instructions. That behavior is nice, but it also means the model is not fully faithful to the instructions, so it's not always good. Still, the goal of producing "accurate" answers was achieved.
 
-As you can see from the examples, there's still a problem: the output format is inconsistent.
-We can fix that by providing an output format in the prompt.
+As you can see from the examples, there's still a problem: the output format is inconsistent. We can fix that by providing an output format in the prompt.
 
-In the next article, we will implement a tool to fetch web page content
-and aim to make the output format more consistent.
+In the next article, we will implement a tool to fetch web page content and aim to make the output format more consistent.
 
 ## Closing
 
-In this article, we confirmed that different Reasoning Effort settings for `gpt-oss` affect the model's reasoning and answers.
-We also found that improving the prompt makes the model answer accurately based on web search results.
+In this article, we confirmed that different Reasoning Effort settings for `gpt-oss` affect the model's reasoning and answers. We also found that improving the prompt makes the model answer accurately based on web search results.
 
-So far, we only confirmed it works for a single example.
-We have not verified whether it can answer other questions accurately at high quality.
-To keep quality across multiple questions, we need to build an automatic evaluation environment, which we will tackle later.
+So far, we only confirmed it works for a single example. We have not verified whether it can answer other questions accurately at high quality. To keep quality across multiple questions, we need to build an automatic evaluation environment, which we will tackle later.
 
-In the next article, we will implement a tool to fetch web page contents
-and see what happens when we give it to the LLM.
+In the next article, we will implement a tool to fetch web page contents and see what happens when we give it to the LLM.

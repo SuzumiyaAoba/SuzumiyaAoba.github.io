@@ -24,7 +24,7 @@ export type BuildLocaleAlternatesOptions = {
 export function buildLocaleAlternates(
   path: string,
   locale: Locale,
-  options?: BuildLocaleAlternatesOptions,
+  options?: BuildLocaleAlternatesOptions
 ): NonNullable<Metadata["alternates"]> {
   const siteUrl = getSiteUrl();
   const availability = options?.availability ?? { ja: true, en: true };

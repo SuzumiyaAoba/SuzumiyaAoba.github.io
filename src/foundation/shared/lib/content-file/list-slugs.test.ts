@@ -24,7 +24,10 @@ describe("listContentSlugs", () => {
   });
 
   it("ディレクトリ名を昇順で返す", async () => {
-    await expect(listContentSlugs("blog")).resolves.toStrictEqual(["post-a", "post-b"]);
+    await expect(listContentSlugs("blog")).resolves.toStrictEqual([
+      "post-a",
+      "post-b",
+    ]);
   });
 
   it("ファイルはslugとして含めない", async () => {

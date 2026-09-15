@@ -35,7 +35,7 @@ export function CustomCodeBlock({
       code={normalizedCode}
       className={cn(
         "my-4 overflow-x-auto rounded-lg bg-muted px-4 py-3 text-sm leading-6",
-        className,
+        className
       )}
       handlers={[
         ...handlers,

@@ -2,7 +2,15 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { afterEach, assert, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  assert,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { useAnchorObserver } from "./use-anchor-observer";
 
 const observers: MockObserver[] = [];
@@ -45,7 +53,13 @@ function observerAt(index: number) {
   return observer;
 }
 
-function Probe({ watch, single = false }: { watch: string[]; single?: boolean }) {
+function Probe({
+  watch,
+  single = false,
+}: {
+  watch: string[];
+  single?: boolean;
+}) {
   return <output>{useAnchorObserver(watch, single).join(",")}</output>;
 }
 

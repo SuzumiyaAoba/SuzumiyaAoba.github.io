@@ -7,9 +7,7 @@ thumbnail: iconify:devicon:scala
 description: 「モナドのすべて」の Reader モナドのサンプルを Scala Cats で実装し直したコードを紹介する。
 ---
 
-今回は Reader モナドに触れるということで[モナドのすべて](https://www.sampou.org/haskell/a-a-monads/html/index.html)の
-Reader モナドのページに載っているサンプルを [Cats](https://typelevel.org/cats/) を使って実装してみた。
-Cats を触り始めたばっかりなのでよりよい書き方があるかもしれないが、一旦動くところまで書けたのでコードだけ載せておく。
+今回は Reader モナドに触れるということで[モナドのすべて](https://www.sampou.org/haskell/a-a-monads/html/index.html)の Reader モナドのページに載っているサンプルを [Cats](https://typelevel.org/cats/) を使って実装してみた。Cats を触り始めたばっかりなのでよりよい書き方があるかもしれないが、一旦動くところまで書けたのでコードだけ載せておく。
 
 [Cats MTL](https://typelevel.org/cats-mtl/) を使うともう少しわかりやすく書ける部分がありそうな気がしている。
 
@@ -96,5 +94,4 @@ Haskell のコードと比べると次の点が異なっていた。
     ```
 - 書き方がよくないのか Haskell のように型推論が上手く働かない :cry:
 
-働き始めてからこの手のコードを書く機会がまったく無くなってしまったので、手続き型でコードを書いた方がわかりやすいのはで？と思ってしまった。
-そのため、上記のコードと同じコードを Reader モナドを使わずに実装して比較してみようと思う。
+働き始めてからこの手のコードを書く機会がまったく無くなってしまったので、手続き型でコードを書いた方がわかりやすいのはで？と思ってしまった。そのため、上記のコードと同じコードを Reader モナドを使わずに実装して比較してみようと思う。

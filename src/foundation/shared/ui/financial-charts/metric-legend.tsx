@@ -28,12 +28,15 @@ export function MetricLegend({
         type="button"
         aria-pressed={isActive}
         onClick={() => onToggle(metric)}
-        className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
+        className="flex cursor-pointer items-center gap-2 border-none bg-transparent p-0"
         style={{ opacity: isActive ? 1 : 0.3 }}
       >
         <div
-          className="w-4 h-4"
-          style={{ backgroundColor: colors[index % colors.length], opacity: colorOpacity }}
+          className="h-4 w-4"
+          style={{
+            backgroundColor: colors[index % colors.length],
+            opacity: colorOpacity,
+          }}
         />
         <span className="text-sm">{getLabel(metric)}</span>
       </button>

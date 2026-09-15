@@ -9,10 +9,14 @@ export type BlogPageMetadataProps = {
 /**
  * ブログページネーションの generateMetadata。ja/en で完全に共通。
  */
-export async function buildBlogPageMetadata({ params }: BlogPageMetadataProps): Promise<Metadata> {
+export async function buildBlogPageMetadata({
+  params,
+}: BlogPageMetadataProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const pageNumber = Number(resolvedParams.page);
-  const title = Number.isFinite(pageNumber) ? `Blog Page ${pageNumber}` : "Blog";
+  const title = Number.isFinite(pageNumber)
+    ? `Blog Page ${pageNumber}`
+    : "Blog";
   return { title };
 }
 

@@ -9,13 +9,19 @@ export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   showAvatar?: boolean;
 };
 
-export function Message({ className, from, showAvatar = true, children, ...props }: MessageProps) {
+export function Message({
+  className,
+  from,
+  showAvatar = true,
+  children,
+  ...props
+}: MessageProps) {
   return (
     <div
       className={cn(
         "group flex w-full items-start gap-3",
         from === "user" ? "justify-end" : "justify-start",
-        className,
+        className
       )}
       {...props}
     >
@@ -23,14 +29,22 @@ export function Message({ className, from, showAvatar = true, children, ...props
         <div
           className={cn(
             "flex size-9 items-center justify-center rounded-full border border-border/60 bg-background text-muted-foreground",
-            from === "user" ? "order-2" : "order-0",
+            from === "user" ? "order-2" : "order-0"
           )}
           aria-hidden="true"
         >
-          <Icon icon={from === "user" ? "lucide:user" : "lucide:bot"} className="size-4" />
+          <Icon
+            icon={from === "user" ? "lucide:user" : "lucide:bot"}
+            className="size-4"
+          />
         </div>
       ) : null}
-      <div className={cn("flex-1 min-w-0", from === "user" ? "order-0" : "order-1")}>
+      <div
+        className={cn(
+          "min-w-0 flex-1",
+          from === "user" ? "order-0" : "order-1"
+        )}
+      >
         {children}
       </div>
     </div>
@@ -55,8 +69,8 @@ export function MessageContent({
         variant === "contained" ? "rounded-lg px-4 py-3" : "",
         from === "user"
           ? "bg-muted text-foreground"
-          : "bg-card/50 text-foreground border border-border/60",
-        className,
+          : "border border-border/60 bg-card/50 text-foreground",
+        className
       )}
       {...props}
     />

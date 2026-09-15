@@ -32,7 +32,8 @@ type SearchPanelProps = {
 export function SearchPanel({ locale }: SearchPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useQueryState("q", queryParser);
-  const { results, isLoading, pagefindLoaded, error } = usePagefindSearch(query);
+  const { results, isLoading, pagefindLoaded, error } =
+    usePagefindSearch(query);
   const pagefindErrorKey = error?.key;
   const t = (ja: string, en: string) => (locale === "en" ? en : ja);
 
@@ -40,7 +41,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
     <div className="space-y-5">
       <search className="relative">
         <Search
-          className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+          className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground"
           aria-hidden="true"
         />
         <Input
@@ -53,14 +54,14 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           placeholder={t("キーワードで検索...", "Search by keyword...")}
           aria-label={t("検索キーワード", "Search keyword")}
           disabled={!pagefindLoaded}
-          className="h-12 pl-12 pr-14 [&::-webkit-search-cancel-button]:appearance-none"
+          className="h-12 pr-14 pl-12 [&::-webkit-search-cancel-button]:appearance-none"
         />
         {query && (
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-1.5 top-1/2 size-11 -translate-y-1/2 rounded-lg"
+            className="absolute top-1/2 right-1.5 size-11 -translate-y-1/2 rounded-lg"
             aria-label={t("検索をクリア", "Clear search")}
             onClick={() => {
               void setQuery("");
@@ -79,21 +80,28 @@ export function SearchPanel({ locale }: SearchPanelProps) {
               {pagefindErrorKey === "notLoaded"
                 ? t(
                     "検索エンジンがまだ読み込まれていません。しばらく待つか、ページを更新してください。",
-                    "Search is not ready yet. Please wait or reload the page.",
+                    "Search is not ready yet. Please wait or reload the page."
                   )
                 : pagefindErrorKey === "searchError"
-                  ? t("検索中にエラーが発生しました。", "An error occurred while searching.")
+                  ? t(
+                      "検索中にエラーが発生しました。",
+                      "An error occurred while searching."
+                    )
                   : pagefindErrorKey === "timeout"
                     ? t(
                         "検索エンジンの読み込みがタイムアウトしました。",
-                        "Search loading timed out.",
+                        "Search loading timed out."
                       )
                     : t(
                         "検索の読み込みに失敗しました。ページを再読み込みしてください。",
-                        "Search could not load. Please reload the page.",
+                        "Search could not load. Please reload the page."
                       )}
             </p>
-            <Button type="button" variant="outline" onClick={() => globalThis.location.reload()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => globalThis.location.reload()}
+            >
               {t("再読み込み", "Reload")}
             </Button>
           </div>
@@ -106,8 +114,13 @@ export function SearchPanel({ locale }: SearchPanelProps) {
         ) : results.length > 0 ? (
           <div className="space-y-4">
             <output className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Badge variant="secondary" className="bg-muted text-xs text-muted-foreground">
-                {locale === "en" ? `${results.length} results` : `${results.length} 件`}
+              <Badge
+                variant="secondary"
+                className="bg-muted text-xs text-muted-foreground"
+              >
+                {locale === "en"
+                  ? `${results.length} results`
+                  : `${results.length} 件`}
               </Badge>
               <span>{t("検索結果", "Results")}</span>
             </output>
@@ -127,7 +140,9 @@ export function SearchPanel({ locale }: SearchPanelProps) {
                         dangerouslySetInnerHTML={{ __html: result.excerpt }}
                       />
                     ) : null}
-                    <span className="text-xs text-muted-foreground">{formatUrl(result.url)}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatUrl(result.url)}
+                    </span>
                   </a>
                 </li>
               ))}
@@ -137,7 +152,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           <output className="block text-sm text-muted-foreground">
             {t(
               "検索結果が見つかりませんでした。別のキーワードをお試しください。",
-              "No results found. Try another keyword.",
+              "No results found. Try another keyword."
             )}
           </output>
         ) : null

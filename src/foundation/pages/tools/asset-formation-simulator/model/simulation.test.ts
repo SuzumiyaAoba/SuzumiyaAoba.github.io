@@ -8,7 +8,12 @@ describe("calculateSchedule", () => {
     const rows = calculateSchedule(1000, 12.682503013196978, 0.25);
 
     expect(rows).toHaveLength(3);
-    expect(rows[0]).toStrictEqual({ month: 1, principal: 1000, gain: 0, balance: 1000 });
+    expect(rows[0]).toStrictEqual({
+      month: 1,
+      principal: 1000,
+      gain: 0,
+      balance: 1000,
+    });
     expect(rows[1]?.balance).toBeCloseTo(2010, 8);
     expect(rows[2]?.balance).toBeCloseTo(3030.1, 8);
     expect(rows[2]?.principal).toBe(3000);
@@ -19,7 +24,12 @@ describe("calculateSchedule", () => {
     const rows = calculateSchedule(30_000, 0, 2);
 
     expect(rows).toHaveLength(24);
-    expect(rows.at(-1)).toStrictEqual({ month: 24, principal: 720_000, gain: 0, balance: 720_000 });
+    expect(rows.at(-1)).toStrictEqual({
+      month: 24,
+      principal: 720_000,
+      gain: 0,
+      balance: 720_000,
+    });
   });
 
   it("負の利回りも月次の複利で計算する", () => {
@@ -36,12 +46,20 @@ describe("calculateSchedule", () => {
     const rows = calculateSchedule(0, 5, 1);
 
     expect(rows).toHaveLength(12);
-    expect(rows.at(-1)).toStrictEqual({ month: 12, principal: 0, gain: 0, balance: 0 });
+    expect(rows.at(-1)).toStrictEqual({
+      month: 12,
+      principal: 0,
+      gain: 0,
+      balance: 0,
+    });
   });
 
-  it.each([0, -1, 0.01])("積立月数がない期間 %s 年では空の明細を返す", (years) => {
-    expect(calculateSchedule(30_000, 5, years)).toStrictEqual([]);
-  });
+  it.each([0, -1, 0.01])(
+    "積立月数がない期間 %s 年では空の明細を返す",
+    (years) => {
+      expect(calculateSchedule(30_000, 5, years)).toStrictEqual([]);
+    }
+  );
 
   it("1ヶ月に満たない端数を切り捨てる", () => {
     const rows = calculateSchedule(1000, 0, 1.99);
@@ -75,9 +93,27 @@ describe("toYearlyRows", () => {
     ];
 
     expect(toYearlyRows(schedule)).toStrictEqual([
-      { month: 12, principal: 12_000, gain: 800, balance: 12_800, gainDiff: 800 },
-      { month: 24, principal: 24_000, gain: 2600, balance: 26_600, gainDiff: 1800 },
-      { month: 36, principal: 36_000, gain: 2000, balance: 38_000, gainDiff: -600 },
+      {
+        month: 12,
+        principal: 12_000,
+        gain: 800,
+        balance: 12_800,
+        gainDiff: 800,
+      },
+      {
+        month: 24,
+        principal: 24_000,
+        gain: 2600,
+        balance: 26_600,
+        gainDiff: 1800,
+      },
+      {
+        month: 36,
+        principal: 36_000,
+        gain: 2000,
+        balance: 38_000,
+        gainDiff: -600,
+      },
     ]);
     expect(schedule.every((row) => !("gainDiff" in row))).toBe(true);
   });

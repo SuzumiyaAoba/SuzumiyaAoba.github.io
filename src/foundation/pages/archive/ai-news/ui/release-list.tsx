@@ -6,7 +6,13 @@ import type { Release } from "../model/release-calendar";
 import { ReleaseCard } from "./release-card";
 import { ReleaseViewHeader, releaseSelectClass } from "./release-view-layout";
 
-export function ReleaseList({ releases, locale }: { releases: Release[]; locale: Locale }) {
+export function ReleaseList({
+  releases,
+  locale,
+}: {
+  releases: Release[];
+  locale: Locale;
+}) {
   const en = locale === "en";
   const [order, setOrder] = useState("newest");
   const groups = useMemo(() => {
@@ -15,8 +21,9 @@ export function ReleaseList({ releases, locale }: { releases: Release[]; locale:
         return a.date ? -1 : b.date ? 1 : b.entry.year - a.entry.year;
       }
       return (
-        (order === "newest" ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) ||
-        a.title.localeCompare(b.title)
+        (order === "newest"
+          ? b.date.localeCompare(a.date)
+          : a.date.localeCompare(b.date)) || a.title.localeCompare(b.title)
       );
     });
     const months = new Map<string, Release[]>();
@@ -30,13 +37,18 @@ export function ReleaseList({ releases, locale }: { releases: Release[]; locale:
   }, [releases, order]);
 
   return (
-    <section aria-label={en ? "All recorded releases" : "全期間のリリース一覧"} className="min-w-0">
+    <section
+      aria-label={en ? "All recorded releases" : "全期間のリリース一覧"}
+      className="min-w-0"
+    >
       <ReleaseViewHeader
         title={en ? "All recorded releases" : "全期間のリリース一覧"}
         aside={
           <label className="flex items-center gap-2 text-xs text-muted-foreground">
             <ArrowDownWideNarrow className="size-4" aria-hidden="true" />
-            <span className="sr-only">{en ? "Sort releases" : "リリースの並び順"}</span>
+            <span className="sr-only">
+              {en ? "Sort releases" : "リリースの並び順"}
+            </span>
             <select
               className={releaseSelectClass}
               value={order}
@@ -62,14 +74,19 @@ export function ReleaseList({ releases, locale }: { releases: Release[]; locale:
                     timeZone: "UTC",
                   }).format(dateTimestamp(`${month}-01`))}
             </h3>
-            <p className="text-[11px] tabular-nums text-muted-foreground">
+            <p className="text-[11px] text-muted-foreground tabular-nums">
               {items.length}
               {en ? " releases" : " 件のリリース"}
             </p>
           </div>
           <div className="min-w-0 divide-y">
             {items.map((release) => (
-              <ReleaseCard key={release.id} release={release} locale={locale} compact />
+              <ReleaseCard
+                key={release.id}
+                release={release}
+                locale={locale}
+                compact
+              />
             ))}
           </div>
         </section>

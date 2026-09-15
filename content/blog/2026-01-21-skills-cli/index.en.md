@@ -31,9 +31,7 @@ Because of that, it was inevitable that CLIs would appear to normalize these dif
 - [skills - npm](https://www.npmjs.com/package/skills)
 - [gotalab/skillport: Bring Agent Skills to Any AI Agent and Coding Agent — via CLI or MCP. Manage once, serve anywhere.](https://github.com/gotalab/skillport)
 
-It's notable that Vercel grabbed generic names like `add-skill` and `skills`.
-`skills` was only [just released](https://x.com/rauchg/status/2012345679721771474), but for now it looks like a thin wrapper around `add-skill`.
-In fact, functionality-wise it's even a [regression](https://www.npmjs.com/package/skills/v/1.0.10?activeTab=code) compared to `add-skill`.
+It's notable that Vercel grabbed generic names like `add-skill` and `skills`. `skills` was only [just released](https://x.com/rauchg/status/2012345679721771474), but for now it looks like a thin wrapper around `add-skill`. In fact, functionality-wise it's even a [regression](https://www.npmjs.com/package/skills/v/1.0.10?activeTab=code) compared to `add-skill`.
 
 Also, since `v1.0.0` was published nine years ago, Vercel likely acquired a long-abandoned name and now intends to operate it as the command for Agent Skills.
 

@@ -5,18 +5,24 @@ import type { Locale } from "@/shared/lib/routing";
 import { toIntlLocaleTag } from "@/shared/lib/presentation";
 
 export function useSimulatorFormatters(locale: Locale) {
-  const numberFormatter = useMemo(() => new Intl.NumberFormat(toIntlLocaleTag(locale)), [locale]);
-  const t = useCallback((ja: string, en: string) => (locale === "en" ? en : ja), [locale]);
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat(toIntlLocaleTag(locale)),
+    [locale]
+  );
+  const t = useCallback(
+    (ja: string, en: string) => (locale === "en" ? en : ja),
+    [locale]
+  );
   const formatYenWithMan = useCallback(
     (value: number) => {
       const yen = Math.round(value);
       const man = Math.floor(yen / 10_000);
       return t(
         `${numberFormatter.format(yen)} 円 (${numberFormatter.format(man)} 万円)`,
-        `¥${numberFormatter.format(yen)} (${numberFormatter.format(man)} x10k JPY)`,
+        `¥${numberFormatter.format(yen)} (${numberFormatter.format(man)} x10k JPY)`
       );
     },
-    [numberFormatter, t],
+    [numberFormatter, t]
   );
   const formatYears = useCallback(
     (months: number) => {
@@ -32,7 +38,7 @@ export function useSimulatorFormatters(locale: Locale) {
       }
       return `${yearsValue.toFixed(1)}年`;
     },
-    [locale],
+    [locale]
   );
 
   return { t, numberFormatter, formatYenWithMan, formatYears };

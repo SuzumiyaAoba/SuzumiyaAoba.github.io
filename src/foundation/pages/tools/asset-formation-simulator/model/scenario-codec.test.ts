@@ -42,7 +42,12 @@ describe("scenario codec", () => {
         monthlyContributionInput: "",
         annualRateInput: "-2.5",
       },
-      { id: "second", name: "Second", monthlyContributionInput: "10000", annualRateInput: "" },
+      {
+        id: "second",
+        name: "Second",
+        monthlyContributionInput: "10000",
+        annualRateInput: "",
+      },
     ];
 
     expect(decodeScenarios(encodeScenarios(inputs))).toStrictEqual(inputs);
@@ -55,8 +60,8 @@ describe("scenario codec", () => {
           null,
           { monthlyContributionInput: 1000, annualRateInput: "5" },
           { monthlyContributionInput: "2000", annualRateInput: "3" },
-        ]),
-      ),
+        ])
+      )
     ).toStrictEqual([
       {
         id: "scenario-3",
@@ -80,7 +85,12 @@ describe("scenario codec", () => {
 
   it("既定値で補完したシナリオは同一と判定し、入力値の差は区別する", () => {
     const unnamed: ScenarioInput[] = [
-      { id: "", name: "", monthlyContributionInput: "30000", annualRateInput: "5" },
+      {
+        id: "",
+        name: "",
+        monthlyContributionInput: "30000",
+        annualRateInput: "5",
+      },
     ];
     const changed: ScenarioInput[] = [
       {
@@ -107,8 +117,13 @@ describe("visibility codec", () => {
   const colors = { "scenario-1": "#123456" };
 
   it("既存URLの表示設定と色を復元し、同じパラメーターを生成する", () => {
-    expect(decodeVisibilityPayload(legacyVisibility, scenarios)).toStrictEqual({ visible, colors });
-    expect(encodeVisibilityPayload(visible, colors, scenarios)).toBe(legacyVisibility);
+    expect(decodeVisibilityPayload(legacyVisibility, scenarios)).toStrictEqual({
+      visible,
+      colors,
+    });
+    expect(encodeVisibilityPayload(visible, colors, scenarios)).toBe(
+      legacyVisibility
+    );
   });
 
   it("不明な系列、削除済みのパターン、不正な型を復元しない", () => {
@@ -133,8 +148,8 @@ describe("visibility codec", () => {
       encodeVisibilityPayload(
         { ...visible, "removed:balance": true },
         { ...colors, removed: "#ffffff" },
-        scenarios,
-      ),
+        scenarios
+      )
     ).toBe(legacyVisibility);
   });
 
@@ -144,7 +159,10 @@ describe("visibility codec", () => {
       colors: {},
     });
     expect(
-      decodeVisibilityPayload(encode({ colors: { "scenario-1": "red" } }), scenarios),
+      decodeVisibilityPayload(
+        encode({ colors: { "scenario-1": "red" } }),
+        scenarios
+      )
     ).toStrictEqual({
       visible: {},
       colors: {},
@@ -155,6 +173,6 @@ describe("visibility codec", () => {
     "復元できない表示設定 %s を無視する",
     (value) => {
       expect(decodeVisibilityPayload(value, scenarios)).toBeNull();
-    },
+    }
   );
 });

@@ -7,13 +7,18 @@ export type PostsIndexPageContentProps = {
   slugs: string[];
 };
 
-export function PostsIndexPageContent({ locale, slugs }: PostsIndexPageContentProps) {
+export function PostsIndexPageContent({
+  locale,
+  slugs,
+}: PostsIndexPageContentProps) {
   const pagePath = toLocalePath("/posts", locale);
 
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <main className="site-main">
-        <h1 className="text-2xl font-semibold leading-snug sm:text-3xl">Posts</h1>
+        <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
+          Posts
+        </h1>
         <ul className="mt-6 space-y-2">
           {slugs.map((slug) => (
             <li key={slug}>

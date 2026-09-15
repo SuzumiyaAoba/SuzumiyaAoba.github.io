@@ -22,7 +22,11 @@ type Props = {
 
 const DEFAULT_CONFIG: NonNullable<Props["config"]> = {};
 
-export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG }) => {
+export const PieChart: React.FC<Props> = ({
+  data,
+  title,
+  config = DEFAULT_CONFIG,
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const colors = config.colors ?? schemeCategory10;
 
@@ -49,7 +53,9 @@ export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG
       .value((d) => d.value)
       .sort(null);
 
-    const arcGenerator = arc<PieArcDatum<PieData>>().innerRadius(0).outerRadius(radius);
+    const arcGenerator = arc<PieArcDatum<PieData>>()
+      .innerRadius(0)
+      .outerRadius(radius);
 
     const arcs = g
       .selectAll(".arc")
@@ -111,11 +117,14 @@ export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG
           horizontalMultiplier = 1.7; // 8%未満の場合は少し外側に
         }
 
-        const finalX = radius * horizontalMultiplier * (midAngle < Math.PI ? 1 : -1);
+        const finalX =
+          radius * horizontalMultiplier * (midAngle < Math.PI ? 1 : -1);
 
         const arcPos = arcGenerator.centroid(d);
 
-        return [arcPos, [outerX, outerY], [finalX, outerY]].map((p) => p.join(",")).join(" ");
+        return [arcPos, [outerX, outerY], [finalX, outerY]]
+          .map((p) => p.join(","))
+          .join(" ");
       });
 
     // 外側のラベル
@@ -149,7 +158,8 @@ export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG
           horizontalMultiplier = 1.75; // 8%未満の場合は少し外側に
         }
 
-        const finalX = radius * horizontalMultiplier * (midAngle < Math.PI ? 1 : -1);
+        const finalX =
+          radius * horizontalMultiplier * (midAngle < Math.PI ? 1 : -1);
 
         return `translate(${finalX},${outerY})`;
       })
@@ -164,7 +174,7 @@ export const PieChart: React.FC<Props> = ({ data, title, config = DEFAULT_CONFIG
 
   return (
     <div className="flex flex-col items-center">
-      <div className="font-bold text-base mb-1">{title}</div>
+      <div className="mb-1 text-base font-bold">{title}</div>
       <svg ref={svgRef} />
     </div>
   );

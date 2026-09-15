@@ -13,21 +13,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const dummyPosts: BlogPaginationPageContentProps["posts"] = Array.from({ length: 10 }, (_, i) => ({
-  slug: `post-${i + 1}`,
-  ja: {
+const dummyPosts: BlogPaginationPageContentProps["posts"] = Array.from(
+  { length: 10 },
+  (_, i) => ({
     slug: `post-${i + 1}`,
-    content: "Content",
-    format: "mdx",
-    frontmatter: {
-      title: `Sample Post ${i + 1}`,
-      date: "2024-01-01",
-      tags: ["Tag1"],
-      category: "Category",
+    ja: {
+      slug: `post-${i + 1}`,
+      content: "Content",
+      format: "mdx",
+      frontmatter: {
+        title: `Sample Post ${i + 1}`,
+        date: "2024-01-01",
+        tags: ["Tag1"],
+        category: "Category",
+      },
     },
-  },
-  en: null,
-}));
+    en: null,
+  })
+);
 
 export const Japanese: Story = {
   args: {

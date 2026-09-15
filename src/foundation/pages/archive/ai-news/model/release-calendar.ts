@@ -70,7 +70,10 @@ export function isExactDate(date?: string): date is string {
     return false;
   }
   const timestamp = dateTimestamp(date);
-  return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === date;
+  return (
+    Number.isFinite(timestamp) &&
+    new Date(timestamp).toISOString().slice(0, 10) === date
+  );
 }
 
 export function daysBetween(from: string, to: string): number {
@@ -101,7 +104,12 @@ function resolveProvider(tags: string[]): Provider {
   if (tags.some((tag) => ["openai", "gpt", "codex"].includes(tag))) {
     return "OpenAI";
   }
-  if (tags.some((tag) => ["anthropic", "ahthropic"].includes(tag) || tag.startsWith("claude"))) {
+  if (
+    tags.some(
+      (tag) =>
+        ["anthropic", "ahthropic"].includes(tag) || tag.startsWith("claude")
+    )
+  ) {
     return "Anthropic";
   }
   if (tags.some((tag) => ["google", "gemini", "nano banana"].includes(tag))) {
@@ -119,7 +127,11 @@ function resolveProvider(tags: string[]): Provider {
   if (tags.includes("llama")) {
     return "Meta";
   }
-  if (tags.some((tag) => ["mistral", "mixtral", "codestral", "devstral"].includes(tag))) {
+  if (
+    tags.some((tag) =>
+      ["mistral", "mixtral", "codestral", "devstral"].includes(tag)
+    )
+  ) {
     return "Mistral AI";
   }
   if (tags.includes("grok")) {
@@ -164,7 +176,10 @@ export function buildReleases(entries: RenderedRelease[]): Release[] {
       intervals: [],
     };
   });
-  const groups = new Map<string, { series: string; dates: Map<string, Release[]> }>();
+  const groups = new Map<
+    string,
+    { series: string; dates: Map<string, Release[]> }
+  >();
   for (const release of releases) {
     if (!release.date) {
       continue;
@@ -189,7 +204,9 @@ export function buildReleases(entries: RenderedRelease[]): Release[] {
         release.intervals.push({
           series,
           previousDate,
-          previousTitles: (dates.get(previousDate) ?? []).map((item) => item.title),
+          previousTitles: (dates.get(previousDate) ?? []).map(
+            (item) => item.title
+          ),
           days: daysBetween(previousDate, date),
         });
       }
@@ -220,7 +237,10 @@ function normalize(value: string) {
   return value.normalize("NFKC").toLowerCase();
 }
 
-export function filterReleases(releases: Release[], filters: ReleaseFilters): Release[] {
+export function filterReleases(
+  releases: Release[],
+  filters: ReleaseFilters
+): Release[] {
   const terms = normalize(filters.query).trim().split(/\s+/u).filter(Boolean);
   return releases.filter((release) => {
     if (filters.provider && release.provider !== filters.provider) {
@@ -233,7 +253,12 @@ export function filterReleases(releases: Release[], filters: ReleaseFilters): Re
       return false;
     }
     const text = normalize(
-      [release.title, release.provider, ...release.series, ...(release.entry.tags ?? [])].join(" "),
+      [
+        release.title,
+        release.provider,
+        ...release.series,
+        ...(release.entry.tags ?? []),
+      ].join(" ")
     );
     return terms.every((term) => text.includes(term));
   });

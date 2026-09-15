@@ -15,7 +15,9 @@ export function getMonthDays(month: string): (string | null)[] {
   const days = daysBetween(start, `${shiftMonth(month, 1)}-01`);
   return Array.from({ length: 42 }, (_, index) => {
     const day = index - weekday + 1;
-    return day > 0 && day <= days ? `${month}-${String(day).padStart(2, "0")}` : null;
+    return day > 0 && day <= days
+      ? `${month}-${String(day).padStart(2, "0")}`
+      : null;
   });
 }
 
@@ -30,14 +32,19 @@ export function getMonthWindow(
   end: string,
   scrollLeft: number,
   viewportWidth: number,
-  monthStep: number,
+  monthStep: number
 ) {
   const total = monthsBetween(start, end) + 1;
   const first = Math.max(0, Math.floor(scrollLeft / monthStep) - 1);
-  const count = Math.max(0, Math.min(total - first, Math.ceil(viewportWidth / monthStep) + 3));
+  const count = Math.max(
+    0,
+    Math.min(total - first, Math.ceil(viewportWidth / monthStep) + 3)
+  );
   return {
     first,
     total,
-    months: Array.from({ length: count }, (_, index) => shiftMonth(start, first + index)),
+    months: Array.from({ length: count }, (_, index) =>
+      shiftMonth(start, first + index)
+    ),
   };
 }

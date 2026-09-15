@@ -21,7 +21,11 @@ const labelMap: Record<string, string> = {
 const groups: MetricGroup[] = [
   {
     name: "収益性",
-    metrics: ["収益性 | ％", "利回りが良いから | ％", "将来の値上がりが期待できるから | ％"],
+    metrics: [
+      "収益性 | ％",
+      "利回りが良いから | ％",
+      "将来の値上がりが期待できるから | ％",
+    ],
   },
   {
     name: "安全性",

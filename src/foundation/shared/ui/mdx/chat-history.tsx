@@ -42,8 +42,13 @@ function sanitizeMdxContent(content: string): string {
 }
 
 /** 描画関数を注入して、MDX コンポーネント一覧への循環参照を避ける。 */
-export function createChatHistory(renderContent: (content: string) => Promise<ReactNode>) {
-  async function ChatHistory({ messages, variant = "contained" }: ChatHistoryProps) {
+export function createChatHistory(
+  renderContent: (content: string) => Promise<ReactNode>
+) {
+  async function ChatHistory({
+    messages,
+    variant = "contained",
+  }: ChatHistoryProps) {
     const rendered = await Promise.all(
       messages.map(async (message) => {
         const [content, reasoning] = await Promise.all([
@@ -53,11 +58,11 @@ export function createChatHistory(renderContent: (content: string) => Promise<Re
             : Promise.resolve(null),
         ]);
         return { ...message, content, reasoning };
-      }),
+      })
     );
 
     return (
-      <div className="not-prose flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4">
+      <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4">
         {rendered.map((message, index) => (
           <Message key={`${message.role}-${index}`} from={message.role}>
             <MessageContent
@@ -65,11 +70,12 @@ export function createChatHistory(renderContent: (content: string) => Promise<Re
               variant={variant}
               className={cn(
                 message.role === "user" ? "bg-muted/80" : "bg-background",
-                "shadow-[0_1px_0_rgba(0,0,0,0.04)]",
+                "shadow-[0_1px_0_rgba(0,0,0,0.04)]"
               )}
             >
               {message.reasoning !== null ||
-              (message.toolInvocations && message.toolInvocations.length > 0) ? (
+              (message.toolInvocations &&
+                message.toolInvocations.length > 0) ? (
                 <div className="flex flex-col gap-2">
                   {message.reasoning === null ? null : (
                     <Reasoning>
@@ -77,11 +83,15 @@ export function createChatHistory(renderContent: (content: string) => Promise<Re
                       <ReasoningContent>{message.reasoning}</ReasoningContent>
                     </Reasoning>
                   )}
-                  {message.toolInvocations && message.toolInvocations.length > 0 ? (
+                  {message.toolInvocations &&
+                  message.toolInvocations.length > 0 ? (
                     <div className="flex flex-col gap-2">
                       {message.toolInvocations.map((invocation) => (
                         <Tool key={invocation.toolCallId}>
-                          <ToolHeader title={invocation.toolName} state={invocation.state} />
+                          <ToolHeader
+                            title={invocation.toolName}
+                            state={invocation.state}
+                          />
                           <ToolContent>
                             <div className={cn("space-y-3")}>
                               <ToolInput input={invocation.input} />

@@ -31,7 +31,9 @@ describe("asStringWithDefault", () => {
 
 describe("asDateString", () => {
   it("Dateインスタンスをyyyy-mm-dd形式に変換する", () => {
-    expect(asDateString(new Date("2024-01-15T00:00:00.000Z"))).toBe("2024-01-15");
+    expect(asDateString(new Date("2024-01-15T00:00:00.000Z"))).toBe(
+      "2024-01-15"
+    );
   });
 
   it("string値をそのまま返す", () => {
@@ -58,7 +60,11 @@ describe("asBoolean", () => {
 
 describe("asStringArray", () => {
   it("配列であればstring要素のみフィルタして返す", () => {
-    expect(asStringArray(["a", "b", 1, null, "c"])).toStrictEqual(["a", "b", "c"]);
+    expect(asStringArray(["a", "b", 1, null, "c"])).toStrictEqual([
+      "a",
+      "b",
+      "c",
+    ]);
   });
 
   it("空配列はそのまま空配列を返す", () => {

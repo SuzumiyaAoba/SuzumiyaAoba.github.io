@@ -13,19 +13,27 @@ export type AiNewsPageContentProps = {
   today?: string;
 };
 
-export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPageContentProps) {
+export function AiNewsPageContent({
+  locale,
+  updated,
+  entries,
+  today,
+}: AiNewsPageContentProps) {
   const en = locale === "en";
   const pagePath = toLocalePath("/archive/ai-news", locale);
   const breadcrumbs = [
     { name: "Home", path: toLocalePath("/", locale) },
-    { name: en ? "Archive" : "アーカイブ", path: toLocalePath("/archive", locale) },
+    {
+      name: en ? "Archive" : "アーカイブ",
+      path: toLocalePath("/archive", locale),
+    },
     { name: en ? "AI News" : "AIニュース", path: pagePath },
   ];
 
   return (
     <SiteLayout locale={locale} path={pagePath} className="@container">
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
-      <main className="site-main min-w-0 font-noto bg-muted/20">
+      <main className="site-main font-noto min-w-0 bg-muted/20">
         <div className="page-stack min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Breadcrumbs items={breadcrumbs} />
@@ -42,11 +50,16 @@ export function AiNewsPageContent({ locale, updated, entries, today }: AiNewsPag
             </h1>
             {updated && (
               <p className="text-xs text-muted-foreground">
-                {en ? "Updated" : "最終更新"}: <time dateTime={updated}>{updated}</time>
+                {en ? "Updated" : "最終更新"}:{" "}
+                <time dateTime={updated}>{updated}</time>
               </p>
             )}
           </section>
-          <ReleaseExplorer entries={entries} locale={locale} {...(today ? { today } : {})} />
+          <ReleaseExplorer
+            entries={entries}
+            locale={locale}
+            {...(today ? { today } : {})}
+          />
         </div>
       </main>
     </SiteLayout>

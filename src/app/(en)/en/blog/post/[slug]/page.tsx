@@ -7,9 +7,11 @@ type PageProps = {
   params: Promise<{ slug?: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
-  return buildBlogPostMetadata(resolvedParams.slug, "en");
+  return await buildBlogPostMetadata(resolvedParams.slug, "en");
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {

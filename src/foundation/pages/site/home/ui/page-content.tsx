@@ -44,7 +44,11 @@ export function HomePageContent({
           seriesCount={series.length}
           topics={topics}
         />
-        <HomeWriting locale={locale} latestPosts={latestPosts} postCount={postCount} />
+        <HomeWriting
+          locale={locale}
+          latestPosts={latestPosts}
+          postCount={postCount}
+        />
         <HomeSeries locale={locale} series={series} />
         <HomeLibrary locale={locale} notes={notes} />
       </main>

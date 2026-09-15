@@ -10,8 +10,7 @@ description: Setting up a local LLM with Ollama after upgrading to an M4 Pro Mac
 
 ## Introduction
 
-I upgraded the Mac mini I use at home to a high-spec model.
-As a result I can now run local LLMs, so here are the setup steps and my impressions.
+I upgraded the Mac mini I use at home to a high-spec model. As a result I can now run local LLMs, so here are the setup steps and my impressions.
 
 ## Environment
 
@@ -29,8 +28,7 @@ What will I use it for?
 
 ### Install ollama
 
-I manage my environment with [Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/),
-so I import the following setting into my usual config.
+I manage my environment with [Nix](https://nixos.org/) + [Home Manager](https://nix-community.github.io/home-manager/), so I import the following setting into my usual config.
 
 ```nix
 { pkgs, ... }:
@@ -66,13 +64,11 @@ Run the following command to download the model.
 $ ollama pull qwen2.5-coder:32b
 ```
 
-Adjust the `32b` after the colon based on your environment.
-As I mention later, `32b` consumed about 20 GB of memory on my machine.
+Adjust the `32b` after the colon based on your environment. As I mention later, `32b` consumed about 20 GB of memory on my machine.
 
 ### Start the server
 
-To run a local LLM, start a server with `ollama`.
-You only need to execute this command.
+To run a local LLM, start a server with `ollama`. You only need to execute this command.
 
 ```shell
 $ ollama serve
@@ -93,8 +89,7 @@ time=2024-11-16T21:53:13.771+09:00 level=INFO source=types.go:107 msg="inference
 
 ### Run the local LLM
 
-Now try running the downloaded LLM.
-Run the following command. The model name should match what you downloaded.
+Now try running the downloaded LLM. Run the following command. The model name should match what you downloaded.
 
 ```shell
 $ ollama run qwen2.5-coder:32b
@@ -143,8 +138,7 @@ Hello, World
 ```
 ````
 
-Maybe that was too easy.
-It even explained how to run it.
+Maybe that was too easy. It even explained how to run it.
 
 Next, let's ask it to write a program that outputs the first 100 Fibonacci numbers.
 
@@ -200,18 +194,14 @@ public class Fibonacci {
 This will print the first 100 Fibonacci numbers to the console.
 ````
 
-It seems to have written a correct Fibonacci program.
-Maybe that was too easy as well.
+It seems to have written a correct Fibonacci program. Maybe that was too easy as well.
 
-I could continue experimenting, but chatting in a terminal isn’t a great experience.
-In the next article, I will try using a local LLM through a different UI.
+I could continue experimenting, but chatting in a terminal isn’t a great experience. In the next article, I will try using a local LLM through a different UI.
 
 ### Conclusion
 
-Installing a local LLM has become surprisingly easy.
-Thanks to Ollama, even if new models appear, I can probably run them with a single command.
+Installing a local LLM has become surprisingly easy. Thanks to Ollama, even if new models appear, I can probably run them with a single command.
 
 If you want to try Japanese LLMs, it seems good to explore models that catch your interest in [Japanese LLM list | LLM-jp](https://llm-jp.github.io/awesome-japanese-llm/).
 
-I tried [Llama-3-ELYZA-JP-8B-GGUF](https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF), but I felt Japanese LLMs sometimes fail to hold a conversation.
-This is a field that will keep evolving, so I plan to explore new models regularly.
+I tried [Llama-3-ELYZA-JP-8B-GGUF](https://huggingface.co/elyza/Llama-3-ELYZA-JP-8B-GGUF), but I felt Japanese LLMs sometimes fail to hold a conversation. This is a field that will keep evolving, so I plan to explore new models regularly.

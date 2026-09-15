@@ -24,7 +24,7 @@ export function useHighlightedCode(source: RawCode | RawCode[]) {
       try {
         const inputs = Array.isArray(source) ? source : [source];
         const blocks = await Promise.all(
-          inputs.map(async (code) => highlight(code, "github-from-css")),
+          inputs.map(async (code) => await highlight(code, "github-from-css"))
         );
         if (!cancelled) {
           setState({ source, blocks, hasError: false });
@@ -41,5 +41,7 @@ export function useHighlightedCode(source: RawCode | RawCode[]) {
     };
   }, [source]);
 
-  return state.source === source ? state : { source, blocks: [], hasError: false };
+  return state.source === source
+    ? state
+    : { source, blocks: [], hasError: false };
 }

@@ -13,7 +13,11 @@ function resolveTimelineIcon(tags?: string[]): string | null {
   }
 
   const normalized = new Set(tags.map((tag) => tag.toLowerCase()));
-  if (normalized.has("openai") || normalized.has("codex") || normalized.has("gpt")) {
+  if (
+    normalized.has("openai") ||
+    normalized.has("codex") ||
+    normalized.has("gpt")
+  ) {
     return "logos:openai-icon";
   }
   if (
@@ -38,7 +42,11 @@ function resolveTimelineIcon(tags?: string[]): string | null {
   return null;
 }
 
-export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPageContentProps) {
+export function AiNewsTimelinePageContent({
+  locale,
+  updated,
+  entries,
+}: AiNewsPageContentProps) {
   const pagePath = toLocalePath("/archive/ai-news/timeline", locale);
   const pageName = locale === "en" ? "AI News" : "AIニュース";
   const archiveName = locale === "en" ? "Archive" : "アーカイブ";
@@ -61,10 +69,10 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
           ]}
         />
         <section className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+          <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             <I18nText locale={locale} ja="ツール" en="Tools" />
           </p>
-          <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
             {pageName}
           </h1>
           {updated ? (
@@ -89,11 +97,15 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
         <section>
           {entries.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              <I18nText locale={locale} ja="ニュースデータがありません。" en="No data." />
+              <I18nText
+                locale={locale}
+                ja="ニュースデータがありません。"
+                en="No data."
+              />
             </p>
           ) : (
             <div className="relative space-y-6">
-              <span className="pointer-events-none absolute left-[9.5rem] top-0 hidden h-full w-px bg-muted-foreground/20 sm:block" />
+              <span className="pointer-events-none absolute top-0 left-[9.5rem] hidden h-full w-px bg-muted-foreground/20 sm:block" />
               {entries.map(({ entry, title, summary }, index) => {
                 const dateParts = entry.date ? entry.date.split("-") : [];
                 const yearLabel = dateParts[0] ?? String(entry.year);
@@ -124,15 +136,21 @@ export function AiNewsTimelinePageContent({ locale, updated, entries }: AiNewsPa
                         <div className="relative flex items-start justify-center self-stretch">
                           {timelineIcon ? (
                             <span className="relative z-10 mt-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-background text-muted-foreground">
-                              <Icon icon={timelineIcon} className="h-5 w-5" aria-hidden />
+                              <Icon
+                                icon={timelineIcon}
+                                className="h-5 w-5"
+                                aria-hidden
+                              />
                             </span>
                           ) : (
                             <span className="relative z-10 mt-4 h-2 w-2 rounded-full bg-muted-foreground/40" />
                           )}
                         </div>
                         <div className="space-y-2">
-                          <h2 className="text-base font-semibold text-foreground">{title}</h2>
-                          <div className="prose prose-sm max-w-none font-serif text-muted-foreground">
+                          <h2 className="text-base font-semibold text-foreground">
+                            {title}
+                          </h2>
+                          <div className="prose max-w-none font-serif text-muted-foreground">
                             {summary}
                           </div>
                           {entry.tags && entry.tags.length > 0 ? (
