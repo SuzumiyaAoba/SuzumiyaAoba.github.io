@@ -11,6 +11,15 @@ events:
     tags: ["Google", "Gemini", "Audio Model"]
     series: ["Gemini Live"]
   - year: 2026
+    date: 2026-09-15
+    title_ja: "Jev (System One Model)"
+    summary_ja: |
+      TypeSafe AI が公開した新しいモデルクラス「System One Model」。テキスト生成を行わず、型付きの決定・確率・信頼度を返す。早期アクセスで提供開始。
+
+      [Introducing System One Models & Jev | TypeSafe AI](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
+    tags: ["TypeSafe AI", "Jev"]
+    series: ["Jev"]
+  - year: 2026
     date: 2026-09-10
     title_ja: "DeepSeek-V4.1-Flash"
     summary_ja: |
