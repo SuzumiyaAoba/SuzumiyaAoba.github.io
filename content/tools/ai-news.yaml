@@ -1,6 +1,15 @@
 version: 1
-updated: "2026-09-13"
+updated: "2026-09-17"
 events:
+  - year: 2026
+    date: 2026-09-15
+    title_ja: "Gemini 3.8 Live / 3.8 Live Extended Thinking"
+    summary_ja: |
+      音声対話向けライブモデル Gemini 3.8 Live と、高推論版の Extended Thinking を公開。
+
+      [Gemini 3.8 Live / 3.8 Live Extended Thinking の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-gemini-3-8-live-extended-thinking/)
+    tags: ["Google", "Gemini", "Audio Model"]
+    series: ["Gemini Live"]
   - year: 2026
     date: 2026-09-10
     title_ja: "DeepSeek-V4.1-Flash"
@@ -75,6 +84,15 @@ events:
     tags: ["Anthropic", "Claude", "LLM Model"]
     series: ["Claude Fable", "Claude Mythos"]
   - year: 2026
+    date: 2026-09-01
+    title_ja: "LLM-jp-4-VL 9B"
+    summary_ja: |
+      llm-jp-4-8b-thinking をマルチモーダル化した約91億パラメータの視覚言語モデル（正式版）を公開。
+
+      [LLM-jp-4-VL 9Bリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/llm-jp-4-vl-9b/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp VL"]
+  - year: 2026
     date: 2026-08-26
     title_ja: "Gemini 3.5 Transcribe / Transcribe Live (GA)"
     summary_ja: |
@@ -109,6 +127,16 @@ events:
       [GLM-5.3 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM"]
+
+  - year: 2026
+    date: 2026-08-18
+    title_ja: "LLM-jp-4 33B"
+    summary_ja: |
+      約332億パラメータの Dense 型モデル LLM-jp-4 33B（base / thinking）と DPO データセットを公開。
+
+      [約332億パラメータのDense型LLM「LLM-jp-4 33B」モデルを公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/20260818/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
 
   - year: 2026
     date: 2026-08-14
@@ -238,6 +266,15 @@ events:
     tags: ["Google", "Nano Banana", "Image Model"]
     series: ["Nano Banana"]
   - year: 2026
+    date: 2026-06-30
+    title_ja: "Sarashina3 シリーズ（mini / nano / guard / embedding / rerank）"
+    summary_ja: |
+      フルスクラッチ開発の国産LLM Sarashina3 シリーズを、ソフトバンクの Cloud PF Type A で商用APIとして提供開始。
+
+      [Sarashina3 シリーズの提供開始 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20260630_01/)
+    tags: ["SB Intuitions", "Sarashina", "LLM Model"]
+    series: ["Sarashina"]
+  - year: 2026
     date: 2026-06-16
     title_ja: "GLM-5.2"
     summary_ja: |
@@ -329,6 +366,16 @@ events:
     series: ["Nemotron"]
 
   - year: 2026
+    date: 2026-04-28
+    title_ja: "Sarashina2.2-TTS"
+    summary_ja: |
+      日本語音声合成モデル Sarashina2.2-TTS を公開（非商用ライセンス）。
+
+      [Sarashina2.2-TTS | SB Intuitions](https://huggingface.co/sbintuitions/sarashina2.2-tts)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "Audio Model"]
+    series: ["Sarashina TTS"]
+
+  - year: 2026
     date: 2026-04-24
     title_ja: "DeepSeek-V4-Pro / DeepSeek-V4-Flash (Preview)"
     summary_ja: |
@@ -392,6 +439,15 @@ events:
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
   - year: 2026
+    date: 2026-04-14
+    title_ja: "LLM-jp-4-VL 9B beta"
+    summary_ja: |
+      LLM-jp-4 8B を画像入力対応に拡張した約91億パラメータの視覚言語モデル beta 版を公開。
+
+      [LLM-jp-4-VL 9B betaリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/20260414_llm-jp-4-vl-9b-beta/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp VL"]
+  - year: 2026
     date: 2026-04-07
     title_ja: "GLM-5.1"
     summary_ja: |
@@ -412,6 +468,16 @@ events:
     series: ["PLaMo"]
 
   - year: 2026
+    date: 2026-04-03
+    title_ja: "LLM-jp-4 8B / LLM-jp-4 32B-A3B"
+    summary_ja: |
+      約12兆トークンのコーパスで学習した国産LLM。Dense 型 8B と MoE 型 32B-A3B（総32B・活性約3.8B）をオープンソースライセンスで公開。
+
+      [LLM-jp-4 8Bモデル / 32B-A3Bモデルの公開 | 国立情報学研究所](https://www.nii.ac.jp/news/release/2026/0403.html)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2026
     date: 2026-04-02
     title_ja: "Gemma 4 (E2B, E4B, 26B MoE, 31B)"
     summary_ja: |
@@ -420,6 +486,16 @@ events:
       [Gemma 4 (E2B, E4B, 26B MoE, 31B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+
+  - year: 2026
+    date: 2026-03-25
+    title_ja: "LLM-jp-3.1-8x13B-32K"
+    summary_ja: |
+      LLM-jp-3.1 のフラグシップ 8x13B の長文脈対応版を公開。最大文脈長を 4,096 から 32,768 トークンに拡張。
+
+      [LLM-jp-3.1 シリーズ 32K長文脈対応モデル 公開 | LLMC](https://llmc.nii.ac.jp/topics/post-2650/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
 
   - year: 2026
     date: 2026-03-18
@@ -506,6 +582,15 @@ events:
       [Nano Banana 2 の発表 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
     tags: ["Google", "Nano Banana", "Image Model"]
     series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-02-25
+    title_ja: "LLM-jp-Moshi-v1"
+    summary_ja: |
+      商用利用可能な同時双方向の日本語音声対話モデルを公開。
+
+      [LLM-jp-Moshi-v1 の公開 | 国立情報学研究所](https://www.nii.ac.jp/news/release/2026/0225.html)
+    tags: ["LLM-jp", "Open Weight Model", "Audio Model"]
+    series: ["LLM-jp Moshi"]
   - year: 2026
     date: 2026-02-24
     title_ja: "Qwen3.5 (27B, 35B-A3B, 122B-A10B)"
@@ -613,6 +698,16 @@ events:
       [GLM-4.7-Flash の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM Flash"]
+
+  - year: 2026
+    date: 2026-01-16
+    title_ja: "ELYZA-LLM-Diffusion（ELYZA-Diffusion-Base/Instruct-1.0-Dream-7B）"
+    summary_ja: |
+      Dream-v0-Instruct-7B をベースに日本語追加学習した拡散言語モデルの Base / Instruct を公開（Apache 2.0）。
+
+      [ELYZA-LLM-Diffusion の公開 | ELYZA](https://prtimes.jp/main/html/rd/p/000000066.000047565.html)
+    tags: ["ELYZA", "Open Weight Model", "LLM Model"]
+    series: ["ELYZA"]
 
   - year: 2025
     date: 2025-12-23
@@ -818,6 +913,16 @@ events:
     series: ["MiniMax"]
 
   - year: 2025
+    date: 2025-10-23
+    title_ja: "PLaMo 2.1 8B"
+    summary_ja: |
+      31B モデルからの pruning と知識蒸留で構築した 8B モデルの重みを公開（PLaMo community license）。Hugging Face での公開日に基づく。
+
+      [PLaMo 2.1 8B | Hugging Face](https://huggingface.co/pfnet/plamo-2.1-8b-cpt)
+    tags: ["Preferred Networks", "PLaMo", "Open Weight Model", "LLM Model"]
+    series: ["PLaMo"]
+
+  - year: 2025
     date: 2025-10-21
     title_ja: "Qwen3-VL (2B, 32B)"
     summary_ja: |
@@ -843,6 +948,16 @@ events:
       [Qwen3-VL (4B, 8B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+
+  - year: 2025
+    date: 2025-10-07
+    title_ja: "PLaMo 2.1 Prime"
+    summary_ja: |
+      商用フラッグシップ PLaMo Prime を 2.1 に更新し、自動ツール連携などエージェント機能を強化。
+
+      [PLaMo 2.1 Prime の提供開始 | Preferred Networks](https://www.preferred.jp/ja/news/566)
+    tags: ["Preferred Networks", "PLaMo", "LLM Model"]
+    series: ["PLaMo"]
 
   - year: 2025
     date: 2025-10-04
@@ -997,6 +1112,16 @@ events:
       [DeepSeek-V3.1 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250821/)
     tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
     series: ["DeepSeek"]
+
+  - year: 2025
+    date: 2025-08-20
+    title_ja: "Sarashina-Embedding-v2-1B"
+    summary_ja: |
+      テキスト埋め込みモデル Sarashina-Embedding-v2-1B を公開（非商用ライセンス）。
+
+      [Sarashina-Embedding-v2-1B | SB Intuitions](https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina Embedding"]
 
   - year: 2025
     date: 2025-08-14
@@ -1258,6 +1383,16 @@ events:
     series: ["Magistral"]
 
   - year: 2025
+    date: 2025-05-30
+    title_ja: "LLM-jp-3.1 シリーズ（1.8B / 13B / 8x13B, instruct4）"
+    summary_ja: |
+      継続事前学習と事後学習の改善で指示追従性を向上させた LLM-jp-3.1 シリーズを公開。
+
+      [LLM-jp-3.1 シリーズ instruct4 の公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-892/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2025
     date: 2025-05-28
     title_ja: "DeepSeek-R1-0528"
     summary_ja: |
@@ -1341,6 +1476,16 @@ events:
       [Mistral Medium 3 の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-medium-3/)
     tags: ["Mistral AI", "LLM Model"]
     series: ["Mistral Medium"]
+
+  - year: 2025
+    date: 2025-05-01
+    title_ja: "ELYZA-Thinking-1.0-Qwen-32B / ELYZA-Shortcut-1.0"
+    summary_ja: |
+      日本語の論理的思考能力を強化した Reasoning Model と、派生の Shortcut モデル（32B / 7B）を公開（Apache 2.0）。
+
+      [ELYZA-Thinking-1.0 / ELYZA-Shortcut-1.0 の公開 | ELYZA](https://prtimes.jp/main/html/rd/p/000000057.000047565.html)
+    tags: ["ELYZA", "Open Weight Model", "LLM Model"]
+    series: ["ELYZA"]
 
   - year: 2025
     date: 2025-04-30
@@ -1438,6 +1583,16 @@ events:
     series: ["Qwen Omni"]
 
   - year: 2025
+    date: 2025-03-26
+    title_ja: "LLM-jp-3 MoE（8x1.8B / 8x13B）"
+    summary_ja: |
+      LLM-jp 初の MoE モデルシリーズ。8x1.8B（総9.2B・活性2.9B）と 8x13B（総73B・活性22B）を Apache 2.0 で公開。
+
+      [LLM-jp-3 MoE シリーズの公開 | LLM-jp](https://llm-jp.nii.ac.jp/blog/blog-603/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2025
     date: 2025-03-25
     title_ja: "Qwen2.5-VL-32B"
     summary_ja: |
@@ -1488,6 +1643,16 @@ events:
     series: ["Gemma"]
 
   - year: 2025
+    date: 2025-03-07
+    title_ja: "Sarashina2.2-Instruct（0.5B / 1B / 3B）"
+    summary_ja: |
+      Sarashina2.2 ベースの Instruct モデル 3 サイズを MIT ライセンスで公開。
+
+      [Sarashina2.2-Instruct の公開 | SB Intuitions](https://www.sbintuitions.co.jp/blog/entry/2025/03/07/093143)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
+
+  - year: 2025
     date: 2025-03-06
     title_ja: "QwQ-32B"
     summary_ja: |
@@ -1506,6 +1671,16 @@ events:
       [Jamba 1.6 の公式発表・公開情報 | AI21 Labs](https://www.ai21.com/blog/introducing-jamba-1-6/)
     tags: ["AI21 Labs", "Jamba", "Open Weight Model", "LLM Model"]
     series: ["Jamba"]
+
+  - year: 2025
+    date: 2025-03-06
+    title_ja: "Sarashina2.2（0.5B / 1B / 3B）"
+    summary_ja: |
+      数学・コーディング性能を向上させた小規模事前学習モデル 3 サイズを MIT ライセンスで公開。
+
+      [Sarashina2.2 の公開 | SB Intuitions](https://www.sbintuitions.co.jp/blog/entry/2025/03/06/112144)
+    tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
+    series: ["Sarashina"]
 
   - year: 2025
     date: 2025-02-27
@@ -1565,6 +1740,15 @@ events:
       [Gemini 2.0 model updates: 2.0 Flash, Flash-Lite, Pro Experimental](https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/)
     tags: ["Google", "Gemini", "LLM Model"]
     series: ["Gemini Flash", "Gemini Flash-Lite", "Gemini Pro"]
+  - year: 2025
+    date: 2025-02-05
+    title_ja: "LLM-jp-3 instruct2 / instruct3 シリーズ"
+    summary_ja: |
+      LLM-jp-3 全サイズの instruct2 / instruct3 を公開し、150M / 440M / 980M / 7.2B のベースモデルも追加。
+
+      [LLM-jp-3 シリーズ instruct2, 3 の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-instruct2-3/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
   - year: 2025
     date: 2025-01-31
     title_ja: "OpenAI o3-mini"
@@ -1648,6 +1832,16 @@ events:
       [QVQ-72B-Preview の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["QVQ"]
+
+  - year: 2024
+    date: 2024-12-24
+    title_ja: "LLM-jp-3 172B"
+    summary_ja: |
+      約1720億パラメータ（GPT-3級）の LLM-jp-3 172B を公開。instruct3 は GPT-3.5 を上回る性能。ベースモデルは申請・承認制で再配布制限あり。
+
+      [「LLM-jp-3 172B」公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-342/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
 
   - year: 2024
     date: 2024-12-18
@@ -1750,6 +1944,16 @@ events:
     series: ["DeepSeek R"]
 
   - year: 2024
+    date: 2024-11-20
+    title_ja: "LLM-jp-3 VILA 14B"
+    summary_ja: |
+      LLM-jp-3 13B をベースに画像入力へ拡張したマルチモーダルモデルを公開。
+
+      [LLM-jp-3 VILA 14B の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-vila-14b/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp VL"]
+
+  - year: 2024
     date: 2024-11-18
     title_ja: "Pixtral Large"
     summary_ja: |
@@ -1758,6 +1962,16 @@ events:
       [Pixtral Large の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/pixtral-large/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Pixtral"]
+
+  - year: 2024
+    date: 2024-11-15
+    title_ja: "LLM-jp-3 172B beta2"
+    summary_ja: |
+      目標学習量の約3分の2にあたる 1.4兆トークンを学習した 172B の beta2 を公開。
+
+      [LLM-jp-3 172B beta2 の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-172b-beta2/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
 
   - year: 2024
     date: 2024-11-12
@@ -1810,6 +2024,16 @@ events:
     series: ["Granite"]
 
   - year: 2024
+    date: 2024-10-04
+    title_ja: "LLM-jp-3 172B alpha1 / alpha2"
+    summary_ja: |
+      172B の学習初期段階で得られたチェックポイント alpha1 / alpha2 を公開。
+
+      [LLM-jp-3 172B alpha1, alpha2 の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-172b-alpha1-alpha2/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
+
+  - year: 2024
     date: 2024-09-25
     title_ja: "Llama 3.2 (1B, 3B, 11B Vision, 90B Vision)"
     summary_ja: |
@@ -1818,6 +2042,16 @@ events:
       [Llama 3.2 (1B, 3B, 11B Vision, 90B Vision) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+
+  - year: 2024
+    date: 2024-09-25
+    title_ja: "LLM-jp-3 1.8B / 3.7B / 13B"
+    summary_ja: |
+      llm-jp-corpus v3 で学習した 1.8B / 3.7B / 13B と instruct モデルを Apache 2.0 で公開。13B は llm-jp-13b v2.0 から大幅に性能向上。
+
+      [LLM-jp-3 1.8B・3.7B・13B の公開 | LLMC](https://llmc.nii.ac.jp/topics/post-707/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
 
   - year: 2024
     date: 2024-09-19
@@ -1856,6 +2090,15 @@ events:
       [OpenAI o1-mini | OpenAI](https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["OpenAI o-series"]
+  - year: 2024
+    date: 2024-09-12
+    title_ja: "LLM-jp-3 172B beta1"
+    summary_ja: |
+      172B のプレビュー版 beta1 と事前学習コーパス v3 を公開（モデル利用は申請・承認制）。
+
+      [「LLM-jp-3 172B beta1」公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-310/)
+    tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
+    series: ["LLM-jp"]
   - year: 2024
     date: 2024-09-05
     title_ja: "DeepSeek-V2.5"
@@ -2103,7 +2346,7 @@ events:
     summary_ja: |
       日本語大規模言語モデル llm-jp-13b v2.0 を公開。
 
-      [llm-jp-13b v2.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.github.io/blog/2024/04/30/v2.0-release.html)
+      [llm-jp-13b v2.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-519/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
 
@@ -2464,7 +2707,7 @@ events:
     summary_ja: |
       LLM-jp が日本語大規模言語モデル llm-jp-13b v1.0 を公開。
 
-      [llm-jp-13b v1.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-521/)
+      [llm-jp-13b v1.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-50/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
 
