@@ -16,7 +16,7 @@ export function ChartSection({
   children,
 }: ChartSectionProps) {
   return (
-    <div style={marginBottom ? { marginBottom: "2rem" } : undefined}>
+    <div className={marginBottom ? "mb-8" : undefined}>
       <h4>{title}</h4>
       {children}
     </div>

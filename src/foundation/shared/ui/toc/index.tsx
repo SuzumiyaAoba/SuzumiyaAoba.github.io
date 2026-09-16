@@ -314,11 +314,11 @@ export function ClerkTOCItems({
     <>
       {svg ? (
         <div
-          className="absolute start-0 top-0 rtl:-scale-x-100"
+          className="absolute start-0 top-0 h-(--toc-h) w-(--toc-w) toc-mask rtl:-scale-x-100"
           style={{
-            width: svg.width,
-            height: svg.height,
-            maskImage: `url("data:image/svg+xml,${encodeURIComponent(
+            "--toc-w": `${svg.width}px`,
+            "--toc-h": `${svg.height}px`,
+            "--toc-mask": `url("data:image/svg+xml,${encodeURIComponent(
               `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
             )}")`,
           }}
@@ -369,9 +369,9 @@ function ClerkTOCItemElement({
     <TOCItem
       href={item.url}
       style={{
-        paddingInlineStart: getItemOffset(item.depth),
+        "--toc-indent": `${getItemOffset(item.depth)}px`,
       }}
-      className="prose relative py-1.5 text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary"
+      className="prose relative py-1.5 ps-(--toc-indent) text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary"
     >
       {offset === upperOffset ? null : (
         <svg
@@ -391,13 +391,11 @@ function ClerkTOCItemElement({
       )}
       <div
         className={cn(
-          "absolute inset-y-0 w-px bg-foreground/10",
+          "absolute inset-y-0 start-(--toc-line-x) w-px bg-foreground/10",
           offset !== upperOffset && "top-1.5",
           offset !== lowerOffset && "bottom-1.5"
         )}
-        style={{
-          insetInlineStart: offset,
-        }}
+        style={{ "--toc-line-x": `${offset}px` }}
       />
       {item.title}
     </TOCItem>

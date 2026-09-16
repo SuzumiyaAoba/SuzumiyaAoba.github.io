@@ -46,7 +46,7 @@ export function TagsListPageContent({
         </section>
 
         {tags.length === 0 ? (
-          <Card className="border-transparent bg-card/40 shadow-none">
+          <Card variant="soft">
             <div className="px-5 py-6 text-sm text-muted-foreground">
               <I18nText
                 locale={locale}
@@ -68,7 +68,8 @@ export function TagsListPageContent({
                 >
                   <Tag
                     tag={tag.name}
-                    className="min-w-0 border-0 bg-transparent p-0 text-sm font-medium whitespace-normal text-inherit"
+                    variant="bareLg"
+                    className="min-w-0 whitespace-normal"
                   />
                   <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
                     {tag.count}

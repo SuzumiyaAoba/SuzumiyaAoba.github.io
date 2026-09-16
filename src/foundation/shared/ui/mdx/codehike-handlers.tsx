@@ -6,6 +6,7 @@ import type {
 } from "codehike/code";
 import { InnerLine } from "codehike/code";
 import { ChevronDown } from "lucide-react";
+import { cn } from "@/shared/lib/utils";
 
 export const lineNumbers: AnnotationHandler = {
   name: "line-numbers",
@@ -14,8 +15,8 @@ export const lineNumbers: AnnotationHandler = {
     return (
       <div className="flex items-start">
         <span
-          className="mr-4 text-right text-muted-foreground select-none"
-          style={{ minWidth: `${width}ch` }}
+          className="mr-4 min-w-(--num-w) text-right text-muted-foreground select-none"
+          style={{ "--num-w": `${width}ch` }}
         >
           {props.lineNumber}
         </span>
@@ -28,31 +29,22 @@ export const lineNumbers: AnnotationHandler = {
 export const mark: AnnotationHandler = {
   name: "mark",
   Line: ({ annotation, ...props }) => {
-    const color = annotation?.query || "oklch(0.7 0.15 250)";
+    const color = annotation?.query || "var(--info)";
     return (
       <div
-        className="flex w-full"
-        style={{
-          backgroundColor:
-            annotation && `color-mix(in oklch, ${color} 12%, transparent)`,
-          borderWidth: annotation && "0 0 0 2px",
-          borderColor:
-            annotation && `color-mix(in oklch, ${color} 60%, transparent)`,
-        }}
+        className={cn("flex w-full", annotation && "ch-mark-line")}
+        style={{ "--mark-color": color }}
       >
         <InnerLine merge={props} className="flex-1 px-2" />
       </div>
     );
   },
   Inline: ({ annotation, children }) => {
-    const color = annotation.query || "oklch(0.7 0.15 250)";
+    const color = annotation.query || "var(--info)";
     return (
       <span
-        className="-mx-0.5 rounded px-0.5 py-0"
-        style={{
-          outline: `solid 1px color-mix(in oklch, ${color} 55%, transparent)`,
-          background: `color-mix(in oklch, ${color} 16%, transparent)`,
-        }}
+        className="-mx-0.5 rounded ch-mark-inline px-0.5 py-0"
+        style={{ "--mark-color": color }}
       >
         {children}
       </span>
@@ -102,21 +94,12 @@ export const callout: AnnotationHandler = {
       <>
         {children}
         <div
-          style={{
-            minWidth: `${column + 2}ch`,
-            left: "3rem",
-            backgroundColor: "var(--codehike-callout-bg)",
-            borderColor: "var(--codehike-callout-border)",
-          }}
-          className="relative mt-2 -ml-[1ch] w-fit rounded border px-2 py-1 text-xs text-foreground"
+          style={{ "--callout-w": `${column + 2}ch` }}
+          className="relative left-12 mt-2 -ml-[1ch] w-fit min-w-(--callout-w) rounded border border-(--codehike-callout-border) bg-(--codehike-callout-bg) px-2 py-1 text-xs text-foreground"
         >
           <div
-            style={{
-              left: `${column}ch`,
-              backgroundColor: "var(--codehike-callout-bg)",
-              borderColor: "var(--codehike-callout-border)",
-            }}
-            className="absolute -top-[1px] h-2 w-2 -translate-y-1/2 rotate-45 border-t border-l"
+            style={{ "--callout-x": `${column}ch` }}
+            className="absolute -top-[1px] left-(--callout-x) h-2 w-2 -translate-y-1/2 rotate-45 border-t border-l border-(--codehike-callout-border) bg-(--codehike-callout-bg)"
           />
           {annotation.query}
         </div>
@@ -166,8 +149,8 @@ export const collapseTrigger: AnnotationHandler = {
     return (
       <summary className="flex w-full cursor-pointer list-none items-start font-normal [&::-webkit-details-marker]:hidden">
         <span
-          className="mr-4 text-right text-muted-foreground select-none"
-          style={{ minWidth: `${width}ch` }}
+          className="mr-4 min-w-(--num-w) text-right text-muted-foreground select-none"
+          style={{ "--num-w": `${width}ch` }}
         >
           {lineNumber}
         </span>
@@ -197,14 +180,7 @@ export const tooltip: AnnotationHandler = {
         <span className="underline decoration-dotted underline-offset-4">
           {children}
         </span>
-        <span
-          className="pointer-events-none absolute top-full left-0 z-10 mt-2 w-max max-w-[260px] rounded border px-2 py-1 text-xs opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
-          style={{
-            backgroundColor: "var(--codehike-tooltip-bg)",
-            borderColor: "var(--codehike-tooltip-border)",
-            color: "var(--codehike-tooltip-text)",
-          }}
-        >
+        <span className="pointer-events-none absolute top-full left-0 z-10 mt-2 w-max max-w-[260px] rounded border border-(--codehike-tooltip-border) bg-(--codehike-tooltip-bg) px-2 py-1 text-xs text-(--codehike-tooltip-text) opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
           {content ?? query}
         </span>
       </span>
@@ -236,8 +212,7 @@ export function FootnoteNumber({ n }: { n: number }) {
   return (
     <span
       data-value={n}
-      style={{ borderColor: "var(--codehike-footnote-border)" }}
-      className="inline-flex h-4 w-4 items-center justify-center rounded-full border font-mono text-[10px] leading-none text-muted-foreground"
+      className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-(--codehike-footnote-border) font-mono text-[10px] leading-none text-muted-foreground"
     />
   );
 }

@@ -22,7 +22,8 @@ export type BlogPostCardProps = {
   locale: Locale;
   /** カード全体の記事リンクに加えて、タグを個別のリンクにする。 */
   interactive?: boolean;
-  thumbnailIconClassName?: string;
+  /** サムネイルの代替アイコンの大きさ（lg は一覧カード用）。 */
+  thumbnailIconSize?: "default" | "lg";
   layout?: "list" | "featured" | "compact";
   headingLevel?: "h2" | "h3";
 };
@@ -31,7 +32,7 @@ export function BlogPostCard({
   post,
   locale,
   interactive = false,
-  thumbnailIconClassName = "size-8 sm:size-10",
+  thumbnailIconSize = "default",
   layout = "list",
   headingLevel: Heading = "h2",
 }: BlogPostCardProps) {
@@ -68,11 +69,13 @@ export function BlogPostCard({
           <div className="flex h-full w-full items-center justify-center">
             <Icon
               icon={thumbnail.icon}
-              className={cn(
+              className={
                 layout === "featured"
                   ? "size-20 text-(--brand)"
-                  : cn(thumbnailIconClassName, "text-muted-foreground")
-              )}
+                  : thumbnailIconSize === "lg"
+                    ? "size-10 text-muted-foreground"
+                    : "size-8 text-muted-foreground sm:size-10"
+              }
               aria-hidden
             />
           </div>
@@ -83,19 +86,12 @@ export function BlogPostCard({
           {post.date && (
             <time
               dateTime={post.date}
-              className="font-mono text-[11px] tabular-nums"
+              className="font-mono text-label tabular-nums"
             >
               {formatDate(post.date, toIntlLocaleTag(locale))}
             </time>
           )}
-          {post.category && (
-            <Badge
-              variant="secondary"
-              className="font-noto bg-transparent px-0 text-[11px] font-medium text-muted-foreground"
-            >
-              {post.category}
-            </Badge>
-          )}
+          {post.category && <Badge variant="ghost">{post.category}</Badge>}
         </div>
         <Heading className="journal-card-title">
           {interactive ? (
@@ -113,6 +109,7 @@ export function BlogPostCard({
             <Tag
               key={tag}
               tag={tag}
+              variant="ghost"
               {...(interactive
                 ? {
                     href: toLocalePath(
@@ -121,10 +118,7 @@ export function BlogPostCard({
                     ),
                   }
                 : {})}
-              className={cn(
-                "font-noto min-h-8 rounded-sm bg-transparent px-0 text-[11px] font-medium text-muted-foreground",
-                interactive && "relative z-10"
-              )}
+              className={cn("min-h-8", interactive && "relative z-10")}
             />
           ))}
         </div>

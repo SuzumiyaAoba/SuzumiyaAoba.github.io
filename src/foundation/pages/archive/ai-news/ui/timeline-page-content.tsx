@@ -69,7 +69,7 @@ export function AiNewsTimelinePageContent({
           ]}
         />
         <section className="space-y-3">
-          <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
+          <p className="section-label">
             <I18nText locale={locale} ja="ツール" en="Tools" />
           </p>
           <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
@@ -121,7 +121,7 @@ export function AiNewsTimelinePageContent({
                     {showYear ? (
                       <div className="relative py-4">
                         <div className="h-px w-full bg-gradient-to-r from-transparent via-muted-foreground/70 to-transparent" />
-                        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-muted-foreground/50 bg-background px-5 py-1.5 text-sm font-semibold tracking-[0.36em] text-foreground shadow-sm">
+                        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-muted-foreground/50 bg-background px-5 py-1.5 text-sm font-semibold tracking-overlay text-foreground shadow-sm">
                           {yearLabel}
                         </div>
                       </div>
@@ -129,7 +129,7 @@ export function AiNewsTimelinePageContent({
                     <article>
                       <div className="grid gap-4 sm:grid-cols-[7.5rem_2rem_1fr] sm:items-start">
                         <div className="px-1 py-2 text-right">
-                          <p className="text-lg font-semibold tracking-[0.2em] text-muted-foreground">
+                          <p className="text-lg font-semibold tracking-eyebrow text-muted-foreground">
                             {monthDayLabel || "--.--"}
                           </p>
                         </div>
@@ -159,9 +159,7 @@ export function AiNewsTimelinePageContent({
                                 <Tag
                                   key={tag}
                                   tag={tag}
-                                  variant="outline"
-                                  className="border-muted-foreground/20 bg-transparent text-[11px] text-muted-foreground"
-                                  iconClassName="text-muted-foreground"
+                                  variant="outlineMuted"
                                 />
                               ))}
                             </div>

@@ -60,7 +60,7 @@ export function SeriesDetailPageContent({
         </section>
 
         {entries.length === 0 ? (
-          <Card className="border-transparent bg-card/40 shadow-none">
+          <Card variant="soft">
             <div className="px-5 py-6 text-sm text-muted-foreground">
               <I18nText
                 locale={locale}
@@ -73,10 +73,10 @@ export function SeriesDetailPageContent({
           <ul className="space-y-3">
             {entries.map((post) => (
               <li key={`${locale}-${post.slug}`}>
-                <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
+                <Card variant="interactive" className="group relative">
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -inset-1 scale-95 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
+                    className="pointer-events-none absolute -inset-1 scale-95 rounded-3xl bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
                   />
                   <a
                     href={toLocalePath(`/blog/post/${post.slug}`, locale)}
@@ -84,12 +84,7 @@ export function SeriesDetailPageContent({
                   >
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{post.date}</span>
-                      <Badge
-                        variant="secondary"
-                        className="bg-muted/70 text-[11px] text-muted-foreground"
-                      >
-                        {series.name}
-                      </Badge>
+                      <Badge variant="muted">{series.name}</Badge>
                     </div>
                     <div className="space-y-2">
                       <p className="text-base font-semibold text-foreground">
@@ -101,7 +96,7 @@ export function SeriesDetailPageContent({
                             <Tag
                               key={`${locale}-${tag}`}
                               tag={tag}
-                              className="bg-muted text-[11px] font-medium text-muted-foreground"
+                              variant="muted"
                             />
                           ))}
                         </div>

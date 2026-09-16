@@ -17,7 +17,6 @@ import type { ReleasePopoverControls } from "./release-popover";
 import {
   ReleaseScrollArea,
   ReleaseViewHeader,
-  releaseActionClass,
   releaseSelectClass,
 } from "./release-view-layout";
 import {
@@ -104,7 +103,7 @@ export function ReleaseTimeline({
         }
         descriptionId={descriptionId}
         aside={
-          <p className="text-[11px] leading-7 text-muted-foreground tabular-nums">
+          <p className="text-label leading-7 text-muted-foreground tabular-nums">
             {range.firstDate.replaceAll("-", ".")} —{" "}
             {range.lastDate.replaceAll("-", ".")}
           </p>
@@ -113,9 +112,8 @@ export function ReleaseTimeline({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <Button
-              size="icon"
-              variant="outline"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={
                 en ? "Scroll to earlier releases" : "過去へスクロール"
               }
@@ -124,9 +122,8 @@ export function ReleaseTimeline({
               <ArrowLeft aria-hidden="true" />
             </Button>
             <Button
-              size="icon"
-              variant="outline"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={en ? "Scroll to later releases" : "未来へスクロール"}
               onClick={() => scrollPage(1)}
             >
@@ -150,7 +147,7 @@ export function ReleaseTimeline({
             </select>
             <Button
               variant="ghost"
-              className={releaseActionClass}
+              size="xl"
               onClick={() => {
                 const date = releases.findLast((release) => release.date)?.date;
                 if (date) {
@@ -163,7 +160,7 @@ export function ReleaseTimeline({
             </Button>
             <Button
               variant="ghost"
-              className={releaseActionClass}
+              size="xl"
               onClick={() => {
                 const date = releases.find((release) => release.date)?.date;
                 if (date) {
@@ -180,9 +177,8 @@ export function ReleaseTimeline({
             className="flex min-w-0 items-center gap-1.5"
           >
             <Button
-              size="icon"
-              variant="outline"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={en ? "Zoom out" : "縮小"}
               disabled={
                 smallerZoom === undefined || plotWidth <= availableWidth
@@ -199,9 +195,8 @@ export function ReleaseTimeline({
               {Math.round((pixelsPerDay / 3) * 100)}%
             </span>
             <Button
-              size="icon"
-              variant="outline"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={en ? "Zoom in" : "拡大"}
               disabled={largerZoom === undefined}
               onClick={() => {
@@ -213,8 +208,8 @@ export function ReleaseTimeline({
               <ZoomIn aria-hidden="true" />
             </Button>
             <Button
-              variant={zoom === "fit" ? "secondary" : "outline"}
-              className={releaseActionClass}
+              variant={zoom === "fit" ? "secondary" : "flat"}
+              size="xl"
               aria-pressed={zoom === "fit"}
               onClick={() => setZoom("fit")}
             >
@@ -231,34 +226,31 @@ export function ReleaseTimeline({
         aria-describedby={descriptionId}
         tabIndex={0}
         onScroll={handleScroll}
-        style={{ scrollPaddingLeft: SERIES_WIDTH }}
-        className="isolate max-h-[72vh] scroll-pt-16 overflow-auto overscroll-x-contain focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+        style={{ "--series-w": `${SERIES_WIDTH}px` }}
+        className="isolate max-h-[72vh] scroll-pt-16 scroll-pl-(--series-w) overflow-auto overscroll-x-contain focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
       >
         <div
+          className="w-(--plot-w)"
           style={{
-            width: SERIES_WIDTH + AXIS_PADDING + endPadding + plotWidth,
+            "--plot-w": `${SERIES_WIDTH + AXIS_PADDING + endPadding + plotWidth}px`,
+            "--axis-pad": `${AXIS_PADDING}px`,
+            "--end-pad": `${endPadding}px`,
           }}
         >
           <div className="sticky top-0 z-30 flex border-b bg-muted text-xs text-muted-foreground">
-            <div
-              style={{ width: SERIES_WIDTH }}
-              className="sticky left-0 z-40 flex shrink-0 items-center border-r bg-muted px-4 py-3 font-medium text-foreground"
-            >
+            <div className="sticky left-0 z-40 flex w-(--series-w) shrink-0 items-center border-r bg-muted px-4 py-3 font-medium text-foreground">
               {en ? "Model series" : "モデル系列"}
             </div>
-            <div
-              className="relative h-16 flex-1"
-              style={{ marginLeft: AXIS_PADDING, marginRight: endPadding }}
-            >
+            <div className="relative mr-(--end-pad) ml-(--axis-pad) h-16 flex-1">
               {yearTicks.map(({ year, date: start }, index) => {
                 const end = yearTicks[index + 1]?.date ?? range.end;
                 return (
                   <div
                     key={year}
-                    className="absolute top-0 h-8 border-l pt-2 font-semibold text-foreground"
+                    className="absolute top-0 left-(--x) h-8 w-(--w) border-l pt-2 font-semibold text-foreground"
                     style={{
-                      left: `${timelinePosition(start, range)}%`,
-                      width: `${timelinePosition(end, range) - timelinePosition(start, range)}%`,
+                      "--x": `${timelinePosition(start, range)}%`,
+                      "--w": `${timelinePosition(end, range) - timelinePosition(start, range)}%`,
                     }}
                   >
                     <span className="sticky left-48 inline-block max-w-full truncate px-2 align-top">
@@ -272,8 +264,10 @@ export function ReleaseTimeline({
                 ticks.map((date) => (
                   <span
                     key={date}
-                    className="absolute top-10 pl-2"
-                    style={{ left: `${timelinePosition(date, range)}%` }}
+                    className="absolute top-10 left-(--x) pl-2"
+                    style={{
+                      "--x": `${timelinePosition(date, range)}%`,
+                    }}
                   >
                     {en
                       ? new Intl.DateTimeFormat("en", {
@@ -284,7 +278,7 @@ export function ReleaseTimeline({
                   </span>
                 ))}
               {monthStep === 12 && (
-                <div className="absolute inset-x-0 top-10 flex justify-between gap-2 text-[10px] whitespace-nowrap tabular-nums">
+                <div className="absolute inset-x-0 top-10 flex justify-between gap-2 text-mini whitespace-nowrap tabular-nums">
                   {plotWidth < 112 ? (
                     <span>{en ? "All dates" : "全期間"}</span>
                   ) : (
@@ -299,8 +293,10 @@ export function ReleaseTimeline({
               )}
               {today && today >= range.start && today < range.end && (
                 <span
-                  className="pointer-events-none absolute top-full z-10 -translate-x-1/2 rounded-b bg-teal-300 px-1.5 py-1 text-[9px] font-semibold text-teal-950"
-                  style={{ left: `${timelinePosition(today, range)}%` }}
+                  className="pointer-events-none absolute top-full left-(--x) z-10 -translate-x-1/2 rounded-b bg-ai-accent-marker px-1.5 py-1 text-micro font-semibold text-ai-accent-marker-ink"
+                  style={{
+                    "--x": `${timelinePosition(today, range)}%`,
+                  }}
                 >
                   {en ? "TODAY" : "今日"}
                 </span>
@@ -311,10 +307,7 @@ export function ReleaseTimeline({
             <Fragment key={`${release.provider}-${release.kind}-${series}`}>
               {rows[index - 1]?.release.provider !== release.provider && (
                 <div className="flex border-b bg-muted/40">
-                  <div
-                    style={{ width: SERIES_WIDTH }}
-                    className="sticky left-0 z-20 flex shrink-0 items-center gap-2.5 border-r bg-background px-4 py-2.5"
-                  >
+                  <div className="sticky left-0 z-20 flex w-(--series-w) shrink-0 items-center gap-2.5 border-r bg-background px-4 py-2.5">
                     <ProviderIcon
                       provider={release.provider}
                       className="size-6 rounded-md"
@@ -323,7 +316,7 @@ export function ReleaseTimeline({
                       {providerLabel(release.provider, locale)}
                     </span>
                   </div>
-                  <div className="flex items-center pl-6 text-[10px] font-medium text-muted-foreground">
+                  <div className="flex items-center pl-6 text-mini font-medium text-muted-foreground">
                     {
                       rows.filter(
                         (row) => row.release.provider === release.provider
@@ -334,10 +327,7 @@ export function ReleaseTimeline({
                 </div>
               )}
               <div className="group/series flex border-b transition-colors hover:bg-muted/20">
-                <div
-                  style={{ width: SERIES_WIDTH }}
-                  className="sticky left-0 z-20 flex shrink-0 flex-col justify-center gap-1.5 border-r bg-background px-4 py-3"
-                >
+                <div className="sticky left-0 z-20 flex w-(--series-w) shrink-0 flex-col justify-center gap-1.5 border-r bg-background px-4 py-3">
                   <span className="flex items-center gap-2 text-xs font-medium">
                     <ProviderIcon
                       provider={release.provider}
@@ -346,17 +336,15 @@ export function ReleaseTimeline({
                     />
                     {series}
                   </span>
-                  <span className="pl-8 text-[10px] text-muted-foreground">
+                  <span className="pl-8 text-mini text-muted-foreground">
                     {dates.size}
                     {en ? " release dates" : " 回のリリース"}
                   </span>
                 </div>
                 <div
-                  className="relative flex-1"
+                  className="relative mr-(--end-pad) ml-(--axis-pad) h-(--row-h) flex-1"
                   style={{
-                    marginLeft: AXIS_PADDING,
-                    marginRight: endPadding,
-                    height: 84 + (laneCount - 1) * 40,
+                    "--row-h": `${84 + (laneCount - 1) * 40}px`,
                   }}
                 >
                   {ticks.map((date) => (
@@ -364,26 +352,30 @@ export function ReleaseTimeline({
                       key={date}
                       aria-hidden="true"
                       className={cn(
-                        "absolute inset-y-0 w-px",
+                        "absolute inset-y-0 left-(--x) w-px",
                         date.slice(5, 7) === "01" ? "bg-border" : "bg-border/50"
                       )}
-                      style={{ left: `${timelinePosition(date, range)}%` }}
+                      style={{
+                        "--x": `${timelinePosition(date, range)}%`,
+                      }}
                     />
                   ))}
                   {selectedDate >= range.start && selectedDate < range.end && (
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 w-px bg-teal-700/30 dark:bg-teal-300/40"
+                      className="pointer-events-none absolute inset-y-0 left-(--x) w-px bg-ai-accent-line"
                       style={{
-                        left: `${timelinePosition(selectedDate, range)}%`,
+                        "--x": `${timelinePosition(selectedDate, range)}%`,
                       }}
                     />
                   )}
                   {today && today >= range.start && today < range.end && (
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 border-l border-dashed border-teal-600/50"
-                      style={{ left: `${timelinePosition(today, range)}%` }}
+                      className="pointer-events-none absolute inset-y-0 left-(--x) border-l border-dashed border-ai-accent/50"
+                      style={{
+                        "--x": `${timelinePosition(today, range)}%`,
+                      }}
                     />
                   )}
                   {points.map(({ date, sameDay, lane }) => {
@@ -407,10 +399,10 @@ export function ReleaseTimeline({
                           <div
                             aria-hidden="true"
                             title={`${interval.previousDate} → ${date}: ${interval.days}${en ? " days" : "日"}`}
-                            className="absolute top-10 h-px"
+                            className="absolute top-10 left-(--x) h-px w-(--w)"
                             style={{
-                              left: `${start}%`,
-                              width: `${end - start}%`,
+                              "--x": `${start}%`,
+                              "--w": `${end - start}%`,
                             }}
                           >
                             <span
@@ -420,7 +412,7 @@ export function ReleaseTimeline({
                               )}
                             />
                             {interval.days * pixelsPerDay > 56 && (
-                              <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-border/60 bg-background/95 px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-muted-foreground tabular-nums">
+                              <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-border/60 bg-background/95 px-2 py-0.5 text-mini font-medium whitespace-nowrap text-muted-foreground tabular-nums">
                                 {interval.days}
                                 {en ? "d" : "日"}
                               </span>

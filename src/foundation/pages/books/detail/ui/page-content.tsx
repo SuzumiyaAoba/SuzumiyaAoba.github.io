@@ -49,9 +49,7 @@ export function BookDetailPageContent({
         ) : null}
 
         <nav aria-label="目次" className="space-y-4">
-          <h2 className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
-            目次
-          </h2>
+          <h2 className="section-label">目次</h2>
           <div className="space-y-5">
             {chapters.map((ch) => (
               <section key={ch.chapter} className="space-y-2">

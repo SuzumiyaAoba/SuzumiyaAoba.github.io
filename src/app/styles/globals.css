@@ -40,6 +40,46 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-brand: var(--brand);
+  --color-info: var(--info);
+  --color-info-surface: var(--info-surface);
+  --color-info-border: var(--info-border);
+  --color-info-ink: var(--info-ink);
+  --color-success: var(--success);
+  --color-sunday: var(--sunday);
+  --color-column-surface: var(--column-surface);
+  --color-column-ink: var(--column-ink);
+  --color-ai-accent: var(--ai-accent);
+  --color-ai-accent-soft: var(--ai-accent-soft);
+  --color-ai-accent-ink: var(--ai-accent-ink);
+  --color-ai-accent-on-solid: var(--ai-accent-on-solid);
+  --color-ai-accent-marker: var(--ai-accent-marker);
+  --color-ai-accent-marker-ink: var(--ai-accent-marker-ink);
+  --color-ai-accent-line: var(--ai-accent-line);
+  --color-provider-openai: var(--provider-openai);
+  --color-provider-openai-soft: var(--provider-openai-soft);
+  --color-provider-openai-ink: var(--provider-openai-ink);
+  --color-provider-openai-border: var(--provider-openai-border);
+  --color-provider-anthropic: var(--provider-anthropic);
+  --color-provider-anthropic-soft: var(--provider-anthropic-soft);
+  --color-provider-anthropic-ink: var(--provider-anthropic-ink);
+  --color-provider-anthropic-border: var(--provider-anthropic-border);
+  --color-provider-google: var(--provider-google);
+  --color-provider-google-soft: var(--provider-google-soft);
+  --color-provider-google-ink: var(--provider-google-ink);
+  --color-provider-google-border: var(--provider-google-border);
+  --color-provider-deepseek: var(--provider-deepseek);
+  --color-provider-deepseek-soft: var(--provider-deepseek-soft);
+  --color-provider-deepseek-ink: var(--provider-deepseek-ink);
+  --color-provider-deepseek-border: var(--provider-deepseek-border);
+  --color-provider-other: var(--provider-other);
+  --color-provider-other-soft: var(--provider-other-soft);
+  --color-provider-other-ink: var(--provider-other-ink);
+  --color-provider-other-border: var(--provider-other-border);
+  --color-bit-muted: var(--bit-muted);
+  --color-bit-high: var(--bit-high);
+  --color-bit-low: var(--bit-low);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -47,6 +87,40 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+}
+
+@theme {
+  --text-micro: 0.5625rem;
+  --text-mini: 0.625rem;
+  --text-label: 0.6875rem;
+  --tracking-eyebrow: 0.24em;
+  --tracking-overlay: 0.36em;
+}
+
+/* 「セクション見出し」の小さなラベル表記（tracking-eyebrow + uppercase）をまとめる。 */
+@utility section-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* CodeHike の mark 注釈。境界線・背景は --mark-color から color-mix で生成する。 */
+@utility ch-mark-line {
+  border-left-width: 2px;
+  border-color: color-mix(in oklch, var(--mark-color) 60%, transparent);
+  background-color: color-mix(in oklch, var(--mark-color) 12%, transparent);
+}
+
+@utility ch-mark-inline {
+  outline: 1px solid color-mix(in oklch, var(--mark-color) 55%, transparent);
+  background-color: color-mix(in oklch, var(--mark-color) 16%, transparent);
+}
+
+/* TOC のレール SVG をマスクとして使う。マスク画像は --toc-mask で渡す。 */
+@utility toc-mask {
+  mask-image: var(--toc-mask);
 }
 
 /* 商品カードなどの既存クラスにも共通の sans-serif を適用する。 */
@@ -116,6 +190,54 @@
   --codehike-footnote-border: var(--muted-foreground);
   --codehike-diff-add: oklch(0.78 0.18 142);
   --codehike-diff-remove: oklch(0.7 0.19 27);
+
+  /* destructive 背景上の文字色 */
+  --destructive-foreground: #ffffff;
+  /* 情報系アクセント（Amazon 案内・カレンダー土曜・凡例ホバー等） */
+  --info: #2563eb;
+  --info-surface: rgb(239 246 255 / 70%);
+  --info-border: rgb(191 219 254 / 70%);
+  --info-ink: #1e3a8a;
+  /* 完了・正常系 */
+  --success: #059669;
+  /* カレンダー日曜・祝日 */
+  --sunday: #e11d48;
+  /* MDX Column のノート風ボックス */
+  --column-surface: rgb(255 251 235 / 60%);
+  --column-ink: #78350f;
+  /* AIニュースのアクセント（teal）: 今日・選択・間隔の強調 */
+  --ai-accent: #0d9488;
+  --ai-accent-soft: rgb(240 253 250 / 60%);
+  --ai-accent-ink: #115e59;
+  --ai-accent-on-solid: #ffffff;
+  --ai-accent-marker: #5eead4;
+  --ai-accent-marker-ink: #134e4a;
+  --ai-accent-line: rgb(15 118 110 / 30%);
+  /* AIニュースのプロバイダー色 */
+  --provider-openai: #059669;
+  --provider-openai-soft: #ecfdf5;
+  --provider-openai-ink: #047857;
+  --provider-openai-border: #a7f3d0;
+  --provider-anthropic: #ea580c;
+  --provider-anthropic-soft: #fff7ed;
+  --provider-anthropic-ink: #c2410c;
+  --provider-anthropic-border: #fed7aa;
+  --provider-google: #2563eb;
+  --provider-google-soft: #eff6ff;
+  --provider-google-ink: #1d4ed8;
+  --provider-google-border: #bfdbfe;
+  --provider-deepseek: #7c3aed;
+  --provider-deepseek-soft: #f5f3ff;
+  --provider-deepseek-ink: #6d28d9;
+  --provider-deepseek-border: #ddd6fe;
+  --provider-other: #64748b;
+  --provider-other-soft: #f1f5f9;
+  --provider-other-ink: #334155;
+  --provider-other-border: #e2e8f0;
+  /* ASCII コード表のビット桁色 */
+  --bit-muted: #94a3b8;
+  --bit-high: #16a34a;
+  --bit-low: #0284c7;
 
   /* CodeHike github-from-css (Light) */
   --ch-0: light;
@@ -192,6 +314,46 @@
   --codehike-footnote-border: var(--muted-foreground);
   --codehike-diff-add: oklch(0.74 0.17 142);
   --codehike-diff-remove: oklch(0.65 0.2 27);
+
+  --destructive-foreground: #ffffff;
+  --info: #60a5fa;
+  --info-surface: rgb(23 37 84 / 30%);
+  --info-border: rgb(30 58 138 / 30%);
+  --info-ink: #bfdbfe;
+  --success: #34d399;
+  --sunday: #fb7185;
+  --column-surface: rgb(69 26 3 / 30%);
+  --column-ink: #fde68a;
+  --ai-accent: #2dd4bf;
+  --ai-accent-soft: rgb(4 47 46 / 40%);
+  --ai-accent-ink: #5eead4;
+  --ai-accent-on-solid: #134e4a;
+  --ai-accent-marker: #5eead4;
+  --ai-accent-marker-ink: #134e4a;
+  --ai-accent-line: rgb(94 234 212 / 40%);
+  --provider-openai: #34d399;
+  --provider-openai-soft: #022c22;
+  --provider-openai-ink: #6ee7b7;
+  --provider-openai-border: #065f46;
+  --provider-anthropic: #fb923c;
+  --provider-anthropic-soft: #431407;
+  --provider-anthropic-ink: #fdba74;
+  --provider-anthropic-border: #9a3412;
+  --provider-google: #60a5fa;
+  --provider-google-soft: #172554;
+  --provider-google-ink: #93c5fd;
+  --provider-google-border: #1e40af;
+  --provider-deepseek: #a78bfa;
+  --provider-deepseek-soft: #2e1065;
+  --provider-deepseek-ink: #c4b5fd;
+  --provider-deepseek-border: #5b21b6;
+  --provider-other: #94a3b8;
+  --provider-other-soft: #1e293b;
+  --provider-other-ink: #cbd5e1;
+  --provider-other-border: #334155;
+  --bit-muted: #cbd5e1;
+  --bit-high: #4ade80;
+  --bit-low: #38bdf8;
 
   /* CodeHike github-from-css (Dark) */
   --ch-0: dark;

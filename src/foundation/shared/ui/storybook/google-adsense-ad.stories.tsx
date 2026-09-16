@@ -16,18 +16,9 @@ type Story = StoryObj<typeof GoogleAdsenseAd>;
 
 export const Default: Story = {
   render: (args) => (
-    <div
-      style={{
-        width: "300px",
-        height: "250px",
-        background: "#f0f0f0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className="relative flex h-62.5 w-75 items-center justify-center bg-muted">
       <GoogleAdsenseAd {...args} />
-      <p style={{ position: "absolute" }}>Ad Placeholder</p>
+      <p className="absolute">Ad Placeholder</p>
     </div>
   ),
 };

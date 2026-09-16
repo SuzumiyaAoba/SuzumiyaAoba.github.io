@@ -158,7 +158,7 @@ export const LineChart: React.FC<Props> = ({
             {group.name && (
               <button
                 type="button"
-                className="mb-2 cursor-pointer border-none bg-transparent p-0 text-left text-sm font-semibold hover:text-blue-600"
+                className="mb-2 cursor-pointer border-none bg-transparent p-0 text-left text-sm font-semibold hover:text-info"
                 onClick={() => toggleGroup(group.metrics)}
               >
                 {group.name}

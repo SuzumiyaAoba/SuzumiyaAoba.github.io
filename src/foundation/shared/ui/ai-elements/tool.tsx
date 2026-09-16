@@ -69,7 +69,7 @@ export function ToolHeader({
             state === "output-error"
               ? "bg-destructive/10 text-destructive"
               : state === "output-available"
-                ? "bg-emerald-500/10 text-emerald-600"
+                ? "bg-success/10 text-success"
                 : "bg-muted text-muted-foreground"
           )}
         >

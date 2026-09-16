@@ -328,8 +328,7 @@ export function SimulationChart({
   return (
     <div
       ref={chartContainerRef}
-      className="relative mb-8 rounded-md border p-4"
-      style={{ backgroundColor: "var(--card)" }}
+      className="relative mb-8 rounded-md border bg-card p-4"
     >
       <div className="mb-3 text-sm text-foreground/70">
         {t("推移グラフ", "Trend chart")}
@@ -356,8 +355,8 @@ export function SimulationChart({
               }}
             >
               <span
-                className="inline-block h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: scenario.color }}
+                className="inline-block h-2.5 w-2.5 rounded-full bg-(--dot-color)"
+                style={{ "--dot-color": scenario.color }}
               />
               <span>{scenario.label}</span>
             </button>
@@ -397,26 +396,24 @@ export function SimulationChart({
       {tooltip && (
         <div
           ref={tooltipRef}
-          className="pointer-events-none absolute rounded-md border px-3 py-2 text-xs shadow"
+          className="pointer-events-none absolute top-(--tip-y) left-(--tip-x) rounded-md border border-border bg-card px-3 py-2 text-xs shadow"
           style={{
-            left: (() => {
+            "--tip-x": `${(() => {
               const container = chartContainerRef.current;
               if (!container) {
                 return tooltip.x + 12;
               }
               const maxLeft = container.clientWidth - tooltipSize.width - 8;
               return Math.max(8, Math.min(tooltip.x + 12, maxLeft));
-            })(),
-            top: (() => {
+            })()}px`,
+            "--tip-y": `${(() => {
               const container = chartContainerRef.current;
               if (!container) {
                 return tooltip.y + 12;
               }
               const maxTop = container.clientHeight - tooltipSize.height - 8;
               return Math.max(8, Math.min(tooltip.y + 12, maxTop));
-            })(),
-            backgroundColor: "var(--card)",
-            borderColor: "var(--border)",
+            })()}px`,
           }}
         >
           <div className="mb-1">

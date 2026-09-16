@@ -54,14 +54,14 @@ export function SearchPanel({ locale }: SearchPanelProps) {
           placeholder={t("キーワードで検索...", "Search by keyword...")}
           aria-label={t("検索キーワード", "Search keyword")}
           disabled={!pagefindLoaded}
-          className="h-12 pr-14 pl-12 [&::-webkit-search-cancel-button]:appearance-none"
+          variant="search"
         />
         {query && (
           <Button
             type="button"
             variant="ghost"
-            size="icon"
-            className="absolute top-1/2 right-1.5 size-11 -translate-y-1/2 rounded-lg"
+            size="icon-xl"
+            className="absolute top-1/2 right-1.5 -translate-y-1/2"
             aria-label={t("検索をクリア", "Clear search")}
             onClick={() => {
               void setQuery("");
@@ -74,7 +74,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
       </search>
 
       {pagefindErrorKey ? (
-        <Card className="border-transparent bg-muted/40 shadow-none">
+        <Card variant="muted">
           <div className="space-y-2 px-4 py-4 text-sm text-muted-foreground">
             <p>
               {pagefindErrorKey === "notLoaded"
@@ -114,10 +114,7 @@ export function SearchPanel({ locale }: SearchPanelProps) {
         ) : results.length > 0 ? (
           <div className="space-y-4">
             <output className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Badge
-                variant="secondary"
-                className="bg-muted text-xs text-muted-foreground"
-              >
+              <Badge variant="muted">
                 {locale === "en"
                   ? `${results.length} results`
                   : `${results.length} 件`}

@@ -123,14 +123,15 @@ export function BookSectionPageContent({
 
           {/* 前後節ナビ */}
           <div className="mt-8 space-y-5">
-            <Separator className="bg-border/40" />
+            <Separator variant="muted" />
             <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {prev ? (
                 <div className="flex min-w-0 flex-1">
                   <Button
                     asChild
-                    variant="ghost"
-                    className="h-auto w-full min-w-0 flex-col items-start gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                    variant="nav"
+                    size="nav"
+                    className="w-full min-w-0 flex-col items-start whitespace-normal"
                   >
                     <a
                       href={toLocalePath(
@@ -159,8 +160,9 @@ export function BookSectionPageContent({
                 <div className="flex min-w-0 flex-1 justify-end">
                   <Button
                     asChild
-                    variant="ghost"
-                    className="h-auto w-full min-w-0 flex-col items-end gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                    variant="nav"
+                    size="nav"
+                    className="w-full min-w-0 flex-col items-end whitespace-normal"
                   >
                     <a
                       href={toLocalePath(

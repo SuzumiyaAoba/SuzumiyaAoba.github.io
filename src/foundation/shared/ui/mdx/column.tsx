@@ -12,12 +12,9 @@ export type ColumnProps = PropsWithChildren<{
 export function Column({ title, children, className }: ColumnProps) {
   return (
     <aside
-      className={cn(
-        "my-6 rounded-md bg-amber-50/60 px-4 py-3 dark:bg-amber-950/30",
-        className
-      )}
+      className={cn("my-6 rounded-md bg-column-surface px-4 py-3", className)}
     >
-      <div className="flex items-center gap-2 font-semibold text-amber-900 dark:text-amber-200">
+      <div className="flex items-center gap-2 font-semibold text-column-ink">
         <Icon icon="lucide:book-open" className="size-4" />
         <span className="text-xs tracking-wider uppercase">Column</span>
         <span className="flex-1">{title}</span>

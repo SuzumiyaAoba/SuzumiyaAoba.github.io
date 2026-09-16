@@ -25,8 +25,7 @@ export default defineConfig({
     jsPlugins: [{ name: "shadcn", specifier: "@shadcn/lint" }],
     options: {
       typeAware: true,
-      // @shadcn/lint のデザイン規約系ルールは段階適用のため warn で運用し、警告は失敗にしない。
-      denyWarnings: false,
+      denyWarnings: true,
       reportUnusedDisableDirectives: "error",
     },
     env: { browser: true, node: true },
@@ -173,15 +172,33 @@ export default defineConfig({
       "jsdoc/require-returns-type": "off",
       // ultracite/oxlint/shadcn プリセット相当。@shadcn/lint でデザインシステムの
       // クラス使用を検査する。allow: ["layout"] でページ側のレイアウト調整は許容する。
-      // デザイン規約系は既存コードへの段階適用のため warn から始める。
-      "shadcn/no-arbitrary-values": ["warn", { allow: ["layout"] }],
-      "shadcn/no-inline-styles": "warn",
-      "shadcn/no-raw-colors": "warn",
-      "shadcn/no-restyle": ["warn", { allow: ["layout"] }],
+      "shadcn/no-arbitrary-values": ["error", { allow: ["layout"] }],
+      "shadcn/no-inline-styles": "error",
+      // text-micro/mini/label は globals.css の --text-* で宣言したフォントサイズ
+      // トークン。text-* は色ユーティリティと名前空間を共有するため allow で除外する。
+      "shadcn/no-raw-colors": [
+        "error",
+        { allow: ["text-micro", "text-mini", "text-label"] },
+      ],
+      "shadcn/no-restyle": [
+        "error",
+        {
+          allow: ["layout"],
+          contracts: [
+            // Icon は任意の SVG を描く生プリミティブで、呼び出し側の色指定が API の一部。
+            { pattern: "^Icon$", allow: ["layout", "color"] },
+            // BackLink はリンク用のユーティリティで、配置・余白・文字サイズを呼び出し側が決める。
+            {
+              pattern: "^BackLink$",
+              allow: ["layout", "spacing", "typography"],
+            },
+          ],
+        },
+      ],
       // Tailwind が生成しないクラスは実バグ（タイポ・死んだクラス）のため error を維持。
       // adsbygoogle は Google AdSense が実行時に付与するクラス。
       "shadcn/no-unknown-classes": ["error", { allow: ["adsbygoogle"] }],
-      "shadcn/require-static-classes": "warn",
+      "shadcn/require-static-classes": "error",
     },
     overrides: [
       {
@@ -290,6 +307,11 @@ export default defineConfig({
       {
         // Satori による OGP 画像描画はインラインスタイルが必須。
         files: ["**/*opengraph-image.tsx", "**/*twitter-image.tsx"],
+        rules: { "shadcn/no-inline-styles": "off" },
+      },
+      {
+        // Google AdSense の <ins> は公式実装どおり style 属性（display など）を渡す必要がある。
+        files: ["src/foundation/shared/ui/google-adsense-ad.tsx"],
         rules: { "shadcn/no-inline-styles": "off" },
       },
       {

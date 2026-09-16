@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { ArrowLeft, ArrowRight, CornerUpLeft } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
-import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { shiftMonth } from "../model/release-calendar";
 import type { Release } from "../model/release-calendar";
@@ -9,11 +8,7 @@ import type { ReleaseTimelineRange } from "../model/release-timeline";
 import { ReleaseCalendarMonth } from "./release-calendar-month";
 import { ReleaseDatePicker } from "./release-date-picker";
 import type { ReleasePopoverControls } from "./release-popover";
-import {
-  ReleaseScrollArea,
-  ReleaseViewHeader,
-  releaseActionClass,
-} from "./release-view-layout";
+import { ReleaseScrollArea, ReleaseViewHeader } from "./release-view-layout";
 import {
   CALENDAR_MONTH_GAP,
   useReleaseCalendarNavigation,
@@ -84,18 +79,16 @@ export function ReleaseCalendarStrip({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none">
             <Button
-              variant="outline"
-              size="icon"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={en ? "Previous month" : "前の月"}
               onClick={() => jumpToMonth(shiftMonth(visibleMonth, -1))}
             >
               <ArrowLeft aria-hidden="true" />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
-              className="size-10 rounded-lg shadow-none"
+              variant="flat"
+              size="icon-lg"
               aria-label={en ? "Next month" : "次の月"}
               onClick={() => jumpToMonth(shiftMonth(visibleMonth, 1))}
             >
@@ -111,17 +104,13 @@ export function ReleaseCalendarStrip({
             />
           </div>
           <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-            <Button
-              variant="outline"
-              className={releaseActionClass}
-              onClick={() => jumpTo(today)}
-            >
+            <Button variant="flat" size="xl" onClick={() => jumpTo(today)}>
               {en ? "Today" : "今日に戻る"}
             </Button>
             {previousDate && (
               <Button
-                variant="ghost"
-                className={cn(releaseActionClass, "text-muted-foreground")}
+                variant="subtle"
+                size="xl"
                 onClick={() => jumpTo(previousDate)}
               >
                 <CornerUpLeft className="size-3.5" aria-hidden="true" />
@@ -141,14 +130,16 @@ export function ReleaseCalendarStrip({
         }
         tabIndex={0}
         onScroll={handleScroll}
-        className="overflow-x-auto overscroll-x-contain bg-muted/20 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-        style={{ scrollPaddingInline: CALENDAR_MONTH_GAP }}
+        className="scroll-px-(--strip-gap) overflow-x-auto overscroll-x-contain bg-muted/20 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+        style={{
+          "--strip-gap": `${CALENDAR_MONTH_GAP}px`,
+        }}
       >
         <div
-          className="flex items-stretch gap-4 py-4"
+          className="flex w-(--strip-w) items-stretch gap-4 py-4 pl-(--strip-pad)"
           style={{
-            width: calendar.total * monthStep + CALENDAR_MONTH_GAP,
-            paddingLeft: calendar.first * monthStep + CALENDAR_MONTH_GAP,
+            "--strip-w": `${calendar.total * monthStep + CALENDAR_MONTH_GAP}px`,
+            "--strip-pad": `${calendar.first * monthStep + CALENDAR_MONTH_GAP}px`,
           }}
         >
           {calendar.months.map((month) => (
@@ -167,7 +158,7 @@ export function ReleaseCalendarStrip({
           ))}
         </div>
       </ReleaseScrollArea>
-      <div className="flex items-center justify-between gap-2 border-t px-4 py-3 text-[10px] text-muted-foreground sm:px-6 sm:text-[11px]">
+      <div className="flex items-center justify-between gap-2 border-t px-4 py-3 text-mini text-muted-foreground sm:px-6 sm:text-label">
         <span className="shrink-0 whitespace-nowrap">
           ← {en ? "Past" : "過去"}
         </span>

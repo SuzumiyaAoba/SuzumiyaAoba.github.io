@@ -36,7 +36,7 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
               />
             </p>
           </div>
-          <Card className="border-transparent bg-card/40 shadow-none">
+          <Card variant="soft">
             <BackLink
               locale={locale}
               href="/"

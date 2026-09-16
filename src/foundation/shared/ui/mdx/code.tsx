@@ -56,7 +56,7 @@ export function Code({ codeblock }: CodeProps) {
       {displayMeta ? (
         <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
           <span className="truncate">{displayMeta}</span>
-          <span className="text-[10px] tracking-[0.12em] uppercase">
+          <span className="text-mini tracking-widest uppercase">
             {codeblock.lang}
           </span>
         </div>
@@ -70,10 +70,10 @@ export function Code({ codeblock }: CodeProps) {
         <div
           aria-hidden
           className={cn(
-            "my-4 rounded-lg bg-muted",
+            "my-4 h-(--placeholder-h) rounded-lg bg-muted",
             displayMeta ? "mt-0 rounded-t-none" : undefined
           )}
-          style={{ height: `${placeholderHeight}rem` }}
+          style={{ "--placeholder-h": `${placeholderHeight}rem` }}
         />
       )}
       {notes.length > 0 ? (

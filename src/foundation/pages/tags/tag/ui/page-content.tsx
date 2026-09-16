@@ -53,10 +53,7 @@ export function TagDetailPageContent({
             <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
               #{tag}
             </h1>
-            <Badge
-              variant="secondary"
-              className="bg-muted text-xs font-medium text-muted-foreground"
-            >
+            <Badge variant="muted">
               <I18nText
                 locale={locale}
                 ja={`${entries.length} 件`}
@@ -72,7 +69,7 @@ export function TagDetailPageContent({
               <BlogPostCard
                 post={post}
                 locale={locale}
-                thumbnailIconClassName="size-10"
+                thumbnailIconSize="lg"
               />
             </li>
           ))}

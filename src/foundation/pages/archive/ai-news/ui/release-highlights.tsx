@@ -22,10 +22,7 @@ export function ReleaseHighlights({
   return (
     <div className="grid divide-y border-b bg-muted/20 sm:grid-cols-[auto_minmax(0,1fr)] sm:divide-x sm:divide-y-0">
       <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
-        <Activity
-          className="size-4 text-teal-700 dark:text-teal-300"
-          aria-hidden="true"
-        />
+        <Activity className="size-4 text-ai-accent-ink" aria-hidden="true" />
         <span className="text-xs text-muted-foreground">
           {en ? "Last 30 days" : "直近30日"}
         </span>
@@ -38,7 +35,7 @@ export function ReleaseHighlights({
           </span>
         </span>
         <span
-          className="text-[11px] text-muted-foreground"
+          className="text-label text-muted-foreground"
           title={
             en ? "Compared with the previous 30 days" : "その前の30日との比較"
           }
@@ -59,7 +56,7 @@ export function ReleaseHighlights({
           }
           className="group flex min-w-0 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-muted/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-6"
         >
-          <span className="shrink-0 text-[11px] text-muted-foreground">
+          <span className="shrink-0 text-label text-muted-foreground">
             {en ? "Latest" : "最新"}
           </span>
           <ProviderIcon
@@ -71,12 +68,12 @@ export function ReleaseHighlights({
           </span>
           <time
             dateTime={latest.date}
-            className="shrink-0 text-[10px] text-muted-foreground tabular-nums sm:text-xs"
+            className="shrink-0 text-mini text-muted-foreground tabular-nums sm:text-xs"
           >
             {latest.date.replaceAll("-", ".")}
           </time>
           <ArrowUpRight
-            className="size-4 shrink-0 text-teal-700 dark:text-teal-300"
+            className="size-4 shrink-0 text-ai-accent-ink"
             aria-hidden="true"
           />
         </button>
@@ -133,7 +130,7 @@ export function ProviderFilters({
             className={cn(
               "relative flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg border px-1 py-2.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring lg:flex-row lg:justify-start lg:gap-2 lg:px-3",
               active
-                ? "border-teal-600 bg-teal-50/60 text-teal-900 dark:border-teal-500 dark:bg-teal-950/40 dark:text-teal-100"
+                ? "border-ai-accent bg-ai-accent-soft text-ai-accent-ink"
                 : "border-transparent bg-muted/30 hover:border-border hover:bg-muted/50"
             )}
           >
@@ -150,14 +147,14 @@ export function ProviderFilters({
                 />
               </span>
             )}
-            <span className="min-w-0 truncate text-[9px] font-medium sm:text-xs">
+            <span className="min-w-0 truncate text-micro font-medium sm:text-xs">
               {provider
                 ? providerLabel(provider, locale)
                 : en
                   ? "All"
                   : "すべて"}
             </span>
-            <span className="ml-auto hidden shrink-0 items-center gap-1.5 text-[11px] whitespace-nowrap text-muted-foreground tabular-nums xl:flex">
+            <span className="ml-auto hidden shrink-0 items-center gap-1.5 text-label whitespace-nowrap text-muted-foreground tabular-nums xl:flex">
               {active && <Check className="size-3" aria-hidden="true" />}
               {count}
             </span>

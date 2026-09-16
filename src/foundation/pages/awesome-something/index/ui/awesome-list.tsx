@@ -121,6 +121,7 @@ export function AwesomeList({
               ref={inputRef}
               id={searchId}
               type="search"
+              variant="underline"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={
@@ -128,7 +129,6 @@ export function AwesomeList({
                   ? "Search by name, category, or tag…"
                   : "名称・カテゴリ・タグで検索…"
               }
-              className="rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0"
             />
           </search>
           <div className={hasFilters ? "flex items-center gap-4" : "sr-only"}>
@@ -192,10 +192,7 @@ export function AwesomeList({
               onClick={() => setSelectedTag(null)}
               className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
-              <Tag
-                tag={selectedTag}
-                className="min-w-0 border-0 bg-transparent p-0 text-inherit [&>span]:min-w-0 [&>span]:break-words"
-              />
+              <Tag tag={selectedTag} variant="bare" className="min-w-0" />
               <X className="size-3.5 shrink-0" aria-hidden="true" />
             </button>
           </div>
@@ -288,7 +285,8 @@ export function AwesomeList({
                                 >
                                   <Tag
                                     tag={tag}
-                                    className="max-w-full bg-muted py-1 text-[11px] font-medium text-muted-foreground group-hover:bg-accent group-hover:text-accent-foreground group-aria-pressed:bg-foreground group-aria-pressed:text-background [&>span]:min-w-0 [&>span]:break-words"
+                                    variant="toggle"
+                                    className="max-w-full"
                                   />
                                 </button>
                               </li>

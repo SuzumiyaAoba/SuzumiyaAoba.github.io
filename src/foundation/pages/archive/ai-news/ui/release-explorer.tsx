@@ -149,6 +149,7 @@ export function ReleaseExplorer({
                 <Input
                   id={`${id}-search`}
                   type="search"
+                  variant="icon"
                   value={filters.query}
                   onChange={(event) =>
                     updateFilters({ query: event.target.value })
@@ -158,7 +159,6 @@ export function ReleaseExplorer({
                       ? "Find a model, series, or provider…"
                       : "モデル名・系列で検索…"
                   }
-                  className="h-11 rounded-lg bg-background pl-10 shadow-none"
                 />
               </search>
               <select
@@ -225,7 +225,7 @@ export function ReleaseExplorer({
                     className={cn(
                       "relative flex h-11 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4 sm:text-sm",
                       view === value
-                        ? "bg-background font-semibold text-teal-800 shadow-sm dark:text-teal-200"
+                        ? "bg-background font-semibold text-ai-accent-ink shadow-sm"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -252,7 +252,8 @@ export function ReleaseExplorer({
                 {hasFilters && (
                   <Button
                     variant="ghost"
-                    className="h-11 gap-1 px-2 text-xs"
+                    size="xs"
+                    className="h-11"
                     onClick={() => updateFilters(INITIAL_FILTERS)}
                     aria-label={en ? "Clear filters" : "絞り込みを解除"}
                   >
@@ -325,8 +326,9 @@ export function ReleaseExplorer({
                     : `日付が未詳の ${filtered.length - dated.length} 件は、一覧で確認できます。`}
                 </p>
                 <Button
-                  variant="outline"
-                  className="rounded-lg text-xs"
+                  variant="flat"
+                  size="xs"
+                  className="h-9"
                   onClick={() => {
                     popover.dismiss();
                     setView("list");
@@ -339,7 +341,7 @@ export function ReleaseExplorer({
           </div>
         )}
       </div>
-      <p className="px-1 text-[11px] leading-6 text-muted-foreground">
+      <p className="px-1 text-label leading-6 text-muted-foreground">
         {en
           ? "Intervals compare recorded dates within the same series, including previews, limited access, and general availability. One announcement counts as one entry. This is a curated history, not an exhaustive release log."
           : "間隔は、同じ系列の記録済みリリース日を比較した日数です。プレビュー・限定提供・一般提供を含み、複数モデルの同時発表は1件として数えています。すべてのリリースを網羅した記録ではありません。"}

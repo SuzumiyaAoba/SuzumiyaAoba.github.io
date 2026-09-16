@@ -65,9 +65,7 @@ export function BlogPostList({
       return null;
     }
     return (
-      <Card
-        className={cn("border-transparent bg-card/40 shadow-none", className)}
-      >
+      <Card variant="soft" className={className}>
         <div className="px-5 py-6 text-sm text-muted-foreground">
           <I18nText locale={locale} ja={emptyMessage.ja} en={emptyMessage.en} />
         </div>
@@ -130,10 +128,10 @@ export function BlogPostList({
 
         return (
           <li key={postSlug}>
-            <Card className="group relative border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20">
+            <Card variant="interactive" className="group relative">
               <span
                 aria-hidden
-                className="pointer-events-none absolute -inset-1 scale-95 rounded-[18px] bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
+                className="pointer-events-none absolute -inset-1 scale-95 rounded-3xl bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
               />
               <a
                 href={toLocalePath(`/blog/post/${postSlug}`, locale)}
@@ -172,12 +170,7 @@ export function BlogPostList({
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <span>{formatDate(post.frontmatter.date, dateLocale)}</span>
                     {category ? (
-                      <Badge
-                        variant="secondary"
-                        className="bg-muted/70 text-[11px] text-muted-foreground"
-                      >
-                        {category}
-                      </Badge>
+                      <Badge variant="muted">{category}</Badge>
                     ) : null}
                   </div>
                   <div className="space-y-2">
@@ -190,6 +183,7 @@ export function BlogPostList({
                           <Tag
                             key={tag}
                             tag={tag}
+                            variant="muted"
                             {...(withTagLinks
                               ? {
                                   href: toLocalePath(
@@ -198,7 +192,6 @@ export function BlogPostList({
                                   ),
                                 }
                               : {})}
-                            className="bg-muted text-[11px] font-medium text-muted-foreground"
                           />
                         ))}
                       </div>

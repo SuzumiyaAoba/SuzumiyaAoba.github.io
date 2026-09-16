@@ -80,7 +80,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         <EntryCardList
           items={items}
           emptyState={
-            <Card className="border-transparent bg-card/40 shadow-none">
+            <Card variant="soft">
               <div className="px-5 py-6 text-sm text-muted-foreground">
                 <I18nText
                   locale={locale}

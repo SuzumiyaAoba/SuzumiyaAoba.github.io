@@ -34,7 +34,7 @@ export function PrivacyPolicyPageContent({
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-3">
-          <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
+          <p className="section-label">
             <I18nText locale={locale} ja="プライバシー" en="Privacy Policy" />
           </p>
           <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">

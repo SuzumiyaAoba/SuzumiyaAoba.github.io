@@ -28,14 +28,13 @@ export function MetricLegend({
         type="button"
         aria-pressed={isActive}
         onClick={() => onToggle(metric)}
-        className="flex cursor-pointer items-center gap-2 border-none bg-transparent p-0"
-        style={{ opacity: isActive ? 1 : 0.3 }}
+        className="flex cursor-pointer items-center gap-2 border-none bg-transparent p-0 opacity-30 aria-pressed:opacity-100"
       >
         <div
-          className="h-4 w-4"
+          className="h-4 w-4 bg-(--legend-color) opacity-(--legend-opacity)"
           style={{
-            backgroundColor: colors[index % colors.length],
-            opacity: colorOpacity,
+            "--legend-color": colors[index % colors.length] ?? "currentColor",
+            "--legend-opacity": colorOpacity ?? 1,
           }}
         />
         <span className="text-sm">{getLabel(metric)}</span>

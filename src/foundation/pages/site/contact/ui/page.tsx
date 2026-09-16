@@ -32,7 +32,7 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
         <Breadcrumbs items={breadcrumbItems} />
         <section className="space-y-4">
           <div className="space-y-2">
-            <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
+            <p className="section-label">
               <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
             </p>
             <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">

@@ -132,20 +132,13 @@ export function BlogPostPageContent({
             {postTitle}
           </h1>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            {category ? (
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                {category}
-              </Badge>
-            ) : null}
+            {category ? <Badge variant="muted">{category}</Badge> : null}
             {series ? (
               <a
                 href={toLocalePath(`/series/${series.slug}`, locale)}
                 className="inline-flex"
               >
-                <Badge
-                  variant="secondary"
-                  className="gap-1 text-[11px] font-medium transition-colors hover:text-foreground"
-                >
+                <Badge variant="mutedLink">
                   <Icon icon="lucide:layers" className="size-3" aria-hidden />
                   {series.name}
                 </Badge>
@@ -157,11 +150,11 @@ export function BlogPostPageContent({
                   <Tag
                     key={tag}
                     tag={tag}
+                    variant="muted"
                     href={toLocalePath(
                       `/tags/${encodeURIComponent(tag)}`,
                       locale
                     )}
-                    className="bg-muted text-[11px] font-medium text-muted-foreground"
                   />
                 ))}
               </div>
@@ -214,20 +207,21 @@ export function BlogPostPageContent({
         </div>
 
         <div className="mt-6 space-y-6">
-          <Separator className="bg-border/40" />
+          <Separator variant="muted" />
           <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {prev ? (
               <div className="flex min-w-0 flex-1">
                 <Button
                   asChild
-                  variant="ghost"
-                  className="h-auto w-full min-w-0 flex-col items-start gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                  variant="nav"
+                  size="nav"
+                  className="w-full min-w-0 flex-col items-start whitespace-normal"
                 >
                   <a
                     href={toLocalePath(`/blog/post/${prev.slug}`, locale)}
                     className="w-full min-w-0"
                   >
-                    <span className="flex items-center gap-1 text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
+                    <span className="flex items-center gap-1 text-label font-medium tracking-wider text-muted-foreground uppercase">
                       <Icon icon="lucide:chevron-left" className="size-3" />
                       <I18nText
                         locale={locale}
@@ -248,14 +242,15 @@ export function BlogPostPageContent({
               <div className="flex min-w-0 flex-1">
                 <Button
                   asChild
-                  variant="ghost"
-                  className="h-auto w-full min-w-0 flex-col items-end gap-1 px-4 py-4 whitespace-normal hover:bg-muted/50"
+                  variant="nav"
+                  size="nav"
+                  className="w-full min-w-0 flex-col items-end whitespace-normal"
                 >
                   <a
                     href={toLocalePath(`/blog/post/${next.slug}`, locale)}
                     className="w-full min-w-0"
                   >
-                    <span className="flex items-center justify-end gap-1 text-right text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
+                    <span className="flex items-center justify-end gap-1 text-right text-label font-medium tracking-wider text-muted-foreground uppercase">
                       <I18nText locale={locale} ja="次の記事" en="Next Post" />
                       <Icon icon="lucide:chevron-right" className="size-3" />
                     </span>

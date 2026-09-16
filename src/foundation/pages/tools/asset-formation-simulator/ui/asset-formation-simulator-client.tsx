@@ -5,11 +5,6 @@ import { useAssetFormationSimulator } from "../model/use-asset-formation-simulat
 import { SimulationChart } from "./simulation-chart";
 import { useSimulatorFormatters } from "./use-simulator-formatters";
 
-const inputStyle = {
-  color: "var(--foreground)",
-  backgroundColor: "var(--input)",
-};
-
 type AssetFormationSimulatorProps = {
   locale: Locale;
 };
@@ -80,8 +75,7 @@ export function AssetFormationSimulator({
             onChange={(event) => {
               setYearsInput(event.target.value);
             }}
-            className="w-full rounded-md border p-2"
-            style={inputStyle}
+            className="w-full rounded-md border bg-input p-2 text-foreground"
           />
         </label>
       </div>
@@ -93,7 +87,7 @@ export function AssetFormationSimulator({
           </h2>
           <button
             type="button"
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-info hover:underline"
             onClick={() => {
               syncScenarios((prev) => {
                 const nextIndex = prev.length + 1;
@@ -116,8 +110,7 @@ export function AssetFormationSimulator({
           {scenarioList.map((scenario, index) => (
             <div
               key={scenario.id}
-              className="space-y-3 rounded-md border p-4"
-              style={{ backgroundColor: "var(--card)" }}
+              className="space-y-3 rounded-md border bg-card p-4"
             >
               <div className="flex items-center justify-between">
                 <div className="text-sm font-semibold">
@@ -126,7 +119,7 @@ export function AssetFormationSimulator({
                 {scenarioList.length > 1 && (
                   <button
                     type="button"
-                    className="text-xs text-red-600 hover:underline"
+                    className="text-xs text-destructive hover:underline"
                     onClick={() => {
                       syncScenarios((prev) =>
                         prev.filter((item) => item.id !== scenario.id)
@@ -154,8 +147,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border p-2"
-                  style={inputStyle}
+                  className="w-full rounded-md border bg-input p-2 text-foreground"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -178,8 +170,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border p-2"
-                  style={inputStyle}
+                  className="w-full rounded-md border bg-input p-2 text-foreground"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -201,8 +192,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border p-2"
-                  style={inputStyle}
+                  className="w-full rounded-md border bg-input p-2 text-foreground"
                 />
               </label>
             </div>
@@ -211,10 +201,7 @@ export function AssetFormationSimulator({
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div
-          className="rounded-md border p-4"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="rounded-md border bg-card p-4">
           <p className="mb-1 text-xs text-foreground/60">
             {t("元本合計", "Total principal")}
           </p>
@@ -222,10 +209,7 @@ export function AssetFormationSimulator({
             {formatYenWithMan(summary.principal)}
           </p>
         </div>
-        <div
-          className="rounded-md border p-4"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="rounded-md border bg-card p-4">
           <p className="mb-1 text-xs text-foreground/60">
             {t("運用益", "Investment gain")}
           </p>
@@ -233,10 +217,7 @@ export function AssetFormationSimulator({
             {formatYenWithMan(summary.gain)}
           </p>
         </div>
-        <div
-          className="rounded-md border p-4"
-          style={{ backgroundColor: "var(--card)" }}
-        >
+        <div className="rounded-md border bg-card p-4">
           <p className="mb-1 text-xs text-foreground/60">
             {t("評価額", "Balance")}
           </p>
@@ -292,8 +273,7 @@ export function AssetFormationSimulator({
           </label>
           <select
             id="visible-scenario-select"
-            className="rounded-md border px-2 py-1"
-            style={inputStyle}
+            className="rounded-md border bg-input px-2 py-1 text-foreground"
             value={selectedScenarioId}
             onChange={(event) => setSelectedScenarioId(event.target.value)}
           >

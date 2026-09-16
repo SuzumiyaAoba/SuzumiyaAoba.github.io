@@ -72,12 +72,7 @@ export function NotesDetailPageContent({
           {category || tags.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {category ? (
-                <Badge
-                  variant="outline"
-                  className="border-border/40 text-[11px] font-medium"
-                >
-                  {category}
-                </Badge>
+                <Badge variant="outlineSoft">{category}</Badge>
               ) : null}
               {tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -85,11 +80,11 @@ export function NotesDetailPageContent({
                     <Tag
                       key={`${locale}-${tag}`}
                       tag={tag}
+                      variant="muted"
                       href={toLocalePath(
                         `/tags/${encodeURIComponent(tag)}`,
                         locale
                       )}
-                      className="bg-muted text-[11px] font-medium text-muted-foreground"
                     />
                   ))}
                 </div>

@@ -49,19 +49,19 @@ export function ReleaseCalendarMonth({
     <section
       data-calendar-month={month}
       aria-label={label}
-      className="shrink-0 overflow-hidden rounded-xl border bg-background"
-      style={{ width: monthWidth }}
+      className="w-(--month-w) shrink-0 overflow-hidden rounded-xl border bg-background"
+      style={{ "--month-w": `${monthWidth}px` }}
     >
       <div className="flex h-16 items-center justify-between gap-2 border-b px-3 sm:px-4">
         <div className="flex items-center gap-2">
           <h3 className="text-base font-semibold tabular-nums">{label}</h3>
           {current && (
-            <span className="rounded-md bg-teal-50 px-1.5 py-1 text-[10px] font-medium text-teal-800 dark:bg-teal-950 dark:text-teal-200">
+            <span className="rounded-md bg-ai-accent-soft px-1.5 py-1 text-mini font-medium text-ai-accent-ink">
               {en ? "This month" : "今月"}
             </span>
           )}
         </div>
-        <span className="text-[11px] text-muted-foreground tabular-nums">
+        <span className="text-label text-muted-foreground tabular-nums">
           {count}
           {en ? " releases" : " 件"}
         </span>
@@ -77,9 +77,9 @@ export function ReleaseCalendarMonth({
                 key={day}
                 scope="col"
                 className={cn(
-                  "h-8 border-b bg-muted/20 text-center text-[11px] font-medium text-muted-foreground",
-                  weekday === 0 && "text-rose-600 dark:text-rose-400",
-                  weekday === 6 && "text-blue-600 dark:text-blue-400"
+                  "h-8 border-b bg-muted/20 text-center text-label font-medium text-muted-foreground",
+                  weekday === 0 && "text-sunday",
+                  weekday === 6 && "text-info"
                 )}
               >
                 {day}
@@ -142,18 +142,18 @@ export function ReleaseCalendarMonth({
                           "flex w-full cursor-pointer flex-col gap-1 p-1 text-left transition-colors hover:bg-muted/50 focus-visible:relative focus-visible:z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                           showTitles ? "h-24" : "h-16",
                           selected &&
-                            "bg-teal-50/60 ring-2 ring-teal-600 ring-inset dark:bg-teal-950/40 dark:ring-teal-400"
+                            "bg-ai-accent-soft ring-2 ring-ai-accent ring-inset"
                         )}
                       >
                         <span
                           className={cn(
-                            "flex size-6 shrink-0 items-center justify-center rounded-full text-[11px] font-medium tabular-nums",
+                            "flex size-6 shrink-0 items-center justify-center rounded-full text-label font-medium tabular-nums",
                             isToday
-                              ? "bg-teal-800 font-semibold text-white dark:bg-teal-200 dark:text-teal-950"
+                              ? "bg-ai-accent-ink font-semibold text-ai-accent-on-solid"
                               : weekday === 0
-                                ? "text-rose-600 dark:text-rose-400"
+                                ? "text-sunday"
                                 : weekday === 6
-                                  ? "text-blue-600 dark:text-blue-400"
+                                  ? "text-info"
                                   : "text-foreground"
                           )}
                         >
@@ -165,7 +165,7 @@ export function ReleaseCalendarMonth({
                               <span
                                 key={item.id}
                                 className={cn(
-                                  "flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-[10px]",
+                                  "flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-mini",
                                   providerStyles[item.provider].badge
                                 )}
                               >
@@ -178,7 +178,7 @@ export function ReleaseCalendarMonth({
                               </span>
                             ))}
                             {items.length > 2 && (
-                              <span className="block px-1 text-[9px] text-muted-foreground">
+                              <span className="block px-1 text-micro text-muted-foreground">
                                 +{items.length - 2}
                               </span>
                             )}
@@ -194,7 +194,7 @@ export function ReleaseCalendarMonth({
                             ))}
                             {items.length >
                               Math.min(providers.length, iconLimit) && (
-                              <span className="text-[9px] text-muted-foreground tabular-nums">
+                              <span className="text-micro text-muted-foreground tabular-nums">
                                 {items.length}
                               </span>
                             )}

@@ -28,7 +28,7 @@ export function MdxDateLabel({
     <time
       dateTime={date}
       className={cn(
-        "inline-flex items-center gap-1 border border-slate-200/80 bg-slate-50/80 px-2 py-0.5 align-middle text-sm leading-none font-semibold whitespace-nowrap text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300",
+        "inline-flex items-center gap-1 border border-border/60 bg-muted/50 px-2 py-0.5 align-middle text-sm leading-none font-semibold whitespace-nowrap text-foreground",
         className
       )}
       {...props}

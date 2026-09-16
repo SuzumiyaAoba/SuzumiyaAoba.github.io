@@ -36,7 +36,7 @@ export function StandardCode() {
   return (
     <HoveredCellContext.Provider value={hoveredCell}>
       <ClickedCellContext.Provider value={clickedCell}>
-        <div style={{ color: "var(--foreground)" }}>
+        <div className="text-foreground">
           <svg width={700} height={700}>
             <AsciiTable onClick={setClickedCell} onMouseOver={setHoveredCell} />
             <LeftSide />

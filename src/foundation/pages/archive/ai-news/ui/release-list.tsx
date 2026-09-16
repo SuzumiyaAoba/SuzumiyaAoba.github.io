@@ -74,7 +74,7 @@ export function ReleaseList({
                     timeZone: "UTC",
                   }).format(dateTimestamp(`${month}-01`))}
             </h3>
-            <p className="text-[11px] text-muted-foreground tabular-nums">
+            <p className="text-label text-muted-foreground tabular-nums">
               {items.length}
               {en ? " releases" : " 件のリリース"}
             </p>

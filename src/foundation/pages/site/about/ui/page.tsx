@@ -43,7 +43,7 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
         <Breadcrumbs items={breadcrumbItems} />
         <section className="page-heading">
           <div className="space-y-2">
-            <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
+            <p className="section-label">
               <I18nText locale={locale} ja="概要" en="About" />
             </p>
             <h1 className="page-title">SuzumiyaAoba</h1>

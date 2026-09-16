@@ -268,16 +268,19 @@ function ReleasePopover({
       tabIndex={active.pinned ? -1 : undefined}
       data-pagefind-ignore
       className={cn(
-        "font-noto fixed z-[60] flex max-h-[min(40rem,calc(100dvh-24px))] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-xl border bg-popover [overflow-wrap:anywhere] text-popover-foreground shadow-xl focus-visible:outline-2 focus-visible:outline-ring",
+        "font-noto fixed top-(--pp-y) left-(--pp-x) z-[60] flex max-h-[min(40rem,calc(100dvh-24px))] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-xl border bg-popover [overflow-wrap:anywhere] text-popover-foreground shadow-xl focus-visible:outline-2 focus-visible:outline-ring",
         active.pinned ? "w-[26rem]" : "pointer-events-none w-72 p-4 text-xs"
       )}
-      style={position}
+      style={{
+        "--pp-x": `${position.left}px`,
+        "--pp-y": `${position.top}px`,
+      }}
     >
       {active.pinned ? (
         <>
           <div className="flex shrink-0 items-start justify-between gap-3 border-b p-4">
             <div className="min-w-0 space-y-1">
-              <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <p className="flex items-center gap-1.5 text-label text-muted-foreground">
                 <Pin className="size-3" aria-hidden="true" />
                 {en ? "Release details" : "リリースの詳細"}
               </p>
@@ -285,7 +288,7 @@ function ReleasePopover({
                 {dateLabel}
                 {active.series && ` · ${active.series}`}
               </h2>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-label text-muted-foreground">
                 {active.releases.length}
                 {en ? " releases" : " 件のリリース"}
               </p>
@@ -350,7 +353,7 @@ function ReleasePopover({
               </p>
             </div>
           )}
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-mini text-muted-foreground">
             {en ? "Click to pin release details" : "クリックで詳細を固定表示"}
           </p>
         </div>

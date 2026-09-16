@@ -152,7 +152,7 @@ export const StackedBarChart: React.FC<Props> = ({
           {group.name && (
             <button
               type="button"
-              className="mb-2 w-full cursor-pointer border-none bg-transparent p-0 text-center text-sm font-semibold hover:text-blue-600"
+              className="mb-2 w-full cursor-pointer border-none bg-transparent p-0 text-center text-sm font-semibold hover:text-info"
               onClick={() => toggleGroup(group.metrics)}
             >
               {group.name}

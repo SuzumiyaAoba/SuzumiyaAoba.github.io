@@ -3,14 +3,33 @@ import * as React from "react";
 import { cn } from "@/shared/lib/utils";
 
 /**
+ * カードのバリアント設定
+ */
+const cardVariants = {
+  default: "",
+  soft: "border-transparent bg-card/40 shadow-none",
+  muted: "border-transparent bg-muted/40 shadow-none",
+  interactive:
+    "border-transparent bg-card/40 shadow-none transition-colors hover:bg-muted/20",
+} as const;
+
+type CardVariant = keyof typeof cardVariants;
+
+/**
  * カードコンポーネントのルート
  */
-function Card({ className, children, ...props }: React.ComponentProps<"div">) {
+function Card({
+  className,
+  variant = "default",
+  children,
+  ...props
+}: React.ComponentProps<"div"> & { variant?: CardVariant }) {
   return (
     <div
       data-slot="card"
       className={cn(
         "rounded-xl border bg-card text-card-foreground shadow-xs",
+        cardVariants[variant],
         className
       )}
       {...props}

@@ -60,7 +60,7 @@ export function ReleaseCard({
           <p className="mt-3 text-xs leading-5">
             {interval.previousTitles.join(" / ")}
           </p>
-          <div className="mt-2 flex items-center gap-2 text-[11px] tabular-nums opacity-75">
+          <div className="mt-2 flex items-center gap-2 text-label tabular-nums opacity-75">
             <time dateTime={interval.previousDate}>
               {interval.previousDate.replaceAll("-", ".")}
             </time>
@@ -79,7 +79,7 @@ export function ReleaseCard({
   );
   const tags =
     (release.entry.tags?.length ?? 0) > 0 ? (
-      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+      <div className="flex flex-wrap gap-x-3 gap-y-1 text-mini text-muted-foreground">
         {(release.entry.tags ?? []).map((tag) => (
           <span key={tag}>#{tag}</span>
         ))}
@@ -119,7 +119,7 @@ export function ReleaseCard({
             className="size-11 rounded-xl"
           />
           <div className="min-w-0 space-y-2">
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-label text-muted-foreground">
               <span className={cn("font-semibold", style.ink)}>
                 {providerLabel(release.provider, locale)}
               </span>
@@ -140,7 +140,7 @@ export function ReleaseCard({
             {primaryInterval ? (
               <div
                 className={cn(
-                  "inline-flex items-baseline gap-1.5 rounded-lg px-3 py-1.5 text-[11px]",
+                  "inline-flex items-baseline gap-1.5 rounded-lg px-3 py-1.5 text-label",
                   style.badge
                 )}
               >
@@ -154,7 +154,7 @@ export function ReleaseCard({
                 )}
               </div>
             ) : (
-              <span className="rounded-lg bg-muted px-3 py-2 text-[11px] text-muted-foreground">
+              <span className="rounded-lg bg-muted px-3 py-2 text-label text-muted-foreground">
                 {release.date && release.series.length > 0
                   ? en
                     ? "First recorded"
@@ -166,7 +166,7 @@ export function ReleaseCard({
             )}
           </div>
         </div>
-        <details className="mt-3 pl-14 sm:pl-[8.5rem]">
+        <details className="mt-3 pl-14 sm:pl-34">
           <summary className="flex w-fit cursor-pointer list-none items-center gap-1.5 rounded py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
             {en ? "Release details" : "リリースの詳細"}
             <ChevronDown className="size-3.5" aria-hidden="true" />
@@ -197,12 +197,12 @@ export function ReleaseCard({
               <p className="text-sm font-semibold">
                 {providerLabel(release.provider, locale)}
               </p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
+              <p className="mt-1 text-label text-muted-foreground">
                 {kindLabel(release.kind, locale)}
               </p>
             </div>
           </div>
-          <span className="text-right text-[11px] text-muted-foreground tabular-nums">
+          <span className="text-right text-label text-muted-foreground tabular-nums">
             {release.date ? (
               <time dateTime={release.date}>
                 {release.date.replaceAll("-", ".")}

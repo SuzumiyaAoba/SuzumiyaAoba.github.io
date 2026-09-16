@@ -7,41 +7,38 @@ import type { Provider, ReleaseKind } from "../model/release-calendar";
 const baseProviderStyles = {
   OpenAI: {
     icon: "logos:openai-icon",
-    dot: "bg-emerald-600 dark:bg-emerald-400",
-    badge:
-      "bg-emerald-50 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
-    border: "border-emerald-200 dark:border-emerald-800",
-    ink: "text-emerald-700 dark:text-emerald-300",
+    dot: "bg-provider-openai",
+    badge: "bg-provider-openai-soft text-provider-openai-ink",
+    border: "border-provider-openai-border",
+    ink: "text-provider-openai-ink",
   },
   Anthropic: {
     icon: "material-icon-theme:claude",
-    dot: "bg-orange-600 dark:bg-orange-400",
-    badge:
-      "bg-orange-50 text-orange-950 dark:bg-orange-950 dark:text-orange-200",
-    border: "border-orange-200 dark:border-orange-800",
-    ink: "text-orange-700 dark:text-orange-300",
+    dot: "bg-provider-anthropic",
+    badge: "bg-provider-anthropic-soft text-provider-anthropic-ink",
+    border: "border-provider-anthropic-border",
+    ink: "text-provider-anthropic-ink",
   },
   Google: {
     icon: "logos:google-icon",
-    dot: "bg-blue-600 dark:bg-blue-400",
-    badge: "bg-blue-50 text-blue-950 dark:bg-blue-950 dark:text-blue-200",
-    border: "border-blue-200 dark:border-blue-800",
-    ink: "text-blue-700 dark:text-blue-300",
+    dot: "bg-provider-google",
+    badge: "bg-provider-google-soft text-provider-google-ink",
+    border: "border-provider-google-border",
+    ink: "text-provider-google-ink",
   },
   DeepSeek: {
     icon: "ri:deepseek-fill",
-    dot: "bg-violet-600 dark:bg-violet-400",
-    badge:
-      "bg-violet-50 text-violet-950 dark:bg-violet-950 dark:text-violet-200",
-    border: "border-violet-200 dark:border-violet-800",
-    ink: "text-violet-700 dark:text-violet-300",
+    dot: "bg-provider-deepseek",
+    badge: "bg-provider-deepseek-soft text-provider-deepseek-ink",
+    border: "border-provider-deepseek-border",
+    ink: "text-provider-deepseek-ink",
   },
   Other: {
     icon: null,
-    dot: "bg-slate-500 dark:bg-slate-400",
-    badge: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
-    border: "border-slate-200 dark:border-slate-700",
-    ink: "text-slate-700 dark:text-slate-300",
+    dot: "bg-provider-other",
+    badge: "bg-provider-other-soft text-provider-other-ink",
+    border: "border-provider-other-border",
+    ink: "text-provider-other-ink",
   },
 };
 

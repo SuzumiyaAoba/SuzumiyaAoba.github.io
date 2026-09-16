@@ -46,8 +46,7 @@ export function Header({ locale, path }: HeaderProps) {
         >
           <div
             ref={progressBarRef}
-            className="reading-progress h-full origin-left"
-            style={{ transform: "scaleX(0)" }}
+            className="reading-progress h-full origin-left scale-x-0"
           />
         </div>
       )}
@@ -90,8 +89,7 @@ export function Header({ locale, path }: HeaderProps) {
           <Button
             asChild
             variant="ghost"
-            size="icon"
-            className="size-11 rounded-sm"
+            size="icon-xl"
             aria-label={en ? "Search" : "検索"}
             title={en ? "Search" : "検索"}
           >

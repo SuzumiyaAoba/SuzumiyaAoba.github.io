@@ -24,7 +24,7 @@ export function BookNav({
     <nav aria-label="書籍ナビゲーション" className="space-y-4">
       <a
         href={toLocalePath(`/books/${bookSlug}`, locale)}
-        className="block text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase transition-colors hover:text-foreground"
+        className="block section-label transition-colors hover:text-foreground"
       >
         {bookTitle}
       </a>
