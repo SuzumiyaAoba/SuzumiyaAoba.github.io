@@ -968,3 +968,85 @@ items:
     tags: [OCaml, 増分計算, GUI]
     description: 入力の変更に応じた再計算を効率化する、Jane Street の OCaml 向け増分計算ライブラリ。表計算・GUI・元データと同期する派生データの処理に活用できる。
     githubUrl: https://github.com/janestreet/incremental
+  - id: pr-lens
+    name: PR Lens
+    category: 開発ツール
+    tags: [コードレビュー, 可視化, GitHub Actions, CLI, スキル]
+    description: プルリクエストの変更をアニメーション付きのアーキテクチャ図とデータフロー図で描き、PR 内のコメントに投稿するコードレビュー支援ツール。GitHub App・GitHub Actions・CLI・コーディングエージェント向けスキルとして導入できる。
+    websiteUrl: https://prlens.dev/
+    githubUrl: https://github.com/coldteadotai/pr-lens
+  - id: shadcn-lint
+    name: "@shadcn/lint"
+    category: 開発ツール
+    tags: [Tailwind CSS, Lint, デザインシステム, AIコーディング]
+    description: Tailwind のデザインシステム向けに、許可するスタイルをルールとして定義できるエージェントファーストな linter。違反時はコンポーネント・バリアント・テーマに基づく修正案を提示する。ESLint と Oxlint で動作し、shadcn/ui 以外の Tailwind v4 プロジェクトにも使える。
+    githubUrl: https://github.com/shadcn-ui/lint
+  - id: ext-skills
+    name: MCP Skills Extension
+    category: 開発ツール
+    tags: [MCP, スキル, 仕様, AIエージェント]
+    description: MCP 経由でエージェントのスキルを発見・配布する公式拡張（io.modelcontextprotocol/skills）の仕様。SEP-2640 に基づき、Skills Over MCP ワーキンググループが仕様・決定記録・実装リストを管理している。
+    githubUrl: https://github.com/modelcontextprotocol/ext-skills
+    articles:
+      - title: 公式ドキュメント
+        url: https://modelcontextprotocol.io/extensions/skills/overview
+  - id: codegraph
+    name: CodeGraph
+    category: 開発ツール
+    tags: [コード解析, 知識グラフ, AIコーディング, ローカルファースト]
+    description: コードベースを事前に索引化した知識グラフを構築し、コード変更に自動で同期するツール。Claude Code・Cursor・Codex などのコーディングエージェントへ、トークンとツール呼び出しを抑えたコンテキストを提供する。Rust 製カーネルでローカル動作。
+    websiteUrl: https://colbymchenry.github.io/codegraph/
+    githubUrl: https://github.com/colbymchenry/codegraph
+  - id: pstack
+    name: pstack
+    category: 開発ツール
+    tags: [Cursor, スキル, AIコーディング, マルチエージェント]
+    description: React コアチームの poteto が公開する Cursor 向けプラグインのスキル集。poteto-mode が調査・バグ修正・性能改善・出荷など 23 種のプレイブックを選び、複数モデルの強みを使い分けながら検証まで行う開発手順を実行する。
+    githubUrl: https://github.com/cursor/plugins/tree/main/pstack
+  - id: openui
+    name: OpenUI
+    category: ライブラリ
+    tags: [AIエージェント, 生成AI, UIコンポーネント, ストリーミング]
+    description: AI エージェントの応答からチャート・フォーム・テーブル・ダッシュボードなどの UI をストリーミング生成するオープン標準のフレームワーク。React・Vue・Svelte・React Native などで描画でき、既存のコンポーネントやデザインシステムをそのまま利用できる。
+    websiteUrl: https://www.openui.com/
+    githubUrl: https://github.com/thesysdev/openui
+  - id: browser-use-web-ui
+    name: Web UI（browser-use）
+    category: 開発ツール
+    tags: [AIエージェント, ブラウザ, 自動化, LLM]
+    description: ブラウザ操作エージェント browser-use を Gradio 製の Web UI から操作するツール。OpenAI・Anthropic・Google・Ollama など複数の LLM に対応し、自分のブラウザでの実行やセッションの保持、画面録画ができる。
+    githubUrl: https://github.com/browser-use/web-ui
+  - id: textlint-ai-words-ja
+    name: textlint-rule-preset-ai-words-ja
+    category: 開発ツール
+    tags: [textlint, Lint, 日本語, 文章校正]
+    description: AI が書いた日本語に現れやすい単語や言い回しを検出する textlint のプリセット。形態素解析で英語の直訳調の動詞・硬い名詞・不自然な比喩表現を見つけ、活用形にもマッチする。
+    githubUrl: https://github.com/p1ass/textlint-rule-preset-ai-words-ja
+  - id: understand-anything
+    name: Understand Anything
+    category: 開発ツール
+    tags: [コード解析, 知識グラフ, 可視化, AIコーディング]
+    description: コードベースやドキュメントをマルチエージェントのパイプラインで解析し、ファイル・関数・クラス・依存関係の知識グラフを構築するプラグイン。対話的なダッシュボードで探索・検索・質問ができ、Claude Code・Codex・Cursor・Copilot・Gemini CLI などに対応する。
+    websiteUrl: https://understand-anything.com/
+    githubUrl: https://github.com/Egonex-AI/Understand-Anything
+  - id: open-code-review
+    name: Open Code Review
+    category: 開発ツール
+    tags: [コードレビュー, AIエージェント, CLI, LLM]
+    description: Alibaba 社内で利用されてきた AI コードレビュー CLI のオープンソース版。決定論的パイプラインとツールを使う LLM エージェントを組み合わせ、行単位のコメントと多言語向けの内蔵ルールでコードの問題を指摘する。OpenAI・Anthropic 互換のモデルに対応。
+    websiteUrl: https://open-codereview.ai/
+    githubUrl: https://github.com/alibaba/open-code-review
+  - id: kache
+    name: Kache
+    category: 開発ツール
+    tags: [Rust, C++, ビルド, キャッシュ]
+    description: Rust・C/C++ 向けのコンテンツアドレス型コンパイラキャッシュ。ビルド成果物を内容で保存し、リフリンクやハードリンクでワークツリー間のコピーを抑えて再利用する。S3 互換やファイルシステムのリモートで共有できる。
+    websiteUrl: https://kunobi.ninja/product/kache
+    githubUrl: https://github.com/kunobi-ninja/kache
+  - id: rune
+    name: Rune
+    category: 開発ツール
+    tags: [IDE, Go, ターミナル, AIエージェント]
+    description: コード・ターミナル・CLI ツール・言語支援・デバッガ・AI エージェントを一つのワークスペースにまとめた、キーボード中心の IDE。Go 製で macOS と Linux に対応し、GPLv3 でオープンソースとして公開されている。
+    websiteUrl: https://rune.build/
+    githubUrl: https://github.com/unstablebuild/rune
