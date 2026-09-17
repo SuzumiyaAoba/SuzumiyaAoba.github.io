@@ -286,6 +286,20 @@ export const Filtering: Story = {
     await expect(openai).toHaveAttribute("aria-pressed", "false");
     await expect(google).toHaveAttribute("aria-pressed", "false");
     await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 8 件");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "モデル名で絞り込み" })
+    );
+    const modelOptions = within(
+      document.getByRole("group", { name: "モデル" })
+    );
+    await userEvent.click(
+      modelOptions.getByRole("button", { name: "GPT Next · OpenAI" })
+    );
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 1 件");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "モデル GPT Next の絞り込みを解除" })
+    );
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 8 件");
   },
 };
 

@@ -151,6 +151,31 @@ describe("ReleaseExplorer selection and URL sync", () => {
     expect(update?.searchParams.get("models")).toBe("GPT");
   });
 
+  it("モデル名の選択をクエリパラメータへ書き込み、系列と併用できる", async () => {
+    await render();
+    await flush();
+    await click("モデル名で絞り込み");
+    await click("GPT Next · OpenAI");
+    await flush();
+    expect(status()).toContain("4 件中 1 件");
+    expect(onUrlUpdate.mock.lastCall?.[0].searchParams.get("titles")).toBe(
+      "GPT Next"
+    );
+    await click("モデル系列で絞り込み");
+    await click("Claude Opus · Anthropic");
+    await flush();
+    expect(status()).toContain("4 件中 3 件");
+    const update = onUrlUpdate.mock.lastCall?.[0];
+    expect(update?.searchParams.get("models")).toBe("Claude Opus");
+    expect(update?.searchParams.get("titles")).toBe("GPT Next");
+    await click("モデル GPT Next の絞り込みを解除");
+    await flush();
+    expect(status()).toContain("4 件中 2 件");
+    expect(onUrlUpdate.mock.lastCall?.[0].searchParams.has("titles")).toBe(
+      false
+    );
+  });
+
   it("複数選択と「すべて」のリセットがURLへ反映される", async () => {
     await render();
     await flush();

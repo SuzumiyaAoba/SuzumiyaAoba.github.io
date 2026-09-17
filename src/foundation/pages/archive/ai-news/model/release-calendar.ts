@@ -230,6 +230,7 @@ export type ReleaseFilters = {
   query: string;
   providers: string[];
   models: string[];
+  titles: string[];
   kind: string;
 };
 
@@ -256,6 +257,20 @@ export type ReleaseModelOption = {
   count: number;
 };
 
+function sortModelOptions(
+  options: Iterable<ReleaseModelOption>
+): ReleaseModelOption[] {
+  const providerOrder = new Map(
+    PROVIDERS.map((provider, index) => [provider, index])
+  );
+  return [...options].toSorted(
+    (a, b) =>
+      (providerOrder.get(a.provider) ?? PROVIDERS.length) -
+        (providerOrder.get(b.provider) ?? PROVIDERS.length) ||
+      a.name.localeCompare(b.name)
+  );
+}
+
 /** モデル絞り込みに出す系列一覧。プロバイダの並び順でまとめる。 */
 export function buildModelOptions(releases: Release[]): ReleaseModelOption[] {
   const options = new Map<string, ReleaseModelOption>();
@@ -269,15 +284,25 @@ export function buildModelOptions(releases: Release[]): ReleaseModelOption[] {
       }
     }
   }
-  const providerOrder = new Map(
-    PROVIDERS.map((provider, index) => [provider, index])
-  );
-  return [...options.values()].toSorted(
-    (a, b) =>
-      (providerOrder.get(a.provider) ?? PROVIDERS.length) -
-        (providerOrder.get(b.provider) ?? PROVIDERS.length) ||
-      a.name.localeCompare(b.name)
-  );
+  return sortModelOptions(options.values());
+}
+
+/** モデル名(タイトル)での絞り込みに出す一覧。プロバイダの並び順でまとめる。 */
+export function buildTitleOptions(releases: Release[]): ReleaseModelOption[] {
+  const options = new Map<string, ReleaseModelOption>();
+  for (const release of releases) {
+    const option = options.get(release.title);
+    if (option) {
+      option.count += 1;
+    } else {
+      options.set(release.title, {
+        name: release.title,
+        provider: release.provider,
+        count: 1,
+      });
+    }
+  }
+  return sortModelOptions(options.values());
 }
 
 function normalize(value: string) {
@@ -291,12 +316,14 @@ export function filterReleases(
   const terms = normalize(filters.query).trim().split(/\s+/u).filter(Boolean);
   const providers = new Set(filters.providers);
   const models = new Set(filters.models);
-  const hasSelection = providers.size > 0 || models.size > 0;
+  const titles = new Set(filters.titles);
+  const hasSelection = providers.size > 0 || models.size > 0 || titles.size > 0;
   return releases.filter((release) => {
     if (
       hasSelection &&
       !providers.has(release.provider) &&
-      !release.series.some((series) => models.has(series))
+      !release.series.some((series) => models.has(series)) &&
+      !titles.has(release.title)
     ) {
       return false;
     }

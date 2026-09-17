@@ -25,6 +25,7 @@ import { Input } from "@/shared/ui/input";
 import {
   buildModelOptions,
   buildReleases,
+  buildTitleOptions,
   filterReleases,
   sameSelection,
   toggleSelection,
@@ -50,15 +51,22 @@ const INITIAL_FILTERS: ReleaseFilters = {
   query: "",
   providers: [],
   models: [],
+  titles: [],
   kind: "",
 };
 
 type ReleaseSelection = {
   providers: string[];
   models: string[];
+  titles: string[];
 };
 
 const selectionParser = parseAsArrayOf(parseAsString)
+  .withDefault([])
+  .withOptions({ history: "replace" });
+
+// モデル名はカンマを含むことがあるため、区切り文字を "|" にする。
+const titleParser = parseAsArrayOf(parseAsString, "|")
   .withDefault([])
   .withOptions({ history: "replace" });
 
@@ -66,19 +74,24 @@ const selectionParser = parseAsArrayOf(parseAsString)
 function ReleaseSelectionUrlSync({
   providers,
   models,
+  titles,
   validProviders,
   validModels,
+  validTitles,
   onApply,
 }: {
   providers: string[];
   models: string[];
+  titles: string[];
   validProviders: ReadonlySet<string>;
   validModels: ReadonlySet<string>;
+  validTitles: ReadonlySet<string>;
   onApply: (next: ReleaseSelection) => void;
 }) {
   const [params, setParams] = useQueryStates({
     providers: selectionParser,
     models: selectionParser,
+    titles: titleParser,
   });
   const onApplyRef = useRef(onApply);
   onApplyRef.current = onApply;
@@ -95,10 +108,20 @@ function ReleaseSelectionUrlSync({
       models: [
         ...new Set(params.models.filter((model) => validModels.has(model))),
       ],
+      titles: [
+        ...new Set(params.titles.filter((title) => validTitles.has(title))),
+      ],
     };
     pendingApply.current = next;
     onApplyRef.current(next);
-  }, [params.providers, params.models, validProviders, validModels]);
+  }, [
+    params.providers,
+    params.models,
+    params.titles,
+    validProviders,
+    validModels,
+    validTitles,
+  ]);
 
   // 選択状態をURLへ書き戻す。適用中は状態側が追いつくまで待つ。
   useEffect(() => {
@@ -106,7 +129,8 @@ function ReleaseSelectionUrlSync({
     if (pending) {
       if (
         !sameSelection(pending.providers, providers) ||
-        !sameSelection(pending.models, models)
+        !sameSelection(pending.models, models) ||
+        !sameSelection(pending.titles, titles)
       ) {
         return;
       }
@@ -114,11 +138,12 @@ function ReleaseSelectionUrlSync({
     }
     if (
       !sameSelection(params.providers, providers) ||
-      !sameSelection(params.models, models)
+      !sameSelection(params.models, models) ||
+      !sameSelection(params.titles, titles)
     ) {
-      void setParams({ providers, models });
+      void setParams({ providers, models, titles });
     }
-  }, [providers, models, params, setParams]);
+  }, [providers, models, titles, params, setParams]);
 
   return null;
 }
@@ -166,11 +191,17 @@ export function ReleaseExplorer({
     () => new Set(releases.flatMap((release) => release.series)),
     [releases]
   );
+  const validTitles = useMemo(
+    () => new Set(releases.map((release) => release.title)),
+    [releases]
+  );
   const modelOptions = useMemo(() => buildModelOptions(releases), [releases]);
+  const titleOptions = useMemo(() => buildTitleOptions(releases), [releases]);
   const applySelection = useCallback((next: ReleaseSelection) => {
     setFilters((previous) =>
       sameSelection(previous.providers, next.providers) &&
-      sameSelection(previous.models, next.models)
+      sameSelection(previous.models, next.models) &&
+      sameSelection(previous.titles, next.titles)
         ? previous
         : { ...previous, ...next }
     );
@@ -179,7 +210,8 @@ export function ReleaseExplorer({
     Boolean(filters.query) ||
     Boolean(filters.kind) ||
     filters.providers.length > 0 ||
-    filters.models.length > 0;
+    filters.models.length > 0 ||
+    filters.titles.length > 0;
   const kindOptions = [
     ["", en ? "All types" : "すべての種類"],
     ["llm", "LLM"],
@@ -209,8 +241,10 @@ export function ReleaseExplorer({
         <ReleaseSelectionUrlSync
           providers={filters.providers}
           models={filters.models}
+          titles={filters.titles}
           validProviders={validProviders}
           validModels={validModels}
+          validTitles={validTitles}
           onApply={applySelection}
         />
       </Suspense>
@@ -252,15 +286,24 @@ export function ReleaseExplorer({
                   providers: toggleSelection(filters.providers, provider),
                 })
               }
-              onSelectAll={() => updateFilters({ providers: [], models: [] })}
+              onSelectAll={() =>
+                updateFilters({ providers: [], models: [], titles: [] })
+              }
               locale={locale}
             />
             <ModelFilters
-              options={modelOptions}
-              selected={filters.models}
-              onToggle={(model) =>
+              seriesOptions={modelOptions}
+              titleOptions={titleOptions}
+              selectedSeries={filters.models}
+              selectedTitles={filters.titles}
+              onToggleSeries={(model) =>
                 updateFilters({
                   models: toggleSelection(filters.models, model),
+                })
+              }
+              onToggleTitle={(title) =>
+                updateFilters({
+                  titles: toggleSelection(filters.titles, title),
                 })
               }
               locale={locale}

@@ -131,6 +131,7 @@ describe("continuous release timeline", () => {
       query: "Last",
       providers: [],
       models: [],
+      titles: [],
       kind: "",
     });
     expect(getReleaseTimelineRange(filtered)).toStrictEqual(
@@ -318,6 +319,7 @@ describe("release intervals", () => {
       providers: ["OpenAI"],
       kind: "llm",
       models: ["Example"],
+      titles: [],
     });
     expect(filtered).toHaveLength(1);
     expect(filtered[0]?.intervals[0]?.previousTitles).toStrictEqual([
@@ -330,6 +332,7 @@ describe("release intervals", () => {
         providers: ["Google"],
         kind: "",
         models: [],
+        titles: [],
       })
     ).toStrictEqual([]);
   });
@@ -376,6 +379,7 @@ describe("release intervals", () => {
         providers: [provider],
         kind: "llm",
         models: [],
+        titles: [],
       });
       expect(matches.length).toBeGreaterThan(1);
       expect(matches.every((item) => item.provider === provider)).toBe(true);
@@ -409,7 +413,7 @@ describe("provider and model selection", () => {
     ),
     release("No series", "2025-06-01", [], ["OpenAI", "LLM Model"]),
   ]);
-  const base = { query: "", kind: "" };
+  const base = { query: "", kind: "", titles: [] as string[] };
 
   it("shows everything when nothing is selected", () => {
     expect(
