@@ -1050,3 +1050,25 @@ items:
     description: コード・ターミナル・CLI ツール・言語支援・デバッガ・AI エージェントを一つのワークスペースにまとめた、キーボード中心の IDE。Go 製で macOS と Linux に対応し、GPLv3 でオープンソースとして公開されている。
     websiteUrl: https://rune.build/
     githubUrl: https://github.com/unstablebuild/rune
+  - id: empryo
+    name: Empryo
+    category: 開発ツール
+    tags: [AIコーディング, 知識グラフ, マルチエージェント, LSP]
+    description: コードベースを tree-sitter で解析し、シンボルや依存関係のグラフを構築してから AST レベルで編集する AI コーディングエージェント（旧 SoulForge）。役割ごとにモデルを割り当てる構成や LSP・MCP 連携に対応し、デスクトップアプリ・ターミナル・CLI で動作する。
+    websiteUrl: https://empryo.com/
+    githubUrl: https://github.com/proxysoul/Empryo
+  - id: stitch-design-md
+    name: DESIGN.md（Stitch）
+    category: デザイン
+    tags: [DESIGN.md, デザインシステム, AIコーディング]
+    description: Google Labs の AI デザインツール Stitch が採用する、デザインシステムを Markdown に記述する DESIGN.md の公式仕様ドキュメント。配色・タイポグラフィ・コンポーネントの役割や根拠を明文化でき、オープン仕様として公開されているため Stitch 以外の AI エージェントにもデザインルールを渡せる。
+    websiteUrl: https://stitch.withgoogle.com/docs/design-md/overview
+  - id: open-knowledge-format
+    name: Open Knowledge Format（OKF）
+    category: AIメモリ
+    tags: [ナレッジ管理, Markdown, 仕様, AIエージェント]
+    description: データやシステムのメタデータ・コンテキスト・知見を、YAML frontmatter 付きの Markdown ファイル群として表現するオープンな知識フォーマットの仕様。人間と AI エージェントの双方が読み書きでき、由来（provenance）・信頼度・ライフサイクル・計算の検証を第一級に扱う。Google Cloud Knowledge Catalog が公開。
+    githubUrl: https://github.com/GoogleCloudPlatform/knowledge-catalog
+    articles:
+      - title: OKF 仕様（SPEC.md）
+        url: https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
