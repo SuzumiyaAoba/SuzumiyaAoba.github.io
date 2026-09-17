@@ -42,11 +42,11 @@ export function ReleasePoint({
   popover,
 }: ReleasePointProps) {
   const en = locale === "en";
-  const label = `${series} · ${formatReleaseDate(date, locale)} · ${titles}${interval ? ` · ${en ? "after" : "前回から"} ${interval.days}${en ? " days" : "日"}` : ""}`;
+  const label = `${series ? `${series} · ` : ""}${formatReleaseDate(date, locale)} · ${titles}${interval ? ` · ${en ? "after" : "前回から"} ${interval.days}${en ? " days" : "日"}` : ""}`;
   const triggerProps = popover.getTriggerProps({
-    id: JSON.stringify([provider, releases[0]?.kind, series, date]),
+    id: JSON.stringify([provider, releases[0]?.kind, series || null, date]),
     date,
-    series,
+    ...(series ? { series } : {}),
     releases,
   });
 

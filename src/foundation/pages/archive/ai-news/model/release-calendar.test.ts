@@ -13,6 +13,7 @@ import {
 } from "./release-calendar";
 import type { RenderedRelease } from "./release-calendar";
 import {
+  buildFlatTimelinePoints,
   buildTimelineRows,
   getReleaseTimelineRange,
   timelinePosition,
@@ -159,6 +160,50 @@ describe("continuous release timeline", () => {
     ]);
     expect(buildTimelineRows(releases, 48)[0]?.laneCount).toBe(1);
     expect(buildTimelineRows(releases, 0.01)[0]?.laneCount).toBe(3);
+  });
+
+  it("lays every dated release on one axis, merging only same-provider dates", () => {
+    const releases = buildReleases([
+      release("Third", "2026-01-01"),
+      release("Second A", "2024-01-01"),
+      release("Same day", "2024-01-01"),
+      release("First", "2023-12-31"),
+      release("Rival", "2024-01-01", ["Other"], ["Google", "LLM Model"]),
+      release("Multi", "2025-06-01", ["Alpha", "Beta"]),
+      release("No series", "2025-01-01", []),
+    ]);
+    const flat = buildFlatTimelinePoints(releases, 3);
+    expect(
+      flat.points.map((point) => `${point.date} ${point.provider}`)
+    ).toStrictEqual([
+      "2023-12-31 OpenAI",
+      "2024-01-01 Google",
+      "2024-01-01 OpenAI",
+      "2025-01-01 OpenAI",
+      "2025-06-01 OpenAI",
+      "2026-01-01 OpenAI",
+    ]);
+    expect(flat.points[1]?.sameDay.map((item) => item.title)).toStrictEqual([
+      "Rival",
+    ]);
+    expect(flat.points[2]?.sameDay.map((item) => item.title)).toStrictEqual([
+      "Same day",
+      "Second A",
+    ]);
+    expect(flat.points.map((point) => point.lane)).toStrictEqual([
+      0, 1, 2, 0, 0, 0,
+    ]);
+    expect(flat.laneCount).toBe(3);
+    expect(
+      flat.points.filter((point) =>
+        point.sameDay.some((item) => item.title === "Multi")
+      )
+    ).toHaveLength(1);
+    expect(
+      flat.points.some((point) =>
+        point.sameDay.some((item) => item.title === "No series")
+      )
+    ).toBe(true);
   });
 });
 

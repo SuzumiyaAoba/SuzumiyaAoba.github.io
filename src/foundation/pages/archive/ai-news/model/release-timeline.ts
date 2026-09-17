@@ -1,5 +1,5 @@
 import { PROVIDERS, daysBetween, shiftMonth } from "./release-calendar";
-import type { Release } from "./release-calendar";
+import type { Provider, Release } from "./release-calendar";
 
 export type ReleaseTimelineRange = {
   start: string;
@@ -67,6 +67,27 @@ export function timelinePosition(
   );
 }
 
+/** 日付の間隔を描画幅に換算し、縮尺が変わっても点の操作領域が重ならないように段を分ける。 */
+function packTimelineLanes<T extends { date: string }>(
+  entries: T[],
+  pixelsPerDay: number,
+  targetWidth: number
+) {
+  const lanes: string[] = [];
+  const points = entries
+    .toSorted((a, b) => a.date.localeCompare(b.date))
+    .map((entry) => {
+      const availableLane = lanes.findIndex(
+        (previous) =>
+          daysBetween(previous, entry.date) * pixelsPerDay >= targetWidth
+      );
+      const lane = availableLane === -1 ? lanes.length : availableLane;
+      lanes[lane] = entry.date;
+      return { ...entry, lane };
+    });
+  return { points, laneCount: lanes.length };
+}
+
 /** 日付の間隔を描画幅に換算し、縮尺が変わっても点の操作領域が重ならないようにする。 */
 export function buildTimelineRows(
   releases: Release[],
@@ -96,21 +117,17 @@ export function buildTimelineRows(
   }
 
   return [...groups.values()]
-    .map((group) => {
-      const lanes: string[] = [];
-      const points = [...group.dates.entries()]
-        .toSorted(([a], [b]) => a.localeCompare(b))
-        .map(([date, sameDay]) => {
-          const availableLane = lanes.findIndex(
-            (previous) =>
-              daysBetween(previous, date) * pixelsPerDay >= targetWidth
-          );
-          const lane = availableLane === -1 ? lanes.length : availableLane;
-          lanes[lane] = date;
-          return { date, sameDay, lane };
-        });
-      return { ...group, points, laneCount: lanes.length };
-    })
+    .map((group) => ({
+      ...group,
+      ...packTimelineLanes(
+        [...group.dates.entries()].map(([date, sameDay]) => ({
+          date,
+          sameDay,
+        })),
+        pixelsPerDay,
+        targetWidth
+      ),
+    }))
     .toSorted(
       (a, b) =>
         PROVIDERS.indexOf(a.release.provider) -
@@ -121,4 +138,30 @@ export function buildTimelineRows(
         a.series.localeCompare(b.series) ||
         a.release.kind.localeCompare(b.release.kind)
     );
+}
+
+/** 系列で分けず全件を一つの時間軸に置き、同日・同一開発元の発表を一つの点にまとめる。 */
+export function buildFlatTimelinePoints(
+  releases: Release[],
+  pixelsPerDay: number,
+  targetWidth = 48
+) {
+  const byDate = new Map<
+    string,
+    { date: string; provider: Provider; sameDay: Release[] }
+  >();
+  for (const release of releases) {
+    if (!release.date) {
+      continue;
+    }
+    const key = `${release.date}${release.provider}`;
+    const point = byDate.get(key) ?? {
+      date: release.date,
+      provider: release.provider,
+      sameDay: [],
+    };
+    point.sameDay.push(release);
+    byDate.set(key, point);
+  }
+  return packTimelineLanes([...byDate.values()], pixelsPerDay, targetWidth);
 }

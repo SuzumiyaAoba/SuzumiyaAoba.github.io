@@ -280,6 +280,38 @@ export const Intervals: Story = {
   },
 };
 
+export const UngroupedTimeline: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const document = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "全期間の比較" }));
+    const chart = within(
+      canvas.getByRole("region", { name: "リリース間隔の比較チャート" })
+    );
+    const toggle = canvas.getByRole("button", { name: "系列でグループ化" });
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
+    await expect(chart.getByText("モデル系列")).toBeVisible();
+    await userEvent.click(toggle);
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await expect(chart.queryByText("モデル系列")).not.toBeInTheDocument();
+    await expect(
+      chart.getByRole("button", { name: /GPT · 2026年3月5日/u })
+    ).toBeInTheDocument();
+    await expect(
+      chart.getByRole("button", { name: /Gemini Flash · 2026年3月5日/u })
+    ).toBeInTheDocument();
+    await userEvent.click(
+      chart.getByRole("button", { name: /Claude Opus · 2026年2月5日/u })
+    );
+    await expect(
+      document.getByRole("article", { name: "Claude Opus Next" })
+    ).toHaveTextContent("前回から 36 日");
+    await userEvent.click(toggle);
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
+    await expect(chart.getByText("モデル系列")).toBeVisible();
+  },
+};
+
 export const UndatedAndEmptyMonth: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

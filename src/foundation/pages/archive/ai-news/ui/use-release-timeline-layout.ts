@@ -2,7 +2,10 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { UIEvent } from "react";
 import { daysBetween } from "../model/release-calendar";
 import type { Release } from "../model/release-calendar";
-import { buildTimelineRows } from "../model/release-timeline";
+import {
+  buildFlatTimelinePoints,
+  buildTimelineRows,
+} from "../model/release-timeline";
 import type { ReleaseTimelineRange } from "../model/release-timeline";
 
 export const SERIES_WIDTH = 176;
@@ -21,27 +24,39 @@ export function useReleaseTimelineLayout({
 }) {
   const scrollRef = useRef<HTMLElement>(null);
   const [zoom, setZoom] = useState<number | "fit">(3);
+  const [grouped, setGrouped] = useState(true);
   const [viewportWidth, setViewportWidth] = useState(0);
   const showLabels = viewportWidth >= 640 && zoom !== "fit" && zoom >= 2;
+  const seriesWidth = grouped ? SERIES_WIDTH : 0;
   const endPadding = showLabels ? 144 : AXIS_PADDING;
   const availableWidth = Math.max(
     1,
-    viewportWidth - SERIES_WIDTH - AXIS_PADDING - endPadding
+    viewportWidth - seriesWidth - AXIS_PADDING - endPadding
   );
   const plotWidth =
     zoom === "fit"
       ? availableWidth
       : Math.max(availableWidth, range.days * zoom);
   const pixelsPerDay = plotWidth / range.days;
+  const targetWidth = showLabels ? 144 : 48;
   const rows = useMemo(
-    () => buildTimelineRows(releases, pixelsPerDay, showLabels ? 144 : 48),
-    [releases, pixelsPerDay, showLabels]
+    () =>
+      grouped ? buildTimelineRows(releases, pixelsPerDay, targetWidth) : [],
+    [grouped, releases, pixelsPerDay, targetWidth]
   );
-  const hasRows = rows.length > 0;
+  const flat = useMemo(
+    () =>
+      grouped
+        ? null
+        : buildFlatTimelinePoints(releases, pixelsPerDay, targetWidth),
+    [grouped, releases, pixelsPerDay, targetWidth]
+  );
+  const hasRows = grouped ? rows.length > 0 : (flat?.points.length ?? 0) > 0;
   const centerDayRef = useRef<number | null>(null);
   const previousLayout = useRef<{
     pixelsPerDay: number;
     viewportWidth: number;
+    seriesWidth: number;
     start: string;
     selectedDate: string;
   } | null>(null);
@@ -65,7 +80,7 @@ export function useReleaseTimelineLayout({
       return;
     }
     const previous = previousLayout.current;
-    const visibleWidth = viewportWidth - SERIES_WIDTH;
+    const visibleWidth = viewportWidth - seriesWidth;
     if (!previous || previous.start !== range.start) {
       element.scrollLeft =
         AXIS_PADDING +
@@ -73,7 +88,8 @@ export function useReleaseTimelineLayout({
         visibleWidth / 2;
     } else if (
       previous.pixelsPerDay !== pixelsPerDay ||
-      previous.viewportWidth !== viewportWidth
+      previous.viewportWidth !== viewportWidth ||
+      previous.seriesWidth !== seriesWidth
     ) {
       // 拡大・縮小や画面幅の変更では、見ていた時点を画面中央に保つ。
       const centerDay =
@@ -95,10 +111,18 @@ export function useReleaseTimelineLayout({
     previousLayout.current = {
       pixelsPerDay,
       viewportWidth,
+      seriesWidth,
       start: range.start,
       selectedDate,
     };
-  }, [pixelsPerDay, viewportWidth, range.start, selectedDate, hasRows]);
+  }, [
+    pixelsPerDay,
+    viewportWidth,
+    seriesWidth,
+    range.start,
+    selectedDate,
+    hasRows,
+  ]);
 
   function scrollToDate(date: string) {
     const element = scrollRef.current;
@@ -108,14 +132,14 @@ export function useReleaseTimelineLayout({
     element.scrollLeft =
       AXIS_PADDING +
       daysBetween(range.start, date) * pixelsPerDay -
-      (element.clientWidth - SERIES_WIDTH) / 2;
+      (element.clientWidth - seriesWidth) / 2;
   }
 
   function scrollPage(direction: number) {
     const element = scrollRef.current;
     if (element) {
       element.scrollLeft +=
-        direction * (element.clientWidth - SERIES_WIDTH) * 0.8;
+        direction * (element.clientWidth - seriesWidth) * 0.8;
     }
   }
 
@@ -128,7 +152,7 @@ export function useReleaseTimelineLayout({
     const element = event.currentTarget;
     centerDayRef.current =
       (element.scrollLeft +
-        (element.clientWidth - SERIES_WIDTH) / 2 -
+        (element.clientWidth - seriesWidth) / 2 -
         AXIS_PADDING) /
       pixelsPerDay;
   }
@@ -137,12 +161,17 @@ export function useReleaseTimelineLayout({
     scrollRef,
     zoom,
     setZoom,
+    grouped,
+    setGrouped,
     showLabels,
+    seriesWidth,
     endPadding,
     availableWidth,
     plotWidth,
     pixelsPerDay,
     rows,
+    flat,
+    hasRows,
     smallerZoom,
     largerZoom,
     scrollToDate,
