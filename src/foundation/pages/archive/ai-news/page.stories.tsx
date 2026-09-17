@@ -216,7 +216,13 @@ export const Filtering: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const document = within(canvasElement.ownerDocument.body);
-    const claudeOpus = canvas.getByRole("button", {
+    await userEvent.click(
+      canvas.getByRole("button", { name: "モデル系列で絞り込み" })
+    );
+    const seriesOptions = within(
+      document.getByRole("group", { name: "モデル系列" })
+    );
+    const claudeOpus = seriesOptions.getByRole("button", {
       name: "Claude Opus · Anthropic",
     });
     await userEvent.click(claudeOpus);

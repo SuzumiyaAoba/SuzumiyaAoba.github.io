@@ -80,7 +80,7 @@ async function flush(): Promise<void> {
 }
 
 function button(name: string): HTMLButtonElement {
-  const element = [...container.querySelectorAll("button")].find(
+  const element = [...document.querySelectorAll("button")].find(
     (item) => item.getAttribute("aria-label") === name
   );
   if (!element) {
@@ -124,6 +124,7 @@ describe("ReleaseExplorer selection and URL sync", () => {
     await flush();
     expect(status()).toContain("4 件中 3 件");
     expect(button("OpenAI").getAttribute("aria-pressed")).toBe("true");
+    await click("モデル系列で絞り込み");
     expect(button("Claude Opus · Anthropic").getAttribute("aria-pressed")).toBe(
       "true"
     );
@@ -141,6 +142,7 @@ describe("ReleaseExplorer selection and URL sync", () => {
     expect(onUrlUpdate.mock.lastCall?.[0].searchParams.get("providers")).toBe(
       "Anthropic"
     );
+    await click("モデル系列で絞り込み");
     await click("GPT · OpenAI");
     await flush();
     expect(status()).toContain("4 件中 3 件");

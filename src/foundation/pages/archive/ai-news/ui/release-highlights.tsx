@@ -1,6 +1,17 @@
-import { ArrowUpRight, Activity, Layers3, Check } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowUpRight,
+  Activity,
+  Check,
+  ChevronDown,
+  Layers3,
+  X,
+} from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { PROVIDERS } from "../model/release-calendar";
 import type {
   Provider,
@@ -183,6 +194,7 @@ export function ProviderFilters({
   );
 }
 
+/** 系列は増えてもチップで潰れないよう、検索付きの一覧へ収める。選択中は解除用チップで示す。 */
 export function ModelFilters({
   options,
   selected,
@@ -195,42 +207,137 @@ export function ModelFilters({
   locale: Locale;
 }) {
   const en = locale === "en";
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   if (options.length === 0) {
     return null;
   }
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleOptions = normalizedQuery
+    ? options.filter((option) =>
+        `${option.name} ${option.provider}`
+          .toLowerCase()
+          .includes(normalizedQuery)
+      )
+    : options;
+  const selectedOptions = options.filter((option) =>
+    selected.includes(option.name)
+  );
   return (
     <fieldset
       aria-label={en ? "Filter by model" : "モデルで絞り込み"}
-      className="grid min-w-0 grid-flow-col grid-rows-2 justify-start gap-1.5 overflow-x-auto pb-2"
+      className="flex min-w-0 flex-wrap items-center gap-1.5 pb-2"
     >
-      {options.map(({ name, provider, count }) => {
-        const active = selected.includes(name);
-        return (
-          <button
-            key={name}
+      <Popover
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next);
+          if (!next) {
+            setQuery("");
+          }
+        }}
+      >
+        <PopoverTrigger asChild>
+          <Button
             type="button"
-            aria-pressed={active}
-            aria-label={`${name} · ${providerLabel(provider, locale)}`}
-            onClick={() => onToggle(name)}
-            className={cn(
-              "flex h-8 min-w-0 items-center gap-1.5 rounded-full border px-2.5 text-xs whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-ring",
-              active
-                ? "border-ai-accent bg-ai-accent-soft font-medium text-ai-accent-ink"
-                : "border-transparent bg-muted/30 text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground"
-            )}
+            variant={selected.length > 0 ? "secondary" : "flat"}
+            size="xl"
+            aria-label={en ? "Filter by model series" : "モデル系列で絞り込み"}
           >
-            <span
-              className={cn(
-                "size-1.5 shrink-0 rounded-full",
-                providerStyles[provider].dot
-              )}
+            {en ? "Series" : "系列"}
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {selected.length > 0 ? selected.length : en ? "All" : "すべて"}
+            </span>
+            <ChevronDown
+              className="size-4 text-muted-foreground"
               aria-hidden="true"
             />
-            {name}
-            <span className="text-mini tabular-nums opacity-70">{count}</span>
-          </button>
-        );
-      })}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          collisionPadding={12}
+          variant="bare"
+          aria-label={en ? "Model series options" : "モデル系列の選択肢"}
+          className="flex w-80 max-w-[calc(100vw-24px)] flex-col overflow-hidden"
+        >
+          <div className="shrink-0 border-b p-2">
+            <Input
+              type="search"
+              value={query}
+              aria-label={en ? "Filter model series" : "系列を検索"}
+              placeholder={en ? "Filter series…" : "系列を検索…"}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
+          <fieldset
+            aria-label={en ? "Model series" : "モデル系列"}
+            className="max-h-80 min-h-0 min-w-0 overflow-y-auto overscroll-contain p-1.5"
+          >
+            {visibleOptions.map(({ name, provider, count }) => {
+              const active = selected.includes(name);
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  aria-pressed={active}
+                  aria-label={`${name} · ${providerLabel(provider, locale)}`}
+                  onClick={() => onToggle(name)}
+                  className={cn(
+                    "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-left text-xs transition-colors hover:bg-muted/60 focus-visible:outline-2 focus-visible:outline-ring",
+                    active && "font-medium"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "size-1.5 shrink-0 rounded-full",
+                      providerStyles[provider].dot
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 flex-1 truncate">{name}</span>
+                  <span className="shrink-0 text-mini text-muted-foreground tabular-nums">
+                    {count}
+                  </span>
+                  {active && (
+                    <Check
+                      className="size-3.5 shrink-0 text-ai-accent-ink"
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              );
+            })}
+            {visibleOptions.length === 0 && (
+              <p className="p-3 text-xs text-muted-foreground">
+                {en ? "No matching series." : "一致する系列がありません。"}
+              </p>
+            )}
+          </fieldset>
+        </PopoverContent>
+      </Popover>
+      {selectedOptions.map(({ name, provider }) => (
+        <button
+          key={name}
+          type="button"
+          aria-pressed="true"
+          aria-label={
+            en ? `Remove the ${name} filter` : `${name} の絞り込みを解除`
+          }
+          onClick={() => onToggle(name)}
+          className="flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-full border border-ai-accent bg-ai-accent-soft px-2.5 text-xs font-medium whitespace-nowrap text-ai-accent-ink transition-colors focus-visible:outline-2 focus-visible:outline-ring"
+        >
+          <span
+            className={cn(
+              "size-1.5 shrink-0 rounded-full",
+              providerStyles[provider].dot
+            )}
+            aria-hidden="true"
+          />
+          {name}
+          <X className="size-3" aria-hidden="true" />
+        </button>
+      ))}
     </fieldset>
   );
 }
