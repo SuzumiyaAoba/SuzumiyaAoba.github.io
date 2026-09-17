@@ -19,11 +19,7 @@ import type {
   ReleaseModelOption,
 } from "../model/release-calendar";
 import { getReleaseActivity } from "../model/release-activity";
-import {
-  ProviderIcon,
-  providerLabel,
-  providerStyles,
-} from "./provider-identity";
+import { ProviderIcon, providerLabel } from "./provider-identity";
 
 export function ReleaseHighlights({
   releases,
@@ -129,7 +125,7 @@ export function ProviderFilters({
   return (
     <fieldset
       aria-label={en ? "Filter by provider" : "提供元で絞り込み"}
-      className="grid min-w-0 auto-cols-[7rem] grid-flow-col gap-1.5 overflow-x-auto pb-2 sm:auto-cols-[9rem] sm:gap-2 lg:auto-cols-[11rem]"
+      className="scrollbar-hide grid min-w-0 auto-cols-[7rem] grid-flow-col gap-1.5 overflow-x-auto pb-2 sm:auto-cols-[9rem] sm:gap-2 lg:auto-cols-[11rem]"
     >
       <button
         type="button"
@@ -290,12 +286,9 @@ function ModelFilterSelect({
                   active && "font-medium"
                 )}
               >
-                <span
-                  className={cn(
-                    "size-1.5 shrink-0 rounded-full",
-                    providerStyles[provider].dot
-                  )}
-                  aria-hidden="true"
+                <ProviderIcon
+                  provider={provider}
+                  className="size-5 rounded-md"
                 />
                 <span className="min-w-0 flex-1 truncate">{name}</span>
                 <span className="shrink-0 text-mini text-muted-foreground tabular-nums">
@@ -411,12 +404,9 @@ export function ModelFilters({
           onClick={() => onToggle(option.name)}
           className="flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-full border border-ai-accent bg-ai-accent-soft px-2.5 text-xs font-medium whitespace-nowrap text-ai-accent-ink transition-colors focus-visible:outline-2 focus-visible:outline-ring"
         >
-          <span
-            className={cn(
-              "size-1.5 shrink-0 rounded-full",
-              providerStyles[option.provider].dot
-            )}
-            aria-hidden="true"
+          <ProviderIcon
+            provider={option.provider}
+            className="size-5 rounded-full"
           />
           {option.name}
           <X className="size-3" aria-hidden="true" />

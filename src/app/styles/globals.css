@@ -123,6 +123,14 @@
   mask-image: var(--toc-mask);
 }
 
+/* 横スクロールは許可しつつ、スクロールバーは表示しない領域用。 */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* 商品カードなどの既存クラスにも共通の sans-serif を適用する。 */
 .font-noto {
   font-family: var(--font-ui);
