@@ -228,10 +228,57 @@ export function buildReleases(entries: RenderedRelease[]): Release[] {
 
 export type ReleaseFilters = {
   query: string;
-  provider: string;
-  series: string;
+  providers: string[];
+  models: string[];
   kind: string;
 };
+
+/** 選択済みの値をトグルする。 */
+export function toggleSelection(
+  values: readonly string[],
+  value: string
+): string[] {
+  return values.includes(value)
+    ? values.filter((item) => item !== value)
+    : [...values, value];
+}
+
+export function sameSelection(
+  a: readonly string[],
+  b: readonly string[]
+): boolean {
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+}
+
+export type ReleaseModelOption = {
+  name: string;
+  provider: Provider;
+  count: number;
+};
+
+/** モデル絞り込みに出す系列一覧。プロバイダの並び順でまとめる。 */
+export function buildModelOptions(releases: Release[]): ReleaseModelOption[] {
+  const options = new Map<string, ReleaseModelOption>();
+  for (const release of releases) {
+    for (const name of release.series) {
+      const option = options.get(name);
+      if (option) {
+        option.count += 1;
+      } else {
+        options.set(name, { name, provider: release.provider, count: 1 });
+      }
+    }
+  }
+  const providerOrder = new Map(
+    PROVIDERS.map((provider, index) => [provider, index])
+  );
+  return [...options.values()].toSorted(
+    (a, b) =>
+      (providerOrder.get(a.provider) ?? PROVIDERS.length) -
+        (providerOrder.get(b.provider) ?? PROVIDERS.length) ||
+      a.name.localeCompare(b.name)
+  );
+}
 
 function normalize(value: string) {
   return value.normalize("NFKC").toLowerCase();
@@ -242,14 +289,18 @@ export function filterReleases(
   filters: ReleaseFilters
 ): Release[] {
   const terms = normalize(filters.query).trim().split(/\s+/u).filter(Boolean);
+  const providers = new Set(filters.providers);
+  const models = new Set(filters.models);
+  const hasSelection = providers.size > 0 || models.size > 0;
   return releases.filter((release) => {
-    if (filters.provider && release.provider !== filters.provider) {
+    if (
+      hasSelection &&
+      !providers.has(release.provider) &&
+      !release.series.some((series) => models.has(series))
+    ) {
       return false;
     }
     if (filters.kind && release.kind !== filters.kind) {
-      return false;
-    }
-    if (filters.series && !release.series.includes(filters.series)) {
       return false;
     }
     const text = normalize(

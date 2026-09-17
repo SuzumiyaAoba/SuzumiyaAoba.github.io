@@ -1,6 +1,15 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
 import {
   CalendarDays,
   GitCommitHorizontal,
@@ -13,7 +22,13 @@ import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { buildReleases, filterReleases } from "../model/release-calendar";
+import {
+  buildModelOptions,
+  buildReleases,
+  filterReleases,
+  sameSelection,
+  toggleSelection,
+} from "../model/release-calendar";
 import type {
   ReleaseFilters,
   RenderedRelease,
@@ -23,16 +38,90 @@ import { useCurrentDate } from "../model/use-current-date";
 import { ReleaseCalendarStrip } from "./release-calendar-strip";
 import { ReleaseTimeline } from "./release-timeline";
 import { ReleaseList } from "./release-list";
-import { ProviderFilters, ReleaseHighlights } from "./release-highlights";
+import {
+  ModelFilters,
+  ProviderFilters,
+  ReleaseHighlights,
+} from "./release-highlights";
 import { releaseSelectClass } from "./release-view-layout";
 import { useReleasePopover } from "./release-popover";
 
 const INITIAL_FILTERS: ReleaseFilters = {
   query: "",
-  provider: "",
-  series: "",
+  providers: [],
+  models: [],
   kind: "",
 };
+
+type ReleaseSelection = {
+  providers: string[];
+  models: string[];
+};
+
+const selectionParser = parseAsArrayOf(parseAsString)
+  .withDefault([])
+  .withOptions({ history: "replace" });
+
+/** クエリパラメータと選択状態を双方向に同期する。描画は行わない。 */
+function ReleaseSelectionUrlSync({
+  providers,
+  models,
+  validProviders,
+  validModels,
+  onApply,
+}: {
+  providers: string[];
+  models: string[];
+  validProviders: ReadonlySet<string>;
+  validModels: ReadonlySet<string>;
+  onApply: (next: ReleaseSelection) => void;
+}) {
+  const [params, setParams] = useQueryStates({
+    providers: selectionParser,
+    models: selectionParser,
+  });
+  const onApplyRef = useRef(onApply);
+  onApplyRef.current = onApply;
+  const pendingApply = useRef<ReleaseSelection | null>(null);
+
+  // URL側の変化を選択状態へ適用する。未知の値はここで落とす。
+  useEffect(() => {
+    const next: ReleaseSelection = {
+      providers: [
+        ...new Set(
+          params.providers.filter((provider) => validProviders.has(provider))
+        ),
+      ],
+      models: [
+        ...new Set(params.models.filter((model) => validModels.has(model))),
+      ],
+    };
+    pendingApply.current = next;
+    onApplyRef.current(next);
+  }, [params.providers, params.models, validProviders, validModels]);
+
+  // 選択状態をURLへ書き戻す。適用中は状態側が追いつくまで待つ。
+  useEffect(() => {
+    const pending = pendingApply.current;
+    if (pending) {
+      if (
+        !sameSelection(pending.providers, providers) ||
+        !sameSelection(pending.models, models)
+      ) {
+        return;
+      }
+      pendingApply.current = null;
+    }
+    if (
+      !sameSelection(params.providers, providers) ||
+      !sameSelection(params.models, models)
+    ) {
+      void setParams({ providers, models });
+    }
+  }, [providers, models, params, setParams]);
+
+  return null;
+}
 
 export function ReleaseExplorer({
   entries,
@@ -69,14 +158,28 @@ export function ReleaseExplorer({
     view === "calendar"
       ? (calendarDate ?? today)
       : (timelineDate ?? latestDate ?? today);
-  const availableSeries = [
-    ...new Set(
-      filterReleases(releases, { ...filters, query: "", series: "" }).flatMap(
-        (item) => item.series
-      )
-    ),
-  ].toSorted();
-  const hasFilters = Object.values(filters).some(Boolean);
+  const validProviders = useMemo(
+    () => new Set(releases.map((release) => release.provider)),
+    [releases]
+  );
+  const validModels = useMemo(
+    () => new Set(releases.flatMap((release) => release.series)),
+    [releases]
+  );
+  const modelOptions = useMemo(() => buildModelOptions(releases), [releases]);
+  const applySelection = useCallback((next: ReleaseSelection) => {
+    setFilters((previous) =>
+      sameSelection(previous.providers, next.providers) &&
+      sameSelection(previous.models, next.models)
+        ? previous
+        : { ...previous, ...next }
+    );
+  }, []);
+  const hasFilters =
+    Boolean(filters.query) ||
+    Boolean(filters.kind) ||
+    filters.providers.length > 0 ||
+    filters.models.length > 0;
   const kindOptions = [
     ["", en ? "All types" : "すべての種類"],
     ["llm", "LLM"],
@@ -102,6 +205,15 @@ export function ReleaseExplorer({
 
   return (
     <div className="space-y-4">
+      <Suspense fallback={null}>
+        <ReleaseSelectionUrlSync
+          providers={filters.providers}
+          models={filters.models}
+          validProviders={validProviders}
+          validModels={validModels}
+          onApply={applySelection}
+        />
+      </Suspense>
       <div
         className={cn(
           "rounded-2xl border bg-background",
@@ -128,16 +240,34 @@ export function ReleaseExplorer({
               );
             }}
           />
-          <div className="px-4 pt-4 sm:px-6">
+          <div className="space-y-2 px-4 pt-4 sm:px-6">
             <ProviderFilters
               releases={releases}
-              selected={filters.provider}
-              onSelect={(provider) => updateFilters({ provider, series: "" })}
+              selected={filters.providers}
+              allSelected={
+                filters.providers.length === 0 && filters.models.length === 0
+              }
+              onToggle={(provider) =>
+                updateFilters({
+                  providers: toggleSelection(filters.providers, provider),
+                })
+              }
+              onSelectAll={() => updateFilters({ providers: [], models: [] })}
+              locale={locale}
+            />
+            <ModelFilters
+              options={modelOptions}
+              selected={filters.models}
+              onToggle={(model) =>
+                updateFilters({
+                  models: toggleSelection(filters.models, model),
+                })
+              }
               locale={locale}
             />
           </div>
           <div className="border-b">
-            <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:px-6">
+            <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-6">
               <search className="relative col-span-2 sm:col-span-1">
                 <label htmlFor={`${id}-search`} className="sr-only">
                   {en ? "Search models" : "モデルを検索"}
@@ -166,27 +296,12 @@ export function ReleaseExplorer({
                 className={releaseSelectClass}
                 value={filters.kind}
                 onChange={(event) =>
-                  updateFilters({ kind: event.target.value, series: "" })
+                  updateFilters({ kind: event.target.value })
                 }
               >
                 {kindOptions.map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
-                  </option>
-                ))}
-              </select>
-              <select
-                aria-label={en ? "Model series" : "モデル系列"}
-                className={releaseSelectClass}
-                value={filters.series}
-                onChange={(event) =>
-                  updateFilters({ series: event.target.value })
-                }
-              >
-                <option value="">{en ? "All series" : "すべての系列"}</option>
-                {availableSeries.map((series) => (
-                  <option key={series} value={series}>
-                    {series}
                   </option>
                 ))}
               </select>

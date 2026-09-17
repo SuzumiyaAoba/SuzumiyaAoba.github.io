@@ -2,9 +2,17 @@ import { ArrowUpRight, Activity, Layers3, Check } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { PROVIDERS } from "../model/release-calendar";
-import type { Release } from "../model/release-calendar";
+import type {
+  Provider,
+  Release,
+  ReleaseModelOption,
+} from "../model/release-calendar";
 import { getReleaseActivity } from "../model/release-activity";
-import { ProviderIcon, providerLabel } from "./provider-identity";
+import {
+  ProviderIcon,
+  providerLabel,
+  providerStyles,
+} from "./provider-identity";
 
 export function ReleaseHighlights({
   releases,
@@ -91,42 +99,65 @@ export function ReleaseHighlights({
 export function ProviderFilters({
   releases,
   selected,
-  onSelect,
+  allSelected,
+  onToggle,
+  onSelectAll,
   locale,
 }: {
   releases: Release[];
-  selected: string;
-  onSelect: (provider: string) => void;
+  selected: readonly string[];
+  allSelected: boolean;
+  onToggle: (provider: Provider) => void;
+  onSelectAll: () => void;
   locale: Locale;
 }) {
   const en = locale === "en";
   const providers = PROVIDERS.filter((provider) =>
     releases.some((release) => release.provider === provider)
   );
-  const choices = ["", ...providers] as const;
   return (
     <fieldset
       aria-label={en ? "Filter by provider" : "提供元で絞り込み"}
       className="grid min-w-0 auto-cols-[7rem] grid-flow-col gap-1.5 overflow-x-auto pb-2 sm:auto-cols-[9rem] sm:gap-2 lg:auto-cols-[11rem]"
     >
-      {choices.map((provider) => {
-        const active = selected === provider;
-        const count = provider
-          ? releases.filter((release) => release.provider === provider).length
-          : releases.length;
+      <button
+        type="button"
+        aria-label={en ? "Show all releases" : "すべてのリリースを表示"}
+        aria-pressed={allSelected}
+        onClick={onSelectAll}
+        className={cn(
+          "relative flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg border px-1 py-2.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring lg:flex-row lg:justify-start lg:gap-2 lg:px-3",
+          allSelected
+            ? "border-ai-accent bg-ai-accent-soft text-ai-accent-ink"
+            : "border-transparent bg-muted/30 hover:border-border hover:bg-muted/50"
+        )}
+      >
+        <span className="flex size-6 items-center justify-center sm:size-7">
+          <Layers3
+            className="size-5 text-muted-foreground"
+            aria-hidden="true"
+          />
+        </span>
+        <span className="min-w-0 truncate text-micro font-medium sm:text-xs">
+          {en ? "All" : "すべて"}
+        </span>
+        <span className="ml-auto hidden shrink-0 items-center gap-1.5 text-label whitespace-nowrap text-muted-foreground tabular-nums xl:flex">
+          {allSelected && <Check className="size-3" aria-hidden="true" />}
+          {releases.length}
+        </span>
+      </button>
+      {providers.map((provider) => {
+        const active = selected.includes(provider);
+        const count = releases.filter(
+          (release) => release.provider === provider
+        ).length;
         return (
           <button
             key={provider}
             type="button"
-            aria-label={
-              provider
-                ? providerLabel(provider, locale)
-                : en
-                  ? "All providers"
-                  : "すべての提供元"
-            }
+            aria-label={providerLabel(provider, locale)}
             aria-pressed={active}
-            onClick={() => onSelect(provider)}
+            onClick={() => onToggle(provider)}
             className={cn(
               "relative flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg border px-1 py-2.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring lg:flex-row lg:justify-start lg:gap-2 lg:px-3",
               active
@@ -134,30 +165,69 @@ export function ProviderFilters({
                 : "border-transparent bg-muted/30 hover:border-border hover:bg-muted/50"
             )}
           >
-            {provider ? (
-              <ProviderIcon
-                provider={provider}
-                className="size-6 rounded-md sm:size-7"
-              />
-            ) : (
-              <span className="flex size-6 items-center justify-center sm:size-7">
-                <Layers3
-                  className="size-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </span>
-            )}
+            <ProviderIcon
+              provider={provider}
+              className="size-6 rounded-md sm:size-7"
+            />
             <span className="min-w-0 truncate text-micro font-medium sm:text-xs">
-              {provider
-                ? providerLabel(provider, locale)
-                : en
-                  ? "All"
-                  : "すべて"}
+              {providerLabel(provider, locale)}
             </span>
             <span className="ml-auto hidden shrink-0 items-center gap-1.5 text-label whitespace-nowrap text-muted-foreground tabular-nums xl:flex">
               {active && <Check className="size-3" aria-hidden="true" />}
               {count}
             </span>
+          </button>
+        );
+      })}
+    </fieldset>
+  );
+}
+
+export function ModelFilters({
+  options,
+  selected,
+  onToggle,
+  locale,
+}: {
+  options: ReleaseModelOption[];
+  selected: readonly string[];
+  onToggle: (model: string) => void;
+  locale: Locale;
+}) {
+  const en = locale === "en";
+  if (options.length === 0) {
+    return null;
+  }
+  return (
+    <fieldset
+      aria-label={en ? "Filter by model" : "モデルで絞り込み"}
+      className="grid min-w-0 grid-flow-col grid-rows-2 justify-start gap-1.5 overflow-x-auto pb-2"
+    >
+      {options.map(({ name, provider, count }) => {
+        const active = selected.includes(name);
+        return (
+          <button
+            key={name}
+            type="button"
+            aria-pressed={active}
+            aria-label={`${name} · ${providerLabel(provider, locale)}`}
+            onClick={() => onToggle(name)}
+            className={cn(
+              "flex h-8 min-w-0 items-center gap-1.5 rounded-full border px-2.5 text-xs whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-ring",
+              active
+                ? "border-ai-accent bg-ai-accent-soft font-medium text-ai-accent-ink"
+                : "border-transparent bg-muted/30 text-muted-foreground hover:border-border hover:bg-muted/50 hover:text-foreground"
+            )}
+          >
+            <span
+              className={cn(
+                "size-1.5 shrink-0 rounded-full",
+                providerStyles[provider].dot
+              )}
+              aria-hidden="true"
+            />
+            {name}
+            <span className="text-mini tabular-nums opacity-70">{count}</span>
           </button>
         );
       })}

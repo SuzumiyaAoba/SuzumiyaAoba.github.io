@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "storybook/test";
+import { NuqsTestingAdapter } from "nuqs/adapters/testing";
 import { AiNewsPageContent } from "./ui/page-content";
 import { AiNewsTimelinePageContent } from "./ui/timeline-page-content";
 import type { RenderedRelease } from "./model/release-calendar";
@@ -81,6 +82,13 @@ const meta = {
   title: "Pages/Archive/AiNews",
   component: AiNewsPageContent,
   parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <NuqsTestingAdapter hasMemory>
+        <Story />
+      </NuqsTestingAdapter>
+    ),
+  ],
   args: { locale: "ja", updated: "2026-03-06", entries, today: "2026-03-06" },
 } satisfies Meta<typeof AiNewsPageContent>;
 
@@ -208,11 +216,17 @@ export const Filtering: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const document = within(canvasElement.ownerDocument.body);
-    await userEvent.click(canvas.getByRole("button", { name: "Anthropic" }));
-    await userEvent.selectOptions(
-      canvas.getByRole("combobox", { name: "モデル系列" }),
-      "Claude Opus"
-    );
+    const claudeOpus = canvas.getByRole("button", {
+      name: "Claude Opus · Anthropic",
+    });
+    await userEvent.click(claudeOpus);
+    await expect(claudeOpus).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 2 件");
+    const anthropic = canvas.getByRole("button", { name: "Anthropic" });
+    await userEvent.click(anthropic);
+    await expect(anthropic).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 3 件");
+    await userEvent.click(anthropic);
     await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 2 件");
     await userEvent.click(
       canvas.getByRole("button", { name: /Claude Opus · 2026年2月5日/u })
@@ -249,6 +263,23 @@ export const Filtering: Story = {
     await expect(
       document.getByRole("article", { name: "GPT Image" })
     ).toBeVisible();
+    await userEvent.selectOptions(
+      canvas.getByRole("combobox", { name: "リリースの種類" }),
+      ""
+    );
+    const openai = canvas.getByRole("button", { name: "OpenAI" });
+    const google = canvas.getByRole("button", { name: "Google" });
+    await userEvent.click(openai);
+    await userEvent.click(google);
+    await expect(openai).toHaveAttribute("aria-pressed", "true");
+    await expect(google).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 4 件");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "すべてのリリースを表示" })
+    );
+    await expect(openai).toHaveAttribute("aria-pressed", "false");
+    await expect(google).toHaveAttribute("aria-pressed", "false");
+    await expect(canvas.getByRole("status")).toHaveTextContent("8 件中 8 件");
   },
 };
 
@@ -416,6 +447,13 @@ export const NearbyReleases: Story = {
     await expect(
       second.getBoundingClientRect().top - first.getBoundingClientRect().top
     ).toBeGreaterThanOrEqual(32);
+    first.scrollIntoView({ block: "center", inline: "nearest" });
+    await waitFor(
+      async () =>
+        await expect(first.getBoundingClientRect().top).toBeLessThan(
+          window.innerHeight
+        )
+    );
     await userEvent.hover(first);
     await expect(document.getByRole("tooltip")).toHaveTextContent("Model A");
     await userEvent.unhover(first);

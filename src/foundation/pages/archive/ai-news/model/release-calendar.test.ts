@@ -4,12 +4,14 @@ import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { AiNewsEntrySchema } from "@/shared/lib/ai-news";
 import {
+  buildModelOptions,
   buildReleases,
   daysBetween,
   filterReleases,
   formatReleaseDate,
   isExactDate,
   shiftMonth,
+  toggleSelection,
 } from "./release-calendar";
 import type { RenderedRelease } from "./release-calendar";
 import {
@@ -38,6 +40,9 @@ function release(
     },
   };
 }
+
+const titles = (items: { title: string }[]): string[] =>
+  items.map((item) => item.title);
 
 describe("release dates and calendar", () => {
   it("accepts only real complete dates, including leap days", () => {
@@ -124,8 +129,8 @@ describe("continuous release timeline", () => {
     ]);
     const filtered = filterReleases(releases, {
       query: "Last",
-      provider: "",
-      series: "",
+      providers: [],
+      models: [],
       kind: "",
     });
     expect(getReleaseTimelineRange(filtered)).toStrictEqual(
@@ -310,9 +315,9 @@ describe("release intervals", () => {
     ]);
     const filtered = filterReleases(result, {
       query: "ＭＯＤＥＬ ３",
-      provider: "OpenAI",
+      providers: ["OpenAI"],
       kind: "llm",
-      series: "Example",
+      models: ["Example"],
     });
     expect(filtered).toHaveLength(1);
     expect(filtered[0]?.intervals[0]?.previousTitles).toStrictEqual([
@@ -322,9 +327,9 @@ describe("release intervals", () => {
     expect(
       filterReleases(result, {
         query: "",
-        provider: "Google",
+        providers: ["Google"],
         kind: "",
-        series: "",
+        models: [],
       })
     ).toStrictEqual([]);
   });
@@ -368,9 +373,9 @@ describe("release intervals", () => {
       );
       const matches = filterReleases(releases, {
         query,
-        provider,
+        providers: [provider],
         kind: "llm",
-        series: "",
+        models: [],
       });
       expect(matches.length).toBeGreaterThan(1);
       expect(matches.every((item) => item.provider === provider)).toBe(true);
@@ -378,4 +383,100 @@ describe("release intervals", () => {
       expect(matches.some((item) => item.date?.startsWith("2026-"))).toBe(true);
     }
   );
+});
+
+describe("provider and model selection", () => {
+  const releases = buildReleases([
+    release("GPT Next", "2026-03-05", ["GPT"], ["OpenAI", "LLM Model"]),
+    release("GPT Previous", "2026-01-01", ["GPT"], ["OpenAI", "LLM Model"]),
+    release(
+      "Gemini Flash Next",
+      "2026-03-05",
+      ["Gemini Flash"],
+      ["Google", "LLM Model"]
+    ),
+    release(
+      "Claude Opus Next",
+      "2026-02-05",
+      ["Claude Opus"],
+      ["Anthropic", "LLM Model"]
+    ),
+    release(
+      "Claude Opus Previous",
+      "2025-12-31",
+      ["Claude Opus"],
+      ["Anthropic", "LLM Model"]
+    ),
+    release("No series", "2025-06-01", [], ["OpenAI", "LLM Model"]),
+  ]);
+  const base = { query: "", kind: "" };
+
+  it("shows everything when nothing is selected", () => {
+    expect(
+      filterReleases(releases, { ...base, providers: [], models: [] })
+    ).toHaveLength(6);
+  });
+
+  it("keeps every release of each selected provider", () => {
+    expect(
+      titles(
+        filterReleases(releases, {
+          ...base,
+          providers: ["OpenAI", "Anthropic"],
+          models: [],
+        })
+      )
+    ).toStrictEqual([
+      "GPT Next",
+      "Claude Opus Next",
+      "GPT Previous",
+      "Claude Opus Previous",
+      "No series",
+    ]);
+  });
+
+  it("shows only the selected models and merges them with selected providers", () => {
+    expect(
+      titles(
+        filterReleases(releases, {
+          ...base,
+          providers: ["OpenAI"],
+          models: ["Claude Opus"],
+        })
+      )
+    ).toStrictEqual([
+      "GPT Next",
+      "Claude Opus Next",
+      "GPT Previous",
+      "Claude Opus Previous",
+      "No series",
+    ]);
+    expect(
+      titles(
+        filterReleases(releases, {
+          ...base,
+          providers: [],
+          models: ["Claude Opus"],
+        })
+      )
+    ).toStrictEqual(["Claude Opus Next", "Claude Opus Previous"]);
+  });
+
+  it("toggles values on and off", () => {
+    expect(toggleSelection([], "GPT")).toStrictEqual(["GPT"]);
+    expect(toggleSelection(["GPT"], "GPT")).toStrictEqual([]);
+    expect(toggleSelection(["GPT"], "Grok")).toStrictEqual(["GPT", "Grok"]);
+  });
+
+  it("lists model options grouped by provider order with release counts", () => {
+    const options = buildModelOptions(releases);
+    expect(options.map((option) => option.name)).toStrictEqual([
+      "GPT",
+      "Claude Opus",
+      "Gemini Flash",
+    ]);
+    expect(options[0]).toMatchObject({ provider: "OpenAI", count: 2 });
+    expect(options[1]).toMatchObject({ provider: "Anthropic", count: 2 });
+    expect(options[2]).toMatchObject({ provider: "Google", count: 1 });
+  });
 });
