@@ -1079,3 +1079,36 @@ items:
     description: MiniMax のターミナル型 AI コーディングエージェント。MiniMax アカウントのほか OpenAI・Anthropic 互換 API のモデル（BYOK）も使え、TUI・ヘッドレス CLI・ACP によるエディタ連携や、MCP・プラグイン・サブエージェントに対応する。
     websiteUrl: https://agent.minimax.io/
     githubUrl: https://github.com/MiniMax-AI/minimax-code
+  - id: codex
+    name: Codex
+    category: 開発ツール
+    tags: [AIコーディング, CLI, コードレビュー, MCP]
+    description: OpenAI の AI コーディングエージェント。ターミナルでコードベースの読解・編集・コマンド実行を行い、実装や不具合修正、コードレビューを支援する。
+    websiteUrl: https://learn.chatgpt.com/docs/codex/cli
+    githubUrl: https://github.com/openai/codex
+  - id: claude-code
+    name: Claude Code
+    category: 開発ツール
+    tags: [AIコーディング, CLI, MCP, スキル]
+    description: Anthropic の AI コーディングエージェント。コードベースを読み、複数ファイルの編集・コマンド実行・動作検証を行う。ターミナルや IDE で利用でき、MCP・スキル・フックで拡張できる。
+    websiteUrl: https://code.claude.com/docs/en/overview
+    githubUrl: https://github.com/anthropics/claude-code
+  - id: opencode
+    name: OpenCode
+    category: 開発ツール
+    tags: [AIコーディング, CLI, LLM, LSP]
+    description: ターミナル・IDE・デスクトップで使えるオープンソースの AI コーディングエージェント。複数の LLM プロバイダーやローカルモデルに対応し、LSP を使ったコード理解や複数セッションでの並行作業を支援する。
+    websiteUrl: https://opencode.ai/
+    githubUrl: https://github.com/anomalyco/opencode
+  - id: muse-code
+    name: Muse Code
+    category: 開発ツール
+    tags: [AIコーディング, CLI, 自動化]
+    description: Meta の Muse Spark を使うターミナル型 AI コーディングエージェント。変更計画の作成・ファイル編集・コマンド実行を行い、対話操作と CI 向けのヘッドレス実行に対応する。
+    websiteUrl: https://dev.meta.ai/docs/muse-code
+  - id: devin-cli
+    name: Devin CLI
+    category: 開発ツール
+    tags: [AIコーディング, CLI, コードレビュー, MCP]
+    description: ローカル環境で動作し、Devin Cloud と連携する AI コーディング CLI。機能実装・バグ修正・コードレビューを支援し、MCP やスキルで拡張できる。
+    websiteUrl: https://docs.devin.ai/cli
