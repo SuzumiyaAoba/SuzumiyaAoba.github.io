@@ -1,6 +1,15 @@
 version: 1
-updated: "2026-09-17"
+updated: "2026-09-19"
 events:
+  - year: 2026
+    date: 2026-09-16
+    title_ja: "SemIf (OpenJev)"
+    summary_ja: |
+      TypeSafe AI の Jev に着想を得た独立研究プロジェクト（旧称 OpenJev、TypeSafe とは無関係）。ブラウザ上でオープンモデルを動かし、選択肢の確率を logits から直接読み取る方式と、JSON をトークン生成させる方式を同一モデルで比較できるデモを公開。Qwen3 0.6B・MiniCPM5 2B・Qwen3.5 4B を選択可能。
+
+      [SemIf - OpenJev in your browser](https://openjev.com/) / [GitHub - TheoLeeCJ/openjev](https://github.com/TheoLeeCJ/openjev)
+    tags: ["OpenJev", "Jev"]
+    series: ["Jev"]
   - year: 2026
     date: 2026-09-15
     title_ja: "Gemini 3.8 Live / 3.8 Live Extended Thinking"
