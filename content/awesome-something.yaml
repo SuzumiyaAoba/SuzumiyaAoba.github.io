@@ -1072,3 +1072,10 @@ items:
     articles:
       - title: OKF 仕様（SPEC.md）
         url: https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
+  - id: minimax-code
+    name: MiniMax Code
+    category: 開発ツール
+    tags: [AIコーディング, CLI, LLM, MCP]
+    description: MiniMax のターミナル型 AI コーディングエージェント。MiniMax アカウントのほか OpenAI・Anthropic 互換 API のモデル（BYOK）も使え、TUI・ヘッドレス CLI・ACP によるエディタ連携や、MCP・プラグイン・サブエージェントに対応する。
+    websiteUrl: https://agent.minimax.io/
+    githubUrl: https://github.com/MiniMax-AI/minimax-code
