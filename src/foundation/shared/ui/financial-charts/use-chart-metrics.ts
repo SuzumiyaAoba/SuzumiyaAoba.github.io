@@ -22,27 +22,23 @@ export function useChartMetrics({
   const [hiddenMetrics, setHiddenMetrics] = useState<Set<string>>(
     () => new Set()
   );
-  const availableMetrics = useMemo(
-    () =>
-      data.headers.filter(
-        (header) =>
-          !excludeHeaders.includes(header) &&
-          data.series.some((row) => Number.isFinite(row.values[header]))
-      ),
-    [data.headers, data.series, excludeHeaders]
-  );
-  const effectiveGroups = useMemo(
-    () =>
-      groups.length > 0
-        ? groups.map((group) => ({
-            ...group,
-            metrics: group.metrics.filter((metric) =>
-              availableMetrics.includes(metric)
-            ),
-          }))
-        : [{ name: "", metrics: availableMetrics }],
-    [groups, availableMetrics]
-  );
+  const availableMetrics = useMemo(() => {
+    const excludeSet = new Set(excludeHeaders);
+    return data.headers.filter(
+      (header) =>
+        !excludeSet.has(header) &&
+        data.series.some((row) => Number.isFinite(row.values[header]))
+    );
+  }, [data.headers, data.series, excludeHeaders]);
+  const effectiveGroups = useMemo(() => {
+    const availableSet = new Set(availableMetrics);
+    return groups.length > 0
+      ? groups.map((group) => ({
+          ...group,
+          metrics: group.metrics.filter((metric) => availableSet.has(metric)),
+        }))
+      : [{ name: "", metrics: availableMetrics }];
+  }, [groups, availableMetrics]);
 
   const selectedMetrics = useMemo(
     () => availableMetrics.filter((metric) => !hiddenMetrics.has(metric)),

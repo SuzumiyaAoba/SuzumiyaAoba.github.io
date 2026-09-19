@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { resolveContentRoot } from "@/shared/lib/content-file";
+import { resolveContentDeps } from "@/shared/lib/content-file";
 
 /** 本文だけで使う、画像を必要としないアフィリエイトリンク。 */
 const AffiliateLinkSchema = z.object({
@@ -82,10 +82,7 @@ let cachedIndex: AffiliateProductIndex | null = null;
  * @returns 商品データのインデックス情報
  */
 async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
-  const { default: path } = await import("node:path");
-  const fs = await import("node:fs/promises");
-
-  const root = await resolveContentRoot();
+  const { fs, path, root } = await resolveContentDeps();
   const filePath = path.join(root, "affiliate-products.json");
   const isDev = process.env.NODE_ENV === "development";
 

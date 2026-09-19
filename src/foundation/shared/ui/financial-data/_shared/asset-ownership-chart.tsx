@@ -37,9 +37,10 @@ export function AssetOwnershipChart({
   }
 
   const { startYear, excludeHeaders, groups } = OWNERSHIP_SHEETS[sheetKey];
+  const excludeSet = new Set(excludeHeaders);
   const availableMetrics = data.headers.filter(
     (header) =>
-      !excludeHeaders.includes(header) &&
+      !excludeSet.has(header) &&
       data.series.some((series) => series.values[header] !== null) &&
       (sheetKey === "1" || header.includes("％"))
   );

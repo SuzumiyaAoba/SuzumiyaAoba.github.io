@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import { ArrowRight, ChevronDown, Clock3 } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
@@ -22,6 +22,14 @@ export function ReleaseCard({
 }) {
   const titleId = useId();
   const en = locale === "en";
+  const weekdayFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        weekday: "short",
+        timeZone: "UTC",
+      }),
+    [locale]
+  );
   const style = providerStyles[release.provider];
   const dateLabel = release.date
     ? formatReleaseDate(release.date, locale)
@@ -104,10 +112,7 @@ export function ReleaseCard({
                   {release.date.slice(-2)}
                 </time>
                 <span className="sm:mt-1">
-                  {new Intl.DateTimeFormat(locale, {
-                    weekday: "short",
-                    timeZone: "UTC",
-                  }).format(dateTimestamp(release.date))}
+                  {weekdayFormatter.format(dateTimestamp(release.date))}
                 </span>
               </>
             ) : (

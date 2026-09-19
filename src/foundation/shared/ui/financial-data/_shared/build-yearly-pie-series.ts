@@ -15,9 +15,10 @@ export function buildYearlyPieSeries(
   metrics: string[],
   labelMap: Record<string, string>
 ): YearlyPieSeries[] | null {
+  const rowsByYear = new Map(data.series.map((row) => [row.year, row]));
   const result: YearlyPieSeries[] = [];
   for (const year of years) {
-    const series = data.series.find((row) => row.year === year);
+    const series = rowsByYear.get(year);
     if (!series) {
       return null;
     }

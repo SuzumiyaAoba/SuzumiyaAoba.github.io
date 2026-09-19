@@ -19,9 +19,10 @@ export function MetricLegend({
   onToggle,
   colorOpacity,
 }: MetricLegendProps) {
+  const selectedSet = new Set(selectedMetrics);
   return metrics.map((metric) => {
     const index = availableMetrics.indexOf(metric);
-    const isActive = selectedMetrics.includes(metric);
+    const isActive = selectedSet.has(metric);
     return (
       <button
         key={metric}

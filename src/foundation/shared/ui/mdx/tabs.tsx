@@ -32,6 +32,8 @@ export function Tabs({ children }: TabsProps) {
           const isActive = index === activeTab;
 
           return (
+            // 選択中タブが index 管理の静的リストで、並び替えは起きない。
+            // react-doctor-disable-next-line no-array-index-as-key
             <button
               key={`${title}-${index}`}
               type="button"

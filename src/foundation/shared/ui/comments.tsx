@@ -1,8 +1,9 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
+import { useMounted } from "@/shared/ui/use-mounted";
 import { cn } from "@/shared/lib/utils";
 import type { Locale } from "@/shared/lib/routing";
 
@@ -38,11 +39,7 @@ export function Comments({
 }: CommentsProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   const giscusTheme = mounted && resolvedTheme === "dark" ? "dark" : "light";
 

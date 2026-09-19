@@ -1,6 +1,6 @@
 import { parse } from "yaml";
 import { z } from "zod";
-import { resolveContentRoot } from "@/shared/lib/content-file";
+import { resolveContentDeps } from "@/shared/lib/content-file";
 
 /**
  * AIニュースのエントリ（出来事）の Zod スキーマ
@@ -122,10 +122,7 @@ function sortEntries(entries: AiNewsEntry[]): AiNewsEntry[] {
  * @returns ニュース全体のインデックス情報
  */
 async function loadAiNews(): Promise<AiNewsIndex> {
-  const { default: path } = await import("node:path");
-  const fs = await import("node:fs/promises");
-
-  const root = await resolveContentRoot();
+  const { fs, path, root } = await resolveContentDeps();
   const filePath = path.join(root, "tools", "ai-news.yaml");
   const isDev = process.env.NODE_ENV === "development";
 

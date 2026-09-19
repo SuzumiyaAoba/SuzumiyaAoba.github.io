@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import type { ButtonHTMLAttributes } from "react";
 import { createPortal } from "react-dom";
@@ -15,6 +16,8 @@ import { formatReleaseDate } from "../model/release-calendar";
 import type { Release } from "../model/release-calendar";
 import { ProviderIcon } from "./provider-identity";
 import { ReleaseCard } from "./release-card";
+
+const subscribeToNothing = () => () => null;
 
 type PopoverTarget = {
   id: string;
@@ -175,6 +178,12 @@ function ReleasePopover({
 }) {
   const en = locale === "en";
   const [position, setPosition] = useState({ left: 12, top: 12 });
+  // document はサーバーでは参照できないため、クライアントのスナップショット経由で取得する。
+  const portalContainer = useSyncExternalStore(
+    subscribeToNothing,
+    () => document.body,
+    () => null
+  );
   const dateLabel = formatReleaseDate(active.date, locale);
   const providers = [
     ...new Set(active.releases.map((release) => release.provider)),
@@ -258,6 +267,10 @@ function ReleasePopover({
       panelRef.current?.focus({ preventScroll: true });
     }
   }, [active.pinned, active.focusOnOpen, panelRef]);
+
+  if (!portalContainer) {
+    return null;
+  }
 
   return createPortal(
     <div
@@ -359,6 +372,6 @@ function ReleasePopover({
         </div>
       )}
     </div>,
-    document.body
+    portalContainer
   );
 }

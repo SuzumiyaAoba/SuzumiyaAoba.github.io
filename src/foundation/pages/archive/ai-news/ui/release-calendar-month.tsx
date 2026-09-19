@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { KeyboardEvent } from "react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
@@ -36,11 +37,16 @@ export function ReleaseCalendarMonth({
     0
   );
   const current = month === today.slice(0, 7);
-  const label = new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    timeZone: "UTC",
-  }).format(dateTimestamp(`${month}-01`));
+  const monthFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "long",
+        timeZone: "UTC",
+      }),
+    [locale]
+  );
+  const label = monthFormatter.format(dateTimestamp(`${month}-01`));
   const weekdays = en
     ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     : ["日", "月", "火", "水", "木", "金", "土"];

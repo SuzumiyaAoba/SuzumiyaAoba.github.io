@@ -122,6 +122,7 @@ export function ProviderFilters({
   const providers = PROVIDERS.filter((provider) =>
     releases.some((release) => release.provider === provider)
   );
+  const selectedSet = new Set(selected);
   return (
     <fieldset
       aria-label={en ? "Filter by provider" : "提供元で絞り込み"}
@@ -154,7 +155,7 @@ export function ProviderFilters({
         </span>
       </button>
       {providers.map((provider) => {
-        const active = selected.includes(provider);
+        const active = selectedSet.has(provider);
         const count = releases.filter(
           (release) => release.provider === provider
         ).length;
@@ -217,6 +218,7 @@ function ModelFilterSelect({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const en = locale === "en";
+  const selectedSet = new Set(selected);
   const normalizedQuery = query.trim().toLowerCase();
   const visibleOptions = normalizedQuery
     ? options.filter((option) =>
@@ -273,7 +275,7 @@ function ModelFilterSelect({
           className="max-h-80 min-h-0 min-w-0 overflow-y-auto overscroll-contain p-1.5"
         >
           {visibleOptions.map(({ name, provider, count }) => {
-            const active = selected.includes(name);
+            const active = selectedSet.has(name);
             return (
               <button
                 key={name}
@@ -334,9 +336,11 @@ export function ModelFilters({
   if (seriesOptions.length === 0 && titleOptions.length === 0) {
     return null;
   }
+  const selectedSeriesSet = new Set(selectedSeries);
+  const selectedTitlesSet = new Set(selectedTitles);
   const selected = [
     ...seriesOptions
-      .filter((option) => selectedSeries.includes(option.name))
+      .filter((option) => selectedSeriesSet.has(option.name))
       .map((option) => ({
         option,
         kind: "series",
@@ -346,7 +350,7 @@ export function ModelFilters({
         onToggle: onToggleSeries,
       })),
     ...titleOptions
-      .filter((option) => selectedTitles.includes(option.name))
+      .filter((option) => selectedTitlesSet.has(option.name))
       .map((option) => ({
         option,
         kind: "model",

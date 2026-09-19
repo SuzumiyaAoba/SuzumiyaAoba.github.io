@@ -46,7 +46,8 @@ export function useAssetFormationSimulator(locale: Locale) {
     parseAsString
   );
   const [scenarios, setScenarios] = useState<ScenarioInput[]>(defaultScenarios);
-  const [selectedScenarioId, setSelectedScenarioId] = useState("scenario-1");
+  const [selectedScenarioIdInput, setSelectedScenarioId] =
+    useState("scenario-1");
   const [yearsInput, setYearsInput] = useState("20");
   const lastEncodedRef = useRef<string | null>(null);
   const [visibleSeriesParam, setVisibleSeriesParam] = useQueryState(
@@ -78,17 +79,13 @@ export function useAssetFormationSimulator(locale: Locale) {
   const scenarioList = scenarios;
   const years = Number(yearsInput) || 0;
 
+  // URL へのシナリオ書き戻しは scenarioList を監視するエフェクトに一本化し、
+  // ここでは純粋に state だけを更新する。
   const syncScenarios = useCallback(
     (updater: (prev: ScenarioInput[]) => ScenarioInput[]) => {
-      setScenarios((prev) => {
-        const next = updater(prev);
-        const encoded = encodeScenarios(next);
-        lastEncodedRef.current = encoded;
-        void setCompressedParam(encoded);
-        return next;
-      });
+      setScenarios(updater);
     },
-    [setCompressedParam]
+    []
   );
 
   const scenarioData = useMemo<ScenarioData[]>(
@@ -120,6 +117,12 @@ export function useAssetFormationSimulator(locale: Locale) {
       }),
     [scenarioList, years, colorOverrides, defaultPatternName]
   );
+
+  const selectedScenarioId = scenarioList.some(
+    (scenario) => scenario.id === selectedScenarioIdInput
+  )
+    ? selectedScenarioIdInput
+    : (scenarioList[0]?.id ?? "");
 
   const selectedScenario =
     scenarioData.find((scenario) => scenario.id === selectedScenarioId) ??
@@ -212,25 +215,6 @@ export function useAssetFormationSimulator(locale: Locale) {
       void setCompressedParam(encoded);
     }
   }, [scenarioList, compressedParam, setCompressedParam]);
-
-  useEffect(() => {
-    if (!selectedScenarioId && scenarioList[0]) {
-      const firstScenarioId = scenarioList[0].id;
-      if (firstScenarioId) {
-        setSelectedScenarioId(firstScenarioId);
-      }
-      return;
-    }
-    if (
-      scenarioList.length > 0 &&
-      !scenarioList.some((s) => s.id === selectedScenarioId)
-    ) {
-      const firstScenarioId = scenarioList[0]?.id;
-      if (firstScenarioId) {
-        setSelectedScenarioId(firstScenarioId);
-      }
-    }
-  }, [scenarioList, selectedScenarioId]);
 
   return {
     scenarioList,

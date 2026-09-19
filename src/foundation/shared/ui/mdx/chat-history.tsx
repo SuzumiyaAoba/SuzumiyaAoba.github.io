@@ -64,6 +64,8 @@ export function createChatHistory(
     return (
       <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4">
         {rendered.map((message, index) => (
+          // 会話ログは静的コンテンツで並び替え・途中挿入が起きない。
+          // react-doctor-disable-next-line no-array-index-as-key
           <Message key={`${message.role}-${index}`} from={message.role}>
             <MessageContent
               from={message.role}

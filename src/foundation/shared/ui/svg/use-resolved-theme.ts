@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useMounted } from "@/shared/ui/use-mounted";
 
 /**
  * 解決されたテーマの種類
@@ -12,11 +12,7 @@ type Theme = "light" | "dark";
  */
 export function useResolvedTheme(): Theme {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   if (!mounted) {
     return "light";

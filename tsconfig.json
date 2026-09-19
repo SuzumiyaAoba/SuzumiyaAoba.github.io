@@ -46,5 +46,5 @@
     "postcss.config.mjs",
     "public/pagefind-adapter.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "apm_modules"]
 }

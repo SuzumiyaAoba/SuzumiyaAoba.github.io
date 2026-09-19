@@ -37,7 +37,7 @@ async function collectFilePaths(
     const entryPath = path.join(current, entry.name);
     if (entry.isDirectory()) {
       // oxlint-disable-next-line no-await-in-loop -- 再帰的な読み込みで同時に開くディレクトリ数を抑える。
-      files.push(...(await collectFilePaths(root, entryPath)));
+      files.push(...(await collectFilePaths(root, entryPath))); // react-doctor-disable-line async-await-in-loop -- 再帰探索は逐次実行が意図的。
       continue;
     }
 
@@ -81,8 +81,10 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const { path: segments } = await params;
-  const root = await resolveContentRoot();
+  const [{ path: segments }, root] = await Promise.all([
+    params,
+    resolveContentRoot(),
+  ]);
   const filePath = path.join(root, ...segments);
 
   try {

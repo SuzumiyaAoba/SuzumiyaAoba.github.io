@@ -4,8 +4,9 @@
  */
 export async function resolveContentRoot(): Promise<string> {
   // Use dynamic imports to prevent Storybook from trying to polyfill these in the browser
+  const fsPromise = import("node:fs/promises");
   const { default: path } = await import("node:path");
-  const fs = await import("node:fs/promises");
+  const fs = await fsPromise;
 
   /**
    * デフォルトのコンテンツルートディレクトリ
@@ -29,4 +30,19 @@ export async function resolveContentRoot(): Promise<string> {
   } catch {
     return fallbackContentRoot;
   }
+}
+
+/**
+ * コンテンツのファイル操作に必要な node:fs・node:path・ルートディレクトリを並列で解決する。
+ * node:path の dynamic import は lint 上 `await` + default 分割代入の形が必須なため、
+ * 呼び出し側で `Promise.all` に混ぜられず、この関数に集約する。
+ * @returns fs・path・コンテンツルート
+ */
+export async function resolveContentDeps() {
+  const fsPromise = import("node:fs/promises");
+  const rootPromise = resolveContentRoot();
+  const { default: path } = await import("node:path");
+  const fs = await fsPromise;
+  const root = await rootPromise;
+  return { fs, path, root };
 }

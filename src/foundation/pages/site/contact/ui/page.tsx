@@ -51,6 +51,8 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
         <section>
           <div className="overflow-hidden rounded-2xl bg-card/40">
             <iframe
+              // Google フォームの埋め込みは allow-scripts + allow-same-origin が必須。
+              // react-doctor-disable-next-line iframe-missing-sandbox
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               title="Contact form"
               src="https://docs.google.com/forms/d/e/1FAIpQLSeXOZA4Mriinisf4yXq8Y9XxfiSNvWjF_qhg5qFYY8af85bfQ/viewform?embedded=true"

@@ -1,20 +1,16 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import { Icon } from "@/shared/ui/icon-client";
 import { Button } from "@/shared/ui/button";
+import { useMounted } from "@/shared/ui/use-mounted";
 
 /**
  * ダークモードとライトモードを切り替えるコンポーネント
  */
 export function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { theme, setTheme, resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted) {
     return (

@@ -108,10 +108,9 @@ export function TOCScrollArea({
 
 export type TOCItemProps = {
   href: string;
-  onActiveChange?: (v: boolean) => void;
 } & Omit<ComponentProps<"a">, "href">;
 
-export function TOCItem({ ref, onActiveChange, ...props }: TOCItemProps) {
+export function TOCItem({ ref, ...props }: TOCItemProps) {
   const containerRef = useContext(ScrollContext);
   const anchorRef = useRef<HTMLAnchorElement>(null);
   const activeAnchors = useActiveAnchors();
@@ -145,10 +144,6 @@ export function TOCItem({ ref, onActiveChange, ...props }: TOCItemProps) {
       });
     }
   }, [containerRef, shouldScroll]);
-
-  useEffect(() => {
-    onActiveChange?.(isActive);
-  }, [isActive, onActiveChange]);
 
   return (
     <a ref={mergeRefs(anchorRef, ref)} data-active={isActive} {...props}>
@@ -184,7 +179,7 @@ export function TOCItems({
       <TocThumb
         containerRef={containerRef}
         active={active}
-        className="absolute top-[var(--toc-top)] h-[var(--toc-height)] w-px bg-primary transition-all"
+        className="absolute top-[var(--toc-top)] h-[var(--toc-height)] w-px bg-primary transition-[top,height]"
       />
       <div
         ref={mergeRefs(ref, containerRef)}
@@ -326,7 +321,7 @@ export function ClerkTOCItems({
           <TocThumb
             containerRef={containerRef}
             active={active}
-            className="mt-[var(--toc-top)] h-[var(--toc-height)] bg-primary transition-all"
+            className="mt-[var(--toc-top)] h-[var(--toc-height)] bg-primary transition-[margin-top,height]"
           />
         </div>
       ) : null}

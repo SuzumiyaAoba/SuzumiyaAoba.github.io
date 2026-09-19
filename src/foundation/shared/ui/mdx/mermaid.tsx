@@ -2,7 +2,6 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useId, useState } from "react";
-import mermaid from "mermaid";
 
 /**
  * Mermaid.js の図を描画するためのプロパティ
@@ -30,6 +29,8 @@ export function Mermaid({ code, className }: MermaidProps) {
 
     const render = async () => {
       try {
+        // mermaid は大きいため、実際に図を描画するときだけ動的に読み込む。
+        const { default: mermaid } = await import("mermaid");
         mermaid.initialize({
           startOnLoad: false,
           theme: resolvedTheme === "dark" ? "dark" : "base",

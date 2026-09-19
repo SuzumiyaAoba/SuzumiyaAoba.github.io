@@ -30,6 +30,9 @@ export const PieChart: React.FC<Props> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const colors = config.colors ?? schemeCategory10;
 
+  // 返すクリーンアップが tooltip.hide() と .on(name, null) + remove() で
+  // 登録済みハンドラとツールチップを解放する(検出器の既知の誤検知)。
+  // react-doctor-disable-next-line effect-needs-cleanup
   useEffect(() => {
     if (!svgRef.current || data.length === 0) {
       return;
@@ -169,7 +172,10 @@ export const PieChart: React.FC<Props> = ({
       })
       .attr("font-size", "11px")
       .text((d) => `${d.data.label} (${d.data.value}%)`);
-    return tooltip.hide;
+    return () => {
+      tooltip.hide();
+      svg.selectAll("*").on("mouseover", null).on("mouseout", null).remove();
+    };
   }, [data, colors]);
 
   return (

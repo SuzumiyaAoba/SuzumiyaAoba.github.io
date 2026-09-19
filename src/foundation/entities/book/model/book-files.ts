@@ -1,11 +1,9 @@
 import { cache } from "react";
-import { parseContent, resolveContentRoot } from "@/shared/lib/content-file";
+import { parseContent, resolveContentDeps } from "@/shared/lib/content-file";
 import { normalizeBookFrontmatter, parseSectionFilename } from "./parse-book";
 
 async function readBookFile(...segments: string[]) {
-  const fs = await import("node:fs/promises");
-  const { default: path } = await import("node:path");
-  const root = await resolveContentRoot();
+  const { fs, path, root } = await resolveContentDeps();
   return await fs.readFile(path.join(root, "books", ...segments), "utf-8");
 }
 
@@ -17,9 +15,7 @@ export const readBookIndex = cache(async (bookSlug: string) => {
 
 export const listBookSectionFiles = cache(
   async (bookSlug: string, chapter: string) => {
-    const fs = await import("node:fs/promises");
-    const { default: path } = await import("node:path");
-    const root = await resolveContentRoot();
+    const { fs, path, root } = await resolveContentDeps();
     const directory = path.join(
       root,
       "books",

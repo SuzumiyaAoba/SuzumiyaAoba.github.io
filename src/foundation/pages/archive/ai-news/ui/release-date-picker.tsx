@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CalendarDays } from "lucide-react";
 import { enUS } from "react-day-picker/locale/en-US";
 import { ja } from "react-day-picker/locale/ja";
@@ -32,11 +32,23 @@ export function ReleaseDatePicker({
   );
   const todayYear = Number(today.slice(0, 4));
   const visibleYear = Number(month.slice(0, 4));
-  const monthFormatter = new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    timeZone: "UTC",
-  });
+  const monthFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "long",
+        timeZone: "UTC",
+      }),
+    [locale]
+  );
+  const monthDropdownFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        month: "short",
+        timeZone: "UTC",
+      }),
+    [locale]
+  );
 
   return (
     <Popover
@@ -97,10 +109,7 @@ export function ReleaseDatePicker({
             }}
             formatters={{
               formatMonthDropdown: (date) =>
-                new Intl.DateTimeFormat(locale, {
-                  month: "short",
-                  timeZone: "UTC",
-                }).format(date),
+                monthDropdownFormatter.format(date),
             }}
             className="[--cell-size:2.25rem]"
             autoFocus

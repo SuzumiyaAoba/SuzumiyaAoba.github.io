@@ -1,6 +1,7 @@
 export async function getPostSlugs(): Promise<string[]> {
-  const fs = await import("node:fs/promises");
+  const fsPromise = import("node:fs/promises");
   const { default: path } = await import("node:path");
+  const fs = await fsPromise;
   const postsDirectory = path.join(process.cwd(), "content", "posts");
 
   try {

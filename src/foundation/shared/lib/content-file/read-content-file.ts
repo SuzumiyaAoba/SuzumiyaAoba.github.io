@@ -1,6 +1,6 @@
 import { cache } from "react";
 import type { Locale } from "@/shared/lib/routing";
-import { resolveContentRoot } from "./content-root";
+import { resolveContentDeps } from "./content-root";
 
 export type ContentFormat = "md" | "mdx";
 export type ContentFile = { raw: string; format: ContentFormat };
@@ -14,9 +14,7 @@ export function createArticleFileLister(
   collectionDir: string
 ): (slug: string) => Promise<Set<string>> {
   return cache(async (slug: string): Promise<Set<string>> => {
-    const fs = await import("node:fs/promises");
-    const { default: path } = await import("node:path");
-    const root = await resolveContentRoot();
+    const { fs, path, root } = await resolveContentDeps();
     const dir = path.join(root, collectionDir, slug);
     try {
       const entries = await fs.readdir(dir);
@@ -37,14 +35,13 @@ export async function readLocaleContentFile(
   locale: Locale,
   listFiles: (slug: string) => Promise<Set<string>>
 ): Promise<ContentFile | null> {
-  const fs = await import("node:fs/promises");
-  const { default: path } = await import("node:path");
+  const [{ fs, path, root }, files] = await Promise.all([
+    resolveContentDeps(),
+    listFiles(slug),
+  ]);
 
-  const root = await resolveContentRoot();
   const baseDir = path.join(root, collectionDir, slug);
   const baseName = locale === "en" ? "index.en" : "index";
-
-  const files = await listFiles(slug);
 
   const mdFile = `${baseName}.md`;
   const mdxFile = `${baseName}.mdx`;

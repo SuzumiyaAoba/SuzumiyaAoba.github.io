@@ -35,7 +35,7 @@ export function LanguageToggle({ locale, path }: LanguageToggleProps) {
       aria-label={label}
       title={label}
     >
-      <a href={targetPath} hrefLang={targetLocale}>
+      <a href={targetPath} hrefLang={targetLocale} aria-label={label}>
         <Icon icon="lucide:languages" className="h-4 w-4" aria-hidden="true" />
       </a>
     </Button>

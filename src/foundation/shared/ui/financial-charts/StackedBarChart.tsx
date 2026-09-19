@@ -54,9 +54,8 @@ export const StackedBarChart: React.FC<Props> = ({
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      const activeMetrics = group.metrics.filter((m) =>
-        selectedMetrics.includes(m)
-      );
+      const selectedSet = new Set(selectedMetrics);
+      const activeMetrics = group.metrics.filter((m) => selectedSet.has(m));
 
       if (activeMetrics.length === 0) {
         return;

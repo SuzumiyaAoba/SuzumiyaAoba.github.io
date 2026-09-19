@@ -93,8 +93,6 @@ function ReleaseSelectionUrlSync({
     models: selectionParser,
     titles: titleParser,
   });
-  const onApplyRef = useRef(onApply);
-  onApplyRef.current = onApply;
   const pendingApply = useRef<ReleaseSelection | null>(null);
 
   // URL側の変化を選択状態へ適用する。未知の値はここで落とす。
@@ -113,7 +111,10 @@ function ReleaseSelectionUrlSync({
       ],
     };
     pendingApply.current = next;
-    onApplyRef.current(next);
+    // useQueryStates は Suspense 配下の子でしか購読できないため、URL の所有権を
+    // 持つこのコンポーネントがパース済みの選択状態を親へ適用する。
+    // react-doctor-disable-next-line no-pass-data-to-parent
+    onApply(next);
   }, [
     params.providers,
     params.models,
@@ -121,6 +122,7 @@ function ReleaseSelectionUrlSync({
     validProviders,
     validModels,
     validTitles,
+    onApply,
   ]);
 
   // 選択状態をURLへ書き戻す。適用中は状態側が追いつくまで待つ。

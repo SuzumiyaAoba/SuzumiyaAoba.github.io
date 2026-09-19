@@ -14,6 +14,15 @@ export function ReleaseList({
   locale: Locale;
 }) {
   const en = locale === "en";
+  const monthFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "long",
+        timeZone: "UTC",
+      }),
+    [locale]
+  );
   const [order, setOrder] = useState("newest");
   const groups = useMemo(() => {
     const sorted = releases.toSorted((a, b) => {
@@ -68,11 +77,7 @@ export function ReleaseList({
                 ? en
                   ? "Undated"
                   : "日付未詳"
-                : new Intl.DateTimeFormat(locale, {
-                    year: "numeric",
-                    month: "long",
-                    timeZone: "UTC",
-                  }).format(dateTimestamp(`${month}-01`))}
+                : monthFormatter.format(dateTimestamp(`${month}-01`))}
             </h3>
             <p className="text-label text-muted-foreground tabular-nums">
               {items.length}

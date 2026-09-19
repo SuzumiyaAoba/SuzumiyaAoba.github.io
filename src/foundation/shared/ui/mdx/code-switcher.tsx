@@ -55,6 +55,8 @@ function HighlightedCodeSwitcher({ code }: { code: RawCode[] }) {
           className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground"
         >
           {languages.map((lang, index) => (
+            // 選択値が index 管理の静的リストで、並び替えは起きない。
+            // react-doctor-disable-next-line no-array-index-as-key
             <option key={`${lang}-${index}`} value={index}>
               {lang}
             </option>

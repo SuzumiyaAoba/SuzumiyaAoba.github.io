@@ -169,6 +169,8 @@ export const StackedAreaChart: React.FC<Props> = ({
       <div className="mb-4 text-center text-base font-bold">{title}</div>
 
       {groups.map((group, index) => (
+        // グループは静的なデータ系列由来で並び替え・挿入が起きない。
+        // react-doctor-disable-next-line no-array-index-as-key
         <div key={group.name || `group-${index}`}>
           <div className="mb-2 text-center text-sm font-semibold">
             {group.name}

@@ -83,6 +83,8 @@ export function CodeWithTooltips({
       {notes.length > 0 ? (
         <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
           {notes.map((note, index) => (
+            // 脚注は静的コンテンツで並び替え・途中挿入が起きない。
+            // react-doctor-disable-next-line no-array-index-as-key
             <li key={`${note}-${index}`} className="flex items-start gap-2">
               <FootnoteNumber n={index + 1} />
               <span>{note}</span>

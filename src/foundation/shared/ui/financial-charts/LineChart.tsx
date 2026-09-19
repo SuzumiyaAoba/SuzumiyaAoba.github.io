@@ -47,6 +47,9 @@ export const LineChart: React.FC<Props> = ({
     toggleGroup,
   } = useChartMetrics({ data, groups, excludeHeaders, labelMap });
 
+  // 返すクリーンアップが tooltip.hide() と .on(name, null) + remove() で
+  // 登録済みハンドラとツールチップを解放する(検出器の既知の誤検知)。
+  // react-doctor-disable-next-line effect-needs-cleanup
   useEffect(() => {
     if (!svgRef.current) {
       return;
@@ -130,7 +133,10 @@ export const LineChart: React.FC<Props> = ({
           });
       }
     }
-    return tooltip.hide;
+    return () => {
+      tooltip.hide();
+      svg.selectAll("*").on("mouseover", null).on("mouseout", null).remove();
+    };
   }, [
     data,
     selectedMetrics,

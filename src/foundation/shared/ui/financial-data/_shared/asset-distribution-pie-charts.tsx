@@ -20,9 +20,10 @@ export function AssetDistributionPieCharts({
     return <NoDataFallback />;
   }
 
+  const excludeSet = new Set(excludeHeaders);
   const percentageMetrics = data.headers.filter(
     (header) =>
-      !excludeHeaders.includes(header) &&
+      !excludeSet.has(header) &&
       data.series.some((series) => series.values[header] !== null)
   );
   const yearlyPieSeries = buildYearlyPieSeries(

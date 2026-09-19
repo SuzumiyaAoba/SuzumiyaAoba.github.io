@@ -100,6 +100,9 @@ export function SimulationChart({
     });
   }, [tooltip]);
 
+  // 返すクリーンアップが points の .on(name, null) と selectAll().remove() で
+  // 登録済みハンドラを解放する(検出器の既知の誤検知)。
+  // react-doctor-disable-next-line effect-needs-cleanup
   useEffect(() => {
     const svgElement = chartRef.current;
     if (!svgElement) {
@@ -316,6 +319,14 @@ export function SimulationChart({
       .on("mouseleave", () => {
         setTooltip(null);
       });
+
+    return () => {
+      points
+        .on("mouseenter", null)
+        .on("mousemove", null)
+        .on("mouseleave", null);
+      svg.selectAll("*").remove();
+    };
   }, [
     scenarioData,
     selectedScenario,

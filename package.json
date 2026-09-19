@@ -24,7 +24,8 @@
     "precommit": "npm run lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "react-doctor": "react-doctor . -y"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
@@ -111,6 +112,7 @@
     "npm-run-all2": "^8.0.4",
     "pagefind": "^1.4.0",
     "playwright": "^1.57.0",
+    "react-doctor": "0.9.14",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-external-links": "^3.0.0",
     "rehype-slug": "^6.0.0",

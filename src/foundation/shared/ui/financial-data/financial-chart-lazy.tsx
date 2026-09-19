@@ -31,6 +31,9 @@ export function FinancialChartLazy({ name }: FinancialChartLazyProps) {
           // webpackInclude が無いと financial-data 配下の
           // *.test.ts / *.stories.tsx まで context module に含まれ、
           // vitest や storybook がバンドルへ載る。
+          // 動的パスは webpackInclude の context module として
+          // チャートごとに分割される意図的な構成。
+          // react-doctor-disable-next-line no-dynamic-import-path
           const chartModule: unknown = await import(
             /* webpackInclude: /ChartWrapper\.tsx$/ */
             `./${name}`

@@ -8,8 +8,9 @@ export async function loadMdxScope(
   source: string,
   baseDir: string
 ): Promise<Record<string, unknown>> {
-  const fs = await import("node:fs/promises");
+  const fsPromise = import("node:fs/promises");
   const { default: path } = await import("node:path");
+  const fs = await fsPromise;
 
   const importRegex = /^import\s+(\w+)\s+from\s+["'](.+\.json)["'];/gmu;
   const matches = [...source.matchAll(importRegex)];
@@ -17,20 +18,27 @@ export async function loadMdxScope(
     return {};
   }
 
-  const scope: Record<string, unknown> = {};
+  // Promise.all の結果順は文書順に一致するため、同じ識別子の再定義も文書順で適用される。
+  const entries = await Promise.all(
+    matches.map(async (match) => {
+      const [, name, relPath] = match;
+      if (!name || !relPath) {
+        return null;
+      }
+      try {
+        const raw = await fs.readFile(path.join(baseDir, relPath), "utf-8");
+        return [name, JSON.parse(raw) as unknown] as const;
+      } catch {
+        return null;
+      }
+    })
+  );
 
-  for (const match of matches) {
-    const [, name, relPath] = match;
-    if (!name || !relPath) {
-      continue;
-    }
-    const filePath = path.join(baseDir, relPath);
-    try {
-      // oxlint-disable-next-line no-await-in-loop -- 同じ識別子の再定義を文書順に処理し、同時読み込みを抑える。
-      const raw = await fs.readFile(filePath, "utf-8");
-      scope[name] = JSON.parse(raw) as unknown;
-    } catch {
-      continue;
+  const scope: Record<string, unknown> = {};
+  for (const entry of entries) {
+    if (entry) {
+      const [name, value] = entry;
+      scope[name] = value;
     }
   }
 

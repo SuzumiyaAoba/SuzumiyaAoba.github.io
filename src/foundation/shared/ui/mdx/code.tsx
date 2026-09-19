@@ -2,10 +2,10 @@
 
 import { annotationData } from "./annotation-data";
 
-import { useEffect, useState } from "react";
 import type { HighlightedCode } from "codehike/code";
 
 import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
+import { useMounted } from "@/shared/ui/use-mounted";
 import { cn } from "@/shared/lib/utils";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
@@ -21,10 +21,7 @@ type CodeProps = {
  * のみを返し、クライアントマウント後に本体を描画して初期 DOM を軽量に保つ。
  */
 export function Code({ codeblock }: CodeProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   const notes = codeblock.annotations
     .filter(({ name }) => name === "ref")
@@ -79,6 +76,8 @@ export function Code({ codeblock }: CodeProps) {
       {notes.length > 0 ? (
         <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
           {notes.map((note, index) => (
+            // 脚注は静的コンテンツで並び替え・途中挿入が起きない。
+            // react-doctor-disable-next-line no-array-index-as-key
             <li key={`${note}-${index}`} className="flex items-start gap-2">
               <FootnoteNumber n={index + 1} />
               <span>{note}</span>

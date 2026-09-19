@@ -38,6 +38,8 @@ function CodeTabs({ tabs }: { tabs: RawCode[] }) {
     <div className="my-6">
       <div className="flex flex-wrap items-center gap-2 rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
         {labels.map((label, index) => (
+          // 選択中タブが index 管理の静的リストで、並び替えは起きない。
+          // react-doctor-disable-next-line no-array-index-as-key
           <button
             key={`${label}-${index}`}
             type="button"

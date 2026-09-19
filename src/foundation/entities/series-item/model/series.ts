@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { resolveContentRoot } from "@/shared/lib/content-file";
+import { resolveContentDeps } from "@/shared/lib/content-file";
 import type { Locale } from "@/shared/lib/routing";
 import { toIntlLocaleTag } from "@/shared/lib/presentation";
 
@@ -87,10 +87,8 @@ function resolveSeriesDefinition(
  * @returns 未解決のシリーズ定義の配列
  */
 async function readSeriesDefinitions(): Promise<SeriesDefinitionRaw[]> {
-  const fs = await import("node:fs/promises");
-  const { default: path } = await import("node:path");
+  const { fs, path, root } = await resolveContentDeps();
 
-  const root = await resolveContentRoot();
   const seriesRoot = path.join(root, "series");
 
   try {

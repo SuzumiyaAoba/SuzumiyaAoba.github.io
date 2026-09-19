@@ -31,6 +31,11 @@ import {
   useReleaseTimelineLayout,
 } from "./use-release-timeline-layout";
 
+const monthTickFormatter = new Intl.DateTimeFormat("en", {
+  month: "short",
+  timeZone: "UTC",
+});
+
 type ReleaseTimelineProps = {
   locale: Locale;
   range: ReleaseTimelineRange;
@@ -301,10 +306,7 @@ export function ReleaseTimeline({
                     }}
                   >
                     {en
-                      ? new Intl.DateTimeFormat("en", {
-                          month: "short",
-                          timeZone: "UTC",
-                        }).format(dateTimestamp(date))
+                      ? monthTickFormatter.format(dateTimestamp(date))
                       : `${Number(date.slice(5, 7))}月`}
                   </span>
                 ))}

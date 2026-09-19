@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useMounted } from "@/shared/ui/use-mounted";
 import type { Cell } from "./StandardCode.utils";
 import { cellToInfo } from "./StandardCode.utils";
 import { AsciiTable } from "./AsciiTable";
@@ -17,12 +18,8 @@ import { HoveredCellContext, ClickedCellContext } from "./StandardCode.context";
 export function StandardCode() {
   const [hoveredCell, setHoveredCell] = useState<Cell | undefined>();
   const [clickedCell, setClickedCell] = useState<Cell | undefined>();
-  const [mounted, setMounted] = useState(false);
-
   // クライアント側でのみ実行されるようにする
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   // サーバーサイドレンダリング時には特定のスタイルを適用しない
   if (!mounted) {

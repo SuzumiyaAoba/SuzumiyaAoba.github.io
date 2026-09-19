@@ -95,6 +95,7 @@ export function Header({ locale, path }: HeaderProps) {
           >
             <a
               href={toLocalePath("/search", locale)}
+              aria-label={en ? "Search" : "検索"}
               aria-current={isActive("/search") ? "page" : undefined}
             >
               <Icon

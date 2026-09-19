@@ -17,9 +17,10 @@ export const Sheet3ChartWrapper: React.FC = () => {
   }
 
   // パーセンテージデータのみを抽出（平均・中央値以外）
+  const excludeSet = new Set(excludeHeaders);
   const percentageMetrics = sheet3Data.headers.filter(
     (header) =>
-      !excludeHeaders.includes(header) &&
+      !excludeSet.has(header) &&
       sheet3Data.series.some((s) => s.values[header] !== null)
   );
 

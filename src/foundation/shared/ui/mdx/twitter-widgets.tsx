@@ -28,10 +28,10 @@ export function TwitterWidgets() {
     if (existingScript) {
       if (window.twttr) {
         loadWidgets();
-      } else {
-        existingScript.addEventListener("load", loadWidgets, { once: true });
+        return;
       }
-      return;
+      existingScript.addEventListener("load", loadWidgets, { once: true });
+      return () => existingScript.removeEventListener("load", loadWidgets);
     }
 
     const script = document.createElement("script");
@@ -39,6 +39,7 @@ export function TwitterWidgets() {
     script.async = true;
     script.addEventListener("load", loadWidgets);
     document.body.append(script);
+    return () => script.removeEventListener("load", loadWidgets);
   }, []);
 
   return null;

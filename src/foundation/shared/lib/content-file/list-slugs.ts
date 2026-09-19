@@ -1,4 +1,4 @@
-import { resolveContentRoot } from "./content-root";
+import { resolveContentDeps } from "./content-root";
 
 /**
  * `content/<collectionDir>` 直下のディレクトリ名一覧を昇順で返す。
@@ -7,10 +7,8 @@ import { resolveContentRoot } from "./content-root";
 export async function listContentSlugs(
   collectionDir: string
 ): Promise<string[]> {
-  const fs = await import("node:fs/promises");
-  const { default: path } = await import("node:path");
+  const { fs, path, root } = await resolveContentDeps();
 
-  const root = await resolveContentRoot();
   const dir = path.join(root, collectionDir);
 
   try {

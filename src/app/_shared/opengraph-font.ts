@@ -5,11 +5,17 @@ const FONT_FETCH_USER_AGENT =
   "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Droid Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
 async function fetchShipporiMinchoBold(): Promise<ArrayBuffer> {
-  const fontCss = await fetch(new URL(SHIPPORI_MINCHO_CSS_URL).href, {
+  const cssResponse = await fetch(new URL(SHIPPORI_MINCHO_CSS_URL).href, {
     headers: {
       "User-Agent": FONT_FETCH_USER_AGENT,
     },
-  }).then(async (res) => await res.text());
+  });
+  if (!cssResponse.ok) {
+    throw new Error(
+      `Failed to fetch font CSS: ${cssResponse.status} ${cssResponse.statusText}`
+    );
+  }
+  const fontCss = await cssResponse.text();
 
   const fontUrl = /src: url\((.+?)\) format\(['"]?truetype['"]?\)/u.exec(
     fontCss
@@ -18,7 +24,13 @@ async function fetchShipporiMinchoBold(): Promise<ArrayBuffer> {
     throw new Error("Failed to load font");
   }
 
-  return await fetch(fontUrl).then(async (res) => await res.arrayBuffer());
+  const fontResponse = await fetch(fontUrl);
+  if (!fontResponse.ok) {
+    throw new Error(
+      `Failed to fetch font: ${fontResponse.status} ${fontResponse.statusText}`
+    );
+  }
+  return await fontResponse.arrayBuffer();
 }
 
 let shipporiMinchoBoldPromise: Promise<ArrayBuffer> | null = null;
