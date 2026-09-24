@@ -754,6 +754,18 @@ items:
     tags: [生成AI, Web, HTML, Figma]
     description: テンプレートや UI コンポーネントを参考に、AI で Web デザインを生成・編集できるサービス。HTML や Figma への書き出しに対応する。
     websiteUrl: https://aura.build/
+  - id: quiver-ai
+    name: QuiverAI
+    category: デザイン
+    tags: [生成AI, SVG, ベクターグラフィックス, ロゴ, イラスト]
+    description: テキストや参照画像からロゴ・イラストなどの SVG を生成・編集する、ベクターグラフィックス特化の AI モデルとツール。
+    websiteUrl: https://quiver.ai/
+  - id: paper-design
+    name: Paper
+    category: デザイン
+    tags: [デザインツール, HTML, CSS, AIエージェント, MCP]
+    description: HTML・CSS を基盤にした、AI エージェントと連携できるデザインキャンバス。デザインをコードとして扱い、MCP 経由でコードベースのスタイルやコンポーネントと同期できる。
+    websiteUrl: https://paper.design/
   - id: hyperbrowser-design-md
     name: DESIGN.md（Hyperbrowser）
     category: デザイン
@@ -856,6 +868,24 @@ items:
     tags: [React, アニメーション, UIコンポーネント]
     description: React 向けのアニメーション付き UI パーツ集。テキスト・背景・カーソル・スクロールなどの演出を組み合わせ、動きのある Web ページを作成できる。
     websiteUrl: https://reactbits.dev/
+  - id: codedvisuals
+    name: CodedVisuals
+    category: デザイン
+    tags: [React, Motion, アニメーション, イラスト]
+    description: React・Motion を使った、Web サイト向けのコードベースのアニメーション付きイラスト・ビジュアル集。ヒーローや機能紹介のセクションに組み込める。
+    websiteUrl: https://codedvisuals.com/
+  - id: kokonut-ui
+    name: Kokonut UI
+    category: デザイン
+    tags: [React, Next.js, Tailwind CSS, Motion, UIコンポーネント]
+    description: React・Next.js・Tailwind CSS・Motion で作られたオープンソースの UI コンポーネント集。ライブプレビューや shadcn CLI から導入できる。
+    websiteUrl: https://kokonutui.com/
+  - id: toggles-dev
+    name: Toggles.dev
+    category: デザイン
+    tags: [React, Svelte, Vue, テーマ切り替え, アニメーション]
+    description: React・Svelte・Vue 向けのアニメーション付きテーマ切り替えトグル集。shadcn/ui や npm から導入するか、ソースをコピーして使える。
+    websiteUrl: https://toggles.dev/
   - id: 8bitcn
     name: 8bitcn/ui
     category: デザイン
@@ -981,6 +1011,12 @@ items:
     tags: [Tailwind CSS, Lint, デザインシステム, AIコーディング]
     description: Tailwind のデザインシステム向けに、許可するスタイルをルールとして定義できるエージェントファーストな linter。違反時はコンポーネント・バリアント・テーマに基づく修正案を提示する。ESLint と Oxlint で動作し、shadcn/ui 以外の Tailwind v4 プロジェクトにも使える。
     githubUrl: https://github.com/shadcn-ui/lint
+  - id: superpowers
+    name: Superpowers
+    category: 開発ツール
+    tags: [AIコーディング, スキル, TDD, 開発ワークフロー]
+    description: AI コーディングエージェント向けの開発方法論とスキルのフレームワーク。設計の整理・実装計画・テスト駆動開発・デバッグ・コードレビューなどの手順を提供する。
+    githubUrl: https://github.com/obra/superpowers
   - id: ext-skills
     name: MCP Skills Extension
     category: 開発ツール
@@ -1112,3 +1148,261 @@ items:
     tags: [AIコーディング, CLI, コードレビュー, MCP]
     description: ローカル環境で動作し、Devin Cloud と連携する AI コーディング CLI。機能実装・バグ修正・コードレビューを支援し、MCP やスキルで拡張できる。
     websiteUrl: https://docs.devin.ai/cli
+  - id: uselayouts
+    name: useLayouts
+    category: デザイン
+    tags: [React, UIコンポーネント, Motion, Tailwind CSS]
+    description: React・Next.js 向けのアニメーション付き UI コンポーネント集。レイアウト・ナビゲーション・操作パターンなどを、ソースからコピーしてカスタマイズできる。
+    websiteUrl: https://uselayouts.com/
+  - id: nexvyn-ui
+    name: Nexvyn/UI
+    category: デザイン
+    tags: [React, UIコンポーネント, Motion, shadcn/ui]
+    description: Motion のアニメーションを取り入れた React コンポーネント集。shadcn CLI から追加し、ソースを調整してプロジェクトに組み込める。
+    websiteUrl: https://ui.nexvyn.dev/
+  - id: motion
+    name: Motion
+    category: ライブラリ
+    tags: [React, JavaScript, Vue, アニメーション]
+    description: Web 向けのオープンソースなアニメーションライブラリ。React・JavaScript・Vue で、スクロール・ジェスチャー・レイアウト変化などの動きを実装できる。
+    websiteUrl: https://motion.dev/
+  - id: cult-ui
+    name: Cult UI
+    category: デザイン
+    tags: [React, shadcn/ui, Tailwind CSS, アニメーション]
+    description: shadcn/ui と Tailwind CSS を使う React プロジェクト向けの、アニメーション付きコンポーネント・ブロック集。
+    websiteUrl: https://www.cult-ui.com/
+  - id: spell-ui
+    name: Spell UI
+    category: デザイン
+    tags: [React, UIコンポーネント, アニメーション, MCP]
+    description: React プロジェクトにコピーして使える UI コンポーネント集。アニメーション付きの部品を揃え、MCP からも利用できる。
+    websiteUrl: https://spell.sh/
+  - id: google-code-wiki
+    name: Code Wiki
+    category: 開発ツール
+    tags: [コード理解, ドキュメント, Gemini]
+    description: 公開リポジトリを解析し、コードに追随する構造化 Wiki を生成する Google のサービス。コードへのリンクや Gemini による質問応答、図解でコードベースの理解を支援する。
+    websiteUrl: https://codewiki.google/
+  - id: codebase-memory-mcp
+    name: Codebase Memory MCP
+    category: 開発ツール
+    tags: [MCP, コード解析, 知識グラフ, AIコーディング]
+    description: コードベースを永続的な知識グラフに索引化し、MCP 経由の検索やコード理解を支援するサーバー。多数のプログラミング言語に対応する。
+    githubUrl: https://github.com/DeusData/codebase-memory-mcp
+  - id: code-migration-kit-with-claude-code
+    name: Code Migration Kit with Claude Code
+    category: 開発ツール
+    tags: [Claude Code, コード移行, AIコーディング]
+    description: Claude Code を使った大規模なプログラミング言語移行を支援するキット。プロンプト・テンプレート・スクリプトを組み合わせ、移行計画から動作検証まで段階的に進められる。
+    githubUrl: https://github.com/anthropics/code-migration-kit-with-claude-code
+  - id: system-design-notes-liquidslr
+    name: System Design Interview Notes
+    category: 資料集
+    tags: [システム設計, 面接対策, ノート]
+    description: Alex Xu の書籍『System Design Interview』第1巻・第2巻をもとにした要点ノート。
+    githubUrl: https://github.com/liquidslr/system-design-notes
+  - id: obsidianui
+    name: ObsidianUI
+    category: デザイン
+    tags: [React, TypeScript, Tailwind CSS, UIコンポーネント]
+    description: React・TypeScript・Tailwind CSS 向けの UI コンポーネントライブラリ。検索可能な作例から部品を選び、プロジェクトに組み込める。
+    websiteUrl: https://www.obsidianui.dev/
+  - id: laya-mlx
+    name: Laya-MLX
+    category: AI研究
+    tags: [MLX, Apple Silicon, ローカル推論, Python]
+    description: Apple Silicon 上で Laya の型付き意思決定モデルを実行する MLX ランタイム。テキスト生成を行わず、クラウド API や PyTorch に依存しない。
+    githubUrl: https://github.com/mizorewww/laya-mlx
+  - id: google-ax
+    name: AX
+    category: AIフレームワーク
+    tags: [AIエージェント, オーケストレーション, サンドボックス, Kubernetes]
+    description: Google のオープンな AI エージェント実行基盤。タスク・ワークスペース・ネットワーク制御などを宣言的に構成し、エージェントを隔離環境で実行・管理できる。
+    githubUrl: https://github.com/google/ax
+  - id: system-design-primer
+    name: System Design Primer
+    category: 資料集
+    tags: [システム設計, スケーラビリティ, 面接対策]
+    description: 大規模システムの設計を学ぶための資料集。負荷分散・キャッシュ・データベースなどの解説や面接対策、Anki 用フラッシュカードをまとめている。
+    githubUrl: https://github.com/donnemartin/system-design-primer
+  - id: system-design-101
+    name: System Design 101
+    category: 資料集
+    tags: [システム設計, 図解, 面接対策]
+    description: システムの仕組みを図解と平易な説明で学べる資料集。システム設計面接の準備にも使える。
+    githubUrl: https://github.com/ByteByteGoHq/system-design-101
+  - id: system-design-karan-pratapsingh
+    name: System Design（Karan Pratap Singh）
+    category: 資料集
+    tags: [システム設計, 分散システム, 面接対策]
+    description: スケールするシステムの設計を学び、システム設計面接に備えるための教材。
+    githubUrl: https://github.com/karanpratapsingh/system-design
+  - id: awesome-system-design-resources
+    name: Awesome System Design Resources
+    category: 資料集
+    tags: [システム設計, 学習資料, 面接対策]
+    description: システム設計の基礎と面接準備に使える無料の資料や記事を集めたリスト。
+    githubUrl: https://github.com/ashishps1/awesome-system-design-resources
+  - id: awesome-scalability
+    name: Awesome Scalability
+    category: 資料集
+    tags: [スケーラビリティ, 分散システム, 読書リスト]
+    description: 大規模システムの拡張性・信頼性・性能を扱うパターンや事例を、技術記事と参考資料から整理した読書リスト。
+    githubUrl: https://github.com/binhnguyennus/awesome-scalability
+  - id: awesome-system-design-madd86
+    name: Awesome System Design（madd86）
+    category: 資料集
+    tags: [システム設計, 分散システム, 読書リスト]
+    description: 分散システムとシステム設計に関する記事・書籍・動画・ツールなどを集めたリスト。面接対策やアーキテクチャ設計に役立つ。
+    githubUrl: https://github.com/madd86/awesome-system-design
+  - id: system-design-interview-checkcheckzz
+    name: System Design Interview（checkcheckzz）
+    category: 資料集
+    tags: [システム設計, 面接対策, 頻出問題]
+    description: IT 企業のシステム設計面接に向けて、基礎知識・進め方・頻出問題・参考資料をまとめたガイド。
+    githubUrl: https://github.com/checkcheckzz/system-design-interview
+  - id: machine-learning-systems-design
+    name: Machine Learning Systems Design
+    category: 資料集
+    tags: [機械学習, システム設計, 演習]
+    description: 機械学習システムの設計を、演習付きの冊子で学べる教材。
+    githubUrl: https://github.com/chiphuyen/machine-learning-systems-design
+  - id: system-design-academy
+    name: System Design Academy
+    category: 資料集
+    tags: [システム設計, AIエンジニアリング, 学習資料]
+    description: システム設計と AI エンジニアリングに関する書籍・記事・動画を整理した学習資料集。
+    githubUrl: https://github.com/systemdesign42/system-design-academy
+  - id: fallow
+    name: Fallow
+    category: 開発ツール
+    tags: [静的解析, JavaScript, TypeScript, コード品質]
+    description: TypeScript・JavaScript の未使用コードや循環依存、コード重複、複雑度、設計上の境界違反などを検出する静的解析ツール。
+    githubUrl: https://github.com/fallow-rs/fallow
+  - id: beautiful-ui
+    name: Beautiful UI
+    category: デザイン
+    tags: [AIエージェント, UIコンポーネント, チャット, AIネイティブ]
+    description: AI エージェントを組み込んだアプリ向けの UI プリミティブ集。ストリーミング回答・承認カード・ツール情報・タスク進捗などの表示部品を提供する。
+    websiteUrl: https://www.beautifului.dev/
+  - id: shadcn-ui
+    name: shadcn/ui
+    category: デザイン
+    tags: [React, UIコンポーネント, アクセシビリティ, デザインシステム]
+    description: アクセシブルな React UI 部品とソースコードを提供するデザインシステムの基盤。CLI でプロジェクトへ追加し、コードを直接カスタマイズできる。
+    websiteUrl: https://ui.shadcn.com/
+  - id: open-pencil
+    name: OpenPencil
+    category: デザイン
+    tags: [デザインツール, Figma, オープンソース, AI, MCP]
+    description: Figma の .fig と Pencil の .pen を読み書きできるオープンソースのデザインエディター。AI 機能・CLI・MCP 連携を備え、デザインの編集からコード書き出しまで行える。
+    githubUrl: https://github.com/open-pencil/open-pencil
+  - id: landdding
+    name: Landdding
+    category: デザイン
+    tags: [Webデザイン, ギャラリー, インスピレーション]
+    description: Webflow・Framer・WordPress などで制作されたランディングページや Web サイトを日々追加する、キュレーションギャラリー。
+    websiteUrl: https://landdding.com/
+  - id: modulify
+    name: Modulify
+    category: デザイン
+    tags: [生成AI, Webサイト制作, Webアプリ, ノーコード]
+    description: プロンプトからランディングページ・Web サイト・ダッシュボード・Web アプリを生成し、AI チャットで編集・公開できるサイト制作プラットフォーム。
+    websiteUrl: https://modulify.ai/
+  - id: logo-to-use
+    name: Logo To Use
+    category: デザイン
+    tags: [ロゴ, SVG, デザイン素材]
+    description: ブランドロゴを色付き・黒・白のバリエーションから探し、SVG 形式でダウンロードできるロゴ素材ライブラリ。
+    websiteUrl: https://logotouse.com/
+  - id: motion-in-design
+    name: Motion In Design
+    category: デザイン
+    tags: [Webデザイン, アニメーション, 参考資料, AIコーディング]
+    description: カーソル反応や物理演算を取り入れた Web セクションのギャラリー。各作例を AI コーディングツールへ渡すためのプロンプトと仕様ファイルを提供する。
+    websiteUrl: https://www.motionin.design/
+  - id: neomacs
+    name: Neomacs
+    category: 開発ツール
+    tags: [Emacs, Rust, エディター, GPU]
+    description: GPU 描画エンジンを備える Rust 製の Emacs 互換エディター。高速化と既存設定・パッケージとの互換性を目指す開発中のプロジェクト。
+    githubUrl: https://github.com/eval-exec/neomacs
+  - id: bashka
+    name: bashka
+    category: 開発ツール
+    tags: [CLI, Bash, 静的解析, セキュリティ]
+    description: curl 経由で実行する形式のインストールスクリプトを静的解析し、スクリプト内や転送先にある危険な処理を検出する CLI ツール。
+    githubUrl: https://github.com/dmtrKovalenko/bashka
+  - id: termaid
+    name: termaid
+    category: 開発ツール
+    tags: [Mermaid, Python, ターミナル, 図解]
+    description: Mermaid 図をターミナル上や Python アプリ内に描画する Python ライブラリ・CLI ツール。
+    githubUrl: https://github.com/fasouto/termaid
+  - id: sqly
+    name: sqly
+    category: データベース
+    tags: [SQL, CLI, CSV, JSON, Parquet]
+    description: CSV・TSV・JSON・Parquet・Excel などのファイルへ SQL を実行できる CLI。データを SQLite 上で扱い、形式をまたいだ結合や集計ができる。
+    githubUrl: https://github.com/nao1215/sqly
+  - id: interior-dev
+    name: interior.dev
+    category: デザイン
+    tags: [React, Tailwind CSS, Motion, アニメーション, UIコンポーネント]
+    description: React・Tailwind CSS・Motion で作られたオープンソースのマイクロインタラクション集。デモを確認し、コンポーネントのソースをコピーしてカスタマイズできる。
+    websiteUrl: https://www.interior.dev/
+  - id: liquid-glass-samasante
+    name: Liquid Glass
+    category: ライブラリ
+    tags: [React, WebGL, SVG, エフェクト]
+    description: React 向けの液体ガラス表現ライブラリ。要素や画像・動画に屈折レンズ効果を重ね、光学パラメーターを調整できる。
+    websiteUrl: https://glass.samasante.com/
+  - id: vibeui
+    name: VibeUI
+    category: デザイン
+    tags: [UIデザイン, プロンプト, AIコーディング, Webデザイン]
+    description: ログイン・料金表・ヒーローなど15カテゴリのレイアウト用プロンプト集。構成を選んでコピーし、AI ツールで UI の生成に使える。
+    websiteUrl: https://vibeui.online/
+  - id: uiable
+    name: UIAble
+    category: デザイン
+    tags: [React, shadcn/ui, Tailwind CSS, UIコンポーネント, テンプレート]
+    description: shadcn ベースの UI システム。コンポーネントに加え、ページブロックやランディングページ・ダッシュボード用テンプレートを提供する。
+    websiteUrl: https://uiable.com/
+  - id: ghostex
+    name: Ghostex
+    category: 開発ツール
+    tags: [AIコーディング, AIエージェント, ターミナル, Rust]
+    description: Claude Code・Codex・OpenCode など複数のコーディングエージェントを並べて操作するデスクトップアプリ。埋め込みブラウザーや IDE 機能も備える。
+    githubUrl: https://github.com/maddada/ghostex
+  - id: jsonize
+    name: jsonize
+    category: 開発ツール
+    tags: [Go, CLI, JSON, データ変換, パイプライン]
+    description: コマンド出力やファイルを JSON に変換し、次のコマンドへ渡す Go 製 CLI ツール。CSV・TSV・YAML・JSONL などを読み込み、パイプラインで扱える。
+    githubUrl: https://github.com/nao1215/jsonize
+  - id: ui-skills
+    name: UI Skills
+    category: 開発ツール
+    tags: [AIコーディング, スキル, UIデザイン, MCP]
+    description: UI・アクセシビリティ・アニメーション・フロントエンド開発などのスキルを集めたカタログ。CLI や MCP 経由で AI エージェントから利用できる。
+    websiteUrl: https://www.ui-skills.com/
+  - id: modern-react-guidance
+    name: Modern React Guidance
+    category: 開発ツール
+    tags: [React, React 19, AIコーディング, スキル]
+    description: React 19 以降の機能や推奨事項をまとめた、AI コーディングエージェント向けスキル。Actions・use・React Compiler・View Transition や移行用 codemod などを扱う。
+    githubUrl: https://github.com/adhhamdev/modern-react-guidance
+  - id: design-token-naming-guide
+    name: Design Token Naming Guide
+    category: デザイン
+    tags: [デザイントークン, デザインシステム, 学習資料]
+    description: デザイントークンの命名規則を学ぶインタラクティブなレッスンと、独自のトークン体系を組み立てるツールを提供する。
+    websiteUrl: https://www.namedesigntokens.guide/
+  - id: llm-internals
+    name: LLM Internals
+    category: 資料集
+    tags: [LLM, Transformer, 推論最適化, 学習資料]
+    description: トークン化・注意機構・Transformer の基礎から、LLM の学習や推論最適化まで段階的に学べる記事・動画シリーズ。
+    githubUrl: https://github.com/amitshekhariitbhu/llm-internals
