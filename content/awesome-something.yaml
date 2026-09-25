@@ -23,6 +23,14 @@
 # tags は用途・技術・特徴を表す文字列のリストです。記載順に表示され、検索にも使えます。
 # タグ・URL・記事リストは省略できます。id は重複しない英小文字・数字・ハイフンにします。
 items:
+  - id: kibo-ui
+    name: Kibo UI
+    category: design
+    subcategory: components
+    tags: [React, shadcn/ui, UIコンポーネント, ブロック]
+    description: shadcn/ui 向けのオープンソースの UI コンポーネント・ブロック集。カラーピッカーやガントチャートなどを組み合わせて使え、CLI から導入できる。
+    websiteUrl: https://www.kibo-ui.com/
+    githubUrl: https://github.com/shadcnblocks/kibo
   - id: tradingagents
     name: TradingAgents
     category: research
