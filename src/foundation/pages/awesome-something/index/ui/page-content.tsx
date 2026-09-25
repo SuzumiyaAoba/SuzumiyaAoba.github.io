@@ -38,37 +38,25 @@ export function AwesomeSomethingPageContent({
         <Breadcrumbs items={breadcrumbs} />
         <header className="page-heading">
           <h1 className="page-title">Awesome Something</h1>
-          <p className="page-count">
-            {isEnglish
-              ? `${categories.length} categories / ${items.length} items`
-              : `${categories.length} カテゴリ / ${items.length} 件`}
-          </p>
-        </header>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="space-y-2">
-            <h2 className="text-lg font-medium">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <p className="page-count">
               {isEnglish
-                ? "Find your next discovery."
-                : "気になる分野から、次の発見へ。"}
-            </h2>
-            <p className="text-sm leading-7 text-muted-foreground">
-              {isEnglish
-                ? "Explore tools and resources by topic, or jump straight into a subcategory."
-                : "ツールや資料を、使いたい目的から探せます。サブカテゴリから、さらに詳しい一覧へ。"}
+                ? `${categories.length} categories / ${items.length} items`
+                : `${categories.length} カテゴリ / ${items.length} 件`}
             </p>
+            {items.length > 0 && (
+              <Link
+                href={toLocalePath(getAwesomePath("all"), locale)}
+                className="inline-flex min-h-11 items-center gap-2 text-sm underline underline-offset-4 transition-colors hover:text-muted-foreground"
+              >
+                {isEnglish
+                  ? "Browse & search all items"
+                  : "すべての項目を見る・検索する"}
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            )}
           </div>
-          {items.length > 0 && (
-            <Link
-              href={toLocalePath(getAwesomePath("all"), locale)}
-              className="inline-flex min-h-11 items-center gap-2 text-sm underline underline-offset-4 transition-colors hover:text-muted-foreground"
-            >
-              {isEnglish
-                ? "Browse & search all items"
-                : "すべての項目を見る・検索する"}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          )}
-        </div>
+        </header>
         {items.length === 0 ? (
           <p className="py-8 text-sm text-muted-foreground">
             {isEnglish
@@ -98,7 +86,7 @@ export function AwesomeSomethingPageContent({
                         : `${category.count} 件`}
                     </span>
                   </div>
-                  <h3
+                  <h2
                     id={`category-${category.id}`}
                     className="flex items-center justify-between gap-3 text-lg font-semibold tracking-tight"
                   >
@@ -107,10 +95,7 @@ export function AwesomeSomethingPageContent({
                       className="size-4 shrink-0 text-muted-foreground transition-transform motion-safe:group-hover:translate-x-1"
                       aria-hidden="true"
                     />
-                  </h3>
-                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                    {category.description[locale]}
-                  </p>
+                  </h2>
                 </Link>
                 <nav
                   aria-label={

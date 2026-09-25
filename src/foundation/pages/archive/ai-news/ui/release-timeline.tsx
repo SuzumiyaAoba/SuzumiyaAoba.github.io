@@ -1,4 +1,4 @@
-import { Fragment, useId } from "react";
+import { Fragment } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -56,7 +56,6 @@ export function ReleaseTimeline({
   popover,
 }: ReleaseTimelineProps) {
   const en = locale === "en";
-  const descriptionId = useId();
   const {
     scrollRef,
     zoom,
@@ -112,12 +111,6 @@ export function ReleaseTimeline({
     <div>
       <ReleaseViewHeader
         title={en ? "Release intervals · All dates" : "全期間のリリース間隔"}
-        description={
-          en
-            ? "Select a model for release details."
-            : "モデルを選択してリリースの詳細を表示"
-        }
-        descriptionId={descriptionId}
         aside={
           <p className="text-label leading-7 text-muted-foreground tabular-nums">
             {range.firstDate.replaceAll("-", ".")} —{" "}
@@ -257,7 +250,6 @@ export function ReleaseTimeline({
         aria-label={
           en ? "Release interval chart" : "リリース間隔の比較チャート"
         }
-        aria-describedby={descriptionId}
         tabIndex={0}
         onScroll={handleScroll}
         style={{ "--series-w": `${seriesWidth}px` }}

@@ -32,40 +32,6 @@ export function AsciiStandardCodePageContent({
           <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
             ASCII Standard Code
           </h1>
-          <p className="text-sm leading-6 text-muted-foreground">
-            <I18nText
-              locale={locale}
-              ja={
-                <>
-                  <a
-                    href="https://www.rfc-editor.org/rfc/rfc20#section-2"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-                  >
-                    RFC 20
-                  </a>{" "}
-                  の Standard Code にあるテーブルの SVG バージョン。ASCII
-                  コードから 16 進数、2 進数への変換表。
-                </>
-              }
-              en={
-                <>
-                  An SVG version of the Standard Code table from{" "}
-                  <a
-                    href="https://www.rfc-editor.org/rfc/rfc20#section-2"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-foreground underline decoration-foreground/40 underline-offset-4"
-                  >
-                    RFC 20
-                  </a>
-                  . A conversion table from ASCII codes to hexadecimal and
-                  binary.
-                </>
-              }
-            />
-          </p>
         </section>
 
         <section

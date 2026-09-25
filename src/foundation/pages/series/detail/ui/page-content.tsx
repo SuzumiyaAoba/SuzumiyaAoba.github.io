@@ -52,11 +52,6 @@ export function SeriesDetailPageContent({
           <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
             {series.name}
           </h1>
-          {series.description ? (
-            <p className="text-sm leading-6 text-muted-foreground">
-              {series.description}
-            </p>
-          ) : null}
         </section>
 
         {entries.length === 0 ? (

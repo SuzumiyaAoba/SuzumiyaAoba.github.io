@@ -140,11 +140,6 @@ export function AwesomeCategoryPageContent({
               </Link>
             )}
           </div>
-          {category && (
-            <p className="text-sm leading-7 text-muted-foreground">
-              {category.description[locale]}
-            </p>
-          )}
           {catalogCategory && (
             <SubcategoryNavigation
               key={path}

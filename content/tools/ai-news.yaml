@@ -1,6 +1,123 @@
 version: 1
-updated: "2026-09-19"
+updated: "2026-09-25"
 events:
+  - year: 2026
+    date: 2026-09-24
+    title_ja: "Decision Model (Preview)"
+    summary_ja: |
+      Alibaba Cloud Model Studio で構造化された判断を返すモデルをプレビュー提供。分類・二択の判断・スコアリングを行い、確率分布と信頼度を返す。
+
+      [Decision Model の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Decision Model"]
+    series: ["Decision Model"]
+  - year: 2026
+    date: 2026-09-23
+    title_ja: "Muse Realtime Avatar (発表)"
+    summary_ja: |
+      Muse Realtime Voice の音声に同期して、参照画像の表情や身体の動きをリアルタイムに生成する動画モデルを発表。公開デモには、Muse アプリで提供されていないアバターも含まれる。
+
+      [Bringing Your Muse to Life | Meta AI Research](https://research.meta.ai/blog/bringing-your-muse-to-life)
+    tags: ["Meta", "Muse", "Video Model"]
+    series: ["Muse Realtime Avatar"]
+  - year: 2026
+    date: 2026-09-22
+    title_ja: "GPT-6 Sol / GPT-6 Luna"
+    summary_ja: |
+      テキスト・画像入力からテキストを生成する推論モデル2種を公開。Responses API と Chat Completions API で提供開始。
+
+      [GPT-6 Sol / GPT-6 Luna のリリース | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-09-22
+    title_ja: "Claude Opus 5.5"
+    summary_ja: |
+      長時間の開発作業や知識業務を改善した Opus モデルを公開。Claude、Claude Code、Claude API と主要クラウドで提供し、Opus 5 からトークン単価とタスク当たりの使用量を削減。
+
+      [Introducing Claude Opus 5.5 | Anthropic](https://www.anthropic.com/claude-opus-5-5)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Opus"]
+  - year: 2026
+    date: 2026-09-22
+    title_ja: "Gemini 3.8 Flash TTS / 3.8 Flash-Lite TTS (GA)"
+    summary_ja: |
+      表現力を重視した Flash TTS と、低遅延・低コストの Flash-Lite TTS を一般提供。長文の音声合成やカスタム音声に対応。
+
+      [Gemini 3.8 TTS の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "Audio Model"]
+    series: ["Gemini Flash TTS", "Gemini Flash-Lite TTS"]
+  - year: 2026
+    date: 2026-09-21
+    title_ja: "Grok 4.7"
+    summary_ja: |
+      より大きな基盤モデルと長時間タスクの学習により、開発・知識業務・結果の自己検証を強化。Grok Build、Cursor、Grok API などで提供開始。
+
+      [Introducing Grok 4.7 | SpaceXAI](https://x.ai/news/grok-4-7)
+    tags: ["xAI", "Grok", "LLM Model"]
+    series: ["Grok"]
+  - year: 2026
+    date: 2026-09-21
+    title_ja: "Qwen3.8-Omni-Flash-Realtime"
+    summary_ja: |
+      音声・動画によるリアルタイム対話モデルを API で提供。テキスト・音声出力、複数チャンネルの音声入力、リモート MCP ツールに対応。
+
+      [Qwen3.8-Omni-Flash-Realtime の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "Audio Model"]
+    series: ["Qwen Omni Realtime"]
+  - year: 2026
+    date: 2026-09-20
+    title_ja: "Qwen-Image-2.1"
+    summary_ja: |
+      画像生成と編集を統合したモデルを重み公開。画像生成部は7Bパラメータで、透過画像の生成・編集と最大10枚の参照画像に対応。
+
+      [Qwen-Image-2.1: Compact, Efficient, and Unified Image Creation | Qwen](https://qwen.ai/blog?id=qwen-image-2.1)
+    tags: ["Alibaba", "Qwen", "Open Weight Model", "Image Model"]
+    series: ["Qwen Image"]
+  - year: 2026
+    date: 2026-09-20
+    title_ja: "Qwen-Audio 3.1 Realtime Plus"
+    summary_ja: |
+      全二重の音声対話モデルを API で提供。約26万トークンのコンテキスト、ツール呼び出し、Web検索、音声クローニングに対応。
+
+      [Qwen-Audio 3.1 Realtime Plus の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "Audio Model"]
+    series: ["Qwen Audio Realtime"]
+  - year: 2026
+    date: 2026-09-18
+    title_ja: "Qwen3.8-LiveTranslate"
+    summary_ja: |
+      同時通訳モデルを公開。60言語の音声入力と29言語の音声出力に対応し、話者分離、原文と訳文の同期表示、過去の文脈を使った訳語の曖昧さの解消を強化。
+
+      [Qwen3.8-LiveTranslate: Names the speaker. Carries the meaning. | Qwen](https://qwen.ai/blog?id=qwen3.8-livetranslate)
+    tags: ["Alibaba", "Qwen", "Audio Model"]
+    series: ["Qwen LiveTranslate"]
+  - year: 2026
+    date: 2026-09-18
+    title_ja: "Grok Voice Transcribe 2.0"
+    summary_ja: |
+      多言語・雑音環境での認識を改善した音声文字起こしモデルを公開。バッチ・ストリーミング、話者分離、単語単位の時刻情報に対応。
+
+      [Introducing Grok Voice Transcribe 2.0 | SpaceXAI](https://x.ai/news/grok-voice-transcribe-2)
+    tags: ["xAI", "Grok", "Audio Model"]
+    series: ["Grok Voice Transcribe"]
+  - year: 2026
+    date: 2026-09-17
+    title_ja: "Qwen3.8-Omni-Flash (API)"
+    summary_ja: |
+      テキスト・画像・音声・動画を入力し、テキストを出力するモデルを API で提供。推論モードとツール利用に対応。
+
+      [Qwen3.8-Omni-Flash の API 提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Omni"]
+  - year: 2026
+    date: 2026-09-17
+    title_ja: "HappyOyster 1.0 (Model Studio)"
+    summary_ja: |
+      対話型の世界モデル Adventure・Directing・Acting を Model Studio で提供。テキストや画像から、探索・演出・ロールプレイが可能な場面を生成する。
+
+      [HappyOyster 1.0 の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "HappyOyster", "World Model"]
+    series: ["HappyOyster"]
   - year: 2026
     date: 2026-09-16
     title_ja: "SemIf (OpenJev)"
@@ -28,6 +145,15 @@ events:
       [Introducing System One Models & Jev | TypeSafe AI](https://typesafe.ai/blog/introducing-system-one-models-and-jev)
     tags: ["TypeSafe AI", "Jev"]
     series: ["Jev"]
+  - year: 2026
+    date: 2026-09-11
+    title_ja: "Kimi K2.8 Preview (Kimi Code)"
+    summary_ja: |
+      Kimi Code 向けモデルを更新。開発・エージェント能力と推論効率を改善し、100万トークンのコンテキストと推論強度の調整に対応。モデル ID は kimi-for-coding を継続。
+
+      [K2.8 Preview の提供開始 | Kimi Code Docs](https://www.kimi.com/code/docs/en/kimi-code/whats-new.html)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi"]
   - year: 2026
     date: 2026-09-10
     title_ja: "DeepSeek-V4.1-Flash"
@@ -65,6 +191,33 @@ events:
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT-Rosalind"]
   - year: 2026
+    date: 2026-09-04
+    title_ja: "MAI-Image-2.6 / MAI-Image-2.6-Flash (Public Preview)"
+    summary_ja: |
+      画像生成・編集モデル2種を Microsoft Foundry で公開プレビュー提供。複数画像を参照した編集、Web情報の参照、可変アスペクト比に対応。
+
+      [Pushing the quality-cost frontier with MAI-Image-2.6 | Microsoft AI](https://microsoft.ai/news/pushing-the-quality-cost-frontier-with-mai-image-2-6/)
+    tags: ["Microsoft", "MAI", "Image Model"]
+    series: ["MAI Image", "MAI Image Flash"]
+  - year: 2026
+    date: 2026-09-03
+    title_ja: "Lyria 3.5 (API GA)"
+    summary_ja: |
+      テキストや画像から楽曲を生成する音楽モデルを API で一般提供。楽曲構成・長さの制御と、自然な歌声を改善。
+
+      [Lyria 3.5 の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Lyria", "Audio Model"]
+    series: ["Lyria"]
+  - year: 2026
+    date: 2026-09-03
+    title_ja: "MAI-Transcribe-2"
+    summary_ja: |
+      60言語に対応する音声認識モデルを公開。話者分離、単語単位の時刻情報、専門用語の認識補助、逐語・整文の切り替えに対応。
+
+      [MAI-Transcribe-2 の発表 | Microsoft AI](https://microsoft.ai/news/mai-transcribe-2-is-the-fastest-most-accurate-and-cheapest-speech-recognition-model-in-the-world/)
+    tags: ["Microsoft", "MAI", "Audio Model"]
+    series: ["MAI Transcribe"]
+  - year: 2026
     date: 2026-09-03
     title_ja: "GPT-6 Astra"
     summary_ja: |
@@ -73,6 +226,15 @@ events:
       [GPT-6 Astra | OpenAI](https://developers.openai.com/api/docs/models/gpt-6-astra) / [発表日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+  - year: 2026
+    date: 2026-09-02
+    title_ja: "Muse Spark 1.3"
+    summary_ja: |
+      長時間の開発作業、複数タスクの追跡、複雑な指示への追従を改善。Muse Code と Meta Model API で提供開始。
+
+      [Introducing Muse Spark 1.3 | Meta AI Research](https://research.meta.ai/blog/introducing-muse-spark-1-3)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Spark"]
   - year: 2026
     date: 2026-09-02
     title_ja: "Qwen3.8-Max-0902"
@@ -94,6 +256,15 @@ events:
     series: ["Gemini Flash", "Gemini Flash Cyber"]
   - year: 2026
     date: 2026-09-01
+    title_ja: "Muse Voice Transcribe"
+    summary_ja: |
+      リアルタイム音声認識モデルを Meta Model API、Meta AI for Mac、Muse Code で提供。多言語の文字起こし、20人以上の話者分離、発話区間の検出に対応。
+
+      [Introducing Muse Voice Transcribe | Meta AI Research](https://research.meta.ai/blog/introducing-muse-voice-transcribe)
+    tags: ["Meta", "Muse", "Audio Model"]
+    series: ["Muse Voice Transcribe"]
+  - year: 2026
+    date: 2026-09-01
     title_ja: "Claude Fable 5.1 / Claude Mythos 5.1"
     summary_ja: |
       Fable 5.1 を一般提供。Mythos 5.1 は、サイバーセキュリティ・ライフサイエンス分野の審査済み組織向けに限定提供。
@@ -110,6 +281,33 @@ events:
       [LLM-jp-4-VL 9Bリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/llm-jp-4-vl-9b/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp VL"]
+  - year: 2026
+    date: 2026-08-31
+    title_ja: "Mistral OCR 4.1 (GA)"
+    summary_ja: |
+      7月に公開した文書認識モデル OCR 4.1 の一般提供を開始。
+
+      [OCR 4.1 の一般提供開始 | Mistral Changelog](https://docs.mistral.ai/resources/changelogs)
+    tags: ["Mistral AI", "OCR Model", "LLM Model"]
+    series: ["Mistral OCR"]
+  - year: 2026
+    date: 2026-08-27
+    title_ja: "Gemini Omni 1.1 Flash (GA)"
+    summary_ja: |
+      動画生成・対話的編集モデルを一般提供。動画の延長、開始・終了画像の指定、出力解像度の選択に対応。
+
+      [Gemini Omni Flash の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "Video Model"]
+    series: ["Gemini Omni Flash"]
+  - year: 2026
+    date: 2026-08-26
+    title_ja: "Qwen3.8-Flash"
+    summary_ja: |
+      100万トークンのコンテキストと画像理解に対応する高速モデルを API で提供。開発支援やエージェント用途に対応。
+
+      [Qwen3.8-Flash の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen Flash"]
   - year: 2026
     date: 2026-08-26
     title_ja: "Gemini 3.5 Transcribe / Transcribe Live (GA)"
@@ -168,6 +366,15 @@ events:
 
   - year: 2026
     date: 2026-08-13
+    title_ja: "MiniMax Music 3.0"
+    summary_ja: |
+      アイデアや歌詞から、作曲・編曲・歌唱を含む楽曲を生成する音楽モデルを公開。最大5分の曲で、構成の一貫性と楽器・歌声の表現を改善。
+
+      [MiniMax Music 3.0 の発表 | MiniMax](https://www.minimax.io/blog/minimax-music-3-0-next-generation-open-weights-production-ready-versatile-music-model)
+    tags: ["MiniMax", "Audio Model"]
+    series: ["MiniMax Music"]
+  - year: 2026
+    date: 2026-08-13
     title_ja: "Gemini 3.7 Flash"
     summary_ja: |
       [Gemini 3.7 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/)
@@ -201,6 +408,42 @@ events:
     series: ["Grok"]
 
   - year: 2026
+    date: 2026-08-11
+    title_ja: "Nemotron 3.5 Lightning"
+    summary_ja: |
+      常時稼働するエージェントの特化タスク向けに、30B規模の MoE モデルを重み公開。低遅延と推論効率を重視。
+
+      [Nemotron 3.5 Lightning の発表 | NVIDIA](https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+  - year: 2026
+    date: 2026-08-11
+    title_ja: "MAI-Code-1.1-Flash"
+    summary_ja: |
+      軽量な開発向けモデルを GitHub Copilot で提供。CLI・.NET のタスクを改善し、前モデルからトークン効率と生成速度を向上。
+
+      [MAI-Code-1.1-Flash の発表 | Microsoft AI](https://microsoft.ai/news/mai-code-1-1-flash-br-better-faster-at-a-quarter-of-the-cost/)
+    tags: ["Microsoft", "MAI", "LLM Model"]
+    series: ["MAI Code Flash"]
+  - year: 2026
+    date: 2026-08-10
+    title_ja: "Muse Glimmer"
+    summary_ja: |
+      ローカルのエージェント用途に最適化した30Bモデルを Apache 2.0 で重み公開。画像・テキスト入力とツール利用に対応し、単一GPUのPCやMacでの実行を想定。
+
+      [Introducing Muse Glimmer: An Open Agentic Model That Runs on Your Device | Meta AI Research](https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model)
+    tags: ["Meta", "Muse", "Open Weight Model", "LLM Model"]
+    series: ["Muse Glimmer"]
+  - year: 2026
+    date: 2026-08-07
+    title_ja: "Grok Imagine Image 2.0"
+    summary_ja: |
+      画像生成・編集モデルを Grok の Quality Mode として一般提供。細かな指示への追従、文字・レイアウトの描画、編集時の一貫性を改善。
+
+      [Imagine Image 2.0 | SpaceXAI](https://x.ai/news/grok-imagine-image-2)
+    tags: ["xAI", "Grok", "Image Model"]
+    series: ["Grok Imagine Image"]
+  - year: 2026
     date: 2026-08-07
     title_ja: "GPT-5.6 Cyber (限定提供)"
     summary_ja: |
@@ -209,6 +452,24 @@ events:
       [GPT-5.6 Cyber | OpenAI](https://developers.openai.com/api/docs/models/gpt-5.6-cyber) / [提供開始日 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT Cyber"]
+  - year: 2026
+    date: 2026-08-05
+    title_ja: "Muse Spark 1.2"
+    summary_ja: |
+      開発向けモデルを、同時発表のターミナルエージェント Muse Code と Meta Model API で提供。大規模リポジトリでの計画・実装・検証を強化。
+
+      [Introducing Muse Code and Muse Spark 1.2 | Meta AI Research](https://research.meta.ai/blog/introducing-muse-code-and-muse-spark-1-2)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Spark"]
+  - year: 2026
+    date: 2026-08-03
+    title_ja: "MiniMax H3 (重み公開)"
+    summary_ja: |
+      音声付き動画を生成する H3-Base の2種のチェックポイントを公開。前処理の H3-Context-IR と2K生成用の H3-Regenerate-2K は、この重み公開には含まれない。
+
+      [Open General Intelligence: MiniMax H3 Is Now Open Source | MiniMax](https://www.minimax.io/news/minimax-h3-open-source)
+    tags: ["MiniMax", "Open Weight Model", "Video Model"]
+    series: ["MiniMax H3"]
   - year: 2026
     date: 2026-08-03
     title_ja: "Qwen3.8-Max (API)"
@@ -219,6 +480,33 @@ events:
     tags: ["Alibaba", "Qwen", "LLM Model"]
     series: ["Qwen Max"]
 
+  - year: 2026
+    date: 2026-07-31
+    title_ja: "MiniMax H3"
+    summary_ja: |
+      テキスト・画像・動画・音声を参照する動画生成モデルを公開。ネイティブなステレオ音声付きで、最大2K・15秒の動画を生成。
+
+      [MiniMax H3: An Open Model Breaking the Boundaries Between Tasks and Modalities | MiniMax](https://www.minimax.io/blog/minimax-h3)
+    tags: ["MiniMax", "Video Model"]
+    series: ["MiniMax H3"]
+  - year: 2026
+    date: 2026-07-30
+    title_ja: "Gemini Robotics ER 2 / ER 2 Streaming (Preview)"
+    summary_ja: |
+      ロボット向けの空間推論・ツール操作モデルを公開プレビュー提供。通常版と、音声・動画を扱うリアルタイム版を用意。
+
+      [Gemini Robotics ER 2 の公開プレビュー | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "Robotics Model", "LLM Model"]
+    series: ["Gemini Robotics ER"]
+  - year: 2026
+    date: 2026-07-29
+    title_ja: "Grok Voice Think Fast 2.0"
+    summary_ja: |
+      発話と並行して推論する音声対話モデルを公開。会話能力・音声認識・ツール利用を改善。
+
+      [Introducing Grok Voice Think Fast 2.0 | SpaceXAI](https://x.ai/news/grok-voice-think-fast-2)
+    tags: ["xAI", "Grok", "Audio Model"]
+    series: ["Grok Voice Think Fast"]
   - year: 2026
     date: 2026-07-24
     title_ja: "Claude Opus 5"
@@ -235,6 +523,15 @@ events:
       [Gemini 3.6 Flash・3.5 Flash-Lite・3.5 Flash Cyber の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/)
     tags: ["Google", "Gemini", "LLM Model"]
     series: ["Gemini Flash", "Gemini Flash-Lite", "Gemini Flash Cyber"]
+  - year: 2026
+    date: 2026-07-16
+    title_ja: "Mistral OCR 4.1"
+    summary_ja: |
+      文書認識モデル OCR 4.1 を公開。OCR API にブロック単位の信頼度スコアを追加。
+
+      [OCR 4.1 のリリース | Mistral Changelog](https://docs.mistral.ai/resources/changelogs)
+    tags: ["Mistral AI", "OCR Model", "LLM Model"]
+    series: ["Mistral OCR"]
   - year: 2026
     date: 2026-07-16
     title_ja: "Kimi K3"
@@ -257,6 +554,15 @@ events:
 
   - year: 2026
     date: 2026-07-09
+    title_ja: "Muse Spark 1.1"
+    summary_ja: |
+      ツール・コンピューター操作、開発、マルチモーダル理解を強化。Meta AI の Thinking モードと、公開プレビューの Meta Model API で提供開始。
+
+      [Introducing Muse Spark 1.1 | Meta AI Research](https://research.meta.ai/blog/introducing-muse-spark-meta-model-api)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Spark"]
+  - year: 2026
+    date: 2026-07-09
     title_ja: "GPT-5.6 (Sol, Terra, Luna)"
     summary_ja: |
       [GPT-5.6：野心に応えるスケーラブルなフロンティア知能 | OpenAI](https://openai.com/ja-JP/index/gpt-5-6/)
@@ -269,6 +575,33 @@ events:
       [Introducing GPT-Live | OpenAI](https://openai.com/index/introducing-gpt-live/)
     tags: ["OpenAI", "GPT", "Audio Model"]
     series: ["GPT-Live"]
+  - year: 2026
+    date: 2026-07-07
+    title_ja: "Muse Image"
+    summary_ja: |
+      Meta Superintelligence Labs の画像生成モデルを公開。複数の参照画像を使った生成・編集、指示追従、検索やコード実行を使う画像作成に対応。
+
+      [Introducing Muse Image and Muse Video | Meta](https://ai.meta.com/blog/introducing-muse-image-muse-video-msl/)
+    tags: ["Meta", "Muse", "Image Model"]
+    series: ["Muse Image"]
+  - year: 2026
+    date: 2026-06-30
+    title_ja: "Leanstral 1.5"
+    summary_ja: |
+      Lean 4 の形式的証明向けモデルを更新。学習データの品質と長文脈での推論を改善。
+
+      [Leanstral 1.5 のリリース | Mistral Changelog](https://docs.mistral.ai/resources/changelogs)
+    tags: ["Mistral AI", "LLM Model"]
+    series: ["Leanstral"]
+  - year: 2026
+    date: 2026-06-30
+    title_ja: "Gemini Omni Flash (Preview)"
+    summary_ja: |
+      動画生成と対話的な編集に対応するモデルを公開プレビュー提供。
+
+      [Gemini Omni Flash の公開プレビュー | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "Video Model"]
+    series: ["Gemini Omni Flash"]
   - year: 2026
     date: 2026-06-30
     title_ja: "Claude Sonnet 5"
@@ -293,6 +626,15 @@ events:
     tags: ["SB Intuitions", "Sarashina", "LLM Model"]
     series: ["Sarashina"]
   - year: 2026
+    date: 2026-06-23
+    title_ja: "Mistral OCR 4"
+    summary_ja: |
+      文書認識モデル OCR 4 を公開。段落単位の領域座標と、表・見出し・数式などの構造ラベルを出力。
+
+      [OCR 4 のリリース | Mistral Changelog](https://docs.mistral.ai/resources/changelogs)
+    tags: ["Mistral AI", "OCR Model", "LLM Model"]
+    series: ["Mistral OCR"]
+  - year: 2026
     date: 2026-06-16
     title_ja: "GLM-5.2"
     summary_ja: |
@@ -309,6 +651,15 @@ events:
       [Redeploying Fable 5 \ Anthropic](https://www.anthropic.com/news/redeploying-fable-5)
     tags: ["Anthropic", "Claude", "LLM Model"]
     series: ["Claude Fable", "Claude Mythos"]
+  - year: 2026
+    date: 2026-06-04
+    title_ja: "Nemotron 3 Ultra"
+    summary_ja: |
+      総550B・有効55Bパラメータの MoE モデルを公開。100万トークンのコンテキストと長時間のエージェント処理に対応し、事前学習・追加学習・量子化済みの重みを提供。
+
+      [NVIDIA Nemotron 3 Ultra | NVIDIA Research](https://research.nvidia.com/labs/nemotron/Nemotron-3-Ultra/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
   - year: 2026
     date: 2026-06-03
     title_ja: "Gemma 4 12B"
@@ -331,6 +682,15 @@ events:
 
   - year: 2026
     date: 2026-05-28
+    title_ja: "Nano Banana 2 / Nano Banana Pro (GA)"
+    summary_ja: |
+      画像生成・編集モデル Gemini 3.1 Flash Image と Gemini 3 Pro Image の一般提供を開始。
+
+      [Nano Banana 2 / Pro の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-05-28
     title_ja: "Claude Opus 4.8"
     summary_ja: |
       [Introducing Claude Opus 4.8 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-8)
@@ -338,11 +698,11 @@ events:
     series: ["Claude Opus"]
   - year: 2026
     date: 2026-05-22
-    title_ja: "Mistral Medium 3.5 (Preview)"
+    title_ja: "Mistral Medium 3.5 (Vibe / Le Chat Preview)"
     summary_ja: |
-      指示追従・推論・開発を統合したモデルの重みを公開。
+      指示追従・推論・開発を統合した128Bモデルを、Vibe と Le Chat の公開プレビューに導入。ここでは製品への導入を伝える公式発表記事の日付を記録。API の変更履歴とモデルページでは、モデルの初回リリースを4月28日と記載。
 
-      [Mistral Medium 3.5 (Preview) の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/)
+      [Vibe / Le Chat への導入発表 | Mistral AI](https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/) / [モデルの公開情報 | Mistral Docs](https://docs.mistral.ai/models/mistral-medium-3-5-26-04)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mistral Medium"]
 
@@ -373,6 +733,15 @@ events:
       [Gemini 3.5 Flash の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/)
     tags: ["Google", "Gemini", "LLM Model"]
     series: ["Gemini Flash"]
+  - year: 2026
+    date: 2026-05-07
+    title_ja: "Gemini 3.1 Flash-Lite (GA)"
+    summary_ja: |
+      3月にプレビュー公開した軽量・低遅延モデルの一般提供を開始。
+
+      [Gemini 3.1 Flash-Lite の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Flash-Lite"]
   - year: 2026
     date: 2026-04-28
     title_ja: "Nemotron 3 Nano Omni"
@@ -465,6 +834,15 @@ events:
       [LLM-jp-4-VL 9B betaリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/20260414_llm-jp-4-vl-9b-beta/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp VL"]
+  - year: 2026
+    date: 2026-04-08
+    title_ja: "Muse Spark"
+    summary_ja: |
+      Meta Superintelligence Labs 初の Muse 系列モデルを公開。マルチモーダル推論とツール利用に対応し、Meta AI で提供開始。API は一部利用者向けの限定プレビュー。
+
+      [Introducing Muse Spark: Scaling Towards Personal Superintelligence | Meta](https://ai.meta.com/blog/introducing-muse-spark-msl/)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Spark"]
   - year: 2026
     date: 2026-04-07
     title_ja: "GLM-5.1"

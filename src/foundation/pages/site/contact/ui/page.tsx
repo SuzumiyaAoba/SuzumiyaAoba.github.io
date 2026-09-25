@@ -30,22 +30,13 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-4">
-          <div className="space-y-2">
-            <p className="section-label">
-              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-            </p>
-            <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
-              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-            </h1>
-          </div>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-            <I18nText
-              locale={locale}
-              ja="お問い合わせは以下のフォームからお願いします。"
-              en="Please use the form below to get in touch."
-            />
+        <section className="space-y-2">
+          <p className="section-label">
+            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
           </p>
+          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
+            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
+          </h1>
         </section>
 
         <section>

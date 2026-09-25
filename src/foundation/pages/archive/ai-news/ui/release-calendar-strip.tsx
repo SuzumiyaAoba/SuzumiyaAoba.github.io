@@ -70,11 +70,6 @@ export function ReleaseCalendarStrip({
     >
       <ReleaseViewHeader
         title={en ? "Monthly release calendar" : "月別リリースカレンダー"}
-        description={
-          en
-            ? "Select a date for release details."
-            : "日付を選択してリリースの詳細を表示"
-        }
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none">
