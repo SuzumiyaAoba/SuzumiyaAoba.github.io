@@ -1,11 +1,10 @@
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { Arrow } from "./home-arrow";
-import type { HomeNote } from "../model/home-content";
 
-type HomeLibraryProps = { locale: Locale; notes: HomeNote[] };
+type HomeLibraryProps = { locale: Locale };
 
-export function HomeLibrary({ locale, notes }: HomeLibraryProps) {
+export function HomeLibrary({ locale }: HomeLibraryProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
   const tools = [
@@ -35,29 +34,56 @@ export function HomeLibrary({ locale, notes }: HomeLibraryProps) {
       <div>
         <div className="home-section-heading">
           <h2 id="library-title" className="home-section-title">
-            {t("ノート", "Notes")}
+            {t("キーワード", "Keywords")}
           </h2>
-          <a href={toLocalePath("/notes", locale)} className="home-inline-link">
-            {t("すべて", "All notes")}
+          <a
+            href={toLocalePath("/keywords", locale)}
+            className="home-inline-link"
+          >
+            {t("すべて", "All keywords")}
             <Arrow />
           </a>
         </div>
-        {notes.length > 0 ? (
-          <ul className="home-note-list">
-            {notes.slice(0, 4).map((note) => (
-              <li key={note.slug}>
-                <a href={toLocalePath(`/notes/${note.slug}`, locale)}>
-                  <span>{note.title}</span>
-                  <Arrow />
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="home-empty">
-            {t("ノートはまだありません。", "No notes yet.")}
-          </p>
-        )}
+        <ul className="home-note-list">
+          {[
+            {
+              category: "graphics/noise",
+              slug: "curl-noise",
+              ja: "カールノイズ",
+              en: "Curl Noise",
+            },
+            {
+              category: "simulation/curves",
+              slug: "cubic-hermite-curve",
+              ja: "エルミート曲線",
+              en: "Cubic Hermite Curve",
+            },
+            {
+              category: "graphics/fields",
+              slug: "signed-distance-field",
+              ja: "符号付き距離場",
+              en: "Signed Distance Field",
+            },
+            {
+              category: "world/generation",
+              slug: "wave-function-collapse",
+              ja: "波動関数崩壊",
+              en: "Wave Function Collapse",
+            },
+          ].map((keyword) => (
+            <li key={keyword.slug}>
+              <a
+                href={toLocalePath(
+                  `/keywords/${keyword.category}/${keyword.slug}`,
+                  locale
+                )}
+              >
+                <span>{en ? keyword.en : keyword.ja}</span>
+                <Arrow />
+              </a>
+            </li>
+          ))}
+        </ul>
         <a href="/books/" hrefLang="ja" className="home-books-link">
           <span>{t("書籍一覧", "Books (Japanese)")}</span>
           <Arrow />

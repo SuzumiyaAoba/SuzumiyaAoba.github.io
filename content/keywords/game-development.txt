@@ -1,0 +1,220 @@
+# noise|ノイズ・不規則さ|Noise & irregularity|模様、位置、流れに自然な揺らぎを加える
+カールノイズ|Curl Noise|渦を持つ流れ場で煙や魔力の粒子をうねらせる
+パーリンノイズ|Perlin / Gradient Noise|連続した不規則さで地形、雲、揺れを作る
+シンプレックスノイズ|Simplex Noise|単体格子による滑らかな多次元ノイズを作る
+バリューノイズ|Value Noise|格子点の乱数値を補間して柔らかい模様を作る
+ウォーリーノイズ|Worley / Cellular Noise|特徴点への距離から細胞や石の境界を作る
+フラクタルブラウン運動|Fractal Brownian Motion / fBm|大きさの異なるノイズを重ねて細部を増やす
+タービュランスノイズ|Turbulence Noise|折り返したノイズを重ねて筋や雲を作る
+リッジノイズ|Ridged Multifractal Noise|ノイズの稜線を強調して山脈を作る
+ドメインワーピング|Domain Warping|参照座標をノイズで歪めて炎や大理石模様を作る
+周期ノイズ|Periodic / Tileable Noise|端がつながるノイズで継ぎ目のない素材を作る
+# curves|曲線・補間|Curves & interpolation|形を決める曲線と進み方を制御する補間
+エルミート曲線|Cubic Hermite Curve|両端の位置と接線で曲がる軌道を指定する
+ベジェ曲線|Bézier Curve|制御点を動かして軌跡やUIの曲がり方を調整する
+カトマル・ロムスプライン|Catmull–Rom Spline|指定点を通る滑らかな経路を作る
+Bスプライン|B-Spline|制御点の局所的な調整で長い滑らかな曲線を作る
+NURBS|Non-Uniform Rational B-Spline|重みとノットを使って円弧などを精密に表す
+弧長パラメータ化|Arc-Length Parameterization|曲線のパラメータと弧長を対応させ、等速移動や等間隔配置に使う
+線形補間・値域変換|Lerp / Inverse Lerp / Remap|値を混ぜたり範囲を変えて色や大きさへ対応させる
+スムーズステップ|Smoothstep / Smootherstep|両端で滑らかにつながるフェードを作る
+イージング|Easing / Back / Bounce / Elastic|時間の進み方を変えて溜めや弾みを付ける
+球面線形補間|Slerp / Quaternion Interpolation|回転姿勢を球面上で滑らかにつなぐ
+# motion|追従・ばね・群れ|Following, springs & flocks|周囲や目標に応じて毎フレーム動きを決める
+指数減衰|Exponential Damping|経過時間に合わせてカメラや照準を目標へ近づける
+ばね・ダンパー|Spring–Damper|復元力と減衰で反動や尻尾の弾みを作る
+臨界減衰|Critical Damping|線形ばね系で振動する設定としない設定の境界を選び、速く落ち着く追従を作る
+PD・PID制御|PD / PID Controller|誤差とその変化などから砲塔や乗り物の操作量を決める
+シーク・アライバル|Seek / Arrival|目標へ向かい到着前に減速させる
+予測追跡|Pursuit / Interception|相手の未来位置を予測して追跡する
+ワンダー|Wander Steering|進行方向を連続的に揺らして自然に徘徊させる
+ボイド|Boids / Flocking|分離、整列、結合で鳥や魚の群れを動かす
+フローフィールド追従|Flow-Field Following|空間に置いた矢印に沿って粒子や群集を進める
+障害物回避操舵|Obstacle Avoidance Steering|進行先の障害物を避ける方向に曲がる
+# particles|パーティクル・軌跡|Particles & trails|粒子の描き方、寿命、軌跡を指定する
+ビルボード|Billboard|カメラに向けた板で煙や光点を描く
+ストレッチビルボード|Stretched Billboard|速度方向に板を伸ばして雨や高速火花を描く
+リボン・トレイル|Ribbon / Trail Renderer|点列を帯にして剣閃やレーザーの残光を描く
+フリップブック|Flipbook / Texture Sheet Animation|連番画像を切り替えて爆発や炎を動かす
+メッシュパーティクル|Mesh Particles|粒子を立体として描いて破片や葉を飛ばす
+ソフトパーティクル|Soft Particles / Depth Fade|深度差で接地部分を薄くして煙の食い込みを和らげる
+寿命カーブ|Size / Color / Alpha over Lifetime|粒子の年齢で大きさ、色、透明度を変える
+サブエミッター|Sub-Emitters / Particle Events|衝突や消滅から次の粒子を発生させる
+サーフェス放出|Surface / Mesh Emission|物体の表面から粒子を出して燃焼や砂化を表す
+速度方向への整列|Velocity Alignment|粒子の長軸を進む向きに合わせる
+# materials|UV・マテリアル表現|UV & materials|表面の参照座標と模様を変える
+UVスクロール|UV Scrolling / Panner|テクスチャ座標をずらして帯や炎を流す
+極座標変換|Polar Coordinates|位置を距離と角度で扱い魔法陣や渦を描く
+トライプラナー|Triplanar / World-Aligned Mapping|複数方向から投影して岩や地形の継ぎ目を減らす
+フローマップ|Flow Map|方向を書いた画像に沿って川や溶岩の模様を流す
+パララックスマッピング|Parallax Mapping / Bump Offset|高さに応じてUVをずらし奥行きを見せる
+頂点変位|Vertex Displacement / World Position Offset|頂点を動かして風や波打つ表面を作る
+ディゾルブ|Dissolve / Noise Threshold Mask|ノイズの閾値で面を切り抜き消滅を表す
+画面歪み・屈折|Screen-Space Distortion / Refraction|背景の参照位置をずらし、熱気や屈折を画面上で近似する
+テクスチャボミング|Texture Bombing|小さな模様を散らしてテクスチャの反復を隠す
+チャンネルパッキング|Channel Packing / Texture Masks|RGBAへ別々のマスクを詰めて材質を制御する
+# fields|距離場・暗黙形状|Distance fields & implicit shapes|空間の数値から形と境界を表す
+符号付き距離場|Signed Distance Field / SDF|表面までの距離と内外で形を表す
+スフィアトレーシング|Sphere Tracing|正しい距離または保守的な下限を使って光線を進め、表面を探す
+CSG|Constructive Solid Geometry|形の和、差、交差で穴やくり抜きを作る
+スムーズユニオン|Smooth Union / Smooth Minimum|距離場を滑らかに合成して接合部を丸くつなぐ。合成後の値は厳密な距離とは限らない
+メタボール|Metaballs / Implicit Surfaces|影響場の等値面から融合する液滴を描く
+空間反復|Domain Repetition / Polar Repetition|座標を折り返して形を繰り返す
+座標変形|Domain Deformation / Twist / Bend|評価する座標をねじり、形を曲げる
+距離場の勾配法線|SDF Gradient / Normal Estimation|距離の変化から表面の向きを求める
+ジャンプフラッド|Jump Flooding Algorithm / JFA|近い種点の情報をGPU上で広げる
+MSDF|Multi-Channel Signed Distance Field|複数の距離チャンネルで文字の角を保つ
+# mesh|メッシュ生成・変形|Meshes & deformation|点や値の場から形を作り加工する
+マーチングキューブ|Marching Cubes|三次元の値の場から等値面メッシュを取り出す
+マーチングスクエア|Marching Squares|二次元の値の場から輪郭線を取り出す
+ドロネー分割|Delaunay Triangulation / Tetrahedralization|空円・空球条件に基づき点群を三角形や四面体へ分割する
+ボロノイ破砕|Voronoi Fracture|種点に近い領域で石やガラスを割る
+スイープ・押し出し|Sweep / Extrusion|断面を経路に沿って運び配管や触手を作る
+ラプラシアン平滑化|Laplacian Smoothing|近くの頂点を参照して表面を滑らかにする
+サブディビジョンサーフェス|Subdivision Surface|面を細分して丸みのある形にする
+メッシュ簡略化|Mesh Decimation / Quadric Error Metrics|見た目の誤差を抑えながら面数を減らす
+ARAP変形|As-Rigid-As-Possible Deformation|局所形状を保ちながらメッシュを変形する
+デュアルクォータニオンスキニング|Dual Quaternion Skinning / DQS|ねじれた関節の体積つぶれを抑える
+# lighting|質感・ライティング|Lighting & surfaces|光の反射、透過、陰影から質感を作る
+PBR・BRDF|Physically Based Rendering / BRDF|PBRは物理に基づく描画の方針、BRDFは表面で光がどの方向へ反射するかを表す関数
+GGX|GGX / Trowbridge–Reitz Distribution|粗さによって変わる反射の広がりを表す
+フレネル・シュリック近似|Fresnel / Schlick Approximation|視線角度で反射を変え水やガラスの縁を強調する
+法線マップ・TBN|Normal Mapping / Tangent Space|頂点を増やさず細かな凹凸の陰影を付ける
+異方性反射|Anisotropic Reflection|方向によって伸びる金属のハイライトを作る
+表面下散乱|Subsurface Scattering / SSS|内部へ入って散る光で肌や蝋を表す
+環境マップ照明|Image-Based Lighting / IBL|周囲の画像から照明や反射を与える
+クリアコート|Clear Coat|透明な塗膜の反射を重ねる
+トゥーン・ランプシェーディング|Toon / Ramp Shading|陰影を段階的な色帯に変えてアニメ調にする
+リムライト|Rim Lighting|輪郭近くを明るくして形を際立たせる
+# volume|ボリューム・空気・透明|Volume & atmosphere|空間を満たす密度と光の通り方を扱う
+ボリュームレイマーチング|Volume Ray Marching|視線に沿って密度と光を積み重ね雲や霧を描く
+ビール・ランバート則|Beer–Lambert Law / Transmittance|通過距離と密度で光を減衰させる
+ヘニエイ・グリーンシュタイン位相関数|Henyey–Greenstein Phase Function|光の散乱方向の偏りを調整する
+レイリー散乱|Rayleigh Scattering|波長ごとの散乱差で青空や夕焼けを作る
+ミー散乱|Mie Scattering|微粒子による霞と太陽周辺の散乱を表す
+ボリューメトリックフォグ|Volumetric Fog|空間の霧に照明を当てて光の存在を見せる
+空気遠近法|Aerial Perspective|遠くの景色ほど空気の色に近づける
+ゴッドレイ|God Rays / Light Shafts|遮蔽物の隙間を通る光の筋を描く
+重み付きOIT|Weighted Blended Order-Independent Transparency|重み付きの近似合成で透明物の描画順による破綻を軽減する
+乗算済みアルファ|Premultiplied Alpha|透明度を掛けた色で境界を自然に合成する
+# post|ポストプロセス・画面表現|Post processing|描画後の画面に発光や輪郭を加える
+ブルーム|Bloom|明るい部分を周囲へにじませて発光を見せる
+カラーグレーディング・LUT|Color Grading / Lookup Table|色変換で画面全体の画調を統一する
+トーンマッピング|Tone Mapping / Filmic / ACES|広い輝度を画面に表示できる範囲へ収める
+被写界深度|Depth of Field / Bokeh|焦点以外をぼかして視線を誘導する
+モーションブラー|Motion Blur / Motion Vectors|移動方向へ像を流して速さを表す
+色収差|Chromatic Aberration|色ごとの位置を少しずらしてレンズ感を出す
+深度・法線アウトライン|Depth / Normal Edge Detection|隣接画素の深度や向きの差から輪郭を描く
+画面空間アンビエントオクルージョン|SSAO / GTAO|隅や接触部分へ近似的な影を加える
+画面空間反射|Screen-Space Reflections / SSR|画面に見えている情報で反射を近似する
+時間方向アンチエイリアス|Temporal Anti-Aliasing / TAA|過去フレームを使ってちらつきやギザギザを抑える
+# nature|水・地形・植生|Water, terrain & plants|波、水底の光、地形、風を表す
+ゲルストナー波|Gerstner Waves|頂点を水平と垂直に動かして盛り上がる波を作る
+FFT海洋|FFT Ocean / Spectral Ocean|波のスペクトルから広い海面を合成する
+浅水波モデル|Shallow Water Equations|浅い水の高さと流れを計算する
+高さ場の波動シミュレーション|Height-Field Wave Simulation|高さの変化を伝えて波紋を広げる
+コースティクス|Caustics|屈折などによる光の集中を水底の揺れる模様にする
+ホワイトウォーター|Whitewater / Foam / Spray / Bubbles|泡、飛沫、気泡を分けて砕ける波を描く
+浮力|Buoyancy|水に浸かった物体へ上向きの力を与える
+水食侵食|Hydraulic Erosion|水と土砂の移動で谷や流路を掘る
+熱・崩落侵食|Thermal Erosion|斜面の土砂を動かして崖下に堆積させる
+風による手続き的変形|Procedural Wind Animation|幹、枝、葉に異なる揺れを与える
+# physics|物理の時間発展・拘束|Physics & constraints|時間の更新と距離や接触の条件を扱う
+半陰的オイラー法|Semi-Implicit Euler|速度を先に更新して位置を進める
+ベルレ積分|Verlet Integration|過去位置を利用してロープや布の動きを進める
+ルンゲ・クッタ法|Runge–Kutta / RK2 / RK4|途中の傾きも評価して軌道を計算する
+固定タイムステップ|Fixed Timestep / Substepping|決まった刻みで物理更新を進める
+位置ベース物理|Position Based Dynamics / PBD|位置を補正して布や紐の拘束を守る
+拡張位置ベース物理|Extended PBD / XPBD|柔らかさの時間刻み依存を軽減する
+質点ばねモデル|Mass–Spring System|点をばねでつないで柔らかな物体を作る
+シェイプマッチング|Shape Matching|基準形へ戻る力で柔らかな塊を動かす
+ジョイント・拘束ソルバー|Joints / Constraint Solver|距離や角度の関係を保って鎖や機械を動かす
+摩擦・反発係数|Friction / Restitution|接触時の滑りや跳ね返りを決める
+# fluids|流体・反応シミュレーション|Fluids & reaction|速度、密度、反応の場を更新する
+安定流体法|Stable Fluids / Grid-Based Fluid Simulation|格子上の流速と密度を更新して煙を動かす
+半ラグランジュ移流|Semi-Lagrangian Advection|流れを逆向きにたどって染料を運ぶ
+圧力投影|Pressure Projection / Poisson Solve|圧力から速度を補正し流れの発散を減らす
+渦度閉じ込め|Vorticity Confinement|計算で弱まる細かな渦を補う
+SPH|Smoothed Particle Hydrodynamics|近傍粒子をカーネルで重み付けし、密度や力を推定して流体を計算する
+PBF|Position Based Fluids|密度拘束を位置補正で解いて液体を動かす
+PIC・FLIP|Particle-in-Cell / Fluid-Implicit-Particle|粒子と格子の間で速度を受け渡す
+APIC|Affine Particle-in-Cell|局所的な速度変化も粒子に保持する
+MPM|Material Point Method|粒子と格子で砂や雪の変形を計算する
+反応拡散|Reaction–Diffusion / Gray–Scott Model|物質の反応と拡散から斑点や迷路模様を成長させる
+# animation|キャラクター・アニメーション|Character animation|目標への適応と動作の切り替えを扱う
+2ボーンIK|Two-Bone / Limb Inverse Kinematics|手足の先を目標へ合わせる
+フルボディIK|Full-Body IK|複数の目標に合わせて全身姿勢を調整する
+FABRIK|Forward And Backward Reaching IK|関節を往復して触手や鎖を目標へ伸ばす
+フットIK・フットロック|Foot IK / Foot Locking|足を地面に合わせて滑りを抑える
+ルートモーション|Root Motion|アニメーションのルート移動で本体を進める
+モーションワーピング|Motion Warping|移動を目標へ合わせて攻撃や乗り越えを成立させる
+モーションマッチング|Motion Matching|現在姿勢と希望軌道に合う動きをデータから選ぶ
+慣性化ブレンド|Inertialization|切り替え時の姿勢差を減衰させる
+加算アニメーション|Additive Animation|基準動作に呼吸や反動の差分を重ねる
+頂点アニメーションテクスチャ|Vertex Animation Textures / VAT|頂点の動きを画像へ焼き込んで再生する
+# generation|自動生成・配置ルール|Procedural generation|隣接条件や成長規則で世界を作る
+波動関数崩壊|Wave Function Collapse / WFC|タイル候補の隣接制約を伝播しながら配置を生成する
+Lシステム|L-System / Lindenmayer System|記号を置き換えて木や稲妻の分岐を作る
+空間占有法|Space Colonization Algorithm|誘引点へ枝を伸ばして樹木や葉脈を作る
+セルオートマトン|Cellular Automata|近傍セルの状態から洞窟や模様を育てる
+二分空間分割|Binary Space Partitioning / BSP|領域を繰り返し二分して部屋を配置する
+ワン・タイル|Wang Tiles|辺が合うタイルを組み合わせ反復感を減らす
+島の減衰マスク|Island Falloff / Distance Mask|境界からの距離で島の外形を整える
+バイオームマップ|Biome Map|標高と湿度などで森林や砂漠を分ける
+ポイントリラックス|Point Relaxation|近すぎる点を離して分布を均す
+密度マスク散布|Density-Masked Scattering|マスクの濃さで草や石の配置密度を変える
+# sampling|点の分布・サンプリング|Sampling & distribution|点の偏り、間隔、重みを制御する
+ポアソンディスク分布|Poisson Disk Sampling|最小距離を守って木や岩を配置する
+ブルーノイズ|Blue Noise / Spatiotemporal Blue Noise|空間の低周波の偏りを抑える。時空間版はフレーム間の分布も整える
+層化サンプリング|Stratified / Jittered Sampling|領域ごとにサンプルを置いて偏りを抑える
+低食い違い列|Low-Discrepancy Sequence / Sobol|空間を均等に埋める数列でサンプルを選ぶ
+球面一様サンプリング|Uniform Sphere Sampling|球面の面積に対して均等な方向を選ぶ
+円盤一様サンプリング|Uniform Disk / Concentric Mapping|円の面積に対して均等な点を選ぶ
+余弦重み半球サンプリング|Cosine-Weighted Hemisphere Sampling|法線に近い方向を多く選ぶ
+重要度サンプリング・逆CDF|Importance Sampling / Inverse CDF|重要な領域へサンプルを多く割り当てる。逆CDFは指定分布から値を生成する一手法
+エイリアス法|Alias Method|前処理した表から重み付き抽選を高速に繰り返す
+ガウス分布サンプリング|Gaussian / Normal Sampling|中心が多い分布で誤差やばらつきを作る
+# navigation|経路探索・意思決定|Pathfinding & decisions|道を選び行動を決める
+Aスター|A* Search|残り距離の見積もりを使って経路を探す
+ダイクストラ法|Dijkstra’s Algorithm|累積コストから最短経路や到達範囲を求める
+ナビゲーションメッシュ|Navigation Mesh / NavMesh|歩ける面の集合から移動経路を求める
+ファネル法|Funnel Algorithm / String Pulling|ナビメッシュの通過回廊の内側で折れの少ない短い経路を求める
+ORCA・相互回避|Optimal Reciprocal Collision Avoidance|周囲の相手と互いに避け合う速度を選ぶ
+ビヘイビアツリー|Behavior Tree|条件と行動を木で組んで敵の判断を作る
+有限状態機械|Finite State Machine / FSM|状態と遷移条件で行動を切り替える
+GOAP|Goal-Oriented Action Planning|目標と行動の前提から手順を計画する
+ブラックボード|Blackboard Architecture|標的や警戒状態を判断処理の間で共有する
+環境クエリ|Environment Query / EQS|周囲の候補地点を評価して隠れ場所を選ぶ
+# collision|衝突判定・空間管理|Collision & spatial queries|接触と近傍を効率よく調べる
+レイキャスト|Ray Casting|線と形状の交差から照準や接地を調べる
+連続衝突判定|Continuous Collision Detection / Shape Cast|移動途中も調べて高速物体のすり抜けを防ぐ
+軸平行包囲箱|Axis-Aligned Bounding Box / AABB|軸に平行な箱で衝突候補を絞る
+分離軸定理|Separating Axis Theorem / SAT|凸形状の投影に隙間があるかで衝突を判定する
+GJK|Gilbert–Johnson–Keerthi Algorithm|凸形状同士の距離や交差を求める
+包囲体階層|Bounding Volume Hierarchy / BVH|包囲体を木にしてレイや衝突探索を絞る
+空間ハッシュ|Spatial Hashing / Hash Grid|セル座標から大量の粒子の近傍を探す
+スイープ・アンド・プルーン|Sweep and Prune|軸上で重なる区間から衝突候補を選ぶ
+モートンコード|Morton Code / Z-Order|空間座標を近さが保たれやすい一次元順序へ並べる
+広域・詳細判定|Broad Phase / Narrow Phase|候補抽出の後に精密な接触判定を行う
+# camera|カメラ・操作感|Camera & controls|見通しと入力の許容範囲を調整する
+デッドゾーン|Camera Dead Zone|対象が枠内にいる間はカメラを動かさない
+先読み追従|Camera Lookahead|進行方向の先を画面に多く映す
+インパルスシェイク|Impulse Camera Shake|衝撃から減衰する揺れをカメラに加える
+コヨーテタイム|Coyote Time|足場を離れた直後もジャンプを受け付ける
+入力バッファ|Input / Jump Buffering|直前の入力を短時間保存して実行可能時に発動する
+コーナー補正|Corner Correction|角への小さな引っかかりを位置補正で救う
+頂点付近の滞空調整|Jump Apex Hang Time|ジャンプの頂点付近で滞空時間を長くする
+カメラ制限領域|Camera Confiner|カメラの移動範囲を決めてステージ外を隠す
+スプラインドリー|Spline Dolly / Rail Camera|曲線のレールに沿ってカメラを運ぶ
+パララックス背景|Parallax Scrolling|奥行き層ごとのスクロール速度を変える
+# performance|大量描画・実装基盤|Rendering & implementation|大量の要素を効率よく更新し描く
+コンピュートシェーダー|Compute Shader|GPU上で粒子や流体の並列計算を行う
+GPUインスタンシング|GPU Instancing|同じメッシュの多数の個体をまとめて描く
+インダイレクト描画|Indirect Drawing|GPUバッファの引数から描画数を決める
+LOD|Level of Detail|遠くの物体を簡単な形に切り替える
+カリング|Frustum / Occlusion Culling|画面外や遮蔽物の奥を描画対象から外す
+オーバードロー|Overdraw / Fill Rate|同じ画素への重ね描きを把握して負荷を抑える
+ピンポンバッファ|Ping-Pong Buffers / Double Buffering|読み元と書き先を交互に交換して反復計算する
+オブジェクトプール|Object Pool|弾や粒子のオブジェクトを使い回す
+SoA・データ局所性|Structure of Arrays / Data Locality|同種のデータをまとめて一括更新しやすくする
+並列プレフィックスサム|Parallel Prefix Sum / Scan|累積値を並列計算して配置先や生存粒子を求める

@@ -106,6 +106,35 @@
   color: var(--muted-foreground);
 }
 
+/* A shared, dark stage keeps effect comparisons legible in both site themes. */
+@utility keyword-demo-stage {
+  --demo-background: #101c26;
+  --demo-surface: #192c38;
+  --demo-grid: #304751;
+  --demo-muted: #829da8;
+  --demo-ink: #eef7f3;
+  --demo-accent: #81e0bf;
+  --demo-secondary: #679bbe;
+  --demo-warm: #efb66d;
+  display: block;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  background: var(--demo-background);
+}
+
+@utility keyword-demo-range {
+  display: block;
+  width: 100%;
+  height: 1.75rem;
+  accent-color: var(--brand);
+  cursor: pointer;
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: var(--radius);
+  }
+}
+
 /* CodeHike の mark 注釈。境界線・背景は --mark-color から color-mix で生成する。 */
 @utility ch-mark-line {
   border-left-width: 2px;

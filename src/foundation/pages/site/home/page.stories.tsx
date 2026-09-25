@@ -52,13 +52,8 @@ const meta: Meta<typeof HomePageContent> = {
     locale: "ja",
     latestPosts: dummyPosts,
     postCount: dummyPosts.length,
+    keywordCount: 201,
     series,
-    notes: [
-      { slug: "java", title: "Java" },
-      { slug: "scala", title: "Scala" },
-      { slug: "nix", title: "Nix" },
-      { slug: "functional-programming", title: "関数型プログラミング" },
-    ],
     topics: [
       { name: "Java", count: 2 },
       { name: "Scala", count: 1 },
@@ -130,16 +125,15 @@ export const English: Story = {
     await expect(
       writing.getByRole("link", { name: /Iterator pattern/u })
     ).toHaveAttribute("href", "/en/blog/post/post-1/");
-    const notes = within(main.getByRole("region", { name: "Notes" }));
-    await expect(notes.getByRole("link", { name: "Java" })).toHaveAttribute(
-      "href",
-      "/en/notes/java/"
-    );
+    const keywords = within(main.getByRole("region", { name: "Keywords" }));
     await expect(
-      notes.getByRole("link", { name: "Books (Japanese)" })
+      keywords.getByRole("link", { name: "Curl Noise" })
+    ).toHaveAttribute("href", "/en/keywords/graphics/noise/curl-noise/");
+    await expect(
+      keywords.getByRole("link", { name: "Books (Japanese)" })
     ).toHaveAttribute("href", "/books/");
     await expect(
-      notes.getByRole("link", { name: "Books (Japanese)" })
+      keywords.getByRole("link", { name: "Books (Japanese)" })
     ).toHaveAttribute("hreflang", "ja");
     await expect(
       main.getByRole("link", { name: /ASCII reference/u })
@@ -159,13 +153,14 @@ export const Empty: Story = {
     latestPosts: [],
     postCount: 0,
     series: [],
-    notes: [],
     topics: [],
   },
   play: async ({ canvasElement }) => {
     const main = within(within(canvasElement).getByRole("main"));
     await expect(main.getByText("記事はまだありません。")).toBeVisible();
-    await expect(main.getByText("ノートはまだありません。")).toBeVisible();
+    await expect(
+      main.getByRole("link", { name: "カールノイズ" })
+    ).toBeVisible();
     await expect(
       main.queryByRole("region", { name: "連載" })
     ).not.toBeInTheDocument();

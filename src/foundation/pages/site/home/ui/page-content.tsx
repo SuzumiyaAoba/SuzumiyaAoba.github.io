@@ -4,7 +4,7 @@ import type { SeriesDefinition } from "@/entities/series-item";
 import { JsonLd } from "@/shared/ui/seo";
 import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import type { HomeNote, HomeTopic } from "../model/home-content";
+import type { HomeTopic } from "../model/home-content";
 import { HomeIntro } from "./home-intro";
 import { HomeWriting } from "./home-writing";
 import { HomeSeries } from "./home-series";
@@ -14,21 +14,20 @@ export type HomePageContentProps = {
   locale: Locale;
   latestPosts: LocalizedBlogPostSummary[];
   postCount?: number;
+  keywordCount: number;
   series?: SeriesDefinition[];
-  notes?: HomeNote[];
   topics?: HomeTopic[];
 };
 
 const EMPTY_SERIES: SeriesDefinition[] = [];
-const EMPTY_NOTES: HomeNote[] = [];
 const EMPTY_TOPICS: HomeTopic[] = [];
 
 export function HomePageContent({
   locale,
   latestPosts,
   postCount = latestPosts.length,
+  keywordCount,
   series = EMPTY_SERIES,
-  notes = EMPTY_NOTES,
   topics = EMPTY_TOPICS,
 }: HomePageContentProps) {
   const pagePath = toLocalePath("/", locale);
@@ -40,7 +39,7 @@ export function HomePageContent({
         <HomeIntro
           locale={locale}
           postCount={postCount}
-          noteCount={notes.length}
+          keywordCount={keywordCount}
           seriesCount={series.length}
           topics={topics}
         />
@@ -50,7 +49,7 @@ export function HomePageContent({
           postCount={postCount}
         />
         <HomeSeries locale={locale} series={series} />
-        <HomeLibrary locale={locale} notes={notes} />
+        <HomeLibrary locale={locale} />
       </main>
     </SiteLayout>
   );

@@ -19,7 +19,7 @@ export const navigationGroups: NavigationGroup[] = [
     en: "Read",
     items: [
       { href: "/blog", ja: "記事", en: "Blog" },
-      { href: "/notes", ja: "ノート", en: "Notes" },
+      { href: "/keywords", ja: "キーワード", en: "Keywords" },
       { href: "/series", ja: "連載", en: "Series" },
       { href: "/books", ja: "書籍", en: "Books", japaneseOnly: true },
     ],
@@ -46,7 +46,7 @@ export const navigationGroups: NavigationGroup[] = [
 export const primaryItems = navigationGroups
   .flatMap((group) => group.items)
   .filter((item) =>
-    ["/blog", "/notes", "/archive", "/about"].includes(item.href)
+    ["/blog", "/keywords", "/archive", "/about"].includes(item.href)
   );
 
 export function getNavigationState(path: string) {
@@ -54,6 +54,7 @@ export function getNavigationState(path: string) {
   const isReading =
     currentPath.startsWith("/blog/post/") ||
     currentPath.startsWith("/notes/") ||
+    currentPath.startsWith("/keywords/") ||
     currentPath.startsWith("/books/");
   const isActive = (href: string) =>
     currentPath === href ||

@@ -7,7 +7,7 @@ import type { HomeTopic } from "../model/home-content";
 type HomeIntroProps = {
   locale: Locale;
   postCount: number;
-  noteCount: number;
+  keywordCount: number;
   seriesCount: number;
   topics: HomeTopic[];
 };
@@ -15,7 +15,7 @@ type HomeIntroProps = {
 export function HomeIntro({
   locale,
   postCount,
-  noteCount,
+  keywordCount,
   seriesCount,
   topics,
 }: HomeIntroProps) {
@@ -38,11 +38,11 @@ export function HomeIntro({
           </span>
           <Arrow />
         </a>
-        <a href={toLocalePath("/notes", locale)}>
-          <span>{t("ノート", "Notes")}</span>
+        <a href={toLocalePath("/keywords", locale)}>
+          <span>{t("キーワード", "Keywords")}</span>
           <span className="home-overview-count">
-            {noteCount}
-            <span>{t("件", "notes")}</span>
+            {keywordCount}
+            <span>{t("項目", "keywords")}</span>
           </span>
           <Arrow />
         </a>

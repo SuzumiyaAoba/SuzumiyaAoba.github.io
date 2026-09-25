@@ -1,0 +1,222 @@
+# noise
+curl-noise|flow|ポテンシャル場 ψ|カール ∇×ψ|連続式で発散ゼロの速度場
+perlin|field|格子の勾配|滑らかに補間|連続する値の場
+simplex-noise|field|単体格子の勾配|近傍の寄与を合成|滑らかな値の場
+value-noise|grid|格子点の乱数値|点間を補間|滑らかな濃淡
+worley|points|特徴点の配置|最近点までの距離|細胞状の領域
+fractal-brownian-motion|layers|大小のノイズ|周波数別に加算|粗い形と細部
+turbulence-noise|graph|ノイズの正負|絶対値で折り返す|鋭い筋
+ridged-multifractal-noise|graph|ノイズの谷と山|稜線を強調して積層|尖った山並み
+domain-warping|grid|元の座標|別の場で座標をずらす|曲がった模様
+periodic|grid|周期境界の座標|周期関数で評価|端でつながる模様
+# curves
+cubic-hermite-curve|curve|両端の位置と接線|三次式で補間|指定接線で出入りする曲線
+be-zier-curve|curve|両端と制御点|制御点で形を調整|ハンドルに沿う曲線
+catmull-rom-spline|curve|通過させたい点|隣点から接線を求める|指定点を通る曲線
+b-spline|curve|制御点とノット|基底関数で合成|局所調整できる曲線
+non-uniform-rational-b-spline|curve|制御点・ノット・重み|有理式で合成|円弧も表せる曲線
+arc-length-parameterization|curve|曲線とパラメータ t|距離と t の対応を求める|等距離の目盛り
+lerp|graph|値 A・B と比率 t|線形補間・値域変換|範囲内の中間値
+smoothstep|graph|0〜1 の進行率|端の傾きをゼロにする|滑らかな S 字遷移
+easing|graph|時間の進行率|進行率を変形|溜め・跳ね返り
+slerp|shape|二つの回転姿勢|球面上を補間|滑らかな回転
+# motion
+exponential-damping|graph|現在値と目標値|時間刻みを考慮して減衰|目標に近づく値
+spring-damper|physics|ずれと速度|復元力＋減衰力|弾んで収束する動き
+critical-damping|graph|目標との差と初期速度|臨界減衰で更新|振動を避けて収束
+pd|pipeline|目標との誤差|P・I・D 項を合成|操作量を調整
+seek|path|現在位置と目標|向かう速度・到着時減速|滑らかな到着
+pursuit|path|相手の位置と速度|未来の位置を推定|先回りする軌道
+wander-steering|path|現在の進行方向|方向を少しずつ乱す|連続した徘徊
+boids|points|近くの個体|分離・整列・結合|まとまる群れ
+flow-field-following|flow|空間の方向ベクトル|現在位置の方向を読む|流れに沿う軌跡
+obstacle-avoidance-steering|path|進行先と障害物|回避方向を選ぶ|障害物をよける軌道
+# particles
+billboard|surface|カメラと板ポリゴン|板の正面をカメラへ向ける|正面を向く粒子
+stretched-billboard|path|粒子の速度|板を速度方向へ伸ばす|細長い火花
+ribbon|curve|過去の点列|点列の左右に頂点を置く|連続する帯
+flipbook|grid|連番の画像アトラス|寿命で画像を切り替える|動く炎・爆発
+mesh-particles|mesh|粒子位置と立体モデル|各粒子にメッシュを配置|立体の破片
+soft-particles|volume|粒子と背景の深度|交差部の透明度を下げる|柔らかい接地境界
+size|graph|粒子の経過時間|属性カーブを読む|大きさ・色・透明度の変化
+sub-emitters|pipeline|衝突・寿命終了イベント|二次放出を起動|新しい粒子群
+surface|surface|メッシュ表面|表面上の位置をサンプル|表面からの放出
+velocity-alignment|path|粒子の速度ベクトル|描画軸を速度へ合わせる|進行方向を向く粒子
+# materials
+uv-scrolling|grid|元の UV 座標|時間で UV を平行移動|流れる表面模様
+polar-coordinates|shape|平面座標 x・y|半径 r・角度 θ に変換|円環・放射状の模様
+triplanar|surface|立体の表面法線|三方向の投影を混合|継ぎ目の少ない模様
+flow-map|flow|方向テクスチャと UV|流れ方向へ UV をずらす|曲がりながら流れる模様
+parallax-mapping|surface|高さマップと視線|高さに応じて UV をずらす|見かけの凹凸
+vertex-displacement|mesh|元の頂点位置|頂点へ変位を加える|動く輪郭と表面
+dissolve|grid|ノイズ値と閾値|閾値を越す画素を除く|広がる欠け・消滅
+screen-space-distortion|image|背景画像と歪み量|参照する画素をずらす|揺らぐ背景
+texture-bombing|points|小さな模様|位置・回転を散らして貼る|反復の目立たない面
+channel-packing|pipeline|別々のマスク|R・G・B・A に格納|一枚から複数の制御値
+# fields
+signed-distance-field|shape|空間内の位置|表面までの符号付き距離|内外と境界
+sphere-tracing|path|光線上の位置|安全な距離ずつ進める|暗黙形状との交点
+constructive-solid-geometry|shape|二つの形|和・差・交差を計算|合成・くり抜き形状
+smooth-union|shape|二つの距離場|滑らかな最小値で合成|丸くつながる形
+metaballs|shape|複数の影響場|値を足して等値面を取る|融合する液滴
+domain-repetition|grid|空間内の座標|座標を折り返す|繰り返す形
+domain-deformation|mesh|元の評価座標|ねじり・曲げて評価|変形した形
+sdf-gradient|light|距離場の近傍値|差分から勾配を求める|照明に使う法線
+jump-flooding-algorithm|grid|種点と画素|大きい歩幅から最近点を伝播|近似的な最近点マップ
+multi-channel-signed-distance-field|image|図形の輪郭|複数チャンネルに距離を記録|拡大しても鋭い角
+# mesh
+marching-cubes|mesh|三次元の値の格子|立方体ごとの交差をつなぐ|等値面メッシュ
+marching-squares|mesh|二次元の値の格子|セルの辺との交差をつなぐ|等値線
+delaunay-triangulation|points|点群|空円・空球条件で分割|三角形・四面体の網
+voronoi-fracture|shape|破砕用の種点|近い種点の領域で切る|分割された破片
+sweep|curve|断面と経路|断面を経路に沿って運ぶ|管・触手のメッシュ
+laplacian-smoothing|mesh|凸凹の頂点列|隣接点へ近づける|滑らかな表面
+subdivision-surface|mesh|粗い面の網|面を規則的に細分|滑らかな曲面
+mesh-decimation|mesh|高密度の面|形状誤差を評価して辺を畳む|少ない面で近い輪郭
+as-rigid-as-possible-deformation|mesh|元のメッシュとハンドル|局所剛性を保って最適化|形を保つ変形
+dual-quaternion-skinning|rig|骨の回転と頂点|双対四元数で変形を混合|ねじれの体積を保つ
+# lighting
+physically-based-rendering|light|光・視線・材質|BRDF などで反射を評価|整合する陰影
+ggx|light|粗さと微小面|GGX 分布で反射を積算|粗さで変わるハイライト
+fresnel|light|視線と表面の角度|シュリック式で反射率を近似|斜めほど強い反射
+normal-mapping|surface|低密度メッシュと法線画像|接空間法線を変換|細かな凹凸の陰影
+anisotropic-reflection|light|方向のある表面|方向別の反射分布を評価|伸びたハイライト
+subsurface-scattering|volume|半透明な材質|内部で散乱・吸収|柔らかい透過光
+image-based-lighting|light|周囲の環境画像|方向ごとの光を積算|環境になじむ反射
+clear-coat|layers|基材と透明塗膜|塗膜の反射を重ねる|二層のハイライト
+toon|graph|連続した明るさ|色帯へ量子化|段階的な陰影
+rim-lighting|light|物体の向きと視線|輪郭付近に光を足す|縁の強調
+# volume
+volume-ray-marching|volume|光線と三次元密度|視線に沿って散乱を積算|奥行きのある雲・霧
+beer-lambert-law|graph|密度と通過距離|指数関数で透過率を減らす|奥ほど暗い光
+henyey-greenstein-phase-function|light|入射と観測の方向|位相関数で散乱量を重み付け|方向性のある霧の光
+rayleigh-scattering|light|太陽光の波長|短波長ほど強く散乱|青い空と赤い夕景
+mie-scattering|light|微粒子と入射光|粒子サイズに応じた散乱|太陽周辺の白い霞
+volumetric-fog|volume|霧の密度と光源|空間内の散乱を計算|霧の中の光
+aerial-perspective|volume|遠近の距離|空気の散乱・減衰を加える|遠くほど淡い景色
+god-rays|light|光源と遮蔽物|遮られない光の経路を見せる|光の筋
+weighted-blended-order-independent-transparency|layers|重なる透明面|重みを付けて近似合成|順序依存を軽減
+premultiplied-alpha|layers|色と透明度|色を先に透明度で乗算|縁の色が自然な合成
+# post
+bloom|image|明るい画素|明部をぼかして元画像へ足す|周囲へにじむ光
+color-grading|image|元の画面の色|LUT で色を対応付ける|統一した画調
+tone-mapping|graph|広い輝度範囲|表示範囲へ圧縮|白飛びを抑えた階調
+depth-of-field|image|深度と焦点距離|焦点外をぼかす|注目点の周囲のボケ
+motion-blur|path|移動量と元画像|動きに沿って画素を積算|速度方向の残像
+chromatic-aberration|image|RGB の各色|色チャンネルをずらす|色のずれた縁
+depth|image|隣接画素の深度・法線|差の大きい場所を抽出|物体の輪郭線
+ssao|light|画面の深度・法線|局所の遮蔽を推定|隅・接触部の陰影
+screen-space-reflections|image|現在の画面情報|画面内をレイ追跡|映り込む反射
+temporal-anti-aliasing|image|現在と過去のフレーム|再投影して時間方向に合成|ちらつきの少ない画像
+# nature
+gerstner-waves|wave|平らな水面の頂点|水平・垂直へ周期的に変位|尖りのある波
+fft-ocean|wave|波の周波数成分|逆 FFT で波を合成|広い海面のうねり
+shallow-water-equations|fluid|浅い水の高さと流速|保存則で時間発展|流れと水位の変化
+height-field-wave-simulation|wave|高さ場への一回の入力|波動方程式で伝播|広がる波紋
+caustics|light|水面を通る光|屈折後の光線を集める|水底の明るい模様
+whitewater|particles|崩れる波|泡・飛沫・気泡を分ける|白く砕ける水
+buoyancy|physics|水中の体積と水の密度|押しのけた水の重さを求める|上向きの力
+hydraulic-erosion|mesh|雨と地形の高さ|水・土砂を流して削る|谷と流路
+thermal-erosion|mesh|急な斜面の土砂|勾配に沿って崩す|斜面下の堆積
+procedural-wind-animation|rig|幹・枝・葉の位置|階層ごとに風の変位を加える|異なる周期の揺れ
+# physics
+semi-implicit-euler|graph|位置と速度|速度を先に更新|次の位置
+verlet-integration|physics|現在と前回の位置|差から次位置を予測|連続する軌跡
+runge-kutta|graph|微分方程式の傾き|途中の傾きも評価|次の状態の近似
+fixed-timestep|graph|描画フレームの時間差|一定幅の小刻みに分割|安定した更新間隔
+position-based-dynamics|physics|予測した頂点位置|距離などの拘束を投影|条件を守る布・紐
+extended-pbd|physics|拘束とコンプライアンス|乗数を更新して補正|刻み幅に左右されにくい柔らかさ
+mass-spring-system|physics|質点とばね|伸びに応じた力を求める|伸縮する網
+shape-matching|mesh|変形した点群|基準形へ剛体的に合わせる|形を保とうとする塊
+joints|physics|関節間の位置・角度|拘束を反復して解く|つながる部品
+friction|physics|接触点と相対速度|摩擦・反発の応答を計算|滑りと跳ね返り
+# fluids
+stable-fluids|fluid|格子上の速度と密度|移流・圧力補正を反復|流れる煙
+semi-lagrangian-advection|flow|現在のセルと速度|逆向きにたどって値を読む|運ばれた密度
+pressure-projection|fluid|発散のある速度場|圧力から勾配を引く|発散を抑えた速度場
+vorticity-confinement|flow|数値計算で弱まる渦|渦度の勾配から力を加える|残る細かな渦
+smoothed-particle-hydrodynamics|particles|近傍の粒子|カーネルで密度・力を推定|粒子として動く流体
+position-based-fluids|particles|粒子の予測位置|密度拘束を位置補正|体積を保ちやすい液体
+particle-in-cell|fluid|粒子と格子の速度|PIC・FLIP で値を転送|更新された粒子速度
+affine-particle-in-cell|fluid|粒子の局所速度分布|アフィン速度を持たせて転送|回転を保ちやすい流れ
+material-point-method|fluid|粒子と背景格子|応力・運動量を相互転送|砂や雪の変形
+reaction-diffusion|grid|二種の濃度場|反応と拡散を反復|成長する斑点・迷路
+# animation
+two-bone|rig|肩・肘・手先と目標|二関節の角度を解く|手先が目標に届く姿勢
+full-body-ik|rig|全身の関節と複数目標|全身を反復調整|目標を満たす姿勢
+forward-and-backward-reaching-ik|rig|関節列と目標位置|前後に往復して関節を置く|先端が届く鎖
+foot-ik|rig|足先と接地点|IK と固定で足を合わせる|滑りにくい接地
+root-motion|path|アニメ内のルート移動|移動を本体へ適用|動作と移動が一致
+motion-warping|path|元のルート軌道と目標|軌道を目標へ合わせて変形|攻撃位置に届く動作
+motion-matching|points|現在姿勢と希望軌道|データから近い動作を探す|状況に合うクリップ
+inertialization|graph|切替前後の姿勢・速度差|差を時間で減衰|滑らかな切替
+additive-animation|rig|基準動作と差分|差分の姿勢を重ねる|呼吸や反動を加えた動作
+vertex-animation-textures|grid|頂点の時系列位置|テクスチャへ記録|焼き込んだ変形の再生
+# generation
+wave-function-collapse|grid|タイル候補と隣接ルール|候補を絞り伝播|条件を守る配置
+l-system|path|記号列と置換規則|書き換えを反復|分岐する枝
+space-colonization-algorithm|path|枝の先端と誘引点|近い誘引点へ伸ばす|樹木・葉脈状の枝
+cellular-automata|grid|各セルの状態|近傍の規則で更新|育つ洞窟・模様
+binary-space-partitioning|grid|一つの大きな領域|再帰的に二分|部屋用の区画
+wang-tiles|grid|辺に印のあるタイル|同じ辺を合わせる|継ぎ目のない並び
+island-falloff|shape|地形の高さと境界|距離で高さを下げる|島の輪郭
+biome-map|grid|標高と湿度|条件で地域を分類|森林・砂漠・雪原
+point-relaxation|points|不均等な点群|近傍から位置を調整|より均一な配置
+density-masked-scattering|points|密度マスクと候補点|濃さで採用確率を変える|場所ごとに違う密度
+# sampling
+poisson-disk-sampling|points|配置できる領域|点間の最小距離を守る|近接しすぎない点群
+blue-noise|points|空間と時間の乱数|低周波の偏りを抑える|空間・時間で均一感のある乱れ
+stratified|grid|領域の小区画|各区画から点を選ぶ|局所的な偏りが少ない点
+low-discrepancy-sequence|points|決定的な数列|低食い違いで空間を覆う|偏りの少ない点列
+uniform-sphere-sampling|shape|球面の面積|面積に従って方向を選ぶ|球面上で均一な点
+uniform-disk|shape|円盤の面積|同心円写像などで選ぶ|円盤上で均一な点
+cosine-weighted-hemisphere-sampling|light|表面法線と半球|余弦に比例する確率で選ぶ|法線寄りの方向
+importance-sampling|graph|重みを持つ候補|確率密度を選び、逆CDF等で抽選|重要な場所に多い点
+alias-method|pipeline|離散分布の重み|エイリアス表を前処理|定数時間の重み付き抽選
+gaussian|graph|平均と標準偏差|正規分布から抽選|中心ほど多い値
+# navigation
+a-search|path|地図と出発・目的地|累積コスト＋推定残りで探索|目的地への経路
+dijkstra-s-algorithm|path|地図と出発点|累積コスト順に展開|最短距離の分布
+navigation-mesh|mesh|歩ける面の集合|面をつないで探索|通れる領域の経路
+funnel-algorithm|path|通過する面の回廊|左右の端点をたどる|回廊内の短い経路
+optimal-reciprocal-collision-avoidance|points|互いに動くエージェント|相互に安全な速度を選ぶ|すれ違う軌道
+behavior-tree|grid|条件と行動の木|枝を評価して実行|状況に応じた行動
+finite-state-machine|grid|現在状態と遷移条件|条件で状態を切替|整理された振る舞い
+goal-oriented-action-planning|path|目標と行動の前提・結果|必要な行動を計画|目標へ向かう手順
+blackboard-architecture|pipeline|標的や警戒などの情報|共有領域を読み書き|判断間で共有する状態
+environment-query|points|周囲の候補地点|条件で採点して比較|選ばれた行動位置
+# collision
+ray-casting|path|始点と方向の光線|形との最初の交差を探す|命中位置
+continuous-collision-detection|path|移動する形|移動区間全体を調べる|すり抜けない接触
+axis-aligned-bounding-box|shape|複雑な形|軸に沿う箱で包む|重なり候補の絞り込み
+separating-axis-theorem|shape|二つの凸形|候補軸へ投影する|離れた軸・接触判定
+gilbert-johnson-keerthi-algorithm|shape|凸形の差集合|原点との距離・包含を調べる|交差または最短距離
+bounding-volume-hierarchy|grid|多数の包囲体|親子の木にまとめる|候補の枝刈り
+spatial-hashing|grid|粒子の位置|セル座標をハッシュ化|近傍セルの候補
+sweep-and-prune|graph|軸上の包囲区間|重なる区間だけを残す|少ない衝突候補
+morton-code|grid|多次元の座標|各軸のビットを交互に並べる|局所性のある一次元順序
+broad-phase|pipeline|全物体の組|粗い候補を先に抽出|候補だけ精密判定
+# camera
+camera-dead-zone|camera|対象と画面内の許容枠|枠外でだけ追従|細かな揺れを抑えた画面
+camera-lookahead|camera|対象の位置と速度|進行方向へ構図をずらす|前方の見通し
+impulse-camera-shake|graph|一度の衝撃|振幅を時間で減衰|短く収まる画面揺れ
+coyote-time|graph|足場を離れた時刻|短い猶予を設ける|直後も有効なジャンプ
+input|graph|入力した時刻|短時間だけ入力を保存|着地直前の入力が発動
+corner-correction|collision|角とプレイヤーの軌道|小さな重なりを補正|引っかからない移動
+jump-apex-hang-time|graph|ジャンプの高さと速度|頂点付近の加速度を調整|長い頂点滞空
+camera-confiner|camera|カメラ位置と境界|位置を領域内に制限|画面外を映さない
+spline-dolly|curve|カメラとレール曲線|曲線上の位置を更新|レールに沿う視点
+parallax-scrolling|layers|背景の複数の層|奥ほど少なく動かす|奥行きを感じるスクロール
+# performance
+compute-shader|pipeline|大量の要素のデータ|GPU の並列プログラムで計算|同時更新されたデータ
+gpu-instancing|mesh|同じ形の多数の個体|共有メッシュをまとめて描く|描画呼出しの削減
+indirect-drawing|pipeline|GPU 側の描画引数|バッファから引数を読む|CPU が数を渡さず描画
+level-of-detail|mesh|近くと遠くの物体|距離で詳細度を切り替える|遠景の負荷を抑える
+frustum|camera|視錐台と遮蔽物|見えない対象を除く|必要な物だけ描画
+overdraw|layers|重なる透明ポリゴン|同じ画素の書き込みを数える|重ね描きの負荷を把握
+ping-pong-buffers|pipeline|二つの更新バッファ|読み元と書き先を交換|前の結果を壊さず反復
+object-pool|pipeline|発射・消滅する多数の弾|生成物を再利用|割当・破棄の頻度を抑える
+structure-of-arrays|pipeline|個体ごとの位置・速度|項目ごとに配列を分ける|連続した一括アクセス
+parallel-prefix-sum|graph|入力の数列|部分和を並列に計算|累積値と配置先
+# dotnet
+plain-old-clr-object|class|通常の CLR クラス|特定の枠組みへの依存を除く|単純なクラスとして扱える

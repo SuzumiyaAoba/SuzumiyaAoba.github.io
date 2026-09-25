@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllBlogTags, getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
+import { getKeywordCategories } from "@/pages/keywords";
 import { getBookSlugs, getBookToc, getBookMeta } from "@/entities/book";
 import { getSeriesList } from "@/entities/series-item";
 import { getSiteUrl } from "@/shared/lib/site/site-url";
@@ -42,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { path: "/about", changeFrequency: "monthly", priority: 0.8 },
       { path: "/awesome-something", changeFrequency: "weekly", priority: 0.7 },
       { path: "/blog", changeFrequency: "daily", priority: 0.9 },
-      { path: "/notes", changeFrequency: "weekly", priority: 0.7 },
+      { path: "/keywords", changeFrequency: "weekly", priority: 0.8 },
       { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
       { path: "/posts", changeFrequency: "weekly", priority: 0.7 },
       { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
@@ -86,6 +87,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
     buildTime,
   });
+  const keywordCategories = await getKeywordCategories();
+  const keywordPages = buildTranslatedSitemapEntries(
+    keywordCategories.flatMap((category) => [
+      {
+        path: `/keywords/${category.id}`,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      ...category.subcategories.flatMap((subcategory) => [
+        {
+          path: `/keywords/${category.id}/${subcategory.id}`,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        },
+        ...subcategory.keywords.map((keyword) => ({
+          path: `/keywords/${category.id}/${subcategory.id}/${keyword.slug}`,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        })),
+      ]),
+    ]),
+    siteUrl,
+    buildTime
+  );
 
   const bookSlugs = await getBookSlugs();
   const bookMetas = await Promise.all(
@@ -180,6 +205,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...aiNewsPages,
     ...blogPages,
     ...notePages,
+    ...keywordPages,
     ...bookIndexPages,
     ...bookSectionPages,
     ...seriesPages,

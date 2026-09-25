@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import NotesPage from "@/pages/notes/index";
+import { redirect } from "next/navigation";
 import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
 
 export const metadata: Metadata = {
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <NotesPage />;
+  redirect("/keywords/");
 }
