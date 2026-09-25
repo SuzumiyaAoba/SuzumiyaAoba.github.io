@@ -10,6 +10,7 @@ import {
   buildTranslatedSitemapEntries,
 } from "./_shared/sitemap-entries";
 import type { SitemapPage } from "./_shared/sitemap-entries";
+import { buildAwesomeCategoryStaticParams } from "./_shared/awesome-category-page";
 
 export const dynamic = "force-static";
 
@@ -17,6 +18,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
 
   const buildTime = new Date();
+  const awesomePages = buildTranslatedSitemapEntries(
+    (await buildAwesomeCategoryStaticParams()).map(({ category }) => ({
+      path: `/awesome-something/${category.join("/")}`,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    })),
+    siteUrl,
+    buildTime
+  );
   const aiNewsPages: MetadataRoute.Sitemap = [
     "/archive/ai-news/",
     "/archive/ai-news/timeline/",
@@ -166,6 +176,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...awesomePages,
     ...aiNewsPages,
     ...blogPages,
     ...notePages,

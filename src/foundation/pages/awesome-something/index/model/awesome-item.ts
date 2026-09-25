@@ -1,5 +1,6 @@
 import { parse } from "yaml";
 import { z } from "zod";
+import { getAwesomeCategory } from "./awesome-categories";
 
 const textSchema = z.string().trim().min(1);
 const httpUrlSchema = z
@@ -27,26 +28,46 @@ function linkSchema(url: typeof httpUrlSchema | typeof relatedUrlSchema) {
   );
 }
 
-const awesomeItemSchema = z.strictObject({
-  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
-  name: textSchema,
-  category: textSchema,
-  tags: z
-    .array(textSchema)
-    .nullish()
-    .transform((value) => [...new Set(value)]),
-  description: textSchema,
-  websiteUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
-  githubUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
-  articles: z
-    .array(linkSchema(httpUrlSchema))
-    .nullish()
-    .transform((value) => value ?? []),
-  relatedPosts: z
-    .array(linkSchema(relatedUrlSchema))
-    .nullish()
-    .transform((value) => value ?? []),
-});
+const awesomeItemSchema = z
+  .strictObject({
+    id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u),
+    name: textSchema,
+    category: textSchema,
+    subcategory: textSchema,
+    tags: z
+      .array(textSchema)
+      .nullish()
+      .transform((value) => [...new Set(value)]),
+    description: textSchema,
+    websiteUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
+    githubUrl: z.preprocess(optionalUrl, httpUrlSchema.optional()),
+    articles: z
+      .array(linkSchema(httpUrlSchema))
+      .nullish()
+      .transform((value) => value ?? []),
+    relatedPosts: z
+      .array(linkSchema(relatedUrlSchema))
+      .nullish()
+      .transform((value) => value ?? []),
+  })
+  .superRefine((item, context) => {
+    const category = getAwesomeCategory(item.category);
+    if (!category) {
+      context.addIssue({
+        code: "custom",
+        path: ["category"],
+        message: `未登録のカテゴリです: ${item.category}`,
+      });
+    } else if (
+      !category.subcategories.some((entry) => entry.id === item.subcategory)
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["subcategory"],
+        message: `カテゴリ ${item.category} に属さないサブカテゴリです: ${item.subcategory}`,
+      });
+    }
+  });
 
 const awesomeSourceSchema = z.strictObject({
   items: z.array(awesomeItemSchema).superRefine((items, context) => {

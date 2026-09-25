@@ -8,13 +8,18 @@ const files = vi.hoisted(() => ({ readFile: vi.fn<typeof readFile>() }));
 // oxlint-disable-next-line vitest/prefer-import-in-mock -- UTF-8 読み込みのみのモックは fs の全オーバーロードを実装しない。
 vi.mock("node:fs/promises", () => files);
 vi.mock(import("@/shared/lib/content-file"), () => ({
-  resolveContentRoot: async () => "/mock/content",
+  resolveContentDeps: async () => {
+    const { default: path } = await import("node:path");
+    const fs = await import("node:fs/promises");
+    return { fs, path, root: "/mock/content" };
+  },
 }));
 
 const item = {
   id: "example-tool",
   name: "Example Tool",
-  category: "開発ツール",
+  category: "development",
+  subcategory: "coding-agents",
   description: "作業を便利にするツール。",
 };
 
@@ -24,7 +29,8 @@ describe("Awesome Something の YAML", () => {
 items:
   - id: example-tool
     name: Example Tool
-    category: 開発ツール
+    category: development
+    subcategory: coding-agents
     tags: [TypeScript, 自動化]
     description: |-
       作業を便利にするツール。
@@ -42,7 +48,8 @@ items:
       - https://suzumiyaaoba.com/notes/example-tool/
   - id: another-tool
     name: Another Tool
-    category: サービス
+    category: ai-agents
+    subcategory: chat
     description: 次に見つけたツール。
 `);
     expect(items.map((entry) => entry.id)).toStrictEqual([
@@ -137,6 +144,10 @@ items:
     { id: "Invalid ID" },
     { name: " " },
     { category: "" },
+    { category: "unknown" },
+    { subcategory: "" },
+    { subcategory: undefined },
+    { subcategory: "chat" },
     { description: null },
     { website: "https://example.com/" },
   ])("必須項目やフィールド名の誤りを検出する: %j", (invalid) => {
