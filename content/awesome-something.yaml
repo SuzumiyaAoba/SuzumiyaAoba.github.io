@@ -1624,3 +1624,10 @@ items:
     tags: [LLM, Transformer, 推論最適化, 学習資料]
     description: トークン化・注意機構・Transformer の基礎から、LLM の学習や推論最適化まで段階的に学べる記事・動画シリーズ。
     githubUrl: https://github.com/amitshekhariitbhu/llm-internals
+  - id: hugeicons
+    name: Hugeicons
+    category: design
+    subcategory: components
+    tags: [アイコン, SVG, Figma, React]
+    description: 複数のスタイルを備えたアイコンライブラリ。SVG や Figma で利用でき、React・Vue・Svelte などのフレームワークにも対応する。
+    websiteUrl: https://hugeicons.com/
