@@ -1,0 +1,74 @@
+---
+related:
+  - motion/pursuit
+  - motion/obstacle-avoidance-steering
+  - motion/wander-steering
+  - motion/boids
+---
+
+## ひとことで
+
+Craig Reynolds が 1999 年の論文 "Steering Behaviors For Autonomous Characters" で体系化した**操舵行動**（Steering Behaviors）の最も基本的な 2 つです。**シーク**は目標へ全速力で向かい、**アライバル**は目標の手前で減速して止まります。どちらも「希望する速度」と「今の速度」の差を操舵力にする、というシンプルな考え方でできています。
+
+## ゲームでの使いどころ
+
+- **敵の接近**：プレイヤーに向かって走ってくる敵、アイテムに群がる動物。
+- **所定位置への移動**：指示した地点で止まる RTS のユニット、定位置に戻る護衛キャラクター。
+- **吸い寄せ演出**：経験値の玉がプレイヤーに吸い込まれる動き（シーク）や、ドロップ品がふわっと所定位置に収まる動き（アライバル）。
+- **操舵行動の部品**：追跡、回避、群れなど、他の操舵行動はこれらの組み合わせです。
+
+## しくみ
+
+エージェントは位置 $\mathbf{p}$ と速度 $\mathbf{v}$ を持ち、毎フレーム次の計算をします。
+
+$$
+\mathbf{v}_{\text{desired}} = \frac{\mathbf{t} - \mathbf{p}}{\lVert \mathbf{t} - \mathbf{p} \rVert}\; v_{\max}, \qquad
+\mathbf{F}_{\text{steer}} = \text{truncate}\big(\mathbf{v}_{\text{desired}} - \mathbf{v},\; F_{\max}\big)
+$$
+
+操舵力を上限 $F_{\max}$ で切り詰めることで、急には曲がれない「慣性」のある動きになります。
+
+**シーク**は希望速度を常に最高速度にするので、目標に着いても止まれず、通り過ぎては引き返すことを繰り返します。**アライバル**は、目標から距離 $d$ が減速半径 $r$ より近いとき、希望速度を距離に比例して小さくします。
+
+$$
+\lVert \mathbf{v}_{\text{desired}} \rVert = \begin{cases} v_{\max} & d \ge r \\ v_{\max}\,\dfrac{d}{r} & d < r \end{cases}
+$$
+
+目標に近づくほど希望速度が 0 に近づくので、ブレーキがかかって滑らかに停止します。
+
+## 実装のポイント
+
+```ts
+function arrive(
+  agent: Agent,
+  target: Vec3,
+  maxSpeed: number,
+  maxForce: number,
+  slowRadius: number
+) {
+  const toTarget = target.sub(agent.position);
+  const distance = toTarget.length();
+  const speed =
+    distance < slowRadius ? maxSpeed * (distance / slowRadius) : maxSpeed;
+  const desired = toTarget.setLength(speed);
+  const steer = desired.sub(agent.velocity).clampLength(maxForce);
+  agent.velocity = agent.velocity.add(steer.mul(dt)).clampLength(maxSpeed);
+  agent.position = agent.position.add(agent.velocity.mul(dt));
+}
+```
+
+- **複数の行動を足し合わせる**：シーク + 障害物回避 + 分離、のように操舵力を重み付きで合計すると、複雑な振る舞いを組み立てられます。優先度の高い行動から順に力の予算を使う「優先度付き合成」もよく使われます。
+- **向きの決め方**：見た目の向きは速度ベクトルから決めます。速度がほぼ 0 のときは前の向きを保ちます（止まった瞬間に向きがぶれるのを防ぐ）。
+- **減速半径の目安**：最高速度から止まるのに必要な距離 $v_{\max}^2 / (2F_{\max})$ より大きくしておくと行き過ぎません。
+
+## つまずきやすい点
+
+- **シークだけで目的地に止めようとする**：通り過ぎては戻る「うろうろ」が起きます。停止が必要ならアライバルを使います。
+- **最大操舵力が大きすぎる**：瞬時に向きが変わり、操舵行動らしい「慣性のある曲がり」が失われます。
+- **経路探索の代わりにはならない**：シークは直線的に目標へ向かうだけです。壁の向こうへ行くには経路探索（A\* など）で通過点を求め、それを順にシークします。
+
+## デモで試すこと
+
+1. 奥の赤いエージェント（シーク）は目標を通り過ぎて周りを回り続けます。手前の水色（アライバル）は円の中で減速し、ぴたりと止まります。
+2. 「最大操舵力」を下げると、どちらも大回りで曲がるようになります。
+3. 「希望速度と操舵ベクトル」を表示すると、白い矢印（行きたい速度）と黄色い矢印（その差＝操舵力）の関係が見えます。床をクリックして目標を置き換えてみてください。

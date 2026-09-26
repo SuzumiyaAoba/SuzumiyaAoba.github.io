@@ -251,6 +251,12 @@ export default defineConfig({
         rules: { "react/no-array-index-key": "off" },
       },
       {
+        // キーワードの Three.js デモは数値シミュレーションが中心。ハッシュ・乱数のビット演算と
+        // 粒子・格子のカウンタ更新を許容する。
+        files: ["src/foundation/pages/keywords/ui/stage/**"],
+        rules: { "no-bitwise": "off", "no-plusplus": "off" },
+      },
+      {
         // D3 の pie.sort は配列の破壊的 sort ではなく、レイアウトの設定 API。
         files: ["src/foundation/shared/ui/financial-charts/PieChart.tsx"],
         rules: { "unicorn/no-array-sort": "off" },

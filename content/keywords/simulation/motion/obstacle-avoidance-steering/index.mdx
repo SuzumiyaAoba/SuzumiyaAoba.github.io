@@ -1,0 +1,76 @@
+---
+related:
+  - motion/seek
+  - motion/flow-field-following
+  - navigation/optimal-reciprocal-collision-avoidance
+  - collision/ray-casting
+  - navigation/navigation-mesh
+---
+
+## ひとことで
+
+進行方向に**先読み線**（フィーラー）を伸ばし、その先に障害物があれば、ぶつかる前に横へ舵を切ってよける操舵行動です。経路探索が「どの道を通るか」を決めるのに対し、障害物回避は「目の前のものにぶつからない」ための局所的な反応で、両者を組み合わせて使います。
+
+## ゲームでの使いどころ
+
+- **敵やNPCの移動**：経路探索で決めた通過点を目指しつつ、途中に置かれた箱や柱、他のキャラクターをよける。
+- **乗り物 AI**：レースゲームの AI が他車や障害物を避けてラインを変える。
+- **飛行する敵・ドローン**：地形や建物の間を縫うように飛ぶ。
+- **群れの障害物回避**：鳥の群れが木や岩を避けて流れるように回り込む。
+
+## しくみ
+
+1. エージェントの速度方向 $\hat{\mathbf{v}}$ に長さ $L$ の先読み線を伸ばす。
+2. 障害物（ここでは円柱）ごとに、先読み線上で中心 $\mathbf{c}$ に最も近い点を求める。
+   $$
+   s = \text{clamp}\big((\mathbf{c} - \mathbf{p})\cdot\hat{\mathbf{v}},\; 0,\; L\big), \qquad \mathbf{q} = \mathbf{p} + s\,\hat{\mathbf{v}}
+   $$
+3. $\lVert \mathbf{q} - \mathbf{c} \rVert$ が「障害物の半径 + 自分の半径」より小さければ衝突の恐れがある。最も近い（$s$ が小さい）障害物を脅威とする。
+4. 先読み点から見て障害物の中心と反対側へ、進行方向に**垂直な**回避力を加える。近いほど強くする。
+
+この回避力を、目標へ向かう[シーク](/keywords/simulation/motion/seek/)の力と合成すると、エージェントは目標を目指しつつ、障害物の縁を回り込んでいきます。
+
+先読みの長さは速度に比例させるのが一般的です。速く動くものほど遠くを見ないと、曲がり切れません。
+
+## 実装のポイント
+
+```ts
+function avoid(
+  agent: Agent,
+  obstacles: Circle[],
+  lookAhead: number,
+  strength: number
+) {
+  const heading = agent.velocity.normalize();
+  let threat: Circle | undefined,
+    nearest = Infinity;
+  for (const o of obstacles) {
+    const s = clamp(o.center.sub(agent.position).dot(heading), 0, lookAhead);
+    const closest = agent.position.add(heading.mul(s));
+    if (closest.distanceTo(o.center) < o.radius + agent.radius && s < nearest) {
+      nearest = s;
+      threat = o;
+    }
+  }
+  if (!threat) return zero();
+  const ahead = agent.position.add(heading.mul(lookAhead));
+  const away = ahead.sub(threat.center).rejectFrom(heading).normalize(); // 進行方向に垂直な成分
+  return away.mul(strength * (1 - nearest / lookAhead));
+}
+```
+
+- **複雑な形状にはレイキャスト**：円柱以外の障害物には、物理エンジンの[レイキャスト](/keywords/world/collision/ray-casting/)やスフィアキャストで先読みします。正面・左右斜めの 3 本の触角を出す方法がよく使われます。
+- **正面衝突の対処**：障害物の真正面に向かうと左右どちらにも力が出ません。その場合は決まった側（例えば右）へよけるようにします。
+- **押し戻しは別に用意**：回避が間に合わなかったときのために、めり込みを解消する衝突処理は必ず残しておきます。
+
+## つまずきやすい点
+
+- **局所最適にはまる**：U 字型の壁の内側などでは、回避だけでは抜け出せません。大局的な道筋は[ナビゲーションメッシュ](/keywords/world/navigation/navigation-mesh/)や[流れ場](/keywords/simulation/motion/flow-field-following/)で与えます。
+- **振動する**：回避力が強すぎると、左右に振れながら進むことがあります。力に上限をかけ、距離に応じて滑らかに強さを変えます。
+- **動く相手には不向き**：他のエージェントのように動く障害物は、相手の未来位置を考える [ORCA](/keywords/world/navigation/optimal-reciprocal-collision-avoidance/) のような相互回避のほうがうまく避けられます。
+
+## デモで試すこと
+
+1. 先読み線が赤くなっているエージェントは、柱を検知して回避中です。柱の手前でなめらかに進路を変える様子を追ってください。
+2. 「障害物回避」をオフにすると、エージェントは柱に正面からぶつかり、押し戻されながらずるずると回り込むしかなくなります。左下の接触時間が一気に増えます。
+3. 「先読みの長さ」を短くすると直前での急旋回に、長くすると早めの大回りになります。

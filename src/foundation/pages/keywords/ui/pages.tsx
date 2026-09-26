@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { ArrowRight } from "lucide-react";
@@ -21,10 +21,10 @@ import {
   getKeywordCategory,
   getKeywordSubcategory,
 } from "../model/catalog";
+import type { Keyword } from "../model/catalog";
 import { keywordSources, keywordSpecificSources } from "../model/sources";
-import { keywordNotes } from "../model/notes";
-import { KeywordVisual } from "./keyword-visual";
-import { KeywordAnimation } from "./keyword-animation";
+import { KeywordStage } from "./stage/keyword-stage";
+import { hasDemo } from "./stage/registry";
 
 const keywordPath = (category: string, subcategory?: string, slug?: string) =>
   `/keywords/${category}${subcategory ? `/${subcategory}` : ""}${slug ? `/${slug}` : ""}`;
@@ -86,6 +86,37 @@ const recipes = [
 
 const keywordBreadcrumbs = (locale: Locale) =>
   buildListBreadcrumbItems(locale, { name: "Keywords", path: "/keywords" });
+
+const fileExists = async (file: string) => {
+  try {
+    await access(file);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/** frontmatter の related（"subcategory/slug" の配列）をキーワードに解決する。 */
+const resolveRelated = async (value: unknown): Promise<Keyword[]> => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const keywords = (await getKeywordCategories()).flatMap((category) =>
+    category.subcategories.flatMap((subcategory) => subcategory.keywords)
+  );
+  return value.flatMap((entry) => {
+    if (typeof entry !== "string") {
+      return [];
+    }
+    const found = keywords.find(
+      (keyword) => `${keyword.subcategoryId}/${keyword.slug}` === entry
+    );
+    if (!found) {
+      throw new Error(`Unknown related keyword: ${entry}`);
+    }
+    return [found];
+  });
+};
 
 const asSentence = (value: string) =>
   /[。.!?]$/u.test(value) ? value : `${value}。`;
@@ -351,8 +382,8 @@ export async function KeywordSubcategoryPage({
                   </span>
                   <span className="mt-3 block text-xs font-medium text-brand">
                     {locale === "ja"
-                      ? "比較デモを見る →"
-                      : "Explore the demo →"}
+                      ? "3D デモと解説を見る →"
+                      : "Explore the 3D demo →"}
                   </span>
                 </span>
                 <ArrowRight
@@ -402,67 +433,109 @@ export async function KeywordDetailPage({
     },
   ];
   const index = subcategory.keywords.findIndex((item) => item.slug === slug);
+  const previous = index > 0 ? subcategory.keywords[index - 1] : undefined;
   const next = subcategory.keywords[index + 1];
   const source = keywordSpecificSources[slug] ?? keywordSources[subcategoryId];
-  const note = keywordNotes[slug];
   let mdxContent: Awaited<ReturnType<typeof renderMdx>> | undefined;
+  let related: Keyword[] = [];
   if (keyword.contentPath) {
     const directory = path.join(
       process.cwd(),
       "content/keywords",
       keyword.contentPath
     );
-    const filename = locale === "ja" ? "index.mdx" : "index.en.mdx";
-    const { content } = matter(
-      await readFile(path.join(directory, filename), "utf-8")
+    const localized = path.join(directory, "index.en.mdx");
+    const useEnglish = locale === "en" && (await fileExists(localized));
+    const { content, data } = matter(
+      await readFile(
+        useEnglish ? localized : path.join(directory, "index.mdx"),
+        "utf-8"
+      )
     );
     const scope = await loadMdxScope(content, directory);
     mdxContent = await renderMdx(content, {
       basePath: `/contents/keywords/${keyword.contentPath}`,
       scope,
     });
+    related = await resolveRelated(data["related"]);
   }
+  const showDemo = keyword.demoKey !== undefined && hasDemo(keyword.demoKey);
+  const displayName = locale === "ja" ? keyword.name : keyword.english;
   return (
     <SiteLayout locale={locale} path={toLocalePath(detailPath, locale)}>
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
-        <header className="page-heading">
+        <header className="space-y-3 border-b border-border pb-6">
           <p className="page-count">
             {locale === "ja" ? subcategory.name : subcategory.english} ·{" "}
             {index + 1} / {subcategory.keywords.length}
           </p>
-          <h1 className="page-title">
-            {locale === "ja" ? keyword.name : keyword.english}
-          </h1>
-          <p className="text-lg leading-relaxed" lang="ja">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h1 className="page-title">{displayName}</h1>
+            <p className="font-mono text-sm text-muted-foreground">
+              {locale === "ja" ? keyword.english : keyword.name}
+            </p>
+          </div>
+          <p className="max-w-3xl text-lg leading-relaxed" lang="ja">
             {asSentence(keyword.effect)}
           </p>
         </header>
-        <section aria-labelledby="animation-heading" className="space-y-4">
-          <h2 id="animation-heading" className="text-xl font-semibold">
-            {locale === "ja" ? "動くデモで比較する" : "Compare in motion"}
-          </h2>
-          <KeywordAnimation keyword={keyword} locale={locale} />
-        </section>
-        <section aria-labelledby="visual-heading" className="space-y-4">
-          <h2 id="visual-heading" className="text-xl font-semibold">
-            {locale === "ja" ? "技法のしくみ" : "How it works"}
-          </h2>
-          <KeywordVisual keyword={keyword} locale={locale} />
-        </section>
+        {showDemo && keyword.demoKey && (
+          <section aria-labelledby="demo-heading" className="space-y-4">
+            <h2 id="demo-heading" className="sr-only">
+              {locale === "ja" ? "インタラクティブデモ" : "Interactive demo"}
+            </h2>
+            <KeywordStage
+              demoKey={keyword.demoKey}
+              title={displayName}
+              locale={locale}
+            />
+          </section>
+        )}
         {mdxContent && (
-          <article className="prose max-w-none min-w-0 font-serif">
+          <article
+            className="prose max-w-3xl min-w-0"
+            lang={locale === "en" ? "ja" : undefined}
+          >
+            {locale === "en" && keyword.categoryId !== "programming" && (
+              <p className="text-sm text-muted-foreground">
+                This explanation is currently available in Japanese.
+              </p>
+            )}
             {mdxContent}
           </article>
         )}
-        {note && (
-          <aside
-            className="max-w-3xl rounded-xl border border-border bg-muted/30 p-5 text-sm leading-relaxed"
-            lang="ja"
-          >
-            {note}
-          </aside>
+        {related.length > 0 && (
+          <section aria-labelledby="related-heading" className="space-y-4">
+            <h2 id="related-heading" className="text-xl font-semibold">
+              {locale === "ja" ? "関連キーワード" : "Related keywords"}
+            </h2>
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((item) => (
+                <li key={`${item.subcategoryId}/${item.slug}`}>
+                  <Link
+                    href={toLocalePath(
+                      keywordPath(
+                        item.categoryId,
+                        item.subcategoryId,
+                        item.slug
+                      ),
+                      locale
+                    )}
+                    className="flex h-full flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  >
+                    <span className="font-semibold">
+                      {locale === "ja" ? item.name : item.english}
+                    </span>
+                    <span className="mt-1 text-sm text-muted-foreground">
+                      {item.effect}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
         {source && (
           <section aria-labelledby="source-heading" className="space-y-2">
@@ -498,8 +571,19 @@ export async function KeywordDetailPage({
             href={toLocalePath(keywordPath(categoryId, subcategoryId), locale)}
             className="underline underline-offset-4"
           >
-            ← {locale === "ja" ? "サブカテゴリへ戻る" : "Back to subcategory"}
+            ↑ {locale === "ja" ? "一覧へ戻る" : "Back to list"}
           </Link>
+          {previous && (
+            <Link
+              href={toLocalePath(
+                keywordPath(categoryId, subcategoryId, previous.slug),
+                locale
+              )}
+              className="underline underline-offset-4"
+            >
+              ← {locale === "ja" ? previous.name : previous.english}
+            </Link>
+          )}
           {next && (
             <Link
               href={toLocalePath(
@@ -508,7 +592,6 @@ export async function KeywordDetailPage({
               )}
               className="underline underline-offset-4"
             >
-              {locale === "ja" ? "次" : "Next"}:{" "}
               {locale === "ja" ? next.name : next.english} →
             </Link>
           )}

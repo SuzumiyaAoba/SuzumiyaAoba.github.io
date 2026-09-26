@@ -1,0 +1,70 @@
+---
+related:
+  - motion/seek
+  - motion/pd
+  - curves/cubic-hermite-curve
+  - collision/continuous-collision-detection
+---
+
+## ひとことで
+
+動く相手の**現在位置**ではなく、**少し先の未来位置**を予測して、そこへ向かう追跡方法です。シーク（現在位置を追う）では相手の後ろを追いかけ回すことになりますが、予測追跡なら相手の進路に先回りし、より短い経路で追いつけます。逆に、追跡者から逃げる「回避（Evasion）」も同じ予測を使います。
+
+## ゲームでの使いどころ
+
+- **誘導ミサイル**：標的の進路の先を狙って曲がるミサイル。
+- **敵 AI の追跡**：逃げるプレイヤーの進行方向へ回り込むハンター、パスを受ける位置へ走るスポーツゲームの選手。
+- **偏差射撃**：弾速のある武器で、動く標的の未来位置を狙う（予測時間を弾の到達時間にする）。
+- **逃走 AI**：追跡者の未来位置から遠ざかる方向へ逃げる（Evasion）。
+
+## しくみ
+
+標的の位置 $\mathbf{q}$、速度 $\mathbf{u}$、追跡者の位置 $\mathbf{p}$、速さ $s$ として、予測時間 $T$ を「今の距離を自分の速さで割った時間」で見積もります。
+
+$$
+T = c\,\frac{\lVert \mathbf{q} - \mathbf{p} \rVert}{s}, \qquad \mathbf{q}_{\text{future}} = \mathbf{q} + \mathbf{u}\,T
+$$
+
+$c$ は予測の強さ（デモの「先読み時間の倍率」）です。あとは $\mathbf{q}_{\text{future}}$ に対して[シーク](/keywords/simulation/motion/seek/)するだけです。距離が縮むにつれて $T$ も小さくなり、最後は現在位置を追う形に自然に切り替わります。
+
+偏差射撃のように**直進する弾**を当てたい場合は、もっと正確に「弾と標的が同時に同じ場所に着く時刻」を解きます。
+
+$$
+\lVert \mathbf{q} + \mathbf{u}\,t - \mathbf{p} \rVert = s\,t
+$$
+
+これは $t$ についての 2 次方程式になり、正の最小解が命中時刻です（解がなければ、弾が遅すぎて当てられません）。
+
+## 実装のポイント
+
+```ts
+function pursue(agent: Agent, target: Agent, lead = 1) {
+  const distance = target.position.distanceTo(agent.position);
+  const T = (distance / agent.maxSpeed) * lead;
+  const future = target.position.add(target.velocity.mul(T));
+  return seek(agent, future);
+}
+
+// 逃走：追跡者の未来位置から遠ざかる
+function evade(agent: Agent, chaser: Agent) {
+  const T = chaser.position.distanceTo(agent.position) / chaser.maxSpeed;
+  const future = chaser.position.add(chaser.velocity.mul(T));
+  return flee(agent, future);
+}
+```
+
+- **標的の速度の推定**：物理エンジンの速度が使えない場合は、前フレームとの位置差から求めます。ノイズが多いなら数フレーム分を平均します。
+- **予測時間の上限**：遠くの標的に対して $T$ が大きくなりすぎると、的外れな場所を目指します。上限を設けておきます。
+- **加速度まで予測する**：旋回し続ける標的には、速度だけの線形予測は外れます。必要なら加速度も含めた 2 次の予測を使います。
+
+## つまずきやすい点
+
+- **急な方向転換に弱い**：予測はあくまで「今の速度のまま進めば」という仮定です。ジグザグに逃げる相手には、予測を弱めたほうが当たることもあります。
+- **強すぎるゲームバランス**：予測が完璧な敵は理不尽に感じられます。わざと誤差を入れたり、予測の強さを難易度で変えたりします。
+- **すり抜け**：高速の弾やミサイルは、1 フレームで標的を飛び越えてしまうことがあります。当たり判定は[連続衝突判定](/keywords/world/collision/continuous-collision-detection/)で行います。
+
+## デモで試すこと
+
+1. 赤いミサイル（シーク）は標的の後ろを追いかけ回し、命中まで時間がかかります。水色のミサイル（予測追跡）は進路の先に回り込み、短時間で命中します。左下の平均命中時間を比べてください。
+2. 「予測地点を表示」すると、水色のミサイルが実際に狙っている地点（点線の先）が見えます。
+3. 「予測の強さ」を 0 にすると、水色もただのシークになります。逆に 2 まで上げると先読みしすぎて、かえって外れやすくなります。

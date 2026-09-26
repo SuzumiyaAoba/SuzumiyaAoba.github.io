@@ -1,0 +1,72 @@
+---
+related:
+  - curves/smoothstep
+  - curves/easing
+  - curves/slerp
+  - motion/exponential-damping
+---
+
+## ひとことで
+
+**Lerp**（線形補間）は 2 つの値を比率 $t$ で混ぜる関数、**Inverse Lerp** はその逆で「値がどの比率の位置にあるか」を求める関数、**Remap** は両者を続けて「ある範囲の値を別の範囲へ写す」関数です。ゲームのコードで最も頻繁に登場する 3 つの道具と言っても過言ではありません。
+
+## ゲームでの使いどころ
+
+- **距離に応じた演出**：近づくと明るくなる街灯、敵との距離で強くなる警告音、カメラからの距離でフェードする物体（デモ）。
+- **HP バーや UI**：HP の割合で色を緑から赤へ、ゲージの長さを 0 から最大へ。
+- **パラメータの対応付け**：アナログスティックの傾き（0〜1）を歩行速度（1.5〜6 m/s）へ、車の速度をエンジン音のピッチへ。
+- **アニメーションとブレンド**：2 つの姿勢や色、カメラ位置を混ぜる基本操作。[イージング](/keywords/simulation/curves/easing/)は $t$ を曲げてから Lerp に渡すものです。
+
+## しくみ
+
+$$
+\text{lerp}(a, b, t) = a + (b - a)\,t = (1 - t)\,a + t\,b
+$$
+
+$$
+\text{invLerp}(a, b, v) = \frac{v - a}{b - a}
+$$
+
+$$
+\text{remap}(v;\, a_{\text{in}}, b_{\text{in}} \to a_{\text{out}}, b_{\text{out}}) = \text{lerp}\big(a_{\text{out}}, b_{\text{out}}, \text{invLerp}(a_{\text{in}}, b_{\text{in}}, v)\big)
+$$
+
+- $t = 0$ で $a$、$t = 1$ で $b$、$t = 0.5$ でちょうど中間。
+- $t$ が 0〜1 の外に出ると**外挿**になり、$a$ と $b$ の範囲を超えます。意図しない場合は $t$ を `clamp` します。
+- ベクトルや色にも成分ごとに適用できます。ただし回転（四元数）には[球面線形補間](/keywords/simulation/curves/slerp/)を使います。
+
+デモでは、プレイヤーと街灯の距離 $d$ を $\text{invLerp}(a, b, d)$ で比率にし、$1 - t$ を明るさと色の Lerp に渡しています。「近い距離 a」「遠い距離 b」を変えても、コード側の明るさの式は一切変わらない点がポイントです。
+
+## 実装のポイント
+
+```ts
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const invLerp = (a: number, b: number, v: number) => (v - a) / (b - a);
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+const remap = (
+  v: number,
+  inA: number,
+  inB: number,
+  outA: number,
+  outB: number
+) => lerp(outA, outB, clamp01(invLerp(inA, inB, v)));
+
+// 街灯：1.5 m 以内で最大、5.5 m で消灯
+light.intensity = remap(distance, 1.5, 5.5, 18, 0);
+```
+
+- **数値誤差に強い形**：`a + (b - a) * t` は $t = 1$ でわずかに $b$ からずれることがあります。端点を厳密に一致させたいなら `(1 - t) * a + t * b` を使います。
+- **エンジンの関数**：Unity の `Mathf.Lerp` は $t$ を自動でクランプし、`Mathf.LerpUnclamped` はしません。GLSL の `mix` はクランプしません。どちらかを意識して使い分けます。
+- **ゼロ除算**：Inverse Lerp で $a = b$ のときは 0 除算になります。範囲をユーザーが設定できる場合はガードを入れます。
+
+## つまずきやすい点
+
+- **`lerp(current, target, 0.1)` を毎フレーム呼ぶ**：よく見る「なめらかに近づく」書き方ですが、フレームレートによって速さが変わります。時間に依存しない[指数減衰](/keywords/simulation/motion/exponential-damping/)の形 `1 - exp(-k * dt)` を係数に使います。
+- **色の Lerp**：sRGB の値をそのまま混ぜると、中間色が暗く濁ります。見た目の自然さが重要なら、線形色空間や OKLab で混ぜます。
+- **角度の Lerp**：350° と 10° を混ぜると 180° を経由してしまいます。角度は差を $[-180°, 180°)$ に正規化してから補間します。
+
+## デモで試すこと
+
+1. プレイヤー（緑）をドラッグして街灯に近づけたり離したりしてください。左下の数値で「距離 → 比率 → 明るさ」の変換を順に追えます。
+2. 「近い距離 a」と「遠い距離 b」を動かすと、右下のグラフの折れ線（Inverse Lerp の結果）が伸び縮みします。
+3. 「比率を 0〜1 にクランプ」をオフにすると、範囲外で比率が 0 未満・1 超になり、色が不自然な方向へ振り切れる様子が見えます。
