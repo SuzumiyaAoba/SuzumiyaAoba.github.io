@@ -2,6 +2,11 @@ name: SuzumiyaAoba.github.io
 version: 1.0.0
 description: APM project for SuzumiyaAoba.github.io
 author: suzumiyaaoba
+targets:
+  - claude
+  - codex
+  - copilot
+includes: auto
 dependencies:
   apm:
     - vercel-labs/agent-skills
