@@ -1647,3 +1647,11 @@ items:
     description: Rust と SVG で動画を記述し、GPU でレンダリングする動画制作フレームワーク。コーディングエージェント向けのスキルも提供する。
     websiteUrl: https://fframes.studio/
     githubUrl: https://github.com/dmtrKovalenko/fframes
+  - id: twinkleplop
+    name: twinkleplop
+    category: development
+    subcategory: libraries
+    tags: [TypeScript, 構文ハイライト, コード作成]
+    description: 必要な言語だけを導入し、HTML またはトークン形式で出力できる、軽量で高速な構文ハイライト・コード作成ツールキット。CSS で出力をカスタマイズできる。
+    websiteUrl: https://twinkleplop.pngwn.at/
+    githubUrl: https://github.com/pngwn/twinkleplop
