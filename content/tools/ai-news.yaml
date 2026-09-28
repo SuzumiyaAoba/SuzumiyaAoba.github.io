@@ -53,13 +53,13 @@ events:
       長時間の開発作業や知識業務を改善した Opus モデルを公開。Claude、Claude Code、Claude API と主要クラウドで提供し、Opus 5 からトークン単価とタスク当たりの使用量を削減。
 
       [Introducing Claude Opus 5.5 | Anthropic](https://www.anthropic.com/claude-opus-5-5)
-    tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
+    tags: ["Anthropic", "Claude", "LLM Model"]
     series: ["Claude Opus"]
   - year: 2026
     date: 2026-09-22
     title_ja: "Gemini 3.8 Flash TTS / 3.8 Flash-Lite TTS (GA)"
     summary_ja: |
-      表現力を重視した Flash TTS と、低遅延・低コストの Flash-Lite TTS を一般提供。長文の音声合成、自然言語による声の設計や演技指示に対応。API の一般提供日は9月22日、公式ブログの発表日は9月23日。
+      表現力を重視した Flash TTS と、低遅延・低コストの Flash-Lite TTS を一般提供。長文の音声合成やカスタム音声に対応。API の一般提供日は9月22日、公式ブログの発表日は9月23日。
 
       [Gemini 3.8 TTS の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog) / [Gemini 3.8 Flash TTS / Flash-Lite TTS の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-text-to-speech/)
     tags: ["Google", "Gemini", "Audio Model"]
@@ -75,7 +75,7 @@ events:
     series: ["Grok"]
   - year: 2026
     date: 2026-09-21
-    title_ja: "Qwen3.8-Omni-Flash-Realtime (API)"
+    title_ja: "Qwen3.8-Omni-Flash-Realtime"
     summary_ja: |
       音声・動画によるリアルタイム対話モデルを API で提供。テキスト・音声出力、複数チャンネルの音声入力、リモート MCP ツールに対応。
 
@@ -93,22 +93,13 @@ events:
     series: ["Qwen Image"]
   - year: 2026
     date: 2026-09-20
-    title_ja: "Qwen-Audio-3.1-Realtime-Plus (API)"
+    title_ja: "Qwen-Audio 3.1 Realtime Plus"
     summary_ja: |
       全二重の音声対話モデルを API で提供。約26万トークンのコンテキスト、ツール呼び出し、Web検索、音声クローニングに対応。
 
       [Qwen-Audio 3.1 Realtime Plus の提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
     tags: ["Alibaba", "Qwen", "Audio Model"]
     series: ["Qwen Audio Realtime"]
-  - year: 2026
-    date: 2026-09-18
-    title_ja: "Qwen3.8-LiveTranslate"
-    summary_ja: |
-      同時通訳モデルを公開。60言語の音声入力と29言語の音声出力に対応し、話者分離、原文と訳文の同期表示、過去の文脈を使った訳語の曖昧さの解消を強化。
-
-      [Qwen3.8-LiveTranslate: Names the speaker. Carries the meaning. | Qwen](https://qwen.ai/blog?id=qwen3.8-livetranslate)
-    tags: ["Alibaba", "Qwen", "Audio Model"]
-    series: ["Qwen LiveTranslate"]
   - year: 2026
     date: 2026-09-18
     title_ja: "Grok Voice Transcribe 2.0"
@@ -140,9 +131,9 @@ events:
     date: 2026-09-17
     title_ja: "Qwen3.8-LiveTranslate-Flash-Realtime (API)"
     summary_ja: |
-      音声・画像入力をもとにしたリアルタイム同時通訳に対応。60言語の音声認識と29言語の音声出力に対応する API モデルを提供開始。
+      同時通訳モデルを9月17日に API で提供開始し、9月18日に公式ブログで発表。60言語の音声入力と29言語の音声出力に対応し、話者分離、原文と訳文の同期表示、過去の文脈を使った訳語の曖昧さの解消を強化。
 
-      [Qwen3.8-LiveTranslate-Flash-Realtime の更新情報 | Qwen Cloud](https://docs.qwencloud.com/changelog/models)
+      [Qwen3.8-LiveTranslate-Flash-Realtime の API 提供開始 | Qwen Cloud](https://docs.qwencloud.com/changelog/models) / [Qwen3.8-LiveTranslate の発表 | Qwen](https://qwen.ai/blog?id=qwen3.8-livetranslate)
     tags: ["Alibaba", "Qwen", "Audio Model"]
     series: ["Qwen LiveTranslate"]
   - year: 2026
@@ -346,7 +337,7 @@ events:
     series: ["Gemini Omni Flash"]
   - year: 2026
     date: 2026-08-26
-    title_ja: "Qwen3.8-Flash (API)"
+    title_ja: "Qwen3.8-Flash"
     summary_ja: |
       100万トークンのコンテキストと画像理解に対応する高速モデルを API で提供。開発支援やエージェント用途に対応。
 
@@ -473,14 +464,13 @@ events:
     series: ["MAI Thinking"]
   - year: 2026
     date: 2026-08-11
-    title_ja: "Nemotron 3.5 Lightning (30B-A3B)"
+    title_ja: "Nemotron 3.5 Lightning"
     summary_ja: |
-      長時間稼働するエージェントのツール呼び出しなどを効率化する、総パラメータ数30B・有効パラメータ数3Bの MoE モデルを公開。BF16 と NVFP4 の重みを公開。
+      常時稼働するエージェントの特化タスク向けに、30B規模の MoE モデルを重み公開。低遅延と推論効率を重視。
 
-      [Nemotron 3.5 Lightning の発表 | NVIDIA](https://developer.nvidia.com/ja-jp/blog/nvidia-nemotron-3-5-lightning-delivers-fast-accurate-specialized-task-execution-for-long-running-agents)
+      [Nemotron 3.5 Lightning の発表 | NVIDIA](https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/)
     tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
     series: ["Nemotron"]
-
   - year: 2026
     date: 2026-08-11
     title_ja: "MAI-Code-1.1-Flash"
@@ -914,7 +904,7 @@ events:
     summary_ja: |
       Meta Superintelligence Labs 初の Muse 系列モデルを公開。マルチモーダル推論とツール利用に対応し、Meta AI で提供開始。API は一部利用者向けの限定プレビュー。
 
-      [Introducing Muse Spark: Scaling Towards Personal Superintelligence | Meta](https://ai.meta.com/blog/introducing-muse-spark-msl/) / [Introducing Muse Spark | Meta](https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/)
+      [Introducing Muse Spark: Scaling Towards Personal Superintelligence | Meta](https://ai.meta.com/blog/introducing-muse-spark-msl/)
     tags: ["Meta", "Muse", "LLM Model"]
     series: ["Muse Spark"]
   - year: 2026
