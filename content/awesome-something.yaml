@@ -1639,3 +1639,11 @@ items:
     tags: [アイコン, SVG, Figma, React]
     description: 複数のスタイルを備えたアイコンライブラリ。SVG や Figma で利用でき、React・Vue・Svelte などのフレームワークにも対応する。
     websiteUrl: https://hugeicons.com/
+  - id: fframes
+    name: fframes
+    category: media
+    subcategory: video
+    tags: [Rust, SVG, GPU, AIコーディング]
+    description: Rust と SVG で動画を記述し、GPU でレンダリングする動画制作フレームワーク。コーディングエージェント向けのスキルも提供する。
+    websiteUrl: https://fframes.studio/
+    githubUrl: https://github.com/dmtrKovalenko/fframes
