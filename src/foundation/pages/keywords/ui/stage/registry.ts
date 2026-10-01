@@ -40,6 +40,26 @@ const loaders: Record<string, Loader> = {
     await import("./demos/camera/parallax-scrolling"),
   "camera/spline-dolly": async () =>
     await import("./demos/camera/spline-dolly"),
+  "collision/axis-aligned-bounding-box": async () =>
+    await import("./demos/collision/axis-aligned-bounding-box"),
+  "collision/bounding-volume-hierarchy": async () =>
+    await import("./demos/collision/bounding-volume-hierarchy"),
+  "collision/broad-phase": async () =>
+    await import("./demos/collision/broad-phase"),
+  "collision/continuous-collision-detection": async () =>
+    await import("./demos/collision/continuous-collision-detection"),
+  "collision/gilbert-johnson-keerthi-algorithm": async () =>
+    await import("./demos/collision/gilbert-johnson-keerthi-algorithm"),
+  "collision/morton-code": async () =>
+    await import("./demos/collision/morton-code"),
+  "collision/ray-casting": async () =>
+    await import("./demos/collision/ray-casting"),
+  "collision/separating-axis-theorem": async () =>
+    await import("./demos/collision/separating-axis-theorem"),
+  "collision/spatial-hashing": async () =>
+    await import("./demos/collision/spatial-hashing"),
+  "collision/sweep-and-prune": async () =>
+    await import("./demos/collision/sweep-and-prune"),
   "curves/arc-length-parameterization": async () =>
     await import("./demos/curves/arc-length-parameterization"),
   "curves/b-spline": async () => await import("./demos/curves/b-spline"),
@@ -200,6 +220,26 @@ const loaders: Record<string, Loader> = {
   "nature/thermal-erosion": async () =>
     await import("./demos/nature/thermal-erosion"),
   "nature/whitewater": async () => await import("./demos/nature/whitewater"),
+  "navigation/a-search": async () =>
+    await import("./demos/navigation/a-search"),
+  "navigation/behavior-tree": async () =>
+    await import("./demos/navigation/behavior-tree"),
+  "navigation/blackboard-architecture": async () =>
+    await import("./demos/navigation/blackboard-architecture"),
+  "navigation/dijkstra-s-algorithm": async () =>
+    await import("./demos/navigation/dijkstra-s-algorithm"),
+  "navigation/environment-query": async () =>
+    await import("./demos/navigation/environment-query"),
+  "navigation/finite-state-machine": async () =>
+    await import("./demos/navigation/finite-state-machine"),
+  "navigation/funnel-algorithm": async () =>
+    await import("./demos/navigation/funnel-algorithm"),
+  "navigation/goal-oriented-action-planning": async () =>
+    await import("./demos/navigation/goal-oriented-action-planning"),
+  "navigation/navigation-mesh": async () =>
+    await import("./demos/navigation/navigation-mesh"),
+  "navigation/optimal-reciprocal-collision-avoidance": async () =>
+    await import("./demos/navigation/optimal-reciprocal-collision-avoidance"),
   "noise/curl-noise": async () => await import("./demos/noise/curl-noise"),
   "noise/domain-warping": async () =>
     await import("./demos/noise/domain-warping"),
@@ -231,6 +271,26 @@ const loaders: Record<string, Loader> = {
   "particles/surface": async () => await import("./demos/particles/surface"),
   "particles/velocity-alignment": async () =>
     await import("./demos/particles/velocity-alignment"),
+  "performance/compute-shader": async () =>
+    await import("./demos/performance/compute-shader"),
+  "performance/frustum": async () =>
+    await import("./demos/performance/frustum"),
+  "performance/gpu-instancing": async () =>
+    await import("./demos/performance/gpu-instancing"),
+  "performance/indirect-drawing": async () =>
+    await import("./demos/performance/indirect-drawing"),
+  "performance/level-of-detail": async () =>
+    await import("./demos/performance/level-of-detail"),
+  "performance/object-pool": async () =>
+    await import("./demos/performance/object-pool"),
+  "performance/overdraw": async () =>
+    await import("./demos/performance/overdraw"),
+  "performance/parallel-prefix-sum": async () =>
+    await import("./demos/performance/parallel-prefix-sum"),
+  "performance/ping-pong-buffers": async () =>
+    await import("./demos/performance/ping-pong-buffers"),
+  "performance/structure-of-arrays": async () =>
+    await import("./demos/performance/structure-of-arrays"),
   "physics/extended-pbd": async () =>
     await import("./demos/physics/extended-pbd"),
   "physics/fixed-timestep": async () =>
@@ -263,14 +323,25 @@ const loaders: Record<string, Loader> = {
   "post/temporal-anti-aliasing": async () =>
     await import("./demos/post/temporal-anti-aliasing"),
   "post/tone-mapping": async () => await import("./demos/post/tone-mapping"),
+  "sampling/alias-method": async () =>
+    await import("./demos/sampling/alias-method"),
   "sampling/blue-noise": async () =>
     await import("./demos/sampling/blue-noise"),
+  "sampling/cosine-weighted-hemisphere-sampling": async () =>
+    await import("./demos/sampling/cosine-weighted-hemisphere-sampling"),
+  "sampling/gaussian": async () => await import("./demos/sampling/gaussian"),
+  "sampling/importance-sampling": async () =>
+    await import("./demos/sampling/importance-sampling"),
   "sampling/low-discrepancy-sequence": async () =>
     await import("./demos/sampling/low-discrepancy-sequence"),
   "sampling/poisson-disk-sampling": async () =>
     await import("./demos/sampling/poisson-disk-sampling"),
   "sampling/stratified": async () =>
     await import("./demos/sampling/stratified"),
+  "sampling/uniform-disk": async () =>
+    await import("./demos/sampling/uniform-disk"),
+  "sampling/uniform-sphere-sampling": async () =>
+    await import("./demos/sampling/uniform-sphere-sampling"),
   "volume/aerial-perspective": async () =>
     await import("./demos/volume/aerial-perspective"),
   "volume/beer-lambert-law": async () =>

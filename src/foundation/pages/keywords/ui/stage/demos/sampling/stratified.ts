@@ -104,10 +104,10 @@ export const demo: DemoModule = {
     texture.colorSpace = SRGBColorSpace;
     const aspect = canvas.width / canvas.height;
     const board = new Mesh(
-      new PlaneGeometry(5.6 * aspect, 5.6),
+      new PlaneGeometry(5.1 * aspect, 5.1),
       new MeshBasicMaterial({ map: texture })
     );
-    board.position.y = 0.4;
+    board.position.set(-1.1, 0.55, 0);
     scene.add(board);
     const graph = historyGraph(context, {
       title: "画素の平均誤差（被覆率）",
