@@ -1,10 +1,6 @@
 import { SiteLayout } from "@/widgets/site-layout";
-import { BackLink } from "@/shared/ui/back-link";
-import { Badge } from "@/shared/ui/badge";
-import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import {
   buildBreadcrumbList,
@@ -13,16 +9,13 @@ import {
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { SeriesDefinition } from "@/entities/series-item";
+import { PostIndex } from "@/entities/blog";
+import type { PostIndexEntry } from "@/entities/blog";
 
 export type SeriesDetailPageContentProps = {
   locale: Locale;
   series: SeriesDefinition;
-  entries: {
-    slug: string;
-    title: string;
-    date?: string;
-    tags: string[];
-  }[];
+  entries: PostIndexEntry[];
 };
 
 export function SeriesDetailPageContent({
@@ -36,72 +29,57 @@ export function SeriesDetailPageContent({
     { name: "Series", path: "/series" },
     { name: series.name, path: pagePath }
   );
+  const [first] = entries;
 
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-3">
-          <BackLink
-            locale={locale}
-            href="/series"
-            ja="← シリーズ一覧"
-            en="← Back to series"
-          />
-          <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
-            {series.name}
-          </h1>
-        </section>
-
-        {entries.length === 0 ? (
-          <Card variant="soft">
-            <div className="px-5 py-6 text-sm text-muted-foreground">
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">
+              <I18nText locale={locale} ja="連載" en="Series" />
+            </p>
+            <h1 className="page-title">{series.name}</h1>
+            {series.description ? (
+              <p className="page-lead">{series.description}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <p className="page-count">
               <I18nText
                 locale={locale}
-                ja="まだ記事がありません。"
-                en="No posts yet."
+                ja={`全 ${entries.length} 回`}
+                en={`${entries.length} parts`}
               />
-            </div>
-          </Card>
+            </p>
+            {first ? (
+              <a
+                href={toLocalePath(`/blog/post/${first.slug}`, locale)}
+                className="arrow-link"
+              >
+                <I18nText
+                  locale={locale}
+                  ja="第 1 回から読む"
+                  en="Start from part 1"
+                />
+                <span aria-hidden="true">→</span>
+              </a>
+            ) : null}
+          </div>
+        </header>
+
+        {entries.length === 0 ? (
+          <p className="empty-state">
+            <I18nText
+              locale={locale}
+              ja="まだ記事がありません。"
+              en="No posts yet."
+            />
+          </p>
         ) : (
-          <ul className="space-y-3">
-            {entries.map((post) => (
-              <li key={`${locale}-${post.slug}`}>
-                <Card variant="interactive" className="group relative">
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -inset-1 scale-95 rounded-3xl bg-muted/30 opacity-0 transition duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
-                  />
-                  <a
-                    href={toLocalePath(`/blog/post/${post.slug}`, locale)}
-                    className="relative z-10 flex flex-col gap-2 px-5 py-4"
-                  >
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <span>{post.date}</span>
-                      <Badge variant="muted">{series.name}</Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-base font-semibold text-foreground">
-                        {post.title}
-                      </p>
-                      {post.tags.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                          {post.tags.map((tag) => (
-                            <Tag
-                              key={`${locale}-${tag}`}
-                              tag={tag}
-                              variant="muted"
-                            />
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  </a>
-                </Card>
-              </li>
-            ))}
-          </ul>
+          <PostIndex entries={entries} locale={locale} layout="numbered" />
         )}
       </main>
     </SiteLayout>

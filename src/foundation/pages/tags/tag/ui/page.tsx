@@ -16,8 +16,8 @@ function buildTagEntries(posts: BlogPostSummary[], tag: string) {
     title: post.frontmatter.title || post.slug,
     date: post.frontmatter.date,
     tags: (post.frontmatter.tags ?? []).filter((item) => item !== tag),
+    description: post.frontmatter.description,
     category: post.frontmatter.category,
-    thumbnail: post.frontmatter.thumbnail,
   }));
 }
 

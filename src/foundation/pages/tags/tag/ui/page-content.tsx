@@ -1,6 +1,4 @@
 import { SiteLayout } from "@/widgets/site-layout";
-import { BackLink } from "@/shared/ui/back-link";
-import { Badge } from "@/shared/ui/badge";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
@@ -10,19 +8,13 @@ import {
   toLocalePath,
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { BlogPostCard } from "@/entities/blog";
+import { PostIndex } from "@/entities/blog";
+import type { PostIndexEntry } from "@/entities/blog";
 
 export type TagDetailPageContentProps = {
   locale: Locale;
   tag: string;
-  entries: {
-    slug: string;
-    title: string;
-    date: string;
-    tags: string[];
-    category?: string | undefined;
-    thumbnail?: string | undefined;
-  }[];
+  entries: PostIndexEntry[];
 };
 
 export function TagDetailPageContent({
@@ -42,38 +34,28 @@ export function TagDetailPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-3">
-          <BackLink
-            locale={locale}
-            href="/tags"
-            ja="← タグ一覧"
-            en="← Back to tags"
-          />
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
-              #{tag}
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">
+              <I18nText locale={locale} ja="タグ" en="Tag" />
+            </p>
+            <h1 className="page-title">
+              <span className="page-title-hash" aria-hidden="true">
+                #
+              </span>
+              {tag}
             </h1>
-            <Badge variant="muted">
-              <I18nText
-                locale={locale}
-                ja={`${entries.length} 件`}
-                en={`${entries.length} posts`}
-              />
-            </Badge>
           </div>
-        </section>
+          <p className="page-count">
+            <I18nText
+              locale={locale}
+              ja={`${entries.length} 件の記事`}
+              en={`${entries.length} articles`}
+            />
+          </p>
+        </header>
 
-        <ul className="post-list">
-          {entries.map((post) => (
-            <li key={`${locale}-${post.slug}`}>
-              <BlogPostCard
-                post={post}
-                locale={locale}
-                thumbnailIconSize="lg"
-              />
-            </li>
-          ))}
-        </ul>
+        <PostIndex entries={entries} locale={locale} />
       </main>
     </SiteLayout>
   );

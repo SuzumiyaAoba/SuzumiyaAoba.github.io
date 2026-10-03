@@ -33,6 +33,7 @@ export default async function Page({ params, locale }: PageProps) {
       locale={resolvedLocale}
       pageNumber={pageNumber}
       pageCount={pageCount}
+      totalCount={posts.length}
       posts={pagePosts}
     />
   );

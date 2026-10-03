@@ -39,6 +39,8 @@ export default async function Page({ params, locale }: PageProps) {
       slug: post.slug,
       title: post.frontmatter.title || post.slug,
       date: post.frontmatter.date,
+      description: post.frontmatter.description,
+      category: post.frontmatter.category,
       tags: post.frontmatter.tags ?? [],
     }));
   const entriesEn = postsEn
@@ -47,6 +49,8 @@ export default async function Page({ params, locale }: PageProps) {
       slug: post.slug,
       title: post.frontmatter.title || post.slug,
       date: post.frontmatter.date,
+      description: post.frontmatter.description,
+      category: post.frontmatter.category,
       tags: post.frontmatter.tags ?? [],
     }));
   const entries = resolvedLocale === "en" ? entriesEn : entriesJa;

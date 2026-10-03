@@ -1,6 +1,4 @@
 import { SiteLayout } from "@/widgets/site-layout";
-import { BackLink } from "@/shared/ui/back-link";
-import { Card } from "@/shared/ui/card";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { toLocalePath, resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
@@ -18,33 +16,43 @@ export function NotFoundPageContent({ locale }: NotFoundPageContentProps) {
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <main className="site-main page-stack">
-        <section className="flex flex-col items-center justify-center gap-6 py-8">
-          <div className="space-y-4 text-center">
-            <h1 className="text-6xl font-bold text-muted-foreground">404</h1>
-            <h2 className="text-2xl font-semibold">
-              <I18nText
-                locale={locale}
-                ja="ページが見つかりません"
-                en="Page not found"
-              />
-            </h2>
-            <p className="text-muted-foreground">
-              <I18nText
-                locale={locale}
-                ja="お探しのページは存在しないか、移動または削除された可能性があります。"
-                en="The page you’re looking for might have been moved or removed."
-              />
-            </p>
-          </div>
-          <Card variant="soft">
-            <BackLink
+        <section className="not-found">
+          <p className="not-found-code">404</p>
+          <h1 className="page-title">
+            <I18nText
               locale={locale}
-              href="/"
-              ja="← ホームに戻る"
-              en="← Back to home"
-              className="flex items-center gap-2 px-6 py-4 text-sm font-medium"
+              ja="ページが見つかりません"
+              en="Page not found"
             />
-          </Card>
+          </h1>
+          <p className="page-lead">
+            <I18nText
+              locale={locale}
+              ja="お探しのページは存在しないか、移動または削除された可能性があります。"
+              en="The page you’re looking for might have been moved or removed."
+            />
+          </p>
+          <ul className="not-found-links">
+            <li>
+              <a href={toLocalePath("/", locale)} className="arrow-link">
+                <I18nText locale={locale} ja="ホームへ戻る" en="Back to home" />
+              </a>
+            </li>
+            <li>
+              <a href={toLocalePath("/blog", locale)} className="arrow-link">
+                <I18nText locale={locale} ja="記事の一覧" en="All articles" />
+              </a>
+            </li>
+            <li>
+              <a href={toLocalePath("/search", locale)} className="arrow-link">
+                <I18nText
+                  locale={locale}
+                  ja="サイト内を検索"
+                  en="Search the site"
+                />
+              </a>
+            </li>
+          </ul>
         </section>
       </main>
     </SiteLayout>

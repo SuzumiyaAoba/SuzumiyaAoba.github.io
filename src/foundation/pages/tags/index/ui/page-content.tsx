@@ -1,8 +1,6 @@
 import { SiteLayout } from "@/widgets/site-layout";
-import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { Tag } from "@/shared/ui/tag";
 import { I18nText } from "@/shared/ui/i18n-text";
 import {
   buildBreadcrumbList,
@@ -36,27 +34,27 @@ export function TagsListPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja="タグ" en="Tags" />
-          </h1>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="タグ" en="Tags" />
+            </h1>
+          </div>
           <p className="page-count">
-            {locale === "en" ? `${tags.length} tags` : `${tags.length} 件`}
+            {locale === "en" ? `${tags.length} tags` : `全 ${tags.length} 件`}
           </p>
-        </section>
+        </header>
 
         {tags.length === 0 ? (
-          <Card variant="soft">
-            <div className="px-5 py-6 text-sm text-muted-foreground">
-              <I18nText
-                locale={locale}
-                ja="タグがまだありません。"
-                en="No tags yet."
-              />
-            </div>
-          </Card>
+          <p className="empty-state">
+            <I18nText
+              locale={locale}
+              ja="タグがまだありません。"
+              en="No tags yet."
+            />
+          </p>
         ) : (
-          <ul className="tag-index grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="tag-cloud">
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
                 <a
@@ -64,16 +62,10 @@ export function TagsListPageContent({
                     `/tags/${encodeURIComponent(tag.name)}`,
                     locale
                   )}
-                  className="index-link flex min-h-14 items-center justify-between gap-3 px-1 py-3"
+                  className="topic-chip"
                 >
-                  <Tag
-                    tag={tag.name}
-                    variant="bareLg"
-                    className="min-w-0 whitespace-normal"
-                  />
-                  <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
-                    {tag.count}
-                  </span>
+                  {tag.name}
+                  <span className="topic-chip-count">{tag.count}</span>
                 </a>
               </li>
             ))}

@@ -8,7 +8,7 @@ import type { HomeTopic } from "../model/home-content";
 import { HomeIntro } from "./home-intro";
 import { HomeWriting } from "./home-writing";
 import { HomeSeries } from "./home-series";
-import { HomeLibrary } from "./home-library";
+import { HomeExplore } from "./home-explore";
 
 export type HomePageContentProps = {
   locale: Locale;
@@ -35,13 +35,12 @@ export function HomePageContent({
   return (
     <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList([{ name: "Home", path: pagePath }])} />
-      <main className="home-main" id="main-content">
+      <main className="home-main">
         <HomeIntro
           locale={locale}
           postCount={postCount}
           keywordCount={keywordCount}
           seriesCount={series.length}
-          topics={topics}
         />
         <HomeWriting
           locale={locale}
@@ -49,7 +48,7 @@ export function HomePageContent({
           postCount={postCount}
         />
         <HomeSeries locale={locale} series={series} />
-        <HomeLibrary locale={locale} />
+        <HomeExplore locale={locale} topics={topics} />
       </main>
     </SiteLayout>
   );

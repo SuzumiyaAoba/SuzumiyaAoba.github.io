@@ -1,7 +1,6 @@
 "use client";
 
 import { Icon } from "@/shared/ui/icon-client";
-import { Button } from "@/shared/ui/button";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
 import { toLocalePath } from "@/shared/lib/routing";
@@ -14,6 +13,7 @@ import {
   navigationGroups,
   primaryItems,
 } from "../model/navigation";
+import { BrandMark } from "./brand-mark";
 import { NavigationLink } from "./navigation-link";
 import { useHeaderMenu } from "./use-header-menu";
 import { useReadingProgress } from "./use-reading-progress";
@@ -32,80 +32,58 @@ export function Header({ locale, path }: HeaderProps) {
   const { isReading, isActive } = getNavigationState(path);
   const progressBarRef = useReadingProgress(isReading);
   const en = locale === "en";
+  const searchLabel = en ? "Search" : "検索";
 
   return (
-    <header
-      ref={headerRef}
-      className="site-header sticky top-0 z-50 bg-background/95 backdrop-blur-md"
-      onBlur={handleBlur}
-    >
+    <header ref={headerRef} className="site-header" onBlur={handleBlur}>
+      <a href="#main-content" className="site-skip-link">
+        {en ? "Skip to content" : "本文へ移動"}
+      </a>
       {isReading && (
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-0.5"
-          aria-hidden="true"
-        >
-          <div
-            ref={progressBarRef}
-            className="reading-progress h-full origin-left scale-x-0"
-          />
+        <div className="reading-progress-track" aria-hidden="true">
+          <div ref={progressBarRef} className="reading-progress" />
         </div>
       )}
       <div className="site-header-inner site-container">
         <a
           href={toLocalePath("/", locale)}
-          className="site-wordmark"
+          className="site-brand"
           aria-label={`${SITE_TITLE} — ${en ? "Home" : "ホーム"}`}
         >
-          <svg
-            className="brand-mark"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <circle cx="12" cy="5" r="2" />
-            <circle cx="5" cy="18" r="2" />
-            <circle cx="19" cy="18" r="2" />
-          </svg>
-          <span className="site-wordmark-title" lang="la">
+          <BrandMark />
+          <span className="site-brand-name" lang="la">
             {SITE_TITLE}
           </span>
         </a>
         <nav
           aria-label={en ? "Main navigation" : "メインナビゲーション"}
-          className="site-primary-nav"
+          className="site-nav"
         >
-          {primaryItems.map((item) => (
-            <NavigationLink
-              key={item.href}
-              item={item}
-              locale={locale}
-              active={isActive(item.href)}
-              onNavigate={closeMenu}
-            />
-          ))}
+          <ul>
+            {primaryItems.map((item) => (
+              <li key={item.href}>
+                <NavigationLink
+                  item={item}
+                  locale={locale}
+                  active={isActive(item.href)}
+                  onNavigate={closeMenu}
+                />
+              </li>
+            ))}
+          </ul>
         </nav>
         <div className="site-header-actions">
-          <Button
-            asChild
-            variant="ghost"
-            size="icon-xl"
-            aria-label={en ? "Search" : "検索"}
-            title={en ? "Search" : "検索"}
+          <a
+            href={toLocalePath("/search", locale)}
+            className="site-search-link"
+            aria-label={searchLabel}
+            aria-current={isActive("/search") ? "page" : undefined}
+            title={searchLabel}
           >
-            <a
-              href={toLocalePath("/search", locale)}
-              aria-label={en ? "Search" : "検索"}
-              aria-current={isActive("/search") ? "page" : undefined}
-            >
-              <Icon
-                icon="lucide:search"
-                className="size-4"
-                aria-hidden="true"
-              />
-            </a>
-          </Button>
-          <div className="hidden items-center lg:flex">
+            <Icon icon="lucide:search" className="size-4" aria-hidden="true" />
+            <span className="site-search-label">{searchLabel}</span>
+          </a>
+          <div className="site-header-toggles">
             <LanguageToggle locale={locale} path={path} />
             <ThemeToggle />
           </div>
@@ -126,7 +104,6 @@ export function Header({ locale, path }: HeaderProps) {
             aria-controls="mobile-nav"
             onClick={toggleMenu}
           >
-            <span className="site-menu-label">{en ? "Index" : "目次"}</span>
             <span className="site-menu-icon" aria-hidden="true">
               <span />
               <span />
@@ -138,7 +115,7 @@ export function Header({ locale, path }: HeaderProps) {
         id="mobile-nav"
         inert={!isMenuOpen}
         className={cn(
-          "site-mobile-nav grid",
+          "site-mobile-nav",
           isMenuOpen
             ? "grid-rows-[1fr] opacity-100"
             : "grid-rows-[0fr] opacity-0"
@@ -152,7 +129,7 @@ export function Header({ locale, path }: HeaderProps) {
                 aria-label={en ? "Site index" : "サイトの目次"}
               >
                 {navigationGroups.map((group) => (
-                  <div key={group.en} className="site-index-group">
+                  <div key={group.en}>
                     <p className="site-index-heading">
                       {en ? group.en : group.ja}
                     </p>
@@ -172,7 +149,7 @@ export function Header({ locale, path }: HeaderProps) {
                   </div>
                 ))}
               </nav>
-              <div className="site-index-settings lg:hidden">
+              <div className="site-index-settings">
                 <div>
                   <span>{en ? "Appearance" : "表示テーマ"}</span>
                   <ThemeToggle />

@@ -37,6 +37,7 @@ export const Japanese: Story = {
     locale: "ja",
     pageNumber: 1,
     pageCount: 5,
+    totalCount: 50,
     posts: dummyPosts,
   },
 };
@@ -46,6 +47,7 @@ export const English: Story = {
     locale: "en",
     pageNumber: 2,
     pageCount: 5,
+    totalCount: 50,
     posts: dummyPosts,
   },
 };

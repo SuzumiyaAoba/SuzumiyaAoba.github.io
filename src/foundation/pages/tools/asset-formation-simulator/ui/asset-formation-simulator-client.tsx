@@ -75,7 +75,7 @@ export function AssetFormationSimulator({
             onChange={(event) => {
               setYearsInput(event.target.value);
             }}
-            className="w-full rounded-md border bg-input p-2 text-foreground"
+            className="w-full rounded-md border border-input bg-card p-2 text-foreground"
           />
         </label>
       </div>
@@ -147,7 +147,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border bg-input p-2 text-foreground"
+                  className="w-full rounded-md border border-input bg-card p-2 text-foreground"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -170,7 +170,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border bg-input p-2 text-foreground"
+                  className="w-full rounded-md border border-input bg-card p-2 text-foreground"
                 />
               </label>
               <label className="flex flex-col gap-2">
@@ -192,7 +192,7 @@ export function AssetFormationSimulator({
                       )
                     );
                   }}
-                  className="w-full rounded-md border bg-input p-2 text-foreground"
+                  className="w-full rounded-md border border-input bg-card p-2 text-foreground"
                 />
               </label>
             </div>
@@ -273,7 +273,7 @@ export function AssetFormationSimulator({
           </label>
           <select
             id="visible-scenario-select"
-            className="rounded-md border bg-input px-2 py-1 text-foreground"
+            className="rounded-md border border-input bg-card px-2 py-1 text-foreground"
             value={selectedScenarioId}
             onChange={(event) => setSelectedScenarioId(event.target.value)}
           >

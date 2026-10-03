@@ -87,12 +87,12 @@ export const Japanese: Story = {
     await expect(
       writing.getByRole("link", { name: /Iterator パターン/u })
     ).toHaveAttribute("href", "/blog/post/post-1/");
-    const overview = within(
-      canvas.getByRole("navigation", { name: "コンテンツ" })
+    const directory = within(
+      canvas.getByRole("navigation", { name: "このサイトの内容" })
     );
-    await expect(
-      overview.getByRole("link", { name: /ブログ/u })
-    ).toHaveTextContent("6記事");
+    const articles = directory.getByRole("link", { name: /記事/u });
+    await expect(articles).toHaveAttribute("href", "/blog/");
+    await expect(articles).toHaveTextContent("6");
     await expect(
       canvasElement.querySelectorAll(".site-page > header.site-header")
     ).toHaveLength(1);
@@ -129,12 +129,12 @@ export const English: Story = {
     await expect(
       keywords.getByRole("link", { name: "Curl Noise" })
     ).toHaveAttribute("href", "/en/keywords/graphics/noise/curl-noise/");
-    await expect(
-      keywords.getByRole("link", { name: "Books (Japanese)" })
-    ).toHaveAttribute("href", "/books/");
-    await expect(
-      keywords.getByRole("link", { name: "Books (Japanese)" })
-    ).toHaveAttribute("hreflang", "ja");
+    const directory = within(
+      main.getByRole("navigation", { name: "What's on this site" })
+    );
+    const books = directory.getByRole("link", { name: /Books/u });
+    await expect(books).toHaveAttribute("href", "/books/");
+    await expect(books).toHaveAttribute("hreflang", "ja");
     await expect(
       main.getByRole("link", { name: /ASCII reference/u })
     ).toHaveAttribute("href", "/en/tools/ascii-standard-code/");

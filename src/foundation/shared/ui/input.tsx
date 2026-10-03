@@ -8,7 +8,8 @@ import { cn } from "@/shared/lib/utils";
 const inputVariants = {
   default: "",
   icon: "pl-10",
-  search: "h-12 pr-14 pl-12 [&::-webkit-search-cancel-button]:appearance-none",
+  search:
+    "h-14 rounded-full bg-card pr-14 pl-12 text-base sm:text-base [&::-webkit-search-cancel-button]:appearance-none",
   underline:
     "rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0",
 } as const;

@@ -1,8 +1,14 @@
-import { getBlogPostSummariesVariants } from "@/entities/blog";
+import {
+  getBlogPostSummariesVariants,
+  getPopularBlogTags,
+} from "@/entities/blog";
 import { paginate } from "@/shared/lib/presentation";
 import { resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { BlogListPageContent } from "./page-content";
+
+/** 一覧の見出し下に出すテーマ（タグ）の数 */
+const TOPIC_LIMIT = 8;
 
 /**
  * ブログ記事一覧ページのプロパティ
@@ -17,7 +23,10 @@ type PageProps = {
  */
 export default async function Page({ locale }: PageProps) {
   const resolvedLocale = resolveLocale(locale);
-  const posts = await getBlogPostSummariesVariants();
+  const [posts, topics] = await Promise.all([
+    getBlogPostSummariesVariants(),
+    getPopularBlogTags(resolvedLocale, TOPIC_LIMIT),
+  ]);
   const pagePosts = paginate(posts, 1);
 
   return (
@@ -26,6 +35,7 @@ export default async function Page({ locale }: PageProps) {
       posts={pagePosts}
       totalCount={posts.length}
       currentPage={1}
+      topics={topics}
     />
   );
 }

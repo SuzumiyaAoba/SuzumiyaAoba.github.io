@@ -2,25 +2,22 @@ import type { ReactElement } from "react";
 import { SiteLayout } from "@/widgets/site-layout";
 
 import { Comments } from "@/shared/ui/comments";
-import { Badge } from "@/shared/ui/badge";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
 import { getSiteUrl, SITE_TITLE } from "@/shared/lib/site";
 import { JsonLd } from "@/shared/ui/seo";
-import { Tag } from "@/shared/ui/tag";
-import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { Button } from "@/shared/ui/button";
 import { Message, TwitterWidgets } from "@/shared/ui/mdx";
 import { Icon } from "@/shared/ui/icon";
-import { Separator } from "@/shared/ui/separator";
-import { Toc } from "./toc";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
 import {
   buildBreadcrumbList,
   buildDetailBreadcrumbItems,
   toLocalePath,
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
+import { InlineToc } from "./inline-toc";
+import { Toc } from "./toc";
 
 /**
  * ブログ記事詳細ページの表示用コンポーネントのプロパティ
@@ -30,8 +27,12 @@ export type BlogPostPageContentProps = {
   locale: Locale;
   /** 記事のタイトル */
   postTitle: string;
+  /** 記事の要約（フロントマターの description） */
+  description?: string | undefined;
   /** 投稿日 */
   postDate: string;
+  /** 読了までのおおよその分数 */
+  readingMinutes?: number | undefined;
   /** カテゴリ名 */
   category?: string | undefined;
   /** タグ名の配列 */
@@ -71,13 +72,42 @@ export type BlogPostPageContentProps = {
   } | null;
 };
 
+type PagerLinkProps = {
+  locale: Locale;
+  post: { slug: string; title: string };
+  direction: "prev" | "next";
+};
+
+function PagerLink({ locale, post, direction }: PagerLinkProps) {
+  const isPrev = direction === "prev";
+  return (
+    <a
+      href={toLocalePath(`/blog/post/${post.slug}`, locale)}
+      rel={direction}
+      className={isPrev ? "article-pager-link" : "article-pager-link is-next"}
+    >
+      <span className="article-pager-label">
+        {isPrev ? (
+          <I18nText locale={locale} ja="← 前の記事" en="← Previous" />
+        ) : (
+          <I18nText locale={locale} ja="次の記事 →" en="Next →" />
+        )}
+      </span>
+      <span className="article-pager-title">{post.title}</span>
+    </a>
+  );
+}
+
 /**
  * ブログ記事詳細ページの表示内容を構成するコンポーネント。
+ * 本文は 1 行 40 字前後の読みやすい幅に固定し、目次は広い画面では右余白に、狭い画面では本文の前に置く。
  */
 export function BlogPostPageContent({
   locale,
   postTitle,
+  description,
   postDate,
+  readingMinutes,
   category,
   tags,
   postPath,
@@ -98,6 +128,11 @@ export function BlogPostPageContent({
     { name: "Blog", path: "/blog" },
     { name: postTitle, path: postPath }
   );
+  const seriesHref = series
+    ? toLocalePath(`/series/${series.slug}`, locale)
+    : null;
+  // カテゴリと同じ名前のタグは見出し上部と重複するため省く。
+  const headerTags = tags.filter((tag) => tag !== category);
 
   return (
     <SiteLayout locale={locale} path={postPath}>
@@ -124,61 +159,80 @@ export function BlogPostPageContent({
           },
         }}
       />
-      <main className="site-main min-w-0">
-        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <header className="article-heading mb-6 space-y-3 pt-2 pb-5 sm:mb-8 sm:pb-6">
-          <p className="font-mono text-xs text-muted-foreground">{postDate}</p>
-          <h1 className="max-w-4xl text-2xl leading-snug font-medium tracking-tight break-words sm:text-3xl">
-            {postTitle}
-          </h1>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            {category ? <Badge variant="muted">{category}</Badge> : null}
-            {series ? (
-              <a
-                href={toLocalePath(`/series/${series.slug}`, locale)}
-                className="inline-flex"
-              >
-                <Badge variant="mutedLink">
-                  <Icon icon="lucide:layers" className="size-3" aria-hidden />
-                  {series.name}
-                </Badge>
+      <main className="article-page">
+        <article>
+          <header className="article-header reading-column">
+            <p className="article-kicker">
+              <a href={toLocalePath("/blog", locale)}>
+                <I18nText locale={locale} ja="記事" en="Articles" />
               </a>
-            ) : null}
-            {tags.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <Tag
-                    key={tag}
-                    tag={tag}
-                    variant="muted"
-                    href={toLocalePath(
-                      `/tags/${encodeURIComponent(tag)}`,
-                      locale
-                    )}
+              {category ? <span>{category}</span> : null}
+            </p>
+            <h1 className="article-title">{postTitle}</h1>
+            {description ? <p className="article-lead">{description}</p> : null}
+            <div className="article-meta">
+              <time dateTime={postDate}>
+                {formatDate(postDate, toIntlLocaleTag(locale))}
+              </time>
+              {readingMinutes !== undefined && readingMinutes > 0 ? (
+                <span>
+                  <I18nText
+                    locale={locale}
+                    ja={`約 ${readingMinutes} 分で読めます`}
+                    en={`${readingMinutes} min read`}
                   />
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </header>
-        <div className="grid w-full min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-8">
-          <div className="flex w-full min-w-0 flex-col">
-            <article className="prose max-w-none min-w-0 font-serif">
-              {isEn && translationModel ? (
-                <Message title="Notes" variant="info" defaultOpen>
-                  This article was translated by {translationModel}. The
-                  original is{" "}
-                  <a href={originalPath}>read the original Japanese article</a>.
-                </Message>
+                </span>
               ) : null}
-              <div>{content}</div>
-              <TwitterWidgets />
-            </article>
-            <div>
+              {series && seriesHref ? (
+                <a href={seriesHref}>
+                  <Icon icon="lucide:layers" className="size-3.5" aria-hidden />
+                  {series.name}
+                </a>
+              ) : null}
+            </div>
+            {headerTags.length > 0 ? (
+              <ul
+                className="tag-list"
+                aria-label={locale === "en" ? "Tags" : "タグ"}
+              >
+                {headerTags.map((tag) => (
+                  <li key={tag}>
+                    <a
+                      href={toLocalePath(
+                        `/tags/${encodeURIComponent(tag)}`,
+                        locale
+                      )}
+                    >
+                      #{tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </header>
+
+          <div className="article-layout">
+            <div className="article-body">
+              <InlineToc headings={headings} locale={locale} />
+              <div className="prose">
+                {isEn && translationModel ? (
+                  <Message title="Notes" variant="info" defaultOpen>
+                    This article was translated by {translationModel}. The
+                    original is{" "}
+                    <a href={originalPath}>
+                      read the original Japanese article
+                    </a>
+                    .
+                  </Message>
+                ) : null}
+                {content}
+                <TwitterWidgets />
+              </div>
+
               {amazonProducts.length > 0 ? (
                 <AmazonProductSection
                   products={amazonProducts}
-                  className="mt-8"
+                  className="mt-12"
                 />
               ) : null}
               {shouldShowAmazonAssociate ? (
@@ -186,86 +240,79 @@ export function BlogPostPageContent({
                   <AmazonAssociate />
                 </div>
               ) : null}
-            </div>
-            <div className="mt-4 flex justify-end gap-2">
-              <Button asChild variant="outline" size="sm">
-                <a
-                  href={shareUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on X"
-                >
-                  <Icon icon="simple-icons:x" className="size-3.5" />
-                  <I18nText locale={locale} ja="ポスト" en="Post" />
-                </a>
-              </Button>
-            </div>
-          </div>
-          <div className="hidden lg:block">
-            <Toc headings={headings} locale={locale} />
-          </div>
-        </div>
 
-        <div className="mt-6 space-y-6">
-          <Separator variant="muted" />
-          <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {prev ? (
-              <div className="flex min-w-0 flex-1">
-                <Button
-                  asChild
-                  variant="nav"
-                  size="nav"
-                  className="w-full min-w-0 flex-col items-start whitespace-normal"
-                >
-                  <a
-                    href={toLocalePath(`/blog/post/${prev.slug}`, locale)}
-                    className="w-full min-w-0"
-                  >
-                    <span className="flex items-center gap-1 text-label font-medium tracking-wider text-muted-foreground uppercase">
-                      <Icon icon="lucide:chevron-left" className="size-3" />
+              <footer className="article-footer">
+                {series && seriesHref ? (
+                  <a href={seriesHref} className="article-series-note">
+                    <span className="article-series-label">
                       <I18nText
                         locale={locale}
-                        ja="前の記事"
-                        en="Previous Post"
+                        ja="この記事は連載の一部です"
+                        en="Part of a series"
                       />
                     </span>
-                    <span className="line-clamp-2 w-full text-left text-sm font-semibold break-all">
-                      {prev.title}
+                    <span className="article-series-name">{series.name}</span>
+                    <span className="article-series-cta">
+                      <I18nText
+                        locale={locale}
+                        ja="連載の目次を見る →"
+                        en="See all parts →"
+                      />
                     </span>
                   </a>
-                </Button>
-              </div>
+                ) : null}
+                <div className="article-share">
+                  <span>
+                    <I18nText
+                      locale={locale}
+                      ja="この記事をシェアする"
+                      en="Share this article"
+                    />
+                  </span>
+                  <a
+                    href={shareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="article-share-link"
+                  >
+                    <Icon
+                      icon="simple-icons:x"
+                      className="size-3.5"
+                      aria-hidden
+                    />
+                    <I18nText locale={locale} ja="ポストする" en="Post on X" />
+                  </a>
+                </div>
+              </footer>
+            </div>
+            <aside className="article-aside">
+              <Toc headings={headings} locale={locale} />
+            </aside>
+          </div>
+        </article>
+
+        {prev || next ? (
+          <nav
+            className="article-pager reading-column"
+            aria-label={locale === "en" ? "More articles" : "前後の記事"}
+          >
+            {prev ? (
+              <PagerLink locale={locale} post={prev} direction="prev" />
             ) : (
-              <div />
+              <span />
             )}
             {next ? (
-              <div className="flex min-w-0 flex-1">
-                <Button
-                  asChild
-                  variant="nav"
-                  size="nav"
-                  className="w-full min-w-0 flex-col items-end whitespace-normal"
-                >
-                  <a
-                    href={toLocalePath(`/blog/post/${next.slug}`, locale)}
-                    className="w-full min-w-0"
-                  >
-                    <span className="flex items-center justify-end gap-1 text-right text-label font-medium tracking-wider text-muted-foreground uppercase">
-                      <I18nText locale={locale} ja="次の記事" en="Next Post" />
-                      <Icon icon="lucide:chevron-right" className="size-3" />
-                    </span>
-                    <span className="line-clamp-2 w-full text-right text-sm font-semibold break-all">
-                      {next.title}
-                    </span>
-                  </a>
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
+              <PagerLink locale={locale} post={next} direction="next" />
+            ) : null}
           </nav>
-        </div>
-        <Comments locale={locale} />
+        ) : null}
+
+        <section
+          className="article-comments reading-column"
+          aria-label={locale === "en" ? "Comments" : "コメント"}
+        >
+          <Comments locale={locale} className="mt-0" />
+        </section>
       </main>
     </SiteLayout>
   );

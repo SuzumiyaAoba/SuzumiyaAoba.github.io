@@ -22,6 +22,7 @@ import {
 } from "@/shared/lib/affiliate-products";
 import type { AffiliateProduct } from "@/shared/lib/affiliate-products";
 import { getSiteUrl } from "@/shared/lib/site";
+import { estimateReadingMinutes } from "@/shared/lib/presentation";
 import { BlogPostPageContent } from "./page-content";
 
 /**
@@ -176,7 +177,9 @@ export default async function Page({ params, locale }: PageProps) {
     <BlogPostPageContent
       locale={resolvedLocale}
       postTitle={postTitle}
+      description={post.frontmatter.description}
       postDate={post.frontmatter.date}
+      readingMinutes={estimateReadingMinutes(contentSource)}
       category={category}
       tags={tags}
       postPath={postPath}

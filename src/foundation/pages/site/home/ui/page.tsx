@@ -4,6 +4,9 @@ import { resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { HomePageContent } from "./page-content";
 
+/** ホームに並べる新着記事の数（大きく見せる 1 本 + 見出しのみの 4 本） */
+const LATEST_POST_COUNT = 5;
+
 type PageProps = { locale?: Locale };
 
 export default async function Page({ locale }: PageProps) {
@@ -23,7 +26,7 @@ export default async function Page({ locale }: PageProps) {
   return (
     <HomePageContent
       locale={resolvedLocale}
-      latestPosts={posts.slice(0, 6)}
+      latestPosts={posts.slice(0, LATEST_POST_COUNT)}
       postCount={posts.length}
       keywordCount={201}
       series={series.filter((item) => item.posts.length > 0)}

@@ -6,7 +6,6 @@ import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { Card } from "@/shared/ui/card";
 import { SimpleEntryList } from "@/shared/ui/simple-entry-list";
 import type { SimpleEntryListItem } from "@/shared/ui/simple-entry-list";
 
@@ -47,27 +46,29 @@ export function SimpleIndexPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja={heading.ja} en={heading.en} />
-          </h1>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja={heading.ja} en={heading.en} />
+            </h1>
+          </div>
           <p className="page-count">
-            {locale === "en" ? `${items.length} items` : `${items.length} 件`}
+            {locale === "en"
+              ? `${items.length} items`
+              : `全 ${items.length} 件`}
           </p>
-        </section>
+        </header>
 
         <SimpleEntryList
           items={items}
           emptyState={
-            <Card className="border-transparent bg-card/40 shadow-none">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText
-                  locale={locale}
-                  ja={emptyMessage.ja}
-                  en={emptyMessage.en}
-                />
-              </div>
-            </Card>
+            <p className="empty-state">
+              <I18nText
+                locale={locale}
+                ja={emptyMessage.ja}
+                en={emptyMessage.en}
+              />
+            </p>
           }
         />
       </main>

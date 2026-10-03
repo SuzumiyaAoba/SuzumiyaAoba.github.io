@@ -1,10 +1,7 @@
 import { getBlogPost, getPublishedBlogSlugs } from "@/entities/blog";
 import type { Locale } from "@/shared/lib/routing";
-import {
-  ArticleOpengraphImage,
-  OpengraphTags,
-  renderOpengraphImage,
-} from "./opengraph-image";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
+import { ArticleOpengraphImage, renderOpengraphImage } from "./opengraph-image";
 
 export { OPENGRAPH_IMAGE_SIZE as BLOG_POST_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
@@ -26,11 +23,19 @@ export async function renderBlogPostOpengraphImage(
   const post = await getBlogPost(slug, { locale, fallback: true });
   const title = post?.frontmatter.title || slug;
   const tags = post?.frontmatter.tags ?? [];
+  const category = post?.frontmatter.category;
+  const date = post?.frontmatter.date;
+  const meta = [
+    ...(category ? [category] : []),
+    ...(date ? [formatDate(date, toIntlLocaleTag(locale))] : []),
+  ];
 
   return await renderOpengraphImage(
     <ArticleOpengraphImage
+      kicker={locale === "en" ? "Article" : "記事"}
+      meta={meta}
       title={title}
-      beforeTitle={<OpengraphTags tags={tags} fontSize={32} />}
+      tags={tags.filter((tag) => tag !== category)}
     />
   );
 }

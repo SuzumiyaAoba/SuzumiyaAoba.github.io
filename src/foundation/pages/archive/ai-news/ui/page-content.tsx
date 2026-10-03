@@ -24,7 +24,7 @@ export function AiNewsPageContent({
   const breadcrumbs = [
     { name: "Home", path: toLocalePath("/", locale) },
     {
-      name: en ? "Archive" : "アーカイブ",
+      name: en ? "Resources" : "資料",
       path: toLocalePath("/archive", locale),
     },
     { name: en ? "AI News" : "AIニュース", path: pagePath },

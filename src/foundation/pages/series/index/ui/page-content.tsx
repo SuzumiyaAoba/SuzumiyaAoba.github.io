@@ -1,6 +1,5 @@
 import { SiteLayout } from "@/widgets/site-layout";
 
-import { Card } from "@/shared/ui/card";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
@@ -33,16 +32,15 @@ export function SeriesListPageContent({
     slug: series.slug,
     title: series.name,
     ...(series.description ? { description: series.description } : {}),
-    ...(series.thumbnail ? { thumbnail: series.thumbnail } : {}),
-    thumbnailBasePath: `/contents/series/${series.slug}`,
     href: toLocalePath(`/series/${series.slug}`, locale),
-    cta: (
+    meta: (
       <I18nText
         locale={locale}
-        ja={`${series.posts.length} 件 →`}
-        en={`${series.posts.length} posts →`}
+        ja={`全 ${series.posts.length} 回`}
+        en={`${series.posts.length} parts`}
       />
     ),
+    cta: <I18nText locale={locale} ja="目次を見る →" en="View parts →" />,
   }));
 
   return (
@@ -50,27 +48,29 @@ export function SeriesListPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja="シリーズ" en="Series" />
-          </h1>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="連載" en="Series" />
+            </h1>
+          </div>
           <p className="page-count">
-            {locale === "en" ? `${items.length} series` : `${items.length} 件`}
+            {locale === "en"
+              ? `${items.length} series`
+              : `全 ${items.length} 件`}
           </p>
-        </section>
+        </header>
 
         <EntryCardList
           items={items}
           emptyState={
-            <Card variant="soft">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText
-                  locale={locale}
-                  ja="まだシリーズがありません。"
-                  en="No series yet."
-                />
-              </div>
-            </Card>
+            <p className="empty-state">
+              <I18nText
+                locale={locale}
+                ja="まだ連載がありません。"
+                en="No series yet."
+              />
+            </p>
           }
         />
       </main>

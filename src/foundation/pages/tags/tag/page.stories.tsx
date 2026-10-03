@@ -20,7 +20,7 @@ const dummyEntries: TagDetailPageContentProps["entries"] = [
     date: "2024-01-01",
     tags: ["OtherTag"],
     category: "Category A",
-    thumbnail: "iconify:ph:book",
+    description: "タグの付いた記事の要約。一覧では 2 行まで表示する。",
   },
   {
     slug: "post-2",
@@ -28,7 +28,6 @@ const dummyEntries: TagDetailPageContentProps["entries"] = [
     date: "2024-01-02",
     tags: ["TagB"],
     category: undefined,
-    thumbnail: undefined,
   },
 ];
 

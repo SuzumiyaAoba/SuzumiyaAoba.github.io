@@ -199,7 +199,7 @@ function SimpleTOCItem({ item }: { item: TOCItemType }) {
     <TOCItem
       href={item.url}
       className={cn(
-        "prose py-1.5 text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary",
+        "py-1.5 text-[0.8125rem] leading-relaxed [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-foreground data-[active=true]:text-brand",
         item.depth <= 2 && "ps-3",
         item.depth === 3 && "ps-6",
         item.depth >= 4 && "ps-8"
@@ -321,7 +321,7 @@ export function ClerkTOCItems({
           <TocThumb
             containerRef={containerRef}
             active={active}
-            className="mt-[var(--toc-top)] h-[var(--toc-height)] bg-primary transition-[margin-top,height]"
+            className="mt-[var(--toc-top)] h-[var(--toc-height)] bg-brand transition-[margin-top,height]"
           />
         </div>
       ) : null}
@@ -366,7 +366,7 @@ function ClerkTOCItemElement({
       style={{
         "--toc-indent": `${getItemOffset(item.depth)}px`,
       }}
-      className="prose relative py-1.5 ps-(--toc-indent) text-sm leading-snug [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-accent-foreground data-[active=true]:text-primary"
+      className="relative py-1.5 ps-(--toc-indent) text-[0.8125rem] leading-relaxed [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-foreground data-[active=true]:text-brand"
     >
       {offset === upperOffset ? null : (
         <svg
@@ -379,14 +379,14 @@ function ClerkTOCItemElement({
             y1="0"
             x2={offset}
             y2="12"
-            className="stroke-foreground/10"
+            className="stroke-rule-strong"
             strokeWidth="1"
           />
         </svg>
       )}
       <div
         className={cn(
-          "absolute inset-y-0 start-(--toc-line-x) w-px bg-foreground/10",
+          "absolute inset-y-0 start-(--toc-line-x) w-px bg-rule-strong",
           offset !== upperOffset && "top-1.5",
           offset !== lowerOffset && "bottom-1.5"
         )}

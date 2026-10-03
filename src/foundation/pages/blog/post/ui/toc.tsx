@@ -10,6 +10,7 @@ type TocProps = {
   locale: Locale;
 };
 
+/** 広い画面で本文の右余白に追従する目次。読んでいる位置を示す。 */
 export function Toc({ headings, locale }: TocProps) {
   if (headings.length === 0) {
     return null;
@@ -23,14 +24,17 @@ export function Toc({ headings, locale }: TocProps) {
 
   return (
     <TOCProvider toc={toc}>
-      <aside className="sticky top-28 flex max-h-[calc(100vh-8rem)] flex-col gap-3 overflow-hidden text-sm">
+      <nav
+        className="article-toc"
+        aria-label={locale === "en" ? "Table of contents" : "目次"}
+      >
         <p className="shrink-0 section-label">
           <I18nText locale={locale} ja="目次" en="Contents" />
         </p>
         <TOCScrollArea className="min-h-0 flex-1">
           <ClerkTOCItems />
         </TOCScrollArea>
-      </aside>
+      </nav>
     </TOCProvider>
   );
 }

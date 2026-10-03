@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vite-plus/test";
-import { formatDate, formatDatePlain } from "./format-date";
+import {
+  formatDate,
+  formatDatePlain,
+  formatMonthDay,
+  yearOf,
+} from "./format-date";
 
 describe("formatDate", () => {
   describe("空の日付", () => {
@@ -50,5 +55,33 @@ describe("formatDatePlain", () => {
     expect(formatDatePlain(date, "en-US")).toBe(
       date.toLocaleDateString("en-US")
     );
+  });
+});
+
+describe("formatMonthDay", () => {
+  it("ja ロケールで月日だけを返す", () => {
+    expect(formatMonthDay("2026-05-28", "ja-JP")).toBe("5月28日");
+  });
+
+  it("en ロケールで月日だけを返す", () => {
+    expect(formatMonthDay("2026-05-28", "en-US")).toBe("May 28");
+  });
+
+  it("月初でもタイムゾーンによって前日にずれない", () => {
+    expect(formatMonthDay("2026-03-01", "en-US")).toBe("Mar 1");
+  });
+
+  it("解釈できない文字列はそのまま返す", () => {
+    expect(formatMonthDay("someday", "ja-JP")).toBe("someday");
+  });
+});
+
+describe("yearOf", () => {
+  it("年を 4 桁の文字列で返す", () => {
+    expect(yearOf("2026-01-01")).toBe("2026");
+  });
+
+  it("解釈できない文字列は空文字を返す", () => {
+    expect(yearOf("")).toBe("");
   });
 });

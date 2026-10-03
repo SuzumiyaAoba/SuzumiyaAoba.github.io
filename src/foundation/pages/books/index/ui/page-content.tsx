@@ -34,7 +34,7 @@ export function BooksIndexPageContent({
         locale={locale}
         path="/books"
         breadcrumbName="Books"
-        heading={{ ja: "Books", en: "Books" }}
+        heading={{ ja: "書籍", en: "Books" }}
         emptyMessage={{
           ja: "まだ書籍が公開されていません。",
           en: "No books have been published yet.",

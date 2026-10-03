@@ -9,7 +9,6 @@ import {
   toLocalePath,
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { Card } from "@/shared/ui/card";
 import { EntryCardList } from "@/shared/ui/entry-card-list";
 import type { EntryCardItem } from "@/shared/ui/entry-card-list";
 
@@ -35,7 +34,6 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         ja: "AIモデルのリリース日と、系列ごとのリリース間隔をカレンダーで比較。",
         en: "Explore AI model release dates and compare release intervals by series.",
       },
-      thumbnail: "iconify:lucide:calendar-days",
     },
     {
       slug: "tools",
@@ -48,7 +46,18 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         ja: "ASCII コード表や資産形成シミュレーションなどのツール集。",
         en: "A collection of tools, including an ASCII code table and an asset formation simulator.",
       },
-      thumbnail: "iconify:lucide:wrench",
+    },
+    {
+      slug: "awesome-something",
+      path: "/awesome-something/",
+      title: {
+        ja: "Awesome Something",
+        en: "Awesome Something",
+      },
+      description: {
+        ja: "開発やデザインに役立つツール・ライブラリ・資料を分野別に集めたリンク集。",
+        en: "A curated collection of tools, libraries, and references for development and design.",
+      },
     },
   ];
 
@@ -57,8 +66,6 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     title: locale === "en" ? archive.title.en : archive.title.ja,
     description:
       locale === "en" ? archive.description.en : archive.description.ja,
-    thumbnail: archive.thumbnail,
-    thumbnailBasePath: `/contents/archive/${archive.slug}`,
     href: toLocalePath(archive.path, locale),
     cta: <I18nText locale={locale} ja="開く →" en="Open →" />,
   }));
@@ -68,27 +75,29 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja="アーカイブ" en="Archive" />
-          </h1>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="資料" en="Resources" />
+            </h1>
+          </div>
           <p className="page-count">
-            {locale === "en" ? `${items.length} items` : `${items.length} 件`}
+            {locale === "en"
+              ? `${items.length} items`
+              : `全 ${items.length} 件`}
           </p>
-        </section>
+        </header>
 
         <EntryCardList
           items={items}
           emptyState={
-            <Card variant="soft">
-              <div className="px-5 py-6 text-sm text-muted-foreground">
-                <I18nText
-                  locale={locale}
-                  ja="項目がありません。"
-                  en="No archive items."
-                />
-              </div>
-            </Card>
+            <p className="empty-state">
+              <I18nText
+                locale={locale}
+                ja="項目がありません。"
+                en="No archive items."
+              />
+            </p>
           }
         />
       </main>

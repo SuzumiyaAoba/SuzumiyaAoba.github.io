@@ -17,6 +17,8 @@ export type BlogListPageContentProps = {
   totalCount: number;
   /** 現在のページ番号 */
   currentPage: number;
+  /** 見出し下に並べる、よく書いているテーマ */
+  topics?: BlogListingContentProps["topics"];
 };
 
 /**
@@ -27,6 +29,7 @@ export function BlogListPageContent({
   posts,
   totalCount,
   currentPage,
+  topics,
 }: BlogListPageContentProps) {
   const pagePath = toLocalePath("/blog", locale);
 
@@ -38,7 +41,7 @@ export function BlogListPageContent({
         pageNumber={currentPage}
         pageCount={getPageCount(totalCount)}
         totalCount={totalCount}
-        variant="list"
+        {...(topics ? { topics } : {})}
       />
     </SiteLayout>
   );

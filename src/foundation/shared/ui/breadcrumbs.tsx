@@ -1,5 +1,3 @@
-import { Icon } from "@/shared/ui/icon";
-
 import { cn } from "@/shared/lib/utils";
 
 export type BreadcrumbItem = {
@@ -12,57 +10,46 @@ type BreadcrumbsProps = {
   className?: string;
 };
 
+/**
+ * 構造化データと共有している英語のセクション名を、画面表示用の言葉に置き換える。
+ */
+const SECTION_LABELS: Record<string, { ja: string; en: string }> = {
+  Home: { ja: "ホーム", en: "Home" },
+  Blog: { ja: "記事", en: "Articles" },
+  Tags: { ja: "タグ", en: "Tags" },
+  Series: { ja: "連載", en: "Series" },
+  Notes: { ja: "ノート", en: "Notes" },
+  Books: { ja: "書籍", en: "Books" },
+  Archive: { ja: "資料", en: "Resources" },
+  Tools: { ja: "ツール", en: "Tools" },
+  Keywords: { ja: "キーワード", en: "Keywords" },
+};
+
+/** 英語版のパスは必ず /en で始まる（toLocalePath の規約）。 */
+const isEnglishPath = (path: string) =>
+  path === "/en" || path.startsWith("/en/");
+
+/**
+ * パンくずリスト。ヘッダーのナビゲーションで現在地が分かる 2 階層以下のページでは表示しない。
+ */
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
-  if (items.length <= 1) {
+  if (items.length <= 2) {
     return null;
   }
+  const lang = isEnglishPath(items[0]?.path ?? "") ? "en" : "ja";
+  const labelOf = (name: string) => SECTION_LABELS[name]?.[lang] ?? name;
 
   return (
-    <nav
-      className={cn("text-[13px] text-muted-foreground", className)}
-      aria-label="Breadcrumb"
-    >
-      <ol className="flex flex-wrap items-center gap-2">
+    <nav className={cn("breadcrumbs", className)} aria-label="Breadcrumb">
+      <ol>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li
-              key={`${item.path}-${item.name}`}
-              className="flex items-center gap-2"
-            >
-              {index === 0 ? null : (
-                <Icon
-                  icon="lucide:chevron-right"
-                  className="size-3 shrink-0 text-muted-foreground"
-                  aria-hidden
-                />
-              )}
+            <li key={`${item.path}-${item.name}`}>
               {isLast ? (
-                <span
-                  aria-current="page"
-                  className="font-medium text-foreground"
-                >
-                  {item.path === "/" ? (
-                    <Icon icon="lucide:home" className="size-3.5" />
-                  ) : (
-                    item.name
-                  )}
-                </span>
-              ) : item.path === "/" ? (
-                <a
-                  href={item.path}
-                  className="inline-flex min-h-8 min-w-8 items-center rounded-sm font-medium transition-colors hover:text-foreground"
-                  aria-label="Home"
-                >
-                  <Icon icon="lucide:home" className="size-3.5" />
-                </a>
+                <span aria-current="page">{labelOf(item.name)}</span>
               ) : (
-                <a
-                  href={item.path}
-                  className="inline-flex min-h-8 items-center rounded-sm font-medium transition-colors hover:text-foreground"
-                >
-                  {item.name}
-                </a>
+                <a href={item.path}>{labelOf(item.name)}</a>
               )}
             </li>
           );

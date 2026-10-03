@@ -1,15 +1,19 @@
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { Arrow } from "./home-arrow";
 import { SITE_TITLE } from "@/shared/lib/site";
-import type { HomeTopic } from "../model/home-content";
 
 type HomeIntroProps = {
   locale: Locale;
   postCount: number;
   keywordCount: number;
   seriesCount: number;
-  topics: HomeTopic[];
+};
+
+type DirectoryEntry = {
+  href: string;
+  label: string;
+  count?: string;
+  japaneseOnly?: boolean;
 };
 
 export function HomeIntro({
@@ -17,71 +21,74 @@ export function HomeIntro({
   postCount,
   keywordCount,
   seriesCount,
-  topics,
 }: HomeIntroProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
+  const directory: DirectoryEntry[] = [
+    {
+      href: "/blog",
+      label: t("記事", "Articles"),
+      count: String(postCount),
+    },
+    {
+      href: "/series",
+      label: t("連載", "Series"),
+      count: String(seriesCount),
+    },
+    {
+      href: "/keywords",
+      label: t("キーワード", "Keywords"),
+      count: String(keywordCount),
+    },
+    {
+      href: "/books",
+      label: t("書籍", "Books"),
+      japaneseOnly: true,
+    },
+    {
+      href: "/archive",
+      label: t("資料", "Resources"),
+    },
+  ];
 
   return (
-    <header className="home-intro site-container">
-      <div>
-        <h1 className="home-headline" lang="la">
-          <span>{SITE_TITLE}</span>
+    <section className="home-intro site-container" aria-labelledby="home-title">
+      <div className="home-intro-copy">
+        <p className="home-author">SuzumiyaAoba</p>
+        <h1 id="home-title" className="home-title" lang="la">
+          {SITE_TITLE}
         </h1>
+        <p className="home-gloss">
+          {t("偽からは、何でも導かれる。", "From falsehood, anything follows.")}
+        </p>
+        <a href={toLocalePath("/about", locale)} className="arrow-link">
+          {t("このサイトについて", "About this site")}
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
-      <nav className="home-overview" aria-label={t("コンテンツ", "Content")}>
-        <a href={toLocalePath("/blog", locale)}>
-          <span>{t("ブログ", "Blog")}</span>
-          <span className="home-overview-count">
-            {postCount}
-            <span>{t("記事", "articles")}</span>
-          </span>
-          <Arrow />
-        </a>
-        <a href={toLocalePath("/keywords", locale)}>
-          <span>{t("キーワード", "Keywords")}</span>
-          <span className="home-overview-count">
-            {keywordCount}
-            <span>{t("項目", "keywords")}</span>
-          </span>
-          <Arrow />
-        </a>
-        <a href={toLocalePath("/series", locale)}>
-          <span>{t("連載", "Series")}</span>
-          <span className="home-overview-count">
-            {seriesCount}
-            <span>{t("件", "series")}</span>
-          </span>
-          <Arrow />
-        </a>
-      </nav>
-      {topics.length > 0 && (
-        <nav
-          className="home-topics"
-          aria-label={t("タグから記事を探す", "Browse by tag")}
-        >
-          <span className="home-topics-label">{t("タグ", "Tags")}</span>
-          {topics.map((topic) => (
-            <a
-              key={topic.name}
-              href={toLocalePath(
-                `/tags/${encodeURIComponent(topic.name)}`,
-                locale
-              )}
-            >
-              <span>{topic.name}</span>
-              <span className="home-topic-count">{topic.count}</span>
-            </a>
+      <nav
+        className="home-directory"
+        aria-label={t("このサイトの内容", "What's on this site")}
+      >
+        <ul>
+          {directory.map((entry) => (
+            <li key={entry.href}>
+              <a
+                href={toLocalePath(
+                  entry.href,
+                  entry.japaneseOnly ? "ja" : locale
+                )}
+                hrefLang={entry.japaneseOnly && en ? "ja" : undefined}
+              >
+                <span className="home-directory-label">{entry.label}</span>
+                <span className="home-directory-count">
+                  {entry.count ?? <span aria-hidden="true">→</span>}
+                </span>
+              </a>
+            </li>
           ))}
-          <a
-            className="home-topics-all"
-            href={toLocalePath("/tags", locale)}
-            aria-label={t("すべてのタグ", "All tags")}
-          >
-            <span aria-hidden="true">→</span>
-          </a>
-        </nav>
-      )}
-    </header>
+        </ul>
+      </nav>
+    </section>
   );
 }

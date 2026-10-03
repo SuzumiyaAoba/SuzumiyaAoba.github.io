@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./journal.css";
+@import "./site.css";
 @import "./home.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -9,8 +9,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-ui);
-  --font-serif: var(--font-shippori-mincho);
-  --font-mono: var(--font-source-code-pro);
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-code);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -42,6 +42,19 @@
   --color-card: var(--card);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-contrast: var(--brand-contrast);
+  --color-surface: var(--surface);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-code-surface: var(--code-surface);
+  --color-mark: var(--mark);
+  --color-callout-surface: var(--callout-surface);
+  --color-callout-info: var(--callout-info);
+  --color-callout-success: var(--callout-success);
+  --color-callout-warning: var(--callout-warning);
+  --color-callout-error: var(--callout-error);
   --color-info: var(--info);
   --color-info-surface: var(--info-surface);
   --color-info-border: var(--info-border);
@@ -93,16 +106,15 @@
   --text-micro: 0.5625rem;
   --text-mini: 0.625rem;
   --text-label: 0.6875rem;
-  --tracking-eyebrow: 0.24em;
+  --tracking-eyebrow: 0.08em;
   --tracking-overlay: 0.36em;
 }
 
-/* 「セクション見出し」の小さなラベル表記（tracking-eyebrow + uppercase）をまとめる。 */
+/* 目次・補足などの小さな見出しラベル。大文字化や広い字間は使わず、静かに置く。 */
 @utility section-label {
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
   color: var(--muted-foreground);
 }
 
@@ -278,64 +290,85 @@
   font-family: var(--font-ui);
 }
 
+/*
+ * デザイントークン
+ * 紙のような温かい地に墨色の文字を置き、アクセントは落ち着いた藍色だけに絞る。
+ * 色の役割: 文字 foreground > muted-foreground > subtle-foreground（装飾のみ）
+ *           面   background < surface / muted < card
+ *           線   rule（区切り） < rule-strong（強調）
+ */
 :root {
-  /* 欧文は Source Sans 3、和文は端末内の書体を使い、日本語 Web フォントの追加取得を避ける。 */
+  /* 欧文は Inter、和文は端末内のゴシック体を使い、日本語 Web フォントの追加取得を避ける。 */
   --font-ui:
-    var(--font-source-sans-3, "Source Sans 3"), "Hiragino Sans",
-    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans CJK JP",
-    "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
-  --radius: 0.375rem;
+    var(--font-inter, "Inter"), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", "Noto Sans CJK JP", "BIZ UDPGothic", Meiryo, system-ui,
+    sans-serif;
+  --font-display:
+    var(--font-newsreader, "Newsreader"), "Hiragino Mincho ProN", "Yu Mincho",
+    "Noto Serif JP", serif;
+  --font-code:
+    var(--font-source-code-pro, "Source Code Pro"), ui-monospace,
+    "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 0.5rem;
   --site-header-height: 4rem;
-  --space-page: clamp(1.25rem, 2vw, 1.5rem);
-  --space-section: clamp(2rem, 3.5vw, 3rem);
+  --reading-width: 43rem;
+  --space-page: clamp(1.5rem, 3vw, 2.25rem);
+  --space-section: clamp(3.5rem, 7vw, 6rem);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
   --duration-normal: 240ms;
   --duration-slow: 700ms;
-  --background: #ffffff;
-  --foreground: #252e27;
+
+  --background: #faf9f6;
+  --foreground: #1f1e1b;
   --card: #ffffff;
-  --card-foreground: #252e27;
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: #eef0e7;
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: #ecefe5;
-  --muted-foreground: #66705f;
-  --accent: #e8eedc;
-  --accent-foreground: #455a36;
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: #d9dfd0;
-  --input: #bbc6b2;
-  --ring: #526c40;
-  --brand: #526c40;
+  --card-foreground: #1f1e1b;
+  --popover: #ffffff;
+  --popover-foreground: #1f1e1b;
+  --primary: #1f1e1b;
+  --primary-foreground: #faf9f6;
+  --secondary: #f1efea;
+  --secondary-foreground: #1f1e1b;
+  --muted: #f1efea;
+  --muted-foreground: #66635c;
+  --subtle-foreground: #8d897f;
+  --accent: #edf0f5;
+  --accent-foreground: #2c4469;
+  --destructive: #b0443d;
+  --border: #e4e0d7;
+  --input: #d3cec3;
+  --ring: #3e5a86;
+  --brand: #3e5a86;
+  --brand-soft: #e9eef5;
   --brand-contrast: #ffffff;
-  --feature-surface: #ecefe5;
-  --feature-ink: #283b2f;
-  --feature-foreground: #f5f7ed;
-  --feature-muted: #c1cfb8;
-  --feature-accent: #dbeba6;
-  --rule: #d9dfd0;
+  --surface: #f4f2ed;
+  --rule: #e4e0d7;
+  --rule-strong: #cdc8bd;
+  --code-surface: #f3f1ec;
+  --mark: #f0e5c6;
+  --callout-surface: #f4f2ed;
+  --callout-info: #3e5a86;
+  --callout-success: #4d6b4f;
+  --callout-warning: #8a6a2c;
+  --callout-error: #9b4841;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --codehike-callout-bg: oklch(0.97 0 0);
-  --codehike-callout-border: oklch(0.85 0 0);
-  --codehike-tooltip-bg: oklch(1 0 0);
-  --codehike-tooltip-border: oklch(0.88 0 0);
-  --codehike-tooltip-text: oklch(0.145 0 0);
+  --sidebar: #f4f2ed;
+  --sidebar-foreground: #1f1e1b;
+  --sidebar-primary: #1f1e1b;
+  --sidebar-primary-foreground: #faf9f6;
+  --sidebar-accent: #edf0f5;
+  --sidebar-accent-foreground: #2c4469;
+  --sidebar-border: #e4e0d7;
+  --sidebar-ring: #3e5a86;
+  --codehike-callout-bg: #f4f2ed;
+  --codehike-callout-border: #cdc8bd;
+  --codehike-tooltip-bg: #ffffff;
+  --codehike-tooltip-border: #e4e0d7;
+  --codehike-tooltip-text: #1f1e1b;
   --codehike-muted-text: var(--muted-foreground);
   --codehike-footnote-border: var(--muted-foreground);
   --codehike-diff-add: oklch(0.78 0.18 142);
@@ -353,8 +386,8 @@
   /* カレンダー日曜・祝日 */
   --sunday: #e11d48;
   /* MDX Column のノート風ボックス */
-  --column-surface: rgb(255 251 235 / 60%);
-  --column-ink: #78350f;
+  --column-surface: #f4f2ed;
+  --column-ink: #5c4a2a;
   /* AIニュースのアクセント（teal）: 今日・選択・間隔の強調 */
   --ai-accent: #0d9488;
   --ai-accent-soft: rgb(240 253 250 / 60%);
@@ -420,46 +453,56 @@
 }
 
 .dark {
-  --background: #19211c;
-  --foreground: #eef2e7;
-  --card: #222d25;
-  --card-foreground: #eef2e7;
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: #28342b;
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: #222e25;
-  --muted-foreground: #b0bcaa;
-  --accent: #33462e;
-  --accent-foreground: #cee1aa;
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: #3a493d;
-  --input: #596c57;
-  --ring: #c4d8a5;
-  --brand: #c4d8a5;
-  --brand-contrast: #23321e;
-  --feature-surface: #25392b;
-  --rule: #3a493d;
+  --background: #161513;
+  --foreground: #e9e6df;
+  --card: #1d1c1a;
+  --card-foreground: #e9e6df;
+  --popover: #1f1e1b;
+  --popover-foreground: #e9e6df;
+  --primary: #e9e6df;
+  --primary-foreground: #161513;
+  --secondary: #23221f;
+  --secondary-foreground: #e9e6df;
+  --muted: #23221f;
+  --muted-foreground: #a4a097;
+  --subtle-foreground: #7b776f;
+  --accent: #222937;
+  --accent-foreground: #c8d4e8;
+  --destructive: #e0867f;
+  --border: #2f2d29;
+  --input: #46433d;
+  --ring: #9fb4d8;
+  --brand: #9fb4d8;
+  --brand-soft: #1f2634;
+  --brand-contrast: #161513;
+  --surface: #1b1a18;
+  --rule: #2d2b28;
+  --rule-strong: #403d38;
+  --code-surface: #1d1c1a;
+  --mark: #4a4129;
+  --callout-surface: #1d1c1a;
+  --callout-info: #9fb4d8;
+  --callout-success: #9cba96;
+  --callout-warning: #d5b679;
+  --callout-error: #e0928a;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --codehike-callout-bg: oklch(0.22 0 0);
-  --codehike-callout-border: oklch(0.32 0 0);
-  --codehike-tooltip-bg: oklch(0.24 0 0);
-  --codehike-tooltip-border: oklch(0.35 0 0);
-  --codehike-tooltip-text: oklch(0.985 0 0);
+  --sidebar: #1b1a18;
+  --sidebar-foreground: #e9e6df;
+  --sidebar-primary: #e9e6df;
+  --sidebar-primary-foreground: #161513;
+  --sidebar-accent: #222937;
+  --sidebar-accent-foreground: #c8d4e8;
+  --sidebar-border: #2f2d29;
+  --sidebar-ring: #9fb4d8;
+  --codehike-callout-bg: #1d1c1a;
+  --codehike-callout-border: #403d38;
+  --codehike-tooltip-bg: #23221f;
+  --codehike-tooltip-border: #403d38;
+  --codehike-tooltip-text: #e9e6df;
   --codehike-muted-text: var(--muted-foreground);
   --codehike-footnote-border: var(--muted-foreground);
   --codehike-diff-add: oklch(0.74 0.17 142);
@@ -472,8 +515,8 @@
   --info-ink: #bfdbfe;
   --success: #34d399;
   --sunday: #fb7185;
-  --column-surface: rgb(69 26 3 / 30%);
-  --column-ink: #fde68a;
+  --column-surface: #1d1c1a;
+  --column-ink: #d5c39c;
   --ai-accent: #2dd4bf;
   --ai-accent-soft: rgb(4 47 46 / 40%);
   --ai-accent-ink: #5eead4;
@@ -540,22 +583,32 @@
     @apply border-border outline-ring/50;
   }
   html {
-    scroll-padding-top: calc(var(--site-header-height) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--site-header-height) + 1.5rem);
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-ui);
+    line-height: 1.75;
     overflow-wrap: anywhere;
     word-break: normal;
     line-break: strict;
     hyphens: auto;
     text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* 見出しや短いラベルだけ約物を詰め、本文は等幅の字送りのまま読みやすさを保つ。 */
+  :where(h1, h2, h3, h4, h5, h6) {
     font-feature-settings: "palt" 1;
+    text-wrap: balance;
   }
   ::selection {
-    background: var(--brand);
-    color: var(--brand-contrast);
+    background: var(--brand-soft);
+    color: var(--foreground);
   }
   :where(
     a,
@@ -567,13 +620,14 @@
     [tabindex]
   ):focus-visible {
     outline: 2px solid var(--ring);
-    outline-offset: 4px;
+    outline-offset: 3px;
+    border-radius: 2px;
   }
   :where(button, select, summary):not(:disabled) {
     cursor: pointer;
   }
   :where(h1, h2, h3, h4, h5, h6)[id] {
-    scroll-margin-top: 1rem;
+    scroll-margin-top: calc(var(--site-header-height) + 1.5rem);
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -588,44 +642,50 @@
 }
 
 @layer components {
+  /* ページの骨格 */
   .site-page {
     @apply flex min-h-screen flex-col bg-background text-foreground;
     font-family: var(--font-ui);
-    font-feature-settings: normal;
   }
   .site-container {
-    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
   }
   .site-container-wide {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6;
   }
   .site-main {
-    @apply mx-auto w-full max-w-7xl min-w-0 flex-1 px-5 pt-6 pb-12 sm:px-8 sm:pt-8 sm:pb-16 lg:px-12;
+    @apply mx-auto w-full max-w-6xl min-w-0 flex-1 px-5 pt-8 pb-20 sm:px-8 sm:pt-12 sm:pb-28;
   }
   .site-main-reading {
-    @apply mx-auto w-full max-w-3xl min-w-0 flex-1 px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-16;
+    @apply mx-auto w-full max-w-3xl min-w-0 flex-1 px-5 pt-8 pb-20 sm:px-8 sm:pt-12 sm:pb-28;
   }
   .page-stack {
     @apply flex flex-col;
     gap: var(--space-page);
   }
+
+  /* 一覧ページの見出し。タイトル・件数・説明を同じ位置に揃え、ページ間で迷わせない。 */
   .page-heading {
-    @apply flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 pt-1 pb-4 sm:pb-5;
+    @apply flex flex-wrap items-end justify-between gap-x-6 gap-y-3 pb-6;
     border-bottom: 1px solid var(--rule);
   }
   .page-title {
-    @apply font-serif leading-snug font-medium tracking-tight text-foreground;
-    font-size: clamp(1.625rem, 2.5vw, 2rem);
-    text-wrap: balance;
+    @apply leading-snug font-bold text-foreground;
+    font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.25rem);
+    letter-spacing: 0.02em;
   }
   .page-count {
     @apply text-sm text-muted-foreground tabular-nums;
-    font-family: var(--font-source-code-pro), monospace;
   }
+  .page-lead {
+    @apply mt-3 max-w-2xl text-[0.9375rem] leading-[1.85] text-muted-foreground;
+  }
+
+  /* 本文。和文は 1 行 40 字前後、行送り 1.9 を基準にする。 */
   .prose {
-    @apply text-base leading-[1.8] text-foreground;
-    font-feature-settings: "palt" 1;
-    text-wrap: pretty;
+    @apply text-base text-foreground;
+    line-height: 1.95;
+    letter-spacing: 0.02em;
   }
   .prose > :first-child {
     @apply mt-0;
@@ -634,54 +694,89 @@
     @apply mb-0;
   }
   .prose p {
-    @apply my-4 tracking-[0.01em];
+    margin-block: 1.25em;
   }
   .prose small {
     @apply text-xs text-muted-foreground;
   }
-  .prose h1 {
-    @apply mt-8 text-2xl leading-snug font-semibold tracking-[0.02em];
+  .prose :is(h1, h2, h3, h4, h5, h6) {
+    @apply font-bold text-foreground;
+    letter-spacing: 0.02em;
   }
+  .prose h1,
   .prose h2 {
-    @apply mt-7 text-xl leading-snug font-semibold tracking-[0.02em];
+    margin-top: 3.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 1.375rem;
+    line-height: 1.5;
   }
   .prose h3 {
-    @apply mt-6 text-lg leading-snug font-semibold tracking-[0.015em];
+    margin-top: 2.5rem;
+    margin-bottom: 0.875rem;
+    font-size: 1.1875rem;
+    line-height: 1.55;
   }
   .prose h4 {
-    @apply mt-6 text-base leading-snug font-semibold tracking-[0.01em];
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
   }
   .prose h5 {
-    @apply mt-5 text-sm leading-snug font-semibold;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
   }
   .prose h6 {
-    @apply mt-6 text-sm font-semibold tracking-[0.18em] text-muted-foreground uppercase;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+  }
+  .prose :is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 1.5rem;
   }
   .prose a {
-    @apply underline underline-offset-4;
-    text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    color: var(--brand);
+    text-decoration-line: underline;
     text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
     transition: text-decoration-color var(--duration-fast) ease;
   }
   .prose a:hover,
   .prose a:focus-visible {
     text-decoration-color: var(--brand);
   }
-  .prose strong {
-    @apply font-semibold;
+  .prose :is(h1, h2, h3, h4, h5, h6) a {
+    color: inherit;
+    text-decoration-line: none;
   }
+  .prose strong {
+    @apply font-bold;
+  }
+  /* 和文の斜体は崩れて読みにくいため、蛍光ペン風の淡い下線で強調する。 */
   .prose em {
-    @apply text-foreground/80 not-italic;
+    font-style: normal;
+    background: linear-gradient(transparent 62%, var(--mark) 62%);
+  }
+  .prose :lang(en) em {
+    font-style: italic;
+    background: none;
   }
   .prose del {
     @apply text-muted-foreground line-through;
   }
   .prose mark {
-    @apply bg-amber-100/70 px-1 py-0.5;
+    @apply rounded-sm px-0.5 text-inherit;
+    background: var(--mark);
   }
   .prose ul,
   .prose ol {
-    @apply mt-0.5 mb-4 pl-6;
+    margin-block: 1.25em;
+    padding-left: 1.5em;
   }
   .prose ul {
     @apply list-disc;
@@ -690,16 +785,32 @@
     @apply list-decimal;
   }
   .prose li {
-    @apply my-0.5;
+    margin-block: 0.375em;
+    padding-left: 0.25em;
+  }
+  .prose li::marker {
+    color: var(--subtle-foreground);
+  }
+  .prose ol > li::marker {
+    font-variant-numeric: tabular-nums;
   }
   .prose li > p {
-    @apply my-0.5;
+    margin-block: 0.375em;
   }
   .prose li > :is(ul, ol) {
-    @apply my-1;
+    margin-block: 0.375em;
   }
   .prose blockquote {
-    @apply my-5 border-l-2 border-border pl-4 text-muted-foreground;
+    margin-block: 1.75em;
+    padding: 0.125em 0 0.125em 1.25em;
+    border-left: 2px solid var(--rule-strong);
+    color: var(--muted-foreground);
+  }
+  .prose blockquote > :first-child {
+    margin-top: 0;
+  }
+  .prose blockquote > :last-child {
+    margin-bottom: 0;
   }
   .prose blockquote.twitter-tweet {
     @apply mx-auto my-6;
@@ -710,58 +821,82 @@
     margin-bottom: 1.5rem !important;
     margin-left: auto !important;
   }
+  /* 区切り線はサイトの印（∴）で置き換える。 */
   .prose hr {
-    @apply my-6 border-border/60;
+    height: auto;
+    margin-block: 3rem;
+    border: 0;
+    color: var(--subtle-foreground);
+    text-align: center;
+  }
+  .prose hr::before {
+    content: "∴";
+    font-size: 1.125rem;
+    line-height: 1;
   }
   .prose code {
-    @apply rounded bg-muted px-1.5 py-0.5 text-[0.9em];
+    @apply rounded px-[0.35em] py-[0.1em] text-[0.875em];
+    background: var(--muted);
+    font-family: var(--font-code);
+    letter-spacing: 0;
   }
   .prose pre {
-    @apply my-5 overflow-x-auto rounded-lg bg-muted p-4 text-sm leading-6;
+    @apply my-6 overflow-x-auto rounded-lg p-4 text-[0.8125rem] leading-[1.75] sm:text-sm;
+    background: var(--code-surface);
+    letter-spacing: 0;
   }
   .prose pre code {
-    @apply bg-transparent p-0 text-sm leading-6;
+    @apply bg-transparent p-0;
+    font-size: inherit;
   }
   .prose kbd {
-    @apply rounded-md border border-foreground/20 bg-foreground px-2 py-0.5 text-[0.75rem] font-semibold text-background;
+    @apply rounded px-1.5 py-0.5 text-[0.8125em];
+    border: 1px solid var(--rule-strong);
+    border-bottom-width: 2px;
+    background: var(--card);
+    font-family: var(--font-code);
   }
   .prose figure {
-    @apply my-5;
+    margin-block: 2rem;
   }
   .prose figcaption {
-    @apply mt-2 text-xs text-muted-foreground;
+    @apply mt-3 text-center text-[0.8125rem] leading-relaxed text-muted-foreground;
   }
   .prose img,
   .prose video {
-    @apply rounded-lg;
+    @apply rounded-md;
   }
   .prose .mdx-table {
-    @apply overflow-x-auto;
+    @apply my-6 overflow-x-auto;
   }
   .prose table {
-    @apply my-5 w-max min-w-full border-collapse text-sm;
+    @apply w-max min-w-full border-collapse text-sm leading-relaxed;
+    letter-spacing: 0.01em;
   }
-  .prose thead {
-    @apply border-b border-border/60;
+  .prose .mdx-table table {
+    @apply my-0;
   }
-  .prose th,
+  .prose th {
+    @apply px-3 py-2.5 text-left align-bottom font-semibold;
+    border-bottom: 1px solid var(--rule-strong);
+    background: var(--surface);
+  }
   .prose td {
-    @apply border-b border-border/60 px-3 py-2 text-left align-top;
-  }
-  .prose tbody tr:nth-child(even) {
-    @apply bg-muted/40;
+    @apply px-3 py-2.5 text-left align-top;
+    border-bottom: 1px solid var(--rule);
   }
   .prose dl {
-    @apply my-5;
+    margin-block: 1.5em;
   }
   .prose dt {
-    @apply font-semibold;
+    @apply font-bold;
   }
   .prose dd {
     @apply mb-4 ml-4 text-muted-foreground;
   }
   .prose details {
-    @apply my-5 rounded-lg border border-border/60 bg-muted/30 px-4 py-3;
+    @apply my-6 rounded-lg px-4 py-3;
+    border: 1px solid var(--rule);
   }
   .prose summary {
     @apply cursor-pointer font-semibold;
@@ -773,21 +908,27 @@
   .prose abbr[title] {
     @apply cursor-help underline decoration-dotted;
   }
+  .prose :is(section.footnotes, section[data-footnotes]) {
+    @apply mt-14 pt-6 text-sm text-muted-foreground;
+    border-top: 1px solid var(--rule);
+  }
+  .prose :is(section.footnotes, section[data-footnotes]) h2 {
+    @apply sr-only;
+  }
   @media (min-width: 768px) {
-    .prose h1 {
-      @apply mt-10 text-[1.625rem];
+    .prose {
+      font-size: 1.0625rem;
     }
+    .prose h1,
     .prose h2 {
-      @apply mt-8 text-[1.375rem];
+      margin-top: 3.75rem;
+      font-size: 1.5rem;
     }
     .prose h3 {
-      @apply mt-7 text-xl;
+      font-size: 1.25rem;
     }
     .prose h4 {
-      @apply mt-6 text-lg;
-    }
-    .prose h5 {
-      @apply mt-6 text-base;
+      font-size: 1.125rem;
     }
   }
 }

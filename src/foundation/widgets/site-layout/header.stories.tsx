@@ -24,7 +24,9 @@ export default meta;
 
 type Story = StoryObj<typeof Header>;
 
+/** メニューボタンはデスクトップ幅では隠れるため、モバイル幅で操作を確かめる。 */
 export const Default: Story = {
+  globals: { viewport: { value: "mobile2", isRotated: false } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const menu = canvas.getByRole("button", { name: "メニューを開く" });
@@ -76,15 +78,29 @@ export const English: Story = {
     const primary = within(
       canvas.getByRole("navigation", { name: "Main navigation" })
     );
-    await expect(primary.getAllByRole("link")).toHaveLength(4);
+    await expect(primary.getAllByRole("link")).toHaveLength(5);
     await expect(
-      primary.getByRole("link", { name: "Archive & tools" })
+      primary.getByRole("link", { name: "Resources" })
     ).toHaveAttribute("aria-current", "page");
     await expect(
-      primary.getByRole("link", { name: "Blog" })
+      primary.getByRole("link", { name: "Articles" })
     ).not.toHaveAttribute("aria-current");
     await expect(
       canvasElement.querySelector(".reading-progress")
+    ).not.toBeInTheDocument();
+    await expect(
+      canvas.queryByRole("button", { name: "Open menu" })
+    ).not.toBeInTheDocument();
+  },
+};
+
+export const EnglishMenu: Story = {
+  args: { locale: "en", path: "/en/tools/ascii-standard-code/" },
+  globals: { viewport: { value: "mobile2", isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.queryByRole("navigation", { name: "Main navigation" })
     ).not.toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Open menu" }));
@@ -95,6 +111,10 @@ export const English: Story = {
     await expect(books).toHaveAttribute("href", "/books/");
     await expect(books).toHaveAttribute("hreflang", "ja");
     await expect(books).toHaveTextContent("JA");
+    await expect(index.getByRole("link", { name: "Tools" })).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
     await expect(index.getByRole("link", { name: "RSS" })).toHaveAttribute(
       "href",
       "/en/rss.xml"

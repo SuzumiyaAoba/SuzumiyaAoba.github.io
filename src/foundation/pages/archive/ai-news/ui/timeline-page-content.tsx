@@ -49,7 +49,7 @@ export function AiNewsTimelinePageContent({
 }: AiNewsPageContentProps) {
   const pagePath = toLocalePath("/archive/ai-news/timeline", locale);
   const pageName = locale === "en" ? "AI News" : "AIニュース";
-  const archiveName = locale === "en" ? "Archive" : "アーカイブ";
+  const archiveName = locale === "en" ? "Resources" : "資料";
 
   return (
     <SiteLayout locale={locale} path={pagePath}>
@@ -150,7 +150,7 @@ export function AiNewsTimelinePageContent({
                           <h2 className="text-base font-semibold text-foreground">
                             {title}
                           </h2>
-                          <div className="prose max-w-none font-serif text-muted-foreground">
+                          <div className="prose max-w-none text-muted-foreground">
                             {summary}
                           </div>
                           {entry.tags && entry.tags.length > 0 ? (

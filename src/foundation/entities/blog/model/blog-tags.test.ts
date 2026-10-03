@@ -5,6 +5,7 @@ import {
   getAllBlogTags,
   getBlogTagIndex,
   groupBlogPostsByTag,
+  rankBlogTags,
 } from "./blog-tags";
 
 vi.mock(import("./blog"), () => ({
@@ -78,5 +79,20 @@ describe("ブログのタグ集計", () => {
     vi.mocked(getBlogPostSummariesVariants).mockResolvedValue([]);
     expect((await getBlogTagIndex("ja")).size).toBe(0);
     await expect(getAllBlogTags()).resolves.toStrictEqual([]);
+  });
+});
+
+describe("rankBlogTags", () => {
+  it("記事数の多い順に並べ、同数は辞書順にする", () => {
+    const index = groupBlogPostsByTag([
+      post("a", ["Scala", "Java"]),
+      post("b", ["Java", "AI"]),
+      post("c", ["Java"]),
+    ]);
+    expect(rankBlogTags(index, "ja")).toStrictEqual([
+      { name: "Java", count: 3 },
+      { name: "AI", count: 1 },
+      { name: "Scala", count: 1 },
+    ]);
   });
 });

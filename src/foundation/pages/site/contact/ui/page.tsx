@@ -30,17 +30,16 @@ export function ContactPageContent({ locale }: ContactPageContentProps) {
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-2">
-          <p className="section-label">
-            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-          </p>
-          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
-            <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-          </h1>
-        </section>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
+            </h1>
+          </div>
+        </header>
 
         <section>
-          <div className="overflow-hidden rounded-2xl bg-card/40">
+          <div className="mx-auto max-w-3xl overflow-hidden rounded-lg border border-rule bg-card">
             <iframe
               // Google フォームの埋め込みは allow-scripts + allow-same-origin が必須。
               // react-doctor-disable-next-line iframe-missing-sandbox

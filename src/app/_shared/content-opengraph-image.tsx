@@ -1,13 +1,9 @@
-import {
-  ArticleOpengraphImage,
-  OpengraphTags,
-  renderOpengraphImage,
-} from "./opengraph-image";
+import { ArticleOpengraphImage, renderOpengraphImage } from "./opengraph-image";
 
 export { OPENGRAPH_IMAGE_SIZE as CONTENT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
 export type RenderContentOpengraphImageOptions = {
-  /** 種別ラベル(例: "Notes", "Series", "Tag", "Book") */
+  /** 種別ラベル(例: "連載", "タグ", "書籍", "Notes") */
   eyebrow: string;
   title: string;
   tags?: string[];
@@ -20,22 +16,6 @@ export async function renderContentOpengraphImage({
   tags = [],
 }: RenderContentOpengraphImageOptions) {
   return await renderOpengraphImage(
-    <ArticleOpengraphImage
-      title={title}
-      beforeTitle={
-        <div
-          style={{
-            fontSize: 32,
-            color: "#71717a",
-            textTransform: "uppercase",
-            letterSpacing: 4,
-            display: "flex",
-          }}
-        >
-          {eyebrow}
-        </div>
-      }
-      afterTitle={<OpengraphTags tags={tags} />}
-    />
+    <ArticleOpengraphImage kicker={eyebrow} title={title} tags={tags} />
   );
 }

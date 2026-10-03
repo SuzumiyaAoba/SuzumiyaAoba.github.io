@@ -1,15 +1,19 @@
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { cn } from "@/shared/lib/utils";
 
 export type PaginationNavProps = {
   locale: Locale;
   currentPage: number;
   pageCount: number;
   hrefForPage: (page: number) => string;
+  /** 「前へ・次へ」のリンクを表示するかどうか */
   showPrevNext?: boolean;
 };
 
+/**
+ * ページ送り。前後のリンクとページ番号を 1 行にまとめる。
+ * ページ数が多いときは先頭・末尾・現在地の周辺だけを表示する。
+ */
 export function PaginationNav({
   locale,
   currentPage,
@@ -35,34 +39,41 @@ export function PaginationNav({
       (currentPage <= 3 && page <= 5) ||
       (currentPage >= pageCount - 2 && page >= pageCount - 4)
   );
-  const controlClass =
-    "inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted";
+  const prevLabel = en ? "← Previous" : "← 前へ";
+  const nextLabel = en ? "Next →" : "次へ →";
 
   return (
-    <nav
-      aria-label={en ? "Pagination" : "ページ送り"}
-      className="space-y-3 pt-4"
-    >
-      <ol className="flex flex-wrap items-center justify-center gap-1">
+    <nav aria-label={en ? "Pagination" : "ページ送り"} className="pagination">
+      {showPrevNext ? (
+        currentPage > 1 ? (
+          <a
+            href={resolvedHref(currentPage - 1)}
+            rel="prev"
+            className="pagination-step"
+          >
+            {prevLabel}
+          </a>
+        ) : (
+          <span aria-disabled="true" className="pagination-step">
+            {prevLabel}
+          </span>
+        )
+      ) : null}
+      <ol className="pagination-pages">
         {visiblePages.map((page, index) => {
           const previousPage = visiblePages[index - 1];
           return (
-            <li key={page} className="flex items-center gap-1">
+            <li key={page}>
               {previousPage !== undefined && page - previousPage > 1 && (
-                <span aria-hidden="true" className="px-2 text-muted-foreground">
+                <span aria-hidden="true" className="pagination-gap">
                   …
                 </span>
               )}
               <a
                 href={resolvedHref(page)}
                 aria-current={page === currentPage ? "page" : undefined}
-                aria-label={en ? `Page ${page}` : `ページ ${page}`}
-                className={cn(
-                  "inline-flex h-11 w-9 items-center justify-center rounded-full font-mono text-xs tabular-nums transition-colors sm:w-11",
-                  page === currentPage
-                    ? "bg-[var(--brand)] font-semibold text-[var(--brand-contrast)]"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
+                aria-label={en ? `Page ${page}` : `${page} ページ目`}
+                className="pagination-page"
               >
                 {page}
               </a>
@@ -70,52 +81,21 @@ export function PaginationNav({
           );
         })}
       </ol>
-      {showPrevNext && (
-        <div className="flex items-center justify-between gap-2">
-          {currentPage > 1 ? (
-            <a
-              href={resolvedHref(currentPage - 1)}
-              rel="prev"
-              className={controlClass}
-            >
-              {en ? "← Previous" : "← 前のページ"}
-            </a>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex min-h-11 items-center px-3 text-sm text-muted-foreground/60"
-            >
-              {en ? "← Previous" : "← 前のページ"}
-            </span>
-          )}
-          <span
-            className="text-sm text-muted-foreground tabular-nums"
-            aria-label={
-              en
-                ? `Page ${currentPage} of ${pageCount}`
-                : `${pageCount} ページ中 ${currentPage} ページ`
-            }
+      {showPrevNext ? (
+        currentPage < pageCount ? (
+          <a
+            href={resolvedHref(currentPage + 1)}
+            rel="next"
+            className="pagination-step"
           >
-            {currentPage} / {pageCount}
+            {nextLabel}
+          </a>
+        ) : (
+          <span aria-disabled="true" className="pagination-step">
+            {nextLabel}
           </span>
-          {currentPage < pageCount ? (
-            <a
-              href={resolvedHref(currentPage + 1)}
-              rel="next"
-              className={controlClass}
-            >
-              {en ? "Next →" : "次のページ →"}
-            </a>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex min-h-11 items-center px-3 text-sm text-muted-foreground/60"
-            >
-              {en ? "Next →" : "次のページ →"}
-            </span>
-          )}
-        </div>
-      )}
+        )
+      ) : null}
     </nav>
   );
 }

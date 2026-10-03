@@ -57,7 +57,7 @@ export function AmazonProductSection({
                     href={product.yahooShoppingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-noto inline-flex w-full items-center justify-center rounded-md bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 sm:w-fit"
+                    className="font-noto inline-flex w-full items-center justify-center rounded-md border border-rule-strong px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted sm:w-fit"
                   >
                     Yahoo!ショッピングで購入する
                   </a>

@@ -10,17 +10,19 @@ export function AmazonAssociate({ className }: AmazonAssociateProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-info-border bg-info-surface px-4 py-3 text-sm text-info-ink",
+        "rounded-lg bg-surface px-4 py-3 text-sm text-muted-foreground",
         className
       )}
     >
       <div className="flex items-start gap-2">
         <Icon
           icon="lucide:info"
-          className="mt-0.5 size-3.5 shrink-0 text-info"
+          className="mt-0.5 size-3.5 shrink-0 text-subtle-foreground"
         />
         <div className="space-y-1">
-          <p className="text-sm font-semibold">Amazon アソシエイトについて</p>
+          <p className="text-sm font-semibold text-foreground">
+            Amazon アソシエイトについて
+          </p>
           <p className="text-xs leading-5">
             この記事には Amazon
             アソシエイトのリンクが含まれています。Amazonのアソシエイトとして、SuzumiyaAoba

@@ -56,3 +56,25 @@ export function summarizeBlogTags(posts: readonly LocalizedBlogPostSummary[]) {
 export const getAllBlogTags = cache(async () =>
   summarizeBlogTags(await getBlogPostSummariesVariants())
 );
+
+/** タグ名と記事数の組 */
+export type BlogTagCount = { name: string; count: number };
+
+/** 記事数の多いタグから順に並べる。同数ならロケールの辞書順。 */
+export function rankBlogTags(
+  index: ReadonlyMap<string, readonly unknown[]>,
+  locale: Locale
+): BlogTagCount[] {
+  return Array.from(index, ([name, posts]) => ({
+    name,
+    count: posts.length,
+  })).toSorted(
+    (a, b) => b.count - a.count || a.name.localeCompare(b.name, locale)
+  );
+}
+
+/** 一覧ページの導線に出す、よく書いているテーマ。 */
+export const getPopularBlogTags = cache(
+  async (locale: Locale, limit: number): Promise<BlogTagCount[]> =>
+    rankBlogTags(await getBlogTagIndex(locale), locale).slice(0, limit)
+);

@@ -19,7 +19,7 @@ export default async function Image({
   const { series: slug } = await params;
   const series = await getSeriesBySlug(slug, "ja");
   return await renderContentOpengraphImage({
-    eyebrow: "シリーズ",
+    eyebrow: "連載",
     title: series?.name || slug,
   });
 }

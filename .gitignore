@@ -52,3 +52,6 @@ apm_modules/
 .claude/skills
 .github/skills
 .agents/skills
+
+# Local investigation documents
+.mdxr/

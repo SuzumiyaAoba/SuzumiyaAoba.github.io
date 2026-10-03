@@ -1,8 +1,8 @@
 import { SiteLayout } from "@/widgets/site-layout";
 
 import { JsonLd } from "@/shared/ui/seo";
-import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
+import { SITE_TITLE } from "@/shared/lib/site";
 import {
   buildBreadcrumbList,
   buildListBreadcrumbItems,
@@ -40,101 +40,68 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
     <SiteLayout locale={locale} path={pagePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
-        <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <div className="space-y-2">
-            <p className="section-label">
-              <I18nText locale={locale} ja="概要" en="About" />
-            </p>
-            <h1 className="page-title">SuzumiyaAoba</h1>
-          </div>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl bg-muted/70 p-5 sm:p-6">
-            <h2 className="text-lg font-semibold">
-              <I18nText locale={locale} ja="コンテンツ" en="Contents" />
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a
-                  href={toLocalePath("/blog", locale)}
-                  className="font-medium text-foreground"
-                >
-                  <I18nText locale={locale} ja="ブログ" en="Blog" />
-                </a>
-                <I18nText
-                  locale={locale}
-                  as="span"
-                  ja="：技術メモと更新履歴"
-                  en=": Technical notes and updates"
-                />
-              </li>
-              <li>
-                <a
-                  href={toLocalePath("/series", locale)}
-                  className="font-medium text-foreground"
-                >
-                  <I18nText locale={locale} ja="シリーズ" en="Series" />
-                </a>
-                <I18nText
-                  locale={locale}
-                  as="span"
-                  ja="：テーマ別の連載まとめ"
-                  en=": Curated series by theme"
-                />
-              </li>
-              <li>
-                <a
-                  href={toLocalePath("/tools", locale)}
-                  className="font-medium text-foreground"
-                >
-                  <I18nText locale={locale} ja="ツール" en="Tools" />
-                </a>
-                <I18nText
-                  locale={locale}
-                  as="span"
-                  ja="：小さなプロダクトの公開"
-                  en=": Small product releases"
-                />
-              </li>
-            </ul>
-          </div>
-          <div className="rounded-xl bg-muted/70 p-5 sm:p-6">
-            <h2 className="text-lg font-semibold">
-              <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">About</p>
+            <h1 className="page-title">
               <I18nText
                 locale={locale}
-                ja={
-                  <>
-                    お問い合わせは
-                    <a
-                      href={toLocalePath("/contact", locale)}
-                      className="font-medium text-foreground"
-                    >
-                      Contact
-                    </a>
-                    ページからお願いします。
-                  </>
-                }
-                en={
-                  <>
-                    Please use the{" "}
-                    <a
-                      href={toLocalePath("/contact", locale)}
-                      className="font-medium text-foreground"
-                    >
-                      Contact
-                    </a>{" "}
-                    page for inquiries.
-                  </>
-                }
+                ja="このサイトについて"
+                en="About this site"
               />
-            </p>
+            </h1>
           </div>
-        </section>
+        </header>
+
+        <div className="about-sections">
+          <section aria-labelledby="about-name">
+            <h2 id="about-name" className="about-heading">
+              <I18nText locale={locale} ja="サイト名" en="The name" />
+            </h2>
+            <div className="about-body">
+              <p className="about-motto" lang="la">
+                {SITE_TITLE}
+              </p>
+              <p className="about-gloss">
+                <I18nText
+                  locale={locale}
+                  ja="偽からは、何でも導かれる。"
+                  en="From falsehood, anything follows."
+                />
+              </p>
+            </div>
+          </section>
+
+          <section aria-labelledby="about-contact">
+            <h2 id="about-contact" className="about-heading">
+              <I18nText
+                locale={locale}
+                ja="更新情報・連絡先"
+                en="Updates & contact"
+              />
+            </h2>
+            <ul className="about-body link-list">
+              <li>
+                <a href={toLocalePath("/rss.xml", locale)}>RSS</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/SuzumiyaAoba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>GitHub</span>
+                  <small>@SuzumiyaAoba</small>
+                </a>
+              </li>
+              <li>
+                <a href={toLocalePath("/contact", locale)}>
+                  <I18nText locale={locale} ja="お問い合わせ" en="Contact" />
+                </a>
+              </li>
+            </ul>
+          </section>
+        </div>
       </main>
     </SiteLayout>
   );

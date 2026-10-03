@@ -33,20 +33,17 @@ export function PrivacyPolicyPageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-3">
-          <p className="section-label">
-            <I18nText locale={locale} ja="プライバシー" en="Privacy Policy" />
-          </p>
-          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
+        <header className="page-heading">
+          <h1 className="page-title">
             <I18nText
               locale={locale}
               ja="プライバシーポリシー"
               en="Privacy Policy"
             />
           </h1>
-        </section>
+        </header>
 
-        <section className="space-y-5 text-sm leading-6 text-muted-foreground">
+        <section className="policy-text space-y-8">
           <div className="space-y-2">
             <h2 className="text-base font-semibold text-foreground">
               <I18nText

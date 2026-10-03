@@ -20,7 +20,10 @@ export function SiteLayout({
   return (
     <div className={cn("site-page", className)}>
       <Header locale={locale} path={path} />
-      {children}
+      {/* スキップリンクの移動先。各ページの main を包み、レイアウトには影響させない。 */}
+      <div id="main-content" tabIndex={-1} className="site-content">
+        {children}
+      </div>
       <Footer locale={locale} />
     </div>
   );

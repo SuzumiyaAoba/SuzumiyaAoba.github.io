@@ -2,36 +2,34 @@ import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { I18nText } from "@/shared/ui/i18n-text";
 import { PaginationNav } from "@/shared/ui/pagination-nav";
-import { DEFAULT_PAGE_SIZE } from "@/shared/lib/presentation";
 import {
   buildBreadcrumbList,
   buildListBreadcrumbItems,
   toLocalePath,
 } from "@/shared/lib/routing";
 import type { BreadcrumbItem, Locale } from "@/shared/lib/routing";
-import { BlogPostList } from "./blog-post-list";
+import type { LocalizedBlogPostSummary } from "../model/blog";
+import type { BlogTagCount } from "../model/blog-tags";
+import { toPostIndexEntries } from "../model/post-index-entry";
+import { PostIndex } from "./post-index";
 
 export type BlogListingContentProps = {
   locale: Locale;
-  posts: React.ComponentProps<typeof BlogPostList>["posts"];
+  posts: LocalizedBlogPostSummary[];
   pageNumber: number;
   pageCount: number;
-  /** variant="list" の場合のみ参照する、ページネーション表示要否の判定に使う総件数 */
-  totalCount?: number;
-  /**
-   * "list": /blog相当。パンくずはJsonLdのみ、ページネーションは記事数超過時のみ表示。
-   * "paginated": /blog/N相当。ビジュアルのパンくずを常に表示し、ページネーションも常に前後リンク付きで表示。
-   * 両バリアントの既存の見た目の差分をそのまま維持するためのフラグ。
-   */
-  variant: "list" | "paginated";
+  /** 全記事数 */
+  totalCount: number;
+  /** 見出し下に並べる、よく書いているテーマ */
+  topics?: BlogTagCount[];
 };
 
 const hrefForPage = (page: number) => (page === 1 ? "/blog" : `/blog/${page}`);
+const NO_TOPICS: BlogTagCount[] = [];
 
 /**
- * /blog と /blog/N の本文部分(パンくず・見出し・記事一覧・ページネーション)を統合したコンポーネント。
- * 両ページは元々コードがほぼ同一だったが見た目に差分があるため、
- * variant で既存の見た目をそれぞれ完全に維持する。Header/Footer はページ側の責務のため含まない。
+ * /blog と /blog/N の本文部分(見出し・テーマ・記事一覧・ページ送り)。
+ * Header/Footer はページ側の責務のため含まない。
  */
 export function BlogListingContent({
   locale,
@@ -39,18 +37,22 @@ export function BlogListingContent({
   pageNumber,
   pageCount,
   totalCount,
-  variant,
+  topics = NO_TOPICS,
 }: BlogListingContentProps) {
+  const en = locale === "en";
   const pagePath = toLocalePath(hrefForPage(pageNumber), locale);
-  const pageLabel =
-    locale === "en" ? `Page ${pageNumber}` : `ページ ${pageNumber}`;
-
   const breadcrumbItems: BreadcrumbItem[] =
-    variant === "paginated"
+    pageNumber > 1
       ? [
           { name: "Home", path: toLocalePath("/", locale) },
-          { name: "Blog", path: toLocalePath("/blog", locale) },
-          { name: pageLabel, path: pagePath },
+          {
+            name: en ? "Articles" : "記事",
+            path: toLocalePath("/blog", locale),
+          },
+          {
+            name: en ? `Page ${pageNumber}` : `${pageNumber} ページ目`,
+            path: pagePath,
+          },
         ]
       : buildListBreadcrumbItems(locale, { name: "Blog", path: "/blog" });
 
@@ -59,44 +61,64 @@ export function BlogListingContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack" data-pagefind-ignore="all">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="page-heading">
-          <h1 className="page-title">
-            <I18nText locale={locale} ja="ブログ" en="Blog" />
-          </h1>
-          {variant === "paginated" ? (
-            <p className="page-count">
-              {pageNumber} / {pageCount}
-            </p>
-          ) : totalCount === undefined ? null : (
-            <p className="page-count">
-              {locale === "en" ? `${totalCount} posts` : `${totalCount} 件`}
-            </p>
-          )}
-        </section>
+        <header className="page-heading">
+          <div>
+            <h1 className="page-title">
+              <I18nText locale={locale} ja="記事" en="Articles" />
+            </h1>
+          </div>
+          <p className="page-count">
+            {en ? `${totalCount} articles` : `全 ${totalCount} 件`}
+            {pageCount > 1
+              ? en
+                ? ` · page ${pageNumber} of ${pageCount}`
+                : ` · ${pageNumber} / ${pageCount} ページ`
+              : null}
+          </p>
+        </header>
 
-        <BlogPostList
-          posts={posts}
+        {topics.length > 0 && (
+          <nav
+            className="topic-bar"
+            aria-label={en ? "Browse by tag" : "タグから探す"}
+          >
+            <span className="topic-bar-label">
+              <I18nText locale={locale} ja="テーマ" en="Topics" />
+            </span>
+            <ul>
+              {topics.map((topic) => (
+                <li key={topic.name}>
+                  <a
+                    href={toLocalePath(
+                      `/tags/${encodeURIComponent(topic.name)}`,
+                      locale
+                    )}
+                    className="topic-chip"
+                  >
+                    {topic.name}
+                    <span className="topic-chip-count">{topic.count}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a href={toLocalePath("/tags", locale)} className="arrow-link">
+              <I18nText locale={locale} ja="すべてのタグ" en="All tags" />
+              <span aria-hidden="true">→</span>
+            </a>
+          </nav>
+        )}
+
+        <PostIndex
+          entries={toPostIndexEntries(posts, locale)}
           locale={locale}
-          variant="detailed"
-          showThumbnail
         />
 
-        {variant === "paginated" ? (
-          <PaginationNav
-            locale={locale}
-            currentPage={pageNumber}
-            pageCount={pageCount}
-            hrefForPage={hrefForPage}
-            showPrevNext
-          />
-        ) : (totalCount ?? 0) > DEFAULT_PAGE_SIZE ? (
-          <PaginationNav
-            locale={locale}
-            currentPage={pageNumber}
-            pageCount={pageCount}
-            hrefForPage={hrefForPage}
-          />
-        ) : null}
+        <PaginationNav
+          locale={locale}
+          currentPage={pageNumber}
+          pageCount={pageCount}
+          hrefForPage={hrefForPage}
+        />
       </main>
     </>
   );

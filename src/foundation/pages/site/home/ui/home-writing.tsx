@@ -1,13 +1,27 @@
-import { resolveLocalizedValue, toLocalePath } from "@/shared/lib/routing";
+import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { Arrow } from "./home-arrow";
-import type { LocalizedBlogPostSummary } from "@/entities/blog";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
+import { toPostIndexEntries } from "@/entities/blog";
+import type { LocalizedBlogPostSummary, PostIndexEntry } from "@/entities/blog";
 
 type HomeWritingProps = {
   locale: Locale;
   latestPosts: LocalizedBlogPostSummary[];
   postCount: number;
 };
+
+function EntryMeta({ post, locale }: { post: PostIndexEntry; locale: Locale }) {
+  return (
+    <p className="home-entry-meta">
+      {post.date ? (
+        <time dateTime={post.date}>
+          {formatDate(post.date, toIntlLocaleTag(locale))}
+        </time>
+      ) : null}
+      {post.category ? <span>{post.category}</span> : null}
+    </p>
+  );
+}
 
 export function HomeWriting({
   locale,
@@ -16,92 +30,52 @@ export function HomeWriting({
 }: HomeWritingProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
-  const posts = latestPosts.flatMap((variant) => {
-    const post = resolveLocalizedValue(variant, locale);
-    return post ? [{ ...post.frontmatter, slug: variant.slug }] : [];
-  });
-  const [featured, ...otherPosts] = posts;
-  const recentPosts = otherPosts.slice(0, 2);
-  const earlierPosts = otherPosts.slice(2, 5);
+  const [lead, ...rest] = toPostIndexEntries(latestPosts, locale);
+  const hrefOf = (post: PostIndexEntry) =>
+    toLocalePath(`/blog/post/${post.slug}`, locale);
 
   return (
     <section
       id="writing"
-      className="home-writing site-container"
+      className="home-section site-container"
       aria-labelledby="writing-title"
     >
-      <div className="home-section-heading">
-        <h2 id="writing-title" className="home-section-title">
+      <div className="section-heading">
+        <h2 id="writing-title" className="section-title">
           {t("最新の記事", "Latest articles")}
         </h2>
-        <a href={toLocalePath("/blog", locale)} className="home-inline-link">
-          {t("すべての記事", "All articles")}
-          <span className="home-small-count">{postCount}</span>
-          <Arrow />
+        <a href={toLocalePath("/blog", locale)} className="arrow-link">
+          {t(`すべての記事（${postCount}）`, `All ${postCount} articles`)}
+          <span aria-hidden="true">→</span>
         </a>
       </div>
-      {featured ? (
-        <div
-          className={`home-lead-grid${recentPosts.length === 0 ? " home-lead-solo" : ""}`}
-        >
-          <article className="home-feature">
-            <a
-              href={toLocalePath(`/blog/post/${featured.slug}`, locale)}
-              className="home-feature-link"
-            >
-              <div className="home-feature-meta">
-                <span>{t("最新の記事", "Latest entry")}</span>
-                {featured.date && (
-                  <time dateTime={featured.date}>
-                    {featured.date.replaceAll("-", ".")}
-                  </time>
-                )}
-              </div>
-              <div className="home-feature-copy">
-                {featured.category && (
-                  <p className="home-feature-category">{featured.category}</p>
-                )}
-                <h3 className="home-feature-title">{featured.title}</h3>
-                {featured.description && (
-                  <p className="home-feature-description">
-                    {featured.description}
-                  </p>
-                )}
-              </div>
-              <div className="home-feature-footer">
-                <span>{t("続きを読む", "Read the article")}</span>
-                <Arrow />
-              </div>
-            </a>
+      {lead ? (
+        <div className="home-latest">
+          <article className="home-lead">
+            <EntryMeta post={lead} locale={locale} />
+            <h3 className="home-lead-title">
+              <a href={hrefOf(lead)} className="stretched-link">
+                {lead.title}
+              </a>
+            </h3>
+            {lead.description ? (
+              <p className="home-lead-description">{lead.description}</p>
+            ) : null}
+            <span className="home-lead-more" aria-hidden="true">
+              {t("続きを読む", "Read article")} →
+            </span>
           </article>
-          {recentPosts.length > 0 && (
-            <ol className="home-recent-list">
-              {recentPosts.map((post) => (
+          {rest.length > 0 && (
+            <ol className="home-recent">
+              {rest.map((post) => (
                 <li key={post.slug}>
-                  <article className="home-recent">
-                    <a
-                      href={toLocalePath(`/blog/post/${post.slug}`, locale)}
-                      className="home-recent-link"
-                    >
-                      <div className="home-entry-meta">
-                        {post.date && (
-                          <time dateTime={post.date}>
-                            {post.date.replaceAll("-", ".")}
-                          </time>
-                        )}
-                        {post.category && <span>{post.category}</span>}
-                      </div>
-                      <h3>{post.title}</h3>
-                      {post.description && (
-                        <p className="home-entry-description">
-                          {post.description}
-                        </p>
-                      )}
-                      <span className="home-recent-footer">
-                        {t("記事を読む", "Read article")}
-                        <Arrow />
-                      </span>
-                    </a>
+                  <article className="home-entry">
+                    <EntryMeta post={post} locale={locale} />
+                    <h3 className="home-entry-title">
+                      <a href={hrefOf(post)} className="stretched-link">
+                        {post.title}
+                      </a>
+                    </h3>
                   </article>
                 </li>
               ))}
@@ -109,30 +83,9 @@ export function HomeWriting({
           )}
         </div>
       ) : (
-        <p className="home-empty">
+        <p className="empty-state">
           {t("記事はまだありません。", "No articles yet.")}
         </p>
-      )}
-
-      {earlierPosts.length > 0 && (
-        <ol className="home-earlier-list">
-          {earlierPosts.map((post) => (
-            <li key={post.slug}>
-              <a href={toLocalePath(`/blog/post/${post.slug}`, locale)}>
-                <div className="home-entry-meta">
-                  {post.date && (
-                    <time dateTime={post.date}>
-                      {post.date.replaceAll("-", ".")}
-                    </time>
-                  )}
-                  {post.category && <span>{post.category}</span>}
-                </div>
-                <h3>{post.title}</h3>
-                <Arrow />
-              </a>
-            </li>
-          ))}
-        </ol>
       )}
     </section>
   );

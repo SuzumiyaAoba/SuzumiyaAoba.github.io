@@ -16,9 +16,18 @@ export {
   getBlogSlugs,
   getPublishedBlogSlugs,
 } from "./model/blog";
-export { getBlogTagIndex, getAllBlogTags } from "./model/blog-tags";
-export { BlogPostList } from "./ui/blog-post-list";
-export { BlogPostCard, type BlogPostCardData } from "./ui/blog-post-card";
+export {
+  getBlogTagIndex,
+  getAllBlogTags,
+  getPopularBlogTags,
+  rankBlogTags,
+  type BlogTagCount,
+} from "./model/blog-tags";
+export { PostIndex } from "./ui/post-index";
+export {
+  toPostIndexEntries,
+  type PostIndexEntry,
+} from "./model/post-index-entry";
 export {
   BlogListingContent,
   type BlogListingContentProps,

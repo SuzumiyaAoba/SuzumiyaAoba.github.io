@@ -1,6 +1,5 @@
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import { cn } from "@/shared/lib/utils";
 import type { NavigationItem } from "../model/navigation";
 
 type NavigationLinkProps = {
@@ -8,7 +7,7 @@ type NavigationLinkProps = {
   locale: Locale;
   active: boolean;
   index?: boolean;
-  onNavigate: () => void;
+  onNavigate?: () => void;
 };
 
 export function NavigationLink({
@@ -24,19 +23,13 @@ export function NavigationLink({
       href={toLocalePath(item.href, item.japaneseOnly ? "ja" : locale)}
       hrefLang={item.japaneseOnly ? "ja" : undefined}
       aria-current={active ? "page" : undefined}
-      className={cn(
-        index ? "site-index-link" : "site-nav-link",
-        active && "font-semibold"
-      )}
+      className={index ? "site-index-link" : "site-nav-link"}
       onClick={onNavigate}
     >
-      <span>
-        {en ? item.en : item.ja}
-        {en && item.japaneseOnly && (
-          <small className="site-link-language">JA</small>
-        )}
-      </span>
-      {index && <span aria-hidden="true">↗</span>}
+      {en ? item.en : item.ja}
+      {en && item.japaneseOnly && (
+        <small className="site-link-language">JA</small>
+      )}
     </a>
   );
 }

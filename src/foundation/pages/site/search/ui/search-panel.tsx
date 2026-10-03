@@ -126,9 +126,9 @@ export function SearchPanel({ locale }: SearchPanelProps) {
                 <li key={result.url}>
                   <a
                     href={toLocalePath(result.url, locale)}
-                    className="index-link flex flex-col gap-2 px-1 py-4"
+                    className="index-link flex flex-col gap-1.5 py-5"
                   >
-                    <h2 className="text-base font-medium">
+                    <h2 className="text-base font-bold">
                       {result.meta.title ?? t("タイトルなし", "Untitled")}
                     </h2>
                     {result.excerpt ? (

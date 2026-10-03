@@ -13,14 +13,37 @@ type NavigationGroup = {
   items: NavigationItem[];
 };
 
+const BLOG: NavigationItem = { href: "/blog", ja: "記事", en: "Articles" };
+const SERIES: NavigationItem = { href: "/series", ja: "連載", en: "Series" };
+const KEYWORDS: NavigationItem = {
+  href: "/keywords",
+  ja: "キーワード",
+  en: "Keywords",
+};
+const ARCHIVE: NavigationItem = {
+  href: "/archive",
+  ja: "資料",
+  en: "Resources",
+};
+const ABOUT: NavigationItem = { href: "/about", ja: "About", en: "About" };
+
+/** ヘッダーに常に並べる主要な行き先。迷わないよう 5 つに絞る。 */
+export const primaryItems: NavigationItem[] = [
+  BLOG,
+  SERIES,
+  KEYWORDS,
+  ARCHIVE,
+  ABOUT,
+];
+
+/** フッターとモバイルメニューに出すサイト全体の地図。 */
 export const navigationGroups: NavigationGroup[] = [
   {
     ja: "読む",
     en: "Read",
     items: [
-      { href: "/blog", ja: "記事", en: "Blog" },
-      { href: "/keywords", ja: "キーワード", en: "Keywords" },
-      { href: "/series", ja: "連載", en: "Series" },
+      BLOG,
+      SERIES,
       { href: "/books", ja: "書籍", en: "Books", japaneseOnly: true },
     ],
   },
@@ -28,8 +51,17 @@ export const navigationGroups: NavigationGroup[] = [
     ja: "探す",
     en: "Explore",
     items: [
-      { href: "/tags", ja: "タグから探す", en: "Browse tags" },
-      { href: "/archive", ja: "資料とツール", en: "Archive & tools" },
+      { href: "/tags", ja: "タグ", en: "Tags" },
+      KEYWORDS,
+      { href: "/search", ja: "検索", en: "Search" },
+    ],
+  },
+  {
+    ja: "資料",
+    en: "Resources",
+    items: [
+      { href: "/archive/ai-news", ja: "AIニュース", en: "AI News" },
+      { href: "/tools", ja: "ツール", en: "Tools" },
       { href: "/awesome-something", ja: "Awesome", en: "Awesome" },
     ],
   },
@@ -37,17 +69,22 @@ export const navigationGroups: NavigationGroup[] = [
     ja: "このサイト",
     en: "This site",
     items: [
-      { href: "/about", ja: "About", en: "About" },
+      ABOUT,
       { href: "/contact", ja: "お問い合わせ", en: "Contact" },
+      { href: "/privacy-policy", ja: "プライバシー", en: "Privacy" },
       { href: "/rss.xml", ja: "RSS", en: "RSS" },
     ],
   },
 ];
-export const primaryItems = navigationGroups
-  .flatMap((group) => group.items)
-  .filter((item) =>
-    ["/blog", "/keywords", "/archive", "/about"].includes(item.href)
-  );
+
+/** 主要な行き先の配下として扱うパス。タグは記事の、ツール類は資料の一部とみなす。 */
+const SECTION_ALIASES: Record<string, string[]> = {
+  "/blog": ["/tags"],
+  "/archive": ["/tools", "/awesome-something"],
+};
+
+const isWithin = (path: string, href: string) =>
+  path === href || path.startsWith(`${href}/`);
 
 export function getNavigationState(path: string) {
   const currentPath = toLocalePath(path, "ja").replace(/\/$/u, "");
@@ -57,10 +94,8 @@ export function getNavigationState(path: string) {
     currentPath.startsWith("/keywords/") ||
     currentPath.startsWith("/books/");
   const isActive = (href: string) =>
-    currentPath === href ||
-    currentPath.startsWith(`${href}/`) ||
-    (href === "/archive" &&
-      (currentPath === "/tools" || currentPath.startsWith("/tools/")));
+    isWithin(currentPath, href) ||
+    (SECTION_ALIASES[href] ?? []).some((alias) => isWithin(currentPath, alias));
 
   return { isReading, isActive };
 }

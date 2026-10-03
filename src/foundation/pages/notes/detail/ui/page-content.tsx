@@ -9,12 +9,10 @@ import {
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { AmazonAssociate, AmazonProductSection } from "@/shared/ui/amazon";
-import { BackLink } from "@/shared/ui/back-link";
-import { Badge } from "@/shared/ui/badge";
-import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { I18nText } from "@/shared/ui/i18n-text";
 import { Message } from "@/shared/ui/mdx";
 import { JsonLd } from "@/shared/ui/seo";
-import { Tag } from "@/shared/ui/tag";
+import { formatDate, toIntlLocaleTag } from "@/shared/lib/presentation";
 
 export type NotesDetailPageContentProps = {
   locale: Locale;
@@ -54,63 +52,83 @@ export function NotesDetailPageContent({
   return (
     <SiteLayout locale={locale} path={notePath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
-      <main className="site-main min-w-0">
-        <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-        <section className="mb-6 space-y-3 sm:mb-8">
-          <BackLink
-            locale={locale}
-            href="/notes"
-            ja="← ノート一覧"
-            en="← Back to notes"
-          />
-          {noteDate ? (
-            <p className="text-sm text-muted-foreground">{noteDate}</p>
-          ) : null}
-          <h1 className="text-2xl leading-snug font-semibold break-words sm:text-3xl">
-            {noteTitle}
-          </h1>
-          {category || tags.length > 0 ? (
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              {category ? (
-                <Badge variant="outlineSoft">{category}</Badge>
-              ) : null}
-              {tags.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <Tag
-                      key={`${locale}-${tag}`}
-                      tag={tag}
-                      variant="muted"
+      <main className="article-page">
+        <article>
+          <header className="article-header reading-column">
+            <p className="article-kicker">
+              <a href={toLocalePath("/keywords", locale)}>
+                <I18nText locale={locale} ja="キーワード" en="Keywords" />
+              </a>
+              {category ? <span>{category}</span> : null}
+            </p>
+            <h1 className="article-title">{noteTitle}</h1>
+            {noteDate ? (
+              <div className="article-meta">
+                <time dateTime={noteDate}>
+                  {formatDate(noteDate, toIntlLocaleTag(locale))}
+                </time>
+              </div>
+            ) : null}
+            {tags.length > 0 ? (
+              <ul
+                className="tag-list"
+                aria-label={locale === "en" ? "Tags" : "タグ"}
+              >
+                {tags.map((tag) => (
+                  <li key={`${locale}-${tag}`}>
+                    <a
                       href={toLocalePath(
                         `/tags/${encodeURIComponent(tag)}`,
                         locale
                       )}
-                    />
-                  ))}
-                </div>
+                    >
+                      #{tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </header>
+
+          <div className="reading-column">
+            <div className="prose">
+              {isEn && translationModel ? (
+                <Message title="Translation" variant="info" defaultOpen>
+                  This note was translated by {translationModel}. The original
+                  is{" "}
+                  <a href={originalPath}>read the original Japanese article</a>.
+                </Message>
               ) : null}
+              {content}
             </div>
-          ) : null}
-        </section>
 
-        <article className="prose max-w-none min-w-0 font-serif">
-          {isEn && translationModel ? (
-            <Message title="Translation" variant="info" defaultOpen>
-              This note was translated by {translationModel}. The original is{" "}
-              <a href={originalPath}>read the original Japanese article</a>.
-            </Message>
-          ) : null}
-          <div>{content}</div>
-        </article>
+            {amazonProducts.length > 0 ? (
+              <AmazonProductSection
+                products={amazonProducts}
+                className="mt-12"
+              />
+            ) : null}
+            {shouldShowAmazonAssociate ? (
+              <div className="mt-6">
+                <AmazonAssociate />
+              </div>
+            ) : null}
 
-        {amazonProducts.length > 0 ? (
-          <AmazonProductSection products={amazonProducts} className="mt-8" />
-        ) : null}
-        {shouldShowAmazonAssociate ? (
-          <div className="mt-6">
-            <AmazonAssociate />
+            <footer className="article-footer">
+              <a
+                href={toLocalePath("/keywords", locale)}
+                className="arrow-link"
+              >
+                <span aria-hidden="true">←</span>
+                <I18nText
+                  locale={locale}
+                  ja="キーワードの一覧へ"
+                  en="All keywords"
+                />
+              </a>
+            </footer>
           </div>
-        ) : null}
+        </article>
       </main>
     </SiteLayout>
   );

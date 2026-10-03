@@ -11,14 +11,22 @@ export type MessageProps = PropsWithChildren<{
   className?: string;
 }>;
 
+/** 面は共通の落ち着いた色にし、種類は左の罫線とアイコンの色だけで伝える。 */
 const variantStyles: Record<NonNullable<MessageProps["variant"]>, string> = {
-  info: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900/50 dark:bg-sky-950 dark:text-sky-200",
-  success:
-    "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950 dark:text-emerald-200",
-  warning:
-    "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950 dark:text-amber-200",
-  error:
-    "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900/50 dark:bg-rose-950 dark:text-rose-200",
+  info: "border-l-callout-info",
+  success: "border-l-callout-success",
+  warning: "border-l-callout-warning",
+  error: "border-l-callout-error",
+};
+
+const variantIconStyles: Record<
+  NonNullable<MessageProps["variant"]>,
+  string
+> = {
+  info: "text-callout-info",
+  success: "text-callout-success",
+  warning: "text-callout-warning",
+  error: "text-callout-error",
 };
 
 const variantIcons: Record<NonNullable<MessageProps["variant"]>, string> = {
@@ -38,7 +46,7 @@ export function Message({
   return (
     <details
       className={cn(
-        "my-6 rounded-md border px-4 py-3",
+        "my-7 rounded-l-none rounded-r-md border-y-0 border-r-0 border-l-[3px] bg-callout-surface px-5 py-4 text-[0.9375rem] leading-[1.85]",
         variantStyles[variant],
         "group",
         className
@@ -46,16 +54,24 @@ export function Message({
       open={defaultOpen}
     >
       {title ? (
-        <summary className="flex cursor-pointer list-none items-center gap-2 font-semibold">
-          <Icon icon={variantIcons[variant]} className="size-4" />
+        <summary className="flex cursor-pointer list-none items-center gap-2 font-bold">
+          <Icon
+            icon={variantIcons[variant]}
+            className={cn("size-4", variantIconStyles[variant])}
+          />
           <span className="flex-1">{title}</span>
           <Icon
             icon="lucide:chevron-down"
-            className="size-4 transition-transform group-open:rotate-180"
+            className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
           />
         </summary>
       ) : null}
-      <div className={cn("prose max-w-none font-serif", title ? "mt-2" : "")}>
+      <div
+        className={cn(
+          "prose max-w-none text-[length:inherit]",
+          title ? "mt-2" : ""
+        )}
+      >
         {children}
       </div>
     </details>

@@ -8,6 +8,7 @@ export type BlogPaginationPageContentProps = {
   locale: Locale;
   pageNumber: number;
   pageCount: number;
+  totalCount: number;
   posts: BlogListingContentProps["posts"];
 };
 
@@ -15,6 +16,7 @@ export function BlogPaginationPageContent({
   locale,
   pageNumber,
   pageCount,
+  totalCount,
   posts,
 }: BlogPaginationPageContentProps) {
   const pagePath = toLocalePath(
@@ -29,7 +31,7 @@ export function BlogPaginationPageContent({
         posts={posts}
         pageNumber={pageNumber}
         pageCount={pageCount}
-        variant="paginated"
+        totalCount={totalCount}
       />
     </SiteLayout>
   );

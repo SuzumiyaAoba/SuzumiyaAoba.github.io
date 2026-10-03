@@ -39,3 +39,36 @@ export function formatDate(date: string, locale: string): string {
 export function formatDatePlain(date: Date, locale: string): string {
   return date.toLocaleDateString(locale);
 }
+
+/** YYYY-MM-DD をタイムゾーンの影響を受けずに解釈する。不正な値は null。 */
+function parseCalendarDate(date: string): Date | null {
+  const parsed = new Date(`${date.slice(0, 10)}T00:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+/**
+ * 年見出しの下に並べる短い日付（「5月28日」「May 28」）にフォーマットする
+ * @param date 日付文字列 (YYYY-MM-DD)
+ * @param locale ロケール識別子
+ * @returns フォーマットされた日付文字列。解釈できない場合は入力をそのまま返す
+ */
+export function formatMonthDay(date: string, locale: string): string {
+  const parsed = parseCalendarDate(date);
+  if (!parsed) {
+    return date;
+  }
+  return parsed.toLocaleDateString(locale, {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+/**
+ * 日付の年部分を返す（年ごとのまとまりの見出し用）
+ * @param date 日付文字列 (YYYY-MM-DD)
+ * @returns 4 桁の年。解釈できない場合は空文字
+ */
+export function yearOf(date: string): string {
+  return parseCalendarDate(date)?.getUTCFullYear().toString() ?? "";
+}

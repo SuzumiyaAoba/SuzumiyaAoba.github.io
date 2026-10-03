@@ -98,7 +98,7 @@ export function BookSectionPageContent({
             <h1 className="text-2xl font-semibold">{sectionTitle}</h1>
           </header>
 
-          <article className="prose max-w-none font-serif">
+          <article className="prose max-w-none">
             {llm ? (
               <Message
                 variant="info"
