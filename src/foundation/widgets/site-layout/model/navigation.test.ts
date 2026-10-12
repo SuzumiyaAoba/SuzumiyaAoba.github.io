@@ -19,6 +19,9 @@ describe("getNavigationState", () => {
     ["/en/search/", "/search", true],
     ["/", "/blog", false],
     ["/en/about/", "/about", true],
+    ["/audio/", "/about", true],
+    ["/en/audio/", "/audio", true],
+    ["/audiophile/", "/about", false],
     ["/en/rss.xml", "/rss.xml", true],
   ] as const)("%s の %s リンクの選択状態は %s", (path, href, active) => {
     expect(getNavigationState(path).isActive(href)).toBe(active);

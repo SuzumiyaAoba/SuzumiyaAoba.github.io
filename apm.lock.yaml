@@ -1,7 +1,62 @@
 lockfile_version: "1"
-generated_at: "2026-09-28T21:55:40.882317+00:00"
+generated_at: "2026-10-12T10:05:39.771262+00:00"
 apm_version: 0.31.0
 dependencies:
+  - repo_url: lucasmarkes/hairline
+    name: hairline
+    host: github.com
+    resolved_commit: a2217852fed6d1a4f20bc7d43d4fad1a3de117b8
+    version: unknown
+    package_type: skill_bundle
+    deployed_files:
+      - .agents/skills/hairline-create
+      - .agents/skills/hairline-create/SKILL.md
+      - .agents/skills/hairline-create/bench.html
+      - .agents/skills/hairline-create/build.mjs
+      - .agents/skills/hairline-create/concepts.md
+      - .agents/skills/hairline-create/examples/riffle.js
+      - .agents/skills/hairline-create/examples/terrain.js
+      - .agents/skills/hairline-create/kernel.js
+      - .agents/skills/hairline-create/look.md
+      - .agents/skills/hairline-create/look.mjs
+      - .agents/skills/hairline-create/rules.md
+      - .agents/skills/hairline-create/validate.mjs
+      - .claude/skills/hairline-create
+      - .claude/skills/hairline-create/SKILL.md
+      - .claude/skills/hairline-create/bench.html
+      - .claude/skills/hairline-create/build.mjs
+      - .claude/skills/hairline-create/concepts.md
+      - .claude/skills/hairline-create/examples/riffle.js
+      - .claude/skills/hairline-create/examples/terrain.js
+      - .claude/skills/hairline-create/kernel.js
+      - .claude/skills/hairline-create/look.md
+      - .claude/skills/hairline-create/look.mjs
+      - .claude/skills/hairline-create/rules.md
+      - .claude/skills/hairline-create/validate.mjs
+    deployed_file_hashes:
+      .agents/skills/hairline-create/SKILL.md: sha256:528890cf33862c2b48e5af3b835a0ff5d0d91ce153a70dbc521f743d62542510
+      .agents/skills/hairline-create/bench.html: sha256:0870fd54e137be0f7635cd309b48a4703a791cfca5915bf22d46b941ebc33278
+      .agents/skills/hairline-create/build.mjs: sha256:7907c722890a9758ed4b479e819f9f8c12b9df3c4a59fa050577b235eee233e7
+      .agents/skills/hairline-create/concepts.md: sha256:af001b0859cb98cfaeb6411dd6a7d815bfde5a9a107954b9aec31b2daeae0d63
+      .agents/skills/hairline-create/examples/riffle.js: sha256:f54ee2de62ac4161291dfd0f4c2cb6646e1289adb286cecad23a7356d97cc4d1
+      .agents/skills/hairline-create/examples/terrain.js: sha256:7755307a1ddb023ed7e119c5c89e549116f1068f0c0a15b96e692fed5e93014b
+      .agents/skills/hairline-create/kernel.js: sha256:2d8be507ceb523581dbfe813f636d1118ca49bf9e62840f66d8ddf55867999ad
+      .agents/skills/hairline-create/look.md: sha256:d3bc1ae47e4331d39e8c0c589a2439a25bf9e0a09de7dcc653593e0a77e0743e
+      .agents/skills/hairline-create/look.mjs: sha256:c7d5c06208ca69982d92df709bf69fd58cbe714b1482d58f5f2ad83ca2612651
+      .agents/skills/hairline-create/rules.md: sha256:01c7880d75beac8bb222519c10bda4d44151bdfc17d07563b9b8e2d19fc7de09
+      .agents/skills/hairline-create/validate.mjs: sha256:a60ad12271cdf3faf0ee4b84131d2474481ab9196360956ba8383c17928378ff
+      .claude/skills/hairline-create/SKILL.md: sha256:528890cf33862c2b48e5af3b835a0ff5d0d91ce153a70dbc521f743d62542510
+      .claude/skills/hairline-create/bench.html: sha256:0870fd54e137be0f7635cd309b48a4703a791cfca5915bf22d46b941ebc33278
+      .claude/skills/hairline-create/build.mjs: sha256:7907c722890a9758ed4b479e819f9f8c12b9df3c4a59fa050577b235eee233e7
+      .claude/skills/hairline-create/concepts.md: sha256:af001b0859cb98cfaeb6411dd6a7d815bfde5a9a107954b9aec31b2daeae0d63
+      .claude/skills/hairline-create/examples/riffle.js: sha256:f54ee2de62ac4161291dfd0f4c2cb6646e1289adb286cecad23a7356d97cc4d1
+      .claude/skills/hairline-create/examples/terrain.js: sha256:7755307a1ddb023ed7e119c5c89e549116f1068f0c0a15b96e692fed5e93014b
+      .claude/skills/hairline-create/kernel.js: sha256:2d8be507ceb523581dbfe813f636d1118ca49bf9e62840f66d8ddf55867999ad
+      .claude/skills/hairline-create/look.md: sha256:d3bc1ae47e4331d39e8c0c589a2439a25bf9e0a09de7dcc653593e0a77e0743e
+      .claude/skills/hairline-create/look.mjs: sha256:c7d5c06208ca69982d92df709bf69fd58cbe714b1482d58f5f2ad83ca2612651
+      .claude/skills/hairline-create/rules.md: sha256:01c7880d75beac8bb222519c10bda4d44151bdfc17d07563b9b8e2d19fc7de09
+      .claude/skills/hairline-create/validate.mjs: sha256:a60ad12271cdf3faf0ee4b84131d2474481ab9196360956ba8383c17928378ff
+    content_hash: sha256:4dbe486efdee6224a863e4c2f32d33c080bbbc7984c6b836ba979b8666fc504c
   - repo_url: vercel-labs/agent-skills
     name: agent-skills
     host: github.com
@@ -1426,6 +1481,114 @@ deployments:
       - vercel-labs/agent-skills
     active_owner: vercel-labs/agent-skills
     content_hash: sha256:418da6ff48c582790799d850a88fd83ca00f2ee00502665caf8dbb06d4dab8b9
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: null
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/SKILL.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:528890cf33862c2b48e5af3b835a0ff5d0d91ce153a70dbc521f743d62542510
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/bench.html
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:0870fd54e137be0f7635cd309b48a4703a791cfca5915bf22d46b941ebc33278
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/build.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:7907c722890a9758ed4b479e819f9f8c12b9df3c4a59fa050577b235eee233e7
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/concepts.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:af001b0859cb98cfaeb6411dd6a7d815bfde5a9a107954b9aec31b2daeae0d63
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/examples/riffle.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:f54ee2de62ac4161291dfd0f4c2cb6646e1289adb286cecad23a7356d97cc4d1
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/examples/terrain.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:7755307a1ddb023ed7e119c5c89e549116f1068f0c0a15b96e692fed5e93014b
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/kernel.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:2d8be507ceb523581dbfe813f636d1118ca49bf9e62840f66d8ddf55867999ad
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/look.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:d3bc1ae47e4331d39e8c0c589a2439a25bf9e0a09de7dcc653593e0a77e0743e
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/look.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:c7d5c06208ca69982d92df709bf69fd58cbe714b1482d58f5f2ad83ca2612651
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/rules.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:01c7880d75beac8bb222519c10bda4d44151bdfc17d07563b9b8e2d19fc7de09
+  - kind: project-relative
+    target: claude
+    value: .claude/skills/hairline-create/validate.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:a60ad12271cdf3faf0ee4b84131d2474481ab9196360956ba8383c17928378ff
   - kind: project-relative
     target: claude
     value: .claude/skills/react-best-practices
@@ -4198,6 +4361,114 @@ deployments:
       - vercel-labs/agent-skills
     active_owner: vercel-labs/agent-skills
     content_hash: sha256:418da6ff48c582790799d850a88fd83ca00f2ee00502665caf8dbb06d4dab8b9
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: null
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/SKILL.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:528890cf33862c2b48e5af3b835a0ff5d0d91ce153a70dbc521f743d62542510
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/bench.html
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:0870fd54e137be0f7635cd309b48a4703a791cfca5915bf22d46b941ebc33278
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/build.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:7907c722890a9758ed4b479e819f9f8c12b9df3c4a59fa050577b235eee233e7
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/concepts.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:af001b0859cb98cfaeb6411dd6a7d815bfde5a9a107954b9aec31b2daeae0d63
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/examples/riffle.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:f54ee2de62ac4161291dfd0f4c2cb6646e1289adb286cecad23a7356d97cc4d1
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/examples/terrain.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:7755307a1ddb023ed7e119c5c89e549116f1068f0c0a15b96e692fed5e93014b
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/kernel.js
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:2d8be507ceb523581dbfe813f636d1118ca49bf9e62840f66d8ddf55867999ad
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/look.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:d3bc1ae47e4331d39e8c0c589a2439a25bf9e0a09de7dcc653593e0a77e0743e
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/look.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:c7d5c06208ca69982d92df709bf69fd58cbe714b1482d58f5f2ad83ca2612651
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/rules.md
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:01c7880d75beac8bb222519c10bda4d44151bdfc17d07563b9b8e2d19fc7de09
+  - kind: project-relative
+    target: codex
+    value: .agents/skills/hairline-create/validate.mjs
+    runtime: null
+    scope: project
+    owners:
+      - lucasmarkes/hairline
+    active_owner: lucasmarkes/hairline
+    content_hash: sha256:a60ad12271cdf3faf0ee4b84131d2474481ab9196360956ba8383c17928378ff
   - kind: project-relative
     target: codex
     value: .agents/skills/react-best-practices

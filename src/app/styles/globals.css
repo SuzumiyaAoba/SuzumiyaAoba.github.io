@@ -118,6 +118,52 @@
   color: var(--muted-foreground);
 }
 
+@utility audio-stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xl);
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    var(--background),
+    var(--surface)
+  );
+  @media (width >= 40rem) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@utility audio-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  outline: none;
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -4px;
+  }
+}
+
+@utility audio-viewer-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: var(--surface);
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  text-align: center;
+}
+
 /* キーワードの Three.js ステージ。サイトのテーマに関係なく暗い撮影台として表示する。 */
 @utility keyword-stage {
   position: relative;

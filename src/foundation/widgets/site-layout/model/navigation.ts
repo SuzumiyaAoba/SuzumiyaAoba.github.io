@@ -70,6 +70,7 @@ export const navigationGroups: NavigationGroup[] = [
     en: "This site",
     items: [
       ABOUT,
+      { href: "/audio", ja: "オーディオ", en: "Audio" },
       { href: "/contact", ja: "お問い合わせ", en: "Contact" },
       { href: "/privacy-policy", ja: "プライバシー", en: "Privacy" },
       { href: "/rss.xml", ja: "RSS", en: "RSS" },
@@ -81,6 +82,7 @@ export const navigationGroups: NavigationGroup[] = [
 const SECTION_ALIASES: Record<string, string[]> = {
   "/blog": ["/tags"],
   "/archive": ["/tools", "/awesome-something"],
+  "/about": ["/audio"],
 };
 
 const isWithin = (path: string, href: string) =>

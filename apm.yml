@@ -10,5 +10,6 @@ includes: auto
 dependencies:
   apm:
     - vercel-labs/agent-skills
+    - lucasmarkes/hairline
   mcp: []
 scripts: {}

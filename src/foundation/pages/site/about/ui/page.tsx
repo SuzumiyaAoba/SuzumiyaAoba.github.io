@@ -54,6 +54,22 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
         </header>
 
         <div className="about-sections">
+          <section aria-labelledby="about-audio">
+            <h2 id="about-audio" className="about-heading">
+              <I18nText locale={locale} ja="オーディオ" en="Audio" />
+            </h2>
+            <ul className="about-body link-list">
+              <li>
+                <a href={toLocalePath("/audio", locale)}>
+                  <I18nText
+                    locale={locale}
+                    ja="持っているオーディオ機器"
+                    en="My audio equipment"
+                  />
+                </a>
+              </li>
+            </ul>
+          </section>
           <section aria-labelledby="about-name">
             <h2 id="about-name" className="about-heading">
               <I18nText locale={locale} ja="サイト名" en="The name" />
