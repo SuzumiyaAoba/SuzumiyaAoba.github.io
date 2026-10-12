@@ -29,6 +29,8 @@ const labels: Record<AudioView, Record<Locale, string>> = {
   earpads: { ja: "イヤーパッド", en: "Ear pads" },
   headband: { ja: "ヘッドバンド", en: "Headband" },
   grille: { ja: "グリル・ドライバー", en: "Grille & driver" },
+  tubes: { ja: "真空管窓", en: "Tube window" },
+  dials: { ja: "ダイアル", en: "Dials" },
 };
 
 export function AudioViewer({

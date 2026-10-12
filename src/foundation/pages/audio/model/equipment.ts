@@ -4,7 +4,13 @@ type LocalizedText = Record<Locale, string>;
 
 export type AudioEquipment = {
   id: string;
-  model?: "ud-505" | "cg-10m" | "node-n130" | "hd-800s" | "clear-mg-pro";
+  model?:
+    | "ud-505"
+    | "cg-10m"
+    | "node-n130"
+    | "ha-1a-mk2"
+    | "hd-800s"
+    | "clear-mg-pro";
   manufacturer: string;
   name: string;
   finish: LocalizedText;
@@ -200,6 +206,79 @@ export const audioEquipment: readonly AudioEquipment[] = [
       {
         title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
         href: "https://pdn.co.jp/assets/bluesound/node_dfu.pdf",
+      },
+    ],
+  },
+  {
+    id: "ha-1a-mk2",
+    model: "ha-1a-mk2",
+    manufacturer: "Cayin",
+    name: "HA-1A MK2",
+    finish: { ja: "シルバー / ウッド", en: "Silver / Wood" },
+    category: {
+      ja: "真空管ヘッドホンアンプ / プリアンプ",
+      en: "Tube headphone amplifier / preamplifier",
+    },
+    description: {
+      ja: "EL84EH、12AU7、12DT5 の計5本の真空管を搭載した、シングルエンド構成のヘッドホンアンプ。5段階のインピーダンス切り替えと2系統の6.35 mmヘッドホン出力を備え、プリアンプとしても使えます。",
+      en: "A single-ended headphone amplifier with five vacuum tubes: EL84EH, 12AU7 and 12DT5. It offers five impedance settings, two 6.35 mm headphone outputs and a preamplifier output.",
+    },
+    details: {
+      ja: "艶のある5段の木製側板、ヘアライン仕上げの前面、丸い窓の奥に見える真空管、上面の通気スリットを再現。背面のCD・AUX入力、PRE-OUT、電源端子や底面の3つの脚も確認できます。部品寸法と内部配置は写真からの推定を含み、真空管の光は点灯時をイメージした静止表示です。",
+      en: "Explore the five lacquered wooden side panels, brushed front plate, tubes behind the circular window and open top ventilation slots. Rear CD/AUX inputs, PRE-OUT, power inlet and three supporting feet are also modeled. Component dimensions and internal placement include estimates from photos; the tube glow is a static illustration.",
+    },
+    specifications: [
+      {
+        label: { ja: "外形寸法", en: "Dimensions" },
+        value: {
+          ja: "126.5 × 215 × 304 mm（幅 × 高さ × 奥行）",
+          en: "126.5 × 215 × 304 mm (W × H × D)",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "9.5 kg", en: "9.5 kg" },
+      },
+      {
+        label: { ja: "真空管", en: "Vacuum tubes" },
+        value: {
+          ja: "EL84EH × 2 · 12AU7 × 2 · 12DT5 × 1",
+          en: "2 × EL84EH · 2 × 12AU7 · 1 × 12DT5",
+        },
+      },
+      {
+        label: { ja: "インピーダンス切り替え", en: "Impedance settings" },
+        value: {
+          ja: "8–32 / 33–64 / 65–150 / 151–300 / 600 Ω",
+          en: "8–32 / 33–64 / 65–150 / 151–300 / 600 Ω",
+        },
+      },
+      {
+        label: { ja: "入力", en: "Inputs" },
+        value: {
+          ja: "RCA × 2系統（CD / AUX）",
+          en: "2 × stereo RCA (CD / AUX)",
+        },
+      },
+      {
+        label: { ja: "出力", en: "Outputs" },
+        value: {
+          ja: "6.35 mmヘッドホン × 2 · RCA（PRE-OUT）",
+          en: "2 × 6.35 mm headphones · stereo RCA (PRE-OUT)",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "メーカー製品情報・写真",
+          en: "Manufacturer’s product information and photos",
+        },
+        href: "https://en.cayin.cn/features/7/59/487.html",
+      },
+      {
+        title: { ja: "取扱説明書（英語）", en: "Owner’s manual (English)" },
+        href: "https://www.easylounge.com/pdf/Produits/14538c1a-7e24-4221-acc8-c369e48eae80/HA-1A%20MK2%20manual%20%28English%29%20230V-50Hz-Cayin-V1.1.pdf",
       },
     ],
   },

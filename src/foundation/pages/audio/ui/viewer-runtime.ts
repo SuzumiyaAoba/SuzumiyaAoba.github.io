@@ -24,6 +24,7 @@ import { createCg10m } from "./scene/cg-10m";
 import { createNodeN130 } from "./scene/node-n130";
 import { createHd800s } from "./scene/hd-800s";
 import { createClearMgPro } from "./scene/clear-mg-pro";
+import { createHa1aMk2 } from "./scene/ha-1a-mk2";
 import type {
   AudioModel,
   AudioView,
@@ -48,6 +49,20 @@ type CameraPose = {
 };
 
 const poses: Record<AudioView, CameraPose> = {
+  dials: {
+    direction: [0.65, 0.24, 1],
+    target: [0, 83, 142],
+    width: 130,
+    height: 100,
+    depth: 28,
+  },
+  tubes: {
+    direction: [0, 0.02, 1],
+    target: [0, 159, 141.5],
+    width: 90,
+    height: 90,
+    depth: 12,
+  },
   overview: {
     direction: [0.7, 0.44, 1],
     target: [0, 39, 0],
@@ -289,6 +304,64 @@ const modelPoses: Partial<
   "node-n130": nodePoses,
   "hd-800s": hd800sPoses,
   "clear-mg-pro": clearMgPoses,
+  "ha-1a-mk2": {
+    overview: {
+      direction: [0.95, 0.45, 1.3],
+      target: [0, 105, 0],
+      width: 310,
+      height: 290,
+      depth: 90,
+    },
+    front: {
+      direction: [0, 0, 1],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 240,
+      depth: 155,
+    },
+    rear: {
+      direction: [0, 0, -1],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 240,
+      depth: 155,
+    },
+    side: {
+      direction: [1, 0.03, 0],
+      target: [0, 107.5, 0],
+      width: 325,
+      height: 240,
+      depth: 65,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 325,
+      depth: 110,
+    },
+    bottom: {
+      direction: [0, -1, 0.001],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 325,
+      depth: 110,
+    },
+    headphones: {
+      direction: [0.05, 0.08, 1],
+      target: [0, 52, 141.5],
+      width: 118,
+      height: 106,
+      depth: 16,
+    },
+    connections: {
+      direction: [0.08, 0.08, -1],
+      target: [0, 153, -143],
+      width: 115,
+      height: 135,
+      depth: 18,
+    },
+  },
 };
 
 const modelBuilders = {
@@ -297,6 +370,7 @@ const modelBuilders = {
   "node-n130": createNodeN130,
   "hd-800s": createHd800s,
   "clear-mg-pro": createClearMgPro,
+  "ha-1a-mk2": createHa1aMk2,
 } satisfies Record<AudioModel, () => ReturnType<typeof createUd505>>;
 
 export function createAudioViewer({
@@ -334,7 +408,7 @@ export function createAudioViewer({
   model.group.traverse((part) => {
     if (part instanceof Mesh && part.material instanceof Material) {
       part.castShadow = !part.material.transparent;
-      part.receiveShadow = detailedHeadphones;
+      part.receiveShadow = detailedHeadphones || modelId === "ha-1a-mk2";
     }
   });
   scene.add(
