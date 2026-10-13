@@ -6,7 +6,6 @@ import type { HighlightedCode } from "codehike/code";
 
 import { parseCodeMeta } from "@/shared/lib/mdx/code-meta";
 import { useMounted } from "@/shared/ui/use-mounted";
-import { cn } from "@/shared/lib/utils";
 import { CustomCodeBlock } from "@/shared/ui/mdx/custom-code-block";
 import { FootnoteNumber } from "@/shared/ui/mdx/codehike-handlers";
 
@@ -49,32 +48,24 @@ export function Code({ codeblock }: CodeProps) {
   const placeholderHeight = Math.min(Math.max(lineCount, 1), 24) * 1.5;
 
   return (
-    <div className="my-6">
+    <div className="code-frame">
       {displayMeta ? (
-        <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
-          <span className="truncate">{displayMeta}</span>
-          <span className="text-mini tracking-widest uppercase">
-            {codeblock.lang}
-          </span>
+        <div className="code-bar">
+          <span className="code-bar-title">{displayMeta}</span>
+          <span className="code-bar-lang">{codeblock.lang}</span>
         </div>
       ) : null}
       {mounted ? (
-        <CustomCodeBlock
-          code={normalizedCodeblock}
-          {...(displayMeta ? { className: "rounded-t-none mt-0" } : {})}
-        />
+        <CustomCodeBlock code={normalizedCodeblock} />
       ) : (
         <div
           aria-hidden
-          className={cn(
-            "my-4 h-(--placeholder-h) rounded-lg bg-muted",
-            displayMeta ? "mt-0 rounded-t-none" : undefined
-          )}
+          className="code-block h-(--placeholder-h)"
           style={{ "--placeholder-h": `${placeholderHeight}rem` }}
         />
       )}
       {notes.length > 0 ? (
-        <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+        <ul className="code-notes">
           {notes.map((note, index) => (
             // 脚注は静的コンテンツで並び替え・途中挿入が起きない。
             // react-doctor-disable-next-line no-array-index-as-key

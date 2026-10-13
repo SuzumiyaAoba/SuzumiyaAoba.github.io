@@ -75,7 +75,7 @@ export const Japanese: Story = {
       canvas.getByRole("link", { name: "文書処理・汎用ライブラリ 1" })
     ).toHaveAttribute("href", "/awesome-something/development/libraries/");
     await expect(
-      canvas.getByRole("link", { name: "すべての項目を見る・検索する" })
+      canvas.getByRole("link", { name: "すべての項目" })
     ).toHaveAttribute("href", "/awesome-something/all/");
     await expect(
       canvas.queryByRole("article", { name: "Example Library" })
@@ -107,7 +107,7 @@ export const Empty: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByText("まだ登録がありません。")).toBeVisible();
     await expect(
-      canvas.queryByRole("link", { name: "すべての項目を見る・検索する" })
+      canvas.queryByRole("link", { name: "すべての項目" })
     ).not.toBeInTheDocument();
   },
 };

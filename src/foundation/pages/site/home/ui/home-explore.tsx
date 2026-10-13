@@ -2,7 +2,11 @@ import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import type { HomeTopic } from "../model/home-content";
 
-type HomeExploreProps = { locale: Locale; topics: HomeTopic[] };
+type HomeExploreProps = {
+  locale: Locale;
+  topics: HomeTopic[];
+  keywordCount: number;
+};
 
 type ExploreLink = {
   href: string;
@@ -34,11 +38,7 @@ const KEYWORD_PICKS: ExploreLink[] = [
 ];
 
 const RESOURCES: ExploreLink[] = [
-  {
-    href: "/archive/ai-news",
-    ja: "AIニュース",
-    en: "AI News",
-  },
+  { href: "/archive/ai-news", ja: "AIニュース", en: "AI News" },
   {
     href: "/tools/ascii-standard-code",
     ja: "ASCII コード表",
@@ -56,7 +56,15 @@ const RESOURCES: ExploreLink[] = [
   },
 ];
 
-export function HomeExplore({ locale, topics }: HomeExploreProps) {
+/**
+ * 探す手がかり。キーワード・資料・テーマを縦罫で区切った三段に組む。
+ * キーワードは和名と英名をリーダーでつなぎ、対訳の用語集のように見せる。
+ */
+export function HomeExplore({
+  locale,
+  topics,
+  keywordCount,
+}: HomeExploreProps) {
   const en = locale === "en";
   const t = (ja: string, english: string) => (en ? english : ja);
 
@@ -66,18 +74,29 @@ export function HomeExplore({ locale, topics }: HomeExploreProps) {
         <h2 id="keywords-title" className="home-column-title">
           {t("キーワード", "Keywords")}
         </h2>
-        <ul className="link-list">
+        <ul className="home-glossary">
           {KEYWORD_PICKS.map((keyword) => (
             <li key={keyword.href}>
               <a href={toLocalePath(keyword.href, locale)}>
-                {en ? keyword.en : keyword.ja}
+                {en ? (
+                  keyword.en
+                ) : (
+                  <>
+                    <span>{keyword.ja}</span>
+                    <span className="home-glossary-gloss" lang="en">
+                      {keyword.en}
+                    </span>
+                  </>
+                )}
               </a>
             </li>
           ))}
         </ul>
         <a href={toLocalePath("/keywords", locale)} className="arrow-link">
-          {t("すべてのキーワード", "All keywords")}
-          <span aria-hidden="true">→</span>
+          {t(
+            `すべてのキーワード（${keywordCount}）`,
+            `All ${keywordCount} keywords`
+          )}
         </a>
       </section>
 
@@ -96,7 +115,6 @@ export function HomeExplore({ locale, topics }: HomeExploreProps) {
         </ul>
         <a href={toLocalePath("/archive", locale)} className="arrow-link">
           {t("資料の一覧", "All resources")}
-          <span aria-hidden="true">→</span>
         </a>
       </section>
 
@@ -106,7 +124,7 @@ export function HomeExplore({ locale, topics }: HomeExploreProps) {
           aria-label={t("タグから記事を探す", "Browse by tag")}
         >
           <h2 className="home-column-title">{t("テーマ", "Topics")}</h2>
-          <ul className="topic-list">
+          <ul>
             {topics.map((topic) => (
               <li key={topic.name}>
                 <a
@@ -114,17 +132,16 @@ export function HomeExplore({ locale, topics }: HomeExploreProps) {
                     `/tags/${encodeURIComponent(topic.name)}`,
                     locale
                   )}
-                  className="topic-chip"
+                  className="leader-link"
                 >
-                  {topic.name}
-                  <span className="topic-chip-count">{topic.count}</span>
+                  <span>{topic.name}</span>
+                  <span>{topic.count}</span>
                 </a>
               </li>
             ))}
           </ul>
           <a href={toLocalePath("/tags", locale)} className="arrow-link">
             {t("すべてのタグ", "All tags")}
-            <span aria-hidden="true">→</span>
           </a>
         </nav>
       )}

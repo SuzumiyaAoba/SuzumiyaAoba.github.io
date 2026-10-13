@@ -23,26 +23,14 @@ export function SimpleEntryList({ items, emptyState }: SimpleEntryListProps) {
     <ul className="simple-journal-list">
       {items.map((item, index) => (
         <li key={item.slug}>
-          <a
-            href={item.href}
-            className="simple-entry-link flex min-h-18 items-center gap-4 px-1 py-4 sm:gap-6"
-          >
-            <span className="simple-entry-number font-mono" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
+          <a href={item.href} className="simple-entry-link">
+            <span className="simple-entry-number" aria-hidden="true">
+              {index + 1}
             </span>
-            <span className="min-w-0 flex-1 space-y-1">
-              <span className="simple-entry-title block text-base leading-normal font-medium break-words">
-                {item.title}
-              </span>
-              {item.date ? (
-                <span className="block text-xs text-muted-foreground tabular-nums">
-                  {item.date}
-                </span>
-              ) : null}
-            </span>
-            <span aria-hidden="true" className="simple-entry-arrow shrink-0">
-              →
-            </span>
+            <span className="simple-entry-title">{item.title}</span>
+            {item.date ? (
+              <span className="simple-entry-date">{item.date}</span>
+            ) : null}
           </a>
         </li>
       ))}

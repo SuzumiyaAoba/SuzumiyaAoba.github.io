@@ -32,11 +32,6 @@ export default function AudioPage({
           <div>
             <p className="page-eyebrow">Audio</p>
             <h1 className="page-title">{ja ? "オーディオ" : "My audio"}</h1>
-            <p className="page-lead">
-              {ja
-                ? "持っているオーディオ機器を、細部まで眺められる3Dモデルとともに紹介します。"
-                : "A collection of my audio equipment, with interactive 3D models to explore the details."}
-            </p>
           </div>
           <p className="page-count">
             {audioEquipment.length} {ja ? "機器" : englishUnit}

@@ -24,7 +24,7 @@ export function BookNav({
     <nav aria-label="書籍ナビゲーション" className="space-y-4">
       <a
         href={toLocalePath(`/books/${bookSlug}`, locale)}
-        className="block section-label transition-colors hover:text-foreground"
+        className="book-nav-title block hover:text-brand"
       >
         {bookTitle}
       </a>
@@ -47,9 +47,9 @@ export function BookNav({
                         locale
                       )}
                       className={cn(
-                        "block rounded px-2 py-0.5 text-sm transition-colors",
+                        "block py-1 text-sm transition-colors",
                         isCurrent
-                          ? "bg-muted font-medium text-foreground"
+                          ? "font-medium text-brand"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                       aria-current={isCurrent ? "page" : undefined}

@@ -33,7 +33,7 @@ export function AiNewsPageContent({
   return (
     <SiteLayout locale={locale} path={pagePath} className="@container">
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
-      <main className="site-main font-noto min-w-0 bg-muted/20">
+      <main className="site-main font-noto min-w-0">
         <div className="page-stack min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Breadcrumbs items={breadcrumbs} />

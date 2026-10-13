@@ -4,8 +4,7 @@ import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
 
 export const metadata: Metadata = {
   title: "Keywords",
-  description:
-    "ゲーム開発の表現と実装に役立つ200のキーワードを20分野から探す。",
+  description: "ゲーム開発の技法を分野別にまとめた用語集。",
   alternates: buildLocaleAlternates("/keywords", "ja"),
 };
 

@@ -67,7 +67,7 @@ export function ReleaseHighlights({
           onClick={(event) => onSelectDate(latest.date, event.currentTarget)}
           aria-haspopup="dialog"
           aria-label={
-            en ? "Explore the latest release" : "最新リリースの詳細を見る"
+            en ? "Latest release details" : "最新リリースの詳細を見る"
           }
           className="group flex min-w-0 items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-muted/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-6"
         >
@@ -92,13 +92,7 @@ export function ReleaseHighlights({
             aria-hidden="true"
           />
         </button>
-      ) : (
-        <p className="px-4 py-3 text-xs text-muted-foreground sm:px-6">
-          {en
-            ? "Explore the release history below."
-            : "提供元を選んでリリースの歴史をたどれます。"}
-        </p>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -406,7 +400,7 @@ export function ModelFilters({
           aria-pressed="true"
           aria-label={removeLabel}
           onClick={() => onToggle(option.name)}
-          className="flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-full border border-ai-accent bg-ai-accent-soft px-2.5 text-xs font-medium whitespace-nowrap text-ai-accent-ink transition-colors focus-visible:outline-2 focus-visible:outline-ring"
+          className="flex h-8 min-w-0 cursor-pointer items-center gap-1.5 rounded-sm border border-ai-accent bg-ai-accent-soft px-2.5 text-xs font-medium whitespace-nowrap text-ai-accent-ink transition-colors focus-visible:outline-2 focus-visible:outline-ring"
         >
           <ProviderIcon
             provider={option.provider}

@@ -34,7 +34,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "マットなブラックの丸い筐体と、光沢のあるタッチパネルを再現。5つのプリセット、音量スライダー、前面の3.5 mm端子、背面の各接続端子を視点を変えて確認できます。LED は点灯状態をイメージした静止表示です。",
-      en: "Explore the rounded matte-black enclosure, gloss touch panel with five presets and a volume slider, front 3.5 mm headphone jack and rear connections. The LEDs are shown in a static, illustrative illuminated state.",
+      en: "The model includes the rounded matte-black enclosure, gloss touch panel with five presets and a volume slider, front 3.5 mm headphone jack and rear connections. The LEDs are shown in a static, illustrative illuminated state.",
     },
     specifications: [
       {
@@ -101,7 +101,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "前面の OVEN メーター、背面の金メッキ BNC 端子と照明調整つまみ、側面の持ち手や3点支持の脚まで再現しています。メーターの針は安定時をイメージした静止表示です。",
-      en: "Explore the OVEN meter, gold-plated rear BNC outputs, brightness control, side handles and three pin-point feet. The needle is shown in a static, illustrative stabilized position.",
+      en: "The model includes the OVEN meter, gold-plated rear BNC outputs, brightness control, side handles and three pin-point feet. The needle is shown in a static, illustrative stabilized position.",
     },
     specifications: [
       {
@@ -159,7 +159,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "前面のつまみや端子だけでなく、背面の接続部と底面の3つの脚まで、視点を変えながら確認できます。",
-      en: "Explore the machined front controls, rear connections and three pin-point feet from different angles.",
+      en: "The model includes the machined front controls, rear connections and the three pin-point feet underneath.",
     },
     specifications: [
       {
@@ -220,7 +220,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "艶のある5段の木製側板、ヘアライン仕上げの前面、丸い窓の奥に見える真空管、上面の通気スリットを再現。背面のCD・AUX入力、PRE-OUT、電源端子や底面の3つの脚も確認できます。部品寸法と内部配置は写真からの推定を含み、真空管の光は点灯時をイメージした静止表示です。",
-      en: "Explore the five lacquered wooden side panels, brushed front plate, tubes behind the circular window and open top ventilation slots. Rear CD/AUX inputs, PRE-OUT, power inlet and three supporting feet are also modeled. Component dimensions and internal placement include estimates from photos; the tube glow is a static illustration.",
+      en: "The model includes the five lacquered wooden side panels, brushed front plate, tubes behind the circular window and open top ventilation slots. Rear CD/AUX inputs, PRE-OUT, power inlet and three supporting feet are also modeled. Component dimensions and internal placement include estimates from photos; the tube glow is a static illustration.",
     },
     specifications: [
       {
@@ -293,7 +293,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "梨地のブラックアルミ、透明ガラスと縁のドット、4つのアンプ回路、DAC・USB回路、抵抗・コンデンサー、はんだと配線を立体形状で再現。ロゴ・基板の印字・画面表示も文字の輪郭から作った形状です。中空端子、溝付きの音量つまみ、丸みのある操作ボタンも拡大して確認できます。筐体の厚さ、内部部品の寸法、確認できない配線は写真からの推定を含み、画面は静止表示です。",
-      en: "Explore sandblasted black aluminium, transparent glass with individual edge dots, four amplifier stages, DAC and USB circuitry, resistors, capacitors, solder joints and traces built as geometry. The logo, PCB markings and display also use solid letter outlines. Inspect hollow sockets, the milled volume knob and rounded buttons. Enclosure thickness, internal dimensions and obscured routing include estimates from photos; the display is static.",
+      en: "Sandblasted black aluminium, transparent glass with individual edge dots, four amplifier stages, DAC and USB circuitry, resistors, capacitors, solder joints and traces are built as geometry. The logo, PCB markings and display also use solid letter outlines. The hollow sockets, milled volume knob and rounded buttons are detailed enough to zoom in on. Enclosure thickness, internal dimensions and obscured routing include estimates from photos; the display is static.",
     },
     specifications: [
       {
@@ -380,7 +380,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "蜂の巣状の曲面グリルと奥に見えるドライバー、金属部分の細い溝、布製パッドの毛足と縫い目まで再現。ヘッドバンドの印字や左右の識別表示、着脱端子の継ぎ目も拡大して確認できます。外形と部品寸法は写真からの推定で、ケーブルは表示用に短く描いています。",
-      en: "Explore the domed honeycomb grille and recessed driver, fine grooves in the metal baffle, and the fibers and seams of the fabric ear pads. Zoom in on the headband lettering, channel markings and detachable connector details. Exterior and component dimensions are estimated from photos; the cables are shortened for display.",
+      en: "The model includes the domed honeycomb grille and recessed driver, fine grooves in the metal baffle, and the fibers and seams of the fabric ear pads. The headband lettering, channel markings and detachable connector details are modeled as well. Exterior and component dimensions are estimated from photos; the cables are shortened for display.",
     },
     specifications: [
       {
@@ -444,7 +444,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "外側のハニカムグリル、中央のロゴと円周の刻印、厚さ20 mmの穿孔パッド、革張りヘッドバンドと調整部を再現。ケーブルを外した状態で、左右の3.5 mm端子やパッド内側も確認できます。外形・部品寸法には写真からの推定を含みます。",
-      en: "Explore the external honeycomb grilles, central emblems and circular engravings, perforated 20 mm cushions, leather headband and adjustment stems. With the cable detached, both 3.5 mm sockets and the inner pads are visible. Exterior and component dimensions include estimates from photos.",
+      en: "The model includes the external honeycomb grilles, central emblems and circular engravings, perforated 20 mm cushions, leather headband and adjustment stems. With the cable detached, both 3.5 mm sockets and the inner pads are visible. Exterior and component dimensions include estimates from photos.",
     },
     specifications: [
       {
@@ -518,7 +518,7 @@ export const audioEquipment: readonly AudioEquipment[] = [
     },
     details: {
       ja: "丸みのある一体形状の梨地ハウジング、彫り込まれたロゴと型番、角度の付いたノズル、保護格子と中空構造を持つシリコン製イヤーチップを再現。MMCX端子の接点、右側の赤いリング、左側の触覚マーク、半透明の耳掛けケーブル内の撚り線も確認できます。単体表示では左のMMCX端子を外して接続部を見せています。外形・部品寸法はメーカー写真からの推定で、ケーブルは表示用に短く描いています。使用しているケーブルは4.4 mmバランス端子のため、据置きではUD-505正面の4.4 mm出力に接続します。HA-1A MK2には接続しません。",
-      en: "Explore the rounded, textured metal housings, engraved emblems and model lettering, angled nozzles, and hollow silicone ear tips with protective guards. Details include MMCX contacts, the right connector’s red ring, the left tactile marker, and twisted wires inside translucent over-ear cables. The standalone view detaches the left MMCX connector to reveal its contacts. Exterior and component dimensions are estimated from manufacturer photos; cables are shortened for display. My cable uses a 4.4 mm balanced plug, so the desktop system connects to UD-505’s front 4.4 mm output. It does not connect to HA-1A MK2.",
+      en: "The model includes the rounded, textured metal housings, engraved emblems and model lettering, angled nozzles, and hollow silicone ear tips with protective guards. Details include MMCX contacts, the right connector’s red ring, the left tactile marker, and twisted wires inside translucent over-ear cables. The standalone view detaches the left MMCX connector to reveal its contacts. Exterior and component dimensions are estimated from manufacturer photos; cables are shortened for display. My cable uses a 4.4 mm balanced plug, so the desktop system connects to UD-505’s front 4.4 mm output. It does not connect to HA-1A MK2.",
     },
     specifications: [
       {

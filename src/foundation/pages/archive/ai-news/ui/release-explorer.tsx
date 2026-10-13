@@ -503,7 +503,7 @@ export function ReleaseExplorer({
       </div>
       <p className="px-1 text-label leading-6 text-muted-foreground">
         {en
-          ? "Intervals compare recorded dates within the same series, including previews, limited access, and general availability. One announcement counts as one entry. This is a curated history, not an exhaustive release log."
+          ? "Intervals compare recorded dates within the same series, including previews, limited access, and general availability. One announcement counts as one entry. This record is not exhaustive."
           : "間隔は、同じ系列の記録済みリリース日を比較した日数です。プレビュー・限定提供・一般提供を含み、複数モデルの同時発表は1件として数えています。すべてのリリースを網羅した記録ではありません。"}
       </p>
       {popover.content}

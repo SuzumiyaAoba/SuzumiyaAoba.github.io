@@ -1,8 +1,8 @@
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { SITE_TITLE } from "@/shared/lib/site";
+import { SiteLockup } from "@/shared/ui/site-lockup";
 import { navigationGroups } from "../model/navigation";
-import { BrandMark } from "./brand-mark";
 import { NavigationLink } from "./navigation-link";
 
 /**
@@ -13,13 +13,16 @@ type FooterProps = {
   locale: Locale;
 };
 
+/** 最初の記事を公開した年。著作権表示の起点にする。 */
+const FIRST_YEAR = 2023;
+
 /**
- * サイトのフッター。全ページへの地図（サイトマップ）を兼ね、どこに何があるかを一望できるようにする。
+ * サイトのフッター。サイト名と、全ページへの地図（サイトマップ）を置く。
  * @param props ロケール情報
  */
 export function Footer({ locale }: FooterProps) {
-  const year = new Date().getFullYear();
   const en = locale === "en";
+  const year = new Date().getFullYear();
 
   return (
     <footer className="site-footer">
@@ -31,8 +34,7 @@ export function Footer({ locale }: FooterProps) {
               className="site-footer-brand"
               aria-label={`${SITE_TITLE} — ${en ? "Home" : "ホーム"}`}
             >
-              <BrandMark />
-              <span lang="la">{SITE_TITLE}</span>
+              <SiteLockup size="md" showRule />
             </a>
           </div>
           <nav
@@ -61,7 +63,9 @@ export function Footer({ locale }: FooterProps) {
           </nav>
         </div>
         <div className="site-footer-bottom">
-          <p>© {year} SuzumiyaAoba</p>
+          <p>
+            © {FIRST_YEAR}–{year} SuzumiyaAoba
+          </p>
           <a href="#top" className="site-footer-top">
             {en ? "Back to top" : "ページの先頭へ"}
             <span aria-hidden="true">↑</span>

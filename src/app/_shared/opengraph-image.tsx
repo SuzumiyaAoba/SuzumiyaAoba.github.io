@@ -1,23 +1,23 @@
 import type { ReactElement, ReactNode } from "react";
 import { ImageResponse } from "next/og";
-import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import { loadOpengraphFonts } from "./opengraph-font";
 
 export const OPENGRAPH_IMAGE_SIZE = { width: 1200, height: 630 };
 
-/** サイトのライトテーマ（globals.css の :root）と同じ色。 */
+/** サイトのライトテーマ（globals.css の :root）と同じ色。紙・墨・朱の三色。 */
 export const OPENGRAPH_COLORS = {
-  background: "#faf9f6",
-  foreground: "#1f1e1b",
-  muted: "#66635c",
-  subtle: "#8d897f",
-  brand: "#3e5a86",
-  rule: "#e4e0d7",
+  background: "#fcfcfb",
+  foreground: "#161514",
+  muted: "#5c5852",
+  subtle: "#8c8780",
+  brand: "#c8361c",
+  rule: "#e3e0da",
 } as const;
 
 const SITE_DOMAIN = "suzumiyaaoba.com";
 const SANS = '"Noto Sans JP"';
-const DISPLAY = '"Newsreader"';
+const SERIF = '"Noto Serif JP"';
+const LATIN = '"Libre Caslon Text"';
 /** 下部に並べるタグの上限。多すぎると 1 行に収まらない。 */
 const MAX_TAGS = 4;
 /** 欧文 1 文字の幅を、和文 1 文字に対する比で表したおおよその値。 */
@@ -33,14 +33,65 @@ export async function renderOpengraphImage(content: ReactElement) {
   });
 }
 
-/** サイトの印 ∴。ヘッダーのロゴと同じ図形。 */
-export function OpengraphBrandMark({ size }: { size: number }) {
+/**
+ * サイト名の推論図。ヘッダーのロゴと同じく、前提 Ex falso と結論 quodlibet を朱の線で隔てる。
+ * size は欧文の字の大きさ（px）。showRule で線の右に sequitur を添える。
+ */
+export function OpengraphLockup({
+  size,
+  showRule = false,
+}: {
+  size: number;
+  showRule?: boolean;
+}) {
+  const word = {
+    display: "flex",
+    padding: `0 ${Math.round(size * 0.3)}px`,
+    fontFamily: LATIN,
+    fontStyle: "italic",
+    fontSize: size,
+    lineHeight: 1,
+    color: OPENGRAPH_COLORS.foreground,
+  } as const;
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24">
-      <circle cx="12" cy="6.5" r="2.25" fill={OPENGRAPH_COLORS.brand} />
-      <circle cx="5.75" cy="17.5" r="2.25" fill={OPENGRAPH_COLORS.brand} />
-      <circle cx="18.25" cy="17.5" r="2.25" fill={OPENGRAPH_COLORS.brand} />
-    </svg>
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div style={word}>Ex falso</div>
+      <div
+        style={{
+          display: "flex",
+          alignSelf: "stretch",
+          height: Math.max(2, Math.round(size * 0.04)),
+          margin: `${Math.round(size * 0.24)}px 0 ${Math.round(size * 0.2)}px`,
+          background: OPENGRAPH_COLORS.brand,
+        }}
+      />
+      <div style={word}>quodlibet</div>
+      {showRule ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "100%",
+            top: Math.round(size * 0.98),
+            display: "flex",
+            marginLeft: Math.round(size * 0.18),
+            fontFamily: LATIN,
+            fontStyle: "italic",
+            fontSize: Math.round(size * 0.42),
+            lineHeight: 1,
+            color: OPENGRAPH_COLORS.foreground,
+          }}
+        >
+          sequitur
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -58,7 +109,7 @@ function visualLength(text: string): number {
 function titleFontSize(title: string): number {
   const length = visualLength(title);
   if (length <= 18) {
-    return 76;
+    return 78;
   }
   if (length <= 30) {
     return 66;
@@ -70,7 +121,7 @@ function titleFontSize(title: string): number {
 }
 
 /**
- * OGP 画像の共通の枠。上にロゴ、下に罫線とドメインを置き、中央に内容を入れる。
+ * OGP 画像の共通の枠。上に小さな推論図、下に墨の罫とドメインを置き、中央に内容を入れる。
  */
 export function OpengraphFrame({
   children,
@@ -87,25 +138,14 @@ export function OpengraphFrame({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: "64px 80px 56px",
+        padding: "56px 80px 52px",
         background: OPENGRAPH_COLORS.background,
         color: OPENGRAPH_COLORS.foreground,
         fontFamily: SANS,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <OpengraphBrandMark size={30} />
-        <div
-          style={{
-            display: "flex",
-            fontFamily: DISPLAY,
-            fontStyle: "italic",
-            fontSize: 32,
-            color: OPENGRAPH_COLORS.foreground,
-          }}
-        >
-          {SITE_TITLE}
-        </div>
+      <div style={{ display: "flex" }}>
+        <OpengraphLockup size={30} />
       </div>
       {children}
       <div
@@ -114,9 +154,9 @@ export function OpengraphFrame({
           alignItems: "center",
           justifyContent: "space-between",
           gap: "32px",
-          paddingTop: "28px",
-          borderTop: `1px solid ${OPENGRAPH_COLORS.rule}`,
-          fontSize: 26,
+          paddingTop: "26px",
+          borderTop: `2px solid ${OPENGRAPH_COLORS.foreground}`,
+          fontSize: 25,
           color: OPENGRAPH_COLORS.muted,
         }}
       >
@@ -144,8 +184,8 @@ export function OpengraphTags({ tags }: { tags: string[] }) {
 }
 
 /**
- * 記事・連載・タグ・書籍などの OGP 画像。種別（kicker）とタイトルを大きく置き、
- * 下部にタグを添える。
+ * 記事・連載・タグ・書籍などの OGP 画像。種別（kicker）を朱の角印とともに置き、
+ * 題を明朝で大きく組む。下部にタグを添える。
  */
 export function ArticleOpengraphImage({
   kicker,
@@ -162,21 +202,28 @@ export function ArticleOpengraphImage({
 }) {
   return (
     <OpengraphFrame footer={<OpengraphTags tags={tags} />}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "26px" }}>
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "20px",
-            fontSize: 28,
+            gap: "22px",
+            fontSize: 27,
           }}
         >
           <div
             style={{
               display: "flex",
-              color: OPENGRAPH_COLORS.brand,
-              fontWeight: 700,
-              letterSpacing: "0.04em",
+              width: 12,
+              height: 12,
+              background: OPENGRAPH_COLORS.brand,
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              color: OPENGRAPH_COLORS.foreground,
+              letterSpacing: "0.12em",
             }}
           >
             {kicker}
@@ -193,10 +240,11 @@ export function ArticleOpengraphImage({
         <div
           style={{
             display: "block",
+            fontFamily: SERIF,
             fontSize: titleFontSize(title),
             fontWeight: 700,
-            lineHeight: 1.4,
-            letterSpacing: "0.01em",
+            lineHeight: 1.42,
+            letterSpacing: "0.02em",
             lineClamp: 3,
           }}
         >

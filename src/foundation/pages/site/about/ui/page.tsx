@@ -2,7 +2,7 @@ import { SiteLayout } from "@/widgets/site-layout";
 
 import { JsonLd } from "@/shared/ui/seo";
 import { I18nText } from "@/shared/ui/i18n-text";
-import { SITE_TITLE } from "@/shared/lib/site";
+import { SiteLockup } from "@/shared/ui/site-lockup";
 import {
   buildBreadcrumbList,
   buildListBreadcrumbItems,
@@ -75,8 +75,8 @@ export function AboutPageContent({ locale }: AboutPageContentProps) {
               <I18nText locale={locale} ja="サイト名" en="The name" />
             </h2>
             <div className="about-body">
-              <p className="about-motto" lang="la">
-                {SITE_TITLE}
+              <p className="about-lockup">
+                <SiteLockup size="md" showRule />
               </p>
               <p className="about-gloss">
                 <I18nText

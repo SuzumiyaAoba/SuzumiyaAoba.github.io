@@ -7,6 +7,10 @@ const nextConfig = {
     unoptimized: true,
   },
   turbopack: {},
+  // 言語ごとにルートレイアウトが分かれているため、未一致 URL の 404.html は app/global-not-found.tsx から作る。
+  experimental: {
+    globalNotFound: true,
+  },
   serverExternalPackages: ["codehike", "@code-hike/lighter", "next-mdx-remote"],
   webpack: (
     /** @type {{ watchOptions?: Record<string, unknown> }} */ config

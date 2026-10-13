@@ -38,17 +38,14 @@ const ICON_DIR = path.join(ROOT, "src/foundation/shared/ui/icon");
 /**
  * クライアントコンポーネントから使うアイコン。
  * これらだけがクライアントバンドルへ載る。
- * 対象ファイル: widgets/header/ui/header.tsx, shared/ui/theme-toggle.tsx,
- *              shared/ui/language-toggle.tsx, pages/archive/ai-news/ui/provider-identity.tsx
+ * 対象ファイル: widgets/site-layout/ui/header.tsx, pages/archive/ai-news/ui/provider-identity.tsx
+ * （明暗と言語の切り替えはアイコンを使わず文字で示す）
  */
 const CLIENT_ICONS = [
   "lucide:search",
   "lucide:menu",
   "lucide:x",
   "lucide:chevron-right",
-  "lucide:sun",
-  "lucide:moon",
-  "lucide:languages",
   "logos:openai-icon",
   "material-icon-theme:claude",
   "logos:google-icon",

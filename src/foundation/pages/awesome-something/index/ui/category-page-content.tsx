@@ -87,7 +87,7 @@ export function AwesomeCategoryPageContent({
   const title =
     subcategory?.name[locale] ??
     category?.name[locale] ??
-    (isEnglish ? "All discoveries" : "すべての項目");
+    (isEnglish ? "All items" : "すべての項目");
   const path = getAwesomePath(category?.id ?? "all", subcategory?.id);
   const selectedItems = selectAwesomeItems(items, selection);
   const catalogCategory = getAwesomeCatalog(items).find(
@@ -136,7 +136,7 @@ export function AwesomeCategoryPageContent({
                 className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <List className="size-4" aria-hidden="true" />
-                {isEnglish ? "All discoveries" : "すべての項目"}
+                {isEnglish ? "All items" : "すべての項目"}
               </Link>
             )}
           </div>

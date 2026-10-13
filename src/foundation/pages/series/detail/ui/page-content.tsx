@@ -45,15 +45,6 @@ export function SeriesDetailPageContent({
             {series.description ? (
               <p className="page-lead">{series.description}</p>
             ) : null}
-          </div>
-          <div className="flex flex-col items-start gap-3 sm:items-end">
-            <p className="page-count">
-              <I18nText
-                locale={locale}
-                ja={`全 ${entries.length} 回`}
-                en={`${entries.length} parts`}
-              />
-            </p>
             {first ? (
               <a
                 href={toLocalePath(`/blog/post/${first.slug}`, locale)}
@@ -64,10 +55,16 @@ export function SeriesDetailPageContent({
                   ja="第 1 回から読む"
                   en="Start from part 1"
                 />
-                <span aria-hidden="true">→</span>
               </a>
             ) : null}
           </div>
+          <p className="page-count">
+            <I18nText
+              locale={locale}
+              ja={`全 ${entries.length} 回`}
+              en={`${entries.length} parts`}
+            />
+          </p>
         </header>
 
         {entries.length === 0 ? (

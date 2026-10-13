@@ -37,26 +37,32 @@ export function BookDetailPageContent({
     <SiteLayout locale={locale} path={bookPath}>
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main-reading page-stack">
-        <div>
-          <Breadcrumbs items={breadcrumbItems} className="mb-4" />
-          <h1 className="text-2xl leading-snug font-semibold sm:text-3xl">
-            {bookTitle}
-          </h1>
-        </div>
+        <Breadcrumbs items={breadcrumbItems} />
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">書籍</p>
+            <h1 className="page-title">{bookTitle}</h1>
+          </div>
+        </header>
 
         {leadContent ? (
           <div className="prose max-w-none">{leadContent}</div>
         ) : null}
 
-        <nav aria-label="目次" className="space-y-4">
-          <h2 className="section-label">目次</h2>
-          <div className="space-y-5">
-            {chapters.map((ch) => (
-              <section key={ch.chapter} className="space-y-2">
-                <h3 className="text-sm font-semibold text-foreground">
-                  第{Number.parseInt(ch.chapter, 10)}章 — {ch.title}
+        {/* 本の目次。節の題と節番号をリーダーでつなぐ。 */}
+        <nav aria-label="目次" className="book-toc">
+          <h2 className="book-toc-title">目次</h2>
+          {chapters.map((ch) => {
+            const chapterNumber = Number.parseInt(ch.chapter, 10);
+            return (
+              <section key={ch.chapter} className="book-toc-chapter">
+                <h3 className="book-toc-chapter-title">
+                  <span className="book-toc-chapter-number">
+                    第{chapterNumber}章
+                  </span>
+                  {ch.title}
                 </h3>
-                <ol className="space-y-1 pl-4">
+                <ol>
                   {ch.sections.map((sec) => (
                     <li key={`${sec.chapter}-${sec.section}`}>
                       <a
@@ -64,16 +70,19 @@ export function BookDetailPageContent({
                           `/books/${bookSlug}/${sec.chapter}/${sec.section}`,
                           locale
                         )}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        className="leader-link"
                       >
-                        {sec.title}
+                        <span>{sec.title}</span>
+                        <span>
+                          {chapterNumber}.{Number.parseInt(sec.section, 10)}
+                        </span>
                       </a>
                     </li>
                   ))}
                 </ol>
               </section>
-            ))}
-          </div>
+            );
+          })}
         </nav>
       </main>
     </SiteLayout>

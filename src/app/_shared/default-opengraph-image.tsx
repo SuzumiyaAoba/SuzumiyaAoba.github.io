@@ -1,21 +1,24 @@
 import type { Locale } from "@/shared/lib/routing";
-import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import {
   OPENGRAPH_COLORS,
-  OpengraphBrandMark,
+  OpengraphLockup,
   renderOpengraphImage,
 } from "./opengraph-image";
 
 export { OPENGRAPH_IMAGE_SIZE as DEFAULT_OPENGRAPH_IMAGE_SIZE } from "./opengraph-image";
 
-const SITE_TITLE_GLOSS: Record<Locale, string> = {
-  ja: "偽からは、何でも導かれる。",
-  en: "From falsehood, anything follows.",
-};
+/** 縦に一字ずつ積む和訳。縦組みの約物は位置が変わるため句読点を省く。同じ字が並ぶため位置を識別子にする。 */
+const VERTICAL_GLOSS = Array.from(
+  "偽からは何でも導かれる",
+  (char, position) => ({
+    char,
+    id: `${position}-${char}`,
+  })
+);
 
 /**
- * サイトルート用の既定 OGP 画像を描画する。ja/en の差分はサイト名の訳のみ。
- * ホームの導入と同じく、∴ の印とサイト名を大きく置く。
+ * サイトルート用の既定 OGP 画像を描画する。ホームの冒頭と同じく、
+ * 左にサイト名の推論図、右端に和訳を縦に置く。英語版は和訳の代わりに英訳を添える。
  */
 export async function renderDefaultOpengraphImage(locale: Locale) {
   return await renderOpengraphImage(
@@ -26,44 +29,66 @@ export async function renderDefaultOpengraphImage(locale: Locale) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: "72px 80px 56px",
+        padding: "64px 80px 52px",
         background: OPENGRAPH_COLORS.background,
         color: OPENGRAPH_COLORS.foreground,
         fontFamily: '"Noto Sans JP"',
       }}
     >
-      <OpengraphBrandMark size={56} />
-      <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
-        <div
-          style={{
-            display: "flex",
-            fontFamily: '"Newsreader"',
-            fontStyle: "italic",
-            fontSize: 104,
-            lineHeight: 1.05,
-            letterSpacing: "-0.015em",
-          }}
-        >
-          {SITE_TITLE}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <div style={{ display: "flex", paddingTop: "28px" }}>
+          <OpengraphLockup size={112} showRule />
         </div>
-        <div
-          style={{
-            display: "flex",
-            fontSize: 30,
-            color: OPENGRAPH_COLORS.subtle,
-            letterSpacing: "0.08em",
-          }}
-        >
-          {SITE_TITLE_GLOSS[locale]}
-        </div>
+        {locale === "ja" ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "6px",
+              fontFamily: '"Noto Serif JP"',
+              fontWeight: 700,
+              fontSize: 30,
+              lineHeight: 1.1,
+              color: OPENGRAPH_COLORS.foreground,
+            }}
+          >
+            {VERTICAL_GLOSS.map(({ char, id }) => (
+              <div key={id} style={{ display: "flex" }}>
+                {char}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              maxWidth: 260,
+              fontFamily: '"Libre Caslon Text"',
+              fontStyle: "italic",
+              fontSize: 30,
+              lineHeight: 1.4,
+              textAlign: "right",
+              color: OPENGRAPH_COLORS.muted,
+            }}
+          >
+            From falsehood, anything follows.
+          </div>
+        )}
       </div>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          paddingTop: "28px",
-          borderTop: `1px solid ${OPENGRAPH_COLORS.rule}`,
-          fontSize: 26,
+          paddingTop: "26px",
+          borderTop: `2px solid ${OPENGRAPH_COLORS.foreground}`,
+          fontSize: 25,
           color: OPENGRAPH_COLORS.muted,
         }}
       >

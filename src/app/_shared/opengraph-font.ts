@@ -39,7 +39,10 @@ type OpengraphFont = {
   weight: 400 | 700;
 };
 
-/** サイトの書体に合わせ、本文はゴシック（Noto Sans JP）、サイト名はセリフ体の斜体（Newsreader）。 */
+/**
+ * サイトの書体に合わせ、題は明朝（Noto Serif JP）、補足はゴシック（Noto Sans JP）、
+ * サイト名の推論図はキャスロンの斜体（Libre Caslon Text）で組む。
+ */
 const FONT_SOURCES = [
   {
     family: "Noto+Sans+JP:wght@400",
@@ -48,14 +51,14 @@ const FONT_SOURCES = [
     weight: 400,
   },
   {
-    family: "Noto+Sans+JP:wght@700",
-    name: "Noto Sans JP",
+    family: "Noto+Serif+JP:wght@700",
+    name: "Noto Serif JP",
     style: "normal",
     weight: 700,
   },
   {
-    family: "Newsreader:ital,wght@1,400",
-    name: "Newsreader",
+    family: "Libre+Caslon+Text:ital@1",
+    name: "Libre Caslon Text",
     style: "italic",
     weight: 400,
   },

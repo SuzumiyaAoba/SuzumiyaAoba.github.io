@@ -49,7 +49,7 @@ export const navigationGroups: NavigationGroup[] = [
   },
   {
     ja: "探す",
-    en: "Explore",
+    en: "Find",
     items: [
       { href: "/tags", ja: "タグ", en: "Tags" },
       KEYWORDS,

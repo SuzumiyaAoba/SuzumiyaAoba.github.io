@@ -11,6 +11,7 @@
   --font-sans: var(--font-ui);
   --font-serif: var(--font-display);
   --font-mono: var(--font-code);
+  --font-latin: var(--font-latin-display);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -47,6 +48,7 @@
   --color-surface: var(--surface);
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
+  --color-rule-ink: var(--rule-ink);
   --color-subtle-foreground: var(--subtle-foreground);
   --color-code-surface: var(--code-surface);
   --color-mark: var(--mark);
@@ -93,13 +95,17 @@
   --color-bit-muted: var(--bit-muted);
   --color-bit-high: var(--bit-high);
   --color-bit-low: var(--bit-low);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  /*
+   * 角は紙の裁ち落としのようにほぼ直角にする。丸みは操作できる小さな部品の手触りに残す程度。
+   * 部品側の rounded-xl などはそのまま、段階だけを詰める。
+   */
+  --radius-sm: 1px;
+  --radius-md: 2px;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-xl: calc(var(--radius) + 1px);
+  --radius-2xl: calc(var(--radius) + 2px);
+  --radius-3xl: calc(var(--radius) + 4px);
+  --radius-4xl: calc(var(--radius) + 6px);
 }
 
 @theme {
@@ -108,14 +114,24 @@
   --text-label: 0.6875rem;
   --tracking-eyebrow: 0.08em;
   --tracking-overlay: 0.36em;
+  /* 面を浮かせる影は使わない。重なりを示す必要があるポップオーバー類だけ輪郭の濃い影を残す。 */
+  --shadow-2xs: 0 0 #0000;
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 1px 0 rgb(0 0 0 / 0.04), 0 10px 24px -14px rgb(0 0 0 / 0.28);
+  --shadow-lg: 0 1px 0 rgb(0 0 0 / 0.04), 0 18px 36px -18px rgb(0 0 0 / 0.32);
 }
 
-/* 目次・補足などの小さな見出しラベル。大文字化や広い字間は使わず、静かに置く。 */
+/* 目次・補足などの小さな見出しラベル。本の「目　次」のように明朝で字間を大きく空けて置く。 */
 @utility section-label {
+  font-family: var(--font-display);
   font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--muted-foreground);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: var(--foreground);
+  &:lang(en) {
+    letter-spacing: 0.08em;
+  }
 }
 
 @utility audio-stage {
@@ -171,11 +187,9 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: calc(var(--radius) + 6px);
+  border-radius: var(--radius);
   background: #0a0f17;
-  box-shadow:
-    0 0 0 1px color-mix(in oklch, var(--border) 70%, transparent),
-    0 24px 60px -32px rgb(3 8 20 / 0.55);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--rule-ink) 85%, transparent);
   color: #e8eef6;
   @media (width >= 40rem) {
     aspect-ratio: 16 / 9;
@@ -338,290 +352,306 @@
 
 /*
  * デザイントークン
- * 紙のような温かい地に墨色の文字を置き、アクセントは落ち着いた藍色だけに絞る。
+ * 紙（白）に墨（黒）で刷り、朱を一色だけ差す二色刷りを基本にする。
+ * 朱はサイト名の推論線・現在地・リンクの下線など「印」に限って使い、面は塗らない。
  * 色の役割: 文字 foreground > muted-foreground > subtle-foreground（装飾のみ）
  *           面   background < surface / muted < card
- *           線   rule（区切り） < rule-strong（強調）
+ *           線   rule（区切り） < rule-strong（強調） < rule-ink（骨格を作る墨の線）
  */
 :root {
-  /* 欧文は Inter、和文は端末内のゴシック体を使い、日本語 Web フォントの追加取得を避ける。 */
+  /*
+   * 書体の役割は三つに分ける。
+   * 明朝 = 書き手の声（題・見出し）、ゴシック = 読ませる文と操作、等幅 = 機械の文字（コード・数表）。
+   * 和文は明朝もゴシックも端末の書体を使い、日本語 Web フォントは取得しない。
+   */
   --font-ui:
-    var(--font-inter, "Inter"), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-    "Noto Sans JP", "Noto Sans CJK JP", "BIZ UDPGothic", Meiryo, system-ui,
-    sans-serif;
+    var(--font-plex-sans, "IBM Plex Sans"), "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Noto Sans CJK JP",
+    "BIZ UDPGothic", Meiryo, system-ui, sans-serif;
   --font-display:
-    var(--font-newsreader, "Newsreader"), "Hiragino Mincho ProN", "Yu Mincho",
-    "Noto Serif JP", serif;
+    "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP",
+    "Noto Serif JP", "BIZ UDPMincho", serif;
+  --font-latin-display:
+    var(--font-caslon, "Libre Caslon Text"), "Hiragino Mincho ProN",
+    "Yu Mincho", "YuMincho", "Noto Serif CJK JP", Georgia, serif;
   --font-code:
-    var(--font-source-code-pro, "Source Code Pro"), ui-monospace,
-    "SFMono-Regular", Menlo, Consolas, monospace;
-  --radius: 0.5rem;
-  --site-header-height: 4rem;
-  --reading-width: 43rem;
-  --space-page: clamp(1.5rem, 3vw, 2.25rem);
-  --space-section: clamp(3.5rem, 7vw, 6rem);
+    var(--font-plex-mono, "IBM Plex Mono"), ui-monospace, "SFMono-Regular",
+    Menlo, Consolas, monospace;
+  --radius: 3px;
+  --site-header-height: 4.5rem;
+  /* 本文 1 行の長さ。本文 17px の全角 40 字分。 */
+  --reading-width: 42.5rem;
+  --space-page: clamp(1.75rem, 3.5vw, 2.75rem);
+  --space-section: clamp(4rem, 8vw, 7rem);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 160ms;
-  --duration-normal: 240ms;
-  --duration-slow: 700ms;
+  --duration-fast: 140ms;
+  --duration-normal: 220ms;
+  --duration-slow: 600ms;
 
-  --background: #faf9f6;
-  --foreground: #1f1e1b;
+  --background: #fcfcfb;
+  --foreground: #161514;
   --card: #ffffff;
-  --card-foreground: #1f1e1b;
+  --card-foreground: #161514;
   --popover: #ffffff;
-  --popover-foreground: #1f1e1b;
-  --primary: #1f1e1b;
-  --primary-foreground: #faf9f6;
-  --secondary: #f1efea;
-  --secondary-foreground: #1f1e1b;
-  --muted: #f1efea;
-  --muted-foreground: #66635c;
-  --subtle-foreground: #8d897f;
-  --accent: #edf0f5;
-  --accent-foreground: #2c4469;
-  --destructive: #b0443d;
-  --border: #e4e0d7;
-  --input: #d3cec3;
-  --ring: #3e5a86;
-  --brand: #3e5a86;
-  --brand-soft: #e9eef5;
+  --popover-foreground: #161514;
+  --primary: #161514;
+  --primary-foreground: #fcfcfb;
+  --secondary: #f2f1ee;
+  --secondary-foreground: #161514;
+  --muted: #f2f1ee;
+  --muted-foreground: #5c5852;
+  --subtle-foreground: #8c8780;
+  --accent: #efede9;
+  --accent-foreground: #161514;
+  --destructive: #b3261e;
+  --border: #e3e0da;
+  --input: #cfcbc4;
+  --ring: #c8361c;
+  /* 朱。紙の上で 5:1 以上を保つ濃さ。 */
+  --brand: #c8361c;
+  --brand-soft: #fbe8e2;
   --brand-contrast: #ffffff;
-  --surface: #f4f2ed;
-  --rule: #e4e0d7;
-  --rule-strong: #cdc8bd;
-  --code-surface: #f3f1ec;
-  --mark: #f0e5c6;
-  --callout-surface: #f4f2ed;
-  --callout-info: #3e5a86;
-  --callout-success: #4d6b4f;
-  --callout-warning: #8a6a2c;
-  --callout-error: #9b4841;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: #f4f2ed;
-  --sidebar-foreground: #1f1e1b;
-  --sidebar-primary: #1f1e1b;
-  --sidebar-primary-foreground: #faf9f6;
-  --sidebar-accent: #edf0f5;
-  --sidebar-accent-foreground: #2c4469;
-  --sidebar-border: #e4e0d7;
-  --sidebar-ring: #3e5a86;
-  --codehike-callout-bg: #f4f2ed;
-  --codehike-callout-border: #cdc8bd;
+  --surface: #f4f3f0;
+  --rule: #e3e0da;
+  --rule-strong: #c9c4bc;
+  --rule-ink: #161514;
+  --code-surface: #f4f3f0;
+  /* 蛍光ペンの黄。強調（em）にだけ使う。 */
+  --mark: #f4e4a2;
+  --callout-surface: #f4f3f0;
+  --callout-info: #2f5574;
+  --callout-success: #3c6646;
+  --callout-warning: #8a6417;
+  --callout-error: #b3261e;
+  --chart-1: oklch(0.6 0.19 35);
+  --chart-2: oklch(0.55 0.09 200);
+  --chart-3: oklch(0.38 0.05 250);
+  --chart-4: oklch(0.8 0.13 85);
+  --chart-5: oklch(0.68 0.12 60);
+  --sidebar: #f4f3f0;
+  --sidebar-foreground: #161514;
+  --sidebar-primary: #161514;
+  --sidebar-primary-foreground: #fcfcfb;
+  --sidebar-accent: #efede9;
+  --sidebar-accent-foreground: #161514;
+  --sidebar-border: #e3e0da;
+  --sidebar-ring: #c8361c;
+  --codehike-callout-bg: #f4f3f0;
+  --codehike-callout-border: #c9c4bc;
   --codehike-tooltip-bg: #ffffff;
-  --codehike-tooltip-border: #e4e0d7;
-  --codehike-tooltip-text: #1f1e1b;
+  --codehike-tooltip-border: #e3e0da;
+  --codehike-tooltip-text: #161514;
   --codehike-muted-text: var(--muted-foreground);
   --codehike-footnote-border: var(--muted-foreground);
-  --codehike-diff-add: oklch(0.78 0.18 142);
-  --codehike-diff-remove: oklch(0.7 0.19 27);
+  --codehike-diff-add: oklch(0.62 0.12 150);
+  --codehike-diff-remove: oklch(0.58 0.17 32);
 
   /* destructive 背景上の文字色 */
   --destructive-foreground: #ffffff;
   /* 情報系アクセント（Amazon 案内・カレンダー土曜・凡例ホバー等） */
-  --info: #2563eb;
-  --info-surface: rgb(239 246 255 / 70%);
-  --info-border: rgb(191 219 254 / 70%);
-  --info-ink: #1e3a8a;
+  --info: #2f5574;
+  --info-surface: #eef2f5;
+  --info-border: #cdd8e1;
+  --info-ink: #1f3a50;
   /* 完了・正常系 */
-  --success: #059669;
-  /* カレンダー日曜・祝日 */
-  --sunday: #e11d48;
+  --success: #3c6646;
+  /* カレンダー日曜・祝日。朱と区別できるよう紅に寄せる。 */
+  --sunday: #b4233f;
   /* MDX Column のノート風ボックス */
-  --column-surface: #f4f2ed;
+  --column-surface: #f4f3f0;
   --column-ink: #5c4a2a;
-  /* AIニュースのアクセント（teal）: 今日・選択・間隔の強調 */
-  --ai-accent: #0d9488;
-  --ai-accent-soft: rgb(240 253 250 / 60%);
-  --ai-accent-ink: #115e59;
+  /* AIニュースの強調（今日・選択・間隔）。サイトの朱に合わせる。 */
+  --ai-accent: #c8361c;
+  --ai-accent-soft: #fbe8e2;
+  --ai-accent-ink: #9a2a15;
   --ai-accent-on-solid: #ffffff;
-  --ai-accent-marker: #5eead4;
-  --ai-accent-marker-ink: #134e4a;
-  --ai-accent-line: rgb(15 118 110 / 30%);
-  /* AIニュースのプロバイダー色 */
-  --provider-openai: #059669;
-  --provider-openai-soft: #ecfdf5;
-  --provider-openai-ink: #047857;
-  --provider-openai-border: #a7f3d0;
-  --provider-anthropic: #ea580c;
-  --provider-anthropic-soft: #fff7ed;
-  --provider-anthropic-ink: #c2410c;
-  --provider-anthropic-border: #fed7aa;
-  --provider-google: #2563eb;
-  --provider-google-soft: #eff6ff;
-  --provider-google-ink: #1d4ed8;
-  --provider-google-border: #bfdbfe;
-  --provider-deepseek: #7c3aed;
-  --provider-deepseek-soft: #f5f3ff;
-  --provider-deepseek-ink: #6d28d9;
-  --provider-deepseek-border: #ddd6fe;
-  --provider-other: #64748b;
-  --provider-other-soft: #f1f5f9;
-  --provider-other-ink: #334155;
-  --provider-other-border: #e2e8f0;
+  --ai-accent-marker: #f4b6a6;
+  --ai-accent-marker-ink: #6e1d0e;
+  --ai-accent-line: rgb(200 54 28 / 35%);
+  /* AIニュースのプロバイダー色。各社の色を墨に寄せて彩度を落とす。 */
+  --provider-openai: #2f7a5c;
+  --provider-openai-soft: #eaf3ee;
+  --provider-openai-ink: #23604a;
+  --provider-openai-border: #b9d6c7;
+  --provider-anthropic: #b8582f;
+  --provider-anthropic-soft: #f8ece4;
+  --provider-anthropic-ink: #8f4322;
+  --provider-anthropic-border: #e6c4b1;
+  --provider-google: #3a62a8;
+  --provider-google-soft: #ebf0f8;
+  --provider-google-ink: #2c4d86;
+  --provider-google-border: #c3d1e8;
+  --provider-deepseek: #5b55a8;
+  --provider-deepseek-soft: #eeedf8;
+  --provider-deepseek-ink: #47428a;
+  --provider-deepseek-border: #cfcce9;
+  --provider-other: #6b6760;
+  --provider-other-soft: #f2f1ee;
+  --provider-other-ink: #46433e;
+  --provider-other-border: #dcd8d1;
   /* ASCII コード表のビット桁色 */
-  --bit-muted: #94a3b8;
-  --bit-high: #16a34a;
-  --bit-low: #0284c7;
+  --bit-muted: #8c8780;
+  --bit-high: #c8361c;
+  --bit-low: #2f5574;
 
-  /* CodeHike github-from-css (Light) */
+  /*
+   * コードの配色（Code Hike の github-from-css のスロットに割り当てる）。
+   * 二色刷りの技術書に倣い、ほとんどを墨で刷り、予約語だけ朱を差す。
+   */
   --ch-0: light;
-  --ch-1: #6e7781;
-  --ch-2: #0550ae;
-  --ch-3: #953800;
-  --ch-4: #24292f;
-  --ch-5: #8250df;
-  --ch-6: #116329;
-  --ch-7: #cf222e;
-  --ch-8: #0a3069;
-  --ch-9: #82071e;
-  --ch-10: #f6f8fa;
-  --ch-11: #ffebe9;
-  --ch-12: #dafbe1;
-  --ch-13: #ffd8b5;
-  --ch-14: #eaeef2;
-  --ch-15: #57606a;
+  --ch-1: #8a847b;
+  --ch-2: #2f5574;
+  --ch-3: #7a5a1c;
+  --ch-4: #1f1d1b;
+  --ch-5: #3d3a35;
+  --ch-6: #3c6646;
+  --ch-7: #a8341c;
+  --ch-8: #3c6646;
+  --ch-9: #8e1f12;
+  --ch-10: #f4f3f0;
+  --ch-11: #f8e3dd;
+  --ch-12: #e2efe5;
+  --ch-13: #f6e7c8;
+  --ch-14: #ebe9e4;
+  --ch-15: #5c5852;
   --ch-16: #ffffff;
-  --ch-17: #eaeef280;
-  --ch-18: #fdff0033;
-  --ch-19: #1a85ff;
-  --ch-20: #add6ff;
-  --ch-21: #0969da;
-  --ch-22: #f6f8fa;
-  --ch-23: #d0d7de;
-  --ch-24: #8c959f;
-  --ch-25: #afb8c133;
+  --ch-17: #e9e6e080;
+  --ch-18: #f4e4a266;
+  --ch-19: #c8361c;
+  --ch-20: #f1d3c9;
+  --ch-21: #c8361c;
+  --ch-22: #f4f3f0;
+  --ch-23: #e3e0da;
+  --ch-24: #a9a39a;
+  --ch-25: #c9c4bc33;
   --ch-26: #ffffffe6;
 }
 
+/* 夜は漆の黒地に生成りの文字。朱は明るくして同じ役割を保つ。 */
 .dark {
-  --background: #161513;
-  --foreground: #e9e6df;
-  --card: #1d1c1a;
-  --card-foreground: #e9e6df;
-  --popover: #1f1e1b;
-  --popover-foreground: #e9e6df;
-  --primary: #e9e6df;
-  --primary-foreground: #161513;
-  --secondary: #23221f;
-  --secondary-foreground: #e9e6df;
-  --muted: #23221f;
-  --muted-foreground: #a4a097;
-  --subtle-foreground: #7b776f;
-  --accent: #222937;
-  --accent-foreground: #c8d4e8;
-  --destructive: #e0867f;
-  --border: #2f2d29;
-  --input: #46433d;
-  --ring: #9fb4d8;
-  --brand: #9fb4d8;
-  --brand-soft: #1f2634;
-  --brand-contrast: #161513;
-  --surface: #1b1a18;
-  --rule: #2d2b28;
-  --rule-strong: #403d38;
-  --code-surface: #1d1c1a;
-  --mark: #4a4129;
-  --callout-surface: #1d1c1a;
-  --callout-info: #9fb4d8;
-  --callout-success: #9cba96;
-  --callout-warning: #d5b679;
-  --callout-error: #e0928a;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #1b1a18;
-  --sidebar-foreground: #e9e6df;
-  --sidebar-primary: #e9e6df;
-  --sidebar-primary-foreground: #161513;
-  --sidebar-accent: #222937;
-  --sidebar-accent-foreground: #c8d4e8;
-  --sidebar-border: #2f2d29;
-  --sidebar-ring: #9fb4d8;
-  --codehike-callout-bg: #1d1c1a;
-  --codehike-callout-border: #403d38;
-  --codehike-tooltip-bg: #23221f;
-  --codehike-tooltip-border: #403d38;
-  --codehike-tooltip-text: #e9e6df;
+  --background: #131211;
+  --foreground: #e9e5df;
+  --card: #1a1918;
+  --card-foreground: #e9e5df;
+  --popover: #1c1b19;
+  --popover-foreground: #e9e5df;
+  --primary: #e9e5df;
+  --primary-foreground: #131211;
+  --secondary: #22201e;
+  --secondary-foreground: #e9e5df;
+  --muted: #22201e;
+  --muted-foreground: #a39e96;
+  --subtle-foreground: #7a756e;
+  --accent: #262422;
+  --accent-foreground: #e9e5df;
+  --destructive: #f2685a;
+  --border: #2e2c29;
+  --input: #45423d;
+  --ring: #ff6a48;
+  --brand: #ff6a48;
+  --brand-soft: #3a1d16;
+  --brand-contrast: #131211;
+  --surface: #191817;
+  --rule: #2e2c29;
+  --rule-strong: #4a4640;
+  --rule-ink: #9e998f;
+  --code-surface: #1a1918;
+  --mark: #5a4a1e;
+  --callout-surface: #1a1918;
+  --callout-info: #8fb3d1;
+  --callout-success: #9cc2a3;
+  --callout-warning: #d9b46a;
+  --callout-error: #f2857a;
+  --chart-1: oklch(0.7 0.17 35);
+  --chart-2: oklch(0.7 0.09 200);
+  --chart-3: oklch(0.78 0.04 250);
+  --chart-4: oklch(0.82 0.12 85);
+  --chart-5: oklch(0.72 0.11 60);
+  --sidebar: #191817;
+  --sidebar-foreground: #e9e5df;
+  --sidebar-primary: #e9e5df;
+  --sidebar-primary-foreground: #131211;
+  --sidebar-accent: #262422;
+  --sidebar-accent-foreground: #e9e5df;
+  --sidebar-border: #2e2c29;
+  --sidebar-ring: #ff6a48;
+  --codehike-callout-bg: #1a1918;
+  --codehike-callout-border: #4a4640;
+  --codehike-tooltip-bg: #22201e;
+  --codehike-tooltip-border: #4a4640;
+  --codehike-tooltip-text: #e9e5df;
   --codehike-muted-text: var(--muted-foreground);
   --codehike-footnote-border: var(--muted-foreground);
-  --codehike-diff-add: oklch(0.74 0.17 142);
-  --codehike-diff-remove: oklch(0.65 0.2 27);
+  --codehike-diff-add: oklch(0.72 0.12 150);
+  --codehike-diff-remove: oklch(0.7 0.16 32);
 
-  --destructive-foreground: #ffffff;
-  --info: #60a5fa;
-  --info-surface: rgb(23 37 84 / 30%);
-  --info-border: rgb(30 58 138 / 30%);
-  --info-ink: #bfdbfe;
-  --success: #34d399;
-  --sunday: #fb7185;
-  --column-surface: #1d1c1a;
+  --destructive-foreground: #131211;
+  --info: #8fb3d1;
+  --info-surface: #1a2026;
+  --info-border: #2d3a45;
+  --info-ink: #c5d9ea;
+  --success: #9cc2a3;
+  --sunday: #f07f95;
+  --column-surface: #1a1918;
   --column-ink: #d5c39c;
-  --ai-accent: #2dd4bf;
-  --ai-accent-soft: rgb(4 47 46 / 40%);
-  --ai-accent-ink: #5eead4;
-  --ai-accent-on-solid: #134e4a;
-  --ai-accent-marker: #5eead4;
-  --ai-accent-marker-ink: #134e4a;
-  --ai-accent-line: rgb(94 234 212 / 40%);
-  --provider-openai: #34d399;
-  --provider-openai-soft: #022c22;
-  --provider-openai-ink: #6ee7b7;
-  --provider-openai-border: #065f46;
-  --provider-anthropic: #fb923c;
-  --provider-anthropic-soft: #431407;
-  --provider-anthropic-ink: #fdba74;
-  --provider-anthropic-border: #9a3412;
-  --provider-google: #60a5fa;
-  --provider-google-soft: #172554;
-  --provider-google-ink: #93c5fd;
-  --provider-google-border: #1e40af;
-  --provider-deepseek: #a78bfa;
-  --provider-deepseek-soft: #2e1065;
-  --provider-deepseek-ink: #c4b5fd;
-  --provider-deepseek-border: #5b21b6;
-  --provider-other: #94a3b8;
-  --provider-other-soft: #1e293b;
-  --provider-other-ink: #cbd5e1;
-  --provider-other-border: #334155;
-  --bit-muted: #cbd5e1;
-  --bit-high: #4ade80;
-  --bit-low: #38bdf8;
+  --ai-accent: #ff6a48;
+  --ai-accent-soft: #2c1712;
+  --ai-accent-ink: #ff9a80;
+  --ai-accent-on-solid: #131211;
+  --ai-accent-marker: #ff9a80;
+  --ai-accent-marker-ink: #3a1209;
+  --ai-accent-line: rgb(255 106 72 / 40%);
+  --provider-openai: #7cc3a2;
+  --provider-openai-soft: #15241e;
+  --provider-openai-ink: #a5d9c0;
+  --provider-openai-border: #2b4a3d;
+  --provider-anthropic: #e39a74;
+  --provider-anthropic-soft: #2a1a12;
+  --provider-anthropic-ink: #f0bea3;
+  --provider-anthropic-border: #5a3624;
+  --provider-google: #8fadde;
+  --provider-google-soft: #161c28;
+  --provider-google-ink: #b9cdee;
+  --provider-google-border: #2f3d58;
+  --provider-deepseek: #a8a3e0;
+  --provider-deepseek-soft: #1c1a2c;
+  --provider-deepseek-ink: #cac6f0;
+  --provider-deepseek-border: #3b3760;
+  --provider-other: #a39e96;
+  --provider-other-soft: #22201e;
+  --provider-other-ink: #cfcac2;
+  --provider-other-border: #3a3733;
+  --bit-muted: #7a756e;
+  --bit-high: #ff8a6b;
+  --bit-low: #8fb3d1;
 
-  /* CodeHike github-from-css (Dark) */
   --ch-0: dark;
-  --ch-1: #8b949e;
-  --ch-2: #79c0ff;
-  --ch-3: #ffa657;
-  --ch-4: #c9d1d9;
-  --ch-5: #d2a8ff;
-  --ch-6: #7ee787;
-  --ch-7: #ff7b72;
-  --ch-8: #a5d6ff;
-  --ch-9: #ffa198;
-  --ch-10: #f0f6fc;
-  --ch-11: #490202;
-  --ch-12: #04260f;
-  --ch-13: #5a1e02;
-  --ch-14: #161b22;
-  --ch-15: #8b949e;
-  --ch-16: #0d1117;
-  --ch-17: #6e76811a;
+  --ch-1: #807a71;
+  --ch-2: #8fb3d1;
+  --ch-3: #d9b46a;
+  --ch-4: #e2ddd5;
+  --ch-5: #f0ece6;
+  --ch-6: #9cc2a3;
+  --ch-7: #ff8466;
+  --ch-8: #a9cdb0;
+  --ch-9: #ffb4a3;
+  --ch-10: #f0ece6;
+  --ch-11: #3a1d16;
+  --ch-12: #17291c;
+  --ch-13: #3a2c12;
+  --ch-14: #1f1d1b;
+  --ch-15: #a39e96;
+  --ch-16: #1a1918;
+  --ch-17: #2e2c2980;
   --ch-18: #ffffff0b;
-  --ch-19: #3794ff;
-  --ch-20: #264f78;
-  --ch-21: #1f6feb;
-  --ch-22: #010409;
-  --ch-23: #30363d;
-  --ch-24: #6e7681;
-  --ch-25: #6e768166;
-  --ch-26: #0d1117e6;
+  --ch-19: #ff6a48;
+  --ch-20: #4a2a20;
+  --ch-21: #ff6a48;
+  --ch-22: #131211;
+  --ch-23: #2e2c29;
+  --ch-24: #6b665f;
+  --ch-25: #6b665f66;
+  --ch-26: #131211e6;
 }
 
 @layer base {
@@ -631,19 +661,21 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scroll-padding-top: calc(var(--site-header-height) + 1.5rem);
+    scroll-padding-top: 1.5rem;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-ui);
-    line-height: 1.75;
+    line-height: 1.8;
     overflow-wrap: anywhere;
     word-break: normal;
     line-break: strict;
     hyphens: auto;
     text-wrap: pretty;
+    /* 行頭・行末と連続する約物の空きを詰める（対応ブラウザーのみ）。 */
+    text-spacing-trim: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -667,13 +699,13 @@
   ):focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 1px;
   }
   :where(button, select, summary):not(:disabled) {
     cursor: pointer;
   }
   :where(h1, h2, h3, h4, h5, h6)[id] {
-    scroll-margin-top: calc(var(--site-header-height) + 1.5rem);
+    scroll-margin-top: 1.5rem;
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -700,38 +732,73 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6;
   }
   .site-main {
-    @apply mx-auto w-full max-w-6xl min-w-0 flex-1 px-5 pt-8 pb-20 sm:px-8 sm:pt-12 sm:pb-28;
+    @apply mx-auto w-full max-w-6xl min-w-0 flex-1 px-5 pt-10 pb-24 sm:px-8 sm:pt-16 sm:pb-32;
   }
   .site-main-reading {
-    @apply mx-auto w-full max-w-3xl min-w-0 flex-1 px-5 pt-8 pb-20 sm:px-8 sm:pt-12 sm:pb-28;
+    @apply mx-auto w-full max-w-3xl min-w-0 flex-1 px-5 pt-10 pb-24 sm:px-8 sm:pt-16 sm:pb-32;
   }
   .page-stack {
     @apply flex flex-col;
     gap: var(--space-page);
   }
 
-  /* 一覧ページの見出し。タイトル・件数・説明を同じ位置に揃え、ページ間で迷わせない。 */
+  /*
+   * 一覧ページの見出し。サイト名の推論図と同じ組み方をする。
+   * 題を線の上に置き、件数などの補足は線の右端に「規則名」のように添える。
+   *   記事
+   *   ──────────────────── 全 53 件
+   */
   .page-heading {
-    @apply flex flex-wrap items-end justify-between gap-x-6 gap-y-3 pb-6;
-    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.25rem;
+  }
+  .page-heading > :first-child {
+    grid-column: 1 / -1;
+    min-width: 0;
+    padding-bottom: 1.125rem;
+  }
+  .page-heading::after {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--rule-ink);
+    content: "";
+  }
+  .page-heading:has(> :nth-child(2))::after {
+    grid-column: 1;
+  }
+  .page-heading .arrow-link {
+    margin-top: 0.75rem;
+  }
+  .page-heading > :nth-child(2) {
+    grid-row: 2;
+    grid-column: 2;
   }
   .page-title {
-    @apply leading-snug font-bold text-foreground;
-    font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.25rem);
-    letter-spacing: 0.02em;
+    @apply text-foreground;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.45rem + 2vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
   }
   .page-count {
     @apply text-sm text-muted-foreground tabular-nums;
+    white-space: nowrap;
   }
   .page-lead {
-    @apply mt-3 max-w-2xl text-[0.9375rem] leading-[1.85] text-muted-foreground;
+    @apply mt-4 max-w-2xl text-[0.9375rem] leading-[1.9] text-muted-foreground;
   }
 
-  /* 本文。和文は 1 行 40 字前後、行送り 1.9 を基準にする。 */
+  /* 本文。和文は 1 行 40 字前後、行送り 1.95 を基準にする。 */
   .prose {
     @apply text-base text-foreground;
     line-height: 1.95;
     letter-spacing: 0.02em;
+    /* 和文と欧文・数字の間に四分アキ相当を補う（対応ブラウザーのみ。手で入れた空白とは重ならない）。 */
+    text-autospace: normal;
   }
   .prose > :first-child {
     @apply mt-0;
@@ -740,7 +807,7 @@
     @apply mb-0;
   }
   .prose p {
-    margin-block: 1.25em;
+    margin-block: 1.2em;
   }
   .prose small {
     @apply text-xs text-muted-foreground;
@@ -749,26 +816,29 @@
     @apply font-bold text-foreground;
     letter-spacing: 0.02em;
   }
+  /* 大見出しは明朝で書き手の声にし、上に墨の罫を引いて節を区切る。 */
   .prose h1,
   .prose h2 {
-    margin-top: 3.25rem;
+    margin-top: 3.75rem;
     margin-bottom: 1.25rem;
-    padding-bottom: 0.625rem;
-    border-bottom: 1px solid var(--rule);
-    font-size: 1.375rem;
+    padding-top: 1.125rem;
+    border-top: 1px solid var(--rule-ink);
+    font-family: var(--font-display);
+    font-size: 1.4375rem;
     line-height: 1.5;
+    letter-spacing: 0.03em;
   }
   .prose h3 {
-    margin-top: 2.5rem;
+    margin-top: 2.75rem;
     margin-bottom: 0.875rem;
     font-size: 1.1875rem;
-    line-height: 1.55;
+    line-height: 1.6;
   }
   .prose h4 {
-    margin-top: 2rem;
+    margin-top: 2.25rem;
     margin-bottom: 0.75rem;
     font-size: 1.0625rem;
-    line-height: 1.6;
+    line-height: 1.65;
   }
   .prose h5 {
     margin-top: 1.75rem;
@@ -784,17 +854,26 @@
   .prose :is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) {
     margin-top: 1.5rem;
   }
+  .prose :is(h1, h2) + :is(h1, h2),
+  .prose > :is(h1, h2):first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* リンクは墨の文字に朱の下線。色だけに頼らず、下線で常にリンクと分かるようにする。 */
   .prose a {
-    color: var(--brand);
+    color: inherit;
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
-    text-underline-offset: 0.22em;
-    text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
-    transition: text-decoration-color var(--duration-fast) ease;
+    text-underline-offset: 0.24em;
+    text-decoration-color: var(--brand);
+    transition:
+      color var(--duration-fast) ease,
+      text-decoration-thickness var(--duration-fast) ease;
   }
   .prose a:hover,
   .prose a:focus-visible {
-    text-decoration-color: var(--brand);
+    color: var(--brand);
+    text-decoration-thickness: 2px;
   }
   .prose :is(h1, h2, h3, h4, h5, h6) a {
     color: inherit;
@@ -806,7 +885,7 @@
   /* 和文の斜体は崩れて読みにくいため、蛍光ペン風の淡い下線で強調する。 */
   .prose em {
     font-style: normal;
-    background: linear-gradient(transparent 62%, var(--mark) 62%);
+    background: linear-gradient(transparent 60%, var(--mark) 60%);
   }
   .prose :lang(en) em {
     font-style: italic;
@@ -821,24 +900,34 @@
   }
   .prose ul,
   .prose ol {
-    margin-block: 1.25em;
+    margin-block: 1.2em;
     padding-left: 1.5em;
   }
+  /* 箇条書きの記号は和文の中黒にし、朱で刷る。入れ子はダッシュで一段弱める。 */
   .prose ul {
-    @apply list-disc;
+    list-style-type: "・";
+  }
+  .prose ul ul {
+    list-style-type: "– ";
   }
   .prose ol {
     @apply list-decimal;
   }
   .prose li {
     margin-block: 0.375em;
-    padding-left: 0.25em;
+    padding-left: 0.125em;
   }
   .prose li::marker {
-    color: var(--subtle-foreground);
+    color: var(--brand);
   }
   .prose ol > li::marker {
+    color: var(--muted-foreground);
+    font-family: var(--font-code);
+    font-size: 0.875em;
     font-variant-numeric: tabular-nums;
+  }
+  .prose ul ul > li::marker {
+    color: var(--subtle-foreground);
   }
   .prose li > p {
     margin-block: 0.375em;
@@ -849,7 +938,7 @@
   .prose blockquote {
     margin-block: 1.75em;
     padding: 0.125em 0 0.125em 1.25em;
-    border-left: 2px solid var(--rule-strong);
+    border-left: 1px solid var(--rule-ink);
     color: var(--muted-foreground);
   }
   .prose blockquote > :first-child {
@@ -867,27 +956,22 @@
     margin-bottom: 1.5rem !important;
     margin-left: auto !important;
   }
-  /* 区切り線はサイトの印（∴）で置き換える。 */
+  /* 場面の区切りは中央に短い墨の線を一本だけ引く。 */
   .prose hr {
-    height: auto;
-    margin-block: 3rem;
+    width: 4rem;
+    height: 1px;
+    margin: 3.25rem auto;
     border: 0;
-    color: var(--subtle-foreground);
-    text-align: center;
-  }
-  .prose hr::before {
-    content: "∴";
-    font-size: 1.125rem;
-    line-height: 1;
+    background: var(--rule-ink);
   }
   .prose code {
-    @apply rounded px-[0.35em] py-[0.1em] text-[0.875em];
+    @apply rounded-sm px-[0.3em] py-[0.08em] text-[0.875em];
     background: var(--muted);
     font-family: var(--font-code);
     letter-spacing: 0;
   }
   .prose pre {
-    @apply my-6 overflow-x-auto rounded-lg p-4 text-[0.8125rem] leading-[1.75] sm:text-sm;
+    @apply my-6 overflow-x-auto rounded-sm px-5 py-4 text-[0.8125rem] leading-[1.75] sm:text-sm;
     background: var(--code-surface);
     letter-spacing: 0;
   }
@@ -896,7 +980,7 @@
     font-size: inherit;
   }
   .prose kbd {
-    @apply rounded px-1.5 py-0.5 text-[0.8125em];
+    @apply rounded-sm px-1.5 py-0.5 text-[0.8125em];
     border: 1px solid var(--rule-strong);
     border-bottom-width: 2px;
     background: var(--card);
@@ -906,17 +990,20 @@
     margin-block: 2rem;
   }
   .prose figcaption {
-    @apply mt-3 text-center text-[0.8125rem] leading-relaxed text-muted-foreground;
+    @apply mt-3 text-[0.8125rem] leading-relaxed text-muted-foreground;
   }
   .prose img,
   .prose video {
-    @apply rounded-md;
+    @apply rounded-sm;
   }
   .prose .mdx-table {
-    @apply my-6 overflow-x-auto;
+    @apply my-7 overflow-x-auto;
   }
+  /* 表は上下を太い墨罫、見出しの下を細い墨罫で挟み、縦罫と塗りは使わない。 */
   .prose table {
     @apply w-max min-w-full border-collapse text-sm leading-relaxed;
+    border-top: 1.5px solid var(--rule-ink);
+    border-bottom: 1.5px solid var(--rule-ink);
     letter-spacing: 0.01em;
   }
   .prose .mdx-table table {
@@ -924,12 +1011,14 @@
   }
   .prose th {
     @apply px-3 py-2.5 text-left align-bottom font-semibold;
-    border-bottom: 1px solid var(--rule-strong);
-    background: var(--surface);
+    border-bottom: 1px solid var(--rule-ink);
   }
   .prose td {
     @apply px-3 py-2.5 text-left align-top;
     border-bottom: 1px solid var(--rule);
+  }
+  .prose tr:last-child > td {
+    border-bottom: 0;
   }
   .prose dl {
     margin-block: 1.5em;
@@ -940,8 +1029,8 @@
   .prose dd {
     @apply mb-4 ml-4 text-muted-foreground;
   }
-  .prose details {
-    @apply my-6 rounded-lg px-4 py-3;
+  .prose details:not(.callout) {
+    @apply my-6 px-4 py-3;
     border: 1px solid var(--rule);
   }
   .prose summary {
@@ -951,24 +1040,254 @@
   .prose sub {
     @apply text-[0.75em];
   }
+  .prose sup a {
+    text-decoration-line: none;
+    color: var(--brand);
+  }
   .prose abbr[title] {
     @apply cursor-help underline decoration-dotted;
   }
   .prose :is(section.footnotes, section[data-footnotes]) {
-    @apply mt-14 pt-6 text-sm text-muted-foreground;
+    @apply mt-16 pt-6 text-sm text-muted-foreground;
     border-top: 1px solid var(--rule);
   }
   .prose :is(section.footnotes, section[data-footnotes]) h2 {
     @apply sr-only;
   }
+  /* 見出しの中のコード名は地を敷かず、等幅の字形だけで示す。 */
+  .prose :is(h1, h2, h3, h4) code {
+    padding: 0;
+    background: none;
+    font-size: 0.9em;
+  }
+
+  /*
+   * コード。技術書のリストのように、ごく薄い地に墨で刷る。
+   * ファイル名や言語は、等幅の小さな札として上辺に付ける。
+   */
+  .code-frame {
+    margin-block: 1.75rem;
+  }
+  .code-block {
+    margin-block: 1.5rem;
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+    background: var(--code-surface);
+    padding: 1rem 1.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+  .code-frame > .code-block {
+    margin-block: 0;
+  }
+  .code-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+    min-height: 2.375rem;
+    padding: 0.375rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--code-surface);
+    color: var(--muted-foreground);
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+  .code-bar-title {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--foreground);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .code-bar-lang,
+  .code-bar-end {
+    margin-left: auto;
+  }
+  .code-bar-lang {
+    color: var(--subtle-foreground);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+  }
+  .code-bar-lang + .code-select {
+    margin-left: -0.5rem;
+  }
+  .code-tab {
+    position: relative;
+    min-height: 1.75rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-ui);
+    transition: color var(--duration-fast) ease;
+  }
+  /* 選んでいるタブは、札の下辺に朱の線を引いて示す。 */
+  .code-tab[aria-pressed="true"] {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+  .code-tab[aria-pressed="true"]::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(-0.375rem - 1px);
+    left: 0;
+    height: 2px;
+    background: var(--brand);
+    content: "";
+  }
+  .code-select {
+    min-height: 1.75rem;
+    padding-inline: 0.25rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 0.75rem;
+  }
+  .code-placeholder {
+    margin-block: 1.5rem;
+    padding: 1.5rem 1.25rem;
+    background: var(--code-surface);
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+  .code-notes {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+  }
+  .code-notes > li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .tab-panel {
+    padding: 1rem 0 0.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 640px) {
+    .code-block {
+      font-size: 0.875rem;
+    }
+  }
+
+  /*
+   * 囲み記事（注意・補足など）。細い罫で囲み、種類は題の前の角印の色で示す。
+   */
+  .callout,
+  .inline-label {
+    --callout-color: var(--callout-info);
+  }
+  :is(.callout, .inline-label)[data-variant="success"] {
+    --callout-color: var(--callout-success);
+  }
+  :is(.callout, .inline-label)[data-variant="warning"] {
+    --callout-color: var(--callout-warning);
+  }
+  :is(.callout, .inline-label)[data-variant="error"] {
+    --callout-color: var(--callout-error);
+  }
+  .inline-label[data-variant="note"] {
+    --callout-color: var(--muted-foreground);
+  }
+  .callout {
+    margin-block: 1.75rem;
+    border: 1px solid var(--rule-strong);
+    font-size: 0.9375rem;
+    line-height: 1.85;
+  }
+  .callout-title {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    list-style: none;
+  }
+  .callout-title::-webkit-details-marker {
+    display: none;
+  }
+  .callout[open] > .callout-title {
+    border-bottom: 1px solid var(--rule);
+  }
+  .callout-mark {
+    width: 0.5rem;
+    height: 0.5rem;
+    flex-shrink: 0;
+    background: var(--callout-color);
+  }
+  .callout-toggle::after {
+    color: var(--muted-foreground);
+    content: "＋";
+    font-weight: 400;
+  }
+  .callout[open] .callout-toggle::after {
+    content: "－";
+  }
+  .callout .callout-body,
+  .column-box .callout-body {
+    max-width: none;
+    font-size: inherit;
+  }
+  .callout .callout-body {
+    padding: 0.25rem 1.25rem 1.125rem;
+  }
+  .callout > .callout-body:first-child {
+    padding-top: 1rem;
+  }
+  /* コラム。淡い地に「Column」の札と題を置く。 */
+  .column-box {
+    margin-block: 2rem;
+    padding: 1.25rem 1.5rem 1.375rem;
+    border-top: 1px solid var(--rule-ink);
+    background: var(--surface);
+    font-size: 0.9375rem;
+    line-height: 1.85;
+  }
+  .column-box-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.875rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .column-box-label {
+    color: var(--brand);
+    font-family: var(--font-latin-display);
+    font-size: 1.0625rem;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .inline-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.6;
+    vertical-align: 0.1em;
+  }
+  .inline-label > .callout-mark {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
   @media (min-width: 768px) {
     .prose {
       font-size: 1.0625rem;
     }
     .prose h1,
     .prose h2 {
-      margin-top: 3.75rem;
-      font-size: 1.5rem;
+      margin-top: 4.25rem;
+      font-size: 1.625rem;
     }
     .prose h3 {
       font-size: 1.25rem;

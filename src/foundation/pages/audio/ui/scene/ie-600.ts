@@ -324,21 +324,6 @@ function displayCable(parts: Ie600Parts, exits: Object3D[]) {
       )
     );
   }
-  for (const [length, radius] of [
-    [-8.7, 1.37],
-    [-10.1, 1.3],
-    [-11.5, 1.22],
-  ] as const) {
-    const rib = parts.ring(
-      radius,
-      0.09,
-      [length, 0, 0],
-      parts.connectorRubber,
-      "Balanced plug flexible strain relief rib"
-    );
-    rib.rotation.y = Math.PI / 2;
-    plug.add(rib);
-  }
 }
 
 export function createIe600({ standaloneCable = true } = {}) {

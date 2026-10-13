@@ -40,7 +40,7 @@ export function SeriesListPageContent({
         en={`${series.posts.length} parts`}
       />
     ),
-    cta: <I18nText locale={locale} ja="目次を見る →" en="View parts →" />,
+    cta: <I18nText locale={locale} ja="目次を見る" en="View parts" />,
   }));
 
   return (

@@ -1,7 +1,6 @@
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -145,11 +144,6 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
         <Breadcrumbs items={breadcrumbs} />
         <header className="page-heading">
           <h1 className="page-title">Keywords</h1>
-          <p className="text-muted-foreground">
-            {locale === "ja"
-              ? "ゲームでどう使う？ すべての用語を、動くデモと使いどころから学ぶ。"
-              : "See every technique in action. Explore interactive demos and game use cases."}
-          </p>
           <p className="page-count">
             {categories.length} {locale === "ja" ? "カテゴリ" : "categories"} ·{" "}
             {subcategoryCount}{" "}
@@ -157,46 +151,34 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
             {keywordCount} {locale === "ja" ? "項目" : "keywords"}
           </p>
         </header>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {/* 分野ごとの段。分野名の下に、細目と項目数を索引のようにリーダーでつなぐ。 */}
+        <div className="index-columns">
           {categories.map((category) => {
             const count = category.subcategories.reduce(
               (total, subcategory) => total + subcategory.keywords.length,
               0
             );
             return (
-              <section
-                key={category.id}
-                className="flex min-w-0 flex-col rounded-xl border border-border bg-card"
-              >
-                <Link
-                  href={toLocalePath(keywordPath(category.id), locale)}
-                  className="group block rounded-t-xl p-6 transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                >
-                  <div className="mb-5 text-xs text-muted-foreground tabular-nums">
-                    {category.subcategories.length}{" "}
-                    {locale === "ja" ? "サブカテゴリ" : "subcategories"} ·{" "}
-                    {count} {locale === "ja" ? "項目" : "items"}
-                  </div>
-                  <h2 className="flex items-center justify-between gap-3 text-lg font-semibold tracking-tight">
+              <section key={category.id} className="index-column">
+                <p className="index-column-meta">
+                  {category.subcategories.length}{" "}
+                  {locale === "ja" ? "サブカテゴリ" : "subcategories"} · {count}{" "}
+                  {locale === "ja" ? "項目" : "items"}
+                </p>
+                <h2 className="index-column-title">
+                  <Link href={toLocalePath(keywordPath(category.id), locale)}>
                     {locale === "ja" ? category.name : category.english}
-                    <ArrowRight
-                      className="size-4 shrink-0 text-muted-foreground transition-transform motion-safe:group-hover:translate-x-1"
-                      aria-hidden="true"
-                    />
-                  </h2>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {category.description}
-                  </p>
-                </Link>
+                  </Link>
+                </h2>
+                <p className="index-column-note">{category.description}</p>
                 <nav
                   aria-label={
                     locale === "ja"
                       ? `${category.name}のサブカテゴリ`
                       : `${category.english} subcategories`
                   }
-                  className="mx-6 mb-5 border-t border-border pt-3"
                 >
-                  <ul>
+                  <ul className="index-column-list">
                     {category.subcategories.map((subcategory) => (
                       <li key={subcategory.id}>
                         <Link
@@ -204,16 +186,14 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                             keywordPath(category.id, subcategory.id),
                             locale
                           )}
-                          className="flex min-h-11 items-center justify-between gap-3 rounded-sm py-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                          className="leader-link"
                         >
                           <span>
                             {locale === "ja"
                               ? subcategory.name
                               : subcategory.english}
                           </span>
-                          <span className="text-xs tabular-nums">
-                            {subcategory.keywords.length}
-                          </span>
+                          <span>{subcategory.keywords.length}</span>
                         </Link>
                       </li>
                     ))}
@@ -223,20 +203,20 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
             );
           })}
         </div>
-        <section className="space-y-5" aria-labelledby="recipes-heading">
-          <h2 id="recipes-heading" className="text-xl font-semibold">
-            {locale === "ja" ? "組み合わせて作る" : "Combine techniques"}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
+        <section className="keyword-recipes" aria-labelledby="recipes-heading">
+          <div className="section-heading">
+            <h2 id="recipes-heading" className="section-title">
+              {locale === "ja" ? "組み合わせて作る" : "Combine techniques"}
+            </h2>
+          </div>
+          {/* 組み合わせる技法を「＋」でつなぎ、足し算として読ませる。 */}
+          <ul className="recipe-list">
             {recipes.map((recipe) => (
-              <div
-                key={recipe.name}
-                className="rounded-xl border border-border bg-card p-5"
-              >
-                <h3 className="font-semibold">
+              <li key={recipe.name}>
+                <h3 className="recipe-name">
                   {locale === "ja" ? recipe.name : recipe.english}
                 </h3>
-                <ul className="mt-3 flex flex-wrap gap-2">
+                <ul className="recipe-terms">
                   {recipe.terms.map(([category, subcategory, slug, name]) => (
                     <li key={slug}>
                       <Link
@@ -244,16 +224,15 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                           keywordPath(category, subcategory, slug),
                           locale
                         )}
-                        className="inline-flex min-h-9 items-center rounded-md border border-border px-3 text-xs transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                       >
                         {name}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       </main>
     </SiteLayout>
@@ -285,35 +264,40 @@ export async function KeywordCategoryPage({
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
         <header className="page-heading">
-          <h1 className="page-title">
-            {locale === "ja" ? category.name : category.english}
-          </h1>
-          <p className="text-muted-foreground">{category.description}</p>
+          <div>
+            <h1 className="page-title">
+              {locale === "ja" ? category.name : category.english}
+            </h1>
+            <p className="page-lead">{category.description}</p>
+          </div>
+          <p className="page-count">
+            {category.subcategories.length}{" "}
+            {locale === "ja" ? "サブカテゴリ" : "subcategories"}
+          </p>
         </header>
-        <div className="grid gap-5 md:grid-cols-2">
+        <ul className="collection-card-list">
           {category.subcategories.map((subcategory) => (
-            <Link
-              key={subcategory.id}
-              href={toLocalePath(keywordPath(id, subcategory.id), locale)}
-              className="group rounded-xl border border-border bg-card p-6 transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-            >
-              <p className="text-xs text-muted-foreground">
-                {subcategory.keywords.length}{" "}
-                {locale === "ja" ? "項目" : "items"}
-              </p>
-              <h2 className="mt-3 flex items-center justify-between gap-3 text-lg font-semibold">
-                {locale === "ja" ? subcategory.name : subcategory.english}
-                <ArrowRight
-                  className="size-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {subcategory.description}
-              </p>
-            </Link>
+            <li key={subcategory.id}>
+              <Link
+                href={toLocalePath(keywordPath(id, subcategory.id), locale)}
+                className="collection-card-link"
+              >
+                <h2 className="collection-card-title">
+                  {locale === "ja" ? subcategory.name : subcategory.english}
+                </h2>
+                <p className="collection-card-description">
+                  {subcategory.description}
+                </p>
+                <p className="collection-card-footer">
+                  <span className="collection-card-meta">
+                    {subcategory.keywords.length}{" "}
+                    {locale === "ja" ? "項目" : "items"}
+                  </span>
+                </p>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </main>
     </SiteLayout>
   );
@@ -351,16 +335,19 @@ export async function KeywordSubcategoryPage({
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
         <header className="page-heading">
-          <h1 className="page-title">
-            {locale === "ja" ? subcategory.name : subcategory.english}
-          </h1>
-          <p className="text-muted-foreground">{subcategory.description}</p>
+          <div>
+            <h1 className="page-title">
+              {locale === "ja" ? subcategory.name : subcategory.english}
+            </h1>
+            <p className="page-lead">{subcategory.description}</p>
+          </div>
           <p className="page-count">
             {subcategory.keywords.length}{" "}
             {locale === "ja" ? "項目" : "keywords"}
           </p>
         </header>
-        <ol className="grid gap-3 md:grid-cols-2">
+        {/* 用語集の見出し語のように、名前・対訳・効き目を一項目ずつ並べる。 */}
+        <ol className="glossary-list">
           {subcategory.keywords.map((keyword) => (
             <li key={keyword.slug}>
               <Link
@@ -368,28 +355,18 @@ export async function KeywordSubcategoryPage({
                   keywordPath(categoryId, subcategoryId, keyword.slug),
                   locale
                 )}
-                className="group flex h-full items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="glossary-entry"
               >
-                <span className="min-w-0">
-                  <span className="block font-semibold">
-                    {locale === "ja" ? keyword.name : keyword.english}
-                  </span>
-                  <span className="mt-1 block text-xs text-muted-foreground">
-                    {locale === "ja" ? keyword.english : keyword.name}
-                  </span>
-                  <span className="mt-3 block text-sm text-muted-foreground">
-                    {keyword.effect}
-                  </span>
-                  <span className="mt-3 block text-xs font-medium text-brand">
-                    {locale === "ja"
-                      ? "3D デモと解説を見る →"
-                      : "Explore the 3D demo →"}
-                  </span>
+                <span className="glossary-term">
+                  {locale === "ja" ? keyword.name : keyword.english}
                 </span>
-                <ArrowRight
-                  className="mt-1 size-4 shrink-0 text-muted-foreground"
-                  aria-hidden="true"
-                />
+                <span
+                  className="glossary-gloss"
+                  lang={locale === "ja" ? "en" : "ja"}
+                >
+                  {locale === "ja" ? keyword.english : keyword.name}
+                </span>
+                <span className="glossary-definition">{keyword.effect}</span>
               </Link>
             </li>
           ))}
@@ -466,19 +443,26 @@ export async function KeywordDetailPage({
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
-        <header className="space-y-3 border-b border-border pb-6">
-          <p className="page-count">
-            {locale === "ja" ? subcategory.name : subcategory.english} ·{" "}
-            {index + 1} / {subcategory.keywords.length}
-          </p>
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <h1 className="page-title">{displayName}</h1>
-            <p className="font-mono text-sm text-muted-foreground">
-              {locale === "ja" ? keyword.english : keyword.name}
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">
+              {locale === "ja" ? subcategory.name : subcategory.english}
+            </p>
+            <div className="keyword-title">
+              <h1 className="page-title">{displayName}</h1>
+              <p
+                className="keyword-title-gloss"
+                lang={locale === "ja" ? "en" : "ja"}
+              >
+                {locale === "ja" ? keyword.english : keyword.name}
+              </p>
+            </div>
+            <p className="keyword-effect" lang="ja">
+              {asSentence(keyword.effect)}
             </p>
           </div>
-          <p className="max-w-3xl text-lg leading-relaxed" lang="ja">
-            {asSentence(keyword.effect)}
+          <p className="page-count">
+            {index + 1} / {subcategory.keywords.length}
           </p>
         </header>
         {showDemo && keyword.demoKey && (
@@ -507,11 +491,13 @@ export async function KeywordDetailPage({
           </article>
         )}
         {related.length > 0 && (
-          <section aria-labelledby="related-heading" className="space-y-4">
-            <h2 id="related-heading" className="text-xl font-semibold">
-              {locale === "ja" ? "関連キーワード" : "Related keywords"}
-            </h2>
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <section aria-labelledby="related-heading">
+            <div className="section-heading">
+              <h2 id="related-heading" className="section-title">
+                {locale === "ja" ? "関連キーワード" : "Related keywords"}
+              </h2>
+            </div>
+            <ul className="glossary-list">
               {related.map((item) => (
                 <li key={`${item.subcategoryId}/${item.slug}`}>
                   <Link
@@ -523,14 +509,18 @@ export async function KeywordDetailPage({
                       ),
                       locale
                     )}
-                    className="flex h-full flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="glossary-entry"
                   >
-                    <span className="font-semibold">
+                    <span className="glossary-term">
                       {locale === "ja" ? item.name : item.english}
                     </span>
-                    <span className="mt-1 text-sm text-muted-foreground">
-                      {item.effect}
+                    <span
+                      className="glossary-gloss"
+                      lang={locale === "ja" ? "en" : "ja"}
+                    >
+                      {locale === "ja" ? item.english : item.name}
                     </span>
+                    <span className="glossary-definition">{item.effect}</span>
                   </Link>
                 </li>
               ))}
@@ -539,37 +529,37 @@ export async function KeywordDetailPage({
         )}
         {source && (
           <section aria-labelledby="source-heading" className="space-y-2">
-            <h2 id="source-heading" className="text-xl font-semibold">
-              {locale === "ja" ? "さらに調べる" : "Further reading"}
-            </h2>
+            <div className="section-heading">
+              <h2 id="source-heading" className="section-title">
+                {locale === "ja" ? "参考資料" : "References"}
+              </h2>
+            </div>
             <a
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm underline underline-offset-4"
+              className="arrow-link"
             >
               {source.title} ↗
             </a>
-            <p className="text-xs text-muted-foreground">
-              {keywordSpecificSources[slug]
-                ? locale === "ja"
-                  ? "この項目の参考資料です。"
-                  : "A reference for this term."
-                : locale === "ja"
-                  ? "この分野の参考資料です。個々の項目を直接説明する資料とは限りません。"
+            {keywordSpecificSources[slug] ? null : (
+              <p className="text-xs text-muted-foreground">
+                {locale === "ja"
+                  ? "分野全体の資料で、この項目を直接扱っているとは限りません。"
                   : "A general reference for this subcategory."}
-            </p>
+              </p>
+            )}
           </section>
         )}
         <nav
           aria-label={
             locale === "ja" ? "キーワードの移動" : "Keyword navigation"
           }
-          className="flex flex-wrap gap-4 border-t border-border pt-5 text-sm"
+          className="keyword-pager"
         >
           <Link
             href={toLocalePath(keywordPath(categoryId, subcategoryId), locale)}
-            className="underline underline-offset-4"
+            className="arrow-link"
           >
             ↑ {locale === "ja" ? "一覧へ戻る" : "Back to list"}
           </Link>
@@ -579,7 +569,7 @@ export async function KeywordDetailPage({
                 keywordPath(categoryId, subcategoryId, previous.slug),
                 locale
               )}
-              className="underline underline-offset-4"
+              className="arrow-link"
             >
               ← {locale === "ja" ? previous.name : previous.english}
             </Link>
@@ -590,7 +580,7 @@ export async function KeywordDetailPage({
                 keywordPath(categoryId, subcategoryId, next.slug),
                 locale
               )}
-              className="underline underline-offset-4"
+              className="arrow-link"
             >
               {locale === "ja" ? next.name : next.english} →
             </Link>

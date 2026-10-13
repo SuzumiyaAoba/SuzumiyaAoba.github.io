@@ -30,7 +30,7 @@ export function CodeWithTooltips({
 
   if (!highlighted) {
     return (
-      <div className="my-6 rounded-lg border border-border bg-muted px-4 py-6 text-sm text-muted-foreground">
+      <div className="code-placeholder">
         {hasError ? "Unable to highlight code." : "Loading code..."}
       </div>
     );
@@ -66,22 +66,16 @@ export function CodeWithTooltips({
   };
 
   return (
-    <div className="my-6">
+    <div className="code-frame">
       {displayMeta ? (
-        <div className="flex items-center justify-between rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
-          <span className="truncate">{displayMeta}</span>
-          <span className="text-[10px] tracking-[0.12em] uppercase">
-            {highlighted.lang}
-          </span>
+        <div className="code-bar">
+          <span className="code-bar-title">{displayMeta}</span>
+          <span className="code-bar-lang">{highlighted.lang}</span>
         </div>
       ) : null}
-      <CustomCodeBlock
-        code={normalizedCodeblock}
-        handlers={[tooltip]}
-        {...(displayMeta ? { className: "rounded-t-none mt-0" } : {})}
-      />
+      <CustomCodeBlock code={normalizedCodeblock} handlers={[tooltip]} />
       {notes.length > 0 ? (
-        <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+        <ul className="code-notes">
           {notes.map((note, index) => (
             // 脚注は静的コンテンツで並び替え・途中挿入が起きない。
             // react-doctor-disable-next-line no-array-index-as-key

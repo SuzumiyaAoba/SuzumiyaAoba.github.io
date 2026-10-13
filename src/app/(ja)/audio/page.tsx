@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/app/_shared/page-metadata";
 export const metadata = buildPageMetadata({
   title: "オーディオ",
   description:
-    "NODE、UD-505、CG-10M、HA-1A MK2 を配線した3Dオーディオシステムを紹介。HD 800 S と Clear Mg Professional を切り替え、接続端子や機器の細部を確認できます。",
+    "持っているオーディオ機器（NODE、CG-10M、UD-505、HA-1A MK2 ほか）の 3D モデル、接続、仕様。",
   path: "/audio",
   locale: "ja",
 });

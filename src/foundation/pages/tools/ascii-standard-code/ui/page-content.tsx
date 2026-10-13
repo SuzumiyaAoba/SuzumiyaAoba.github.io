@@ -25,14 +25,14 @@ export function AsciiStandardCodePageContent({
       <JsonLd data={buildBreadcrumbList(breadcrumbItems)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbItems} />
-        <section className="space-y-3">
-          <p className="section-label">
-            <I18nText locale={locale} ja="ツール" en="Tools" />
-          </p>
-          <h1 className="text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
-            ASCII Standard Code
-          </h1>
-        </section>
+        <header className="page-heading">
+          <div>
+            <p className="page-eyebrow">
+              <I18nText locale={locale} ja="ツール" en="Tools" />
+            </p>
+            <h1 className="page-title">ASCII Standard Code</h1>
+          </div>
+        </header>
 
         <section
           className="min-w-0 overflow-x-auto"

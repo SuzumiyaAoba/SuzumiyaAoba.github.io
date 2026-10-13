@@ -8,79 +8,123 @@
     margin-top: var(--space-section);
   }
 
-  /* ───────── 導入：サイト名と、このサイトの案内板 ───────── */
-  .home-intro {
+  /*
+   * ───────── 冒頭：サイト名の推論図 ─────────
+   * 左に欧文の推論図を大きく、右端に和訳を縦に組む。横組みの欧文と縦組みの和文を向かい合わせる。
+   * 推論図の下（結論の側）に、筆者名とこのサイトの目次を置く。
+   */
+  .home-masthead {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    align-items: end;
-    gap: 3rem 5rem;
-    padding-top: clamp(3rem, 7vw, 5.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title title gloss"
+      "body  index gloss";
+    gap: clamp(2.5rem, 5vw, 4.5rem) clamp(2.5rem, 5vw, 5rem);
+    padding-top: clamp(3.5rem, 8vw, 7.5rem);
   }
-  .home-author {
+  .home-masthead-title {
+    grid-area: title;
+    min-width: 0;
+    font-weight: 400;
+  }
+  .home-masthead-gloss {
+    grid-area: gloss;
+    align-self: start;
+    color: var(--foreground);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    line-height: 1.6;
+  }
+  /* 和文の訳だけを縦組みにする。英語版では横組みのまま斜体の注記として添える。 */
+  .home-masthead-gloss:lang(ja) {
+    writing-mode: vertical-rl;
+  }
+  .home-masthead-gloss:lang(en) {
+    max-width: 9rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: 1.0625rem;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 1.5;
+    text-align: right;
+  }
+  .home-masthead-byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+    align-items: center;
+    gap: 0 1.5rem;
+    grid-area: body;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
-  .home-title {
-    margin-top: 0.75rem;
+
+  /* 目次。項目名と件数を本の目次のようにリーダー（点線）でつなぐ。 */
+  .home-directory {
+    grid-area: index;
+    min-width: 0;
+  }
+  .home-directory-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule-ink);
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
-    text-wrap: balance;
-  }
-  .home-gloss {
-    margin-top: 1rem;
-    color: var(--subtle-foreground);
     font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.5em;
+  }
+  /* 字間を大きく空けるのは和文の見出し語だけ。欧文は語の形が崩れない程度にとどめる。 */
+  .home-directory-title:lang(en) {
     letter-spacing: 0.08em;
   }
-  .home-intro-copy .arrow-link {
-    margin-top: 1.5rem;
-  }
-  .home-directory ul {
-    border-top: 1px solid var(--rule-strong);
-  }
-  .home-directory li {
-    border-bottom: 1px solid var(--rule);
+  .home-directory ol {
+    padding-top: 0.375rem;
   }
   .home-directory a {
-    display: grid;
-    min-height: 3.75rem;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 1rem;
-    padding-block: 0.75rem;
+    display: flex;
+    min-height: 3rem;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+  }
+  .home-directory a::after {
+    order: 1;
+    flex: 1;
+    min-width: 2rem;
+    border-bottom: 1px dotted var(--rule-strong);
+    content: "";
+    transform: translateY(-0.35em);
   }
   .home-directory-label {
-    font-size: 0.9375rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     transition: color var(--duration-fast) ease;
   }
   .home-directory-count {
+    order: 2;
     min-width: 2.5rem;
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-latin-display);
+    font-size: 1.25rem;
+    font-variant-numeric: lining-nums tabular-nums;
     text-align: right;
     transition: color var(--duration-fast) ease;
   }
 
-  /* ───────── 最新の記事：1 本を大きく、残りを見出しだけで並べる ───────── */
+  /* ───────── 最新の記事：1 本を大きく、残りは縦罫の右に題だけ ───────── */
   .home-latest {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: 2rem 4rem;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
   .home-lead {
     position: relative;
     display: flex;
     flex-direction: column;
-    padding-top: 0.5rem;
+    padding: 0.5rem 3.5rem 0.5rem 0;
   }
   .home-entry-meta {
     display: flex;
@@ -89,26 +133,43 @@
     color: var(--muted-foreground);
     font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
   }
   .home-lead-title {
-    margin-top: 0.875rem;
-    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2rem);
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.2rem + 1.7vw, 2.625rem);
     font-weight: 700;
     letter-spacing: 0.02em;
-    line-height: 1.45;
+    line-height: 1.42;
     transition: color var(--duration-fast) ease;
   }
   .home-lead-description {
-    margin-top: 1rem;
+    max-width: 34em;
+    margin-top: 1.25rem;
     color: var(--muted-foreground);
-    font-size: 0.9375rem;
-    line-height: 1.95;
+    font-size: 1.0625rem;
+    line-height: 2;
   }
-  .home-lead-more {
-    margin-top: 1.5rem;
-    color: var(--brand);
-    font-size: 0.875rem;
-    font-weight: 500;
+  .home-lead-tags {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.125rem;
+    margin-top: 1rem;
+  }
+  .home-lead-tags a {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    transition: color var(--duration-fast) ease;
+  }
+  .home-recent {
+    padding-left: 2.5rem;
+    border-left: 1px solid var(--rule);
   }
   .home-recent > li + li {
     border-top: 1px solid var(--rule);
@@ -122,112 +183,231 @@
   }
   .home-entry-title {
     margin-top: 0.375rem;
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     line-height: 1.65;
     transition: color var(--duration-fast) ease;
   }
 
-  /* ───────── 連載 ───────── */
+  /* ───────── 連載：一冊ずつ、題と各回の目次 ───────── */
   .home-series {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.5rem 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .home-series-item {
-    position: relative;
-    height: 100%;
-    padding-top: 0.5rem;
+  .home-series > li {
+    padding-block: 0.5rem 2.25rem;
+  }
+  .home-series > li:nth-child(odd) {
+    padding-right: 2.5rem;
+  }
+  .home-series > li:nth-child(even) {
+    padding-left: 2.5rem;
+    border-left: 1px solid var(--rule);
+  }
+  .home-series > li:nth-child(n + 3) {
+    padding-top: 2.25rem;
+    border-top: 1px solid var(--rule);
   }
   .home-series-count {
     color: var(--muted-foreground);
     font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
   }
   .home-series-title {
     margin-top: 0.5rem;
-    font-size: 1.0625rem;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.6;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+  .home-series-title a {
     transition: color var(--duration-fast) ease;
   }
   .home-series-description {
     margin-top: 0.5rem;
     color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.85;
   }
+  .home-series-parts {
+    margin-top: 1.125rem;
+    border-top: 1px solid var(--rule-ink);
+  }
+  .home-series-parts > li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .home-series-parts a {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: baseline;
+    min-height: 2.75rem;
+    padding-block: 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    transition: color var(--duration-fast) ease;
+  }
+  .home-series-number {
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: 1.0625rem;
+    font-variant-numeric: lining-nums;
+  }
+  .home-series-more {
+    padding: 0.625rem 0 0 2rem;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
 
-  /* ───────── 探す：キーワード・資料・テーマ ───────── */
+  /* ───────── 探す：キーワード・資料・テーマを縦罫で区切った三段 ───────── */
   .home-explore {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 3rem;
     margin-top: var(--space-section);
   }
   .home-column {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--rule-strong);
+    padding: 1.5rem 2.25rem 0;
+    border-top: 1px solid var(--rule-ink);
+  }
+  .home-column + .home-column {
+    border-left: 1px solid var(--rule);
+  }
+  .home-column:first-child {
+    padding-left: 0;
+  }
+  .home-column:last-child {
+    padding-right: 0;
   }
   .home-column > ul {
     align-self: stretch;
-    margin-top: 1rem;
+    margin-block: 1rem 0.5rem;
   }
   .home-column-title {
-    font-size: 1.125rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
   }
-  .home-column .arrow-link {
-    margin-top: 0.5rem;
+  /* 和名と英名をリーダーでつなぐ対訳の用語集 */
+  .home-glossary a {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-top: 0.6rem;
+    font-size: 0.9375rem;
+    transition: color var(--duration-fast) ease;
   }
-  .home-column .topic-list {
-    margin-bottom: 0.5rem;
+  .home-glossary a::after {
+    order: 1;
+    flex: 1;
+    min-width: 1rem;
+    border-bottom: 1px dotted var(--rule-strong);
+    content: "";
+    transform: translateY(-0.3em);
+  }
+  .home-glossary-gloss {
+    order: 2;
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: 0.9375rem;
+    font-style: italic;
+    white-space: nowrap;
   }
 
   @media (hover: hover) and (pointer: fine) {
     .home-directory a:hover :is(.home-directory-label, .home-directory-count),
     .home-lead:has(.stretched-link:hover) .home-lead-title,
     .home-entry:has(.stretched-link:hover) .home-entry-title,
-    .home-series-item:has(.stretched-link:hover) .home-series-title {
+    .home-series-title a:hover,
+    .home-series-parts a:hover,
+    .home-glossary a:hover,
+    .home-lead-tags a:hover {
       color: var(--brand);
     }
   }
 
   @media (max-width: 1023px) {
-    .home-intro {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+    .home-masthead {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "title title"
+        "gloss gloss"
+        "body  index";
+      row-gap: 2rem;
+    }
+    .home-masthead-gloss:lang(ja) {
+      writing-mode: horizontal-tb;
+      font-size: 1.125rem;
+      letter-spacing: 0.24em;
+    }
+    .home-masthead-gloss:lang(en) {
+      max-width: none;
+      text-align: left;
     }
     .home-series {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
+    }
+    .home-series > li:nth-child(odd),
+    .home-series > li:nth-child(even) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+    .home-series > li + li {
+      padding-top: 2.25rem;
+      border-top: 1px solid var(--rule);
     }
     .home-explore {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .home-column:nth-child(3) {
+      grid-column: 1 / -1;
+      margin-top: 2.5rem;
+      padding-inline: 0;
+      border-left: 0;
     }
   }
   @media (max-width: 767px) {
+    .home-masthead {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "title"
+        "gloss"
+        "body"
+        "index";
+    }
     .home-latest {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
     }
     .home-lead {
-      padding-bottom: 1.5rem;
+      padding: 0 0 1.75rem;
       border-bottom: 1px solid var(--rule);
+    }
+    .home-recent {
+      padding: 0.5rem 0 0;
+      border-left: 0;
+    }
+    .home-recent > li:first-child .home-entry {
+      padding-top: 1.125rem;
     }
     .home-explore {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
     }
-  }
-  @media (max-width: 479px) {
-    .home-series {
-      grid-template-columns: 1fr;
+    .home-column,
+    .home-column:nth-child(3) {
+      margin-top: 0;
+      padding-inline: 0;
+      padding-bottom: 2.5rem;
+      border-left: 0;
+    }
+    .home-column + .home-column {
+      border-left: 0;
     }
   }
 }

@@ -1,17 +1,67 @@
 @layer components {
   /*
    * サイト共通の部品。色・速度・幅は globals.css のトークンに揃える。
-   * 装飾は罫線と余白だけに絞り、強調は文字の太さとアクセント色（藍）で行う。
+   * 面は塗らず、墨の罫線と余白と書体の切り替えで組む。朱は「いまここ」「つながり」を示す印にだけ使う。
    */
+
+  /* ───────── サイト名の推論図 ───────── */
+  .site-lockup {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    color: var(--foreground);
+    font-family: var(--font-latin-display);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .site-lockup-premise,
+  .site-lockup-conclusion {
+    grid-column: 1;
+    justify-self: center;
+    padding-inline: 0.3em;
+  }
+  .site-lockup-premise {
+    grid-row: 1;
+  }
+  /* 推論の線。前提と結論のうち長い方より少しだけ長く引く。 */
+  .site-lockup-line {
+    grid-row: 2;
+    grid-column: 1;
+    height: max(2px, 0.045em);
+    margin-block: 0.24em 0.2em;
+    background: var(--brand);
+  }
+  .site-lockup-rule {
+    grid-row: 2;
+    grid-column: 2;
+    margin-left: 0.4em;
+    font-size: 0.42em;
+  }
+  .site-lockup-conclusion {
+    grid-row: 3;
+  }
+  .site-lockup[data-size="sm"] {
+    font-size: 1.1875rem;
+  }
+  .site-lockup[data-size="md"] {
+    font-size: 1.75rem;
+  }
+  /* 推論図の全幅はおよそ 6.9em。320px の画面でも sequitur まで収まる大きさに抑える。 */
+  .site-lockup[data-size="lg"] {
+    font-size: clamp(2.25rem, 0.75rem + 7.9vw, 8.25rem);
+  }
+  .site-lockup[data-size="lg"] .site-lockup-line {
+    height: max(2px, 0.03em);
+  }
 
   /* ───────── ヘッダー ───────── */
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    border-bottom: 1px solid var(--rule);
-    background: color-mix(in srgb, var(--background) 90%, transparent);
-    backdrop-filter: saturate(1.2) blur(12px);
+    position: relative;
+    border-bottom: 1px solid var(--rule-ink);
+    background: var(--background);
   }
   .site-skip-link {
     position: absolute;
@@ -19,9 +69,8 @@
     left: 1rem;
     z-index: 60;
     padding: 0.5rem 0.875rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: var(--radius);
-    background: var(--card);
+    border: 1px solid var(--rule-ink);
+    background: var(--background);
     font-size: 0.875rem;
     transform: translateY(-200%);
   }
@@ -38,32 +87,14 @@
     display: flex;
     min-height: var(--site-header-height);
     align-items: center;
-    gap: 2rem;
+    gap: 2.5rem;
   }
   .site-brand {
     display: inline-flex;
-    min-width: 0;
-    min-height: 2.75rem;
-    align-items: center;
-    gap: 0.625rem;
-    color: var(--foreground);
-  }
-  .brand-mark {
-    width: 1.125rem;
-    height: 1.125rem;
     flex-shrink: 0;
-    color: var(--brand);
-  }
-  .site-brand-name {
-    overflow: hidden;
-    font-family: var(--font-display);
-    font-size: 1.1875rem;
-    font-style: italic;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.005em;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    align-items: center;
+    padding-block: 0.5rem;
+    color: var(--foreground);
   }
   .site-nav {
     margin-left: auto;
@@ -78,110 +109,109 @@
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
-    padding-inline: 0.75rem;
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
-    transition: color var(--duration-fast) ease;
+    padding-inline: 0.8rem;
+    color: var(--foreground);
+    font-size: 0.9375rem;
+    letter-spacing: 0.08em;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.45em;
+    transition: text-decoration-color var(--duration-fast) ease;
   }
-  /* 現在地はヘッダー下端の罫線に重なる短い線で示す。 */
-  .site-nav-link::after {
+  /* 現在地は語の左肩に朱の小さな角印を打って示す。字の位置は動かさない。 */
+  .site-nav-link[aria-current="page"]::before {
     position: absolute;
-    right: 0.75rem;
-    bottom: calc((2.75rem - var(--site-header-height)) / 2);
-    left: 0.75rem;
-    height: 2px;
+    top: 50%;
+    left: 0.1rem;
+    width: 5px;
+    height: 5px;
+    margin-top: -2.5px;
     background: var(--brand);
     content: "";
-    opacity: 0;
-    transition: opacity var(--duration-fast) ease;
   }
   .site-nav-link[aria-current="page"] {
-    color: var(--foreground);
     font-weight: 600;
   }
-  .site-nav-link[aria-current="page"]::after {
-    opacity: 1;
-  }
   .site-link-language {
-    margin-left: 0.5rem;
+    margin-left: 0.4rem;
     color: var(--subtle-foreground);
     font-size: 0.625rem;
     letter-spacing: 0.06em;
   }
+  /* 検索・言語・明暗は、細い縦罫で区切った小さな文字の道具としてまとめる。 */
   .site-header-actions {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    gap: 0.25rem;
+    gap: 1.25rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--rule);
   }
-  .site-search-link {
+  .site-search-link,
+  .language-toggle {
     display: inline-flex;
-    height: 2.25rem;
+    min-height: 2.75rem;
     align-items: center;
-    gap: 0.5rem;
-    margin-right: 0.5rem;
-    padding-inline: 0.875rem 1rem;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    background: var(--card);
+    gap: 0.375rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
-    transition:
-      border-color var(--duration-fast) ease,
-      color var(--duration-fast) ease;
+    letter-spacing: 0.04em;
+    transition: color var(--duration-fast) ease;
   }
   .site-search-link[aria-current="page"] {
-    border-color: var(--rule-strong);
     color: var(--foreground);
   }
   .site-header-toggles {
     display: flex;
     align-items: center;
+    gap: 1.25rem;
+  }
+  .theme-toggle {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--subtle-foreground);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+  }
+  .theme-toggle-divider {
+    width: 1px;
+    height: 0.875em;
+    background: var(--rule-strong);
+  }
+  .theme-toggle[data-state="light"] [data-side="light"],
+  .theme-toggle[data-state="dark"] [data-side="dark"] {
+    color: var(--foreground);
+    font-weight: 600;
   }
   .site-menu-toggle {
     display: none;
-    width: 2.75rem;
-    height: 2.75rem;
+    min-width: 4.25rem;
+    min-height: 2.75rem;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius);
-    transition: background-color var(--duration-fast) ease;
+    padding-inline: 0.875rem;
+    border: 1px solid var(--rule-ink);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
+    transition:
+      background-color var(--duration-fast) ease,
+      color var(--duration-fast) ease;
   }
   .site-menu-toggle[aria-expanded="true"] {
-    background: var(--muted);
+    background: var(--foreground);
+    color: var(--background);
   }
-  .site-menu-icon {
-    position: relative;
-    display: block;
-    width: 1.125rem;
-    height: 1.125rem;
-  }
-  .site-menu-icon > span {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 1.5px;
-    border-radius: 1px;
-    background: currentColor;
-    transform: translateY(-3.5px);
-    transition: transform var(--duration-normal) var(--ease-out);
-  }
-  .site-menu-icon > span:last-child {
-    transform: translateY(3.5px);
-  }
-  .site-menu-toggle[aria-expanded="true"] .site-menu-icon > span:first-child {
-    transform: rotate(45deg);
-  }
-  .site-menu-toggle[aria-expanded="true"] .site-menu-icon > span:last-child {
-    transform: rotate(-45deg);
-  }
+  /* 読み進めた位置。画面の最上端に朱の細い線で示す。 */
   .reading-progress-track {
-    position: absolute;
+    position: fixed;
+    top: 0;
     right: 0;
-    bottom: -1px;
     left: 0;
+    z-index: 60;
     height: 2px;
     pointer-events: none;
   }
@@ -207,20 +237,22 @@
     background: var(--background);
   }
   .site-index-inner {
-    padding-block: 1.5rem 2rem;
+    padding-block: 1.75rem 2rem;
   }
   .site-index-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem 1.5rem;
+    gap: 2rem 1.5rem;
   }
   .site-index-heading,
   .site-footer-heading {
-    margin-bottom: 0.375rem;
-    color: var(--subtle-foreground);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--muted-foreground);
     font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.16em;
   }
   .site-index-link {
     display: flex;
@@ -228,6 +260,7 @@
     align-items: center;
     color: var(--foreground);
     font-size: 0.9375rem;
+    letter-spacing: 0.04em;
     transition: color var(--duration-fast) ease;
   }
   .site-index-link[aria-current="page"] {
@@ -239,36 +272,31 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--rule);
+    border-top: 1px solid var(--rule-ink);
   }
   .site-index-settings > div {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.875rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
   }
 
   @media (max-width: 1023px) {
     .site-nav,
-    .site-header-toggles,
-    .site-search-label {
+    .site-header-toggles {
       display: none;
     }
     .site-header-inner {
       justify-content: space-between;
       gap: 0.75rem;
     }
-    .site-search-link {
-      width: 2.75rem;
-      height: 2.75rem;
-      justify-content: center;
-      margin-right: 0;
-      padding: 0;
-      border: 0;
-      background: transparent;
+    .site-header-actions {
+      gap: 1rem;
+      padding-left: 0;
+      border-left: 0;
     }
     .site-menu-toggle {
       display: inline-flex;
@@ -280,30 +308,25 @@
     }
   }
   @media (max-width: 639px) {
-    .site-brand-name {
+    .site-lockup[data-size="sm"] {
       font-size: 1.0625rem;
     }
   }
 
-  /* ───────── フッター ───────── */
+  /* ───────── フッター（サイトマップ） ───────── */
   .site-footer {
     margin-top: auto;
-    padding-block: 3.5rem 1.75rem;
-    border-top: 1px solid var(--rule);
-    background: var(--surface);
+    padding-block: 4.5rem 2rem;
+    border-top: 1px solid var(--rule-ink);
   }
   .site-footer-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: 2.5rem 4rem;
+    gap: 3rem 4rem;
   }
   .site-footer-brand {
     display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-family: var(--font-display);
-    font-size: 1.125rem;
-    font-style: italic;
+    color: var(--foreground);
   }
   .site-footer-nav {
     display: grid;
@@ -312,8 +335,7 @@
   }
   .site-footer .site-index-link {
     min-height: 2.25rem;
-    color: var(--muted-foreground);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
   .site-footer-bottom {
     display: flex;
@@ -321,11 +343,12 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
-    margin-top: 3rem;
-    padding-top: 1.25rem;
+    margin-top: 4rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--rule);
     color: var(--muted-foreground);
     font-size: 0.75rem;
+    letter-spacing: 0.04em;
   }
   .site-footer-top {
     display: inline-flex;
@@ -336,7 +359,7 @@
   }
   @media (max-width: 767px) {
     .site-footer {
-      padding-top: 2.75rem;
+      padding-top: 3rem;
     }
     .site-footer-grid {
       grid-template-columns: 1fr;
@@ -348,18 +371,24 @@
 
   /* ───────── 汎用の小さな部品 ───────── */
 
-  /* 「すべて見る →」のような文中・見出し横のリンク */
+  /* 「すべて見る」のような見出し横・文中のリンク。墨の文字に朱の下線。 */
   .arrow-link {
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
-    gap: 0.375rem;
-    color: var(--brand);
+    gap: 0.4rem;
+    color: var(--foreground);
     font-size: 0.875rem;
-    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration-line: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
     white-space: nowrap;
+    transition: color var(--duration-fast) ease;
   }
   .arrow-link > [aria-hidden="true"] {
+    color: var(--brand);
     transition: transform var(--duration-normal) var(--ease-out);
   }
   /* 見出しのリンクで、カードやまとまり全体をクリックできるようにする */
@@ -374,18 +403,18 @@
   :where(article, li):has(> * > .stretched-link:focus-visible) {
     outline: 2px solid var(--ring);
     outline-offset: 4px;
-    border-radius: 2px;
+    border-radius: 1px;
   }
   .page-eyebrow {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.16em;
   }
   .page-title-hash {
-    margin-right: 0.125em;
-    color: var(--subtle-foreground);
+    margin-right: 0.15em;
+    color: var(--brand);
     font-weight: 400;
   }
   .empty-state {
@@ -393,28 +422,49 @@
     color: var(--muted-foreground);
     font-size: 0.9375rem;
   }
+  /* 節の見出しもページ見出しと同じ推論図の組み方にする。 */
   .section-heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.25rem 1.5rem;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.25rem;
-    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-heading > :first-child {
+    grid-column: 1 / -1;
+    padding-bottom: 0.75rem;
+  }
+  .section-heading::after {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--rule-ink);
+    content: "";
+  }
+  .section-heading:has(> :nth-child(2))::after {
+    grid-column: 1;
+  }
+  .section-heading > :nth-child(2) {
+    grid-row: 2;
+    grid-column: 2;
+  }
+  /* 線の右端に添えたリンクは、罫と下線が二重に見えないよう下線を引かない。 */
+  :is(.section-heading, .page-heading) > .arrow-link {
+    text-decoration-color: transparent;
   }
   .section-title {
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
     font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1.5;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
   }
 
   /* タグを文字だけで並べる（記事ヘッダーなど） */
   .tag-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem 1rem;
+    gap: 0.125rem 1.125rem;
   }
   .tag-list a {
     display: inline-flex;
@@ -422,61 +472,48 @@
     align-items: center;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
+    letter-spacing: 0.02em;
     transition: color var(--duration-fast) ease;
   }
 
-  /* テーマ（タグ）の小さなチップ */
+  /* テーマ（タグ）。枠で囲まず、語と小さな件数を並べるだけにする。 */
   .topic-chip {
     display: inline-flex;
     min-height: 2.25rem;
-    align-items: center;
-    gap: 0.5rem;
-    padding-inline: 0.875rem;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    background: var(--card);
+    align-items: baseline;
+    gap: 0.3em;
+    padding-top: 0.5rem;
     color: var(--foreground);
-    font-size: 0.8125rem;
-    transition:
-      border-color var(--duration-fast) ease,
-      color var(--duration-fast) ease;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+    transition: text-decoration-color var(--duration-fast) ease;
   }
   .topic-chip-count {
     color: var(--subtle-foreground);
-    font-size: 0.75rem;
+    font-family: var(--font-code);
+    font-size: 0.6875rem;
     font-variant-numeric: tabular-nums;
   }
   .topic-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1rem;
-    margin-top: calc(var(--space-page) * -0.5);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    margin-top: calc(var(--space-page) * -0.35);
   }
-  .topic-bar ul,
-  .topic-list {
+  .topic-bar ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0 1.25rem;
   }
   .topic-bar-label {
     color: var(--muted-foreground);
     font-size: 0.8125rem;
-  }
-  .topic-bar .arrow-link {
-    margin-left: auto;
-  }
-
-  /* タグ一覧ページのタグの集まり */
-  .tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.625rem;
-  }
-  .tag-cloud .topic-chip {
-    min-height: 2.5rem;
-    padding-inline: 1rem;
-    font-size: 0.875rem;
+    letter-spacing: 0.12em;
   }
 
   /* 補足付きのリンク一覧 */
@@ -502,6 +539,7 @@
   .breadcrumbs {
     color: var(--muted-foreground);
     font-size: 0.8125rem;
+    letter-spacing: 0.04em;
   }
   .breadcrumbs ol {
     display: flex;
@@ -515,7 +553,7 @@
   .breadcrumbs li + li::before {
     margin-inline: 0.625rem;
     color: var(--subtle-foreground);
-    content: "/";
+    content: "／";
   }
   .breadcrumbs a {
     display: inline-flex;
@@ -527,15 +565,15 @@
     color: var(--foreground);
   }
 
-  /* ページ送り */
+  /* ページ送り。現在のページだけを墨の枠で囲む。 */
   .pagination {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem 1rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-ink);
   }
   .pagination-pages {
     display: flex;
@@ -555,18 +593,19 @@
     height: 2.75rem;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border: 1px solid transparent;
     color: var(--muted-foreground);
+    font-family: var(--font-code);
     font-size: 0.875rem;
     font-variant-numeric: tabular-nums;
     transition:
-      background-color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease,
       color var(--duration-fast) ease;
   }
   .pagination-page[aria-current="page"] {
-    background: var(--brand-soft);
-    color: var(--brand);
-    font-weight: 700;
+    border-color: var(--rule-ink);
+    color: var(--foreground);
+    font-weight: 600;
   }
   .pagination-gap {
     padding-inline: 0.25rem;
@@ -576,13 +615,12 @@
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
-    color: var(--brand);
+    color: var(--foreground);
     font-size: 0.875rem;
-    font-weight: 500;
+    letter-spacing: 0.04em;
   }
   .pagination-step[aria-disabled="true"] {
     color: var(--subtle-foreground);
-    font-weight: 400;
   }
   @media (max-width: 479px) {
     .pagination-pages {
@@ -592,61 +630,68 @@
   }
 
   /* ───────── 記事の一覧 ───────── */
+  /* 年は左の余白に欧文の数字で大きく吊り下げ、その年の記事を右に並べる。 */
   .post-year-group {
     display: grid;
-    grid-template-columns: 7rem minmax(0, 1fr);
-    gap: 0 1rem;
-    border-top: 1px solid var(--rule-strong);
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 0 2rem;
+    border-top: 1px solid var(--rule-ink);
   }
   .post-year {
     position: sticky;
-    top: calc(var(--site-header-height) + 1.25rem);
+    top: 1.5rem;
     align-self: start;
-    padding-top: 1.5rem;
+    padding-top: 1.375rem;
     color: var(--foreground);
-    font-size: 1.125rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
+    font-family: var(--font-latin-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    font-variant-numeric: lining-nums;
+    letter-spacing: 0;
+    line-height: 1;
   }
   .post-row {
     position: relative;
     display: grid;
-    grid-template-columns: 7rem minmax(0, 1fr);
+    grid-template-columns: 5rem minmax(0, 1fr);
     gap: 0.25rem 1.5rem;
-    padding-block: 1.5rem;
+    padding-block: 1.625rem;
   }
   .post-rows > .post-row + .post-row {
     border-top: 1px solid var(--rule);
   }
   .post-index-timeline .post-row {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
+    grid-template-columns: 5rem minmax(0, 1fr);
   }
   .post-index-numbered .post-row {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
+    grid-template-columns: 4rem minmax(0, 1fr);
   }
   .post-row-aside {
-    padding-top: 0.25rem;
+    padding-top: 0.35rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
     white-space: nowrap;
   }
   .post-index-numbered .post-row-aside {
-    color: var(--subtle-foreground);
-    font-size: 1rem;
-    font-weight: 600;
-    padding-top: 0.0625rem;
+    padding-top: 0;
+    color: var(--foreground);
+    font-family: var(--font-latin-display);
+    font-size: 1.75rem;
+    letter-spacing: 0;
+    line-height: 1.1;
   }
   .post-row-main {
     min-width: 0;
-    max-width: 44rem;
+    max-width: 46rem;
   }
   .post-row-title {
-    font-size: 1.125rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.6;
+    letter-spacing: 0.03em;
+    line-height: 1.55;
   }
   .post-row-link {
     transition: color var(--duration-fast) ease;
@@ -662,15 +707,15 @@
   .post-row:has(.post-row-link:focus-visible) {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 1px;
   }
   .post-row-description {
     display: -webkit-box;
     overflow: hidden;
-    margin-top: 0.375rem;
+    margin-top: 0.5rem;
     color: var(--muted-foreground);
     font-size: 0.875rem;
-    line-height: 1.85;
+    line-height: 1.9;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
@@ -678,8 +723,8 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.25rem 1rem;
-    margin-top: 0.5rem;
+    gap: 0.125rem 0.875rem;
+    margin-top: 0.625rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
   }
@@ -702,6 +747,7 @@
     .post-year {
       position: static;
       padding-top: 1.25rem;
+      font-size: 2rem;
     }
     .post-row,
     .post-index-timeline .post-row {
@@ -709,16 +755,19 @@
       padding-block: 1.25rem;
     }
     .post-year + .post-rows > .post-row:first-child {
-      padding-top: 0.5rem;
+      padding-top: 0.75rem;
     }
     .post-row-aside {
       padding-top: 0;
     }
     .post-index-numbered .post-row {
-      grid-template-columns: 2.25rem minmax(0, 1fr);
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+    }
+    .post-index-numbered .post-row-aside {
+      font-size: 1.375rem;
     }
     .post-row-title {
-      font-size: 1.0625rem;
+      font-size: 1.125rem;
     }
   }
 
@@ -728,13 +777,23 @@
   .search-results > li {
     border-bottom: 1px solid var(--rule);
   }
-  .simple-journal-list {
-    border-top: 1px solid var(--rule);
+  .simple-entry-link {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.25rem 1.5rem;
+    min-height: 4.5rem;
+    padding-block: 1.375rem;
   }
   .simple-entry-number {
-    color: var(--subtle-foreground);
-    font-size: 0.875rem;
-    font-weight: 600;
+    color: var(--foreground);
+    font-family: var(--font-latin-display);
+    font-size: 1.625rem;
+    line-height: 1;
+  }
+  .simple-entry-date {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
   }
   .simple-entry-title,
@@ -744,16 +803,62 @@
     transition: color var(--duration-fast) ease;
   }
   .simple-entry-title {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
     font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.55;
   }
-  .simple-entry-arrow {
-    color: var(--subtle-foreground);
-    transition:
-      color var(--duration-fast) ease,
-      transform var(--duration-normal) var(--ease-out);
+  @media (max-width: 639px) {
+    .simple-entry-link {
+      grid-template-columns: 2.25rem minmax(0, 1fr);
+    }
+    .simple-entry-date {
+      grid-column: 2;
+    }
   }
-  .simple-entry-link:focus-visible
-    :is(.simple-entry-title, .simple-entry-arrow),
+
+  /* 書籍の目次。章を明朝の見出しにし、節は題と節番号をリーダーでつなぐ。 */
+  .book-toc {
+    display: grid;
+    gap: 2.25rem;
+  }
+  .book-toc-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule-ink);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.5em;
+  }
+  .book-nav-title {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    transition: color var(--duration-fast) ease;
+  }
+  .book-toc-chapter-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+  }
+  .book-toc-chapter-number {
+    color: var(--brand);
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
+  }
+  .book-toc-chapter ol {
+    padding-left: 1rem;
+  }
+  .simple-entry-link:focus-visible .simple-entry-title,
   .collection-card-link:focus-visible
     :is(.collection-card-title, .collection-card-cta),
   .index-link:focus-visible {
@@ -764,52 +869,301 @@
   .collection-card-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 2.5rem;
-    border-top: 1px solid var(--rule);
+    gap: 0 3rem;
   }
   .collection-card {
     height: 100%;
-  }
-  .collection-card-title {
-    font-weight: 700;
-  }
-  .collection-card-cta {
-    color: var(--brand);
-    font-weight: 500;
   }
   .collection-card-link {
     display: flex;
     height: 100%;
     flex-direction: column;
-    gap: 0.5rem;
-    padding-block: 1.5rem;
+    gap: 0.625rem;
+    padding-block: 1.75rem;
   }
   .collection-card-title {
-    font-size: 1.125rem;
-    line-height: 1.6;
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.55;
   }
   .collection-card-description {
     color: var(--muted-foreground);
     font-size: 0.875rem;
-    line-height: 1.85;
+    line-height: 1.9;
   }
   .collection-card-footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.25rem 1rem;
+    gap: 0.25rem 1.25rem;
     margin-top: auto;
     padding-top: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
   .collection-card-meta {
     color: var(--muted-foreground);
     font-variant-numeric: tabular-nums;
   }
+  .collection-card-cta {
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+  }
   @media (max-width: 767px) {
     .collection-card-list {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* 本の索引のように、語と件数をリーダー（点線）でつなぐ。タグ一覧などで使う。 */
+  .leader-index {
+    columns: 3 14rem;
+    column-gap: 3rem;
+    column-rule: 1px solid var(--rule);
+  }
+  .leader-index > li {
+    break-inside: avoid;
+  }
+  .leader-link {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-top: 0.55rem;
+    color: var(--foreground);
+    font-size: 0.9375rem;
+    transition: color var(--duration-fast) ease;
+  }
+  .leader-link::after {
+    order: 1;
+    flex: 1;
+    min-width: 1.5rem;
+    border-bottom: 1px dotted var(--rule-strong);
+    content: "";
+    transform: translateY(-0.3em);
+  }
+  .leader-link > :last-child {
+    order: 2;
+    color: var(--muted-foreground);
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * 分野ごとの段組。縦罫で区切り、各段の頭に件数・分野名・説明、その下に細目の索引を置く。
+   * キーワードの入口などで使う。
+   */
+  .index-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--rule-ink);
+  }
+  .index-column {
+    min-width: 0;
+    padding: 1.5rem 2.25rem 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .index-column:not(:nth-child(3n + 1)) {
+    border-left: 1px solid var(--rule);
+  }
+  .index-column:nth-child(3n + 1) {
+    padding-left: 0;
+  }
+  .index-column:nth-child(3n) {
+    padding-right: 0;
+  }
+  .index-column-meta {
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+  .index-column-meta-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .index-column-title {
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.45;
+  }
+  .index-column-title a {
+    transition: color var(--duration-fast) ease;
+  }
+  .index-column-note {
+    margin-top: 0.375rem;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    line-height: 1.8;
+  }
+  .index-column-list {
+    margin-top: 0.875rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--rule-ink);
+  }
+  @media (max-width: 1023px) {
+    .index-columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .index-column,
+    .index-column:nth-child(3n),
+    .index-column:nth-child(3n + 1) {
+      padding-inline: 2rem;
+      border-left: 0;
+    }
+    .index-column:nth-child(odd) {
+      padding-left: 0;
+    }
+    .index-column:nth-child(even) {
+      padding-right: 0;
+      border-left: 1px solid var(--rule);
+    }
+  }
+  @media (max-width: 639px) {
+    .index-columns {
+      grid-template-columns: 1fr;
+    }
+    .index-column,
+    .index-column:nth-child(odd),
+    .index-column:nth-child(even) {
+      padding-inline: 0;
+      border-left: 0;
+    }
+  }
+
+  /* 技法の組み合わせ。用語を「＋」でつなぎ、足し算として読ませる。 */
+  .keyword-recipes {
+    margin-top: calc(var(--space-section) - var(--space-page));
+  }
+  .recipe-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 3rem;
+  }
+  .recipe-list > li {
+    padding-block: 1.125rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .recipe-name {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .recipe-terms {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    line-height: 2;
+  }
+  .recipe-terms > li + li::before {
+    margin-inline: 0.5em;
+    color: var(--brand);
+    content: "＋";
+  }
+  .recipe-terms a {
+    text-decoration-line: underline;
+    text-decoration-color: var(--rule-strong);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    transition:
+      color var(--duration-fast) ease,
+      text-decoration-color var(--duration-fast) ease;
+  }
+  @media (max-width: 767px) {
+    .recipe-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* 用語集の見出し語。和名を明朝で立て、対訳を欧文の斜体で添える。 */
+  .glossary-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 3rem;
+  }
+  .glossary-list > li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .glossary-entry {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    padding-block: 1.25rem;
+  }
+  .glossary-term {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: color var(--duration-fast) ease;
+  }
+  .glossary-gloss {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: 0.9375rem;
+    font-style: italic;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .glossary-gloss:lang(ja) {
+    font-family: var(--font-display);
+    font-style: normal;
+  }
+  .glossary-definition {
+    grid-column: 1 / -1;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.85;
+  }
+  @media (max-width: 767px) {
+    .glossary-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* キーワードの見出し。和名と対訳を一行に並べる。 */
+  .keyword-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+  }
+  .keyword-title-gloss {
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    font-style: italic;
+  }
+  .keyword-title-gloss:lang(ja) {
+    font-family: var(--font-display);
+    font-style: normal;
+  }
+  .keyword-effect {
+    max-width: 40rem;
+    margin-top: 1rem;
+    font-size: 1.0625rem;
+    line-height: 1.9;
+  }
+  .keyword-pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule-ink);
   }
 
   /* 規約やポリシーなど、読み通す説明文 */
@@ -821,14 +1175,46 @@
   }
 
   /* ───────── 404 ───────── */
+  /* 左に朱の ⊥ を大きく置き、右に見出しと行き先を並べる。 */
   .not-found {
-    padding-block: 3rem 2rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 2rem clamp(2.5rem, 6vw, 5.5rem);
+    padding-block: clamp(1rem, 4vw, 3rem) 2rem;
+  }
+  .not-found-falsum {
+    position: relative;
+    width: clamp(6rem, 4rem + 8vw, 11rem);
+    aspect-ratio: 1;
+  }
+  .not-found-falsum::before,
+  .not-found-falsum::after {
+    position: absolute;
+    background: var(--brand);
+    content: "";
+  }
+  .not-found-falsum::before {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 9%;
+  }
+  .not-found-falsum::after {
+    top: 0;
+    bottom: 9%;
+    left: 45.5%;
+    width: 9%;
+  }
+  .not-found-body {
+    display: grid;
+    gap: 1rem;
+    max-width: 38rem;
   }
   .not-found-code {
-    margin-bottom: 0.75rem;
-    color: var(--subtle-foreground);
-    font-family: var(--font-display);
-    font-size: 3.5rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-latin-display);
+    font-size: 1.25rem;
     font-style: italic;
     line-height: 1;
   }
@@ -836,7 +1222,15 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0 2rem;
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
+  }
+  @media (max-width: 639px) {
+    .not-found {
+      grid-template-columns: 1fr;
+    }
+    .not-found-falsum {
+      width: 5rem;
+    }
   }
 
   /* ───────── About ───────── */
@@ -851,9 +1245,10 @@
     padding-top: 0.5rem;
   }
   .about-heading {
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
   }
   .about-body {
     max-width: var(--reading-width);
@@ -861,16 +1256,13 @@
     line-height: 1.95;
   }
   .about-gloss {
-    color: var(--subtle-foreground);
-    font-size: 0.875rem;
-    letter-spacing: 0.08em;
-  }
-  .about-motto {
-    margin-bottom: 0.5rem;
+    color: var(--muted-foreground);
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-style: italic;
-    line-height: 1.4;
+    font-size: 0.9375rem;
+    letter-spacing: 0.14em;
+  }
+  .about-lockup {
+    margin-bottom: 1rem;
   }
   .about-body.link-list > li:first-child a {
     padding-top: 0;
@@ -886,16 +1278,24 @@
   .article-page {
     flex: 1;
     min-width: 0;
-    padding-block: 3rem 5rem;
+    padding-block: 3.5rem 6rem;
   }
   .reading-column {
     width: min(100% - 2.5rem, var(--reading-width));
     margin-inline: auto;
   }
   .article-header {
+    margin-bottom: 3rem;
     padding-bottom: 2rem;
-    margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule-ink);
+  }
+  .book-section-header {
+    margin-bottom: 2.75rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--rule-ink);
+  }
+  .book-section-header .article-title {
+    margin-top: 0;
   }
   .article-kicker {
     display: flex;
@@ -903,52 +1303,61 @@
     align-items: center;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
   }
   .article-kicker > * + *::before {
     margin-inline: 0.625rem;
     color: var(--subtle-foreground);
-    content: "/";
+    content: "／";
   }
   .article-kicker a {
     display: inline-flex;
     min-height: 2rem;
     align-items: center;
-    color: var(--brand);
-    font-weight: 500;
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
   }
   .article-title {
-    margin-top: 0.75rem;
-    font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.375rem);
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.35rem + 2vw, 2.75rem);
     font-weight: 700;
     letter-spacing: 0.02em;
-    line-height: 1.45;
+    line-height: 1.42;
   }
   .article-lead {
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
     color: var(--muted-foreground);
     font-size: 1rem;
-    line-height: 1.9;
+    line-height: 1.95;
   }
   .article-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.25rem 1.25rem;
-    margin-top: 1.5rem;
+    gap: 0.25rem 1.5rem;
+    margin-top: 1.75rem;
     color: var(--muted-foreground);
     font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
   }
   .article-meta a {
     display: inline-flex;
     min-height: 2rem;
     align-items: center;
     gap: 0.375rem;
-    color: var(--brand);
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
   }
   .article-header .tag-list {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
   .article-layout {
     display: grid;
@@ -967,58 +1376,70 @@
   }
   .article-toc {
     position: sticky;
-    top: calc(var(--site-header-height) + 2.5rem);
+    top: 2.5rem;
     display: flex;
     max-width: 15rem;
-    max-height: calc(100dvh - var(--site-header-height) - 5rem);
+    max-height: calc(100dvh - 5rem);
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     overflow: hidden;
   }
+  /* 本文の終わりに打つ証明終わりの記号（∎）。 */
+  .article-end {
+    margin-top: 2.5rem;
+    color: var(--brand);
+    font-size: 1.0625rem;
+    line-height: 1;
+    text-align: right;
+  }
+  /* 記事見出しの下罫の直後に置くため、上には罫を引かず下だけ細く閉じる。 */
   .article-toc-inline {
-    margin-bottom: 2.5rem;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    background: var(--card);
+    margin-top: -1.25rem;
+    margin-bottom: 2.75rem;
+    border-bottom: 1px solid var(--rule);
   }
   .article-toc-inline summary {
     display: flex;
-    min-height: 3rem;
+    min-height: 3.25rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-inline: 1.125rem;
-    font-size: 0.9375rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
     font-weight: 700;
+    letter-spacing: 0.12em;
     list-style: none;
   }
   .article-toc-inline summary::-webkit-details-marker {
     display: none;
   }
   .article-toc-inline summary::after {
-    color: var(--muted-foreground);
-    content: "+";
+    color: var(--brand);
+    content: "＋";
+    font-family: var(--font-ui);
     font-weight: 400;
   }
   .article-toc-inline[open] summary::after {
-    content: "−";
+    content: "－";
   }
   .article-toc-inline-count {
     margin-right: auto;
-    color: var(--subtle-foreground);
+    color: var(--muted-foreground);
+    font-family: var(--font-ui);
     font-size: 0.75rem;
     font-weight: 400;
+    letter-spacing: 0.04em;
   }
   .article-toc-inline ol {
-    padding: 0.25rem 1.125rem 1rem;
-    border-top: 1px solid var(--rule);
+    padding: 0 0 1.25rem;
+    counter-reset: toc;
   }
   .article-toc-inline li[data-level="3"] {
-    padding-left: 1rem;
+    padding-left: 1.25rem;
   }
   .article-toc-inline a {
     display: block;
-    padding-block: 0.5rem;
+    padding-block: 0.45rem;
     color: var(--muted-foreground);
     font-size: 0.875rem;
     line-height: 1.6;
@@ -1034,33 +1455,32 @@
   }
   .article-footer {
     display: grid;
-    gap: 1.5rem;
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--rule);
+    gap: 1.75rem;
+    margin-top: 4.5rem;
   }
   .article-series-note {
     display: grid;
-    gap: 0.25rem;
-    padding: 1.25rem 1.5rem;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    background: var(--card);
-    transition: border-color var(--duration-fast) ease;
+    gap: 0.375rem;
+    padding-block: 1.375rem;
+    border-top: 1px solid var(--rule-ink);
+    border-bottom: 1px solid var(--rule-ink);
   }
   .article-series-label {
     color: var(--muted-foreground);
     font-size: 0.75rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.14em;
   }
   .article-series-name {
-    font-size: 1.0625rem;
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
     font-weight: 700;
+    letter-spacing: 0.03em;
+    transition: color var(--duration-fast) ease;
   }
   .article-series-cta {
     margin-top: 0.25rem;
-    color: var(--brand);
-    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
   }
   .article-share {
     display: flex;
@@ -1069,37 +1489,34 @@
     justify-content: space-between;
     gap: 0.75rem 1.5rem;
     color: var(--muted-foreground);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
   }
   .article-share-link {
     display: inline-flex;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
     align-items: center;
     gap: 0.5rem;
-    padding-inline: 1rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: 999px;
     color: var(--foreground);
     font-size: 0.8125rem;
-    transition:
-      border-color var(--duration-fast) ease,
-      background-color var(--duration-fast) ease;
+    text-decoration-line: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
   }
+  /* 前後の記事。左右に分け、上に墨の罫を引くだけの静かな組み方にする。 */
   .article-pager {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 3rem;
+    gap: 2rem;
+    margin-top: 3.5rem;
   }
   .article-pager-link {
     display: flex;
-    min-height: 6rem;
     flex-direction: column;
-    gap: 0.375rem;
-    padding: 1.125rem 1.25rem;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    transition: border-color var(--duration-fast) ease;
+    gap: 0.5rem;
+    padding-top: 1.125rem;
+    border-top: 1px solid var(--rule-ink);
   }
   .article-pager-link.is-next {
     grid-column: 2;
@@ -1109,26 +1526,30 @@
   .article-pager-label {
     color: var(--muted-foreground);
     font-size: 0.75rem;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
   }
   .article-pager-title {
     display: -webkit-box;
     overflow: hidden;
-    font-size: 0.9375rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
     font-weight: 700;
-    line-height: 1.6;
+    line-height: 1.65;
+    letter-spacing: 0.02em;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    transition: color var(--duration-fast) ease;
   }
   .article-comments {
-    margin-top: 4rem;
+    margin-top: 4.5rem;
   }
   @media (max-width: 639px) {
     .article-page {
-      padding-top: 2rem;
+      padding-top: 2.25rem;
     }
     .article-pager {
       grid-template-columns: 1fr;
+      gap: 1.25rem;
     }
     .article-pager-link.is-next {
       grid-column: 1;
@@ -1137,48 +1558,61 @@
 
   /* ───────── ホバー（マウス環境のみ） ───────── */
   @media (hover: hover) and (pointer: fine) {
-    .site-nav-link:hover,
     .site-search-link:hover,
-    .site-footer .site-index-link:hover,
+    .language-toggle:hover,
+    .theme-toggle:hover,
     .site-footer-top:hover,
     .tag-list a:hover,
     .breadcrumbs a:hover,
-    .article-toc-inline a:hover {
+    .article-toc-inline a:hover,
+    .pagination-step:not([aria-disabled="true"]):hover {
       color: var(--foreground);
     }
-    .site-search-link:hover,
-    .topic-chip:hover,
-    .article-share-link:hover,
-    .article-pager-link:hover,
-    .article-series-note:hover {
-      border-color: var(--rule-strong);
+    .theme-toggle:hover [data-side] {
+      color: var(--foreground);
+    }
+    .site-nav-link:hover,
+    .topic-chip:hover {
+      text-decoration-color: var(--brand);
     }
     .site-menu-toggle:hover {
       background: var(--muted);
     }
-    .site-index-link:hover,
-    .topic-chip:hover,
-    .link-list a:hover,
-    .post-row:has(.post-row-link:hover) .post-row-title,
-    .post-row-tag:hover,
-    .simple-entry-link:hover :is(.simple-entry-title, .simple-entry-arrow),
-    .collection-card-link:hover .collection-card-title,
-    .index-link:hover,
-    .article-pager-link:hover .article-pager-title {
-      color: var(--brand);
+    .site-menu-toggle[aria-expanded="true"]:hover {
+      background: var(--foreground);
     }
     .pagination-page:not([aria-current="page"]):hover {
-      background: var(--muted);
+      border-color: var(--rule-strong);
       color: var(--foreground);
     }
-    .arrow-link:hover > [aria-hidden="true"],
-    .simple-entry-link:hover .simple-entry-arrow {
+    .site-index-link:hover,
+    .index-column-title a:hover,
+    .recipe-terms a:hover,
+    .glossary-entry:hover .glossary-term,
+    .link-list a:hover,
+    .leader-link:hover,
+    .arrow-link:hover,
+    .post-row:has(.post-row-link:hover) .post-row-title,
+    .post-row-tag:hover,
+    .simple-entry-link:hover .simple-entry-title,
+    .collection-card-link:hover .collection-card-title,
+    .index-link:hover,
+    .article-pager-link:hover .article-pager-title,
+    .article-series-note:hover .article-series-name,
+    .article-share-link:hover,
+    .article-kicker a:hover,
+    .article-meta a:hover {
+      color: var(--brand);
+    }
+    :is(.section-heading, .page-heading) > .arrow-link:hover {
+      text-decoration-color: var(--brand);
+    }
+    .arrow-link:hover > [aria-hidden="true"] {
       transform: translateX(3px);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .arrow-link > [aria-hidden="true"],
-    .simple-entry-arrow {
+    .arrow-link > [aria-hidden="true"] {
       transform: none !important;
     }
   }

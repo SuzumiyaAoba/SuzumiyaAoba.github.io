@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/app/_shared/page-metadata";
 export const metadata = buildPageMetadata({
   title: "Audio",
   description:
-    "Explore a connected 3D audio system with NODE, UD-505, CG-10M and HA-1A MK2. Switch between HD 800 S and Clear Mg Professional and inspect the connections and equipment details.",
+    "My audio equipment (NODE, CG-10M, UD-505, HA-1A MK2 and more): 3D models, connections, and specifications.",
   path: "/audio",
   locale: "en",
 });

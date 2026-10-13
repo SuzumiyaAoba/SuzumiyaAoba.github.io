@@ -103,7 +103,6 @@ export function BlogListingContent({
             </ul>
             <a href={toLocalePath("/tags", locale)} className="arrow-link">
               <I18nText locale={locale} ja="すべてのタグ" en="All tags" />
-              <span aria-hidden="true">→</span>
             </a>
           </nav>
         )}

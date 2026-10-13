@@ -1,7 +1,5 @@
 import type { PropsWithChildren } from "react";
 
-import { Icon } from "@/shared/ui/icon";
-
 import { cn } from "@/shared/lib/utils";
 
 export type MessageProps = PropsWithChildren<{
@@ -11,31 +9,10 @@ export type MessageProps = PropsWithChildren<{
   className?: string;
 }>;
 
-/** 面は共通の落ち着いた色にし、種類は左の罫線とアイコンの色だけで伝える。 */
-const variantStyles: Record<NonNullable<MessageProps["variant"]>, string> = {
-  info: "border-l-callout-info",
-  success: "border-l-callout-success",
-  warning: "border-l-callout-warning",
-  error: "border-l-callout-error",
-};
-
-const variantIconStyles: Record<
-  NonNullable<MessageProps["variant"]>,
-  string
-> = {
-  info: "text-callout-info",
-  success: "text-callout-success",
-  warning: "text-callout-warning",
-  error: "text-callout-error",
-};
-
-const variantIcons: Record<NonNullable<MessageProps["variant"]>, string> = {
-  info: "lucide:info",
-  success: "lucide:check-circle-2",
-  warning: "lucide:alert-triangle",
-  error: "lucide:alert-circle",
-};
-
+/**
+ * 本文中の囲み記事。細い罫で囲み、種類は題の前の小さな角印の色だけで伝える。
+ * 開閉の記号も ＋／－ の文字にして、アイコンの定型から離す。
+ */
 export function Message({
   title,
   children,
@@ -45,35 +22,18 @@ export function Message({
 }: MessageProps) {
   return (
     <details
-      className={cn(
-        "my-7 rounded-l-none rounded-r-md border-y-0 border-r-0 border-l-[3px] bg-callout-surface px-5 py-4 text-[0.9375rem] leading-[1.85]",
-        variantStyles[variant],
-        "group",
-        className
-      )}
+      className={cn("callout", className)}
+      data-variant={variant}
       open={defaultOpen}
     >
       {title ? (
-        <summary className="flex cursor-pointer list-none items-center gap-2 font-bold">
-          <Icon
-            icon={variantIcons[variant]}
-            className={cn("size-4", variantIconStyles[variant])}
-          />
+        <summary className="callout-title">
+          <span className="callout-mark" aria-hidden="true" />
           <span className="flex-1">{title}</span>
-          <Icon
-            icon="lucide:chevron-down"
-            className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
-          />
+          <span className="callout-toggle" aria-hidden="true" />
         </summary>
       ) : null}
-      <div
-        className={cn(
-          "prose max-w-none text-[length:inherit]",
-          title ? "mt-2" : ""
-        )}
-      >
-        {children}
-      </div>
+      <div className="prose callout-body">{children}</div>
     </details>
   );
 }

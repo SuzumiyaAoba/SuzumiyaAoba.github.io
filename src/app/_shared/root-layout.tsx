@@ -8,7 +8,7 @@ import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import { buildWebsiteJsonLd } from "@/shared/lib/site/website-jsonld";
 import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
-import { inter, newsreader, sourceCodePro } from "./fonts";
+import { ibmPlexMono, ibmPlexSans, libreCaslonText } from "./fonts";
 
 const OPEN_GRAPH_LOCALE: Record<Locale, string> = {
   ja: "ja_JP",
@@ -68,7 +68,7 @@ export function AppRootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${inter.variable} ${newsreader.variable} ${sourceCodePro.variable}`}
+      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${libreCaslonText.variable}`}
     >
       <body className="font-sans antialiased">
         <JsonLd data={buildWebsiteJsonLd(locale)} />

@@ -9,7 +9,7 @@ const inputVariants = {
   default: "",
   icon: "pl-10",
   search:
-    "h-14 rounded-full bg-card pr-14 pl-12 text-base sm:text-base [&::-webkit-search-cancel-button]:appearance-none",
+    "h-16 rounded-none border-0 border-b border-rule-ink bg-transparent pr-12 pl-9 text-lg focus-visible:border-brand focus-visible:ring-0 sm:text-lg [&::-webkit-search-cancel-button]:appearance-none",
   underline:
     "rounded-none border-0 border-b border-border bg-transparent pl-7 focus-visible:border-ring focus-visible:ring-0",
 } as const;
@@ -31,7 +31,7 @@ function Input({
       type={type}
       data-slot="input"
       className={cn(
-        "flex h-11 w-full rounded-lg border border-input bg-background px-3 py-2 text-base shadow-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm",
+        "flex h-11 w-full rounded-sm border border-input bg-background px-3 py-2 text-base shadow-none transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm",
         inputVariants[variant],
         className
       )}

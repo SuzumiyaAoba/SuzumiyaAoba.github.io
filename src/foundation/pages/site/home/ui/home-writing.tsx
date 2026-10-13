@@ -10,6 +10,9 @@ type HomeWritingProps = {
   postCount: number;
 };
 
+/** 最新記事に添えるタグの上限 */
+const LEAD_TAG_LIMIT = 4;
+
 function EntryMeta({ post, locale }: { post: PostIndexEntry; locale: Locale }) {
   return (
     <p className="home-entry-meta">
@@ -23,6 +26,9 @@ function EntryMeta({ post, locale }: { post: PostIndexEntry; locale: Locale }) {
   );
 }
 
+/**
+ * 新着記事。最新の 1 本を左に大きく組み、残りは縦罫の右に題だけを並べる。
+ */
 export function HomeWriting({
   locale,
   latestPosts,
@@ -33,6 +39,10 @@ export function HomeWriting({
   const [lead, ...rest] = toPostIndexEntries(latestPosts, locale);
   const hrefOf = (post: PostIndexEntry) =>
     toLocalePath(`/blog/post/${post.slug}`, locale);
+  // カテゴリと同じ名前のタグは見出し上の分類と重なるため省く。
+  const leadTags = (lead?.tags ?? [])
+    .filter((tag) => tag !== lead?.category)
+    .slice(0, LEAD_TAG_LIMIT);
 
   return (
     <section
@@ -46,7 +56,6 @@ export function HomeWriting({
         </h2>
         <a href={toLocalePath("/blog", locale)} className="arrow-link">
           {t(`すべての記事（${postCount}）`, `All ${postCount} articles`)}
-          <span aria-hidden="true">→</span>
         </a>
       </div>
       {lead ? (
@@ -61,9 +70,22 @@ export function HomeWriting({
             {lead.description ? (
               <p className="home-lead-description">{lead.description}</p>
             ) : null}
-            <span className="home-lead-more" aria-hidden="true">
-              {t("続きを読む", "Read article")} →
-            </span>
+            {leadTags.length > 0 ? (
+              <ul className="home-lead-tags" aria-label={t("タグ", "Tags")}>
+                {leadTags.map((tag) => (
+                  <li key={tag}>
+                    <a
+                      href={toLocalePath(
+                        `/tags/${encodeURIComponent(tag)}`,
+                        locale
+                      )}
+                    >
+                      #{tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </article>
           {rest.length > 0 && (
             <ol className="home-recent">

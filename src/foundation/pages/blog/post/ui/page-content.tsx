@@ -88,9 +88,9 @@ function PagerLink({ locale, post, direction }: PagerLinkProps) {
     >
       <span className="article-pager-label">
         {isPrev ? (
-          <I18nText locale={locale} ja="← 前の記事" en="← Previous" />
+          <I18nText locale={locale} ja="前の記事" en="Previous" />
         ) : (
-          <I18nText locale={locale} ja="次の記事 →" en="Next →" />
+          <I18nText locale={locale} ja="次の記事" en="Next" />
         )}
       </span>
       <span className="article-pager-title">{post.title}</span>
@@ -228,6 +228,9 @@ export function BlogPostPageContent({
                 {content}
                 <TwitterWidgets />
               </div>
+              <p className="article-end" aria-hidden="true">
+                ∎
+              </p>
 
               {amazonProducts.length > 0 ? (
                 <AmazonProductSection
@@ -255,8 +258,8 @@ export function BlogPostPageContent({
                     <span className="article-series-cta">
                       <I18nText
                         locale={locale}
-                        ja="連載の目次を見る →"
-                        en="See all parts →"
+                        ja="連載の目次を見る"
+                        en="See all parts"
                       />
                     </span>
                   </a>

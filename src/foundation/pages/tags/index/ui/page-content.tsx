@@ -54,7 +54,7 @@ export function TagsListPageContent({
             />
           </p>
         ) : (
-          <ul className="tag-cloud">
+          <ul className="leader-index">
             {tags.map((tag) => (
               <li key={`${locale}-${tag.name}`}>
                 <a
@@ -62,10 +62,10 @@ export function TagsListPageContent({
                     `/tags/${encodeURIComponent(tag.name)}`,
                     locale
                   )}
-                  className="topic-chip"
+                  className="leader-link"
                 >
-                  {tag.name}
-                  <span className="topic-chip-count">{tag.count}</span>
+                  <span>{tag.name}</span>
+                  <span>{tag.count}</span>
                 </a>
               </li>
             ))}

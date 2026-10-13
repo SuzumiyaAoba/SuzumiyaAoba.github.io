@@ -1,7 +1,3 @@
-"use client";
-
-import { Icon } from "@/shared/ui/icon-client";
-import { Button } from "@/shared/ui/button";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 
@@ -16,28 +12,24 @@ type LanguageToggleProps = {
 };
 
 /**
- * サイトの表示言語を切り替えるコンポーネント
- * テーマ切り替えと同様に、アイコンボタンのトグルとして表示する
+ * 表示言語の切り替え。旗や翻訳アイコンは使わず、切り替え先の言語名をその言語で書く。
  * @param props ロケールと遷移パス
  */
 export function LanguageToggle({ locale, path }: LanguageToggleProps) {
   const targetLocale: Locale = locale === "ja" ? "en" : "ja";
   const targetPath = toLocalePath(path, targetLocale);
   const label =
-    targetLocale === "en" ? "Switch to English" : "日本語に切り替え";
+    targetLocale === "en" ? "Read this site in English" : "日本語で読む";
 
   return (
-    <Button
-      asChild
-      variant="ghost"
-      size="icon"
-      className="size-11 rounded-lg"
-      aria-label={label}
+    <a
+      href={targetPath}
+      hrefLang={targetLocale}
+      lang={targetLocale}
+      className="language-toggle"
       title={label}
     >
-      <a href={targetPath} hrefLang={targetLocale} aria-label={label}>
-        <Icon icon="lucide:languages" className="h-4 w-4" aria-hidden="true" />
-      </a>
-    </Button>
+      {targetLocale === "en" ? "English" : "日本語"}
+    </a>
   );
 }

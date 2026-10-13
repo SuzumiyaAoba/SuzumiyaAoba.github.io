@@ -1,31 +1,35 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Icon } from "@/shared/ui/icon-client";
-import { Button } from "@/shared/ui/button";
+import type { Locale } from "@/shared/lib/routing";
 import { useMounted } from "@/shared/ui/use-mounted";
 
+const LABELS = {
+  ja: {
+    light: "明",
+    dark: "暗",
+    toLight: "明るい表示にする",
+    toDark: "暗い表示にする",
+  },
+  en: {
+    light: "Light",
+    dark: "Dark",
+    toLight: "Switch to light theme",
+    toDark: "Switch to dark theme",
+  },
+} as const;
+
 /**
- * ダークモードとライトモードを切り替えるコンポーネント
+ * 明暗の切り替え。アイコンではなく「明｜暗」の二文字を並べ、いまの側を墨で、もう一方を淡く刷る。
+ * 押すたびに反対側へ切り替わる。
  */
-export function ThemeToggle() {
+export function ThemeToggle({ locale = "ja" }: { locale?: Locale }) {
   const mounted = useMounted();
   const { theme, setTheme, resolvedTheme } = useTheme();
-
-  if (!mounted) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="size-11 rounded-lg"
-        aria-label="テーマを切り替え"
-      >
-        <span className="h-4 w-4" />
-      </Button>
-    );
-  }
-
-  const isDark = resolvedTheme === "dark";
+  const labels = LABELS[locale];
+  // 描画前はどちらが選ばれているか分からないため、両方を淡く表示する。
+  const isDark = mounted && resolvedTheme === "dark";
+  const state = mounted ? (isDark ? "dark" : "light") : "unknown";
 
   const toggleTheme = () => {
     if (theme === "system") {
@@ -35,20 +39,20 @@ export function ThemeToggle() {
     }
   };
 
+  const label = isDark ? labels.toLight : labels.toDark;
+
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <button
+      type="button"
       onClick={toggleTheme}
-      className="size-11 rounded-lg"
-      aria-label={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
-      title={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+      className="theme-toggle"
+      data-state={state}
+      aria-label={label}
+      title={label}
     >
-      {isDark ? (
-        <Icon icon="lucide:sun" className="h-4 w-4" />
-      ) : (
-        <Icon icon="lucide:moon" className="h-4 w-4" />
-      )}
-    </Button>
+      <span data-side="light">{labels.light}</span>
+      <span className="theme-toggle-divider" aria-hidden="true" />
+      <span data-side="dark">{labels.dark}</span>
+    </button>
   );
 }

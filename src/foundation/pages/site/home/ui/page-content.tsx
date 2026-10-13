@@ -15,19 +15,26 @@ export type HomePageContentProps = {
   latestPosts: LocalizedBlogPostSummary[];
   postCount?: number;
   keywordCount: number;
+  /** 書籍の冊数。目次の件数に使う。 */
+  bookCount?: number;
   series?: SeriesDefinition[];
+  /** 記事のスラッグから表示言語の題を引く表。連載の各回の題に使う。 */
+  postTitles?: Record<string, string>;
   topics?: HomeTopic[];
 };
 
 const EMPTY_SERIES: SeriesDefinition[] = [];
 const EMPTY_TOPICS: HomeTopic[] = [];
+const EMPTY_TITLES: Record<string, string> = {};
 
 export function HomePageContent({
   locale,
   latestPosts,
   postCount = latestPosts.length,
   keywordCount,
+  bookCount = 1,
   series = EMPTY_SERIES,
+  postTitles = EMPTY_TITLES,
   topics = EMPTY_TOPICS,
 }: HomePageContentProps) {
   const pagePath = toLocalePath("/", locale);
@@ -41,14 +48,19 @@ export function HomePageContent({
           postCount={postCount}
           keywordCount={keywordCount}
           seriesCount={series.length}
+          bookCount={bookCount}
         />
         <HomeWriting
           locale={locale}
           latestPosts={latestPosts}
           postCount={postCount}
         />
-        <HomeSeries locale={locale} series={series} />
-        <HomeExplore locale={locale} topics={topics} />
+        <HomeSeries locale={locale} series={series} postTitles={postTitles} />
+        <HomeExplore
+          locale={locale}
+          topics={topics}
+          keywordCount={keywordCount}
+        />
       </main>
     </SiteLayout>
   );

@@ -31,8 +31,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         en: "AI News",
       },
       description: {
-        ja: "AIモデルのリリース日と、系列ごとのリリース間隔をカレンダーで比較。",
-        en: "Explore AI model release dates and compare release intervals by series.",
+        ja: "AI モデルのリリース日の記録",
+        en: "A record of AI model release dates",
       },
     },
     {
@@ -43,8 +43,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         en: "Tools",
       },
       description: {
-        ja: "ASCII コード表や資産形成シミュレーションなどのツール集。",
-        en: "A collection of tools, including an ASCII code table and an asset formation simulator.",
+        ja: "ASCII コード表、資産形成シミュレーション",
+        en: "ASCII code table, asset formation simulator",
       },
     },
     {
@@ -55,8 +55,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
         en: "Awesome Something",
       },
       description: {
-        ja: "開発やデザインに役立つツール・ライブラリ・資料を分野別に集めたリンク集。",
-        en: "A curated collection of tools, libraries, and references for development and design.",
+        ja: "ツール・ライブラリ・資料のリンク集",
+        en: "Links to tools, libraries, and references",
       },
     },
   ];
@@ -67,7 +67,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     description:
       locale === "en" ? archive.description.en : archive.description.ja,
     href: toLocalePath(archive.path, locale),
-    cta: <I18nText locale={locale} ja="開く →" en="Open →" />,
+    cta: <I18nText locale={locale} ja="開く" en="Open" />,
   }));
 
   return (

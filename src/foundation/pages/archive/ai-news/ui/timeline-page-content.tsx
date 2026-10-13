@@ -87,8 +87,8 @@ export function AiNewsTimelinePageContent({
             >
               <I18nText
                 locale={locale}
-                ja="カレンダー・リリース間隔を見る →"
-                en="View calendar and release intervals →"
+                ja="カレンダー・リリース間隔を見る"
+                en="View calendar and release intervals"
               />
             </a>
           </p>

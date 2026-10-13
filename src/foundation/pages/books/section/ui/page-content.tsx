@@ -1,12 +1,9 @@
 import type { ReactElement } from "react";
 import { SiteLayout } from "@/widgets/site-layout";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { Button } from "@/shared/ui/button";
-import { Separator } from "@/shared/ui/separator";
 import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
-import { Icon } from "@/shared/ui/icon";
 import { Message } from "@/shared/ui/mdx";
 import type { BookChapter, SectionRef } from "@/entities/book";
 import type { TocHeading } from "@/shared/lib/mdx";
@@ -91,11 +88,11 @@ export function BookSectionPageContent({
             ]}
             className="mb-4"
           />
-          <header className="mb-6 space-y-1">
-            <p className="text-xs text-muted-foreground">
-              第{chapterNum}章 — {chapterTitle}
+          <header className="book-section-header">
+            <p className="page-eyebrow">
+              第{chapterNum}章　{chapterTitle}
             </p>
-            <h1 className="text-2xl font-semibold">{sectionTitle}</h1>
+            <h1 className="article-title">{sectionTitle}</h1>
           </header>
 
           <article className="prose max-w-none">
@@ -121,74 +118,39 @@ export function BookSectionPageContent({
             {content}
           </article>
 
-          {/* 前後節ナビ */}
-          <div className="mt-8 space-y-5">
-            <Separator variant="muted" />
-            <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* 前後節ナビ。記事ページと同じく、上に墨の罫を引いた左右二つのリンクにする。 */}
+          {prev || next ? (
+            <nav className="article-pager" aria-label="前後の節">
               {prev ? (
-                <div className="flex min-w-0 flex-1">
-                  <Button
-                    asChild
-                    variant="nav"
-                    size="nav"
-                    className="w-full min-w-0 flex-col items-start whitespace-normal"
-                  >
-                    <a
-                      href={toLocalePath(
-                        `/books/${bookSlug}/${prev.chapter}/${prev.section}`,
-                        locale
-                      )}
-                      className="w-full min-w-0"
-                    >
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Icon
-                          icon="lucide:chevron-left"
-                          className="size-3 shrink-0"
-                        />
-                        前の節
-                      </span>
-                      <span className="w-full min-w-0 text-left text-sm font-medium break-words">
-                        {prev.title}
-                      </span>
-                    </a>
-                  </Button>
-                </div>
+                <a
+                  href={toLocalePath(
+                    `/books/${bookSlug}/${prev.chapter}/${prev.section}`,
+                    locale
+                  )}
+                  rel="prev"
+                  className="article-pager-link"
+                >
+                  <span className="article-pager-label">前の節</span>
+                  <span className="article-pager-title">{prev.title}</span>
+                </a>
               ) : (
-                <div />
+                <span />
               )}
               {next ? (
-                <div className="flex min-w-0 flex-1 justify-end">
-                  <Button
-                    asChild
-                    variant="nav"
-                    size="nav"
-                    className="w-full min-w-0 flex-col items-end whitespace-normal"
-                  >
-                    <a
-                      href={toLocalePath(
-                        `/books/${bookSlug}/${next.chapter}/${next.section}`,
-                        locale
-                      )}
-                      className="w-full min-w-0"
-                    >
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        次の節
-                        <Icon
-                          icon="lucide:chevron-right"
-                          className="size-3 shrink-0"
-                        />
-                      </span>
-                      <span className="w-full min-w-0 text-right text-sm font-medium break-words">
-                        {next.title}
-                      </span>
-                    </a>
-                  </Button>
-                </div>
-              ) : (
-                <div />
-              )}
+                <a
+                  href={toLocalePath(
+                    `/books/${bookSlug}/${next.chapter}/${next.section}`,
+                    locale
+                  )}
+                  rel="next"
+                  className="article-pager-link is-next"
+                >
+                  <span className="article-pager-label">次の節</span>
+                  <span className="article-pager-title">{next.title}</span>
+                </a>
+              ) : null}
             </nav>
-          </div>
+          ) : null}
         </main>
 
         {/* 右: 節内 ToC */}

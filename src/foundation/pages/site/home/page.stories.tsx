@@ -159,7 +159,7 @@ export const Empty: Story = {
     const main = within(within(canvasElement).getByRole("main"));
     await expect(main.getByText("記事はまだありません。")).toBeVisible();
     await expect(
-      main.getByRole("link", { name: "カールノイズ" })
+      main.getByRole("link", { name: /^カールノイズ/u })
     ).toBeVisible();
     await expect(
       main.queryByRole("region", { name: "連載" })

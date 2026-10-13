@@ -120,7 +120,7 @@ export function AwesomeList({
   if (items.length === 0) {
     return (
       <p className="py-8 text-sm text-muted-foreground">
-        {isEnglish ? "No discoveries recorded yet." : "まだ登録がありません。"}
+        {isEnglish ? "No items yet." : "まだ登録がありません。"}
       </p>
     );
   }
@@ -214,7 +214,7 @@ export function AwesomeList({
                   : `タグ「${selectedTag}」の絞り込みを解除`
               }
               onClick={() => setSelectedTag(null)}
-              className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-sm border border-border bg-muted px-3 py-1 text-left text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <Tag tag={selectedTag} variant="bare" className="min-w-0" />
               <X className="size-3.5 shrink-0" aria-hidden="true" />
@@ -226,7 +226,7 @@ export function AwesomeList({
       {filteredCount === 0 ? (
         <p className="border-t border-border py-8 text-sm text-muted-foreground">
           {isEnglish
-            ? "No matching discoveries."
+            ? "No matching items."
             : "条件に一致する項目がありません。"}
         </p>
       ) : (
@@ -311,7 +311,7 @@ export function AwesomeList({
                                         current === tag ? null : tag
                                       )
                                     }
-                                    className="group inline-flex min-h-9 max-w-full items-center rounded-full text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                                    className="group inline-flex min-h-9 max-w-full items-center rounded-sm text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                   >
                                     <Tag
                                       tag={tag}

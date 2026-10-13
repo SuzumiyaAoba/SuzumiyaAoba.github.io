@@ -3,7 +3,6 @@
 import { isValidElement, useMemo, useState } from "react";
 import type { ReactElement } from "react";
 
-import { cn } from "@/shared/lib/utils";
 import type { TabProps } from "./tab";
 
 type TabsProps = {
@@ -25,8 +24,8 @@ export function Tabs({ children }: TabsProps) {
   }
 
   return (
-    <div className="my-6">
-      <div className="flex flex-wrap items-center gap-2 rounded-t-lg bg-muted px-3 py-2 text-xs font-medium text-muted-foreground">
+    <div className="code-frame">
+      <div className="code-bar">
         {tabs.map((tab, index) => {
           const title = tab.props.title || `タブ ${index + 1}`;
           const isActive = index === activeTab;
@@ -38,21 +37,15 @@ export function Tabs({ children }: TabsProps) {
               key={`${title}-${index}`}
               type="button"
               onClick={() => setActiveTab(index)}
-              className={cn(
-                "rounded-full px-3 py-1 transition-colors",
-                isActive
-                  ? "bg-background text-foreground"
-                  : "hover:text-foreground"
-              )}
+              aria-pressed={isActive}
+              className="code-tab"
             >
               {title}
             </button>
           );
         })}
       </div>
-      <div className="rounded-b-lg bg-muted/30 px-3 py-4">
-        {tabs[activeTab]}
-      </div>
+      <div className="tab-panel">{tabs[activeTab]}</div>
     </div>
   );
 }

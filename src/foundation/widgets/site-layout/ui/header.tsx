@@ -3,6 +3,7 @@
 import { Icon } from "@/shared/ui/icon-client";
 import { ThemeToggle } from "@/shared/ui/theme-toggle";
 import { LanguageToggle } from "@/shared/ui/language-toggle";
+import { SiteLockup } from "@/shared/ui/site-lockup";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { SITE_TITLE } from "@/shared/lib/site";
@@ -13,13 +14,16 @@ import {
   navigationGroups,
   primaryItems,
 } from "../model/navigation";
-import { BrandMark } from "./brand-mark";
 import { NavigationLink } from "./navigation-link";
 import { useHeaderMenu } from "./use-header-menu";
 import { useReadingProgress } from "./use-reading-progress";
 
 type HeaderProps = { locale: Locale; path: string };
 
+/**
+ * サイトのヘッダー。本の柱（ランニングヘッド）のように、ページの頭に一度だけ置いてスクロールには追従させない。
+ * 狭い画面ではナビゲーションを「目次」にまとめ、ボタンも記号ではなく言葉で示す。
+ */
 export function Header({ locale, path }: HeaderProps) {
   const {
     headerRef,
@@ -50,10 +54,7 @@ export function Header({ locale, path }: HeaderProps) {
           className="site-brand"
           aria-label={`${SITE_TITLE} — ${en ? "Home" : "ホーム"}`}
         >
-          <BrandMark />
-          <span className="site-brand-name" lang="la">
-            {SITE_TITLE}
-          </span>
+          <SiteLockup size="sm" />
         </a>
         <nav
           aria-label={en ? "Main navigation" : "メインナビゲーション"}
@@ -76,38 +77,28 @@ export function Header({ locale, path }: HeaderProps) {
           <a
             href={toLocalePath("/search", locale)}
             className="site-search-link"
-            aria-label={searchLabel}
             aria-current={isActive("/search") ? "page" : undefined}
-            title={searchLabel}
           >
-            <Icon icon="lucide:search" className="size-4" aria-hidden="true" />
-            <span className="site-search-label">{searchLabel}</span>
+            <Icon
+              icon="lucide:search"
+              className="size-3.5"
+              aria-hidden="true"
+            />
+            {searchLabel}
           </a>
           <div className="site-header-toggles">
             <LanguageToggle locale={locale} path={path} />
-            <ThemeToggle />
+            <ThemeToggle locale={locale} />
           </div>
           <button
             ref={menuButtonRef}
             type="button"
             className="site-menu-toggle"
-            aria-label={
-              isMenuOpen
-                ? en
-                  ? "Close menu"
-                  : "メニューを閉じる"
-                : en
-                  ? "Open menu"
-                  : "メニューを開く"
-            }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-nav"
             onClick={toggleMenu}
           >
-            <span className="site-menu-icon" aria-hidden="true">
-              <span />
-              <span />
-            </span>
+            {isMenuOpen ? (en ? "Close" : "閉じる") : en ? "Contents" : "目次"}
           </button>
         </div>
       </div>
@@ -151,8 +142,8 @@ export function Header({ locale, path }: HeaderProps) {
               </nav>
               <div className="site-index-settings">
                 <div>
-                  <span>{en ? "Appearance" : "表示テーマ"}</span>
-                  <ThemeToggle />
+                  <span>{en ? "Theme" : "表示"}</span>
+                  <ThemeToggle locale={locale} />
                 </div>
                 <div>
                   <span>{en ? "Language" : "言語"}</span>

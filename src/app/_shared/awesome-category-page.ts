@@ -29,12 +29,12 @@ export async function buildAwesomeCategoryMetadata(
   const name =
     subcategory?.name[locale] ??
     category?.name[locale] ??
-    (locale === "en" ? "All discoveries" : "すべての項目");
+    (locale === "en" ? "All items" : "すべての項目");
   return buildPageMetadata({
     title: `${name} | Awesome Something`,
     description:
       locale === "en"
-        ? `Explore tools and resources for ${name}.`
+        ? `Links to tools and resources: ${name}.`
         : `${name}に関するツール・サービス・資料のリンク集。`,
     path: getAwesomePath(category?.id ?? "all", subcategory?.id),
     locale,

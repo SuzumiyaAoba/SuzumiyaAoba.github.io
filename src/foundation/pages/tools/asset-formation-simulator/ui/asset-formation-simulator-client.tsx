@@ -31,16 +31,21 @@ export function AssetFormationSimulator({
   } = useAssetFormationSimulator(locale);
 
   return (
-    <main className="site-main flex flex-col pt-5 sm:pt-6">
-      <h1 className="mb-5 text-2xl leading-snug sm:text-3xl">
-        {t("資産形成シミュレーション", "Asset Formation Simulator")}
-      </h1>
-      <p className="mb-4 text-sm text-foreground/80">
-        {t(
-          "毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。",
-          "Contributions are made at month-end. Annual returns are converted to monthly rates and compounded across scenarios under the same conditions. Taxes and fees are not considered."
-        )}
-      </p>
+    <main className="site-main flex flex-col">
+      <header className="page-heading mb-8">
+        <div>
+          <p className="page-eyebrow">{t("ツール", "Tools")}</p>
+          <h1 className="page-title">
+            {t("資産形成シミュレーション", "Asset Formation Simulator")}
+          </h1>
+          <p className="page-lead">
+            {t(
+              "毎月末に積立て、年平均利回りは実効年利として月利へ換算し、複数パターンを同一条件で複利計算します。税金や手数料は考慮していません。",
+              "Contributions are made at month-end. Annual returns are converted to monthly rates and compounded across scenarios under the same conditions. Taxes and fees are not considered."
+            )}
+          </p>
+        </div>
+      </header>
       <p className="mb-2 text-xs text-foreground/70">
         {t(
           "※ 本シミュレーションは実際の値動きを反映したものではありません。",

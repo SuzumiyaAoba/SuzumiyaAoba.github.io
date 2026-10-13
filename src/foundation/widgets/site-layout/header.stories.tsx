@@ -24,19 +24,19 @@ export default meta;
 
 type Story = StoryObj<typeof Header>;
 
-/** メニューボタンはデスクトップ幅では隠れるため、モバイル幅で操作を確かめる。 */
+/** 「目次」ボタンはデスクトップ幅では隠れるため、モバイル幅で操作を確かめる。 */
 export const Default: Story = {
   globals: { viewport: { value: "mobile2", isRotated: false } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const menu = canvas.getByRole("button", { name: "メニューを開く" });
+    const menu = canvas.getByRole("button", { name: "目次" });
     const panel = canvasElement.querySelector("#mobile-nav");
     const outside = canvas.getByRole("button", { name: "Header preview" });
 
     await expect(menu).toHaveAttribute("aria-expanded", "false");
     await expect(panel).toHaveAttribute("inert");
     await userEvent.click(menu);
-    await expect(menu).toHaveAccessibleName("メニューを閉じる");
+    await expect(menu).toHaveAccessibleName("閉じる");
     await expect(panel).not.toHaveAttribute("inert");
     const index = within(
       canvas.getByRole("navigation", { name: "サイトの目次" })
@@ -89,7 +89,7 @@ export const English: Story = {
       canvasElement.querySelector(".reading-progress")
     ).not.toBeInTheDocument();
     await expect(
-      canvas.queryByRole("button", { name: "Open menu" })
+      canvas.queryByRole("button", { name: "Contents" })
     ).not.toBeInTheDocument();
   },
 };
@@ -103,7 +103,7 @@ export const EnglishMenu: Story = {
       canvas.queryByRole("navigation", { name: "Main navigation" })
     ).not.toBeInTheDocument();
 
-    await userEvent.click(canvas.getByRole("button", { name: "Open menu" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Contents" }));
     const index = within(
       canvas.getByRole("navigation", { name: "Site index" })
     );

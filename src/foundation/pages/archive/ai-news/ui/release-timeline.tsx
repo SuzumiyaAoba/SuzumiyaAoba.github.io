@@ -181,7 +181,7 @@ export function ReleaseTimeline({
               {en ? "Latest" : "最新の記録"}
             </Button>
           </div>
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Button
               variant={grouped ? "secondary" : "flat"}
               size="xl"
@@ -200,7 +200,7 @@ export function ReleaseTimeline({
             </Button>
             <fieldset
               aria-label={en ? "Timeline zoom" : "時間軸の表示倍率"}
-              className="flex min-w-0 items-center gap-1.5"
+              className="flex min-w-0 flex-wrap items-center gap-1.5"
             >
               <Button
                 variant="flat"
@@ -413,7 +413,7 @@ export function ReleaseTimeline({
                                 )}
                               />
                               {interval.days * pixelsPerDay > 56 && (
-                                <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-border/60 bg-background/95 px-2 py-0.5 text-mini font-medium whitespace-nowrap text-muted-foreground tabular-nums">
+                                <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-sm border border-border/60 bg-background/95 px-2 py-0.5 text-mini font-medium whitespace-nowrap text-muted-foreground tabular-nums">
                                   {interval.days}
                                   {en ? "d" : "日"}
                                 </span>

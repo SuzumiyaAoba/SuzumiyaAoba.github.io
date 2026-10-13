@@ -298,10 +298,7 @@ export const ie600BalancedPlugDimensions = {
 /** 純正4.4 mmケーブルのL字形オーバーモールド。根元は細いケーブルへ絞る。 */
 export function ie600BalancedPlugBodyGeometry() {
   const outline = new Shape();
-  outline.moveTo(ie600BalancedPlugDimensions.cableEntry, -1.15);
-  outline.lineTo(-5, -1.6);
-  outline.quadraticCurveTo(-3.5, -1.65, -3.5, -2.55);
-  outline.lineTo(-3.5, -3.1);
+  outline.moveTo(-3.5, -3.1);
   outline.quadraticCurveTo(-3.5, -3.55, -2.8, -3.55);
   outline.lineTo(2.7, -3.55);
   outline.quadraticCurveTo(3.2, -3.55, 3.2, -2.95);
@@ -310,27 +307,49 @@ export function ie600BalancedPlugBodyGeometry() {
   outline.lineTo(-2.55, 6.2);
   outline.quadraticCurveTo(-3.2, 6.2, -3.2, 5.55);
   outline.lineTo(-3.2, 3.3);
-  outline.quadraticCurveTo(-3.2, 1.6, -5, 1.6);
-  outline.lineTo(ie600BalancedPlugDimensions.cableEntry, 1.15);
+  outline.quadraticCurveTo(-3.2, 1.6, -3.5, 1.6);
   outline.closePath();
   const geometry = new ExtrudeGeometry(outline, {
     depth: 5.4,
     bevelEnabled: true,
-    bevelSize: 0.2,
-    bevelThickness: 0.3,
-    bevelSegments: 4,
+    bevelSize: 0.3,
+    bevelThickness: 0.4,
+    bevelSegments: 6,
     curveSegments: 24,
   });
   geometry.translate(0, 0, -2.7);
-  const positions = geometry.getAttribute("position");
-  for (let vertex = 0; vertex < positions.count; vertex += 1) {
-    const thickness =
-      0.43 + 0.57 * MathUtils.smoothstep(positions.getX(vertex), -5, -3.2);
-    positions.setZ(vertex, positions.getZ(vertex) * thickness);
-  }
   geometry.rotateX(Math.PI / 2);
-  geometry.computeVertexNormals();
-  return geometry;
+  const reliefProfile = [
+    new Vector2(0.85, 0),
+    new Vector2(1.12, 0),
+    new Vector2(1.2, 0.2),
+    new Vector2(1.2, 0.95),
+    new Vector2(1.08, 1.05),
+    new Vector2(1.08, 1.3),
+    new Vector2(1.26, 1.4),
+    new Vector2(1.26, 2.35),
+    new Vector2(1.14, 2.45),
+    new Vector2(1.14, 2.7),
+    new Vector2(1.32, 2.8),
+    new Vector2(1.32, 3.75),
+    new Vector2(1.2, 3.85),
+    new Vector2(1.2, 4.1),
+    new Vector2(1.4, 4.2),
+    new Vector2(1.55, 6.2),
+    new Vector2(1.75, 7.9),
+    new Vector2(1.9, 9.5),
+    new Vector2(0.85, 9.5),
+    new Vector2(0.85, 0),
+  ];
+  const lathe = new LatheGeometry(reliefProfile, 64);
+  const relief = lathe.toNonIndexed();
+  lathe.dispose();
+  relief.rotateZ(-Math.PI / 2);
+  relief.translate(ie600BalancedPlugDimensions.cableEntry, 0, 0);
+  const body = mergeGeometries([geometry, relief]);
+  geometry.dispose();
+  relief.dispose();
+  return body;
 }
 
 export function ie600BalancedPlugGeometry() {
