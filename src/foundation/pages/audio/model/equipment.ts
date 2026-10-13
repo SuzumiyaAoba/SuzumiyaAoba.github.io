@@ -278,6 +278,93 @@ export const audioEquipment: readonly AudioEquipment[] = [
     ],
   },
   {
+    id: "sigma-pro",
+    model: "sigma-pro",
+    manufacturer: "Questyle",
+    name: "SIGMA Pro",
+    finish: { ja: "ブラック", en: "Black" },
+    category: {
+      ja: "ポータブル DAC / ヘッドホンアンプ",
+      en: "Portable DAC / headphone amplifier",
+    },
+    description: {
+      ja: "ESS ES9069Q を2基、フルディスクリートの電流モードアンプを4基搭載したポータブル DAC・ヘッドホンアンプ。USB と Bluetooth に対応し、3種類のヘッドホン出力を備えます。",
+      en: "A portable DAC and headphone amplifier with dual ESS ES9069Q converters and four discrete Current Mode amplifier stages. It supports USB and Bluetooth playback and offers three headphone outputs.",
+    },
+    details: {
+      ja: "梨地のブラックアルミ、透明ガラスと縁のドット、4つのアンプ回路、DAC・USB回路、抵抗・コンデンサー、はんだと配線を立体形状で再現。ロゴ・基板の印字・画面表示も文字の輪郭から作った形状です。中空端子、溝付きの音量つまみ、丸みのある操作ボタンも拡大して確認できます。筐体の厚さ、内部部品の寸法、確認できない配線は写真からの推定を含み、画面は静止表示です。",
+      en: "Explore sandblasted black aluminium, transparent glass with individual edge dots, four amplifier stages, DAC and USB circuitry, resistors, capacitors, solder joints and traces built as geometry. The logo, PCB markings and display also use solid letter outlines. Inspect hollow sockets, the milled volume knob and rounded buttons. Enclosure thickness, internal dimensions and obscured routing include estimates from photos; the display is static.",
+    },
+    specifications: [
+      {
+        label: { ja: "外形寸法", en: "Dimensions" },
+        value: {
+          ja: "85 × 155.7 mm（幅 × 奥行、メーカー公表値）",
+          en: "85 × 155.7 mm (W × D, manufacturer’s published footprint)",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "330.8 g", en: "330.8 g" },
+      },
+      {
+        label: { ja: "D/A コンバーター", en: "D/A converters" },
+        value: { ja: "ESS ES9069Q × 2", en: "2 × ESS ES9069Q" },
+      },
+      {
+        label: { ja: "USB 入力", en: "USB input" },
+        value: {
+          ja: "PCM 768 kHz / 32 bit · DSD 512",
+          en: "PCM 768 kHz / 32 bit · DSD 512",
+        },
+      },
+      {
+        label: { ja: "入力", en: "Inputs" },
+        value: {
+          ja: "USB-C · 光 / 同軸デジタル · 3.5 mm / 4.4 mm アナログ · Bluetooth 5.4",
+          en: "USB-C · optical / coaxial digital · 3.5 mm / 4.4 mm analog · Bluetooth 5.4",
+        },
+      },
+      {
+        label: { ja: "ヘッドホン出力", en: "Headphone outputs" },
+        value: {
+          ja: "6.35 mm · 4.4 mm バランス · 3.5 mm",
+          en: "6.35 mm · balanced 4.4 mm · 3.5 mm",
+        },
+      },
+      {
+        label: { ja: "バッテリー", en: "Battery" },
+        value: {
+          ja: "4300 mAh · 最大約12時間再生 · 充電専用 USB-C",
+          en: "4300 mAh · up to 12 hours playback · dedicated USB-C charging port",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "メーカー製品情報・写真",
+          en: "Manufacturer’s product information and photos",
+        },
+        href: "https://www.questyle.com/products/questyle-sigma-pro-portable-bluetooth-dac-with-headphone-amplifier",
+      },
+      {
+        title: {
+          ja: "メーカー製品資料（英語）",
+          en: "Manufacturer’s product brochure (English)",
+        },
+        href: "https://www.supersonido.es/media/productos/58083/docs/documento-27894.pdf",
+      },
+      {
+        title: {
+          ja: "日本正規代理店の製品仕様",
+          en: "Japanese distributor’s specifications",
+        },
+        href: "https://questyle.jp/questyle「sigma-pro」登場-プリアンプ搭載・デュアルdac構成/",
+      },
+    ],
+  },
+  {
     id: "hd-800s",
     model: "hd-800s",
     manufacturer: "Sennheiser",
@@ -412,6 +499,73 @@ export const audioEquipment: readonly AudioEquipment[] = [
       {
         title: { ja: "取扱説明書", en: "Owner’s manual" },
         href: "https://dam.focal-naim.com/m/1d0c79ac3e22c22c/original/UserManual_ClearMGPRO_85x200_web-pdf.pdf",
+      },
+    ],
+  },
+  {
+    id: "ie-600",
+    model: "ie-600",
+    manufacturer: "Sennheiser",
+    name: "IE 600",
+    finish: {
+      ja: "シルバー / 梨地仕上げ",
+      en: "Silver / Textured finish",
+    },
+    category: { ja: "カナル型イヤホン", en: "In-ear headphones" },
+    description: {
+      ja: "7 mm TrueResponse トランスデューサーとデュアル・レゾネーター・チャンバー（D2CA）を搭載したカナル型イヤホン。3Dプリントされた AMLOY-ZR01 アモルファスジルコニウムの小さなハウジングを、手作業で仕上げています。",
+      en: "In-ear headphones with 7 mm TrueResponse transducers and dual resonator chambers (D2CA). The compact AMLOY-ZR01 amorphous zirconium housings are 3D printed and finished by hand.",
+    },
+    details: {
+      ja: "丸みのある一体形状の梨地ハウジング、彫り込まれたロゴと型番、角度の付いたノズル、保護格子と中空構造を持つシリコン製イヤーチップを再現。MMCX端子の接点、右側の赤いリング、左側の触覚マーク、半透明の耳掛けケーブル内の撚り線も確認できます。単体表示では左のMMCX端子を外して接続部を見せています。外形・部品寸法はメーカー写真からの推定で、ケーブルは表示用に短く描いています。使用しているケーブルは4.4 mmバランス端子のため、据置きではUD-505正面の4.4 mm出力に接続します。HA-1A MK2には接続しません。",
+      en: "Explore the rounded, textured metal housings, engraved emblems and model lettering, angled nozzles, and hollow silicone ear tips with protective guards. Details include MMCX contacts, the right connector’s red ring, the left tactile marker, and twisted wires inside translucent over-ear cables. The standalone view detaches the left MMCX connector to reveal its contacts. Exterior and component dimensions are estimated from manufacturer photos; cables are shortened for display. My cable uses a 4.4 mm balanced plug, so the desktop system connects to UD-505’s front 4.4 mm output. It does not connect to HA-1A MK2.",
+    },
+    specifications: [
+      {
+        label: { ja: "方式", en: "Transducer principle" },
+        value: {
+          ja: "シングルダイナミック / カナル型",
+          en: "Single dynamic driver / in-ear",
+        },
+      },
+      {
+        label: { ja: "ドライバー", en: "Drivers" },
+        value: { ja: "7 mm TrueResponse", en: "7 mm TrueResponse" },
+      },
+      {
+        label: { ja: "周波数特性", en: "Frequency response" },
+        value: { ja: "4 Hz – 46,500 Hz", en: "4 Hz – 46,500 Hz" },
+      },
+      {
+        label: { ja: "インピーダンス", en: "Impedance" },
+        value: { ja: "18 Ω", en: "18 Ω" },
+      },
+      {
+        label: { ja: "感度", en: "Sound pressure level" },
+        value: {
+          ja: "118 dB SPL / 1 Vrms @ 1 kHz",
+          en: "118 dB SPL / 1 Vrms at 1 kHz",
+        },
+      },
+      {
+        label: { ja: "ケーブル・接続端子", en: "Cables and connectors" },
+        value: {
+          ja: "1.25 m · 3.5 mm / 4.4 mm バランス · Fidelity (+) MMCX（着脱式）",
+          en: "1.25 m · 3.5 mm / balanced 4.4 mm · detachable Fidelity (+) MMCX",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "メーカー製品情報・写真",
+          en: "Manufacturer’s product information and photos",
+        },
+        href: "https://jp.sennheiser-hearing.com/ja/products/ie-600",
+      },
+      {
+        title: { ja: "取扱説明書", en: "Owner’s manual" },
+        href: "https://cdn.sennheiser-hearing.com/product-documents/product-downloads/ie-600/instruction_manual/Instruction_manual_IE_600.pdf",
       },
     ],
   },

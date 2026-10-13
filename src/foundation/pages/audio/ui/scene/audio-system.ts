@@ -6,6 +6,7 @@ import { createCg10m } from "./cg-10m";
 import { createClearMgPro } from "./clear-mg-pro";
 import { createHa1aMk2 } from "./ha-1a-mk2";
 import { createHd800s } from "./hd-800s";
+import { createIe600 } from "./ie-600";
 import { createNodeN130 } from "./node-n130";
 import { cableEndpoint, createSystemCables } from "./system-cables";
 import type { CableEndpoint } from "./system-cables";
@@ -87,47 +88,76 @@ function connectEquipment(
   return cables;
 }
 
+function headphoneEndpoint(
+  cables: ReturnType<typeof createSystemCables>,
+  model: Object3D,
+  headphone: HeadphoneModel,
+  side: "Left" | "Right"
+): CableEndpoint {
+  if (headphone === "ie-600") {
+    return cableEndpoint(
+      namedPart(model, `IE 600 ${side} cable exit`),
+      [0, 0, 0]
+    );
+  }
+  if (headphone === "hd-800s") {
+    return cableEndpoint(
+      namedPart(model, `${side} ear cup`),
+      [4, -129, 12],
+      [0, -1, 0]
+    );
+  }
+  const cup = namedPart(
+    model,
+    `Clear Mg Professional ${side.toLowerCase()} ear cup`
+  );
+  return cables.plug(
+    cableEndpoint(
+      namedPart(cup, "Recessed detachable 3.5 mm cable socket"),
+      [0, 0, 0.6]
+    ),
+    "mini",
+    side === "Left" ? 0xe0_dd_d3 : 0xaf_33_36,
+    `Clear Mg ${side} 3.5 mm`
+  );
+}
+
 function connectHeadphones(
   model: Object3D,
   amp: Object3D,
+  dac: Object3D,
   headphone: HeadphoneModel
 ) {
   const cables = createSystemCables();
-  const plug = cables.plug(
-    cableEndpoint(amp, [-36, 31, 142.2]),
-    "headphone",
-    0x9d_a3_aa,
-    "HA-1A MK2 left PHONES A 6.35 mm"
-  );
+  const earphones = headphone === "ie-600";
+  const plug = earphones
+    ? cables.plug(
+        cableEndpoint(dac, [25.5, 30.8, 115.9]),
+        "balanced",
+        0x56_57_55,
+        "IE 600 4.4 mm balanced cable plug in UD-505"
+      )
+    : cables.plug(
+        cableEndpoint(amp, [-36, 31, 142.2]),
+        "headphone",
+        0x9d_a3_aa,
+        "HA-1A MK2 left PHONES A 6.35 mm"
+      );
   const junction: CableEndpoint = {
     position: new Vector3(295, 10, 220),
     direction: new Vector3(0, 0, -1),
   };
   cables.cable(
-    "HA-1A MK2 left jack → headphone Y split",
+    earphones
+      ? "UD-505 4.4 mm balanced output → IE 600 Y split"
+      : "HA-1A MK2 left jack → headphone Y split",
     plug,
     { position: junction.position, direction: new Vector3(0, 0, 1) },
-    [new Vector3(150, 8, 235), new Vector3(245, 7, 275)]
+    [new Vector3(earphones ? -35 : 150, 8, 235), new Vector3(245, 7, 275)],
+    earphones ? 0.85 : 2.2
   );
-  for (const side of ["Left", "Right"]) {
-    const cup = namedPart(
-      model,
-      headphone === "hd-800s"
-        ? `${side} ear cup`
-        : `Clear Mg Professional ${side.toLowerCase()} ear cup`
-    );
-    const endpoint =
-      headphone === "hd-800s"
-        ? cableEndpoint(cup, [4, -129, 12], [0, -1, 0])
-        : cables.plug(
-            cableEndpoint(
-              namedPart(cup, "Recessed detachable 3.5 mm cable socket"),
-              [0, 0, 0.6]
-            ),
-            "mini",
-            side === "Left" ? 0xe0_dd_d3 : 0xaf_33_36,
-            `Clear Mg ${side} 3.5 mm`
-          );
+  for (const side of ["Left", "Right"] as const) {
+    const endpoint = headphoneEndpoint(cables, model, headphone, side);
     cables.cable(
       `${side} headphone cable`,
       junction,
@@ -136,7 +166,7 @@ function connectHeadphones(
         new Vector3(endpoint.position.x, 6, 145),
         new Vector3(endpoint.position.x + 12, 7, 70),
       ],
-      1.5
+      earphones ? 0.6 : 1.5
     );
   }
   return cables;
@@ -169,6 +199,7 @@ export function createAudioSystem() {
   const headphones = {
     "hd-800s": createHd800s(),
     "clear-mg-pro": createClearMgPro(),
+    "ie-600": createIe600({ standaloneCable: false }),
   };
   const headphoneCables = new Map<
     HeadphoneModel,
@@ -183,7 +214,12 @@ export function createAudioSystem() {
   }
   group.updateMatrixWorld(true);
   for (const id of headphoneModels) {
-    const cables = connectHeadphones(headphones[id].group, amp.group, id);
+    const cables = connectHeadphones(
+      headphones[id].group,
+      amp.group,
+      dac.group,
+      id
+    );
     headphoneCables.set(id, cables);
     group.add(cables.group);
   }

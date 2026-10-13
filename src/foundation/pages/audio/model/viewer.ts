@@ -8,6 +8,8 @@ export const viewNames = [
   "meter",
   "outputs",
   "controls",
+  "display",
+  "circuit",
   "connections",
   "side",
   "earpads",
@@ -15,6 +17,9 @@ export const viewNames = [
   "grille",
   "tubes",
   "dials",
+  "housing",
+  "eartips",
+  "cable",
 ] as const;
 export const audioModels = [
   "system",
@@ -22,16 +27,19 @@ export const audioModels = [
   "cg-10m",
   "node-n130",
   "ha-1a-mk2",
+  "sigma-pro",
   "hd-800s",
   "clear-mg-pro",
+  "ie-600",
 ] as const;
 export type AudioModel = (typeof audioModels)[number];
 export type EquipmentModel = Exclude<AudioModel, "system">;
-export const headphoneModels = ["hd-800s", "clear-mg-pro"] as const;
+export const headphoneModels = ["hd-800s", "clear-mg-pro", "ie-600"] as const;
 export type HeadphoneModel = (typeof headphoneModels)[number];
 export const headphoneNames: Record<HeadphoneModel, string> = {
   "hd-800s": "HD 800 S",
   "clear-mg-pro": "Clear Mg Professional",
+  "ie-600": "IE 600",
 };
 export type AudioView = (typeof viewNames)[number];
 export const modelViews: Record<AudioModel, readonly AudioView[]> = {
@@ -60,6 +68,18 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
     "headphones",
     "connections",
   ],
+  "sigma-pro": [
+    "overview",
+    "front",
+    "rear",
+    "side",
+    "top",
+    "circuit",
+    "bottom",
+    "headphones",
+    "display",
+    "connections",
+  ],
   "hd-800s": [
     "overview",
     "front",
@@ -79,6 +99,16 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
     "earpads",
     "headband",
     "connections",
+  ],
+  "ie-600": [
+    "overview",
+    "front",
+    "rear",
+    "top",
+    "housing",
+    "eartips",
+    "connections",
+    "cable",
   ],
 };
 export type ViewerStatus = "loading" | "ready" | "unavailable";

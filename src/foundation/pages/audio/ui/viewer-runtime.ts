@@ -41,7 +41,7 @@ export function createAudioViewer({
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFShadowMap;
 
-  const sceneResources = createViewerScene(renderer, modelId);
+  const sceneResources = createViewerScene(renderer, modelId, invalidate);
 
   let frame = 0;
   let visible = true;

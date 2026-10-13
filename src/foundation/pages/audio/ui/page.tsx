@@ -54,8 +54,8 @@ export default function AudioPage({
             finish="NODE / CG-10M / UD-505 / HA-1A MK2"
             description={
               ja
-                ? "NODE（USB-A）→ UD-505（USB-B）→ HA-1A MK2 → ヘッドホン。CG-10M → UD-505。ヘッドホンはアンプ正面左の PHONES A に接続します。"
-                : "NODE (USB-A) → UD-505 (USB-B) → HA-1A MK2 → headphones. CG-10M → UD-505. Headphones connect to the front left PHONES A jack."
+                ? "NODE（USB-A）→ UD-505（USB-B）。CG-10M → UD-505。HD 800 S と Clear Mg Professional は HA-1A MK2 正面左の PHONES A（6.35 mm）に、IE 600 は UD-505 正面の 4.4 mm バランス出力に接続します。"
+                : "NODE (USB-A) → UD-505 (USB-B). CG-10M → UD-505. HD 800 S and Clear Mg Professional connect through HA-1A MK2’s front left PHONES A (6.35 mm) jack; IE 600 connects to UD-505’s front 4.4 mm balanced output."
             }
             locale={locale}
           />

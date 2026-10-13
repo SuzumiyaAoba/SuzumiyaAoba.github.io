@@ -75,21 +75,25 @@ it("選択した視点をリサイズ時に維持し、手動回転後は位置�
 });
 
 it.each([
-  ["ud-505", 1100],
-  ["system", 6000],
-] as const)("%s のズームを距離の範囲内に制限する", (model, maximum) => {
-  const controls = create(model);
-  const target = new Vector3(...getCameraPose(model, "overview").target);
-  for (let count = 0; count < 60; count++) {
-    controls.zoom("in");
+  ["ud-505", 65, 1100],
+  ["system", 65, 6000],
+  ["ie-600", 8, 650],
+] as const)(
+  "%s のズームを距離の範囲内に制限する",
+  (model, minimum, maximum) => {
+    const controls = create(model);
+    const target = new Vector3(...getCameraPose(model, "overview").target);
+    for (let count = 0; count < 60; count++) {
+      controls.zoom("in");
+    }
+    expect(controls.camera.position.distanceTo(target)).toBeCloseTo(minimum);
+    for (let count = 0; count < 60; count++) {
+      controls.zoom("out");
+    }
+    expect(controls.camera.position.distanceTo(target)).toBeCloseTo(maximum);
+    expect(onView).toHaveBeenLastCalledWith(undefined);
   }
-  expect(controls.camera.position.distanceTo(target)).toBeCloseTo(65);
-  for (let count = 0; count < 60; count++) {
-    controls.zoom("out");
-  }
-  expect(controls.camera.position.distanceTo(target)).toBeCloseTo(maximum);
-  expect(onView).toHaveBeenLastCalledWith(undefined);
-});
+);
 
 it("ドラッグ操作が無効でもキーボードでズームと視点リセットができる", () => {
   const controls = create();

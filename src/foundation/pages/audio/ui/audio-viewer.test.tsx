@@ -4,6 +4,7 @@ import { act, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
+import type { Locale } from "@/shared/lib/routing";
 import type { AudioModel, ViewerHandle } from "../model/viewer";
 import { AudioViewer } from "./audio-viewer";
 import { createAudioViewer } from "./viewer-runtime";
@@ -47,12 +48,12 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-async function render(model: AudioModel = "system") {
+async function render(model: AudioModel = "system", locale: Locale = "ja") {
   await act(async () => {
     const viewer = (
       <AudioViewer
         model={model}
-        locale="ja"
+        locale={locale}
         manufacturer="Audio"
         name="接続全体"
         finish="Silver"
@@ -161,6 +162,37 @@ it("モデル変更とアンマウントでビューアを破棄する", async (
   root = null;
   expect(handle.dispose).toHaveBeenCalledTimes(2);
 });
+
+it.each([
+  ["ja", "HD 800 S"],
+  ["ja", "Clear Mg Professional"],
+  ["en", "HD 800 S"],
+  ["en", "Clear Mg Professional"],
+] as const)(
+  "%s: IE 600 は UD-505 の4.4 mm出力に、%s は HA-1A MK2 に接続する",
+  async (locale, headphone) => {
+    await render("system", locale);
+    await click("IE 600");
+    expect(handle.setHeadphones).toHaveBeenLastCalledWith("ie-600");
+    expect(button("IE 600").getAttribute("aria-pressed")).toBe("true");
+    const connection = container.querySelector("output")?.textContent;
+    expect(connection).toContain("UD-505");
+    expect(connection).toContain("4.4 mm");
+    expect(connection).not.toContain("HA-1A MK2");
+    expect(connection).not.toContain("3.5 mm");
+    const label = container.querySelector("canvas")?.getAttribute("aria-label");
+    expect(label).toContain("IE 600");
+    expect(label).toContain("4.4 mm");
+    await click(headphone);
+    expect(container.querySelector("output")?.textContent).toContain(
+      "HA-1A MK2"
+    );
+    expect(container.querySelector("output")?.textContent).toContain("6.35 mm");
+    expect(
+      container.querySelector("canvas")?.getAttribute("aria-label")
+    ).not.toContain("4.4 mm");
+  }
+);
 
 it("Strict Mode で読み込み完了前にアンマウントするとビューアを生成しない", async () => {
   act(() => {

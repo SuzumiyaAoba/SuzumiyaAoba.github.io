@@ -14,11 +14,12 @@ import {
 import type { BufferGeometry, Object3D } from "three";
 
 export type CableEndpoint = { position: Vector3; direction: Vector3 };
-type Plug = "rca" | "bnc" | "headphone" | "mini";
+type Plug = "rca" | "bnc" | "headphone" | "balanced" | "mini";
 const plugDimensions: Record<Plug, readonly [number, number]> = {
   rca: [5.5, 25],
   bnc: [7, 28],
   headphone: [6.5, 38],
+  balanced: [3.8, 24],
   mini: [3.8, 16],
 };
 

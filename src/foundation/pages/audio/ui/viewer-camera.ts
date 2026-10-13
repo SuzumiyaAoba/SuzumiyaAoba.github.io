@@ -24,12 +24,13 @@ export function createViewerCamera({
   onView,
 }: CameraOptions) {
   const system = model === "system";
+  const earphones = model === "ie-600";
   const camera = new PerspectiveCamera(35, 1, 0.5, system ? 8000 : 3000);
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = false;
   controls.enablePan = false;
-  controls.minDistance = 65;
-  controls.maxDistance = system ? 6000 : 1100;
+  controls.minDistance = earphones ? 8 : 65;
+  controls.maxDistance = system ? 6000 : earphones ? 650 : 1100;
   controls.minPolarAngle = 0.001;
   controls.maxPolarAngle = Math.PI - 0.001;
   controls.rotateSpeed = 0.65;

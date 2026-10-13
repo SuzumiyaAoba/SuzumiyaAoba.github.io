@@ -16,7 +16,9 @@ import { createNodeN130 } from "./scene/node-n130";
 import { createHd800s } from "./scene/hd-800s";
 import { createClearMgPro } from "./scene/clear-mg-pro";
 import { createHa1aMk2 } from "./scene/ha-1a-mk2";
+import { createSigmaPro } from "./scene/sigma-pro";
 import { createAudioSystem } from "./scene/audio-system";
+import { createIe600 } from "./scene/ie-600";
 import type { AudioModel, HeadphoneModel } from "../model/viewer";
 
 type AudioScene = {
@@ -25,46 +27,62 @@ type AudioScene = {
   setHeadphones?: (model: HeadphoneModel) => void;
 };
 
-const modelBuilders = {
-  system: createAudioSystem,
-  "ud-505": createUd505,
-  "cg-10m": createCg10m,
-  "node-n130": createNodeN130,
-  "hd-800s": createHd800s,
-  "clear-mg-pro": createClearMgPro,
-  "ha-1a-mk2": createHa1aMk2,
-} satisfies Record<AudioModel, () => AudioScene>;
+const modelBuilders: Record<AudioModel, (onChange?: () => void) => AudioScene> =
+  {
+    system: createAudioSystem,
+    "ud-505": createUd505,
+    "cg-10m": createCg10m,
+    "node-n130": createNodeN130,
+    "hd-800s": createHd800s,
+    "clear-mg-pro": createClearMgPro,
+    "ha-1a-mk2": createHa1aMk2,
+    "ie-600": () => createIe600(),
+    "sigma-pro": createSigmaPro,
+  };
 
 export function createViewerScene(
   renderer: WebGLRenderer,
-  modelId: AudioModel
+  modelId: AudioModel,
+  onChange?: () => void
 ) {
   const scene = new Scene();
   const system = modelId === "system";
   const detailedHeadphones = modelId === "hd-800s";
+  const detailedPortable = modelId === "sigma-pro";
+  const earphones = modelId === "ie-600";
   const room = new RoomEnvironment();
   const pmrem = new PMREMGenerator(renderer);
   const environment = pmrem.fromScene(room, 0.04);
   scene.environment = environment.texture;
-  scene.environmentIntensity = detailedHeadphones ? 0.72 : 1;
+  scene.environmentIntensity =
+    detailedHeadphones || detailedPortable || earphones ? 0.72 : 1;
   pmrem.dispose();
   room.dispose();
 
-  const model: AudioScene = modelBuilders[modelId]();
+  const model: AudioScene = modelBuilders[modelId](onChange);
   scene.add(model.group);
   model.group.traverse((part) => {
     if (part instanceof Mesh && part.material instanceof Material) {
-      part.castShadow = !part.material.transparent;
+      part.castShadow =
+        !part.material.transparent && part.userData["castShadow"] !== false;
       part.receiveShadow =
-        system || detailedHeadphones || modelId === "ha-1a-mk2";
+        system ||
+        detailedHeadphones ||
+        earphones ||
+        modelId === "ha-1a-mk2" ||
+        modelId === "sigma-pro";
     }
   });
   scene.add(
-    new HemisphereLight(0xff_ff_ff, 0x6a_73_7e, detailedHeadphones ? 0.8 : 2.2)
+    new HemisphereLight(
+      0xff_ff_ff,
+      0x6a_73_7e,
+      detailedHeadphones || detailedPortable || earphones ? 0.8 : 2.2
+    )
   );
   const key = new DirectionalLight(
     detailedHeadphones ? 0xff_f8_ef : 0xff_ff_ff,
-    detailedHeadphones ? 3.6 : 3
+    detailedHeadphones ? 3.6 : detailedPortable ? 2.7 : 3
   );
   key.position.set(
     system ? -450 : -150,
@@ -72,16 +90,35 @@ export function createViewerScene(
     system ? 450 : 260
   );
   key.castShadow = true;
-  const shadowSize = detailedHeadphones || system ? 2048 : 1024;
+  const shadowSize =
+    detailedHeadphones || detailedPortable || earphones || system ? 2048 : 1024;
   key.shadow.mapSize.set(shadowSize, shadowSize);
-  key.shadow.camera.left = system ? -750 : -250;
-  key.shadow.camera.right = system ? 750 : 250;
-  key.shadow.camera.top = system ? 550 : 230;
-  key.shadow.camera.bottom = system ? -550 : -230;
+  key.shadow.camera.left = system ? -750 : detailedPortable ? -110 : -250;
+  key.shadow.camera.right = system ? 750 : detailedPortable ? 110 : 250;
+  key.shadow.camera.top = system ? 550 : detailedPortable ? 130 : 230;
+  key.shadow.camera.bottom = system ? -550 : detailedPortable ? -130 : -230;
   key.shadow.camera.near = 1;
   key.shadow.camera.far = system ? 1800 : 900;
-  key.shadow.normalBias = detailedHeadphones ? 0.08 : 0.4;
+  key.shadow.normalBias = detailedHeadphones
+    ? 0.08
+    : detailedPortable
+      ? 0.025
+      : 0.4;
   key.shadow.radius = 4;
+  if (earphones) {
+    key.position.set(-70, 145, 115);
+    key.shadow.camera.left = -110;
+    key.shadow.camera.right = 110;
+    key.shadow.camera.top = 110;
+    key.shadow.camera.bottom = -110;
+    key.shadow.camera.far = 500;
+    key.shadow.normalBias = 0.015;
+    key.target.position.set(0, 18, 10);
+    scene.add(key.target);
+    const rim = new DirectionalLight(0xe5_ee_ff, 1.4);
+    rim.position.set(80, 85, -85);
+    scene.add(rim);
+  }
   scene.add(key);
   if (detailedHeadphones) {
     key.target.position.set(0, 145, 0);
@@ -90,12 +127,15 @@ export function createViewerScene(
     rim.position.set(-220, 320, -250);
     scene.add(rim);
   }
-  const fill = new DirectionalLight(0xdc_e6_ff, detailedHeadphones ? 0.8 : 1.1);
+  const fill = new DirectionalLight(
+    0xdc_e6_ff,
+    detailedHeadphones || detailedPortable || earphones ? 0.8 : 1.1
+  );
   fill.position.set(300, 100, -250);
   scene.add(fill);
   const undersideFill = new DirectionalLight(
     0xe6_ee_fc,
-    detailedHeadphones ? 0.5 : 1.8
+    detailedHeadphones || detailedPortable || earphones ? 0.5 : 1.8
   );
   undersideFill.position.set(0, -250, 50);
   scene.add(undersideFill);

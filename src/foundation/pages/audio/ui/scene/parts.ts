@@ -41,14 +41,18 @@ function brushedTexture(): CanvasTexture {
   return texture;
 }
 
-export function createModelParts() {
+export function createModelParts({
+  brushed = true,
+}: { brushed?: boolean } = {}) {
   const root = new Group();
   root.name = "TEAC UD-505 Silver — millimetres";
   const geometries = new Set<BufferGeometry>();
   const textures = new Set<Texture>();
   const materials = new Set<Material>();
-  const brush = brushedTexture();
-  textures.add(brush);
+  const brush = brushed ? brushedTexture() : null;
+  if (brush) {
+    textures.add(brush);
+  }
 
   const silver = new MeshPhysicalMaterial({
     color: 0xc9_cb_ce,

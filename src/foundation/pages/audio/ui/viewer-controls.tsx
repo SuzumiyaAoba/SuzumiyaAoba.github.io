@@ -8,7 +8,7 @@ import type {
   HeadphoneModel,
   ZoomDirection,
 } from "../model/viewer";
-import { viewLabels } from "./viewer-labels";
+import { getHeadphoneConnectionLabel, viewLabels } from "./viewer-labels";
 
 export function HeadphoneControls({
   id,
@@ -44,9 +44,7 @@ export function HeadphoneControls({
         ))}
       </fieldset>
       <output className="text-xs text-muted-foreground">
-        {ja
-          ? "HA-1A MK2 正面左の PHONES A · 6.35 mm"
-          : "HA-1A MK2 front left PHONES A · 6.35 mm"}
+        {getHeadphoneConnectionLabel(selected, locale)}
         {" / "}
         {headphoneNames[selected]}
       </output>

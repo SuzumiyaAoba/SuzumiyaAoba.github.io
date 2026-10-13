@@ -9,6 +9,27 @@ type CameraPose = {
 };
 
 const poses: Record<AudioView, CameraPose> = {
+  housing: {
+    direction: [0.05, 0.15, 1],
+    target: [25, 14, 0],
+    width: 32,
+    height: 38,
+    depth: 12,
+  },
+  eartips: {
+    direction: [-0.4, 0.25, -1],
+    target: [13, 16, -12],
+    width: 28,
+    height: 30,
+    depth: 12,
+  },
+  cable: {
+    direction: [0.1, 0.85, 1],
+    target: [0, 24, 35],
+    width: 145,
+    height: 105,
+    depth: 35,
+  },
   dials: {
     direction: [0.65, 0.24, 1],
     target: [0, 83, 142],
@@ -85,6 +106,20 @@ const poses: Record<AudioView, CameraPose> = {
     width: 170,
     height: 115,
     depth: 15,
+  },
+  display: {
+    direction: [0, 1, 0.45],
+    target: [0, 20, 54],
+    width: 95,
+    height: 40,
+    depth: 12,
+  },
+  circuit: {
+    direction: [0.14, 1, 0.25],
+    target: [0, 17, -18],
+    width: 90,
+    height: 120,
+    depth: 8,
   },
   connections: {
     direction: [0.06, 0.1, -1],
@@ -306,8 +341,103 @@ const modelPoses: Partial<
     },
   },
   "node-n130": nodePoses,
+  "sigma-pro": {
+    overview: {
+      direction: [0.6, 1.15, 1],
+      target: [0, 10, 0],
+      width: 150,
+      height: 175,
+      depth: 40,
+    },
+    front: {
+      direction: [0, 0.08, 1],
+      target: [0, 10, 66],
+      width: 100,
+      height: 35,
+      depth: 12,
+    },
+    rear: {
+      direction: [0, 0.08, -1],
+      target: [0, 10, -76],
+      width: 100,
+      height: 35,
+      depth: 12,
+    },
+    side: {
+      direction: [1, 0.17, 0.02],
+      target: [0, 10, 0],
+      width: 175,
+      height: 40,
+      depth: 44,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 10, 0],
+      width: 100,
+      height: 175,
+      depth: 12,
+    },
+    bottom: {
+      direction: [0, -1, 0.001],
+      target: [0, 10, 0],
+      width: 100,
+      height: 175,
+      depth: 12,
+    },
+    headphones: {
+      direction: [0.1, 0.2, 1],
+      target: [-10, 9, 68],
+      width: 66,
+      height: 30,
+      depth: 8,
+    },
+    connections: {
+      direction: [0.1, 0.15, -1],
+      target: [0, 10, -77],
+      width: 95,
+      height: 30,
+      depth: 8,
+    },
+  },
   "hd-800s": hd800sPoses,
   "clear-mg-pro": clearMgPoses,
+  "ie-600": {
+    overview: {
+      direction: [0.18, 0.6, 1],
+      target: [0, 22, 25],
+      width: 145,
+      height: 95,
+      depth: 60,
+    },
+    front: {
+      direction: [0, 0.05, 1],
+      target: [0, 27, 10],
+      width: 145,
+      height: 75,
+      depth: 80,
+    },
+    rear: {
+      direction: [0.7, 0.26, -1],
+      target: [28, 17, -2],
+      width: 32,
+      height: 38,
+      depth: 16,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 22, 35],
+      width: 145,
+      height: 130,
+      depth: 35,
+    },
+    connections: {
+      direction: [-0.65, 0.65, 1],
+      target: [-28, 33, 0],
+      width: 22,
+      height: 24,
+      depth: 8,
+    },
+  },
   "ha-1a-mk2": {
     overview: {
       direction: [0.95, 0.45, 1.3],

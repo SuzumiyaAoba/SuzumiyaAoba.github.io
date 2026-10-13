@@ -9,6 +9,7 @@ import { headphoneNames } from "../model/viewer";
 import type { AudioModel } from "../model/viewer";
 import { useAudioViewer } from "./use-audio-viewer";
 import { HeadphoneControls, ViewerControls } from "./viewer-controls";
+import { getHeadphoneConnectionLabel } from "./viewer-labels";
 
 export function AudioViewer({
   locale,
@@ -42,6 +43,7 @@ export function AudioViewer({
     retry,
   } = useAudioViewer(model);
   const ready = status === "ready";
+  const headphoneConnection = getHeadphoneConnectionLabel(headphones, locale);
 
   return (
     <figure className="space-y-4" aria-labelledby={`${id}-caption`}>
@@ -69,8 +71,8 @@ export function AudioViewer({
           aria-label={
             model === "system"
               ? ja
-                ? `NODE、UD-505、CG-10M、HA-1A MK2、${headphoneNames[headphones]}を配線した3Dモデル。ヘッドホンはアンプ正面左のジャックに接続。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
-                : `3D system connecting NODE, UD-505, CG-10M, HA-1A MK2 and ${headphoneNames[headphones]}. Headphones connect to the amplifier’s front left jack. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
+                ? `NODE、UD-505、CG-10M、HA-1A MK2、${headphoneNames[headphones]}を配線した3Dモデル。接続先：${headphoneConnection}。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
+                : `3D system connecting NODE, UD-505, CG-10M, HA-1A MK2 and ${headphoneNames[headphones]}. Connected to ${headphoneConnection}. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
               : ja
                 ? `${manufacturer} ${name} ${finish}の3Dモデル。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
                 : `3D model of ${manufacturer} ${name} in ${finish}. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
