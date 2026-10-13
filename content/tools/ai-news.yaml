@@ -1,6 +1,114 @@
 version: 1
-updated: "2026-09-29"
+updated: "2026-10-14"
 events:
+  - year: 2026
+    date: 2026-10-13
+    title_ja: "Gemini 4 Argon (GA)"
+    summary_ja: |
+      複雑なソフトウェア開発、数学・科学、複数段階のエージェント作業向けの推論モデルを一般提供。テキスト・画像・動画・音声・PDF の入力に対応し、約100万トークンのコンテキストと長文出力をサポート。
+
+      [Gemini 4 Argon | Google AI for Developers](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon) / [Gemini 4 Argon の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Argon"]
+  - year: 2026
+    date: 2026-10-13
+    title_ja: "GLM-Legal (Beta)"
+    summary_ja: |
+      GLM-5.3-Flash を基盤とする法律業務向けモデルを発表。契約レビュー、証拠分析、コンプライアンスなどの専門業務に対応。API のベータ利用申請を受け付け、AutoClaw でも試用可能。
+
+      [GLM-Legal: Advancing Agentic Legal Intelligence | AutoClaw](https://autoclaw.z.ai/blog/model/GLM-Legal/)
+    tags: ["Z.ai", "GLM", "LLM Model"]
+    series: ["GLM Legal"]
+  - year: 2026
+    date: 2026-10-13
+    title_ja: "Nemotron 3.5 Bolt 74B (発表)"
+    summary_ja: |
+      RTX Spark 上のローカルエージェント向けに、総パラメータ74B・活性化9Bの MoE モデルを発表。2ビット量子化でモデルを24GBに圧縮。提供開始は10月15日の予定で、重み・学習データ・レシピの公開を予告。
+
+      [Nemotron 3.5 Bolt 74B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/local-ai-rtx-spark-laptops-software-updates/)
+    tags: ["NVIDIA", "Nemotron", "LLM Model"]
+    series: ["Nemotron Bolt"]
+  - year: 2026
+    date: 2026-10-12
+    title_ja: "Muse Wonder / Muse Wonder Full"
+    summary_ja: |
+      個人・業務用エージェント向けの2モデルを公開。会話をまたいで必要な情報を取り出す Active Memory と、長時間の作業を継続する Active Focus を導入。Wonder は Meta Model API と Muse Code、Full は Muse Code の購読者向けに提供。
+
+      [Muse Wonder | Meta AI Research](https://research.meta.ai/blog/muse-wonder)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Wonder"]
+  - year: 2026
+    date: 2026-10-09
+    title_ja: "Qwen-Image-2.1-Turbo (API)"
+    summary_ja: |
+      Qwen-Image-2.1 系列のコスト効率を重視した画像モデルを、Alibaba Cloud Model Studio の国際向け API で提供。画像生成と編集を統合し、透過画像や複数の参照画像を使った編集に対応。
+
+      [Qwen-Image-2.1-Turbo の API 提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "Image Model"]
+    series: ["Qwen Image"]
+  - year: 2026
+    date: 2026-10-07
+    title_ja: "Claude Haiku 5.5"
+    summary_ja: |
+      大量・低コストの処理向けの小型モデルを公開。要約、コンテキスト圧縮、分類、データベース照会や、コーディング作業のサブエージェント用途を強化。Claude Platform、AWS、Google Cloud、Microsoft Azure で提供。
+
+      [Introducing Claude Haiku 5.5 | Anthropic](https://www.anthropic.com/claude-haiku-5-5)
+    tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
+    series: ["Claude Haiku"]
+  - year: 2026
+    date: 2026-10-06
+    title_ja: "Nano Banana 2.1 (GA)"
+    summary_ja: |
+      Gemini Nano Banana 2.1 を一般提供。Nano Banana 2 の速度・コスト効率を維持しながら、画質、指示への追従、複数ターンでのキャラクターの一貫性、文字描画を改善。最大14枚の参照画像と、1K・2K・4K の画像生成に対応。
+
+      [Gemini Nano Banana 2.1 | Google AI for Developers](https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1) / [Nano Banana 2.1 の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
+    tags: ["Google", "Gemini", "Nano Banana", "Image Model"]
+    series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-10-06
+    title_ja: "Mistral Large 4 (Public Preview)"
+    summary_ja: |
+      総パラメータ1兆のマルチモーダル MoE モデルを、Mistral Studio の API で公開プレビュー提供。コーディング、エージェント作業、視覚理解を強化。モデルの重みは10月末までに公開予定で、発表時点では未公開。
+
+      [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/)
+    tags: ["Mistral AI", "LLM Model"]
+    series: ["Mistral Large"]
+  - year: 2026
+    date: 2026-10-06
+    title_ja: "Decisions API (Public Beta)"
+    summary_ja: |
+      GPT-6 Luna を使う判断専用 API を公開ベータ提供。テキスト・画像から、条件が成立する確率、選択肢、評価スコアを返す。分類やリクエスト振り分け向けで、OpenAI は Responses API と比べ約10倍の速度を示している。
+
+      [Decisions API | OpenAI](https://developers.openai.com/api/docs/guides/decisions) / [Decisions API の公開ベータ開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "Decision Model"]
+    series: ["Decisions API"]
+  - year: 2026
+    date: 2026-10-05
+    title_ja: "Amazon Nova 2.5 Sonic (GA)"
+    summary_ja: |
+      リアルタイム音声エージェント向けの音声対話モデルを一般提供。推論、指示への追従、ツール呼び出しの精度と遅延を改善。7言語の音声、非同期ツール呼び出し、約26万トークンのコンテキストに対応し、東京を含む4リージョンの Amazon Bedrock で利用可能。
+
+      [Amazon Nova 2.5 Sonic の一般提供開始 | AWS](https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-nova-2.5-Sonic/)
+    tags: ["Amazon", "Nova", "Audio Model"]
+    series: ["Nova Sonic"]
+  - year: 2026
+    date: 2026-10-02
+    title_ja: "Qwen-Image-2.1-Pro (API)"
+    summary_ja: |
+      画質・推論効率・コストのバランスを重視する画像モデルを、Alibaba Cloud Model Studio の国際向け API で提供。画像生成部は7Bパラメータで、透過画像の生成・編集、最大10枚の参照画像、局所的な編集に対応。
+
+      [Qwen-Image-2.1-Pro の API 提供開始 | Alibaba Cloud Model Studio](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+    tags: ["Alibaba", "Qwen", "Image Model"]
+    series: ["Qwen Image"]
+  - year: 2026
+    date: 2026-09-29
+    title_ja: "GPT-6.1 Sol"
+    summary_ja: |
+      複雑なコーディング、コンピューター操作、専門業務向けモデルを公開。GPT-6 Astra に近い性能を低コストで提供する位置付けで、Responses API と Chat Completions API に対応。ツール利用は Responses API を使い、サブエージェントへ作業を委任する Multi-agent もベータ対応。
+
+      [GPT-6.1 Sol | OpenAI](https://developers.openai.com/api/docs/models/gpt-6.1-sol) / [GPT-6.1 Sol の公開 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
   - year: 2026
     date: 2026-09-28
     title_ja: "LLM-jp-4.1 (8B, 32B-A3B, 33B)"
