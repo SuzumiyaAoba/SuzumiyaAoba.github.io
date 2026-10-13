@@ -43,6 +43,24 @@ export default function AudioPage({
           </p>
         </header>
 
+        <section
+          className="space-y-6"
+          aria-label={ja ? "オーディオシステム" : "Audio system"}
+        >
+          <AudioViewer
+            model="system"
+            name={ja ? "接続全体" : "Connected system"}
+            manufacturer="Audio"
+            finish="NODE / CG-10M / UD-505 / HA-1A MK2"
+            description={
+              ja
+                ? "NODE（USB-A）→ UD-505（USB-B）→ HA-1A MK2 → ヘッドホン。CG-10M → UD-505。ヘッドホンはアンプ正面左の PHONES A に接続します。"
+                : "NODE (USB-A) → UD-505 (USB-B) → HA-1A MK2 → headphones. CG-10M → UD-505. Headphones connect to the front left PHONES A jack."
+            }
+            locale={locale}
+          />
+        </section>
+
         <div className="space-y-16">
           {audioEquipment.map((equipment, index) => (
             <article

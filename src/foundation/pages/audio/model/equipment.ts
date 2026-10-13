@@ -24,125 +24,6 @@ export type AudioEquipment = {
 /** 所有機器の紹介文と仕様。機器を追加する際はここに追記する。 */
 export const audioEquipment: readonly AudioEquipment[] = [
   {
-    id: "ud-505",
-    model: "ud-505",
-    manufacturer: "TEAC",
-    name: "UD-505",
-    finish: { ja: "シルバー", en: "Silver" },
-    category: {
-      ja: "USB DAC / ヘッドホンアンプ",
-      en: "USB DAC / headphone amplifier",
-    },
-    description: {
-      ja: "デュアルモノーラル構成の USB DAC・ヘッドホンアンプ。左右独立の AK4497 と電源回路を備え、4.4 mm のバランス接続にも対応します。",
-      en: "A dual-mono USB DAC and headphone amplifier, with independent AK4497 converters and power supplies for each channel, plus a 4.4 mm balanced headphone output.",
-    },
-    details: {
-      ja: "前面のつまみや端子だけでなく、背面の接続部と底面の3つの脚まで、視点を変えながら確認できます。",
-      en: "Explore the machined front controls, rear connections and three pin-point feet from different angles.",
-    },
-    specifications: [
-      {
-        label: { ja: "外形寸法", en: "Dimensions" },
-        value: {
-          ja: "290 × 84.5 × 248.7 mm（幅 × 高さ × 奥行、突起部を含む）",
-          en: "290 × 84.5 × 248.7 mm (W × H × D, including protrusions)",
-        },
-      },
-      {
-        label: { ja: "質量", en: "Weight" },
-        value: { ja: "4.2 kg", en: "4.2 kg" },
-      },
-      {
-        label: { ja: "D/A コンバーター", en: "D/A converters" },
-        value: { ja: "AK4497 × 2", en: "2 × AK4497" },
-      },
-      {
-        label: { ja: "USB 入力", en: "USB input" },
-        value: {
-          ja: "PCM 768 kHz / 32 bit · DSD 22.5 MHz",
-          en: "PCM 768 kHz / 32 bit · DSD 22.5 MHz",
-        },
-      },
-      {
-        label: { ja: "ヘッドホン出力", en: "Headphone outputs" },
-        value: { ja: "4.4 mm × 1 · 6.3 mm × 2", en: "1 × 4.4 mm · 2 × 6.3 mm" },
-      },
-      {
-        label: { ja: "ライン出力", en: "Line outputs" },
-        value: { ja: "XLR / RCA", en: "XLR / RCA" },
-      },
-    ],
-    sources: [
-      {
-        title: { ja: "メーカー製品情報", en: "Manufacturer’s product page" },
-        href: "https://teac.jp/jp/product/ud-505/top",
-      },
-      {
-        title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
-        href: "https://teac.jp/downloads/products/teac/ud-505/UD-505_OM_J_vB.pdf",
-      },
-    ],
-  },
-  {
-    id: "cg-10m",
-    model: "cg-10m",
-    manufacturer: "TEAC",
-    name: "CG-10M",
-    finish: { ja: "シルバー", en: "Silver" },
-    category: {
-      ja: "マスタークロックジェネレーター",
-      en: "Master clock generator",
-    },
-    description: {
-      ja: "恒温槽付き水晶発振器 TEAC Reference OCXO を搭載した、10 MHz のマスタークロックジェネレーター。4系統の独立した BNC 出力から、対応するオーディオ機器へクロック信号を供給します。",
-      en: "A 10 MHz master clock generator with a TEAC Reference OCXO oven-controlled crystal oscillator and four independent BNC outputs for compatible audio equipment.",
-    },
-    details: {
-      ja: "前面の OVEN メーター、背面の金メッキ BNC 端子と照明調整つまみ、側面の持ち手や3点支持の脚まで再現しています。メーターの針は安定時をイメージした静止表示です。",
-      en: "Explore the OVEN meter, gold-plated rear BNC outputs, brightness control, side handles and three pin-point feet. The needle is shown in a static, illustrative stabilized position.",
-    },
-    specifications: [
-      {
-        label: { ja: "外形寸法", en: "Dimensions" },
-        value: {
-          ja: "290 × 84.5 × 248.7 mm（幅 × 高さ × 奥行、突起部を含む）",
-          en: "290 × 84.5 × 248.7 mm (W × H × D, including protrusions)",
-        },
-      },
-      {
-        label: { ja: "質量", en: "Weight" },
-        value: { ja: "3.6 kg", en: "3.6 kg" },
-      },
-      {
-        label: { ja: "発振器", en: "Oscillator" },
-        value: { ja: "TEAC Reference OCXO", en: "TEAC Reference OCXO" },
-      },
-      {
-        label: { ja: "クロック出力", en: "Clock outputs" },
-        value: { ja: "10 MHz · BNC × 4 · 50 Ω", en: "10 MHz · 4 × BNC · 50 Ω" },
-      },
-      {
-        label: { ja: "出力レベル", en: "Output level" },
-        value: { ja: "0.5 Vrms（サイン波）", en: "0.5 Vrms (sine wave)" },
-      },
-      {
-        label: { ja: "クロック安定時間", en: "Stabilization time" },
-        value: { ja: "約2分", en: "Approximately 2 minutes" },
-      },
-    ],
-    sources: [
-      {
-        title: { ja: "メーカー製品情報", en: "Manufacturer’s product page" },
-        href: "https://teac.jp/jp/product/cg-10m/top",
-      },
-      {
-        title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
-        href: "https://teac.jp/downloads/products/teac/cg-10m/CG-10M_OM_J_vB2.pdf",
-      },
-    ],
-  },
-  {
     id: "node-n130",
     model: "node-n130",
     manufacturer: "Bluesound",
@@ -206,6 +87,125 @@ export const audioEquipment: readonly AudioEquipment[] = [
       {
         title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
         href: "https://pdn.co.jp/assets/bluesound/node_dfu.pdf",
+      },
+    ],
+  },
+  {
+    id: "cg-10m",
+    model: "cg-10m",
+    manufacturer: "TEAC",
+    name: "CG-10M",
+    finish: { ja: "シルバー", en: "Silver" },
+    category: {
+      ja: "マスタークロックジェネレーター",
+      en: "Master clock generator",
+    },
+    description: {
+      ja: "恒温槽付き水晶発振器 TEAC Reference OCXO を搭載した、10 MHz のマスタークロックジェネレーター。4系統の独立した BNC 出力から、対応するオーディオ機器へクロック信号を供給します。",
+      en: "A 10 MHz master clock generator with a TEAC Reference OCXO oven-controlled crystal oscillator and four independent BNC outputs for compatible audio equipment.",
+    },
+    details: {
+      ja: "前面の OVEN メーター、背面の金メッキ BNC 端子と照明調整つまみ、側面の持ち手や3点支持の脚まで再現しています。メーターの針は安定時をイメージした静止表示です。",
+      en: "Explore the OVEN meter, gold-plated rear BNC outputs, brightness control, side handles and three pin-point feet. The needle is shown in a static, illustrative stabilized position.",
+    },
+    specifications: [
+      {
+        label: { ja: "外形寸法", en: "Dimensions" },
+        value: {
+          ja: "290 × 84.5 × 248.7 mm（幅 × 高さ × 奥行、突起部を含む）",
+          en: "290 × 84.5 × 248.7 mm (W × H × D, including protrusions)",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "3.6 kg", en: "3.6 kg" },
+      },
+      {
+        label: { ja: "発振器", en: "Oscillator" },
+        value: { ja: "TEAC Reference OCXO", en: "TEAC Reference OCXO" },
+      },
+      {
+        label: { ja: "クロック出力", en: "Clock outputs" },
+        value: { ja: "10 MHz · BNC × 4 · 50 Ω", en: "10 MHz · 4 × BNC · 50 Ω" },
+      },
+      {
+        label: { ja: "出力レベル", en: "Output level" },
+        value: { ja: "0.5 Vrms（サイン波）", en: "0.5 Vrms (sine wave)" },
+      },
+      {
+        label: { ja: "クロック安定時間", en: "Stabilization time" },
+        value: { ja: "約2分", en: "Approximately 2 minutes" },
+      },
+    ],
+    sources: [
+      {
+        title: { ja: "メーカー製品情報", en: "Manufacturer’s product page" },
+        href: "https://teac.jp/jp/product/cg-10m/top",
+      },
+      {
+        title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
+        href: "https://teac.jp/downloads/products/teac/cg-10m/CG-10M_OM_J_vB2.pdf",
+      },
+    ],
+  },
+  {
+    id: "ud-505",
+    model: "ud-505",
+    manufacturer: "TEAC",
+    name: "UD-505",
+    finish: { ja: "シルバー", en: "Silver" },
+    category: {
+      ja: "USB DAC / ヘッドホンアンプ",
+      en: "USB DAC / headphone amplifier",
+    },
+    description: {
+      ja: "デュアルモノーラル構成の USB DAC・ヘッドホンアンプ。左右独立の AK4497 と電源回路を備え、4.4 mm のバランス接続にも対応します。",
+      en: "A dual-mono USB DAC and headphone amplifier, with independent AK4497 converters and power supplies for each channel, plus a 4.4 mm balanced headphone output.",
+    },
+    details: {
+      ja: "前面のつまみや端子だけでなく、背面の接続部と底面の3つの脚まで、視点を変えながら確認できます。",
+      en: "Explore the machined front controls, rear connections and three pin-point feet from different angles.",
+    },
+    specifications: [
+      {
+        label: { ja: "外形寸法", en: "Dimensions" },
+        value: {
+          ja: "290 × 84.5 × 248.7 mm（幅 × 高さ × 奥行、突起部を含む）",
+          en: "290 × 84.5 × 248.7 mm (W × H × D, including protrusions)",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "4.2 kg", en: "4.2 kg" },
+      },
+      {
+        label: { ja: "D/A コンバーター", en: "D/A converters" },
+        value: { ja: "AK4497 × 2", en: "2 × AK4497" },
+      },
+      {
+        label: { ja: "USB 入力", en: "USB input" },
+        value: {
+          ja: "PCM 768 kHz / 32 bit · DSD 22.5 MHz",
+          en: "PCM 768 kHz / 32 bit · DSD 22.5 MHz",
+        },
+      },
+      {
+        label: { ja: "ヘッドホン出力", en: "Headphone outputs" },
+        value: { ja: "4.4 mm × 1 · 6.3 mm × 2", en: "1 × 4.4 mm · 2 × 6.3 mm" },
+      },
+      {
+        label: { ja: "ライン出力", en: "Line outputs" },
+        value: { ja: "XLR / RCA", en: "XLR / RCA" },
+      },
+    ],
+    sources: [
+      {
+        title: { ja: "メーカー製品情報", en: "Manufacturer’s product page" },
+        href: "https://teac.jp/jp/product/ud-505/top",
+      },
+      {
+        title: { ja: "取扱説明書", en: "Owner’s manual (Japanese)" },
+        href: "https://teac.jp/downloads/products/teac/ud-505/UD-505_OM_J_vB.pdf",
       },
     ],
   },

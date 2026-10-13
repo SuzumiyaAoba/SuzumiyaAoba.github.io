@@ -6,10 +6,11 @@ import { Hand, Minus, Plus, RotateCcw } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import type { Locale } from "@/shared/lib/routing";
-import { modelViews } from "./viewer-types";
+import { headphoneNames, modelViews } from "./viewer-types";
 import type {
   AudioModel,
   AudioView,
+  HeadphoneModel,
   ViewerHandle,
   ViewerStatus,
 } from "./viewer-types";
@@ -57,6 +58,8 @@ export function AudioViewer({
   const [selected, setSelected] = useState<AudioView | undefined>("overview");
   const [interactive, setInteractive] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [headphones, setHeadphones] = useState<HeadphoneModel>("hd-800s");
+  const selectedHeadphones = useRef<HeadphoneModel>("hd-800s");
 
   useEffect(() => {
     let cancelled = false;
@@ -80,6 +83,7 @@ export function AudioViewer({
           onView: setSelected,
         });
         viewer.current = handle;
+        handle.setHeadphones?.(selectedHeadphones.current);
         const enabled = window.matchMedia(
           "(hover: hover) and (pointer: fine)"
         ).matches;
@@ -109,9 +113,49 @@ export function AudioViewer({
     setInteractive(enabled);
   };
   const ready = status === "ready";
+  const selectHeadphones = (headphone: HeadphoneModel) => {
+    viewer.current?.setHeadphones?.(headphone);
+    selectedHeadphones.current = headphone;
+    setHeadphones(headphone);
+  };
 
   return (
     <figure className="space-y-4" aria-labelledby={`${id}-caption`}>
+      {model === "system" && (
+        <div className="flex flex-wrap items-center gap-3">
+          <span
+            className="text-sm text-muted-foreground"
+            id={`${id}-headphones`}
+          >
+            {ja ? "接続するヘッドホン" : "Connected headphones"}
+          </span>
+          <div
+            className="flex flex-wrap gap-1.5"
+            role="group"
+            aria-labelledby={`${id}-headphones`}
+          >
+            {(["hd-800s", "clear-mg-pro"] as const).map((headphone) => (
+              <Button
+                key={headphone}
+                variant={headphones === headphone ? "secondary" : "outline"}
+                size="sm"
+                disabled={!ready}
+                aria-pressed={headphones === headphone}
+                onClick={() => selectHeadphones(headphone)}
+              >
+                {headphoneNames[headphone]}
+              </Button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground" role="status">
+            {ja
+              ? "HA-1A MK2 正面左の PHONES A · 6.35 mm"
+              : "HA-1A MK2 front left PHONES A · 6.35 mm"}
+            {" / "}
+            {headphoneNames[headphones]}
+          </p>
+        </div>
+      )}
       <div
         ref={container}
         className="audio-stage"
@@ -125,9 +169,13 @@ export function AudioViewer({
           role="img"
           tabIndex={ready ? 0 : -1}
           aria-label={
-            ja
-              ? `${manufacturer} ${name} ${finish}の3Dモデル。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
-              : `3D model of ${manufacturer} ${name} in ${finish}. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
+            model === "system"
+              ? ja
+                ? `NODE、UD-505、CG-10M、HA-1A MK2、${headphoneNames[headphones]}を配線した3Dモデル。ヘッドホンはアンプ正面左のジャックに接続。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
+                : `3D system connecting NODE, UD-505, CG-10M, HA-1A MK2 and ${headphoneNames[headphones]}. Headphones connect to the amplifier’s front left jack. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
+              : ja
+                ? `${manufacturer} ${name} ${finish}の3Dモデル。矢印キーで回転、プラス・マイナスで拡大縮小、Homeで全体表示。`
+                : `3D model of ${manufacturer} ${name} in ${finish}. Arrow keys rotate, plus and minus zoom, and Home resets the view.`
           }
           aria-describedby={`${id}-instructions`}
         >
@@ -234,7 +282,11 @@ export function AudioViewer({
       </div>
       <figcaption
         id={`${id}-caption`}
-        className="space-y-2 text-xs leading-relaxed text-muted-foreground"
+        className={
+          model === "system"
+            ? "sr-only"
+            : "space-y-2 text-xs leading-relaxed text-muted-foreground"
+        }
       >
         <p id={`${id}-instructions`}>
           {ja

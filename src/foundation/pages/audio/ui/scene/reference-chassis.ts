@@ -2,26 +2,50 @@ import { Box3, ExtrudeGeometry, Path, Shape, Vector3 } from "three";
 import type { ModelParts } from "./parts";
 
 function sidePlate(parts: ModelParts, x: number) {
+  const front = -128;
+  const rear = 115.75;
+  const bottom = 12;
+  const top = 84.5;
+  const cornerRadius = 2.6;
   const plate = new Shape();
-  plate.moveTo(-128, 12);
-  plate.lineTo(115.75, 12);
-  plate.lineTo(115.75, 84.5);
-  plate.lineTo(-128, 84.5);
+  plate.moveTo(front + cornerRadius, bottom);
+  plate.lineTo(rear - cornerRadius, bottom);
+  plate.quadraticCurveTo(rear, bottom, rear, bottom + cornerRadius);
+  plate.lineTo(rear, top - cornerRadius);
+  plate.quadraticCurveTo(rear, top, rear - cornerRadius, top);
+  plate.lineTo(front + cornerRadius, top);
+  plate.quadraticCurveTo(front, top, front, top - cornerRadius);
+  plate.lineTo(front, bottom + cornerRadius);
+  plate.quadraticCurveTo(front, bottom, front + cornerRadius, bottom);
   plate.closePath();
+
+  // 両機種とも、前面より手前に張り出した側板に縦長の貫通穴がある。
+  const slotCenter = -120;
+  const slotBottom = 21.25;
+  const slotTop = 73.25;
+  const slotRadius = 3.7;
   const handle = new Path();
-  handle.moveTo(-122.75, 26);
-  handle.lineTo(-122.75, 64);
-  handle.absarc(-120.25, 64, 2.5, Math.PI, 0, true);
-  handle.lineTo(-117.75, 26);
-  handle.absarc(-120.25, 26, 2.5, 0, Math.PI, true);
+  handle.moveTo(slotCenter - slotRadius, slotBottom + slotRadius);
+  handle.lineTo(slotCenter - slotRadius, slotTop - slotRadius);
+  handle.absarc(slotCenter, slotTop - slotRadius, slotRadius, Math.PI, 0, true);
+  handle.lineTo(slotCenter + slotRadius, slotBottom + slotRadius);
+  handle.absarc(
+    slotCenter,
+    slotBottom + slotRadius,
+    slotRadius,
+    0,
+    Math.PI,
+    true
+  );
+  handle.closePath();
   plate.holes.push(handle);
   const geometry = new ExtrudeGeometry(plate, {
-    depth: 6.8,
+    depth: 6.4,
     bevelEnabled: true,
-    bevelSize: 0.6,
-    bevelThickness: 0.6,
-    bevelSegments: 3,
-    curveSegments: 24,
+    bevelSize: 0.65,
+    bevelThickness: 0.8,
+    bevelSegments: 5,
+    curveSegments: 32,
   });
   const positions = geometry.getAttribute("position");
   const uvs = geometry.getAttribute("uv");
@@ -35,7 +59,7 @@ function sidePlate(parts: ModelParts, x: number) {
   const side = parts.mesh(
     geometry,
     parts.silver,
-    [x > 0 ? 137.6 : -144.4, 0, 2.75],
+    [x > 0 ? 137.8 : -144.2, 0, 2.75],
     "Aluminium side cheek with carrying slot"
   );
   side.rotation.y = Math.PI / 2;
@@ -109,7 +133,7 @@ function pinPointFeet(parts: ModelParts) {
   }
 }
 
-export function createReferenceChassis(parts: ModelParts, handles = false) {
+export function createReferenceChassis(parts: ModelParts) {
   parts.box(
     [272, 64, 221],
     [0, 46, 0],
@@ -132,17 +156,7 @@ export function createReferenceChassis(parts: ModelParts, handles = false) {
     0.3
   );
   for (const x of [-141, 141]) {
-    if (handles) {
-      sidePlate(parts, x);
-    } else {
-      parts.box(
-        [8, 72.5, 231.5],
-        [x, 48.25, 2.75],
-        parts.silver,
-        "Raised aluminium side cheek",
-        1.2
-      );
-    }
+    sidePlate(parts, x);
     parts.box(
       [0.6, 66, 224],
       [Math.sign(x) * 136.8, 47, 0],

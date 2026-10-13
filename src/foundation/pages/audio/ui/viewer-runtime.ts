@@ -25,9 +25,11 @@ import { createNodeN130 } from "./scene/node-n130";
 import { createHd800s } from "./scene/hd-800s";
 import { createClearMgPro } from "./scene/clear-mg-pro";
 import { createHa1aMk2 } from "./scene/ha-1a-mk2";
+import { createAudioSystem } from "./scene/audio-system";
 import type {
   AudioModel,
   AudioView,
+  HeadphoneModel,
   ViewerHandle,
   ViewerStatus,
 } from "./viewer-types";
@@ -301,6 +303,50 @@ const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
 const modelPoses: Partial<
   Record<AudioModel, Partial<Record<AudioView, CameraPose>>>
 > = {
+  system: {
+    overview: {
+      direction: [0.5, 0.8, 1.4],
+      target: [110, 105, -20],
+      width: 800,
+      height: 480,
+      depth: 220,
+    },
+    front: {
+      direction: [0, 0.1, 1],
+      target: [110, 115, 0],
+      width: 800,
+      height: 360,
+      depth: 200,
+    },
+    rear: {
+      direction: [0, 0.42, -1],
+      target: [110, 105, -40],
+      width: 800,
+      height: 420,
+      depth: 230,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [110, 80, -10],
+      width: 800,
+      height: 620,
+      depth: 160,
+    },
+    headphones: {
+      direction: [0.1, 0.55, 1],
+      target: [265, 95, 95],
+      width: 510,
+      height: 380,
+      depth: 160,
+    },
+    connections: {
+      direction: [-0.2, 0.7, -1],
+      target: [25, 100, -160],
+      width: 560,
+      height: 390,
+      depth: 180,
+    },
+  },
   "node-n130": nodePoses,
   "hd-800s": hd800sPoses,
   "clear-mg-pro": clearMgPoses,
@@ -364,14 +410,19 @@ const modelPoses: Partial<
   },
 };
 
+type AudioScene = ReturnType<typeof createUd505> & {
+  setHeadphones?: (model: HeadphoneModel) => void;
+};
+
 const modelBuilders = {
+  system: createAudioSystem,
   "ud-505": createUd505,
   "cg-10m": createCg10m,
   "node-n130": createNodeN130,
   "hd-800s": createHd800s,
   "clear-mg-pro": createClearMgPro,
   "ha-1a-mk2": createHa1aMk2,
-} satisfies Record<AudioModel, () => ReturnType<typeof createUd505>>;
+} satisfies Record<AudioModel, () => AudioScene>;
 
 export function createAudioViewer({
   model: modelId,
@@ -394,6 +445,7 @@ export function createAudioViewer({
   renderer.shadowMap.type = PCFShadowMap;
 
   const scene = new Scene();
+  const system = modelId === "system";
   const detailedHeadphones = modelId === "hd-800s";
   const room = new RoomEnvironment();
   const pmrem = new PMREMGenerator(renderer);
@@ -403,12 +455,13 @@ export function createAudioViewer({
   pmrem.dispose();
   room.dispose();
 
-  const model = modelBuilders[modelId]();
+  const model: AudioScene = modelBuilders[modelId]();
   scene.add(model.group);
   model.group.traverse((part) => {
     if (part instanceof Mesh && part.material instanceof Material) {
       part.castShadow = !part.material.transparent;
-      part.receiveShadow = detailedHeadphones || modelId === "ha-1a-mk2";
+      part.receiveShadow =
+        system || detailedHeadphones || modelId === "ha-1a-mk2";
     }
   });
   scene.add(
@@ -418,16 +471,20 @@ export function createAudioViewer({
     detailedHeadphones ? 0xff_f8_ef : 0xff_ff_ff,
     detailedHeadphones ? 3.6 : 3
   );
-  key.position.set(-150, 430, 260);
+  key.position.set(
+    system ? -450 : -150,
+    system ? 700 : 430,
+    system ? 450 : 260
+  );
   key.castShadow = true;
-  const shadowSize = detailedHeadphones ? 2048 : 1024;
+  const shadowSize = detailedHeadphones || system ? 2048 : 1024;
   key.shadow.mapSize.set(shadowSize, shadowSize);
-  key.shadow.camera.left = -250;
-  key.shadow.camera.right = 250;
-  key.shadow.camera.top = 230;
-  key.shadow.camera.bottom = -230;
+  key.shadow.camera.left = system ? -750 : -250;
+  key.shadow.camera.right = system ? 750 : 250;
+  key.shadow.camera.top = system ? 550 : 230;
+  key.shadow.camera.bottom = system ? -550 : -230;
   key.shadow.camera.near = 1;
-  key.shadow.camera.far = 900;
+  key.shadow.camera.far = system ? 1800 : 900;
   key.shadow.normalBias = detailedHeadphones ? 0.08 : 0.4;
   key.shadow.radius = 4;
   scene.add(key);
@@ -447,7 +504,10 @@ export function createAudioViewer({
   );
   undersideFill.position.set(0, -250, 50);
   scene.add(undersideFill);
-  const floorGeometry = new PlaneGeometry(1500, 1500);
+  const floorGeometry = new PlaneGeometry(
+    system ? 2500 : 1500,
+    system ? 2500 : 1500
+  );
   const floorMaterial = new ShadowMaterial({ opacity: 0.09 });
   const floor = new Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
@@ -455,12 +515,12 @@ export function createAudioViewer({
   floor.receiveShadow = true;
   scene.add(floor);
 
-  const camera = new PerspectiveCamera(35, 1, 0.5, 3000);
+  const camera = new PerspectiveCamera(35, 1, 0.5, system ? 8000 : 3000);
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = false;
   controls.enablePan = false;
   controls.minDistance = 65;
-  controls.maxDistance = 1100;
+  controls.maxDistance = system ? 6000 : 1100;
   controls.minPolarAngle = 0.001;
   controls.maxPolarAngle = Math.PI - 0.001;
   controls.rotateSpeed = 0.65;
@@ -613,6 +673,10 @@ export function createAudioViewer({
   onStatus("ready");
 
   return {
+    setHeadphones(selected) {
+      model.setHeadphones?.(selected);
+      invalidate();
+    },
     setView,
     zoom,
     setInteractive(enabled) {

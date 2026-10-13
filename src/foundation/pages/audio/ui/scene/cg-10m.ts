@@ -10,7 +10,7 @@ import {
 export function createCg10m() {
   const parts = createModelParts();
   parts.root.name = "TEAC CG-10M Silver — millimetres";
-  createReferenceChassis(parts, true);
+  createReferenceChassis(parts);
   createCg10mFront(parts);
   createCg10mRear(parts);
   fitReferenceDimensions(parts);

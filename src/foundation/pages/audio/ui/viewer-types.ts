@@ -17,14 +17,21 @@ export const viewNames = [
   "dials",
 ] as const;
 export type AudioModel =
+  | "system"
   | "ud-505"
   | "cg-10m"
   | "node-n130"
   | "ha-1a-mk2"
   | "hd-800s"
   | "clear-mg-pro";
+export type HeadphoneModel = "hd-800s" | "clear-mg-pro";
+export const headphoneNames: Record<HeadphoneModel, string> = {
+  "hd-800s": "HD 800 S",
+  "clear-mg-pro": "Clear Mg Professional",
+};
 export type AudioView = (typeof viewNames)[number];
 export const modelViews: Record<AudioModel, readonly AudioView[]> = {
+  system: ["overview", "front", "rear", "top", "headphones", "connections"],
   "ud-505": ["overview", "front", "rear", "top", "bottom", "headphones"],
   "cg-10m": ["overview", "front", "rear", "top", "bottom", "meter", "outputs"],
   "node-n130": [
@@ -72,6 +79,7 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
 };
 export type ViewerStatus = "loading" | "ready" | "unavailable";
 export type ViewerHandle = {
+  setHeadphones?: (model: HeadphoneModel) => void;
   setView: (view: AudioView) => void;
   zoom: (direction: "in" | "out") => void;
   setInteractive: (enabled: boolean) => void;

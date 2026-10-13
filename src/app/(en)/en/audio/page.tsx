@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/app/_shared/page-metadata";
 export const metadata = buildPageMetadata({
   title: "Audio",
   description:
-    "Explore my audio equipment with interactive 3D models of the TEAC UD-505 and CG-10M, Bluesound NODE, Sennheiser HD 800 S and Focal Clear Mg Professional.",
+    "Explore a connected 3D audio system with NODE, UD-505, CG-10M and HA-1A MK2. Switch between HD 800 S and Clear Mg Professional and inspect the connections and equipment details.",
   path: "/audio",
   locale: "en",
 });
