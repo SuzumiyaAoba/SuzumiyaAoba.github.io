@@ -1,6 +1,7 @@
 import { Group, Vector3 } from "three";
 import type { Object3D } from "three";
-import type { HeadphoneModel } from "../viewer-types";
+import { headphoneModels } from "../../model/viewer";
+import type { HeadphoneModel } from "../../model/viewer";
 import { createCg10m } from "./cg-10m";
 import { createClearMgPro } from "./clear-mg-pro";
 import { createHa1aMk2 } from "./ha-1a-mk2";
@@ -181,13 +182,13 @@ export function createAudioSystem() {
     group.add(model.group);
   }
   group.updateMatrixWorld(true);
-  for (const id of ["hd-800s", "clear-mg-pro"] as const) {
+  for (const id of headphoneModels) {
     const cables = connectHeadphones(headphones[id].group, amp.group, id);
     headphoneCables.set(id, cables);
     group.add(cables.group);
   }
   const setHeadphones = (selected: HeadphoneModel) => {
-    for (const id of ["hd-800s", "clear-mg-pro"] as const) {
+    for (const id of headphoneModels) {
       headphones[id].group.visible = id === selected;
       const cables = headphoneCables.get(id);
       if (cables) {

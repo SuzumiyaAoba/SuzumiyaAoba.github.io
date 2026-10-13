@@ -1,0 +1,373 @@
+import type { AudioModel, AudioView } from "../model/viewer";
+
+type CameraPose = {
+  direction: readonly [number, number, number];
+  target: readonly [number, number, number];
+  width: number;
+  height: number;
+  depth: number;
+};
+
+const poses: Record<AudioView, CameraPose> = {
+  dials: {
+    direction: [0.65, 0.24, 1],
+    target: [0, 83, 142],
+    width: 130,
+    height: 100,
+    depth: 28,
+  },
+  tubes: {
+    direction: [0, 0.02, 1],
+    target: [0, 159, 141.5],
+    width: 90,
+    height: 90,
+    depth: 12,
+  },
+  overview: {
+    direction: [0.7, 0.44, 1],
+    target: [0, 39, 0],
+    width: 350,
+    height: 230,
+    depth: 140,
+  },
+  front: {
+    direction: [0, 0, 1],
+    target: [0, 42, 4],
+    width: 315,
+    height: 125,
+    depth: 128,
+  },
+  rear: {
+    direction: [0, 0.05, -1],
+    target: [0, 42, -15],
+    width: 315,
+    height: 125,
+    depth: 107,
+  },
+  top: {
+    direction: [0, 1, 0.001],
+    target: [0, 40, 0],
+    width: 315,
+    height: 280,
+    depth: 44,
+  },
+  bottom: {
+    direction: [0, -1, 0.001],
+    target: [0, 40, 0],
+    width: 315,
+    height: 280,
+    depth: 40,
+  },
+  headphones: {
+    direction: [0.08, 0.12, 1],
+    target: [25, 35, 113],
+    width: 145,
+    height: 85,
+    depth: 22,
+  },
+  meter: {
+    direction: [0.1, 0.08, 1],
+    target: [0, 44.5, 113],
+    width: 85,
+    height: 70,
+    depth: 12,
+  },
+  outputs: {
+    direction: [0.08, 0.12, -1],
+    target: [35, 32, -111],
+    width: 190,
+    height: 80,
+    depth: 12,
+  },
+  controls: {
+    direction: [0.02, 1, 0.28],
+    target: [0, 45, 0],
+    width: 170,
+    height: 115,
+    depth: 15,
+  },
+  connections: {
+    direction: [0.06, 0.1, -1],
+    target: [0, 25, -70],
+    width: 215,
+    height: 70,
+    depth: 15,
+  },
+  side: {
+    direction: [1, 0, 0.02],
+    target: [0, 158, 0],
+    width: 165,
+    height: 305,
+    depth: 110,
+  },
+  earpads: {
+    direction: [1, 0.08, 0.7],
+    target: [-82, 130, 0],
+    width: 120,
+    height: 150,
+    depth: 30,
+  },
+  headband: {
+    direction: [0.35, 0.65, 1],
+    target: [0, 239, 0],
+    width: 210,
+    height: 135,
+    depth: 45,
+  },
+  grille: {
+    direction: [1, 0.12, 0.3],
+    target: [82, 130, 0],
+    width: 135,
+    height: 165,
+    depth: 40,
+  },
+};
+
+const nodePoses: Partial<Record<AudioView, CameraPose>> = {
+  overview: {
+    direction: [0.65, 0.7, 1],
+    target: [0, 22, 0],
+    width: 270,
+    height: 180,
+    depth: 85,
+  },
+  front: {
+    direction: [0, 0, 1],
+    target: [0, 23, 0],
+    width: 240,
+    height: 80,
+    depth: 80,
+  },
+  rear: {
+    direction: [0, 0.05, -1],
+    target: [0, 23, -4],
+    width: 240,
+    height: 85,
+    depth: 75,
+  },
+  top: {
+    direction: [0, 1, 0.001],
+    target: [0, 23, 0],
+    width: 245,
+    height: 175,
+    depth: 24,
+  },
+  bottom: {
+    direction: [0, -1, 0.001],
+    target: [0, 23, 0],
+    width: 245,
+    height: 175,
+    depth: 24,
+  },
+  headphones: {
+    direction: [0.1, 0.06, 1],
+    target: [0, 10.2, 70.5],
+    width: 55,
+    height: 42,
+    depth: 8,
+  },
+};
+
+const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
+  overview: {
+    direction: [1, 0.32, 1.6],
+    target: [0, 157, 0],
+    width: 265,
+    height: 305,
+    depth: 85,
+  },
+  front: {
+    direction: [0, 0, 1],
+    target: [0, 157, 0],
+    width: 265,
+    height: 305,
+    depth: 65,
+  },
+  rear: {
+    direction: [0, 0, -1],
+    target: [0, 157, 0],
+    width: 265,
+    height: 305,
+    depth: 65,
+  },
+  top: {
+    direction: [0, 1, 0.001],
+    target: [0, 157, 0],
+    width: 265,
+    height: 180,
+    depth: 140,
+  },
+};
+
+const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
+  overview: {
+    direction: [1.3, 0.28, 1.35],
+    target: [0, 117, 0],
+    width: 245,
+    height: 260,
+    depth: 65,
+  },
+  front: {
+    direction: [0, 0, 1],
+    target: [0, 117, 0],
+    width: 245,
+    height: 260,
+    depth: 45,
+  },
+  rear: {
+    direction: [0, 0.04, -1],
+    target: [0, 117, 0],
+    width: 245,
+    height: 260,
+    depth: 45,
+  },
+  top: {
+    direction: [0, 1, 0.001],
+    target: [0, 117, 0],
+    width: 250,
+    height: 155,
+    depth: 125,
+  },
+  side: {
+    direction: [1, 0.025, 0.025],
+    target: [75, 59, 0],
+    width: 130,
+    height: 160,
+    depth: 12,
+  },
+  earpads: {
+    direction: [1, 0.04, 1],
+    target: [-35, 66, 0],
+    width: 145,
+    height: 150,
+    depth: 35,
+  },
+  headband: {
+    direction: [0.3, 0.45, 1],
+    target: [0, 197, 0],
+    width: 220,
+    height: 135,
+    depth: 35,
+  },
+  connections: {
+    direction: [0.85, -1, 1],
+    target: [75, 3, 0],
+    width: 65,
+    height: 65,
+    depth: 18,
+  },
+};
+
+const modelPoses: Partial<
+  Record<AudioModel, Partial<Record<AudioView, CameraPose>>>
+> = {
+  system: {
+    overview: {
+      direction: [0.5, 0.8, 1.4],
+      target: [110, 105, -20],
+      width: 800,
+      height: 480,
+      depth: 220,
+    },
+    front: {
+      direction: [0, 0.1, 1],
+      target: [110, 115, 0],
+      width: 800,
+      height: 360,
+      depth: 200,
+    },
+    rear: {
+      direction: [0, 0.42, -1],
+      target: [110, 105, -40],
+      width: 800,
+      height: 420,
+      depth: 230,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [110, 80, -10],
+      width: 800,
+      height: 620,
+      depth: 160,
+    },
+    headphones: {
+      direction: [0.1, 0.55, 1],
+      target: [265, 95, 95],
+      width: 510,
+      height: 380,
+      depth: 160,
+    },
+    connections: {
+      direction: [-0.2, 0.7, -1],
+      target: [25, 100, -160],
+      width: 560,
+      height: 390,
+      depth: 180,
+    },
+  },
+  "node-n130": nodePoses,
+  "hd-800s": hd800sPoses,
+  "clear-mg-pro": clearMgPoses,
+  "ha-1a-mk2": {
+    overview: {
+      direction: [0.95, 0.45, 1.3],
+      target: [0, 105, 0],
+      width: 310,
+      height: 290,
+      depth: 90,
+    },
+    front: {
+      direction: [0, 0, 1],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 240,
+      depth: 155,
+    },
+    rear: {
+      direction: [0, 0, -1],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 240,
+      depth: 155,
+    },
+    side: {
+      direction: [1, 0.03, 0],
+      target: [0, 107.5, 0],
+      width: 325,
+      height: 240,
+      depth: 65,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 325,
+      depth: 110,
+    },
+    bottom: {
+      direction: [0, -1, 0.001],
+      target: [0, 107.5, 0],
+      width: 160,
+      height: 325,
+      depth: 110,
+    },
+    headphones: {
+      direction: [0.05, 0.08, 1],
+      target: [0, 52, 141.5],
+      width: 118,
+      height: 106,
+      depth: 16,
+    },
+    connections: {
+      direction: [0.08, 0.08, -1],
+      target: [0, 153, -143],
+      width: 115,
+      height: 135,
+      depth: 18,
+    },
+  },
+};
+
+export function getCameraPose(model: AudioModel, view: AudioView): CameraPose {
+  return modelPoses[model]?.[view] ?? poses[view];
+}

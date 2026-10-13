@@ -1,0 +1,126 @@
+import {
+  DirectionalLight,
+  HemisphereLight,
+  Material,
+  Mesh,
+  PlaneGeometry,
+  PMREMGenerator,
+  Scene,
+  ShadowMaterial,
+} from "three";
+import type { Group, WebGLRenderer } from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { createUd505 } from "./scene/ud-505";
+import { createCg10m } from "./scene/cg-10m";
+import { createNodeN130 } from "./scene/node-n130";
+import { createHd800s } from "./scene/hd-800s";
+import { createClearMgPro } from "./scene/clear-mg-pro";
+import { createHa1aMk2 } from "./scene/ha-1a-mk2";
+import { createAudioSystem } from "./scene/audio-system";
+import type { AudioModel, HeadphoneModel } from "../model/viewer";
+
+type AudioScene = {
+  group: Group;
+  dispose: () => void;
+  setHeadphones?: (model: HeadphoneModel) => void;
+};
+
+const modelBuilders = {
+  system: createAudioSystem,
+  "ud-505": createUd505,
+  "cg-10m": createCg10m,
+  "node-n130": createNodeN130,
+  "hd-800s": createHd800s,
+  "clear-mg-pro": createClearMgPro,
+  "ha-1a-mk2": createHa1aMk2,
+} satisfies Record<AudioModel, () => AudioScene>;
+
+export function createViewerScene(
+  renderer: WebGLRenderer,
+  modelId: AudioModel
+) {
+  const scene = new Scene();
+  const system = modelId === "system";
+  const detailedHeadphones = modelId === "hd-800s";
+  const room = new RoomEnvironment();
+  const pmrem = new PMREMGenerator(renderer);
+  const environment = pmrem.fromScene(room, 0.04);
+  scene.environment = environment.texture;
+  scene.environmentIntensity = detailedHeadphones ? 0.72 : 1;
+  pmrem.dispose();
+  room.dispose();
+
+  const model: AudioScene = modelBuilders[modelId]();
+  scene.add(model.group);
+  model.group.traverse((part) => {
+    if (part instanceof Mesh && part.material instanceof Material) {
+      part.castShadow = !part.material.transparent;
+      part.receiveShadow =
+        system || detailedHeadphones || modelId === "ha-1a-mk2";
+    }
+  });
+  scene.add(
+    new HemisphereLight(0xff_ff_ff, 0x6a_73_7e, detailedHeadphones ? 0.8 : 2.2)
+  );
+  const key = new DirectionalLight(
+    detailedHeadphones ? 0xff_f8_ef : 0xff_ff_ff,
+    detailedHeadphones ? 3.6 : 3
+  );
+  key.position.set(
+    system ? -450 : -150,
+    system ? 700 : 430,
+    system ? 450 : 260
+  );
+  key.castShadow = true;
+  const shadowSize = detailedHeadphones || system ? 2048 : 1024;
+  key.shadow.mapSize.set(shadowSize, shadowSize);
+  key.shadow.camera.left = system ? -750 : -250;
+  key.shadow.camera.right = system ? 750 : 250;
+  key.shadow.camera.top = system ? 550 : 230;
+  key.shadow.camera.bottom = system ? -550 : -230;
+  key.shadow.camera.near = 1;
+  key.shadow.camera.far = system ? 1800 : 900;
+  key.shadow.normalBias = detailedHeadphones ? 0.08 : 0.4;
+  key.shadow.radius = 4;
+  scene.add(key);
+  if (detailedHeadphones) {
+    key.target.position.set(0, 145, 0);
+    scene.add(key.target);
+    const rim = new DirectionalLight(0xe5_ee_ff, 2.3);
+    rim.position.set(-220, 320, -250);
+    scene.add(rim);
+  }
+  const fill = new DirectionalLight(0xdc_e6_ff, detailedHeadphones ? 0.8 : 1.1);
+  fill.position.set(300, 100, -250);
+  scene.add(fill);
+  const undersideFill = new DirectionalLight(
+    0xe6_ee_fc,
+    detailedHeadphones ? 0.5 : 1.8
+  );
+  undersideFill.position.set(0, -250, 50);
+  scene.add(undersideFill);
+  const floorGeometry = new PlaneGeometry(
+    system ? 2500 : 1500,
+    system ? 2500 : 1500
+  );
+  const floorMaterial = new ShadowMaterial({ opacity: 0.09 });
+  const floor = new Mesh(floorGeometry, floorMaterial);
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.5;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  return {
+    scene,
+    setHeadphones(selected: HeadphoneModel) {
+      model.setHeadphones?.(selected);
+    },
+    dispose() {
+      model.dispose();
+      environment.dispose();
+      floorGeometry.dispose();
+      floorMaterial.dispose();
+      key.shadow.dispose();
+    },
+  };
+}

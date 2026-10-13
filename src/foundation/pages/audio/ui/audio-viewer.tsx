@@ -2,37 +2,13 @@
 
 /* eslint-disable jsx-a11y/prefer-tag-over-role -- WebGL のキャンバスに画像の代替説明を付ける。 */
 
-import { Hand, Minus, Plus, RotateCcw } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useId } from "react";
 import { Button } from "@/shared/ui/button";
 import type { Locale } from "@/shared/lib/routing";
-import { headphoneNames, modelViews } from "./viewer-types";
-import type {
-  AudioModel,
-  AudioView,
-  HeadphoneModel,
-  ViewerHandle,
-  ViewerStatus,
-} from "./viewer-types";
-
-const labels: Record<AudioView, Record<Locale, string>> = {
-  overview: { ja: "全体", en: "Overview" },
-  front: { ja: "正面", en: "Front" },
-  rear: { ja: "背面", en: "Rear" },
-  top: { ja: "上面", en: "Top" },
-  bottom: { ja: "底面", en: "Underside" },
-  headphones: { ja: "ヘッドホン端子", en: "Headphone outputs" },
-  meter: { ja: "メーター", en: "Meter" },
-  outputs: { ja: "クロック出力", en: "Clock outputs" },
-  controls: { ja: "タッチパネル", en: "Touch controls" },
-  connections: { ja: "接続端子", en: "Connections" },
-  side: { ja: "側面", en: "Side" },
-  earpads: { ja: "イヤーパッド", en: "Ear pads" },
-  headband: { ja: "ヘッドバンド", en: "Headband" },
-  grille: { ja: "グリル・ドライバー", en: "Grille & driver" },
-  tubes: { ja: "真空管窓", en: "Tube window" },
-  dials: { ja: "ダイアル", en: "Dials" },
-};
+import { headphoneNames } from "../model/viewer";
+import type { AudioModel } from "../model/viewer";
+import { useAudioViewer } from "./use-audio-viewer";
+import { HeadphoneControls, ViewerControls } from "./viewer-controls";
 
 export function AudioViewer({
   locale,
@@ -51,110 +27,32 @@ export function AudioViewer({
 }) {
   const ja = locale === "ja";
   const id = useId();
-  const container = useRef<HTMLDivElement>(null);
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const viewer = useRef<ViewerHandle | null>(null);
-  const [status, setStatus] = useState<ViewerStatus>("loading");
-  const [selected, setSelected] = useState<AudioView | undefined>("overview");
-  const [interactive, setInteractive] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  const [headphones, setHeadphones] = useState<HeadphoneModel>("hd-800s");
-  const selectedHeadphones = useRef<HeadphoneModel>("hd-800s");
-
-  useEffect(() => {
-    let cancelled = false;
-    let handle: ViewerHandle | undefined;
-    const surface = canvas.current;
-    const frame = container.current;
-    if (!surface || !frame) {
-      return;
-    }
-    const load = async () => {
-      try {
-        const { createAudioViewer } = await import("./viewer-runtime");
-        if (cancelled) {
-          return;
-        }
-        handle = createAudioViewer({
-          model,
-          canvas: surface,
-          container: frame,
-          onStatus: setStatus,
-          onView: setSelected,
-        });
-        viewer.current = handle;
-        handle.setHeadphones?.(selectedHeadphones.current);
-        const enabled = window.matchMedia(
-          "(hover: hover) and (pointer: fine)"
-        ).matches;
-        handle.setInteractive(enabled);
-        setInteractive(enabled);
-      } catch {
-        if (!cancelled) {
-          setStatus("unavailable");
-        }
-      }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-      handle?.dispose();
-      viewer.current = null;
-    };
-  }, [attempt, model]);
-
-  const selectView = (view: AudioView) => {
-    viewer.current?.setView(view);
-    setSelected(view);
-  };
-  const toggleInteraction = () => {
-    const enabled = !interactive;
-    viewer.current?.setInteractive(enabled);
-    setInteractive(enabled);
-  };
+  const {
+    container,
+    canvas,
+    status,
+    selected,
+    interactive,
+    attempt,
+    headphones,
+    selectView,
+    toggleInteraction,
+    selectHeadphones,
+    zoom,
+    retry,
+  } = useAudioViewer(model);
   const ready = status === "ready";
-  const selectHeadphones = (headphone: HeadphoneModel) => {
-    viewer.current?.setHeadphones?.(headphone);
-    selectedHeadphones.current = headphone;
-    setHeadphones(headphone);
-  };
 
   return (
     <figure className="space-y-4" aria-labelledby={`${id}-caption`}>
       {model === "system" && (
-        <div className="flex flex-wrap items-center gap-3">
-          <span
-            className="text-sm text-muted-foreground"
-            id={`${id}-headphones`}
-          >
-            {ja ? "接続するヘッドホン" : "Connected headphones"}
-          </span>
-          <div
-            className="flex flex-wrap gap-1.5"
-            role="group"
-            aria-labelledby={`${id}-headphones`}
-          >
-            {(["hd-800s", "clear-mg-pro"] as const).map((headphone) => (
-              <Button
-                key={headphone}
-                variant={headphones === headphone ? "secondary" : "outline"}
-                size="sm"
-                disabled={!ready}
-                aria-pressed={headphones === headphone}
-                onClick={() => selectHeadphones(headphone)}
-              >
-                {headphoneNames[headphone]}
-              </Button>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground" role="status">
-            {ja
-              ? "HA-1A MK2 正面左の PHONES A · 6.35 mm"
-              : "HA-1A MK2 front left PHONES A · 6.35 mm"}
-            {" / "}
-            {headphoneNames[headphones]}
-          </p>
-        </div>
+        <HeadphoneControls
+          id={`${id}-headphones`}
+          locale={locale}
+          selected={headphones}
+          ready={ready}
+          onSelect={selectHeadphones}
+        />
       )}
       <div
         ref={container}
@@ -202,84 +100,23 @@ export function AudioViewer({
                   : "3D is unavailable in this environment. You can still read the specifications and view the manufacturer’s photos below."}
             </p>
             {status === "unavailable" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setStatus("loading");
-                  setSelected("overview");
-                  setAttempt((value) => value + 1);
-                }}
-              >
+              <Button variant="outline" size="sm" onClick={retry}>
                 {ja ? "再読み込み" : "Try again"}
               </Button>
             )}
           </div>
         )}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div
-          className="flex flex-wrap gap-1.5"
-          role="group"
-          aria-label={ja ? "視点" : "Viewpoints"}
-        >
-          {modelViews[model].map((view) => (
-            <Button
-              key={view}
-              variant={selected === view ? "secondary" : "ghost"}
-              size="sm"
-              disabled={!ready}
-              aria-pressed={selected === view}
-              onClick={() => selectView(view)}
-            >
-              {labels[view][locale]}
-            </Button>
-          ))}
-        </div>
-        <div
-          className="flex flex-wrap items-center gap-1.5"
-          role="group"
-          aria-label={ja ? "3D操作" : "3D controls"}
-        >
-          <Button
-            variant={interactive ? "secondary" : "outline"}
-            size="sm"
-            disabled={!ready}
-            aria-pressed={interactive}
-            onClick={toggleInteraction}
-          >
-            <Hand aria-hidden="true" />
-            {ja ? "ドラッグ操作" : "Drag to rotate"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={!ready}
-            aria-label={ja ? "縮小" : "Zoom out"}
-            onClick={() => viewer.current?.zoom("out")}
-          >
-            <Minus aria-hidden="true" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={!ready}
-            aria-label={ja ? "拡大" : "Zoom in"}
-            onClick={() => viewer.current?.zoom("in")}
-          >
-            <Plus aria-hidden="true" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={!ready}
-            aria-label={ja ? "視点を戻す" : "Reset view"}
-            onClick={() => selectView("overview")}
-          >
-            <RotateCcw aria-hidden="true" />
-          </Button>
-        </div>
-      </div>
+      <ViewerControls
+        locale={locale}
+        model={model}
+        selected={selected}
+        interactive={interactive}
+        ready={ready}
+        onSelectView={selectView}
+        onToggleInteraction={toggleInteraction}
+        onZoom={zoom}
+      />
       <figcaption
         id={`${id}-caption`}
         className={

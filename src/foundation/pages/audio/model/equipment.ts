@@ -1,16 +1,11 @@
 import type { Locale } from "@/shared/lib/routing";
+import type { EquipmentModel } from "./viewer";
 
 type LocalizedText = Record<Locale, string>;
 
 export type AudioEquipment = {
   id: string;
-  model?:
-    | "ud-505"
-    | "cg-10m"
-    | "node-n130"
-    | "ha-1a-mk2"
-    | "hd-800s"
-    | "clear-mg-pro";
+  model?: EquipmentModel;
   manufacturer: string;
   name: string;
   finish: LocalizedText;

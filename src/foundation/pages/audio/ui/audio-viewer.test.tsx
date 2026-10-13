@@ -1,0 +1,199 @@
+// @vitest-environment jsdom
+
+import { act, StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
+import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
+import type { AudioModel, ViewerHandle } from "../model/viewer";
+import { AudioViewer } from "./audio-viewer";
+import { createAudioViewer } from "./viewer-runtime";
+
+vi.mock(import("./viewer-runtime"), () => ({
+  createAudioViewer: vi.fn<typeof createAudioViewer>(),
+}));
+
+const createViewer = vi.mocked(createAudioViewer);
+let container: HTMLDivElement;
+let root: Root | null;
+let handle: ViewerHandle;
+
+beforeEach(() => {
+  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({ matches: true }))
+  );
+  handle = {
+    setHeadphones: vi.fn<NonNullable<ViewerHandle["setHeadphones"]>>(),
+    setView: vi.fn<ViewerHandle["setView"]>(),
+    zoom: vi.fn<ViewerHandle["zoom"]>(),
+    setInteractive: vi.fn<ViewerHandle["setInteractive"]>(),
+    dispose: vi.fn<ViewerHandle["dispose"]>(),
+  };
+  createViewer.mockReset().mockImplementation(({ onStatus, onView }) => {
+    onStatus("ready");
+    onView("overview");
+    return handle;
+  });
+  container = document.createElement("div");
+  document.body.append(container);
+  root = createRoot(container);
+});
+
+afterEach(async () => {
+  await act(async () => root?.unmount());
+  root = null;
+  container.remove();
+  vi.unstubAllGlobals();
+});
+
+async function render(model: AudioModel = "system") {
+  await act(async () => {
+    const viewer = (
+      <AudioViewer
+        model={model}
+        locale="ja"
+        manufacturer="Audio"
+        name="接続全体"
+        finish="Silver"
+        description="説明"
+      />
+    );
+    root?.render(viewer);
+  });
+  await act(async () => {
+    await vi.dynamicImportSettled();
+  });
+}
+
+function button(label: string) {
+  const element = [...container.querySelectorAll("button")].find(
+    (candidate) =>
+      candidate.textContent === label ||
+      candidate.getAttribute("aria-label") === label
+  );
+  if (!element) {
+    throw new Error(`Viewer button not found: ${label}`);
+  }
+  return element;
+}
+
+async function click(label: string) {
+  await act(async () => {
+    button(label).click();
+  });
+  await act(async () => {
+    await vi.dynamicImportSettled();
+  });
+}
+
+it("読み込み後に操作を有効化し、視点・ズーム・ドラッグ操作をビューアへ伝える", async () => {
+  await render();
+  expect(container.querySelector("canvas")?.tabIndex).toBe(0);
+  expect(button("正面").disabled).toBe(false);
+  expect(handle.setInteractive).toHaveBeenCalledWith(true);
+  await click("正面");
+  expect(handle.setView).toHaveBeenLastCalledWith("front");
+  expect(button("正面").getAttribute("aria-pressed")).toBe("true");
+  await click("拡大");
+  expect(handle.zoom).toHaveBeenLastCalledWith("in");
+  await click("縮小");
+  expect(handle.zoom).toHaveBeenLastCalledWith("out");
+  await click("ドラッグ操作");
+  expect(handle.setInteractive).toHaveBeenLastCalledWith(false);
+  await click("視点を戻す");
+  expect(handle.setView).toHaveBeenLastCalledWith("overview");
+});
+
+it("タッチ環境ではドラッグ操作を無効にして読み込む", async () => {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({ matches: false }))
+  );
+  await render("ud-505");
+  expect(handle.setInteractive).toHaveBeenLastCalledWith(false);
+  expect(button("ドラッグ操作").getAttribute("aria-pressed")).toBe("false");
+  expect(container.textContent).not.toContain("接続するヘッドホン");
+});
+
+it("読み込み失敗時は操作を無効にし、キャンバスを交換して再試行する", async () => {
+  createViewer.mockImplementationOnce(() => {
+    throw new Error("WebGL unavailable");
+  });
+  await render();
+  const surface = container.querySelector("canvas");
+  expect(surface?.tabIndex).toBe(-1);
+  expect(button("正面").disabled).toBe(true);
+  expect(container.textContent).toContain("この環境では3D表示を利用できません");
+  await click("再読み込み");
+  expect(createViewer).toHaveBeenCalledTimes(2);
+  expect(container.querySelector("canvas")).not.toBe(surface);
+  expect(button("全体").getAttribute("aria-pressed")).toBe("true");
+  expect(button("正面").disabled).toBe(false);
+});
+
+it("選択したヘッドホンを再読み込み後も保持し、古いビューアの通知を無視する", async () => {
+  await render();
+  await click("Clear Mg Professional");
+  expect(handle.setHeadphones).toHaveBeenLastCalledWith("clear-mg-pro");
+  expect(
+    container.querySelector("canvas")?.getAttribute("aria-label")
+  ).toContain("Clear Mg Professional");
+  const options = createViewer.mock.calls[0]?.[0];
+  await act(async () => options?.onStatus("unavailable"));
+  await click("再読み込み");
+  expect(handle.dispose).toHaveBeenCalledTimes(1);
+  expect(handle.setHeadphones).toHaveBeenLastCalledWith("clear-mg-pro");
+  await act(async () => {
+    options?.onStatus("unavailable");
+    options?.onView("rear");
+  });
+  expect(button("正面").disabled).toBe(false);
+  expect(button("全体").getAttribute("aria-pressed")).toBe("true");
+});
+
+it("モデル変更とアンマウントでビューアを破棄する", async () => {
+  await render();
+  await render("ud-505");
+  expect(handle.dispose).toHaveBeenCalledTimes(1);
+  expect(createViewer.mock.calls[1]?.[0].model).toBe("ud-505");
+  await act(async () => root?.unmount());
+  root = null;
+  expect(handle.dispose).toHaveBeenCalledTimes(2);
+});
+
+it("Strict Mode で読み込み完了前にアンマウントするとビューアを生成しない", async () => {
+  act(() => {
+    root?.render(
+      <StrictMode>
+        <AudioViewer
+          model="system"
+          locale="ja"
+          manufacturer="Audio"
+          name="接続全体"
+          finish="Silver"
+          description="説明"
+        />
+      </StrictMode>
+    );
+  });
+  act(() => root?.unmount());
+  root = null;
+  await act(async () => {
+    await vi.dynamicImportSettled();
+  });
+  expect(createViewer).not.toHaveBeenCalled();
+  expect(handle.dispose).not.toHaveBeenCalled();
+});
+
+it("操作の初期化に失敗したビューアを破棄し、アンマウントで二重に破棄しない", async () => {
+  vi.mocked(handle.setInteractive).mockImplementation(() => {
+    throw new Error("Interaction setup failed");
+  });
+  await render();
+  expect(handle.dispose).toHaveBeenCalledTimes(1);
+  expect(button("再読み込み").disabled).toBe(false);
+  await act(async () => root?.unmount());
+  root = null;
+  expect(handle.dispose).toHaveBeenCalledTimes(1);
+});
