@@ -569,4 +569,104 @@ export const audioEquipment: readonly AudioEquipment[] = [
       },
     ],
   },
+  {
+    id: "audioquest-cinnamon",
+    model: "audioquest-cinnamon",
+    manufacturer: "AudioQuest",
+    name: "Cinnamon USB 2.0 A–B",
+    finish: { ja: "レッド / ブラック", en: "Red / Black" },
+    category: { ja: "USB オーディオケーブル", en: "USB audio cable" },
+    description: {
+      ja: "NODE の USB-A 出力と UD-505 の USB-B 入力を接続する、1.5 m の Cinnamon USB 2.0 ケーブル。型番は USB2/CIN/1.5 です。",
+      en: "A 1.5 m Cinnamon USB 2.0 cable connecting NODE’s USB-A output to UD-505’s USB-B input. Model: USB2/CIN/1.5.",
+    },
+    details: {
+      ja: "赤黒の編組、赤い金属調カバー、黒いケーブル根元、CINNAMON の印字を再現。単体表示では金色の中空端子と内部の接点を確認できます。ケーブルの余長は二巻きにし、外装寸法はメーカー写真から推定しています。",
+      en: "The model includes the red/black braid, red metallic covers, black strain-relief boots and CINNAMON markings. The standalone view exposes the hollow gold-colored connectors and internal contacts. The cable is arranged in two loops; exterior dimensions are estimated from manufacturer photos.",
+    },
+    specifications: [
+      {
+        label: { ja: "型番", en: "Model" },
+        value: { ja: "USB2/CIN/1.5", en: "USB2/CIN/1.5" },
+      },
+      {
+        label: { ja: "ケーブル長", en: "Length" },
+        value: { ja: "1.5 m", en: "1.5 m" },
+      },
+      {
+        label: { ja: "接続端子", en: "Connectors" },
+        value: { ja: "USB 2.0 Type-A → Type-B", en: "USB 2.0 Type-A → Type-B" },
+      },
+      {
+        label: { ja: "外装", en: "Jacket" },
+        value: { ja: "赤黒の編組", en: "Red/black braid" },
+      },
+      {
+        label: { ja: "導体", en: "Conductors" },
+        value: {
+          ja: "1.25% シルバーコーティング LGC",
+          en: "1.25% silver-plated LGC",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "国内公式の製品情報・写真",
+          en: "Japanese distributor’s product information and photos",
+        },
+        href: "https://www.dm-importaudio.jp/audioquest/lineup/detail1/index1385.html",
+      },
+    ],
+  },
+  {
+    id: "cybershaft-bnc",
+    model: "cybershaft-bnc",
+    manufacturer: "Cybershaft",
+    name: "50Ω BNC Semi-Rigid",
+    finish: { ja: "ブルー / シルバー", en: "Blue / Silver" },
+    category: { ja: "クロック用BNCケーブル", en: "BNC clock cable" },
+    description: {
+      ja: "CG-10M の 10 MHz OUT 1 と UD-505 の CLOCK SYNC IN を接続する、サイバーシャフト 50Ω BNCセミリジッドケーブル。RG402 規格の同軸ケーブルを使用しています。",
+      en: "A Cybershaft 50Ω BNC semi-rigid cable connecting CG-10M’s 10 MHz OUT 1 to UD-505’s CLOCK SYNC IN, using RG402 coaxial cable.",
+    },
+    details: {
+      ja: "青い被覆、銀色のローレット付きBNC端子、黒い熱収縮チューブを再現。単体表示では端子内部の白い絶縁体と金色の中心ピンを確認できます。緩やかな弧を保つセミリジッドの形状を表現し、部品寸法と表示用のケーブル長はメーカー写真から推定しています。",
+      en: "The model includes the blue jacket, silver knurled BNC connectors and black heat-shrink sleeves. The standalone view exposes the white dielectric and gold-colored centre pins. The cable retains a gentle semi-rigid bend; component dimensions and the displayed cable length are estimated from manufacturer photos.",
+    },
+    specifications: [
+      {
+        label: { ja: "ケーブル規格", en: "Cable specification" },
+        value: { ja: "RG402", en: "RG402" },
+      },
+      {
+        label: { ja: "インピーダンス", en: "Impedance" },
+        value: { ja: "50 Ω", en: "50 Ω" },
+      },
+      {
+        label: { ja: "接続端子", en: "Connectors" },
+        value: { ja: "BNC 50 Ω / BNC 50 Ω", en: "BNC 50 Ω / BNC 50 Ω" },
+      },
+      {
+        label: { ja: "販売されている長さ", en: "Available lengths" },
+        value: { ja: "0.3 / 0.5 / 1.0 / 1.5 m", en: "0.3 / 0.5 / 1.0 / 1.5 m" },
+      },
+      {
+        label: { ja: "接続先", en: "System connection" },
+        value: {
+          ja: "CG-10M 10 MHz OUT 1 → UD-505 CLOCK SYNC IN",
+          en: "CG-10M 10 MHz OUT 1 → UD-505 CLOCK SYNC IN",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "メーカー製品情報・写真",
+          en: "Manufacturer’s product information and photos",
+        },
+        href: "https://www.cybershaft.jp/option01/semirg02.html",
+      },
+    ],
+  },
 ];

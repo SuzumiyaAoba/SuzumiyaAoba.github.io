@@ -1,14 +1,10 @@
 import {
-  BoxGeometry,
   CatmullRomCurve3,
   CylinderGeometry,
-  ExtrudeGeometry,
   Group,
   Mesh,
   MeshStandardMaterial,
-  Shape,
   TubeGeometry,
-  Vector2,
   Vector3,
 } from "three";
 import type { BufferGeometry, Object3D } from "three";
@@ -116,65 +112,6 @@ export function createSystemCables() {
     };
   };
 
-  const usbPlug = (
-    endpoint: CableEndpoint,
-    type: "usb-a" | "usb-b",
-    name: string
-  ): CableEndpoint => {
-    // 金属シェルをソケット内部に収め、グリップを端子面に近づける。
-    const insertionDepth = 7.5;
-    const seatedEndpoint: CableEndpoint = {
-      position: endpoint.position
-        .clone()
-        .addScaledVector(endpoint.direction, -insertionDepth),
-      direction: endpoint.direction,
-    };
-    const connector = new Group();
-    connector.name = name;
-    connector.position.copy(seatedEndpoint.position);
-    connector.quaternion.setFromUnitVectors(
-      new Vector3(0, 0, 1),
-      endpoint.direction
-    );
-    const shieldGeometry =
-      type === "usb-a"
-        ? new BoxGeometry(12, 4.5, 8)
-        : new ExtrudeGeometry(
-            new Shape(
-              [
-                [-3.3, -3.4],
-                [3.3, -3.4],
-                [3.3, 1.5],
-                [1.6, 3.2],
-                [-1.6, 3.2],
-                [-3.3, 1.5],
-              ].map(([x, y]) => new Vector2(x, y))
-            ),
-            { depth: 8, bevelEnabled: false }
-          );
-    const shield = new Mesh(shieldGeometry, metal);
-    shield.name = `${name} metal shield`;
-    shield.position.z = type === "usb-a" ? 4 : 0;
-    const gripGeometry = new BoxGeometry(
-      type === "usb-a" ? 16 : 11,
-      type === "usb-a" ? 8 : 12,
-      20
-    );
-    const grip = new Mesh(gripGeometry, jacket);
-    grip.name = `${name} molded rectangular grip`;
-    grip.position.z = 18;
-    geometries.push(shieldGeometry, gripGeometry);
-    connector.add(shield, grip);
-    group.add(connector);
-    cylinder(seatedEndpoint, 2.8, 8, 32, jacket, `${name} strain relief`);
-    return {
-      position: seatedEndpoint.position
-        .clone()
-        .addScaledVector(endpoint.direction, 36),
-      direction: endpoint.direction,
-    };
-  };
-
   const cable = (
     name: string,
     start: CableEndpoint,
@@ -203,7 +140,6 @@ export function createSystemCables() {
   return {
     group,
     plug,
-    usbPlug,
     cable,
     dispose() {
       for (const geometry of geometries) {

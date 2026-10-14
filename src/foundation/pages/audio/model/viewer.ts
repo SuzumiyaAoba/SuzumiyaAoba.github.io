@@ -31,6 +31,8 @@ export const audioModels = [
   "hd-800s",
   "clear-mg-pro",
   "ie-600",
+  "audioquest-cinnamon",
+  "cybershaft-bnc",
 ] as const;
 export type AudioModel = (typeof audioModels)[number];
 export type EquipmentModel = Exclude<AudioModel, "system">;
@@ -110,6 +112,8 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
     "connections",
     "cable",
   ],
+  "audioquest-cinnamon": ["overview", "top", "connections", "cable"],
+  "cybershaft-bnc": ["overview", "top", "connections", "cable"],
 };
 export type ViewerStatus = "loading" | "ready" | "unavailable";
 export type ZoomDirection = "in" | "out";

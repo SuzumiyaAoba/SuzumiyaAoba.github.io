@@ -8,41 +8,15 @@ import {
   Scene,
   ShadowMaterial,
 } from "three";
-import type { Group, WebGLRenderer } from "three";
+import type { WebGLRenderer } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { createUd505 } from "./scene/ud-505";
-import { createCg10m } from "./scene/cg-10m";
-import { createNodeN130 } from "./scene/node-n130";
-import { createHd800s } from "./scene/hd-800s";
-import { createClearMgPro } from "./scene/clear-mg-pro";
-import { createHa1aMk2 } from "./scene/ha-1a-mk2";
-import { createSigmaPro } from "./scene/sigma-pro";
-import { createAudioSystem } from "./scene/audio-system";
-import { createIe600 } from "./scene/ie-600";
 import type { AudioModel, HeadphoneModel } from "../model/viewer";
-
-type AudioScene = {
-  group: Group;
-  dispose: () => void;
-  setHeadphones?: (model: HeadphoneModel) => void;
-};
-
-const modelBuilders: Record<AudioModel, (onChange?: () => void) => AudioScene> =
-  {
-    system: createAudioSystem,
-    "ud-505": createUd505,
-    "cg-10m": createCg10m,
-    "node-n130": createNodeN130,
-    "hd-800s": createHd800s,
-    "clear-mg-pro": createClearMgPro,
-    "ha-1a-mk2": createHa1aMk2,
-    "ie-600": () => createIe600(),
-    "sigma-pro": createSigmaPro,
-  };
+import type { AudioModelBuilder } from "./viewer-model-loader";
 
 export function createViewerScene(
   renderer: WebGLRenderer,
   modelId: AudioModel,
+  createModel: AudioModelBuilder,
   onChange?: () => void
 ) {
   const scene = new Scene();
@@ -59,7 +33,7 @@ export function createViewerScene(
   pmrem.dispose();
   room.dispose();
 
-  const model: AudioScene = modelBuilders[modelId](onChange);
+  const model = createModel(onChange);
   scene.add(model.group);
   model.group.traverse((part) => {
     if (part instanceof Mesh && part.material instanceof Material) {

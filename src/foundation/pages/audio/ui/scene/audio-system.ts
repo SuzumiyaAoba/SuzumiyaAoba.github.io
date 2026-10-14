@@ -2,8 +2,10 @@ import { Group, Vector3 } from "three";
 import type { Object3D } from "three";
 import { headphoneModels } from "../../model/viewer";
 import type { HeadphoneModel } from "../../model/viewer";
+import { createAudioquestCinnamon } from "./audioquest-cinnamon";
 import { createCg10m } from "./cg-10m";
 import { createClearMgPro } from "./clear-mg-pro";
+import { createCybershaftBnc } from "./cybershaft-bnc";
 import { createHa1aMk2 } from "./ha-1a-mk2";
 import { createHd800s } from "./hd-800s";
 import { createIe600 } from "./ie-600";
@@ -31,36 +33,16 @@ function connectEquipment(
   const dacRear = namedPart(dac, "Rear connections");
   const clockRear = namedPart(clock, "CG-10M rear connections");
   const ampRear = namedPart(amp, "Rear connection panel");
-  cables.cable(
-    "NODE USB-A → UD-505 USB-B",
-    cables.usbPlug(
-      cableEndpoint(nodeRear, [27.5, 21.4, 2]),
-      "usb-a",
-      "NODE USB-A output"
-    ),
-    cables.usbPlug(
-      cableEndpoint(dacRear, [25.5, 54, 3]),
-      "usb-b",
-      "UD-505 USB-B input"
-    ),
-    [new Vector3(-145, 140, -245), new Vector3(-205, 68, -250)]
+  const usb = createAudioquestCinnamon(
+    cableEndpoint(nodeRear, [27.5, 21.4, 2]),
+    cableEndpoint(dacRear, [25.5, 54, 3])
   );
-  cables.cable(
-    "CG-10M 10 MHz OUT 1 → UD-505 CLOCK SYNC IN",
-    cables.plug(
-      cableEndpoint(clockRear, [25, 31.5, 8.5]),
-      "bnc",
-      0xb9_91_4e,
-      "CG-10M clock output 1"
-    ),
-    cables.plug(
-      cableEndpoint(dacRear, [82, 32, 8.5]),
-      "bnc",
-      0xb9_91_4e,
-      "UD-505 10 MHz input"
-    ),
-    [new Vector3(-150, 18, -285), new Vector3(-245, 72, -290)]
+  cables.group.add(usb.group);
+  const clockCable = createCybershaftBnc(
+    cableEndpoint(clockRear, [25, 31.5, 8.5]),
+    cableEndpoint(dacRear, [82, 32, 8.5])
   );
+  cables.group.add(clockCable.group);
   for (const [channel, dacX, ampY, color, offset] of [
     ["L", -46.5, 180, 0xe0_dd_d3, 0],
     ["R", -78.5, 157, 0xaf_33_36, 13],
@@ -85,7 +67,14 @@ function connectEquipment(
       ]
     );
   }
-  return cables;
+  return {
+    group: cables.group,
+    dispose() {
+      cables.dispose();
+      usb.dispose();
+      clockCable.dispose();
+    },
+  };
 }
 
 function headphoneEndpoint(

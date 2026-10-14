@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { loadAudioModel } from "./viewer-model-loader";
 import type {
   AudioModel,
   AudioView,
@@ -30,12 +31,16 @@ export function useAudioViewer(model: AudioModel) {
 
     const load = async () => {
       try {
-        const { createAudioViewer } = await import("./viewer-runtime");
+        const [{ createAudioViewer }, createModel] = await Promise.all([
+          import("./viewer-runtime"),
+          loadAudioModel(model),
+        ]);
         if (cancelled) {
           return;
         }
         handle = createAudioViewer({
           model,
+          createModel,
           canvas: surface,
           container: frame,
           onStatus: (nextStatus) => {

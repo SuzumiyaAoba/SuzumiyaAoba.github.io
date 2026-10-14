@@ -3,23 +3,33 @@
 import { act, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
+import { Group } from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
 import type { Locale } from "@/shared/lib/routing";
 import type { AudioModel, ViewerHandle } from "../model/viewer";
 import { AudioViewer } from "./audio-viewer";
 import { createAudioViewer } from "./viewer-runtime";
+import { loadAudioModel } from "./viewer-model-loader";
+import type { AudioModelBuilder } from "./viewer-model-loader";
 
 vi.mock(import("./viewer-runtime"), () => ({
   createAudioViewer: vi.fn<typeof createAudioViewer>(),
 }));
+vi.mock(import("./viewer-model-loader"), () => ({
+  loadAudioModel: vi.fn<typeof loadAudioModel>(),
+}));
 
 const createViewer = vi.mocked(createAudioViewer);
+const loadModel = vi.mocked(loadAudioModel);
 let container: HTMLDivElement;
 let root: Root | null;
 let handle: ViewerHandle;
 
 beforeEach(() => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  loadModel
+    .mockReset()
+    .mockResolvedValue(() => ({ group: new Group(), dispose() {} }));
   vi.stubGlobal(
     "matchMedia",
     vi.fn(() => ({ matches: true }))
@@ -228,4 +238,18 @@ it("操作の初期化に失敗したビューアを破棄し、アンマウン�
   await act(async () => root?.unmount());
   root = null;
   expect(handle.dispose).toHaveBeenCalledTimes(1);
+});
+
+it("モデルを読み込み中にアンマウントすると、遅れて届いても描画を開始しない", async () => {
+  const pending = Promise.withResolvers<AudioModelBuilder>();
+  loadModel.mockReturnValueOnce(pending.promise);
+  await render("cg-10m");
+  expect(createViewer).not.toHaveBeenCalled();
+  await act(async () => root?.unmount());
+  root = null;
+  await act(async () =>
+    pending.resolve(() => ({ group: new Group(), dispose() {} }))
+  );
+  expect(createViewer).not.toHaveBeenCalled();
+  expect(handle.dispose).not.toHaveBeenCalled();
 });

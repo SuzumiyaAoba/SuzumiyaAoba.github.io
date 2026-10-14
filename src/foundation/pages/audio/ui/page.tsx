@@ -9,7 +9,7 @@ import {
 import type { Locale } from "@/shared/lib/routing";
 import { audioEquipment } from "../model/equipment";
 import { AudioViewer } from "./audio-viewer";
-import { EquipmentArticle } from "./equipment-article";
+import { EquipmentTabs } from "./equipment-tabs";
 
 export default function AudioPage({
   locale: providedLocale,
@@ -18,7 +18,7 @@ export default function AudioPage({
 }) {
   const locale = resolveLocale(providedLocale);
   const ja = locale === "ja";
-  const englishUnit = audioEquipment.length === 1 ? "device" : "devices";
+  const englishUnit = audioEquipment.length === 1 ? "product" : "products";
   const breadcrumbs = buildListBreadcrumbItems(locale, {
     name: ja ? "オーディオ" : "Audio",
     path: "/audio",
@@ -34,7 +34,7 @@ export default function AudioPage({
             <h1 className="page-title">{ja ? "オーディオ" : "My audio"}</h1>
           </div>
           <p className="page-count">
-            {audioEquipment.length} {ja ? "機器" : englishUnit}
+            {audioEquipment.length} {ja ? "製品" : englishUnit}
           </p>
         </header>
 
@@ -49,23 +49,14 @@ export default function AudioPage({
             finish="NODE / CG-10M / UD-505 / HA-1A MK2"
             description={
               ja
-                ? "NODE（USB-A）→ UD-505（USB-B）。CG-10M → UD-505。HD 800 S と Clear Mg Professional は HA-1A MK2 正面左の PHONES A（6.35 mm）に、IE 600 は UD-505 正面の 4.4 mm バランス出力に接続します。"
-                : "NODE (USB-A) → UD-505 (USB-B). CG-10M → UD-505. HD 800 S and Clear Mg Professional connect through HA-1A MK2’s front left PHONES A (6.35 mm) jack; IE 600 connects to UD-505’s front 4.4 mm balanced output."
+                ? "NODE（USB-A）→ AudioQuest Cinnamon USB 2.0 A–B 1.5m（USB2/CIN/1.5）→ UD-505（USB-B）。CG-10M → サイバーシャフト 50Ω BNCセミリジッドケーブル → UD-505。HD 800 S と Clear Mg Professional は HA-1A MK2 正面左の PHONES A（6.35 mm）に、IE 600 は UD-505 正面の 4.4 mm バランス出力に接続します。"
+                : "NODE (USB-A) → AudioQuest Cinnamon USB 2.0 A–B 1.5m (USB2/CIN/1.5) → UD-505 (USB-B). CG-10M → Cybershaft 50Ω BNC semi-rigid cable → UD-505. HD 800 S and Clear Mg Professional connect through HA-1A MK2’s front left PHONES A (6.35 mm) jack; IE 600 connects to UD-505’s front 4.4 mm balanced output."
             }
             locale={locale}
           />
         </section>
 
-        <div className="space-y-16">
-          {audioEquipment.map((equipment, index) => (
-            <EquipmentArticle
-              key={equipment.id}
-              equipment={equipment}
-              index={index}
-              locale={locale}
-            />
-          ))}
-        </div>
+        <EquipmentTabs locale={locale} />
       </main>
     </SiteLayout>
   );

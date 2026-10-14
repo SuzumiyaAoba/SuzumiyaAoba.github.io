@@ -12,9 +12,11 @@ import type {
 } from "../model/viewer";
 import { createViewerCamera } from "./viewer-camera";
 import { createViewerScene } from "./viewer-scene";
+import type { AudioModelBuilder } from "./viewer-model-loader";
 
 type ViewerOptions = {
   model: AudioModel;
+  createModel: AudioModelBuilder;
   canvas: HTMLCanvasElement;
   container: HTMLElement;
   onStatus: (status: ViewerStatus) => void;
@@ -23,6 +25,7 @@ type ViewerOptions = {
 
 export function createAudioViewer({
   model: modelId,
+  createModel,
   canvas,
   container,
   onStatus,
@@ -41,7 +44,12 @@ export function createAudioViewer({
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFShadowMap;
 
-  const sceneResources = createViewerScene(renderer, modelId, invalidate);
+  const sceneResources = createViewerScene(
+    renderer,
+    modelId,
+    createModel,
+    invalidate
+  );
 
   let frame = 0;
   let visible = true;
@@ -121,6 +129,7 @@ export function createAudioViewer({
       cameraController.dispose();
       sceneResources.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

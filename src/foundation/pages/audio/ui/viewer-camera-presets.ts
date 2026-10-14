@@ -296,6 +296,66 @@ const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
 const modelPoses: Partial<
   Record<AudioModel, Partial<Record<AudioView, CameraPose>>>
 > = {
+  "cybershaft-bnc": {
+    overview: {
+      direction: [0.35, 1.25, 1],
+      target: [0, 7, 5],
+      width: 135,
+      height: 160,
+      depth: 35,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 7, 5],
+      width: 125,
+      height: 155,
+      depth: 8,
+    },
+    connections: {
+      direction: [0, 0.35, 1],
+      target: [0, 7, 61],
+      width: 100,
+      height: 40,
+      depth: 15,
+    },
+    cable: {
+      direction: [0.15, 1, 0.4],
+      target: [0, 7, -35],
+      width: 95,
+      height: 70,
+      depth: 10,
+    },
+  },
+  "audioquest-cinnamon": {
+    overview: {
+      direction: [0.25, 1.1, 1],
+      target: [-50, 15, 35],
+      width: 380,
+      height: 300,
+      depth: 65,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [-50, 10, 35],
+      width: 360,
+      height: 320,
+      depth: 20,
+    },
+    connections: {
+      direction: [0.15, 0.7, 1],
+      target: [-5, 14, 150],
+      width: 110,
+      height: 65,
+      depth: 25,
+    },
+    cable: {
+      direction: [0.05, 1, 0.4],
+      target: [-138, 8, 13],
+      width: 80,
+      height: 65,
+      depth: 15,
+    },
+  },
   system: {
     overview: {
       direction: [0.5, 0.8, 1.4],

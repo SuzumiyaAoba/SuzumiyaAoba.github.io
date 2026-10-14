@@ -50,7 +50,7 @@ export function EquipmentArticle({
       <div className="grid gap-8 border-t border-rule pt-8 md:grid-cols-2 md:gap-12">
         <div className="space-y-5">
           <h3 className="section-label">
-            {ja ? "この機器について" : "About this device"}
+            {ja ? "この製品について" : "About this product"}
           </h3>
           <p className="text-sm leading-loose text-foreground">
             {equipment.description[locale]}
