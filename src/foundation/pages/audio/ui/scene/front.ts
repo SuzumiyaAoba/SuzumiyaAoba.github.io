@@ -1,5 +1,9 @@
 import { ExtrudeGeometry, Path, Shape } from "three";
 import type { ModelParts } from "./parts";
+import {
+  createUd505PowerSwitch,
+  ud505PowerSwitchCutout,
+} from "./ud-505-power-switch";
 
 const FRONT = 115;
 
@@ -207,7 +211,7 @@ export function createFront(parts: ModelParts) {
     panel.holes.push(hole);
   }
   panel.holes.push(roundedPath(-10, 44.5, 71, 24, 3));
-  panel.holes.push(roundedPath(-120, 29, 12, 20, 5.8));
+  panel.holes.push(ud505PowerSwitchCutout());
   const plateGeometry = new ExtrudeGeometry(panel, {
     depth: 3.2,
     bevelEnabled: true,
@@ -261,27 +265,7 @@ export function createFront(parts: ModelParts) {
     512
   );
 
-  parts.facePlate(
-    [11.7, 19.7, 1],
-    [-114, 39, FRONT - 0.3],
-    parts.steel,
-    "Power switch bezel",
-    5.5
-  );
-  parts.facePlate(
-    [5.9, 12.2, 1.2],
-    [-114, 38.2, FRONT + 0.3],
-    parts.cavity,
-    "Power switch opening",
-    2.9
-  );
-  parts.cylinder(
-    2.9,
-    3.5,
-    [-114, 40.4, FRONT + 2],
-    parts.turned,
-    "Power toggle"
-  );
+  createUd505PowerSwitch(parts);
   parts.cylinder(
     1.65,
     0.8,
