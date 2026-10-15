@@ -24,6 +24,7 @@ const loaders: Record<AudioModel, () => Promise<AudioModelBuilder>> = {
     return () => createIe600();
   },
   "sigma-pro": async () => (await import("./scene/sigma-pro")).createSigmaPro,
+  btr17: async () => (await import("./scene/btr17")).createBtr17,
   "audioquest-cinnamon": async () =>
     (await import("./scene/audioquest-cinnamon")).createStandaloneCinnamon,
   "cybershaft-bnc": async () =>

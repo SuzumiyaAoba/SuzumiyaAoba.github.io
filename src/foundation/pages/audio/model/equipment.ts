@@ -365,6 +365,86 @@ export const audioEquipment: readonly AudioEquipment[] = [
     ],
   },
   {
+    id: "btr17",
+    model: "btr17",
+    manufacturer: "FiiO",
+    name: "BTR17",
+    finish: { ja: "ブラック", en: "Black" },
+    category: {
+      ja: "ポータブルBluetooth DAC / ヘッドホンアンプ",
+      en: "Portable Bluetooth DAC / headphone amplifier",
+    },
+    description: {
+      ja: "Bluetooth 5.4 と USB DAC に対応するポータブルヘッドホンアンプ。2基の ES9069Q と THX AAA 78+ アンプを搭載し、専用電源入力を使うデスクトップモードも備えています。",
+      en: "A portable Bluetooth 5.4 and USB DAC/amp with dual ES9069Q DACs, THX AAA 78+ amplification and a desktop mode with a dedicated power input.",
+    },
+    details: {
+      ja: "ブラックの面取りされたアルミ筐体、二段構成の前面、シボのあるレザー背面を再現。1.3インチ画面、刻みの入ったボリュームノブ、側面のボタンとモード切替、上面の3.5 mm・4.4 mm出力、底面のUSB・POWER INを拡大して確認できます。画面はBluetooth再生時の静止した表示例で、細部寸法は公式写真からの推定です。",
+      en: "The black model includes a chamfered aluminium body, stepped front, leather back, screen, knurled volume wheel, side controls and open headphone and USB sockets. The display is a static Bluetooth playback example; component dimensions are estimated from official photos.",
+    },
+    specifications: [
+      {
+        label: { ja: "外形寸法", en: "Dimensions" },
+        value: {
+          ja: "約41.2 × 86.6 × 16.3 mm（幅 × 高さ × 厚さ）",
+          en: "Approx. 41.2 × 86.6 × 16.3 mm (W × H × D)",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "約73.4 g", en: "Approx. 73.4 g" },
+      },
+      {
+        label: { ja: "DAC / アンプ", en: "DAC / amplifier" },
+        value: {
+          ja: "ES9069Q × 2 / THX AAA 78+",
+          en: "ES9069Q × 2 / THX AAA 78+",
+        },
+      },
+      {
+        label: { ja: "Bluetooth", en: "Bluetooth" },
+        value: {
+          ja: "5.4 · LDAC / aptX Lossless / aptX Adaptive ほか",
+          en: "5.4 · LDAC / aptX Lossless / aptX Adaptive and more",
+        },
+      },
+      {
+        label: { ja: "出力", en: "Outputs" },
+        value: {
+          ja: "3.5 mm シングルエンド / 4.4 mm バランス",
+          en: "3.5 mm single-ended / 4.4 mm balanced",
+        },
+      },
+      {
+        label: { ja: "バランス出力", en: "Balanced output power" },
+        value: {
+          ja: "650 mW + 650 mW以上（32 Ω・THD+N < 1%・デスクトップモード）",
+          en: "≥650 mW + 650 mW (32 Ω, THD+N < 1%, desktop mode)",
+        },
+      },
+      {
+        label: { ja: "画面", en: "Display" },
+        value: {
+          ja: "1.3インチ・240 × 240 IPSカラー",
+          en: "1.3-inch 240 × 240 colour IPS",
+        },
+      },
+    ],
+    sources: [
+      {
+        title: {
+          ja: "メーカー製品情報・写真",
+          en: "Official product information and photos",
+        },
+        href: "https://www.fiio.com/btr17",
+      },
+      {
+        title: { ja: "メーカー仕様表", en: "Official specifications" },
+        href: "https://www.fiio.com/btr17_parameters",
+      },
+    ],
+  },
+  {
     id: "hd-800s",
     model: "hd-800s",
     manufacturer: "Sennheiser",

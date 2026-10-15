@@ -22,7 +22,8 @@ export function createViewerScene(
   const scene = new Scene();
   const system = modelId === "system";
   const detailedHeadphones = modelId === "hd-800s";
-  const detailedPortable = modelId === "sigma-pro";
+  const detailedPortable = modelId === "sigma-pro" || modelId === "btr17";
+  const bluetoothDac = modelId === "btr17";
   const earphones = modelId === "ie-600";
   const room = new RoomEnvironment();
   const pmrem = new PMREMGenerator(renderer);
@@ -44,7 +45,7 @@ export function createViewerScene(
         detailedHeadphones ||
         earphones ||
         modelId === "ha-1a-mk2" ||
-        modelId === "sigma-pro";
+        detailedPortable;
     }
   });
   scene.add(
@@ -79,7 +80,7 @@ export function createViewerScene(
       ? 0.025
       : 0.4;
   key.shadow.radius = 4;
-  if (earphones) {
+  if (earphones || bluetoothDac) {
     key.position.set(-70, 145, 115);
     key.shadow.camera.left = -110;
     key.shadow.camera.right = 110;
@@ -87,7 +88,7 @@ export function createViewerScene(
     key.shadow.camera.bottom = -110;
     key.shadow.camera.far = 500;
     key.shadow.normalBias = 0.015;
-    key.target.position.set(0, 18, 10);
+    key.target.position.set(0, bluetoothDac ? 43 : 18, bluetoothDac ? 0 : 10);
     scene.add(key.target);
     const rim = new DirectionalLight(0xe5_ee_ff, 1.4);
     rim.position.set(80, 85, -85);
