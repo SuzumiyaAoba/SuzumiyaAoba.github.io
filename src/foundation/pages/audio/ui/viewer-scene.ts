@@ -19,6 +19,23 @@ function isMesh(part: Object3D): part is Mesh {
   return part instanceof Mesh;
 }
 
+function configureModelShadows(group: Object3D) {
+  group.traverse((part) => {
+    if (!isMesh(part)) {
+      return;
+    }
+    const materials = Array.isArray(part.material)
+      ? part.material
+      : [part.material];
+    part.castShadow =
+      part.userData["castShadow"] !== false &&
+      materials.some(
+        (material) => !material.transparent || material.alphaTest > 0
+      );
+    part.receiveShadow = true;
+  });
+}
+
 export function createViewerScene(
   renderer: WebGLRenderer,
   modelId: AudioModel,
@@ -34,22 +51,9 @@ export function createViewerScene(
   pmrem.dispose();
   room.dispose();
 
-  const model = createModel(onChange);
+  let initialized = false;
+  const model = createModel(refresh);
   scene.add(model.group);
-  model.group.traverse((part) => {
-    if (!isMesh(part)) {
-      return;
-    }
-    const materials = Array.isArray(part.material)
-      ? part.material
-      : [part.material];
-    part.castShadow =
-      part.userData["castShadow"] !== false &&
-      materials.some(
-        (material) => !material.transparent || material.alphaTest > 0
-      );
-    part.receiveShadow = true;
-  });
 
   // 全製品を同じ撮影環境に置き、照明範囲だけを実寸に合わせる。
   const bounds = new Box3().setFromObject(model.group);
@@ -61,6 +65,8 @@ export function createViewerScene(
   key.position.copy(center).add(new Vector3(-span * 0.75, span * 1.5, span));
   key.target.position.copy(center);
   key.castShadow = true;
+  // 視点を動かしても光源と模型は動かないため、影は内容変更時だけ再計算する。
+  key.shadow.autoUpdate = false;
   key.shadow.mapSize.set(2048, 2048);
   const shadowExtent = bounds.getBoundingSphere(new Sphere()).radius * 1.08;
   key.shadow.camera.left = -shadowExtent;
@@ -95,12 +101,31 @@ export function createViewerScene(
   floor.receiveShadow = true;
   scene.add(floor);
 
+  function refresh() {
+    if (!initialized) {
+      return;
+    }
+    configureModelShadows(model.group);
+    scene.updateMatrixWorld(true);
+    key.shadow.needsUpdate = true;
+    onChange?.();
+  }
+  initialized = true;
+  refresh();
+  // 静的な模型・床・照明の行列を毎フレーム巡回し直さない。
+  scene.matrixWorldAutoUpdate = false;
+
   return {
     scene,
-    setHeadphones(selected: HeadphoneModel) {
-      model.setHeadphones?.(selected);
+    refresh,
+    setHeadphones: (selected: HeadphoneModel) => {
+      if (model.setHeadphones) {
+        model.setHeadphones(selected);
+        refresh();
+      }
     },
     dispose() {
+      initialized = false;
       model.dispose();
       environment.dispose();
       floorGeometry.dispose();

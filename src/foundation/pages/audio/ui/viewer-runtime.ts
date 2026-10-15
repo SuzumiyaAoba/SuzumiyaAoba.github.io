@@ -12,6 +12,7 @@ import type {
 } from "../model/viewer";
 import { createViewerCamera } from "./viewer-camera";
 import { createViewerScene } from "./viewer-scene";
+import { createViewerRenderLoop } from "./viewer-render-loop";
 import type { AudioModelBuilder } from "./viewer-model-loader";
 
 type ViewerOptions = {
@@ -44,92 +45,87 @@ export function createAudioViewer({
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFShadowMap;
 
-  const sceneResources = createViewerScene(
-    renderer,
-    modelId,
-    createModel,
-    invalidate
-  );
-
-  let frame = 0;
-  let visible = true;
   let disposed = false;
-  let contextLost = false;
-  const cameraController = createViewerCamera({
-    model: modelId,
-    canvas,
-    onChange: invalidate,
-    onView,
-  });
-
-  function invalidate() {
-    if (frame || disposed || contextLost || !visible || document.hidden) {
-      return;
-    }
-    frame = window.requestAnimationFrame(() => {
-      frame = 0;
-      if (disposed || contextLost) {
-        return;
-      }
-      renderer.render(sceneResources.scene, cameraController.camera);
-    });
-  }
-
-  const resize = () => {
-    const { width, height } = container.getBoundingClientRect();
-    if (width === 0 || height === 0) {
-      return;
-    }
-    renderer.setSize(width, height, false);
-    cameraController.resize(width / height);
-    invalidate();
-  };
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(container);
-  const visibilityObserver = new IntersectionObserver(([entry]) => {
-    visible = entry?.isIntersecting ?? false;
-    invalidate();
-  });
-  visibilityObserver.observe(container);
-  document.addEventListener("visibilitychange", invalidate);
-  const lost = (event: Event) => {
-    event.preventDefault();
-    contextLost = true;
+  let sceneResources: ReturnType<typeof createViewerScene> | undefined;
+  let cameraController: ReturnType<typeof createViewerCamera> | undefined;
+  let renderLoop: ReturnType<typeof createViewerRenderLoop> | undefined;
+  const invalidate = () => renderLoop?.invalidate();
+  const unavailable = () => {
+    renderLoop?.setActive(false);
     onStatus("unavailable");
   };
+  const lost = (event: Event) => {
+    event.preventDefault();
+    unavailable();
+  };
   const restored = () => {
-    contextLost = false;
-    invalidate();
+    sceneResources?.refresh();
+    renderLoop?.setActive(true);
     onStatus("ready");
   };
-  canvas.addEventListener("webglcontextlost", lost);
-  canvas.addEventListener("webglcontextrestored", restored);
-  resize();
-  onStatus("ready");
 
-  return {
-    setHeadphones(selected) {
-      sceneResources.setHeadphones(selected);
-      invalidate();
-    },
-    setView: cameraController.setView,
-    zoom: cameraController.zoom,
-    setInteractive: cameraController.setInteractive,
-    dispose() {
-      if (disposed) {
-        return;
-      }
-      disposed = true;
-      window.cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      visibilityObserver.disconnect();
-      document.removeEventListener("visibilitychange", invalidate);
-      canvas.removeEventListener("webglcontextlost", lost);
-      canvas.removeEventListener("webglcontextrestored", restored);
-      cameraController.dispose();
-      sceneResources.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-    },
+  const dispose = () => {
+    if (disposed) {
+      return;
+    }
+    disposed = true;
+    canvas.removeEventListener("webglcontextlost", lost);
+    canvas.removeEventListener("webglcontextrestored", restored);
+    renderLoop?.dispose();
+    cameraController?.dispose();
+    sceneResources?.dispose();
+    renderer.dispose();
+    renderer.forceContextLoss();
   };
+
+  try {
+    const resources = createViewerScene(
+      renderer,
+      modelId,
+      createModel,
+      invalidate
+    );
+    sceneResources = resources;
+    const camera = createViewerCamera({
+      model: modelId,
+      canvas,
+      onChange: invalidate,
+      onView,
+    });
+    cameraController = camera;
+    renderLoop = createViewerRenderLoop({
+      container,
+      resize(width, height) {
+        renderer.setSize(width, height, false);
+        camera.resize(width / height);
+      },
+      render() {
+        try {
+          renderer.render(resources.scene, camera.camera);
+        } catch {
+          unavailable();
+        }
+      },
+    });
+    canvas.addEventListener("webglcontextlost", lost);
+    canvas.addEventListener("webglcontextrestored", restored);
+    onStatus("ready");
+
+    return {
+      setHeadphones(selected) {
+        try {
+          resources.setHeadphones(selected);
+        } catch {
+          unavailable();
+        }
+      },
+      setView: camera.setView,
+      zoom: camera.zoom,
+      setInteractive: camera.setInteractive,
+      dispose,
+    };
+  } catch (error) {
+    dispose();
+    throw error;
+  }
 }

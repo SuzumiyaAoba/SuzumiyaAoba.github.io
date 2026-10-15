@@ -19,6 +19,14 @@ const plugDimensions: Record<Plug, readonly [number, number]> = {
   mini: [3.8, 16],
 };
 
+export function getConnectionPoint(model: Object3D, name: string): Object3D {
+  const part = model.getObjectByName(name);
+  if (!part) {
+    throw new Error(`Audio connection point is missing: ${name}`);
+  }
+  return part;
+}
+
 /** モデルの寸法調整と背面パネルの回転を反映して、端子位置を求める。 */
 export function cableEndpoint(
   panel: Object3D,

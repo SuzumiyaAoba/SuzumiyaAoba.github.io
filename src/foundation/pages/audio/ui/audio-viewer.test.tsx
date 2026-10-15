@@ -24,8 +24,22 @@ const loadModel = vi.mocked(loadAudioModel);
 let container: HTMLDivElement;
 let root: Root | null;
 let handle: ViewerHandle;
+let notifyVisibility: (entries: { isIntersecting: boolean }[]) => void;
+let initiallyVisible: boolean;
+
+function VisibilityObserver(this: unknown, onEntries: typeof notifyVisibility) {
+  notifyVisibility = onEntries;
+  return {
+    observe() {
+      onEntries([{ isIntersecting: initiallyVisible }]);
+    },
+    disconnect() {},
+  };
+}
 
 beforeEach(() => {
+  initiallyVisible = true;
+  vi.stubGlobal("IntersectionObserver", VisibilityObserver);
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   loadModel
     .mockReset()
@@ -252,4 +266,33 @@ it("モデルを読み込み中にアンマウントすると、遅れて届い�
   );
   expect(createViewer).not.toHaveBeenCalled();
   expect(handle.dispose).not.toHaveBeenCalled();
+});
+
+it("画面外のモデルは読み込まず、表示領域に近づいたときに一度だけ生成する", async () => {
+  initiallyVisible = false;
+  await render("ud-505");
+  expect(loadModel).not.toHaveBeenCalled();
+  expect(createViewer).not.toHaveBeenCalled();
+  expect(button("正面").disabled).toBe(true);
+  await act(async () => {
+    notifyVisibility([{ isIntersecting: true }]);
+    notifyVisibility([{ isIntersecting: true }]);
+    await vi.dynamicImportSettled();
+  });
+  expect(loadModel).toHaveBeenCalledTimes(1);
+  expect(createViewer).toHaveBeenCalledTimes(1);
+  expect(button("正面").disabled).toBe(false);
+});
+
+it("画面外でアンマウントしたモデルは遅れて表示通知が来ても読み込まない", async () => {
+  initiallyVisible = false;
+  await render();
+  await act(async () => root?.unmount());
+  root = null;
+  await act(async () => {
+    notifyVisibility([{ isIntersecting: true }]);
+    await vi.dynamicImportSettled();
+  });
+  expect(loadModel).not.toHaveBeenCalled();
+  expect(createViewer).not.toHaveBeenCalled();
 });

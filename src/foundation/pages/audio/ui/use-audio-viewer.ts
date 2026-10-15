@@ -22,6 +22,7 @@ export function useAudioViewer(model: AudioModel) {
 
   useEffect(() => {
     let cancelled = false;
+    let started = false;
     let handle: ViewerHandle | undefined;
     const surface = canvas.current;
     const frame = container.current;
@@ -70,9 +71,26 @@ export function useAudioViewer(model: AudioModel) {
         }
       }
     };
-    void load();
+    // 画面下の製品モデルは近づいてから生成し、接続全体の初期表示を妨げない。
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          cancelled ||
+          started ||
+          !entries.some((entry) => entry.isIntersecting)
+        ) {
+          return;
+        }
+        started = true;
+        observer.disconnect();
+        void load();
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(frame);
     return () => {
       cancelled = true;
+      observer.disconnect();
       handle?.dispose();
       viewer.current = null;
     };
