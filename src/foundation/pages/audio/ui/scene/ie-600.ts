@@ -12,6 +12,8 @@ import {
   ie600ConnectorGripGeometry,
   ie600ContactSleeveGeometry,
   ie600EarTipRim,
+  ie600EarHookRelief,
+  ie600EarHookReliefGeometry,
   ie600MmcxPinGeometry,
   ie600SocketRimGeometry,
   ie600BalancedPlugGeometry,
@@ -21,7 +23,8 @@ import {
   ie600EarTipGeometry,
   ie600ShellGeometry,
 } from "./ie-600-geometry";
-import { ie600Cable } from "./ie-600-cable";
+import { ie600Cable, ie600CableBranchCurve } from "./ie-600-cable";
+import { cableEndpoint } from "./system-cables";
 import { createIe600Parts } from "./ie-600-parts";
 import type { Ie600Parts } from "./ie-600-parts";
 
@@ -219,32 +222,30 @@ function earHook(
     new Vector3(35, 19, 2),
     new Vector3(39, 15, 6),
   ];
-  ie600Cable(
-    parts,
-    shell,
-    new CatmullRomCurve3(points),
-    0.9,
-    "Adjustable reinforced over ear hook"
+  const curve = new CatmullRomCurve3(points);
+  ie600Cable(parts, shell, curve, 0.9, "Adjustable reinforced over ear hook");
+  const end = curve.getPoint(1);
+  const direction = curve.getTangent(1);
+  const relief = parts.mesh(
+    ie600EarHookReliefGeometry(),
+    parts.connectorRubber,
+    [0, 0, 0],
+    "Tapered ear hook strain relief"
   );
-  const relief = parts.cylinder(
-    1.15,
-    4.6,
-    [37.6, 16.4, 4.6],
-    parts.black,
-    "Ear hook strain relief"
-  );
-  relief.quaternion.setFromUnitVectors(
-    new Vector3(0, 1, 0),
-    new Vector3(4, -4, 4).normalize()
-  );
+  relief.position
+    .copy(end)
+    .addScaledVector(direction, -ie600EarHookRelief.hookInset);
+  relief.quaternion.setFromUnitVectors(new Vector3(0, 0, 1), direction);
   shell.add(relief);
   const exit = new Object3D();
   exit.name = `IE 600 ${channel} cable exit`;
-  exit.position.set(39, 15, 6);
-  exit.quaternion.setFromUnitVectors(
-    new Vector3(0, 0, 1),
-    new Vector3(4, -4, 4).normalize()
-  );
+  exit.position
+    .copy(end)
+    .addScaledVector(
+      direction,
+      ie600EarHookRelief.length - ie600EarHookRelief.hookInset
+    );
+  exit.quaternion.setFromUnitVectors(new Vector3(0, 0, 1), direction);
   shell.add(exit);
   return exit;
 }
@@ -252,19 +253,15 @@ function earHook(
 function displayCable(parts: Ie600Parts, exits: Object3D[]) {
   const junction = new Vector3(0, 2.1, 48);
   for (const exit of exits) {
-    const start = exit.getWorldPosition(new Vector3());
-    const path = new CatmullRomCurve3([
-      start,
-      new Vector3(start.x * 0.94, start.y - 3, start.z + 4),
-      new Vector3(start.x * 0.75, 3, 26),
-      new Vector3(start.x * 0.4, 2.1, 40),
-      junction,
-    ]);
+    const endpoint = cableEndpoint(exit, [0, 0, 0]);
+    const branchEntry = junction.clone();
+    branchEntry.x = Math.sign(endpoint.position.x) * 0.65;
+    const path = ie600CableBranchCurve(endpoint, branchEntry);
     ie600Cable(
       parts,
       parts.root,
       path,
-      0.6,
+      ie600EarHookRelief.cableRadius,
       "Shortened detachable earphone cable branch"
     );
   }

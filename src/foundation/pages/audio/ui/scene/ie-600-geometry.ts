@@ -274,6 +274,29 @@ export function ie600ConnectorGripGeometry() {
   return geometry;
 }
 
+export const ie600EarHookRelief = {
+  length: 6,
+  hookInset: 2.2,
+  cableRadius: 0.6,
+} as const;
+
+/** 耳掛けを包む丸い肩から、細いケーブルまで段差なく絞る。 */
+export function ie600EarHookReliefGeometry() {
+  const profile = new Path();
+  profile.moveTo(0.86, 0);
+  profile.lineTo(1.02, 0);
+  profile.quadraticCurveTo(1.15, 0, 1.15, 0.6);
+  profile.lineTo(1.15, 1.4);
+  profile.bezierCurveTo(1.15, 3.1, 0.6, 4.1, 0.6, 5.6);
+  profile.lineTo(ie600EarHookRelief.cableRadius, ie600EarHookRelief.length);
+  profile.lineTo(0.5, ie600EarHookRelief.length);
+  profile.lineTo(0.5, 0);
+  profile.closePath();
+  const geometry = new LatheGeometry(profile.getPoints(32), 64);
+  geometry.rotateX(Math.PI / 2);
+  return geometry;
+}
+
 export function ie600SocketRimGeometry() {
   const profile = new Path();
   profile.moveTo(1.9, 0.3);

@@ -1,12 +1,28 @@
-import { CatmullRomCurve3, TubeGeometry } from "three";
-import type { Group } from "three";
+import {
+  CatmullRomCurve3,
+  CubicBezierCurve3,
+  TubeGeometry,
+  Vector3,
+} from "three";
+import type { Curve, Group } from "three";
 import type { Ie600Parts } from "./ie-600-parts";
+import type { CableEndpoint } from "./system-cables";
+
+/** 耳掛けの出口の向きを保ち、分岐部へは軸に沿って滑らかに合流する。 */
+export function ie600CableBranchCurve(exit: CableEndpoint, junction: Vector3) {
+  return new CubicBezierCurve3(
+    exit.position.clone(),
+    exit.position.clone().addScaledVector(exit.direction, 16),
+    junction.clone().add(new Vector3(0, 0, -18)),
+    junction.clone()
+  );
+}
 
 /** 半透明の被覆の中に、曲線に沿って撚った導線を配置する。 */
 export function ie600Cable(
   parts: Ie600Parts,
   parent: Group,
-  curve: CatmullRomCurve3,
+  curve: Curve<Vector3>,
   radius: number,
   name: string
 ) {
