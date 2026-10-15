@@ -15,6 +15,7 @@ import { createModelParts } from "./parts";
 import type { Position } from "./parts";
 import {
   earPadGeometry,
+  cupOutline,
   honeycombGrilleGeometry,
   microfiberPileGeometry,
 } from "./hd-800s-geometry";
@@ -47,9 +48,9 @@ export function createHd800sParts() {
   });
   const trim = new MeshPhysicalMaterial({
     color: 0x15_17_1a,
-    roughness: 0.54,
+    roughness: 0.66,
     roughnessMap: textures.powder.roughness,
-    metalness: 0.4,
+    metalness: 0.18,
     bumpMap: textures.powder.height,
     bumpScale: 0.015,
   });
@@ -189,6 +190,21 @@ export function createHd800sParts() {
       name
     );
 
+  const housingRing = (
+    outerInset: number,
+    innerInset: number,
+    depth: number,
+    z: number,
+    material: Material,
+    name: string,
+    bevel = 0.5
+  ) => {
+    const shape = cupOutline(outerInset);
+    const hole = new Path(cupOutline(innerInset).getPoints());
+    shape.holes.push(hole);
+    return plate(shape, depth, [0, 0, z], material, name, bevel);
+  };
+
   const surfacePrint = (
     geometry: BufferGeometry,
     width: number,
@@ -228,6 +244,7 @@ export function createHd800sParts() {
     silver,
     plate,
     ovalRing,
+    housingRing,
     piping,
     surfacePrint,
     cable,

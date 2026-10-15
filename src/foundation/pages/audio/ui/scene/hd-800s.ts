@@ -7,12 +7,18 @@ import {
   Shape,
   Vector3,
 } from "three";
-import { createHd800sParts, ellipticalOutline } from "./hd-800s-parts";
+import { createHd800sParts } from "./hd-800s-parts";
 import type { Hd800sParts } from "./hd-800s-parts";
 import {
   arcLabelGeometry,
+  acousticBaffleGeometry,
+  baffleBraceGeometry,
+  cupContour,
+  cupContourPoints,
+  cupOutline,
+  hd800sDriver,
+  headbandCushionGeometry,
   headbandLabelGeometry,
-  ovalPoints,
 } from "./hd-800s-geometry";
 
 function bandOutline(
@@ -48,13 +54,11 @@ function createHeadband(parts: Hd800sParts) {
       0.2
     );
   }
-  parts.plate(
-    bandOutline(79.8, 83.8, 72.8, 76.8, 0.15 * Math.PI, 0.85 * Math.PI),
-    25,
-    [0, 0, -12.5],
+  parts.mesh(
+    headbandCushionGeometry(),
     parts.microfiber,
-    "Microfiber cushion beneath the headband",
-    1.2
+    [0, 0, 0],
+    "Rounded microfiber cushion beneath the headband"
   );
   for (const side of [-1, 1]) {
     const slider = parts.box(
@@ -82,6 +86,14 @@ function createHeadband(parts: Hd800sParts) {
       );
     }
     parts.screw([side * 86.3, 139, 0], side === 1 ? "right" : "left", true);
+    const hinge = parts.cylinder(
+      2.6,
+      16,
+      [side * 89, 145, 0],
+      parts.trim,
+      "Headband-to-yoke swivel axle"
+    );
+    hinge.rotation.y = Math.PI / 2;
   }
   parts.surfacePrint(
     headbandLabelGeometry(),
@@ -110,11 +122,19 @@ function createHeadband(parts: Hd800sParts) {
   }
 }
 
-function createDriver(parts: Hd800sParts, cup: Group) {
-  cup.add(
+function createDriver(parts: Hd800sParts, cup: Group, side: number) {
+  const driver = new Group();
+  driver.name = "Angled ring-radiator assembly";
+  driver.position.set(hd800sDriver.x, hd800sDriver.y, 0);
+  driver.rotation.y = hd800sDriver.tilt;
+  cup.add(driver);
+  driver.add(
+    parts.cylinder(28, 5, [0, 0, 2.5], parts.black, "Driver acoustic chamber")
+  );
+  driver.add(
     parts.disc(28, [0, 0, 5], parts.black, "Recessed driver rear cavity")
   );
-  cup.add(
+  driver.add(
     parts.ovalRing(
       [56, 56],
       [28, 28],
@@ -125,13 +145,18 @@ function createDriver(parts: Hd800sParts, cup: Group) {
       0.2
     ),
     parts.cylinder(
-      10.5,
+      8.2,
       2,
       [0, 0, 8.5],
       parts.driver,
       "Central transducer back plate"
     ),
-    parts.disc(8.5, [0, 0, 9.6], parts.trim, "Central absorber cover"),
+    parts.disc(
+      8,
+      [0, 0, 9.6],
+      parts.driver,
+      "Central transducer back plate face"
+    ),
     parts.ring(13.6, 1.1, [0, 0, 9], parts.matte, "Inner driver basket ring"),
     parts.ring(26.5, 1.2, [0, 0, 9], parts.matte, "Outer driver basket ring")
   );
@@ -155,9 +180,9 @@ function createDriver(parts: Hd800sParts, cup: Group) {
       0.3
     );
     spoke.rotation.z = angle;
-    cup.add(spoke);
+    driver.add(spoke);
   }
-  cup.add(
+  driver.add(
     parts.ovalRing(
       [70, 70],
       [57, 57],
@@ -175,94 +200,112 @@ function createDriver(parts: Hd800sParts, cup: Group) {
       parts.trim,
       "Bezel machined outer edge"
     ),
-    parts.grille(),
-    parts.surfacePrint(
-      arcLabelGeometry(32.4, 2.3, Math.PI * 1.02, Math.PI * 1.88),
-      87,
-      2.3,
-      [0, 0, 15.68],
-      (context) => {
-        context.fillStyle = "#d7d9dc";
-        context.textAlign = "center";
-        context.font = "2px Arial";
-        context.fillText("High Definition Driver  300 Ω", 43.5, 1.85);
-      },
-      "Curved driver-bezel specification lettering"
+    parts.grille()
+  );
+  const specification = parts.surfacePrint(
+    arcLabelGeometry(32.4, 2.3, Math.PI * 1.02, Math.PI * 1.88),
+    87,
+    2.3,
+    [0, 0, 15.68],
+    (context) => {
+      context.fillStyle = "#d7d9dc";
+      context.textAlign = "center";
+      context.font = "2px Arial";
+      context.fillText("High Definition Driver  300 Ω", 43.5, 1.85);
+    },
+    "Curved driver-bezel specification lettering"
+  );
+  specification.scale.x = side;
+  driver.add(specification);
+  driver.add(
+    parts.ring(22.5, 1.25, [0, 0, -5], parts.trim, "Inner driver basket rim"),
+    parts.ovalRing(
+      [24, 24],
+      [14, 14],
+      0.8,
+      [0, 0, -5],
+      parts.trim,
+      "Inner driver basket hub",
+      0.15
     )
   );
+  for (let index = 0; index < 6; index += 1) {
+    const spoke = parts.box(
+      [2, 13, 1],
+      [0, 17.5, -5],
+      parts.trim,
+      "Inner driver basket spoke",
+      0.25
+    );
+    const angle = (index / 6) * Math.PI * 2;
+    spoke.position.set(-17.5 * Math.sin(angle), 17.5 * Math.cos(angle), -5);
+    spoke.rotation.z = angle;
+    driver.add(spoke);
+  }
   const innerGrille = parts.disc(
     31,
     [0, 0, -7.5],
     parts.acoustic,
     "Inner driver protective mesh"
   );
-  cup.add(innerGrille);
+  innerGrille.rotation.y = Math.PI;
+  driver.add(innerGrille);
 }
 
 function createCupFrame(parts: Hd800sParts, cup: Group) {
   cup.add(
-    parts.ovalRing(
-      [100, 126],
-      [82, 108],
+    parts.housingRing(
+      0,
+      6.5,
       6,
-      [0, 0, -2],
+      -3,
       parts.matte,
-      "Open elliptical ear-cup perimeter",
-      1.5
+      "Swept ear-cup perimeter",
+      1.1
     ),
-    parts.ovalRing(
-      [96, 122],
-      [91, 116],
-      1.5,
-      [0, 0, 5],
-      parts.trim,
-      "Outer ear-cup bevel",
-      0.5
-    ),
-    parts.ovalRing(
-      [83, 105],
-      [63, 72],
-      2,
-      [0, 0, 2.5],
+    parts.housingRing(1, 3.2, 1.5, 3.8, parts.trim, "Outer ear-cup bevel", 0.5),
+    parts.mesh(
+      acousticBaffleGeometry(),
       parts.silver,
-      "Fine-grooved stainless acoustic baffle",
-      0.4
+      [0, 0, 0],
+      "Sloping stainless-steel acoustic mesh baffle"
     )
   );
-  for (const side of [-1, 1]) {
-    const bridge = parts.box(
-      [8, 24, 5],
-      [side * 24, side * 34, 6],
-      parts.matte,
-      "Angled bridge across the silver ear-cup opening",
-      1
+  for (const angle of [0.3, 0.68, 1.18, 1.68]) {
+    cup.add(
+      parts.mesh(
+        baffleBraceGeometry(angle * Math.PI),
+        parts.matte,
+        [0, 0, 0],
+        "Radial brace joining the bezel to the housing"
+      )
     );
-    bridge.rotation.z = -0.55;
-    cup.add(bridge);
   }
   const yoke = new Shape();
-  yoke.moveTo(-24, 56);
-  yoke.lineTo(-17, 83);
-  yoke.lineTo(16, 79);
-  yoke.quadraticCurveTo(43, 62, 48, 29);
-  yoke.lineTo(38, 33);
-  yoke.quadraticCurveTo(33, 52, 17, 61);
-  yoke.lineTo(-24, 56);
+  yoke.moveTo(-15, 58);
+  yoke.lineTo(-16, 78);
+  yoke.quadraticCurveTo(3, 80, 22, 69);
+  yoke.bezierCurveTo(48, 55, 59, 25, 54, -7);
+  yoke.quadraticCurveTo(52, -29, 43, -41);
+  yoke.lineTo(34, -35);
+  yoke.bezierCurveTo(48, -13, 50, 15, 40, 37);
+  yoke.quadraticCurveTo(29, 61, 10, 62);
+  yoke.lineTo(-15, 58);
   yoke.closePath();
   cup.add(
     parts.plate(
       yoke,
-      6,
-      [0, 0, 6],
+      7,
+      [0, 0, 8],
       parts.matte,
-      "Angled upper ear-cup yoke",
-      1
+      "Continuous curved single-sided ear-cup yoke",
+      0.8
     ),
     parts.box(
-      [16, 25, 9],
-      [41, -30, 7],
+      [15, 21, 14],
+      [38, -34, 12],
       parts.matte,
-      "Lower ear-cup pivot block",
+      "Lower yoke pivot and cable socket housing",
       1
     )
   );
@@ -270,41 +313,48 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
     parts.pad(),
     parts.pile(),
     parts.piping(
-      ovalPoints(48.8, 61.8, -12.8),
+      cupContourPoints(0.9, -11.5),
       0.42,
       parts.thread,
       "Ear-pad outer seam piping"
     ),
     parts.piping(
-      ovalPoints(33.3, 44.3, -12.8),
+      cupContourPoints(16.7, -11.5),
       0.28,
       parts.black,
       "Ear-pad inner edge binding"
     ),
-    parts.ovalRing(
-      [69, 91],
-      [63, 85],
-      7,
-      [0, 0, -9],
+    parts.housingRing(
+      16,
+      18.5,
+      8,
+      -11,
       parts.black,
       "Inner ear-pad lining",
       0.7
     )
   );
-  const baffle = ellipticalOutline(63, 85);
+  const innerBaffle = cupOutline(16);
   const driverOpening = new Path();
-  driverOpening.absarc(0, 0, 28, 0, Math.PI * 2, true);
-  baffle.holes.push(driverOpening);
-  const inner = parts.plate(
-    baffle,
-    0.4,
-    [0, 0, -1],
-    parts.black,
-    "Angled inner acoustic baffle",
-    0
+  driverOpening.absarc(
+    hd800sDriver.x,
+    hd800sDriver.y,
+    28.5,
+    0,
+    Math.PI * 2,
+    true
   );
-  inner.rotation.y = 0.14;
-  cup.add(inner);
+  innerBaffle.holes.push(driverOpening);
+  cup.add(
+    parts.plate(
+      innerBaffle,
+      0.8,
+      [0, 0, -6.5],
+      parts.black,
+      "Recessed inner baffle surrounding the driver opening",
+      0.2
+    )
+  );
   const stitchCount = 128;
   const stitches = parts.instanced(
     new CylinderGeometry(0.105, 0.105, 1.1, 6),
@@ -315,12 +365,10 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
   const transform = new Matrix4();
   for (let index = 0; index < stitchCount; index += 1) {
     const angle = (index / stitchCount) * Math.PI * 2;
-    transform.makeRotationZ(angle);
-    transform.setPosition(
-      48.5 * Math.cos(angle),
-      61.5 * Math.sin(angle),
-      -13.1
-    );
+    const point = cupContour(angle, 1.2, -11.8);
+    const tangent = cupContour(angle + 0.01, 1.2).sub(point.clone().setZ(0));
+    transform.makeRotationZ(Math.atan2(tangent.y, tangent.x) - Math.PI / 2);
+    transform.setPosition(point);
     stitches.setMatrixAt(index, transform);
   }
   cup.add(stitches);
@@ -330,34 +378,34 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
 function createFrameDetails(parts: Hd800sParts, cup: Group) {
   cup.add(
     parts.piping(
-      ovalPoints(48.1, 61.1, 0.3),
+      cupContourPoints(0.9, -0.4),
       0.32,
       parts.black,
       "Housing parting line"
     ),
     parts.piping(
-      ovalPoints(45.5, 57.8, 6.3),
+      cupContourPoints(4.4, 4.9),
       0.26,
       parts.trim,
       "Inset perimeter highlight"
     )
   );
-  for (const [x, y] of [
-    [-9, 71],
-    [10, 69],
-    [38, -24],
+  for (const [x, y, z] of [
+    [-9, 71, 15.9],
+    [10, 69, 15.9],
+    [38, -30, 19.4],
   ] as const) {
     const head = parts.cylinder(
       1.6,
       0.6,
-      [x, y, 12.65],
+      [x, y, z],
       parts.trim,
       "Recessed pivot fastener",
       32
     );
     const slot = parts.box(
       [1.8, 0.28, 0.15],
-      [x, y, 13.02],
+      [x, y, z + 0.37],
       parts.black,
       "Pivot fastener slot",
       0.06
@@ -368,7 +416,7 @@ function createFrameDetails(parts: Hd800sParts, cup: Group) {
     cup.add(
       parts.disc(
         0.65,
-        [9, 74 - index * 2, 13.03],
+        [17, 73 - index * 2, 15.85],
         parts.black,
         "Yoke adjustment witness mark"
       )
@@ -377,7 +425,7 @@ function createFrameDetails(parts: Hd800sParts, cup: Group) {
   const channel = parts.print(
     5,
     5,
-    [-7, 69, 13.04],
+    [-1, 70, 15.85],
     (context) => {
       context.fillStyle = "#a5a9ad";
       context.textAlign = "center";
@@ -387,82 +435,101 @@ function createFrameDetails(parts: Hd800sParts, cup: Group) {
     "Left or right channel identification",
     256
   );
+  channel.scale.x = cup.scale.x;
   cup.add(channel);
 }
 
 function createCupCable(parts: Hd800sParts, cup: Group) {
+  const cable = new Group();
+  cable.name = "Angled detachable ODU cable assembly";
+  cable.position.set(34, -43, 14);
+  cable.rotation.z = -0.28;
+  cup.add(cable);
+  const socket = parts.ring(
+    3.25,
+    0.5,
+    [0, 0, 0],
+    parts.black,
+    "Recessed cable socket rim"
+  );
+  socket.rotation.x = Math.PI / 2;
+  cable.add(socket);
   const connector = parts.cylinder(
-    3.2,
-    14,
-    [16, -58, 8],
+    2.9,
+    12,
+    [0, -6, 0],
     parts.turned,
     "Detachable cable connector"
   );
-  connector.rotation.x = Math.PI;
-  for (const y of [-53, -55, -61]) {
+  connector.rotation.x = 0;
+  for (const y of [-1.3, -2.5, -10.7]) {
     const collar = parts.ring(
-      3.2,
-      0.22,
-      [16, y, 8],
+      2.91,
+      0.16,
+      [0, y, 0],
       parts.trim,
       "Connector sleeve circumferential groove"
     );
     collar.rotation.x = Math.PI / 2;
-    cup.add(collar);
+    cable.add(collar);
   }
-  const sleeve = parts.cylinder(
-    2.8,
-    15,
-    [16, -72, 8],
+  const sleeve = parts.lathe(
+    [
+      [1.5, -28],
+      [1.65, -25],
+      [2.25, -18],
+      [2.7, -13],
+      [2.7, -12],
+    ],
+    [0, 0, 0],
     parts.rubber,
-    "Cable strain relief"
+    "Smooth tapered cable strain relief"
   );
-  sleeve.rotation.x = Math.PI;
-  for (let index = 0; index < 6; index += 1) {
-    const rib = parts.ring(
-      2.8,
-      0.28,
-      [16, -67 - index * 1.65, 8],
-      parts.black,
-      "Molded strain-relief rib"
-    );
-    rib.rotation.x = Math.PI / 2;
-    cup.add(rib);
-  }
-  cup.add(
+  sleeve.rotation.x = 0;
+  cable.add(
     connector,
     sleeve,
     parts.cable(
       [
-        [16, -79, 8],
-        [15, -93, 9],
-        [9, -112, 10],
-        [4, -129, 12],
+        [0, -28, 0],
+        [-0.6, -43, 0],
+        [-4, -66, 1],
+        [-8, -90, 2],
       ],
       "Shortened cable for display"
     )
   );
+  const exit = new Group();
+  exit.name = `HD 800 S ${cup.name.startsWith("Right") ? "Right" : "Left"} cable exit`;
+  exit.position.set(-8, -90, 2);
+  exit.quaternion.setFromUnitVectors(
+    new Vector3(0, 0, 1),
+    new Vector3(-4, -24, 1).normalize()
+  );
+  cable.add(exit);
 }
 
 function createEarCup(parts: Hd800sParts, side: number) {
   const cup = new Group();
   cup.name = side === 1 ? "Right ear cup" : "Left ear cup";
+  cup.scale.x = side;
   createCupFrame(parts, cup);
-  createDriver(parts, cup);
+  createDriver(parts, cup, side);
   createCupCable(parts, cup);
   const modelName = parts.print(
     28,
     4,
-    [0, -44, 6],
+    [1, 76, 15.9],
     (context) => {
       context.fillStyle = "#c0c4c8";
       context.textAlign = "center";
-      context.font = "3px Arial";
-      context.fillText("HD 800 S", 14, 3.2);
+      context.font = "2px Arial";
+      context.fillText("HD 800 S", 14, 3);
     },
     "Ear-cup model marking",
     512
   );
+  modelName.scale.x = side;
   cup.add(modelName);
   cup.position.set(side * 82, 72, 0);
   cup.rotation.set(0.06, side * (Math.PI / 2 - 0.16), side * -0.1);

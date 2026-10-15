@@ -91,9 +91,8 @@ function headphoneEndpoint(
   }
   if (headphone === "hd-800s") {
     return cableEndpoint(
-      namedPart(model, `${side} ear cup`),
-      [4, -129, 12],
-      [0, -1, 0]
+      namedPart(model, `HD 800 S ${side} cable exit`),
+      [0, 0, 0]
     );
   }
   const cup = namedPart(

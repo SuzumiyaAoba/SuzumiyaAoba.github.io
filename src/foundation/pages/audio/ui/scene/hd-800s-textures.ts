@@ -119,9 +119,9 @@ function powderFinish() {
 
 function acousticCloth() {
   const surface = textureSurface();
-  surface.context.fillStyle = "#181818";
+  surface.context.fillStyle = "#8c8c8c";
   surface.context.fillRect(0, 0, textureSize, textureSize);
-  surface.context.strokeStyle = "#b0b0b0";
+  surface.context.strokeStyle = "#d0d0d0";
   surface.context.lineWidth = 1.3;
   for (let offset = 0; offset <= textureSize; offset += 4) {
     surface.context.beginPath();
