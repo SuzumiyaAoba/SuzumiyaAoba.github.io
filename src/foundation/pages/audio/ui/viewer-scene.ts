@@ -1,17 +1,23 @@
 import {
+  Box3,
   DirectionalLight,
   HemisphereLight,
-  Material,
   Mesh,
   PlaneGeometry,
   PMREMGenerator,
   Scene,
   ShadowMaterial,
+  Sphere,
+  Vector3,
 } from "three";
-import type { WebGLRenderer } from "three";
+import type { WebGLRenderer, Object3D } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import type { AudioModel, HeadphoneModel } from "../model/viewer";
 import type { AudioModelBuilder } from "./viewer-model-loader";
+
+function isMesh(part: Object3D): part is Mesh {
+  return part instanceof Mesh;
+}
 
 export function createViewerScene(
   renderer: WebGLRenderer,
@@ -20,108 +26,72 @@ export function createViewerScene(
   onChange?: () => void
 ) {
   const scene = new Scene();
-  const system = modelId === "system";
-  const detailedHeadphones = modelId === "hd-800s";
-  const detailedPortable = modelId === "sigma-pro" || modelId === "btr17";
-  const bluetoothDac = modelId === "btr17";
-  const earphones = modelId === "ie-600";
   const room = new RoomEnvironment();
   const pmrem = new PMREMGenerator(renderer);
   const environment = pmrem.fromScene(room, 0.04);
   scene.environment = environment.texture;
-  scene.environmentIntensity =
-    detailedHeadphones || detailedPortable || earphones ? 0.72 : 1;
+  scene.environmentIntensity = 0.72;
   pmrem.dispose();
   room.dispose();
 
   const model = createModel(onChange);
   scene.add(model.group);
   model.group.traverse((part) => {
-    if (part instanceof Mesh && part.material instanceof Material) {
-      part.castShadow =
-        !part.material.transparent && part.userData["castShadow"] !== false;
-      part.receiveShadow =
-        system ||
-        detailedHeadphones ||
-        earphones ||
-        modelId === "ha-1a-mk2" ||
-        detailedPortable;
+    if (!isMesh(part)) {
+      return;
     }
+    const materials = Array.isArray(part.material)
+      ? part.material
+      : [part.material];
+    part.castShadow =
+      part.userData["castShadow"] !== false &&
+      materials.some(
+        (material) => !material.transparent || material.alphaTest > 0
+      );
+    part.receiveShadow = true;
   });
-  scene.add(
-    new HemisphereLight(
-      0xff_ff_ff,
-      0x6a_73_7e,
-      detailedHeadphones || detailedPortable || earphones ? 0.8 : 2.2
-    )
-  );
-  const key = new DirectionalLight(
-    detailedHeadphones ? 0xff_f8_ef : 0xff_ff_ff,
-    detailedHeadphones ? 3.6 : detailedPortable ? 2.7 : 3
-  );
-  key.position.set(
-    system ? -450 : -150,
-    system ? 700 : 430,
-    system ? 450 : 260
-  );
+
+  // 全製品を同じ撮影環境に置き、照明範囲だけを実寸に合わせる。
+  const bounds = new Box3().setFromObject(model.group);
+  const center = bounds.getCenter(new Vector3());
+  const size = bounds.getSize(new Vector3());
+  const span = Math.max(size.x, size.y, size.z, 50);
+  scene.add(new HemisphereLight(0xff_ff_ff, 0x56_5b_66, 0.75));
+  const key = new DirectionalLight(0xff_f9_f2, 3.1);
+  key.position.copy(center).add(new Vector3(-span * 0.75, span * 1.5, span));
+  key.target.position.copy(center);
   key.castShadow = true;
-  const shadowSize =
-    detailedHeadphones || detailedPortable || earphones || system ? 2048 : 1024;
-  key.shadow.mapSize.set(shadowSize, shadowSize);
-  key.shadow.camera.left = system ? -750 : detailedPortable ? -110 : -250;
-  key.shadow.camera.right = system ? 750 : detailedPortable ? 110 : 250;
-  key.shadow.camera.top = system ? 550 : detailedPortable ? 130 : 230;
-  key.shadow.camera.bottom = system ? -550 : detailedPortable ? -130 : -230;
-  key.shadow.camera.near = 1;
-  key.shadow.camera.far = system ? 1800 : 900;
-  key.shadow.normalBias = detailedHeadphones
-    ? 0.08
-    : detailedPortable
-      ? 0.025
-      : 0.4;
-  key.shadow.radius = 4;
-  if (earphones || bluetoothDac) {
-    key.position.set(-70, 145, 115);
-    key.shadow.camera.left = -110;
-    key.shadow.camera.right = 110;
-    key.shadow.camera.top = 110;
-    key.shadow.camera.bottom = -110;
-    key.shadow.camera.far = 500;
-    key.shadow.normalBias = 0.015;
-    key.target.position.set(0, bluetoothDac ? 43 : 18, bluetoothDac ? 0 : 10);
-    scene.add(key.target);
-    const rim = new DirectionalLight(0xe5_ee_ff, 1.4);
-    rim.position.set(80, 85, -85);
-    scene.add(rim);
-  }
-  scene.add(key);
-  if (detailedHeadphones) {
-    key.target.position.set(0, 145, 0);
-    scene.add(key.target);
-    const rim = new DirectionalLight(0xe5_ee_ff, 2.3);
-    rim.position.set(-220, 320, -250);
-    scene.add(rim);
-  }
-  const fill = new DirectionalLight(
-    0xdc_e6_ff,
-    detailedHeadphones || detailedPortable || earphones ? 0.8 : 1.1
-  );
-  fill.position.set(300, 100, -250);
-  scene.add(fill);
-  const undersideFill = new DirectionalLight(
-    0xe6_ee_fc,
-    detailedHeadphones || detailedPortable || earphones ? 0.5 : 1.8
-  );
-  undersideFill.position.set(0, -250, 50);
-  scene.add(undersideFill);
-  const floorGeometry = new PlaneGeometry(
-    system ? 2500 : 1500,
-    system ? 2500 : 1500
-  );
-  const floorMaterial = new ShadowMaterial({ opacity: 0.09 });
+  key.shadow.mapSize.set(2048, 2048);
+  const shadowExtent = bounds.getBoundingSphere(new Sphere()).radius * 1.08;
+  key.shadow.camera.left = -shadowExtent;
+  key.shadow.camera.right = shadowExtent;
+  key.shadow.camera.top = shadowExtent;
+  key.shadow.camera.bottom = -shadowExtent;
+  key.shadow.camera.near = span * 0.2;
+  key.shadow.camera.far = span * 4;
+  key.shadow.normalBias = Math.max(0.008, span * 0.00012);
+  key.shadow.bias = -0.00005;
+  key.shadow.radius = 3;
+  scene.add(key, key.target);
+
+  const fill = new DirectionalLight(0xe4_ed_ff, 0.7);
+  fill.position.copy(center).add(new Vector3(span, span * 0.4, span * 0.35));
+  fill.target.position.copy(center);
+  const rim = new DirectionalLight(0xec_f2_ff, 1.6);
+  rim.position.copy(center).add(new Vector3(span * 0.3, span, -span));
+  rim.target.position.copy(center);
+  const underside = new DirectionalLight(0xe6_eb_f5, 0.4);
+  underside.position.copy(center).add(new Vector3(0, -span, span * 0.3));
+  underside.target.position.copy(center);
+  scene.add(fill, fill.target, rim, rim.target, underside, underside.target);
+
+  const floorGeometry = new PlaneGeometry(span * 5, span * 5);
+  const floorMaterial = new ShadowMaterial({
+    opacity: modelId === "system" ? 0.12 : 0.16,
+  });
   const floor = new Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.5;
+  floor.position.set(center.x, -0.5, center.z);
   floor.receiveShadow = true;
   scene.add(floor);
 

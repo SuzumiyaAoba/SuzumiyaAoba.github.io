@@ -336,10 +336,12 @@ function innerDriver(parts: ClearMgParts, cup: Group) {
   // Both sides remain visible through the open ear cup.
   innerMesh.material.side = DoubleSide;
   cup.add(diaphragm, innerMesh);
-  const { cushion, holes } = createClearPad(parts);
+  const { cushion, holes, seam } = createClearPad(parts);
   cup.add(
     cushion,
     holes,
+    seam,
+    parts.pile(),
     parts.ovalRing(
       [92, 114],
       [83, 104],
@@ -421,18 +423,24 @@ function socket(parts: ClearMgParts, cup: Group) {
   jack.position.set(0, -59.4, -0.5);
   jack.rotation.x = Math.PI / 2;
   jack.add(
-    parts.cylinder(
-      4.1,
-      1.1,
+    parts.lathe(
+      [
+        [4.1, -3],
+        [4.1, 0.3],
+        [3.65, 0.55],
+        [2.25, 0.55],
+        [1.75, 0.15],
+        [1.75, -4],
+      ],
       [0, 0, 0],
       parts.coated,
-      "Recessed connector surround"
+      "Hollow recessed connector surround"
     ),
     parts.ring(2.25, 0.38, [0, 0, 0.67], parts.polished, "3.5 mm socket rim"),
-    parts.disc(1.86, [0, 0, 0.68], parts.cavity, "Open connector bore"),
+    parts.disc(1.75, [0, 0, -4.1], parts.cavity, "Deep 3.5 mm connector bore"),
     parts.box(
       [0.35, 1, 0.2],
-      [1.25, 0, 0.72],
+      [1.6, 0, -1.8],
       parts.gold,
       "Socket spring contact",
       0.04

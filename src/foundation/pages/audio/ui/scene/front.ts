@@ -1,4 +1,4 @@
-import { ExtrudeGeometry, Path, Shape } from "three";
+import { BoxGeometry, ExtrudeGeometry, Matrix4, Path, Shape } from "three";
 import type { ModelParts } from "./parts";
 import {
   createUd505PowerSwitch,
@@ -31,7 +31,8 @@ function headphoneSocket(
   parts: ModelParts,
   x: number,
   y: number,
-  radius: number
+  radius: number,
+  bore: number
 ) {
   parts.lathe(
     [
@@ -39,24 +40,25 @@ function headphoneSocket(
       [radius + 2.4, 0.3],
       [radius + 1.3, 0.9],
       [radius, 0.9],
-      [radius, -3],
+      [bore + 0.65, -2.8],
     ],
     [x, y, FRONT],
     parts.turned,
     "Recessed headphone surround"
   );
   parts.disc(
-    radius,
-    [x, y, FRONT - 3.1],
+    bore,
+    [x, y, FRONT - 4.35],
     parts.cavity,
     "Headphone socket cavity"
   );
   parts.lathe(
     [
-      [radius - 0.25, -2.8],
-      [radius - 0.25, 0.35],
-      [radius - 0.8, 0.35],
-      [radius - 0.8, -2.8],
+      [bore + 0.65, -3],
+      [bore + 0.65, -0.4],
+      [bore + 0.22, -0.15],
+      [bore, -0.45],
+      [bore, -7.5],
     ],
     [x, y, FRONT],
     parts.gold,
@@ -64,7 +66,7 @@ function headphoneSocket(
   );
   parts.box(
     [0.65, 1.2, 1.1],
-    [x + radius - 1.3, y, FRONT - 1.2],
+    [x + bore - 0.25, y, FRONT - 3.8],
     parts.gold,
     "Headphone spring contact",
     0.1
@@ -106,57 +108,32 @@ function knob(
     parts.turned,
     knurled ? "Input selector" : "Volume control"
   );
-  // Machined concentric circles and the fine grip on the input selector are geometry.
-  for (let index = 0; index < 7; index += 1) {
-    parts.ring(
-      radius - 1.3 - index * 0.12,
-      0.035,
-      [x, y, FRONT + depth + 1.015],
-      parts.steel,
-      "Concentric machining"
-    );
-  }
+  parts.disc(
+    radius - 1.12,
+    [x, y, FRONT + depth + 1.025],
+    parts.turnedFace(),
+    "Concentric turned aluminium dial face"
+  );
   if (knurled) {
-    for (let index = 0; index < 96; index += 1) {
-      const angle = (index / 96) * Math.PI * 2;
-      const grip = parts.box(
-        [0.13, 0.13, 2],
-        [
-          x + Math.cos(angle) * radius,
-          y + Math.sin(angle) * radius,
-          FRONT + depth - 2.6,
-        ],
-        parts.steel,
-        "Input dial knurl",
-        0.02
+    const count = 96;
+    const grips = parts.instanced(
+      new BoxGeometry(0.12, 0.12, 2),
+      parts.steel,
+      count,
+      "Input selector fine machined grip"
+    );
+    const matrix = new Matrix4();
+    for (let index = 0; index < count; index += 1) {
+      const angle = (index / count) * Math.PI * 2;
+      matrix.makeRotationZ(angle);
+      matrix.setPosition(
+        x + Math.cos(angle) * radius,
+        y + Math.sin(angle) * radius,
+        FRONT + depth - 2.6
       );
-      grip.rotation.z = angle;
+      grips.setMatrixAt(index, matrix);
     }
   }
-  // A radial specular texture reproduces the turned dial face without animated lighting.
-  parts.print(
-    radius * 2 - 2.3,
-    radius * 2 - 2.3,
-    [x, y, FRONT + depth + 1.04],
-    (context) => {
-      const r = radius - 1.15;
-      context.save();
-      context.translate(r, r);
-      for (let index = 0; index < 360; index += 1) {
-        const angle = (index / 360) * Math.PI * 2;
-        const alpha = 0.035 + (Math.cos(angle * 2 + 0.9) + 1) * 0.08;
-        context.fillStyle = `rgb(15 20 25 / ${alpha})`;
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.arc(0, 0, r, angle, angle + Math.PI / 180);
-        context.closePath();
-        context.fill();
-      }
-      context.restore();
-    },
-    "Turned dial face",
-    512
-  );
 }
 
 function frontLettering(parts: ModelParts) {
@@ -262,7 +239,8 @@ export function createFront(parts: ModelParts) {
       context.fillText("USB", 9, 9.2);
     },
     "OLED input display",
-    512
+    512,
+    true
   );
 
   createUd505PowerSwitch(parts);
@@ -309,9 +287,9 @@ export function createFront(parts: ModelParts) {
     "Infrared receiver window"
   );
 
-  headphoneSocket(parts, 0, 27, 6.2);
-  headphoneSocket(parts, 25.5, 30.8, 3.7);
-  headphoneSocket(parts, 50.7, 27, 6.2);
+  headphoneSocket(parts, 0, 27, 6.2, 3.15);
+  headphoneSocket(parts, 25.5, 30.8, 3.7, 2.2);
+  headphoneSocket(parts, 50.7, 27, 6.2, 3.15);
   knob(parts, -50.5, 43, 10, 11.5, true);
   knob(parts, 99.5, 43.5, 19.5, 15.7, false);
   frontLettering(parts);

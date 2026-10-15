@@ -1,5 +1,6 @@
 import {
   BufferGeometry,
+  BoxGeometry,
   ExtrudeGeometry,
   Float32BufferAttribute,
   MathUtils,
@@ -8,31 +9,68 @@ import {
   Vector2,
 } from "three";
 
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+
 export type CinnamonConnector = "usb-a" | "usb-b";
 
 /** USB-A の長方形と USB-B の面取り形状を、中空の金属シェルにする。 */
 export function cinnamonShieldGeometry(type: CinnamonConnector) {
-  const outline: readonly (readonly [number, number])[] =
-    type === "usb-a"
-      ? [
-          [-6, -2.25],
-          [6, -2.25],
-          [6, 2.25],
-          [-6, 2.25],
-        ]
-      : [
-          [-3.3, -3.4],
-          [3.3, -3.4],
-          [3.3, 1.5],
-          [1.6, 3.2],
-          [-1.6, 3.2],
-          [-3.3, 1.5],
-        ];
+  if (type === "usb-a") {
+    return cinnamonUsbAShield();
+  }
+  const outline: readonly (readonly [number, number])[] = [
+    [-3.3, -3.4],
+    [3.3, -3.4],
+    [3.3, 1.5],
+    [1.6, 3.2],
+    [-1.6, 3.2],
+    [-3.3, 1.5],
+  ];
   const shape = new Shape(outline.map(([x, y]) => new Vector2(x, y)));
   shape.holes.push(
     new Path(outline.map(([x, y]) => new Vector2(x * 0.9, y * 0.82)))
   );
   return new ExtrudeGeometry(shape, { depth: 8, bevelEnabled: false });
+}
+
+/** USB-A の保持ばねが掛かる上下二組の開口も板厚を持つ。 */
+function cinnamonUsbAShield() {
+  const pieces: BufferGeometry[] = [];
+  for (const side of [-1, 1]) {
+    const plate = new Shape();
+    plate.moveTo(-6, -8);
+    plate.lineTo(6, -8);
+    plate.lineTo(6, 0);
+    plate.lineTo(-6, 0);
+    plate.closePath();
+    for (const x of [-2.6, 2.6]) {
+      const hole = new Path();
+      hole.moveTo(x - 1.2, -5.3);
+      hole.lineTo(x - 1.2, -2.6);
+      hole.lineTo(x + 1.2, -2.6);
+      hole.lineTo(x + 1.2, -5.3);
+      hole.closePath();
+      plate.holes.push(hole);
+    }
+    const face = new ExtrudeGeometry(plate, {
+      depth: 0.35,
+      bevelEnabled: false,
+    });
+    face.rotateX(-Math.PI / 2);
+    if (side < 0) {
+      face.rotateZ(Math.PI);
+    }
+    face.translate(0, side * 1.9, 0);
+    pieces.push(face);
+    const edge = new BoxGeometry(0.6, 3.8, 8).toNonIndexed();
+    edge.translate(side * 5.7, 0, 4);
+    pieces.push(edge);
+  }
+  const geometry = mergeGeometries(pieces);
+  for (const piece of pieces) {
+    piece.dispose();
+  }
+  return geometry;
 }
 
 /** 写真から推定した丸い角と、赤いカバーから黒いブーツへ続く曲面。単位は mm。 */

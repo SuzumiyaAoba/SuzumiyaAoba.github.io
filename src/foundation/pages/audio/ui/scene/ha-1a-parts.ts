@@ -6,49 +6,42 @@ import {
   MeshStandardMaterial,
   SRGBColorSpace,
 } from "three";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 
-function finishTexture(wood: boolean) {
+function woodFinishTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
   canvas.height = 512;
   const context = canvas.getContext("2d");
   if (!context) {
-    throw new Error("Cannot create the Cayin enclosure finish.");
+    throw new Error("Cannot create the Cayin wood finish.");
   }
-  if (wood) {
-    const pixels = context.createImageData(1024, 512);
-    for (let y = 0; y < 512; y += 1) {
-      for (let x = 0; x < 1024; x += 1) {
-        const knot =
-          Math.exp(-(((x - 640) / 260) ** 2)) * Math.sin(y * 0.016) * 48;
-        const grain =
-          y +
-          Math.sin(x * 0.005) * 18 +
-          Math.sin(x * 0.014 + y * 0.006) * 5 +
-          knot;
-        const shade =
-          Math.sin(grain * 0.17) * 11 +
-          Math.sin(grain * 0.72) * 3 +
-          Math.sin(grain * 2.4) * 1.4 +
-          Math.sin(x * 0.008 + y * 0.012) * 7;
-        const index = (y * 1024 + x) * 4;
-        pixels.data[index] = 119 + shade;
-        pixels.data[index + 1] = 45 + shade * 0.55;
-        pixels.data[index + 2] = 19 + shade * 0.3;
-        pixels.data[index + 3] = 255;
-      }
-    }
-    context.putImageData(pixels, 0, 0);
-  } else {
-    context.fillStyle = "#dedede";
-    context.fillRect(0, 0, 1024, 512);
-    for (let column = 0; column < 1024; column += 1) {
-      const shade = 188 + ((column * 73) % 55);
-      context.fillStyle = `rgb(${shade} ${shade} ${shade} / 0.5)`;
-      context.fillRect(column, 0, 0.6, 512);
+  const pixels = context.createImageData(1024, 512);
+  for (let y = 0; y < 512; y += 1) {
+    for (let x = 0; x < 1024; x += 1) {
+      const knot = Math.exp(-(((x - 700) / 155) ** 2 + ((y - 355) / 85) ** 2));
+      const flow =
+        y +
+        Math.sin(x * 0.006) * 3 +
+        Math.sin(x * 0.017 + y * 0.008) * 0.8 +
+        knot * 14;
+      const latewood =
+        ((Math.sin(flow * 1.6 + Math.sin(x * 0.01) * 0.6) + 1) / 2) ** 12;
+      const fibers = Math.sin(flow * 6.1 + Math.sin(x * 0.1)) * 1.4;
+      const shade =
+        Math.sin(flow * 0.19) * 3.2 -
+        latewood * 18 +
+        fibers +
+        Math.sin(x * 0.007 + y * 0.011) * 6;
+      const index = (y * 1024 + x) * 4;
+      pixels.data[index] = 119 + shade;
+      pixels.data[index + 1] = 43 + shade * 0.55;
+      pixels.data[index + 2] = 17 + shade * 0.3;
+      pixels.data[index + 3] = 255;
     }
   }
+  context.putImageData(pixels, 0, 0);
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   texture.anisotropy = 8;
@@ -98,8 +91,7 @@ function knobFaceTextures() {
 
 export function createHa1aParts() {
   const parts = createModelParts();
-  const woodTexture = finishTexture(true);
-  const aluminiumTexture = finishTexture(false);
+  const woodTexture = woodFinishTexture();
   const faceTextures = knobFaceTextures();
   const knobFace = new MeshPhysicalMaterial({
     color: 0xc3_c5_c8,
@@ -115,22 +107,26 @@ export function createHa1aParts() {
     bumpMap: woodTexture,
     bumpScale: 0.12,
     roughness: 0.3,
-    clearcoat: 1,
-    clearcoatRoughness: 0.17,
+    clearcoat: 0.8,
+    clearcoatRoughness: 0.2,
+    ior: 1.45,
   });
-  const aluminium = new MeshPhysicalMaterial({
-    color: 0xd0_d2_d4,
-    map: aluminiumTexture,
-    bumpMap: aluminiumTexture,
-    bumpScale: 0.06,
-    metalness: 0.86,
-    roughness: 0.34,
-  });
-  const charcoal = new MeshStandardMaterial({
-    color: 0x23_24_26,
-    metalness: 0.45,
-    roughness: 0.64,
-  });
+  const aluminium = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0xd0_d2_d4,
+      metalness: 0.86,
+      roughness: 0.34,
+    }),
+    { scale: [8, 0.08, 8], relief: 0.022, roughness: 0.13 }
+  );
+  const charcoal = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0x23_24_26,
+      metalness: 0.45,
+      roughness: 0.64,
+    }),
+    { relief: 0.018, roughness: 0.12 }
+  );
   const tubeGlass = new MeshPhysicalMaterial({
     color: 0xe7_ec_ef,
     transparent: true,
@@ -150,7 +146,12 @@ export function createHa1aParts() {
     clearcoat: 1,
     depthWrite: false,
   });
-  const glow = new MeshBasicMaterial({ color: 0xff_53_09, toneMapped: false });
+  const glow = new MeshStandardMaterial({
+    color: 0x4a_16_07,
+    emissive: 0xff_49_07,
+    emissiveIntensity: 0.6,
+    roughness: 0.65,
+  });
   const filament = new MeshBasicMaterial({
     color: 0xff_b6_42,
     toneMapped: false,
@@ -168,7 +169,6 @@ export function createHa1aParts() {
     dispose() {
       parts.dispose();
       woodTexture.dispose();
-      aluminiumTexture.dispose();
       faceTextures.anisotropy.dispose();
       faceTextures.bump.dispose();
     },

@@ -1,4 +1,4 @@
-import { PointLight, SphereGeometry } from "three";
+import { PointLight, SphereGeometry, MeshPhysicalMaterial } from "three";
 import {
   HA1A_FRONT,
   HA1A_WINDOW_RADIUS,
@@ -79,12 +79,30 @@ function tube(
       0.05
     );
   }
+  for (const offset of [-3.2, 3.2]) {
+    for (const rib of [-2, -1, 0, 1, 2]) {
+      parts.box(
+        [0.3, height - 23, 0.22],
+        [x + offset + rib * 0.72, baseY + height / 2 + 3, z + 3.3],
+        parts.steel,
+        `${name} folded anode cooling rib`,
+        0.04
+      );
+    }
+  }
+  const micaMaterial = new MeshPhysicalMaterial({
+    color: 0x9b_9d_87,
+    roughness: 0.52,
+    transparent: true,
+    opacity: 0.7,
+    depthWrite: false,
+  });
   for (const y of [baseY + 5, baseY + height - 8]) {
     const mica = parts.cylinder(
       7.6,
       0.5,
       [x, y, z],
-      parts.steel,
+      micaMaterial,
       `${name} mica support`
     );
     mica.rotation.x = 0;
@@ -101,8 +119,8 @@ function tube(
     7.6,
     2.4,
     [x, baseY + 3, z],
-    parts.glow,
-    `${name} glowing heater base`
+    parts.rubber,
+    `${name} dark ceramic base around the heater`
   );
   warmGlass.rotation.x = 0;
   const tip = parts.mesh(

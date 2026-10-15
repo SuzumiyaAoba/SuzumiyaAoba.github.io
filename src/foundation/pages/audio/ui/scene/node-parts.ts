@@ -1,5 +1,4 @@
 import {
-  CanvasTexture,
   ExtrudeGeometry,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -7,6 +6,7 @@ import {
   Shape,
 } from "three";
 import type { Material } from "three";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 
 export function roundedOutline(width: number, height: number, radius: number) {
@@ -26,37 +26,17 @@ export function roundedOutline(width: number, height: number, radius: number) {
   return shape;
 }
 
-function satinGrain() {
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 256;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Cannot create the NODE satin finish.");
-  }
-  const pixels = context.createImageData(256, 256);
-  for (let index = 0; index < pixels.data.length; index += 4) {
-    const shade = 112 + ((index * 13 + Math.floor(index / 1024) * 47) % 31);
-    pixels.data[index] = shade;
-    pixels.data[index + 1] = shade;
-    pixels.data[index + 2] = shade;
-    pixels.data[index + 3] = 255;
-  }
-  context.putImageData(pixels, 0, 0);
-  return new CanvasTexture(canvas);
-}
-
 export function createNodeParts() {
   const parts = createModelParts();
-  const grain = satinGrain();
-  const matte = new MeshPhysicalMaterial({
-    color: 0x12_13_14,
-    roughness: 0.68,
-    specularIntensity: 0.3,
-    envMapIntensity: 0.45,
-    bumpMap: grain,
-    bumpScale: 0.015,
-  });
+  const matte = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x12_13_14,
+      roughness: 0.68,
+      specularIntensity: 0.3,
+      envMapIntensity: 0.45,
+    }),
+    { scale: [6, 6, 6], relief: 0.018, roughness: 0.1 }
+  );
   const trim = new MeshStandardMaterial({
     color: 0x23_25_27,
     metalness: 0.35,
@@ -88,7 +68,6 @@ export function createNodeParts() {
     whiteLed,
     dispose() {
       parts.dispose();
-      grain.dispose();
     },
   };
 }

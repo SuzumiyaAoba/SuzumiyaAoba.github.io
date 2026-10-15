@@ -1,4 +1,5 @@
 import { MeshPhysicalMaterial, MeshStandardMaterial } from "three";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import { ie600ZirconiumMaterial } from "./ie-600-material";
 import { ie600EngravingTexture, ie600GrainTexture } from "./ie-600-textures";
@@ -18,18 +19,24 @@ export function createIe600Parts() {
     rightRear,
     true
   );
-  const silicone = new MeshPhysicalMaterial({
-    color: 0x18_19_1a,
-    roughness: 0.68,
-    specularIntensity: 0.32,
-    clearcoat: 0.08,
-    clearcoatRoughness: 0.85,
-  });
-  const connectorRubber = new MeshPhysicalMaterial({
-    color: 0x13_15_17,
-    roughness: 0.57,
-    specularIntensity: 0.42,
-  });
+  const silicone = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x18_19_1a,
+      roughness: 0.68,
+      specularIntensity: 0.32,
+      clearcoat: 0.08,
+      clearcoatRoughness: 0.85,
+    }),
+    { scale: [18, 18, 18], relief: 0.0025, roughness: 0.06 }
+  );
+  const connectorRubber = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x13_15_17,
+      roughness: 0.57,
+      specularIntensity: 0.42,
+    }),
+    { scale: [9, 9, 9], relief: 0.004, roughness: 0.08 }
+  );
   const connectorGold = new MeshPhysicalMaterial({
     color: 0xd5_b7_5e,
     metalness: 1,

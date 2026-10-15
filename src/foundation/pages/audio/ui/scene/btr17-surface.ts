@@ -1,40 +1,17 @@
-import { CanvasTexture } from "three";
+import { createLeatherGrain } from "./leather-grain";
 
-/** 細かな凹凸のみを使い、ブラックの背面レザーに浅いシボを付ける。 */
+/** 背面の浅い革シボと型押しロゴ。 */
 export function btr17LeatherTexture() {
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 512;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Cannot create the BTR17 leather texture.");
-  }
-  context.fillStyle = "#808080";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  let seed = 73;
-  const random = () => {
-    seed = (seed * 16_807) % 2_147_483_647;
-    return seed / 2_147_483_647;
-  };
-  for (let index = 0; index < 18_000; index += 1) {
-    const x = random() * canvas.width;
-    const y = random() * canvas.height;
-    const shade = Math.floor(65 + random() * 120);
-    context.strokeStyle = `rgb(${shade} ${shade} ${shade})`;
-    context.lineWidth = 0.65;
-    context.beginPath();
-    context.moveTo(x, y);
-    context.quadraticCurveTo(x + 0.5, y - 1.5, x + 2, y - 0.6);
-    context.stroke();
-  }
-  context.fillStyle = "#4f4f4f";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.font = "bold 36px Arial";
-  context.fillText("FiiO", 125, 145);
-  const texture = new CanvasTexture(canvas);
-  texture.anisotropy = 8;
-  return texture;
+  return createLeatherGrain(256, 512, 8, (context) => {
+    context.fillStyle = "#565656";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.font = "bold 36px Arial";
+    // 背面の UV は筐体正面と同じ向きなので、型押しを背面から読める向きにする。
+    context.translate(125, 145);
+    context.scale(-1, 1);
+    context.fillText("FiiO", 0, 0);
+  });
 }
 
 /** 写真のBluetooth再生画面を参考にした、静止した表示例。 */

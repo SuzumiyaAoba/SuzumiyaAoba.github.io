@@ -86,21 +86,10 @@ function microfiberFinish() {
 
 function metalFinish() {
   const random = noiseSource(300);
-  const height = textureSurface();
   const roughness = textureSurface();
-  const color = textureSurface();
   const rows = Array.from({ length: textureSize }, () => random());
-  grayscale(height.context, (x, y) => {
-    const groove = Math.cos(y * Math.PI) * 12;
-    return (
-      126 + groove + (rows[y] ?? 0) * 8 + random() * 5 + Math.sin(x / 110) * 2
-    );
-  });
   grayscale(roughness.context, (_x, y) => 209 + (rows[y] ?? 0) * 16);
-  grayscale(color.context, (_x, y) => 231 + (rows[y] ?? 0) * 12);
   return {
-    color: finishTexture(color.canvas, true),
-    height: finishTexture(height.canvas),
     roughness: finishTexture(roughness.canvas),
   };
 }
@@ -119,9 +108,9 @@ function powderFinish() {
 
 function acousticCloth() {
   const surface = textureSurface();
-  surface.context.fillStyle = "#8c8c8c";
+  surface.context.fillStyle = "#000000";
   surface.context.fillRect(0, 0, textureSize, textureSize);
-  surface.context.strokeStyle = "#d0d0d0";
+  surface.context.strokeStyle = "#e4e4e4";
   surface.context.lineWidth = 1.3;
   for (let offset = 0; offset <= textureSize; offset += 4) {
     surface.context.beginPath();
@@ -134,22 +123,52 @@ function acousticCloth() {
   return finishTexture(surface.canvas);
 }
 
+/** 0.4 mm ピッチの織金網。色ではなく開口と線材の高さを別々に描く。 */
+function steelMeshFinish() {
+  const aperture = textureSurface();
+  const height = textureSurface();
+  const pitch = 16;
+  const wireProfile = (coordinate: number) => {
+    const distance = Math.abs((coordinate % pitch) - pitch / 2);
+    return Math.sqrt(Math.max(0, 1 - (distance / 3) ** 2));
+  };
+  grayscale(
+    aperture.context,
+    (x, y) => Math.min(1, Math.max(wireProfile(x), wireProfile(y)) * 3) * 255
+  );
+  grayscale(height.context, (x, y) => {
+    const crossing = (Math.floor(x / pitch) + Math.floor(y / pitch)) % 2;
+    const warp = wireProfile(x) * (crossing === 0 ? 1 : 0.75);
+    const weft = wireProfile(y) * (crossing === 1 ? 1 : 0.75);
+    return Math.max(warp, weft) * 255;
+  });
+  const mask = finishTexture(aperture.canvas);
+  const relief = finishTexture(height.canvas);
+  for (const texture of [mask, relief]) {
+    texture.repeat.set(100 / (32 * 0.4), 126 / (32 * 0.4));
+  }
+  return { mask, height: relief };
+}
+
 export function createHd800sTextures() {
   const fabric = microfiberFinish();
   const metal = metalFinish();
   const powder = powderFinish();
   const cloth = acousticCloth();
+  const mesh = steelMeshFinish();
   const textures = [
     ...Object.values(fabric),
     ...Object.values(metal),
     ...Object.values(powder),
     cloth,
+    ...Object.values(mesh),
   ];
   return {
     fabric,
     metal,
     powder,
     cloth,
+    mesh,
     dispose() {
       for (const texture of textures) {
         texture.dispose();

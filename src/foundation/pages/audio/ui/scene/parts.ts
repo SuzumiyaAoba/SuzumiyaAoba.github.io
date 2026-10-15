@@ -17,29 +17,12 @@ import {
   Vector2,
 } from "three";
 import type { BufferGeometry, Material, Texture } from "three";
+import { screwHeadGeometry } from "./hardware-geometry";
+import { applySurfaceFinish } from "./surface-finish";
+import { createTurnedFace } from "./turned-metal";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 export type Position = readonly [number, number, number];
-
-function brushedTexture(): CanvasTexture {
-  const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 512;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Cannot create the aluminium finish texture.");
-  }
-  context.fillStyle = "#f5f5f5";
-  context.fillRect(0, 0, 512, 512);
-  for (let row = 0; row < 512; row += 1) {
-    const shade = 208 + ((row * 73 + 19) % 43);
-    context.fillStyle = `rgb(${shade} ${shade} ${shade} / 0.5)`;
-    context.fillRect(0, row, 512, 0.6);
-  }
-  const texture = new CanvasTexture(canvas);
-  texture.anisotropy = 8;
-  return texture;
-}
 
 export function createModelParts({
   brushed = true,
@@ -49,27 +32,33 @@ export function createModelParts({
   const geometries = new Set<BufferGeometry>();
   const textures = new Set<Texture>();
   const materials = new Set<Material>();
-  const brush = brushed ? brushedTexture() : null;
-  if (brush) {
-    textures.add(brush);
-  }
+  const instances = new Set<InstancedMesh>();
+  let screwGeometry: BufferGeometry | undefined;
+  let dialFace: ReturnType<typeof createTurnedFace> | undefined;
 
   const silver = new MeshPhysicalMaterial({
     color: 0xc9_cb_ce,
     metalness: 0.92,
     roughness: 0.32,
-    map: brush,
-    bumpMap: brush,
-    bumpScale: 0.08,
     anisotropy: 0.45,
     envMapIntensity: 1.1,
   });
-  const turned = new MeshPhysicalMaterial({
-    color: 0xd1_d3_d6,
-    metalness: 1,
-    roughness: 0.25,
-    envMapIntensity: 1.15,
-  });
+  if (brushed) {
+    applySurfaceFinish(silver, {
+      scale: [0.08, 7, 7],
+      relief: 0.028,
+      roughness: 0.16,
+    });
+  }
+  const turned = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0xd1_d3_d6,
+      metalness: 1,
+      roughness: 0.25,
+      envMapIntensity: 1.15,
+    }),
+    { relief: 0.003, roughness: 0.035 }
+  );
   const steel = new MeshStandardMaterial({
     color: 0x70_74_7a,
     metalness: 0.9,
@@ -86,11 +75,16 @@ export function createModelParts({
     roughness: 0.4,
     envMapIntensity: 1.2,
   });
-  const black = new MeshStandardMaterial({ color: 0x10_12_16, roughness: 0.7 });
-  const rubber = new MeshStandardMaterial({
-    color: 0x08_09_0b,
-    roughness: 0.95,
-  });
+  const black = applySurfaceFinish(
+    new MeshStandardMaterial({ color: 0x10_12_16, roughness: 0.7 })
+  );
+  const rubber = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0x08_09_0b,
+      roughness: 0.95,
+    }),
+    { scale: [5, 5, 5], relief: 0.007, roughness: 0.04 }
+  );
   const cavity = new MeshBasicMaterial({ color: 0x03_04_05 });
   const rear = new MeshStandardMaterial({
     color: 0x1d_20_24,
@@ -166,6 +160,7 @@ export function createModelParts({
     geometries.add(geometry);
     materials.add(material);
     const part = new InstancedMesh(geometry, material, count);
+    instances.add(part);
     part.name = name;
     root.add(part);
     return part;
@@ -286,7 +281,8 @@ export function createModelParts({
     position: Position,
     draw: (context: CanvasRenderingContext2D) => void,
     name: string,
-    resolution = 2048
+    resolution = 2048,
+    illuminated = false
   ) => {
     const canvas = document.createElement("canvas");
     canvas.width = resolution;
@@ -301,12 +297,31 @@ export function createModelParts({
     texture.colorSpace = SRGBColorSpace;
     texture.anisotropy = 8;
     textures.add(texture);
-    const material = new MeshBasicMaterial({
-      map: texture,
-      transparent: true,
-      depthWrite: false,
-    });
-    return mesh(new PlaneGeometry(width, height), material, position, name);
+    const material = illuminated
+      ? new MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+          depthWrite: false,
+          toneMapped: false,
+        })
+      : new MeshStandardMaterial({
+          map: texture,
+          transparent: true,
+          depthWrite: false,
+          roughness: 0.72,
+          metalness: 0.08,
+          polygonOffset: true,
+          polygonOffsetFactor: -1,
+          polygonOffsetUnits: -1,
+        });
+    const lettering = mesh(
+      new PlaneGeometry(width, height),
+      material,
+      position,
+      name
+    );
+    lettering.userData["castShadow"] = false;
+    return lettering;
   };
 
   const screw = (
@@ -331,29 +346,20 @@ export function createModelParts({
     if (face === "left") {
       group.rotation.y = -Math.PI / 2;
     }
-    const head = cylinder(
-      1.65,
-      0.55,
-      [0, 0, 0],
+    screwGeometry ??= screwHeadGeometry();
+    const head = mesh(
+      screwGeometry,
       dark ? black : steel,
-      "Screw head",
-      24
+      [0, 0, 0],
+      "Beveled screw head with a recessed Phillips drive"
     );
-    const slotA = box(
-      [1.9, 0.3, 0.15],
-      [0, 0, 0.32],
+    const recess = disc(
+      1.58,
+      [0, 0, -0.08],
       cavity,
-      "Phillips recess",
-      0.06
+      "Dark floor beneath the screw drive"
     );
-    const slotB = box(
-      [0.3, 1.9, 0.15],
-      [0, 0, 0.32],
-      cavity,
-      "Phillips recess",
-      0.06
-    );
-    group.add(head, slotA, slotB);
+    group.add(head, recess);
     root.add(group);
   };
 
@@ -371,6 +377,14 @@ export function createModelParts({
     screw,
     silver,
     turned,
+    turnedFace() {
+      dialFace ??= createTurnedFace();
+      materials.add(dialFace.material);
+      for (const texture of dialFace.textures) {
+        textures.add(texture);
+      }
+      return dialFace.material;
+    },
     steel,
     footMetal,
     gold,
@@ -381,6 +395,9 @@ export function createModelParts({
     glass,
     blue,
     dispose() {
+      for (const instance of instances) {
+        instance.dispose();
+      }
       for (const geometry of geometries) {
         geometry.dispose();
       }

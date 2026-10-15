@@ -37,6 +37,27 @@ it.each(["usb-a", "usb-b"] as const)("%s の金属シェルを中空にする", 
   material.dispose();
 });
 
+it("USB-A の保持穴を上下とも開け、穴の間の金属板を残す", () => {
+  const geometry = cinnamonShieldGeometry("usb-a");
+  const material = new MeshBasicMaterial();
+  const shield = new Mesh(geometry, material);
+  for (const side of [-1, 1]) {
+    for (const x of [-2.6, 2.6]) {
+      const ray = new Raycaster(
+        new Vector3(x, side * 5, 4),
+        new Vector3(0, -side, 0),
+        0,
+        4
+      );
+      expect(ray.intersectObject(shield)).toHaveLength(0);
+      ray.ray.origin.x = 0;
+      expect(ray.intersectObject(shield).length).toBeGreaterThan(0);
+    }
+  }
+  geometry.dispose();
+  material.dispose();
+});
+
 it("巻いた USB ケーブルを床面に埋めない", () => {
   const curve = cinnamonCableCurve(
     {

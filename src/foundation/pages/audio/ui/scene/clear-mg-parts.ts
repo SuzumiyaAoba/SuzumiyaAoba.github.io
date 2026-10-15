@@ -2,6 +2,8 @@ import {
   BufferGeometry,
   CanvasTexture,
   CircleGeometry,
+  CatmullRomCurve3,
+  TubeGeometry,
   DoubleSide,
   ExtrudeGeometry,
   Float32BufferAttribute,
@@ -16,6 +18,9 @@ import {
   Vector3,
 } from "three";
 import type { Material } from "three";
+import { createClearMgPile } from "./clear-mg-fabric";
+import { createLeatherGrain } from "./leather-grain";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { Position } from "./parts";
 
@@ -65,6 +70,8 @@ function acousticMeshTexture() {
   if (!context) {
     throw new Error("Cannot create the Clear Mg Professional acoustic mesh.");
   }
+  context.fillStyle = "#000000";
+  context.fillRect(0, 0, 256, 256);
   context.fillStyle = "#ffffff";
   for (let offset = 0; offset < 256; offset += 4) {
     context.fillRect(offset, 0, 0.9, 256);
@@ -78,37 +85,49 @@ function acousticMeshTexture() {
 export function createClearMgParts() {
   const parts = createModelParts();
   const fabric = surfaceTexture(true);
-  const grain = surfaceTexture(false);
+  const grain = createLeatherGrain(512, 512, 14);
+  grain.repeat.set(3, 2);
   const meshTexture = acousticMeshTexture();
-  const coated = new MeshPhysicalMaterial({
-    color: 0x0b_0c_0d,
-    metalness: 0.35,
-    roughness: 0.48,
-    specularIntensity: 0.45,
-    envMapIntensity: 0.65,
-    bumpMap: grain,
-    bumpScale: 0.025,
-  });
+  const coated = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x0b_0c_0d,
+      metalness: 0.35,
+      roughness: 0.48,
+      specularIntensity: 0.45,
+      envMapIntensity: 0.65,
+    }),
+    { relief: 0.016, roughness: 0.09 }
+  );
   const leather = new MeshPhysicalMaterial({
     color: 0x0a_0b_0c,
     roughness: 0.75,
     specularIntensity: 0.3,
     envMapIntensity: 0.4,
     bumpMap: grain,
-    bumpScale: 0.12,
+    bumpScale: 0.2,
   });
   const microfiber = new MeshPhysicalMaterial({
-    color: 0x64_21_32,
+    color: 0x92_27_40,
     roughness: 0.97,
     specularIntensity: 0.15,
-    sheen: 0.15,
-    sheenColor: 0x7b_39_44,
+    sheen: 0.65,
+    sheenColor: 0xbe_65_76,
     sheenRoughness: 0.95,
     map: fabric,
     roughnessMap: fabric,
     bumpMap: fabric,
     bumpScale: 0.085,
   });
+  const pile = new MeshPhysicalMaterial({
+    color: 0x97_31_48,
+    roughness: 1,
+    sheen: 0.8,
+    sheenColor: 0xc2_63_74,
+    sheenRoughness: 0.95,
+    specularIntensity: 0.08,
+    side: DoubleSide,
+  });
+  const pileGeometry = createClearMgPile(padPoint);
   const lining = new MeshStandardMaterial({
     color: 0x35_0b_1d,
     roughness: 0.97,
@@ -132,7 +151,8 @@ export function createClearMgParts() {
     metalness: 0.4,
     roughness: 0.65,
     alphaMap: meshTexture,
-    alphaTest: 0.1,
+    alphaTest: 0.25,
+    alphaToCoverage: true,
     side: DoubleSide,
   });
   const magnesium = new MeshStandardMaterial({
@@ -196,6 +216,13 @@ export function createClearMgParts() {
     coated,
     leather,
     microfiber,
+    pile: () =>
+      parts.mesh(
+        pileGeometry,
+        pile,
+        [0, 0, 0],
+        "Short individual red microfiber fibers"
+      ),
     lining,
     perforation,
     grille,
@@ -287,5 +314,20 @@ export function createClearPad(parts: ClearMgParts) {
     }
   }
   holes.computeBoundingSphere();
-  return { cushion, holes };
+  const seamPoints = Array.from({ length: 129 }, (_, segment) =>
+    padPoint((segment / 128) * Math.PI * 2, 0.44)
+  );
+  const seam = parts.mesh(
+    new TubeGeometry(
+      new CatmullRomCurve3(seamPoints, true),
+      192,
+      0.12,
+      6,
+      true
+    ),
+    parts.lining,
+    [0, 0, 0],
+    "Fine sewn binding around the removable cushion"
+  );
+  return { cushion, holes, seam };
 }

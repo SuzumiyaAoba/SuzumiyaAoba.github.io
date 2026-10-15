@@ -101,7 +101,8 @@ function touchLights(parts: NodeParts) {
       }
     },
     "Static illuminated skip controls and gentle LED diffusion",
-    1024
+    1024,
+    true
   );
   glow.rotation.x = -Math.PI / 2;
   for (const x of [-50, -25, 0, 25, 50]) {

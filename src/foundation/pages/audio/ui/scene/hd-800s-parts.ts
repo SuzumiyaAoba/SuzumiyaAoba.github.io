@@ -85,9 +85,8 @@ export function createHd800sParts() {
   const acoustic = new MeshStandardMaterial({
     color: 0x20_22_24,
     alphaMap: textures.cloth,
-    transparent: true,
-    alphaTest: 0.025,
-    depthWrite: false,
+    alphaTest: 0.2,
+    alphaToCoverage: true,
     roughness: 0.93,
     side: DoubleSide,
   });
@@ -108,14 +107,15 @@ export function createHd800sParts() {
   });
   const silver = new MeshPhysicalMaterial({
     color: 0x9f_a3_a8,
-    map: textures.metal.color,
+    alphaMap: textures.mesh.mask,
+    alphaTest: 0.2,
+    alphaToCoverage: true,
     metalness: 0.88,
     roughness: 0.44,
-    roughnessMap: textures.metal.roughness,
-    anisotropy: 0.65,
-    anisotropyRotation: Math.PI / 4,
-    bumpMap: textures.metal.height,
-    bumpScale: 0.025,
+    anisotropy: 0.2,
+    bumpMap: textures.mesh.height,
+    bumpScale: 0.035,
+    side: DoubleSide,
   });
 
   const plate = (

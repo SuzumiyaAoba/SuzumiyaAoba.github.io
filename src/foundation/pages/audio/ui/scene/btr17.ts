@@ -21,6 +21,7 @@ import {
   drawBtr17Display,
   drawBtr17SideLabels,
 } from "./btr17-surface";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { ModelParts } from "./parts";
 
@@ -38,6 +39,15 @@ function createHeadphoneOutputs(parts: ModelParts) {
       [output.x, 86.65, 0],
       `${output.label} recessed headphone socket`
     );
+    for (const depth of [1.4, 3.4]) {
+      parts.box(
+        [0.22, 0.8, 0.65],
+        [output.x + output.bore - 0.15, 86.4 - depth, 0],
+        parts.gold,
+        `${output.label} recessed jack spring contact`,
+        0.06
+      );
+    }
     const rim = parts.ring(
       output.rim - 0.12,
       0.13,
@@ -101,14 +111,16 @@ function createUsbConnections(parts: ModelParts) {
       `${label} recessed USB C tongue`,
       0.2
     );
-    for (let contact = 0; contact < 12; contact += 1) {
-      parts.box(
-        [0.16, 0.85, 0.035],
-        [x - 2.2 + contact * 0.4, 1.6, 0.315],
-        parts.gold,
-        `${label} USB contact`,
-        0.01
-      );
+    for (const side of [-1, 1]) {
+      for (let contact = 0; contact < 12; contact += 1) {
+        parts.box(
+          [0.16, 0.85, 0.035],
+          [x - 2.2 + contact * 0.4, 1.6, side * 0.315],
+          parts.gold,
+          `${label} USB contact`,
+          0.01
+        );
+      }
     }
   }
   const labels = parts.print(
@@ -252,13 +264,16 @@ function createControls(parts: ModelParts, metal: MeshPhysicalMaterial) {
 export function createBtr17() {
   const parts = createModelParts({ brushed: false });
   parts.root.name = "FiiO BTR17 Black — millimetres";
-  const metal = new MeshPhysicalMaterial({
-    color: 0x2e_32_38,
-    metalness: 0.72,
-    roughness: 0.4,
-    clearcoat: 0.12,
-    clearcoatRoughness: 0.55,
-  });
+  const metal = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x2e_32_38,
+      metalness: 0.72,
+      roughness: 0.4,
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.55,
+    }),
+    { relief: 0.0045, roughness: 0.075 }
+  );
   const front = new MeshPhysicalMaterial({
     color: 0x19_1c_20,
     metalness: 0.45,
@@ -305,7 +320,8 @@ export function createBtr17() {
     [-0.6, 60.2, 7.85],
     drawBtr17Display,
     "1.3 inch IPS display illustrative LDAC playback",
-    1024
+    1024,
+    true
   );
   const back = parts.mesh(
     btr17RearLeatherGeometry(),

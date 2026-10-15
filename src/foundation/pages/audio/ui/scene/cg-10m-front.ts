@@ -77,16 +77,22 @@ function dialFace(parts: ModelParts) {
       context.fillText("+", 12.6, -5);
     },
     "Oven meter scale and legends",
-    1024
+    1024,
+    true
   );
 
   const angle = 0.6;
-  const needle = parts.box(
-    [0.22, 15, 0.12],
-    [-Math.sin(angle) * 7.5, METER_Y - 4 + Math.cos(angle) * 7.5, FRONT - 0.3],
-    parts.cavity,
-    "Static oven-status needle",
-    0.02
+  const blade = new Shape();
+  blade.moveTo(-0.22, 0);
+  blade.lineTo(-0.055, 15);
+  blade.lineTo(0.055, 15);
+  blade.lineTo(0.22, 0);
+  blade.closePath();
+  const needle = parts.mesh(
+    new ExtrudeGeometry(blade, { depth: 0.12, bevelEnabled: false }),
+    parts.black,
+    [0, METER_Y - 4, FRONT - 0.3],
+    "Tapered oven-status needle above the dial scale"
   );
   needle.rotation.z = angle;
 
@@ -125,9 +131,10 @@ function dialFace(parts: ModelParts) {
     color: 0xe8_f3_ff,
     transparent: true,
     opacity: 0.045,
-    roughness: 0.12,
+    roughness: 0.07,
     metalness: 0,
-    clearcoat: 0.3,
+    ior: 1.5,
+    clearcoat: 1,
     specularIntensity: 0.25,
     envMapIntensity: 0.3,
     clearcoatRoughness: 0.06,

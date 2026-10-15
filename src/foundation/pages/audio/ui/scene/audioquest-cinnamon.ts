@@ -2,7 +2,6 @@ import {
   CatmullRomCurve3,
   Group,
   MeshPhysicalMaterial,
-  MeshStandardMaterial,
   TubeGeometry,
   Vector3,
 } from "three";
@@ -11,7 +10,7 @@ import {
   cinnamonShieldGeometry,
 } from "./cinnamon-geometry";
 import type { CinnamonConnector } from "./cinnamon-geometry";
-import { cinnamonBraidTexture, drawCinnamonMark } from "./cinnamon-textures";
+import { cinnamonBraidTextures, drawCinnamonMark } from "./cinnamon-textures";
 import { createModelParts } from "./parts";
 import type { ModelParts } from "./parts";
 import type { CableEndpoint } from "./system-cables";
@@ -160,15 +159,19 @@ export function createAudioquestCinnamon(
   const start = cinnamonPlug(parts, usbA, "usb-a", cover);
   const end = cinnamonPlug(parts, usbB, "usb-b", cover);
   const curve = cinnamonCableCurve(start, end);
-  const braid = cinnamonBraidTexture(curve.getLength(), cableRadius);
-  const jacket = new MeshStandardMaterial({
-    map: braid,
-    bumpMap: braid,
-    bumpScale: 0.12,
-    roughness: 0.86,
+  const braid = cinnamonBraidTextures(curve.getLength(), cableRadius);
+  const jacket = new MeshPhysicalMaterial({
+    map: braid.color,
+    bumpMap: braid.height,
+    roughnessMap: braid.roughness,
+    bumpScale: 0.09,
+    roughness: 0.92,
+    sheen: 0.3,
+    sheenColor: 0x60_45_42,
+    sheenRoughness: 0.8,
   });
   const cable = parts.mesh(
-    new TubeGeometry(curve, 600, cableRadius, 12, false),
+    new TubeGeometry(curve, 600, cableRadius, 24, false),
     jacket,
     [0, 0, 0],
     "Cinnamon red/black braided cable, 1.5 m"
@@ -178,7 +181,9 @@ export function createAudioquestCinnamon(
     group: parts.root,
     dispose() {
       parts.dispose();
-      braid.dispose();
+      for (const texture of Object.values(braid)) {
+        texture.dispose();
+      }
     },
   };
 }

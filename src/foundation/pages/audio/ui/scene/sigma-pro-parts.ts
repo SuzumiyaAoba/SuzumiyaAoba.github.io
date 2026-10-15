@@ -5,6 +5,7 @@ import {
   MeshStandardMaterial,
 } from "three";
 import type { BufferGeometry, Material } from "three";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { Position } from "./parts";
 import { sigmaAluminiumMaterial } from "./sigma-pro-material";
@@ -44,20 +45,26 @@ export function createSigmaParts() {
     clearcoatRoughness: 0.04,
     depthWrite: false,
   });
-  const boardSurface = new MeshPhysicalMaterial({
-    color: 0x0c_12_14,
-    metalness: 0.08,
-    roughness: 0.82,
-    specularIntensity: 0.3,
-    envMapIntensity: 0.25,
-    clearcoat: 0.12,
-    clearcoatRoughness: 0.7,
-  });
-  const packageSurface = new MeshStandardMaterial({
-    color: 0x13_16_18,
-    metalness: 0.04,
-    roughness: 0.78,
-  });
+  const boardSurface = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x0c_12_14,
+      metalness: 0.08,
+      roughness: 0.82,
+      specularIntensity: 0.3,
+      envMapIntensity: 0.25,
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.7,
+    }),
+    { scale: [12, 12, 12], relief: 0.004, roughness: 0.06 }
+  );
+  const packageSurface = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0x13_16_18,
+      metalness: 0.04,
+      roughness: 0.78,
+    }),
+    { scale: [18, 18, 18], relief: 0.006, roughness: 0.12 }
+  );
   const ceramic = new MeshStandardMaterial({
     color: 0x91_7e_5b,
     roughness: 0.57,

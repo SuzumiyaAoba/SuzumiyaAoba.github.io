@@ -8,10 +8,12 @@ import {
 } from "three";
 
 /** 交互に重なる黒い繊維束と、その縁の細い赤い糸を繰り返す編組。 */
-export function cinnamonBraidTexture(length: number, radius: number) {
+export function cinnamonBraidTextures(length: number, radius: number) {
   const size = 256;
   const bundle = 64;
   const pixels = new Uint8Array(size * size * 4);
+  const relief = new Uint8Array(pixels.length);
+  const roughness = new Uint8Array(pixels.length);
   for (let row = 0; row < size; row += 1) {
     for (let column = 0; column < size; column += 1) {
       const rising = column + row;
@@ -28,19 +30,31 @@ export function cinnamonBraidTexture(length: number, radius: number) {
       pixels[index + 1] = red ? 25 + Math.round(crown * 18) : shade;
       pixels[index + 2] = red ? 18 + Math.round(crown * 12) : shade + 2;
       pixels[index + 3] = 255;
+      const height = 80 + crown * 115 + fiber * 2;
+      const matte = 200 + crown * 25 + (red ? -10 : 0);
+      for (const channel of [0, 1, 2]) {
+        relief[index + channel] = height;
+        roughness[index + channel] = matte;
+      }
+      relief[index + 3] = 255;
+      roughness[index + 3] = 255;
     }
   }
-  const texture = new DataTexture(pixels, size, size, RGBAFormat);
-  texture.colorSpace = SRGBColorSpace;
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(length / 16, (2 * Math.PI * radius) / 16);
-  texture.magFilter = LinearFilter;
-  texture.minFilter = LinearMipmapLinearFilter;
-  texture.generateMipmaps = true;
-  texture.anisotropy = 8;
-  texture.needsUpdate = true;
-  return texture;
+  const color = new DataTexture(pixels, size, size, RGBAFormat);
+  color.colorSpace = SRGBColorSpace;
+  const height = new DataTexture(relief, size, size, RGBAFormat);
+  const matte = new DataTexture(roughness, size, size, RGBAFormat);
+  for (const texture of [color, height, matte]) {
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+    texture.repeat.set(length / 16, (2 * Math.PI * radius) / 16);
+    texture.magFilter = LinearFilter;
+    texture.minFilter = LinearMipmapLinearFilter;
+    texture.generateMipmaps = true;
+    texture.anisotropy = 8;
+    texture.needsUpdate = true;
+  }
+  return { color, height, roughness: matte };
 }
 
 export function drawCinnamonMark(context: CanvasRenderingContext2D) {

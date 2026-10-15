@@ -10,6 +10,8 @@ import {
   TubeGeometry,
   Vector3,
 } from "three";
+import { bncBayonetGeometry } from "./bnc-geometry";
+import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { ModelParts } from "./parts";
 import type { CableEndpoint } from "./system-cables";
@@ -54,8 +56,7 @@ function bncPlug(
   );
   const sleeve = parts.lathe(
     [
-      [5.2, 0],
-      [6.2, 0],
+      [5.2, 8],
       [6.2, 8],
       [5.3, 9],
       [5.3, 16],
@@ -64,29 +65,20 @@ function bncPlug(
       [2.2, 22],
       [2.2, 9],
       [5.2, 8],
-      [5.2, 0],
     ],
     [0, 0, 0],
     parts.turned,
     "Nickel-plated BNC bayonet sleeve seated over socket"
   );
-  const collar = parts.lathe(
-    [
-      [6.2, 1.8],
-      [6.7, 1.8],
-      [6.9, 2.2],
-      [6.9, 7.2],
-      [6.7, 7.6],
-      [6.2, 7.6],
-      [6.2, 1.8],
-    ],
+  const collar = parts.mesh(
+    bncBayonetGeometry(),
+    parts.turned,
     [0, 0, 0],
-    parts.silver,
-    "BNC rotating locking collar"
+    "BNC rotating collar with two open L shaped bayonet slots"
   );
   const knurlCount = 64;
   const knurl = parts.instanced(
-    new BoxGeometry(0.22, 0.16, 4.8),
+    new BoxGeometry(0.22, 0.16, 1.7),
     parts.turned,
     knurlCount,
     "Fine longitudinal knurl on BNC collar"
@@ -95,7 +87,7 @@ function bncPlug(
   for (let index = 0; index < knurlCount; index += 1) {
     const angle = (index / knurlCount) * Math.PI * 2;
     matrix.makeRotationZ(angle);
-    matrix.setPosition(Math.cos(angle) * 6.93, Math.sin(angle) * 6.93, 4.7);
+    matrix.setPosition(Math.cos(angle) * 6.93, Math.sin(angle) * 6.93, 6.4);
     knurl.setMatrixAt(index, matrix);
   }
   knurl.instanceMatrix.needsUpdate = true;
@@ -144,9 +136,6 @@ function bncPlug(
       .clone()
       .addScaledVector(endpoint.direction, connectorLength),
     direction: endpoint.direction.clone(),
-    dispose() {
-      knurl.dispose();
-    },
   };
 }
 
@@ -173,21 +162,24 @@ export function createCybershaftBnc(
     connected
   );
   // 照明下の色を写真に合わせ、ACESによる青の色相変化と白い反射を抑える。
-  const jacket = new MeshPhysicalMaterial({
-    color: 0x00_50_a3,
-    toneMapped: false,
-    roughness: 0.55,
-    specularIntensity: 0.15,
-    envMapIntensity: 0.3,
-    clearcoat: 0.03,
-    clearcoatRoughness: 0.5,
-  });
+  const jacket = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x00_50_a3,
+      toneMapped: false,
+      roughness: 0.55,
+      specularIntensity: 0.15,
+      envMapIntensity: 0.3,
+      clearcoat: 0.03,
+      clearcoatRoughness: 0.5,
+    }),
+    { scale: [3, 3, 3], relief: 0.006, roughness: 0.04 }
+  );
   parts.mesh(
     new TubeGeometry(
       cybershaftCableCurve(start, end),
       160,
       cableRadius,
-      12,
+      24,
       false
     ),
     jacket,
@@ -197,8 +189,6 @@ export function createCybershaftBnc(
   return {
     group: parts.root,
     dispose() {
-      start.dispose();
-      end.dispose();
       parts.dispose();
     },
   };
