@@ -224,6 +224,44 @@ function domeHeight(x: number, y: number, radius: number) {
   return 3.8 * Math.max(0, 1 - (x * x + y * y) / (radius * radius));
 }
 
+/** 遠景用のドーム。細かい開口は生成済みのアルファ画像で表す。 */
+export function distantGrilleGeometry() {
+  const radius = 28.5;
+  const segments = 64;
+  const rings = 16;
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+  for (let ring = 0; ring <= rings; ring += 1) {
+    const r = (ring / rings) * radius;
+    for (let segment = 0; segment <= segments; segment += 1) {
+      const angle = (segment / segments) * Math.PI * 2;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      positions.push(x, y, domeHeight(x, y, radius));
+      uvs.push(x / (radius * 2) + 0.5, y / (radius * 2) + 0.5);
+      if (ring > 0 && segment > 0) {
+        const current = ring * (segments + 1) + segment;
+        const previous = current - segments - 1;
+        indices.push(
+          previous - 1,
+          current - 1,
+          previous,
+          previous,
+          current - 1,
+          current
+        );
+      }
+    }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 /** Honeycomb apertures and beveled walls are actual geometry, shared by both ear cups. */
 export function honeycombGrilleGeometry() {
   const radius = 28.5;

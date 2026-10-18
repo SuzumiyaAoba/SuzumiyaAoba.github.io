@@ -106,6 +106,7 @@ it.each([
   "%s を選んで初めて単体を描画し、前の製品を破棄する",
   async (name, model) => {
     await render();
+    const surface = container.querySelector('[role="tabpanel"] canvas');
     await select(name);
     expect(renderedModels()).toStrictEqual(["system", model]);
     expect(disposed).toHaveBeenCalledWith("node-n130");
@@ -114,6 +115,7 @@ it.each([
       mounted.mock.calls.map(([mountedModel]) => mountedModel)
     ).toStrictEqual(["system", "node-n130", model]);
     expect(window.location.hash).toBe(`#${model}`);
+    expect(container.querySelector('[role="tabpanel"] canvas')).toBe(surface);
     await select("NODE (N130)");
     expect(renderedModels()).toStrictEqual(["system", "node-n130"]);
     expect(disposed).toHaveBeenCalledWith(model);

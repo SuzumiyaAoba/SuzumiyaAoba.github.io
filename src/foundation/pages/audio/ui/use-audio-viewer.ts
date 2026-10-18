@@ -19,6 +19,20 @@ export function useAudioViewer(model: AudioModel) {
   const [attempt, setAttempt] = useState(0);
   const [headphones, setHeadphones] = useState<HeadphoneModel>("hd-800s");
   const selectedHeadphones = useRef<HeadphoneModel>("hd-800s");
+  const currentModel = useRef(model);
+  const activeModel = useRef(model);
+  const lifetime = useRef(0);
+  currentModel.current = model;
+
+  // 製品切り替えではキャンバスとレンダラーを維持し、再試行・離脱時に解放する。
+  useEffect(() => {
+    lifetime.current += 1;
+    return () => {
+      lifetime.current += 1;
+      viewer.current?.dispose();
+      viewer.current = null;
+    };
+  }, [attempt]);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,6 +43,8 @@ export function useAudioViewer(model: AudioModel) {
     if (!surface || !frame) {
       return;
     }
+    setStatus("loading");
+    setSelected("overview");
 
     const load = async () => {
       try {
@@ -39,22 +55,36 @@ export function useAudioViewer(model: AudioModel) {
         if (cancelled) {
           return;
         }
-        handle = createAudioViewer({
+        activeModel.current = model;
+        handle = viewer.current ?? undefined;
+        if (handle) {
+          handle.setModel(model, createModel);
+          return;
+        }
+        const created: { handle?: ViewerHandle } = {};
+        const generation = lifetime.current;
+        const isCurrent = () =>
+          generation === lifetime.current &&
+          (created.handle ? viewer.current === created.handle : !cancelled) &&
+          activeModel.current === currentModel.current;
+        created.handle = createAudioViewer({
           model,
           createModel,
           canvas: surface,
           container: frame,
           onStatus: (nextStatus) => {
-            if (!cancelled) {
+            if (isCurrent()) {
               setStatus(nextStatus);
             }
           },
           onView: (view) => {
-            if (!cancelled) {
+            if (isCurrent()) {
               setSelected(view);
             }
           },
         });
+        const { handle: initialized } = created;
+        handle = initialized;
         viewer.current = handle;
         handle.setHeadphones?.(selectedHeadphones.current);
         const enabled = window.matchMedia(
@@ -63,6 +93,9 @@ export function useAudioViewer(model: AudioModel) {
         handle.setInteractive(enabled);
         setInteractive(enabled);
       } catch {
+        if (cancelled) {
+          return;
+        }
         handle?.dispose();
         handle = undefined;
         viewer.current = null;
@@ -91,8 +124,6 @@ export function useAudioViewer(model: AudioModel) {
     return () => {
       cancelled = true;
       observer.disconnect();
-      handle?.dispose();
-      viewer.current = null;
     };
   }, [attempt, model]);
 

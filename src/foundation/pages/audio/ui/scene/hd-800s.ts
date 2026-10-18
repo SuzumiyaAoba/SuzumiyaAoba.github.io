@@ -545,5 +545,9 @@ export function createHd800s() {
   createEarCup(parts, 1);
   const bounds = new Box3().setFromObject(parts.root);
   parts.root.position.y = -bounds.min.y;
-  return { group: parts.root, dispose: () => parts.dispose() };
+  return {
+    group: parts.root,
+    updateDetail: parts.updateDetail,
+    dispose: () => parts.dispose(),
+  };
 }

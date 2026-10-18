@@ -8,6 +8,7 @@ import {
   MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
+  WebGLRenderTarget,
 } from "three";
 import type * as Three from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
@@ -20,6 +21,8 @@ import { createViewerCamera } from "./viewer-camera";
 import { createViewerRenderLoop } from "./viewer-render-loop";
 import { createAudioViewer } from "./viewer-runtime";
 import { createViewerScene } from "./viewer-scene";
+import { createViewerEnvironment } from "./viewer-environment";
+import { upgradeAudioTextures } from "./scene/texture-images";
 
 const renderer = vi.hoisted(() => ({
   shadowMap: { enabled: false, type: 0 },
@@ -46,13 +49,20 @@ vi.mock(import("./viewer-camera"), () => ({
 vi.mock(import("./viewer-render-loop"), () => ({
   createViewerRenderLoop: vi.fn<typeof createViewerRenderLoop>(),
 }));
+vi.mock(import("./viewer-environment"), () => ({
+  createViewerEnvironment: vi.fn<typeof createViewerEnvironment>(),
+}));
+vi.mock(import("./scene/texture-images"), () => ({
+  upgradeAudioTextures: vi.fn<typeof upgradeAudioTextures>(),
+}));
 
 let viewer: ViewerHandle | undefined;
 let canvas: HTMLCanvasElement;
 const scene = {
   scene: new Scene(),
   refresh: vi.fn<() => void>(),
-  setHeadphones: vi.fn<(selected: HeadphoneModel) => void>(),
+  setHeadphones: vi.fn<(selected: HeadphoneModel) => Promise<void>>(),
+  updateDetail: vi.fn<ReturnType<typeof createViewerScene>["updateDetail"]>(),
   dispose: vi.fn<() => void>(),
 } satisfies ReturnType<typeof createViewerScene>;
 const camera = {
@@ -74,7 +84,12 @@ beforeEach(() => {
   vi.clearAllMocks();
   renderer.render.mockReset();
   renderer.compileAsync.mockReset().mockResolvedValue(scene.scene);
-  scene.setHeadphones.mockReset();
+  scene.setHeadphones.mockReset().mockResolvedValue(undefined);
+  scene.updateDetail.mockReset().mockReturnValue(false);
+  vi.mocked(createViewerEnvironment)
+    .mockReset()
+    .mockReturnValue(new WebGLRenderTarget(1, 1));
+  vi.mocked(upgradeAudioTextures).mockReset().mockResolvedValue(false);
   scene.scene.clear();
   canvas = document.createElement("canvas");
   vi.mocked(createViewerScene)
@@ -107,6 +122,7 @@ it("視点変更は再描画だけを要求し、静的な模型と影を更新�
   expect.hasAssertions();
   viewer = create();
   await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
+  scene.refresh.mockClear();
   vi.mocked(createViewerCamera).mock.calls[0]?.[0].onChange();
   expect(loop.invalidate).toHaveBeenCalledTimes(1);
   expect(scene.refresh).not.toHaveBeenCalled();
@@ -119,6 +135,7 @@ it("コンテキストの復元で影とシェーダーを再生成し、破棄�
   expect.hasAssertions();
   viewer = create();
   await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
+  scene.refresh.mockClear();
   const lost = new Event("webglcontextlost", { cancelable: true });
   canvas.dispatchEvent(lost);
   expect(lost.defaultPrevented).toBe(true);
@@ -239,7 +256,8 @@ it("シェーダーの準備に失敗した場合も再読み込みできる状�
   expect(loop.setActive).toHaveBeenLastCalledWith(false);
 });
 
-it("同じヘッドホンの再選択ではモデルとシェーダーを準備し直さない", () => {
+it("同じヘッドホンの再選択ではモデルとシェーダーを準備し直さない", async () => {
+  expect.hasAssertions();
   viewer = create();
   viewer.setHeadphones?.("hd-800s");
   expect(scene.setHeadphones).not.toHaveBeenCalled();
@@ -247,7 +265,9 @@ it("同じヘッドホンの再選択ではモデルとシェーダーを準備�
   viewer.setHeadphones?.("clear-mg-pro");
   viewer.setHeadphones?.("clear-mg-pro");
   expect(scene.setHeadphones).toHaveBeenCalledTimes(1);
-  expect(renderer.compileAsync).toHaveBeenCalledTimes(2);
+  await vi.waitFor(() =>
+    expect(renderer.compileAsync).toHaveBeenCalledTimes(2)
+  );
 });
 
 it("表示中の形状とインスタンスのシェーダーだけを、親子関係を変えずに準備する", () => {
@@ -274,3 +294,43 @@ it("表示中の形状とインスタンスのシェーダーだけを、親子�
   material.dispose();
   instanced.dispose();
 });
+
+it("製品を戻るとシーンと描画環境を再利用し、上限を超えた資源だけを解放する", () => {
+  const second = {
+    ...scene,
+    scene: new Scene(),
+    refresh: vi.fn<() => void>(),
+    dispose: vi.fn<() => void>(),
+  };
+  const third = {
+    ...scene,
+    scene: new Scene(),
+    refresh: vi.fn<() => void>(),
+    dispose: vi.fn<() => void>(),
+  };
+  vi.mocked(createViewerScene)
+    .mockReturnValueOnce(scene)
+    .mockReturnValueOnce(second)
+    .mockReturnValueOnce(third);
+
+  viewer = create();
+  viewer.setModel("ud-505", buildModel);
+  scene.refresh.mockClear();
+  viewer.setModel("system", buildModel);
+  expect(createViewerScene).toHaveBeenCalledTimes(2);
+  expect(createViewerEnvironment).toHaveBeenCalledTimes(1);
+  expect(renderer.dispose).not.toHaveBeenCalled();
+  expect(renderer.forceContextLoss).not.toHaveBeenCalled();
+  expect(scene.refresh).not.toHaveBeenCalled();
+  viewer.setModel("hd-800s", buildModel);
+  expect(second.dispose).toHaveBeenCalledTimes(1);
+  expect(scene.dispose).not.toHaveBeenCalled();
+  viewer.dispose();
+  expect(scene.dispose).toHaveBeenCalledTimes(1);
+  expect(second.dispose).toHaveBeenCalledTimes(1);
+  expect(third.dispose).toHaveBeenCalledTimes(1);
+});
+
+function buildModel() {
+  return { group: new Group(), dispose() {} };
+}

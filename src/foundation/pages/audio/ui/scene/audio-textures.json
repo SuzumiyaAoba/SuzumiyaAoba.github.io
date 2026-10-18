@@ -1,0 +1,109 @@
+{
+  "sourceHash": "7ed937401cee4d03248616ae91ce05d4bd901d36232dde4fd8d0c1d5aaf57e67",
+  "textures": {
+    "hd-fabric-color": {
+      "url": "/assets/audio/textures/hd-fabric-color.c45d88b4b2b9.webp",
+      "previewUrl": "/assets/audio/textures/hd-fabric-color.2495f915ecfa.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "c45d88b4b2b954b1e4fa45370ea7cc2c888a5b8f6bf874ff81cc434f33db48b0",
+      "previewDigest": "2495f915ecfa72b67456bbea6366d8e8441bc636429f5bc69c122ab10d6f04fe"
+    },
+    "hd-fabric-height": {
+      "url": "/assets/audio/textures/hd-fabric-height.2d096f56dce8.webp",
+      "previewUrl": "/assets/audio/textures/hd-fabric-height.946daf8e924b.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "2d096f56dce82d5988d11c8a7c8c9cb0a5ee4df1371fbfbafd08b6721a0035d4",
+      "previewDigest": "946daf8e924b667719301c3a462c33e54f789bf8bc683f20267ecac1c95b6090"
+    },
+    "hd-fabric-roughness": {
+      "url": "/assets/audio/textures/hd-fabric-roughness.0c7fb807f177.webp",
+      "previewUrl": "/assets/audio/textures/hd-fabric-roughness.f402032ef57b.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "0c7fb807f1774893a0cb0be96e98caa867f9a6703c92d7c75cadbe9a56640747",
+      "previewDigest": "f402032ef57b9afc2d4d6610f165f014b8c32a322fdba89ea7b29fd2d04697b1"
+    },
+    "hd-metal-roughness": {
+      "url": "/assets/audio/textures/hd-metal-roughness.044ae16cdd47.webp",
+      "previewUrl": "/assets/audio/textures/hd-metal-roughness.17faf76edf2d.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "044ae16cdd47bd023ca29f346a43d1149796d829ccb444026156575847ef2bfa",
+      "previewDigest": "17faf76edf2db5fdc0bd95c11f1189a3b18646a0a5b0b5b14e02623d88c62acb"
+    },
+    "hd-powder-height": {
+      "url": "/assets/audio/textures/hd-powder-height.9309b68cc671.webp",
+      "previewUrl": "/assets/audio/textures/hd-powder-height.95f54300249d.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "9309b68cc671073df7bbb19e3f8e4bb19b8b6c10e522aaf4329084976908f892",
+      "previewDigest": "95f54300249d1d69ea200085943362dac74e992bcea62d43fc18027dd6d873ce"
+    },
+    "hd-powder-roughness": {
+      "url": "/assets/audio/textures/hd-powder-roughness.9303ad2c02d3.webp",
+      "previewUrl": "/assets/audio/textures/hd-powder-roughness.487bc9d4408c.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "9303ad2c02d383234c95446b1f45558ce7ff7bb6fb95ef2ad25d564b79d8494a",
+      "previewDigest": "487bc9d4408ceb078b8502c050a6df36ceb1d791fb8e8d0edc1452ab3b1f541d"
+    },
+    "hd-cloth": {
+      "url": "/assets/audio/textures/hd-cloth.d3458dd0cc4a.webp",
+      "previewUrl": "/assets/audio/textures/hd-cloth.875c6aba8cde.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "d3458dd0cc4aa48cee94599db7486d9424bb6ee0b5c2a74edd8e4da1b23fbf50",
+      "previewDigest": "875c6aba8cdecd0c9834797be0ca72781dbfbf0581fe0c18d6cae178aae12cad"
+    },
+    "hd-mesh-mask": {
+      "url": "/assets/audio/textures/hd-mesh-mask.bf018cc8eeab.webp",
+      "previewUrl": "/assets/audio/textures/hd-mesh-mask.9b318d3664e8.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "bf018cc8eeab45854478393a2f1e996400635f704d7eea104745344555eacc57",
+      "previewDigest": "9b318d3664e80ed7335edf8600441640b496fdb23bc289a168c87a59cdcd748c"
+    },
+    "hd-mesh-height": {
+      "url": "/assets/audio/textures/hd-mesh-height.4992a0b2c2eb.webp",
+      "previewUrl": "/assets/audio/textures/hd-mesh-height.682c342401f9.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "4992a0b2c2ebe7780fc7e889f347a53209495b72abb7486fecae1e2e6ad4ef82",
+      "previewDigest": "682c342401f918865f51f9023ecc3fda1d60a9cbbb97263f7097f053425ef167"
+    },
+    "hd-grille-mask": {
+      "url": "/assets/audio/textures/hd-grille-mask.85a6d61c1dd1.webp",
+      "previewUrl": "/assets/audio/textures/hd-grille-mask.8b1c93dece26.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "85a6d61c1dd11692a3191b0b52b40f190cb9993b95bf0af397f0b56a0815de74",
+      "previewDigest": "8b1c93dece26e99a0abea894a0a3f6c8dcb342c7620d274106d20465453fdcfa"
+    },
+    "ha-wood": {
+      "url": "/assets/audio/textures/ha-wood.6415177afd3b.webp",
+      "previewUrl": "/assets/audio/textures/ha-wood.810d3fbf3a42.webp",
+      "width": 1024,
+      "height": 512,
+      "digest": "6415177afd3b9428d66c07d1aaf4dbef613a37babee440843c9666bd4529ff48",
+      "previewDigest": "810d3fbf3a42b7c37b2d2115e330154d04cb2c020a488f96af8ab6d702706d47"
+    },
+    "ha-dial-anisotropy": {
+      "url": "/assets/audio/textures/ha-dial-anisotropy.cbd6a68025f5.webp",
+      "previewUrl": "/assets/audio/textures/ha-dial-anisotropy.d6967db5382d.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "cbd6a68025f59f9ca3a0075e10fc1e1201c8eb110b4bd2cf201eb50d192e756c",
+      "previewDigest": "d6967db5382debcf992e19dc03f610801647bfb459f74560cda99c328f71f6af"
+    },
+    "ha-dial-bump": {
+      "url": "/assets/audio/textures/ha-dial-bump.8d7e84c6520e.webp",
+      "previewUrl": "/assets/audio/textures/ha-dial-bump.6856d935c734.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "8d7e84c6520eca72d535cb79aa2ed38778beee86b7435207eaaf50d337b538c8",
+      "previewDigest": "6856d935c734a2b984bcae78a0f6bdf8b5b109f55b982d4bbcc114a4a895dd4e"
+    }
+  }
+}

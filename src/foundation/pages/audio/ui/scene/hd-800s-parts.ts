@@ -1,5 +1,6 @@
 import {
   CatmullRomCurve3,
+  BufferGeometry,
   DoubleSide,
   ExtrudeGeometry,
   MeshPhysicalMaterial,
@@ -9,7 +10,7 @@ import {
   TubeGeometry,
   Vector3,
 } from "three";
-import type { BufferGeometry, Material } from "three";
+import type { Material, Camera } from "three";
 import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 import { createModelParts } from "./parts";
 import type { Position } from "./parts";
@@ -18,8 +19,10 @@ import {
   cupOutline,
   honeycombGrilleGeometry,
   microfiberPileGeometry,
+  distantGrilleGeometry,
 } from "./hd-800s-geometry";
 import { createHd800sTextures } from "./hd-800s-textures";
+import { createDetailLevels } from "./detail-levels";
 
 export function ellipticalOutline(width: number, height: number) {
   const shape = new Shape();
@@ -35,8 +38,10 @@ export function createHd800sParts() {
     texture.rotation = Math.PI / 4;
   }
   const padGeometry = earPadGeometry();
-  const grilleGeometry = honeycombGrilleGeometry();
-  const pileGeometry = microfiberPileGeometry();
+  const grilleGeometry = distantGrilleGeometry();
+  const detail = createDetailLevels();
+  let detailedGrille: BufferGeometry | undefined;
+  let detailedPile: BufferGeometry | undefined;
   const matte = new MeshPhysicalMaterial({
     color: 0x09_0a_0b,
     roughness: 0.68,
@@ -97,6 +102,10 @@ export function createHd800sParts() {
     roughnessMap: textures.powder.roughness,
     side: DoubleSide,
   });
+  const distantGrilleMetal = grilleMetal.clone();
+  distantGrilleMetal.alphaMap = textures.grille;
+  distantGrilleMetal.alphaTest = 0.35;
+  distantGrilleMetal.alphaToCoverage = true;
   const driver = new MeshPhysicalMaterial({
     color: 0x80_83_88,
     metalness: 0.86,
@@ -256,20 +265,40 @@ export function createHd800sParts() {
         "Contoured microfiber ear pad"
       ),
     pile: () =>
-      parts.mesh(
-        pileGeometry,
-        pile,
-        [0, 0, 0],
-        "Short microfiber pile on the ear-pad surface"
+      detail.add(
+        parts.mesh(
+          new BufferGeometry(),
+          pile,
+          [0, 0, 0],
+          "Short microfiber pile on the ear-pad surface"
+        ),
+        {
+          radius: 65,
+          pixels: 250,
+          hideLow: true,
+          build: () => (detailedPile ??= microfiberPileGeometry()),
+        }
       ),
     grille: () =>
-      parts.mesh(
-        grilleGeometry,
-        grilleMetal,
-        [0, 0, 15.1],
-        "Domed honeycomb metal grille with beveled apertures"
+      detail.add(
+        parts.mesh(
+          grilleGeometry,
+          distantGrilleMetal,
+          [0, 0, 15.1],
+          "Domed honeycomb metal grille with beveled apertures"
+        ),
+        {
+          radius: 28.5,
+          pixels: 96,
+          highMaterial: grilleMetal,
+          build: () => (detailedGrille ??= honeycombGrilleGeometry()),
+        }
       ),
+    updateDetail: (camera: Camera, viewportHeight: number) =>
+      detail.update(camera, viewportHeight),
     dispose() {
+      detail.dispose();
+      grilleMetal.dispose();
       parts.dispose();
       textures.dispose();
     },

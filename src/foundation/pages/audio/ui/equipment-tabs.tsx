@@ -12,6 +12,10 @@ export function EquipmentTabs({ locale }: { locale: Locale }) {
   const [selected, setSelected] = useState(audioEquipment[0]?.id ?? "");
   const [focused, setFocused] = useState(selected);
   const buttons = useRef(new Map<string, HTMLButtonElement>());
+  const selectedIndex = audioEquipment.findIndex(
+    (equipment) => equipment.id === selected
+  );
+  const selectedEquipment = audioEquipment[selectedIndex];
 
   useEffect(() => {
     const selectAnchor = () => {
@@ -81,7 +85,7 @@ export function EquipmentTabs({ locale }: { locale: Locale }) {
             }}
             role="tab"
             id={`${id}-${equipment.id}-tab`}
-            aria-controls={`${id}-${equipment.id}-panel`}
+            aria-controls={`${id}-panel`}
             aria-selected={selected === equipment.id}
             tabIndex={focused === equipment.id ? 0 : -1}
             variant={selected === equipment.id ? "secondary" : "outline"}
@@ -97,24 +101,20 @@ export function EquipmentTabs({ locale }: { locale: Locale }) {
           </Button>
         ))}
       </div>
-      {audioEquipment.map((equipment, index) => (
-        <div
-          key={equipment.id}
-          role="tabpanel"
-          id={`${id}-${equipment.id}-panel`}
-          aria-labelledby={`${id}-${equipment.id}-tab`}
-          tabIndex={0}
-          hidden={selected !== equipment.id}
-        >
-          {selected === equipment.id && (
-            <EquipmentArticle
-              equipment={equipment}
-              index={index}
-              locale={locale}
-            />
-          )}
-        </div>
-      ))}
+      <div
+        role="tabpanel"
+        id={`${id}-panel`}
+        aria-labelledby={`${id}-${selected}-tab`}
+        tabIndex={0}
+      >
+        {selectedEquipment && (
+          <EquipmentArticle
+            equipment={selectedEquipment}
+            index={selectedIndex}
+            locale={locale}
+          />
+        )}
+      </div>
     </section>
   );
 }

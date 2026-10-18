@@ -5,18 +5,22 @@ import {
   WebGLRenderer,
 } from "three";
 import type {
-  ViewerHandle,
-  ViewerStatus,
   AudioModel,
+  AudioModelBuilder,
   AudioView,
   HeadphoneModel,
+  ViewerHandle,
+  ViewerStatus,
 } from "../model/viewer";
 import { createViewerCamera } from "./viewer-camera";
+import { createViewerEnvironment } from "./viewer-environment";
 import { createViewerScene } from "./viewer-scene";
 import { createViewerRenderLoop } from "./viewer-render-loop";
-import type { AudioModelBuilder } from "./viewer-model-loader";
 import { prepareViewerShaders } from "./viewer-shader-preparation";
+import { upgradeAudioTextures } from "./scene/texture-images";
 
+const sceneCacheLimit = 2;
+type SceneResources = ReturnType<typeof createViewerScene>;
 type ViewerOptions = {
   model: AudioModel;
   createModel: AudioModelBuilder;
@@ -27,7 +31,7 @@ type ViewerOptions = {
 };
 
 export function createAudioViewer({
-  model: modelId,
+  model: initialModel,
   createModel,
   canvas,
   container,
@@ -47,20 +51,35 @@ export function createAudioViewer({
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFShadowMap;
 
+  const scenes = new Map<AudioModel, SceneResources>();
+  const upgraded = new Set<AudioModel>();
+  let modelId = initialModel;
   let disposed = false;
   let contextLost = false;
   let prepared = false;
   let ready = false;
   let preparation = 0;
+  let interactive = false;
+  let width = 0;
+  let height = 0;
   let headphones: HeadphoneModel = "hd-800s";
-  let sceneResources: ReturnType<typeof createViewerScene> | undefined;
+  let environment: ReturnType<typeof createViewerEnvironment> | undefined;
+  let sceneResources: SceneResources | undefined;
   let cameraController: ReturnType<typeof createViewerCamera> | undefined;
   let renderLoop: ReturnType<typeof createViewerRenderLoop> | undefined;
   const invalidate = () => renderLoop?.invalidate();
-  const unavailable = () => {
+  const beginLoading = () => {
+    preparation += 1;
     prepared = false;
     ready = false;
+    renderLoop?.setActive(false);
+    onStatus("loading");
+    return preparation;
+  };
+  const unavailable = () => {
     preparation += 1;
+    prepared = false;
+    ready = false;
     renderLoop?.setActive(false);
     onStatus("unavailable");
   };
@@ -71,26 +90,41 @@ export function createAudioViewer({
   };
   const restored = () => {
     contextLost = false;
-    sceneResources?.refresh();
-    void prepare();
+    try {
+      const previous = environment;
+      environment = createViewerEnvironment(renderer);
+      for (const resources of scenes.values()) {
+        resources.scene.environment = environment.texture;
+        resources.refresh();
+      }
+      previous?.dispose();
+      void prepare();
+    } catch {
+      unavailable();
+    }
   };
+
+  async function upgradeTextures(model: AudioModel) {
+    try {
+      await upgradeAudioTextures(model);
+      if (!disposed) {
+        scenes.get(model)?.refresh();
+      }
+    } catch {
+      // 詳細画像を取得できなくても、生成済みの軽量画像で操作を続ける。
+    }
+  }
 
   async function prepare() {
     if (disposed || contextLost || !sceneResources || !cameraController) {
       return;
     }
-    preparation += 1;
-    const attempt = preparation;
-    prepared = false;
-    ready = false;
-    renderLoop?.setActive(false);
-    onStatus("loading");
+    const attempt = beginLoading();
+    const resources = sceneResources;
+    const { camera } = cameraController;
     try {
-      await prepareViewerShaders(
-        renderer,
-        sceneResources.scene,
-        cameraController.camera
-      );
+      resources.updateDetail(camera, height);
+      await prepareViewerShaders(renderer, resources.scene, camera);
       if (disposed || contextLost || attempt !== preparation) {
         return;
       }
@@ -98,6 +132,72 @@ export function createAudioViewer({
       renderLoop?.setActive(true);
     } catch {
       if (!disposed && attempt === preparation) {
+        unavailable();
+      }
+    }
+  }
+
+  function activateModel(model: AudioModel, build: AudioModelBuilder) {
+    beginLoading();
+    let resources = scenes.get(model);
+    if (!resources) {
+      resources = createViewerScene(
+        renderer,
+        model,
+        build,
+        invalidate,
+        environment?.texture
+      );
+      scenes.set(model, resources);
+    }
+    const camera = createViewerCamera({
+      model,
+      canvas,
+      onChange: invalidate,
+      onView,
+    });
+    cameraController?.dispose();
+    cameraController = camera;
+    sceneResources = resources;
+    modelId = model;
+    headphones = "hd-800s";
+    scenes.delete(model);
+    scenes.set(model, resources);
+    // 現在と直前の製品だけを保持し、全製品のGPU資源が蓄積するのを防ぐ。
+    if (scenes.size > sceneCacheLimit) {
+      const [oldest] = scenes;
+      if (oldest) {
+        scenes.delete(oldest[0]);
+        upgraded.delete(oldest[0]);
+        oldest[1].dispose();
+      }
+    }
+    camera.setInteractive(interactive);
+    if (width > 0 && height > 0) {
+      camera.resize(width / height);
+    }
+  }
+
+  async function selectHeadphones(selected: HeadphoneModel) {
+    if (disposed || selected === headphones || !sceneResources) {
+      return;
+    }
+    const resources = sceneResources;
+    const previous = headphones;
+    headphones = selected;
+    const attempt = beginLoading();
+    try {
+      await resources.setHeadphones(selected);
+      if (
+        !disposed &&
+        attempt === preparation &&
+        resources === sceneResources
+      ) {
+        await prepare();
+      }
+    } catch {
+      if (!disposed && attempt === preparation) {
+        headphones = previous;
         unavailable();
       }
     }
@@ -112,41 +212,49 @@ export function createAudioViewer({
     canvas.removeEventListener("webglcontextrestored", restored);
     renderLoop?.dispose();
     cameraController?.dispose();
-    sceneResources?.dispose();
+    for (const resources of scenes.values()) {
+      resources.dispose();
+    }
+    scenes.clear();
+    environment?.dispose();
     renderer.dispose();
     renderer.forceContextLoss();
   };
 
   try {
-    const resources = createViewerScene(
-      renderer,
-      modelId,
-      createModel,
-      invalidate
-    );
-    sceneResources = resources;
-    const camera = createViewerCamera({
-      model: modelId,
-      canvas,
-      onChange: invalidate,
-      onView,
-    });
-    cameraController = camera;
+    environment = createViewerEnvironment(renderer);
+    activateModel(initialModel, createModel);
     renderLoop = createViewerRenderLoop({
       container,
-      resize(width, height) {
+      resize(nextWidth, nextHeight) {
+        width = nextWidth;
+        height = nextHeight;
         renderer.setSize(width, height, false);
-        camera.resize(width / height);
+        cameraController?.resize(width / height);
       },
       render() {
-        if (!prepared || disposed || contextLost) {
+        if (
+          !prepared ||
+          disposed ||
+          contextLost ||
+          !sceneResources ||
+          !cameraController
+        ) {
           return;
         }
         try {
-          renderer.render(resources.scene, camera.camera);
+          if (sceneResources.updateDetail(cameraController.camera, height)) {
+            void prepare();
+            return;
+          }
+          renderer.render(sceneResources.scene, cameraController.camera);
           if (!ready) {
             ready = true;
             onStatus("ready");
+            if (!upgraded.has(modelId)) {
+              upgraded.add(modelId);
+              void upgradeTextures(modelId);
+            }
           }
         } catch {
           unavailable();
@@ -156,23 +264,27 @@ export function createAudioViewer({
     canvas.addEventListener("webglcontextlost", lost);
     canvas.addEventListener("webglcontextrestored", restored);
     void prepare();
-
     return {
-      setHeadphones(selected) {
-        if (disposed || selected === headphones) {
+      setModel(model, build) {
+        if (disposed || modelId === model) {
           return;
         }
-        try {
-          resources.setHeadphones(selected);
-          headphones = selected;
-          void prepare();
-        } catch {
-          unavailable();
-        }
+        activateModel(model, build);
+        void prepare();
       },
-      setView: camera.setView,
-      zoom: camera.zoom,
-      setInteractive: camera.setInteractive,
+      setHeadphones(selected) {
+        void selectHeadphones(selected);
+      },
+      setView(view) {
+        cameraController?.setView(view);
+      },
+      zoom(direction) {
+        cameraController?.zoom(direction);
+      },
+      setInteractive(enabled) {
+        interactive = enabled;
+        cameraController?.setInteractive(enabled);
+      },
       dispose,
     };
   } catch (error) {

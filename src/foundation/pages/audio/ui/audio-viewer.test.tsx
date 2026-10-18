@@ -6,11 +6,14 @@ import type { Root } from "react-dom/client";
 import { Group } from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
 import type { Locale } from "@/shared/lib/routing";
-import type { AudioModel, ViewerHandle } from "../model/viewer";
+import type {
+  AudioModel,
+  ViewerHandle,
+  AudioModelBuilder,
+} from "../model/viewer";
 import { AudioViewer } from "./audio-viewer";
 import { createAudioViewer } from "./viewer-runtime";
 import { loadAudioModel } from "./viewer-model-loader";
-import type { AudioModelBuilder } from "./viewer-model-loader";
 
 vi.mock(import("./viewer-runtime"), () => ({
   createAudioViewer: vi.fn<typeof createAudioViewer>(),
@@ -49,6 +52,7 @@ beforeEach(() => {
     vi.fn(() => ({ matches: true }))
   );
   handle = {
+    setModel: vi.fn<ViewerHandle["setModel"]>(),
     setHeadphones: vi.fn<NonNullable<ViewerHandle["setHeadphones"]>>(),
     setView: vi.fn<ViewerHandle["setView"]>(),
     zoom: vi.fn<ViewerHandle["zoom"]>(),
@@ -177,14 +181,15 @@ it("選択したヘッドホンを再読み込み後も保持し、古いビュ�
   expect(button("全体").getAttribute("aria-pressed")).toBe("true");
 });
 
-it("モデル変更とアンマウントでビューアを破棄する", async () => {
+it("モデル変更ではビューアを再利用し、アンマウントで破棄する", async () => {
   await render();
   await render("ud-505");
-  expect(handle.dispose).toHaveBeenCalledTimes(1);
-  expect(createViewer.mock.calls[1]?.[0].model).toBe("ud-505");
+  expect(handle.dispose).not.toHaveBeenCalled();
+  expect(handle.setModel).toHaveBeenCalledWith("ud-505", expect.any(Function));
+  expect(createViewer).toHaveBeenCalledTimes(1);
   await act(async () => root?.unmount());
   root = null;
-  expect(handle.dispose).toHaveBeenCalledTimes(2);
+  expect(handle.dispose).toHaveBeenCalledTimes(1);
 });
 
 it.each([

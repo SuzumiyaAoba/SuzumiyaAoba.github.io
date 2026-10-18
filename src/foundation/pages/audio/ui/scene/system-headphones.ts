@@ -1,9 +1,7 @@
 import { Group, Vector3 } from "three";
-import type { Object3D } from "three";
-import type { HeadphoneModel } from "../../model/viewer";
-import { createClearMgPro } from "./clear-mg-pro";
+import type { Camera, Object3D } from "three";
+import type { AudioScene, HeadphoneModel } from "../../model/viewer";
 import { createHd800s } from "./hd-800s";
-import { createIe600 } from "./ie-600";
 import {
   cableEndpoint,
   createSystemCables,
@@ -11,11 +9,17 @@ import {
 } from "./system-cables";
 import type { CableEndpoint } from "./system-cables";
 
-type HeadphoneScene = { group: Group; dispose: () => void };
-const headphoneBuilders: Record<HeadphoneModel, () => HeadphoneScene> = {
-  "hd-800s": createHd800s,
-  "clear-mg-pro": createClearMgPro,
-  "ie-600": () => createIe600({ standaloneCable: false }),
+type HeadphoneScene = AudioScene;
+const headphoneBuilders: Record<
+  HeadphoneModel,
+  () => Promise<() => HeadphoneScene>
+> = {
+  "hd-800s": async () => createHd800s,
+  "clear-mg-pro": async () => (await import("./clear-mg-pro")).createClearMgPro,
+  "ie-600": async () => {
+    const { createIe600 } = await import("./ie-600");
+    return () => createIe600({ standaloneCable: false });
+  },
 };
 
 function headphoneEndpoint(
@@ -108,9 +112,14 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
   const cache = new Map<HeadphoneModel, HeadphoneScene>();
   let active: HeadphoneScene | undefined;
   let disposed = false;
+  let request = 0;
+  let activeSelection: HeadphoneModel = "hd-800s";
 
-  const createHeadphones = (selected: HeadphoneModel): HeadphoneScene => {
-    const model = headphoneBuilders[selected]();
+  const createHeadphones = (
+    selected: HeadphoneModel,
+    build: () => HeadphoneScene
+  ): HeadphoneScene => {
+    const model = build();
     const assembly = new Group();
     assembly.name = `${selected} with connected cables`;
     model.group.position.x = 390;
@@ -125,6 +134,8 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
       assembly.add(cables.group);
       return {
         group: assembly,
+        updateDetail: (camera, viewportHeight) =>
+          model.updateDetail?.(camera, viewportHeight) ?? false,
         dispose() {
           model.dispose();
           cables.dispose();
@@ -137,14 +148,23 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
     }
   };
 
-  const setHeadphones = (selected: HeadphoneModel) => {
+  const setHeadphones = async (nextModel: HeadphoneModel) => {
     if (disposed) {
       return;
     }
-    let next = cache.get(selected);
+    request += 1;
+    const version = request;
+    if (nextModel === activeSelection) {
+      return;
+    }
+    let next = cache.get(nextModel);
     if (!next) {
-      next = createHeadphones(selected);
-      cache.set(selected, next);
+      const build = await headphoneBuilders[nextModel]();
+      if (disposed || version !== request) {
+        return;
+      }
+      next = createHeadphones(nextModel, build);
+      cache.set(nextModel, next);
     }
     if (active === next) {
       return;
@@ -154,17 +174,22 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
     }
     next.group.visible = true;
     active = next;
+    activeSelection = nextModel;
   };
-  setHeadphones("hd-800s");
+  active = createHeadphones("hd-800s", createHd800s);
+  cache.set("hd-800s", active);
 
   return {
     group,
     setHeadphones,
+    updateDetail: (camera: Camera, viewportHeight: number) =>
+      active?.updateDetail?.(camera, viewportHeight) ?? false,
     dispose() {
       if (disposed) {
         return;
       }
       disposed = true;
+      request += 1;
       for (const model of cache.values()) {
         model.dispose();
       }

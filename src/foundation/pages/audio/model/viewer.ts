@@ -1,3 +1,5 @@
+import type { Camera, Group } from "three";
+
 export const viewNames = [
   "overview",
   "front",
@@ -130,7 +132,15 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
 };
 export type ViewerStatus = "loading" | "ready" | "unavailable";
 export type ZoomDirection = "in" | "out";
+export type AudioScene = {
+  group: Group;
+  dispose: () => void;
+  setHeadphones?: (model: HeadphoneModel) => void | Promise<void>;
+  updateDetail?: (camera: Camera, viewportHeight: number) => boolean;
+};
+export type AudioModelBuilder = (onChange?: () => void) => AudioScene;
 export type ViewerHandle = {
+  setModel: (model: AudioModel, createModel: AudioModelBuilder) => void;
   setHeadphones?: (model: HeadphoneModel) => void;
   setView: (view: AudioView) => void;
   zoom: (direction: ZoomDirection) => void;

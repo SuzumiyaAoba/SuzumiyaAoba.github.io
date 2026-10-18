@@ -9,7 +9,7 @@ import {
 } from "three";
 import type * as Three from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
-import type { AudioModelBuilder } from "./viewer-model-loader";
+import type { AudioModelBuilder } from "../model/viewer";
 import { createViewerScene } from "./viewer-scene";
 
 const { disposeEnvironment } = vi.hoisted(() => ({
@@ -105,14 +105,14 @@ it("モデルの変更通知で行列と影を更新し、再描画を要求す�
   expect(onChange).toHaveBeenCalledTimes(1);
 });
 
-it("遅延生成したヘッドホンにも影とワールド座標を設定する", () => {
+it("遅延生成したヘッドホンにも影とワールド座標を設定する", async () => {
   const added = new Mesh(mesh.geometry, mesh.material);
   const { setHeadphones, light } = createScene(() => {
     added.position.x = 390;
     group.add(added);
   });
   light.shadow.needsUpdate = false;
-  setHeadphones("clear-mg-pro");
+  await setHeadphones("clear-mg-pro");
   expect(added.castShadow).toBe(true);
   expect(added.receiveShadow).toBe(true);
   expect(added.matrixWorld.elements[12]).toBe(390);

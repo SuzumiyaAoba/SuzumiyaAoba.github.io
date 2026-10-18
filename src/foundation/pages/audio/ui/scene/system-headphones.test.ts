@@ -35,7 +35,13 @@ function model(name: string) {
   }
   const dispose = vi.fn<() => void>();
   disposals.push(dispose);
-  return { group, dispose };
+  return {
+    group,
+    dispose,
+    updateDetail() {
+      return false;
+    },
+  };
 }
 
 beforeEach(() => {
@@ -58,7 +64,7 @@ afterEach(() => {
   headphones = undefined;
 });
 
-it("初期選択だけを生成し、切り替えたモデルと配線を再利用する", () => {
+it("初期選択だけを生成し、切り替えたモデルと配線を再利用する", async () => {
   headphones = createSystemHeadphones(new Group(), new Group());
   expect(createHd800s).toHaveBeenCalledTimes(1);
   expect(createClearMgPro).not.toHaveBeenCalled();
@@ -66,24 +72,24 @@ it("初期選択だけを生成し、切り替えたモデルと配線を再利�
   const [initial] = headphones.group.children;
   expect(initial?.children[0]?.position.toArray()).toStrictEqual([390, 44, 25]);
 
-  headphones.setHeadphones("clear-mg-pro");
+  await headphones.setHeadphones("clear-mg-pro");
   const [, selected] = headphones.group.children;
   expect(createClearMgPro).toHaveBeenCalledTimes(1);
   expect(initial?.visible).toBe(false);
   expect(selected?.visible).toBe(true);
   expect(selected?.children).toHaveLength(2);
 
-  headphones.setHeadphones("hd-800s");
-  headphones.setHeadphones("clear-mg-pro");
+  await headphones.setHeadphones("hd-800s");
+  await headphones.setHeadphones("clear-mg-pro");
   expect(headphones.group.children).toHaveLength(2);
   expect(createHd800s).toHaveBeenCalledTimes(1);
   expect(createClearMgPro).toHaveBeenCalledTimes(1);
   expect(selected?.visible).toBe(true);
 });
 
-it("IE 600 は単体ケーブルを作らず、UD-505 のバランス出力へ接続する", () => {
+it("IE 600 は単体ケーブルを作らず、UD-505 のバランス出力へ接続する", async () => {
   headphones = createSystemHeadphones(new Group(), new Group());
-  headphones.setHeadphones("ie-600");
+  await headphones.setHeadphones("ie-600");
   expect(createIe600).toHaveBeenCalledWith({ standaloneCable: false });
   const [, assembly] = headphones.group.children;
   const plug = assembly?.getObjectByName(
@@ -95,12 +101,12 @@ it("IE 600 は単体ケーブルを作らず、UD-505 のバランス出力へ�
   ]);
 });
 
-it("生成したモデルだけを一度ずつ解放し、破棄後にはモデルを作らない", () => {
+it("生成したモデルだけを一度ずつ解放し、破棄後にはモデルを作らない", async () => {
   headphones = createSystemHeadphones(new Group(), new Group());
-  headphones.setHeadphones("ie-600");
+  await headphones.setHeadphones("ie-600");
   headphones.dispose();
   headphones.dispose();
-  headphones.setHeadphones("clear-mg-pro");
+  await headphones.setHeadphones("clear-mg-pro");
   expect(disposals).toHaveLength(2);
   expect(disposals[0]).toHaveBeenCalledTimes(1);
   expect(disposals[1]).toHaveBeenCalledTimes(1);
@@ -108,14 +114,32 @@ it("生成したモデルだけを一度ずつ解放し、破棄後にはモデ�
   expect(headphones.group.children).toHaveLength(0);
 });
 
-it("切り替え先の生成に失敗しても現在のモデルを表示し続ける", () => {
+it("切り替え先の生成に失敗しても現在のモデルを表示し続ける", async () => {
   headphones = createSystemHeadphones(new Group(), new Group());
   vi.mocked(createClearMgPro).mockImplementationOnce(() => {
     throw new Error("Model creation failed");
   });
-  expect(() => headphones?.setHeadphones("clear-mg-pro")).toThrow(
+  await expect(headphones.setHeadphones("clear-mg-pro")).rejects.toThrow(
     "Model creation failed"
   );
   expect(headphones.group.children).toHaveLength(1);
   expect(headphones.group.children[0]?.visible).toBe(true);
+});
+
+it("読み込み中に初期選択へ戻った場合は、遅れて届くモデルを生成しない", async () => {
+  headphones = createSystemHeadphones(new Group(), new Group());
+  const pending = headphones.setHeadphones("clear-mg-pro");
+  await headphones.setHeadphones("hd-800s");
+  await pending;
+  expect(createClearMgPro).not.toHaveBeenCalled();
+  expect(headphones.group.children).toHaveLength(1);
+});
+
+it("読み込み中に破棄した場合は、遅れて届くモデルを生成しない", async () => {
+  headphones = createSystemHeadphones(new Group(), new Group());
+  const pending = headphones.setHeadphones("ie-600");
+  headphones.dispose();
+  await pending;
+  expect(createIe600).not.toHaveBeenCalled();
+  expect(headphones.group.children).toHaveLength(0);
 });

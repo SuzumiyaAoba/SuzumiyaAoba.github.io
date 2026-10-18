@@ -1,13 +1,5 @@
-import type { Group } from "three";
-import type { AudioModel, HeadphoneModel } from "../model/viewer";
-
-type AudioScene = {
-  group: Group;
-  dispose: () => void;
-  setHeadphones?: (model: HeadphoneModel) => void;
-};
-
-export type AudioModelBuilder = (onChange?: () => void) => AudioScene;
+import type { AudioModel, AudioModelBuilder } from "../model/viewer";
+import { preloadAudioTextures } from "./scene/texture-images";
 
 // import のパスを固定し、未選択の単体モデルを初回のバンドルに含めない。
 const loaders: Record<AudioModel, () => Promise<AudioModelBuilder>> = {
@@ -32,5 +24,9 @@ const loaders: Record<AudioModel, () => Promise<AudioModelBuilder>> = {
 };
 
 export async function loadAudioModel(model: AudioModel) {
-  return await loaders[model]();
+  const [builder] = await Promise.all([
+    loaders[model](),
+    preloadAudioTextures(model),
+  ]);
+  return builder;
 }

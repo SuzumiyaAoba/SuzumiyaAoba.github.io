@@ -16,6 +16,7 @@ function isStaticMesh(part: Object3D): part is StaticMesh {
   }
   return (
     part.constructor === Mesh &&
+    part.userData["audioDynamicDetail"] !== true &&
     (part.material.onBeforeCompile === Material.prototype.onBeforeCompile ||
       hasSurfaceFinish(part.material)) &&
     !part.material.transparent &&

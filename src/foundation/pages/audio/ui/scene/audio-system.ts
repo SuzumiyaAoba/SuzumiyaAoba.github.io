@@ -97,6 +97,7 @@ export function createAudioSystem() {
   return {
     group,
     setHeadphones: headphones.setHeadphones,
+    updateDetail: headphones.updateDetail,
     dispose() {
       for (const model of [node, dac, clock, amp, headphones]) {
         model.dispose();

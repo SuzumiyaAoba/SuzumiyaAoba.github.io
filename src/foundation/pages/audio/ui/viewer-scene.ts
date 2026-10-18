@@ -4,17 +4,19 @@ import {
   HemisphereLight,
   Mesh,
   PlaneGeometry,
-  PMREMGenerator,
   Scene,
   ShadowMaterial,
   Sphere,
   Vector3,
 } from "three";
-import type { WebGLRenderer, Object3D } from "three";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import type { AudioModel, HeadphoneModel } from "../model/viewer";
-import type { AudioModelBuilder } from "./viewer-model-loader";
+import type { WebGLRenderer, Object3D, Texture, Camera } from "three";
+import type {
+  AudioModel,
+  HeadphoneModel,
+  AudioModelBuilder,
+} from "../model/viewer";
 import { createViewerMeshBatches } from "./viewer-mesh-batches";
+import { createViewerEnvironment } from "./viewer-environment";
 
 function isMesh(part: Object3D): part is Mesh {
   return part instanceof Mesh;
@@ -41,16 +43,15 @@ export function createViewerScene(
   renderer: WebGLRenderer,
   modelId: AudioModel,
   createModel: AudioModelBuilder,
-  onChange?: () => void
+  onChange?: () => void,
+  sharedEnvironment?: Texture
 ) {
   const scene = new Scene();
-  const room = new RoomEnvironment();
-  const pmrem = new PMREMGenerator(renderer);
-  const environment = pmrem.fromScene(room, 0.04);
-  scene.environment = environment.texture;
+  const environment = sharedEnvironment
+    ? undefined
+    : createViewerEnvironment(renderer);
+  scene.environment = sharedEnvironment ?? environment?.texture ?? null;
   scene.environmentIntensity = 0.72;
-  pmrem.dispose();
-  room.dispose();
 
   let initialized = false;
   const model = createModel(refresh);
@@ -121,9 +122,16 @@ export function createViewerScene(
   return {
     scene,
     refresh,
-    setHeadphones: (selected: HeadphoneModel) => {
+    updateDetail(camera: Camera, viewportHeight: number) {
+      if (!model.updateDetail?.(camera, viewportHeight)) {
+        return false;
+      }
+      refresh();
+      return true;
+    },
+    setHeadphones: async (selected: HeadphoneModel) => {
       if (model.setHeadphones) {
-        model.setHeadphones(selected);
+        await model.setHeadphones(selected);
         refresh();
       }
     },
@@ -131,7 +139,7 @@ export function createViewerScene(
       initialized = false;
       batches.dispose();
       model.dispose();
-      environment.dispose();
+      environment?.dispose();
       floorGeometry.dispose();
       floorMaterial.dispose();
       key.shadow.dispose();
