@@ -75,8 +75,9 @@ export function Mermaid({ code, className }: MermaidProps) {
 
   return (
     <div className={className}>
+      {/* 計測時と字間を揃え、本文の letter-spacing によるラベルの見切れを防ぐ。 */}
       <div
-        className="mx-auto w-full text-center [&>svg]:mx-auto [&>svg]:inline-block [&>svg]:h-auto [&>svg]:max-w-full"
+        className="mx-auto w-full text-center tracking-normal [&>svg]:mx-auto [&>svg]:inline-block [&>svg]:h-auto [&>svg]:max-w-full"
         dangerouslySetInnerHTML={{ __html: svg ?? "" }}
       />
     </div>
