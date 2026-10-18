@@ -213,6 +213,86 @@ it("シェーダーの準備中は描画せず、最初に描画できたとき�
   ).toHaveLength(1);
 });
 
+it.each(["in", "out"] as const)(
+  "ズームによる詳細切り替えではロード表示に戻らず、操作を続けられる (%s)",
+  async (direction) => {
+    expect.hasAssertions();
+    viewer = create();
+    await vi.waitFor(() =>
+      expect(loop.setActive).toHaveBeenLastCalledWith(true)
+    );
+    const render = vi.mocked(createViewerRenderLoop).mock.calls[0]?.[0].render;
+    render?.();
+    expect(onStatus).toHaveBeenLastCalledWith("ready");
+    onStatus.mockClear();
+    renderer.render.mockClear();
+
+    const pending = Promise.withResolvers<Three.Object3D>();
+    renderer.compileAsync.mockReturnValueOnce(pending.promise);
+    scene.updateDetail.mockReturnValueOnce(true);
+    viewer.zoom(direction);
+    render?.();
+    expect(onStatus).not.toHaveBeenCalled();
+    render?.();
+    expect(renderer.render).not.toHaveBeenCalled();
+    viewer.zoom(direction);
+    expect(camera.zoom).toHaveBeenCalledTimes(2);
+    expect(camera.zoom).toHaveBeenLastCalledWith(direction);
+
+    pending.resolve(scene.scene);
+    await vi.waitFor(() =>
+      expect(loop.setActive).toHaveBeenLastCalledWith(true)
+    );
+    render?.();
+    expect(renderer.render).toHaveBeenCalledWith(scene.scene, camera.camera);
+    expect(onStatus).not.toHaveBeenCalled();
+  }
+);
+
+it("詳細切り替えの準備中に製品を変更すると、古い完了通知を無視してロード表示にする", async () => {
+  expect.hasAssertions();
+  viewer = create();
+  await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
+  const render = vi.mocked(createViewerRenderLoop).mock.calls[0]?.[0].render;
+  render?.();
+  const detail = Promise.withResolvers<Three.Object3D>();
+  const model = Promise.withResolvers<Three.Object3D>();
+  renderer.compileAsync
+    .mockReturnValueOnce(detail.promise)
+    .mockReturnValueOnce(model.promise);
+  scene.updateDetail.mockReturnValueOnce(true);
+  render?.();
+  expect(onStatus).toHaveBeenLastCalledWith("ready");
+
+  viewer.setModel("ud-505", buildModel);
+  expect(onStatus).toHaveBeenLastCalledWith("loading");
+  detail.resolve(scene.scene);
+  await detail.promise;
+  await Promise.resolve();
+  expect(loop.setActive).toHaveBeenLastCalledWith(false);
+  model.resolve(scene.scene);
+  await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
+  render?.();
+  expect(onStatus).toHaveBeenLastCalledWith("ready");
+});
+
+it("詳細切り替えの準備に失敗した場合は再読み込みできる状態にする", async () => {
+  expect.hasAssertions();
+  viewer = create();
+  await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
+  const render = vi.mocked(createViewerRenderLoop).mock.calls[0]?.[0].render;
+  render?.();
+  renderer.compileAsync.mockRejectedValueOnce(
+    new Error("Detail shader preparation failed")
+  );
+  scene.updateDetail.mockReturnValueOnce(true);
+  render?.();
+  await vi.waitFor(() =>
+    expect(onStatus).toHaveBeenLastCalledWith("unavailable")
+  );
+  expect(loop.setActive).toHaveBeenLastCalledWith(false);
+});
+
 it("準備中に破棄したビューアは、遅れて完了しても描画を再開しない", async () => {
   const pending = Promise.withResolvers<Three.Object3D>();
   renderer.compileAsync.mockReturnValueOnce(pending.promise);

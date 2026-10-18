@@ -68,19 +68,21 @@ export function createAudioViewer({
   let cameraController: ReturnType<typeof createViewerCamera> | undefined;
   let renderLoop: ReturnType<typeof createViewerRenderLoop> | undefined;
   const invalidate = () => renderLoop?.invalidate();
-  const beginLoading = () => {
+  const pauseRendering = () => {
     preparation += 1;
     prepared = false;
-    ready = false;
     renderLoop?.setActive(false);
-    onStatus("loading");
     return preparation;
   };
-  const unavailable = () => {
-    preparation += 1;
-    prepared = false;
+  const beginLoading = () => {
+    const attempt = pauseRendering();
     ready = false;
-    renderLoop?.setActive(false);
+    onStatus("loading");
+    return attempt;
+  };
+  const unavailable = () => {
+    pauseRendering();
+    ready = false;
     onStatus("unavailable");
   };
   const lost = (event: Event) => {
@@ -119,7 +121,8 @@ export function createAudioViewer({
     if (disposed || contextLost || !sceneResources || !cameraController) {
       return;
     }
-    const attempt = beginLoading();
+    // 詳細度の切り替えでは直前の描画と操作状態を維持する。
+    const attempt = ready ? pauseRendering() : beginLoading();
     const resources = sceneResources;
     const { camera } = cameraController;
     try {
