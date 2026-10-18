@@ -1,6 +1,96 @@
 version: 1
-updated: "2026-10-14"
+updated: "2026-10-18"
 events:
+  - year: 2026
+    date: 2026-10-17
+    title_ja: "DeepSeek-V4.1-Flash-1017"
+    summary_ja: |
+      DeepSeek-V4.1-Flash の更新版を Web・アプリ・API で提供開始し、重みも公開。推論、コーディング、エージェント作業、視覚理解を改善し、タスクの実行時間と出力長を削減。API は従来の deepseek-flash で利用でき、呼び出し方法と料金は維持。
+
+      [DeepSeek-V4.1-Flash-1017 の公開 | DeepSeek](https://api-docs.deepseek.com/news/news261017/) / [10月17日のモデル更新 | DeepSeek API Change Log](https://api-docs.deepseek.com/updates/)
+    tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
+    series: ["DeepSeek Flash"]
+  - year: 2026
+    date: 2026-10-16
+    title_ja: "Beam (重み公開)"
+    summary_ja: |
+      Reflection が10月5日に発表した、総パラメータ501B・活性化23Bの MoE モデルの重みを Apache 2.0 で公開。コーディング、推論、長時間のエージェント作業向けで、BF16・FP8・NVFP4 形式と投機的デコード用モデルを提供。自社 API は公開ベータで提供。
+
+      [Beam の重み公開 | Reflection](https://reflection.ai/blog/beam-is-available) / [Beam の発表 | Reflection](https://reflection.ai/blog/introducing-beam)
+    tags: ["Reflection", "Beam", "Open Weight Model", "LLM Model"]
+    series: ["Beam"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Muse Spark Open"
+    summary_ja: |
+      総パラメータ816B・活性化42B、100万トークンのコンテキストを持つマルチモーダルモデルの重みを公開。テキスト・画像・動画・音声の入力に対応し、コーディングや長時間のエージェント作業向け。Muse Model License の商用利用条件が適用され、提携各社の API でも利用可能。
+
+      [Muse Spark Open の公開 | Meta AI Research](https://research.meta.ai/blog/muse-spark-open) / [Build with Muse Spark Open | Meta for Developers](https://dev.meta.ai/resources/blog/build-with-muse-spark-open)
+    tags: ["Meta", "Muse", "Open Weight Model", "LLM Model"]
+    series: ["Muse Spark"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Nemotron 3.5 Super VL"
+    summary_ja: |
+      画像や文書を理解する120Bパラメータのモデルを公開。OCR、表・グラフの読解、ツール利用、複数段階の業務処理など、継続稼働する専門エージェント向け。重み・データセット・学習レシピを公開し、Hugging Face や NVIDIA NIM などで提供。
+
+      [Nemotron 3.5 Super VL / Bolt の公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Nemotron 3.5 Bolt 74B-A9B (重み公開)"
+    summary_ja: |
+      10月13日に発表したローカルエージェント向けモデルの重みを公開。ネイティブ2ビット量子化により24GBのメモリに収まり、RTX / DGX Spark などで動作。llama.cpp、Ollama、LM Studio、vLLM などに対応。
+
+      [Nemotron 3.5 Bolt 74B-A9B の重み公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron Bolt"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Nemotron 3.5 Bolt E4B (発表)"
+    summary_ja: |
+      4GBのメモリで動作する、物理・対話エージェント向けモデルを発表。GeForce RTX、Jetson、RTX / DGX Spark 上での音声アシスタントや対話型キャラクターを想定。提供開始は10月23日の予定で、発表時点では未公開。
+
+      [Nemotron 3.5 Bolt E4B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
+    tags: ["NVIDIA", "Nemotron", "LLM Model"]
+    series: ["Nemotron Bolt"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "d1-ultra (API)"
+    summary_ja: |
+      テキスト・画像から判断を返すマルチモーダル判断モデルを Liquid AI API で提供。文章を生成せず、真偽・選択肢・スコアの確率を返し、分類や検査、申請内容の確認などに対応。入力100万トークン当たり0.042ドルで、出力トークンの課金はなし。
+
+      [d1-ultra の公開 | Liquid AI](https://www.liquid.ai/blog/d1-ultra)
+    tags: ["Liquid AI", "d1", "Decision Model"]
+    series: ["Liquid d1"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Span-02"
+    summary_ja: |
+      テキスト・画像・画面から選択肢、真偽、スコア、数値を返す判断モデルを公開。推論に使う時間をミリ秒単位で指定でき、期限までに得られた判断と確信度を返す。Respan Gateway の API と、セルフホスト用の公開重みを提供。
+
+      [Introducing Span-02: Anytime Reasoning for Decisions | Respan](https://www.respan.ai/blog/introducing-span-2)
+    tags: ["Respan", "Span", "Open Weight Model", "Decision Model"]
+    series: ["Span"]
+  - year: 2026
+    date: 2026-10-14
+    title_ja: "Jev 1.14.0 (Preview)"
+    summary_ja: |
+      判断モデル Jev の新バージョンを jev-preview で提供し、全般的な性能と多言語対応を改善。画像入力、画像内の対象を囲む box 型の出力、長いコンテキストを実験機能として追加。実験機能は API ヘッダーで明示的に有効化する方式。
+
+      [Jev 1.14.0 の公開 | TypeSafe AI](https://typesafe.ai/blog/jev-1-14)
+    tags: ["TypeSafe AI", "Jev", "Decision Model"]
+    series: ["Jev"]
+  - year: 2026
+    date: 2026-10-13
+    title_ja: "LFM2.5-24B-A2B"
+    summary_ja: |
+      端末上のエージェント向けに、総パラメータ24B・活性化2Bの推論モデルを公開。コンテキストを131,072トークンに拡張し、ツール利用や複数ターンの作業を強化。ベースモデルと事後学習済みモデルの重みを Hugging Face で提供。
+
+      [LFM2.5-24B-A2B の公開 | Liquid AI](https://www.liquid.ai/blog/lfm2-5-24b-a2b)
+    tags: ["Liquid AI", "LFM", "Open Weight Model", "LLM Model"]
+    series: ["LFM"]
   - year: 2026
     date: 2026-10-13
     title_ja: "Gemini 4 Argon (GA)"
@@ -21,11 +111,11 @@ events:
     series: ["GLM Legal"]
   - year: 2026
     date: 2026-10-13
-    title_ja: "Nemotron 3.5 Bolt 74B (発表)"
+    title_ja: "Nemotron 3.5 Bolt 74B-A9B (発表)"
     summary_ja: |
-      RTX Spark 上のローカルエージェント向けに、総パラメータ74B・活性化9Bの MoE モデルを発表。2ビット量子化でモデルを24GBに圧縮。提供開始は10月15日の予定で、重み・学習データ・レシピの公開を予告。
+      RTX Spark 上のローカルエージェント向けに、総パラメータ74B・活性化9Bの MoE モデルを発表。2ビット量子化でモデルを24GBに圧縮。発表時点では10月15日の提供開始を予告し、同日に重みを公開。
 
-      [Nemotron 3.5 Bolt 74B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/local-ai-rtx-spark-laptops-software-updates/)
+      [Nemotron 3.5 Bolt 74B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/local-ai-rtx-spark-laptops-software-updates/) / [10月15日の重み公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
     tags: ["NVIDIA", "Nemotron", "LLM Model"]
     series: ["Nemotron Bolt"]
   - year: 2026
