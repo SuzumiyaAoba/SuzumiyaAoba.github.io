@@ -14,6 +14,7 @@ import type { WebGLRenderer, Object3D } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import type { AudioModel, HeadphoneModel } from "../model/viewer";
 import type { AudioModelBuilder } from "./viewer-model-loader";
+import { createViewerMeshBatches } from "./viewer-mesh-batches";
 
 function isMesh(part: Object3D): part is Mesh {
   return part instanceof Mesh;
@@ -53,6 +54,7 @@ export function createViewerScene(
 
   let initialized = false;
   const model = createModel(refresh);
+  const batches = createViewerMeshBatches(model.group);
   scene.add(model.group);
 
   // 全製品を同じ撮影環境に置き、照明範囲だけを実寸に合わせる。
@@ -106,6 +108,7 @@ export function createViewerScene(
       return;
     }
     configureModelShadows(model.group);
+    batches.refresh();
     scene.updateMatrixWorld(true);
     key.shadow.needsUpdate = true;
     onChange?.();
@@ -126,6 +129,7 @@ export function createViewerScene(
     },
     dispose() {
       initialized = false;
+      batches.dispose();
       model.dispose();
       environment.dispose();
       floorGeometry.dispose();
