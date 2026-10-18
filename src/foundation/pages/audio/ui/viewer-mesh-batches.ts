@@ -1,6 +1,7 @@
-import { Material, Mesh } from "three";
+import { Material, Matrix4, Mesh } from "three";
 import type { BufferGeometry, Object3D } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { hasSurfaceFinish } from "./scene/surface-finish";
 
 type StaticMesh = Mesh<BufferGeometry, Material>;
 type MeshBatch = { mesh: StaticMesh; originals: StaticMesh[] };
@@ -15,7 +16,8 @@ function isStaticMesh(part: Object3D): part is StaticMesh {
   }
   return (
     part.constructor === Mesh &&
-    part.material.onBeforeCompile === Material.prototype.onBeforeCompile &&
+    (part.material.onBeforeCompile === Material.prototype.onBeforeCompile ||
+      hasSurfaceFinish(part.material)) &&
     !part.material.transparent &&
     part.visible &&
     part.children.length === 0 &&
@@ -47,14 +49,50 @@ function batchKey(mesh: StaticMesh) {
   ].join("/");
 }
 
-function createBatch(originals: StaticMesh[]): StaticMesh | undefined {
+function collectParts(parent: Object3D, mergedMeshes: WeakSet<Object3D>) {
+  const meshes: StaticMesh[] = [];
+  const recursive = parent.userData["audioStaticRoot"] === true;
+  const inverse = parent.matrixWorld.clone().invert();
+  const transform = new Matrix4();
+  const visit = (part: Object3D) => {
+    for (const child of part.children) {
+      if (
+        !child.visible ||
+        mergedMeshes.has(child) ||
+        child.userData["audioStaticRoot"] === true
+      ) {
+        continue;
+      }
+      if (isStaticMesh(child)) {
+        transform.multiplyMatrices(inverse, child.matrixWorld);
+        // 鏡像の部品は元の親の下で結合し、表裏の判定を保つ。
+        if (transform.determinant() > 0) {
+          meshes.push(child);
+        }
+      }
+      if (recursive && child.children.length > 0) {
+        visit(child);
+      }
+    }
+  };
+  visit(parent);
+  return meshes;
+}
+
+function createBatch(
+  originals: StaticMesh[],
+  parent: Object3D
+): StaticMesh | undefined {
   const [first] = originals;
   if (!first || originals.length < 4) {
     return;
   }
+  const inverse = parent.matrixWorld.clone().invert();
+  const transform = new Matrix4();
   const geometries = originals.map((mesh) => {
-    mesh.updateMatrix();
-    return mesh.geometry.clone().applyMatrix4(mesh.matrix);
+    const geometry = mesh.geometry.clone();
+    transform.multiplyMatrices(inverse, mesh.matrixWorld);
+    return geometry.applyMatrix4(transform);
   });
   try {
     const geometry = mergeGeometries(geometries);
@@ -79,9 +117,10 @@ function createBatch(originals: StaticMesh[]): StaticMesh | undefined {
   }
 }
 
-/** 同じ親を持つ静的な部品をまとめ、親の移動・表示切替と部品のローカル座標を保つ。 */
+/** 静的な部品をまとめ、機器の移動・表示切替と質感に使うローカル座標を保つ。 */
 export function createViewerMeshBatches(root: Object3D) {
   const batches: MeshBatch[] = [];
+  const mergedMeshes = new WeakSet<Object3D>();
   let disposed = false;
 
   return {
@@ -89,18 +128,28 @@ export function createViewerMeshBatches(root: Object3D) {
       if (disposed) {
         return;
       }
+      root.updateWorldMatrix(true, true);
       const parents: Object3D[] = [];
       root.traverse((part) => {
+        if (
+          isMesh(part) &&
+          !Array.isArray(part.material) &&
+          hasSurfaceFinish(part.material) &&
+          !part.geometry.hasAttribute("audioOriginalPosition")
+        ) {
+          // 元の部品は位置バッファを共有し、結合した形状では変換前の座標を残す。
+          part.geometry.setAttribute(
+            "audioOriginalPosition",
+            part.geometry.getAttribute("position")
+          );
+        }
         if (part.children.length > 0) {
           parents.push(part);
         }
       });
       for (const parent of parents) {
         const candidates = new Map<string, StaticMesh[]>();
-        for (const child of parent.children) {
-          if (!isStaticMesh(child)) {
-            continue;
-          }
+        for (const child of collectParts(parent, mergedMeshes)) {
           const key = batchKey(child);
           const meshes = candidates.get(key);
           if (meshes) {
@@ -110,9 +159,10 @@ export function createViewerMeshBatches(root: Object3D) {
           }
         }
         for (const originals of candidates.values()) {
-          const mesh = createBatch(originals);
+          const mesh = createBatch(originals, parent);
           if (mesh) {
             parent.add(mesh);
+            mergedMeshes.add(mesh);
             batches.push({ mesh, originals });
             for (const original of originals) {
               original.visible = false;

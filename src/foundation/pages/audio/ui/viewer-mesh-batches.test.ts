@@ -10,6 +10,7 @@ import {
 import type { Object3D } from "three";
 import { afterEach, expect, it, vi } from "vite-plus/test";
 import { createViewerMeshBatches } from "./viewer-mesh-batches";
+import { applySurfaceFinish } from "./scene/surface-finish";
 
 const disposals: (() => void)[] = [];
 
@@ -174,4 +175,69 @@ it("結合したGPU資源だけを一度解放し、元のモデルや共有材�
   expect(originalDisposed).not.toHaveBeenCalled();
   expect(materialDisposed).not.toHaveBeenCalled();
   expect(visibleMeshes(parent)).toHaveLength(4);
+});
+
+it("静的な機器は別のグループの部品も結合し、親子の変換を焼き込む", () => {
+  const root = new Group();
+  root.userData["audioStaticRoot"] = true;
+  root.position.set(80, 40, -20);
+  root.rotation.z = 0.2;
+  const first = parts();
+  const next = parts(new Group(), first.material);
+  next.parent.position.set(30, 15, -10);
+  next.parent.rotation.y = Math.PI / 3;
+  next.parent.scale.set(2, 1, 0.5);
+  root.add(first.parent, next.parent);
+  const bounds = new Box3().setFromObject(root, true);
+  optimize(root);
+  const rendered = visibleMeshes(root);
+  expect(rendered).toHaveLength(1);
+  const [batch] = rendered;
+  if (!batch) {
+    throw new Error("The merged model is missing");
+  }
+  const mergedBounds = new Box3().setFromObject(batch, true);
+  expect(mergedBounds.min.distanceTo(bounds.min)).toBeLessThan(0.0001);
+  expect(mergedBounds.max.distanceTo(bounds.max)).toBeLessThan(0.0001);
+  expect(batch.parent).toBe(root);
+});
+
+it("鏡像の部品は元の親の下で結合し、面の向きを反転させない", () => {
+  const root = new Group();
+  root.userData["audioStaticRoot"] = true;
+  const mirrored = parts();
+  mirrored.parent.scale.x = -1;
+  root.add(mirrored.parent);
+  optimize(root);
+  const rendered = visibleMeshes(root);
+  expect(rendered).toHaveLength(1);
+  expect(rendered[0]?.parent).toBe(mirrored.parent);
+});
+
+it("金属や樹脂の質感には結合前の座標を渡し、共有材質と描画順を保つ", () => {
+  const material = applySurfaceFinish(new MeshStandardMaterial(), {
+    scale: [0.08, 7, 7],
+  });
+  const { parent, geometry } = parts(new Group(), material);
+  const batches = optimize(parent);
+  const rendered = visibleMeshes(parent);
+  expect(rendered).toHaveLength(1);
+  const [batch] = rendered;
+  if (!(batch?.material instanceof MeshStandardMaterial)) {
+    throw new Error("The merged surface material is missing");
+  }
+  const originalPosition = new Vector3().fromBufferAttribute(
+    geometry.getAttribute("position"),
+    0
+  );
+  const preservedPosition = new Vector3().fromBufferAttribute(
+    batch.geometry.getAttribute("audioOriginalPosition"),
+    geometry.getAttribute("position").count
+  );
+  expect(preservedPosition.toArray()).toStrictEqual(originalPosition.toArray());
+  expect(batch.material).toBe(material);
+  const disposeOriginal = vi.spyOn(material, "dispose");
+  batches.dispose();
+  batches.dispose();
+  expect(disposeOriginal).not.toHaveBeenCalled();
 });

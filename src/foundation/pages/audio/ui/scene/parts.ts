@@ -29,6 +29,8 @@ export function createModelParts({
 }: { brushed?: boolean } = {}) {
   const root = new Group();
   root.name = "TEAC UD-505 Silver — millimetres";
+  // 内部の部品は静的。機器単位で結合しても外側の移動・表示切替を保てる。
+  root.userData["audioStaticRoot"] = true;
   const geometries = new Set<BufferGeometry>();
   const textures = new Set<Texture>();
   const materials = new Set<Material>();

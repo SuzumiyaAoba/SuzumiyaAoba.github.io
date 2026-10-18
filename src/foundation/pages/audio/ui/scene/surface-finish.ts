@@ -1,5 +1,13 @@
 import { Vector3 } from "three";
-import type { MeshStandardMaterial } from "three";
+import type { Material, MeshStandardMaterial } from "three";
+
+const surfaceMaterials = new WeakSet<Material>();
+
+export function hasSurfaceFinish(
+  material: Material
+): material is MeshStandardMaterial {
+  return surfaceMaterials.has(material);
+}
 
 type SurfaceFinish = {
   scale?: readonly [number, number, number];
@@ -12,7 +20,8 @@ export function applySurfaceFinish<T extends MeshStandardMaterial>(
   material: T,
   { scale = [8, 8, 8], relief = 0.012, roughness = 0.08 }: SurfaceFinish = {}
 ): T {
-  material.customProgramCacheKey = () => "audio-physical-surface-v1";
+  surfaceMaterials.add(material);
+  material.customProgramCacheKey = () => "audio-physical-surface-v2";
   material.onBeforeCompile = (shader) => {
     shader.uniforms["audioSurfaceScale"] = { value: new Vector3(...scale) };
     shader.uniforms["audioSurfaceRelief"] = { value: relief };
@@ -20,15 +29,17 @@ export function applySurfaceFinish<T extends MeshStandardMaterial>(
     shader.vertexShader = shader.vertexShader
       .replace(
         "#include <common>",
-        "#include <common>\nvarying vec3 audioSurfacePosition;"
+        `#include <common>
+varying vec3 audioSurfacePosition;
+attribute vec3 audioOriginalPosition;`
       )
       .replace(
         "#include <begin_vertex>",
         `#include <begin_vertex>
 #ifdef USE_INSTANCING
-audioSurfacePosition = (instanceMatrix * vec4(position, 1.0)).xyz;
+audioSurfacePosition = (instanceMatrix * vec4(audioOriginalPosition, 1.0)).xyz;
 #else
-audioSurfacePosition = position;
+audioSurfacePosition = audioOriginalPosition;
 #endif`
       );
     shader.fragmentShader = shader.fragmentShader
