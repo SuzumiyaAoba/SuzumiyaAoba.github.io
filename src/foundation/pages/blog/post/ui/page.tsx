@@ -150,6 +150,7 @@ export default async function Page({ params, locale }: PageProps) {
   const tagProducts =
     remainingSlots > 0 && productMatchTags.length > 0
       ? await getAffiliateProductsByTags(productMatchTags, {
+          ...(category ? { category } : {}),
           excludeIds: [
             ...prioritizedProducts.map((product) => product.id),
             ...productIdsInContent,
@@ -163,7 +164,9 @@ export default async function Page({ params, locale }: PageProps) {
   }
   const amazonProducts = [...prioritizedProducts, ...tagProducts];
   const shouldShowAmazonAssociate =
-    amazonProducts.length > 0 || post.frontmatter.amazonAssociate;
+    amazonProducts.length > 0 ||
+    productIdsInContent.length > 0 ||
+    post.frontmatter.amazonAssociate;
 
   const prevTitle = prev
     ? (resolveLocalizedValue(prev, resolvedLocale)?.frontmatter.title ??

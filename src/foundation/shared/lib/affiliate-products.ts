@@ -160,6 +160,8 @@ export async function getAffiliateProductsByIds(
  * タグ検索時のオプション
  */
 type AffiliateProductTagOptions = {
+  /** 対応する商品が登録済みなら、そのカテゴリ内に検索を限定する。 */
+  category?: string;
   /** 結果から除外する ID のリスト（現在表示中の商品など） */
   excludeIds?: string[];
   /** 最大取得件数 */
@@ -177,12 +179,17 @@ export async function getAffiliateProductsByTags(
   tags: string[],
   options?: AffiliateProductTagOptions
 ): Promise<AffiliateProduct[]> {
-  if (tags.length === 0) {
+  const category = options?.category?.trim();
+  if (tags.length === 0 && !category) {
     return [];
   }
 
   const index = await loadAffiliateProducts();
-  const normalizedTags = new Set(tags.map((tag) => tag.trim()).filter(Boolean));
+  // 本文の商品を除外して候補がなくなっても、別カテゴリの商品では補充しない。
+  const matchTags = category && index.byTag.has(category) ? [category] : tags;
+  const normalizedTags = new Set(
+    matchTags.map((tag) => tag.trim()).filter(Boolean)
+  );
   const excluded = new Set(options?.excludeIds);
   const matches: AffiliateProduct[] = [];
   const seen = new Set<string>();

@@ -11,6 +11,7 @@ import {
 } from "vite-plus/test";
 
 import { AffiliateProductSchema } from "./affiliate-products";
+import affiliateProductSource from "@/content/affiliate-products.json";
 
 const files = vi.hoisted(() => ({
   readFile: vi.fn<typeof readFile>(),
@@ -82,6 +83,61 @@ describe("アフィリエイトリンクの読み込み", () => {
     await expect(getAffiliateProductUrlById()).resolves.toStrictEqual(
       new Map([[link.id, link.productUrl]])
     );
+  });
+
+  it.each([
+    {
+      excludeIds: [],
+      expectedIds: ["hd800s", "clear-mg-pro", "ud-505-x"],
+    },
+    {
+      excludeIds: ["hd800s", "clear-mg-pro"],
+      expectedIds: ["ud-505-x"],
+    },
+    {
+      excludeIds: ["hd800s", "clear-mg-pro", "ud-505-x"],
+      expectedIds: [],
+    },
+  ])(
+    "オーディオ記事では本文の商品を除外しても AI 書籍を補充しない: $excludeIds",
+    async ({ excludeIds, expectedIds }) => {
+      files.readFile.mockResolvedValue(JSON.stringify(affiliateProductSource));
+      const { getAffiliateProductsByTags } =
+        await import("./affiliate-products");
+
+      const products = await getAffiliateProductsByTags(
+        ["オーディオ", "3Dモデル", "AI"],
+        { category: "オーディオ", excludeIds, limit: 3 }
+      );
+
+      expect(products.map(({ id }) => id)).toStrictEqual(expectedIds);
+    }
+  );
+
+  it("カテゴリに商品が登録されていない記事ではタグから商品を選ぶ", async () => {
+    files.readFile.mockResolvedValue(JSON.stringify(affiliateProductSource));
+    const { getAffiliateProductsByTags } = await import("./affiliate-products");
+
+    const products = await getAffiliateProductsByTags(["AI"], {
+      category: "プログラミング",
+      limit: 3,
+    });
+
+    expect(products.map(({ id }) => id)).toStrictEqual([
+      "現場で活用するためのAIエージェント実践入門",
+    ]);
+  });
+
+  it("タグがない記事でも前後の空白を除いたカテゴリから件数上限まで商品を選ぶ", async () => {
+    files.readFile.mockResolvedValue(JSON.stringify(affiliateProductSource));
+    const { getAffiliateProductsByTags } = await import("./affiliate-products");
+
+    const products = await getAffiliateProductsByTags([], {
+      category: " オーディオ ",
+      limit: 1,
+    });
+
+    expect(products.map(({ id }) => id)).toStrictEqual(["hd800s"]);
   });
 
   it.each([
