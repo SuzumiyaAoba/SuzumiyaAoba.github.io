@@ -16,7 +16,7 @@ import type {
   HeadphoneModel,
   ViewerHandle,
   ViewerStatus,
-} from "../model/viewer";
+} from "@/shared/ui/audio/definitions/viewer";
 import { createViewerCamera } from "./viewer-camera";
 import { createViewerRenderLoop } from "./viewer-render-loop";
 import { createAudioViewer } from "./viewer-runtime";

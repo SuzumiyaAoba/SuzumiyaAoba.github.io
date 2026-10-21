@@ -1,6 +1,9 @@
 import { Group, Vector3 } from "three";
 import type { Camera, Object3D } from "three";
-import type { AudioScene, HeadphoneModel } from "../../model/viewer";
+import type {
+  AudioScene,
+  HeadphoneModel,
+} from "@/shared/ui/audio/definitions/viewer";
 import { createHd800s } from "./hd-800s";
 import {
   cableEndpoint,

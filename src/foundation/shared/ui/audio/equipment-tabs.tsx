@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { Button } from "@/shared/ui/button";
 import type { Locale } from "@/shared/lib/routing";
-import { audioEquipment } from "../model/equipment";
+import { audioEquipment } from "@/shared/ui/audio/definitions/equipment";
 import { EquipmentArticle } from "./equipment-article";
 
 export function EquipmentTabs({ locale }: { locale: Locale }) {

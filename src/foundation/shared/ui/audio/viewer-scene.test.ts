@@ -9,7 +9,7 @@ import {
 } from "three";
 import type * as Three from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
-import type { AudioModelBuilder } from "../model/viewer";
+import type { AudioModelBuilder } from "@/shared/ui/audio/definitions/viewer";
 import { createViewerScene } from "./viewer-scene";
 
 const { disposeEnvironment } = vi.hoisted(() => ({

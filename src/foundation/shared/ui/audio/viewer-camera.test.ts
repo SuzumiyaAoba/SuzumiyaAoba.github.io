@@ -2,8 +2,11 @@
 
 import { Vector3 } from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
-import { audioModels, modelViews } from "../model/viewer";
-import type { AudioModel, AudioView } from "../model/viewer";
+import { audioModels, modelViews } from "@/shared/ui/audio/definitions/viewer";
+import type {
+  AudioModel,
+  AudioView,
+} from "@/shared/ui/audio/definitions/viewer";
 import { createViewerCamera } from "./viewer-camera";
 import { getCameraPose } from "./viewer-camera-presets";
 

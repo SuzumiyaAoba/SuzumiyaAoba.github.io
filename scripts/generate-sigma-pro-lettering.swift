@@ -56,6 +56,6 @@ let fonts = [
     "wordmark": fontData("Optima-Regular", characters: "Questyle?")
 ]
 let data = try JSONSerialization.data(withJSONObject: fonts, options: [.prettyPrinted, .sortedKeys])
-let destination = URL(fileURLWithPath: "src/foundation/pages/audio/ui/scene/sigma-pro-fonts.json")
+let destination = URL(fileURLWithPath: "src/foundation/shared/ui/audio/scene/sigma-pro-fonts.json")
 try data.write(to: destination)
 print("Wrote vector glyph outlines to \(destination.path)")

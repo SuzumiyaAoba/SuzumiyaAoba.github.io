@@ -53,6 +53,8 @@ const MERMAID_USAGE = /^[ \t]*(?:```|~~~)[ \t]*mermaid\b|<Mermaid[\s/>]/mu;
 const CODE_BLOCK_USAGE =
   /<(?:CodeWithTabs|CodeSwitcher|CodeWithTooltips)[\s/>]/u;
 
+const AUDIO_USAGE = /<(?:AudioSystem|AudioEquipment)[\s/>]/u;
+
 /**
  * 重量級コンポーネントを、実際に使う記事にだけ注入する。
  *
@@ -73,6 +75,12 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
     components["CodeWithTabs"] = lazy.CodeWithTabs;
     components["CodeSwitcher"] = lazy.CodeSwitcher;
     components["CodeWithTooltips"] = lazy.CodeWithTooltips;
+  }
+
+  if (AUDIO_USAGE.test(source)) {
+    const audio = await import("@/shared/ui/mdx/audio-lazy");
+    components["AudioSystem"] = audio.AudioSystem;
+    components["AudioEquipment"] = audio.AudioEquipment;
   }
 
   return components;

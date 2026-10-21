@@ -1,5 +1,5 @@
 /**
- * 生成元: src/foundation/pages/audio/ui/scene/texture-sources/
+ * 生成元: src/foundation/shared/ui/audio/scene/texture-sources/
  * 再生成: npm run build:audio-textures（初回は npx playwright install chromium）
  * 検証: npm run check:audio-textures（ブラウザー不要）
  * 別の Chromium を使う場合: AUDIO_TEXTURE_BROWSER=/path/to/chromium
@@ -11,7 +11,7 @@ import sharp from "sharp";
 import { z } from "zod";
 
 const root = path.resolve(import.meta.dirname, "..");
-const sceneDirectory = "src/foundation/pages/audio/ui/scene";
+const sceneDirectory = "src/foundation/shared/ui/audio/scene";
 const manifestPath = path.join(root, sceneDirectory, "audio-textures.json");
 const sourceFiles = ["catalog.ts", "hd-800s.ts", "ha-1a.ts"];
 const hash = createHash("sha256");
@@ -89,7 +89,7 @@ if (process.argv.includes("--check")) {
     await page.goto(url);
     const images = await page.evaluate(async () => {
       const { captureAudioTextureSources } =
-        await import("../src/foundation/pages/audio/ui/scene/texture-sources/catalog.ts");
+        await import("../src/foundation/shared/ui/audio/scene/texture-sources/catalog.ts");
       return captureAudioTextureSources();
     });
     const outputDirectory = path.join(root, "public/assets/audio/textures");

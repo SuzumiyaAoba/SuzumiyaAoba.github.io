@@ -1,5 +1,5 @@
 import type { Texture } from "three";
-import type { AudioModel } from "../../model/viewer";
+import type { AudioModel } from "@/shared/ui/audio/definitions/viewer";
 import manifest from "./audio-textures.json";
 
 export type TextureName = keyof typeof manifest.textures;

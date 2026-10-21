@@ -1,4 +1,5 @@
 import type { readFile } from "node:fs/promises";
+import path from "node:path";
 import {
   assert,
   afterEach,
@@ -20,7 +21,11 @@ vi.mock("node:fs/promises", () => files);
 
 // Mock the content-root module (transitive dependency)
 vi.mock(import("@/shared/lib/content-file"), () => ({
-  resolveContentRoot: async () => "/mock/content",
+  resolveContentDeps: async () => ({
+    fs: await import("node:fs/promises"),
+    path,
+    root: "/mock/content",
+  }),
 }));
 
 afterEach(() => vi.unstubAllEnvs());

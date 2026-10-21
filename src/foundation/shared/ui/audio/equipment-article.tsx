@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
-import type { AudioEquipment } from "../model/equipment";
+import type { AudioEquipment } from "@/shared/ui/audio/definitions/equipment";
 import { AudioViewer } from "./audio-viewer";
 
 export function EquipmentArticle({

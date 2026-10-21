@@ -1,5 +1,8 @@
 import type { Locale } from "@/shared/lib/routing";
-import type { AudioView, HeadphoneModel } from "../model/viewer";
+import type {
+  AudioView,
+  HeadphoneModel,
+} from "@/shared/ui/audio/definitions/viewer";
 
 export function getHeadphoneConnectionLabel(
   headphone: HeadphoneModel,

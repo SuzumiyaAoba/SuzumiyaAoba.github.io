@@ -1,4 +1,7 @@
-import type { AudioModel, AudioView } from "../model/viewer";
+import type {
+  AudioModel,
+  AudioView,
+} from "@/shared/ui/audio/definitions/viewer";
 
 type CameraPose = {
   direction: readonly [number, number, number];

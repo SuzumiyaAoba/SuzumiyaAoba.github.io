@@ -1,4 +1,7 @@
-import type { AudioModel, AudioModelBuilder } from "../model/viewer";
+import type {
+  AudioModel,
+  AudioModelBuilder,
+} from "@/shared/ui/audio/definitions/viewer";
 import { preloadAudioTextures } from "./scene/texture-images";
 
 // import のパスを固定し、未選択の単体モデルを初回のバンドルに含めない。

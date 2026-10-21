@@ -1,13 +1,17 @@
 import { Hand, Minus, Plus, RotateCcw } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import type { Locale } from "@/shared/lib/routing";
-import { headphoneModels, headphoneNames, modelViews } from "../model/viewer";
+import {
+  headphoneModels,
+  headphoneNames,
+  modelViews,
+} from "@/shared/ui/audio/definitions/viewer";
 import type {
   AudioModel,
   AudioView,
   HeadphoneModel,
   ZoomDirection,
-} from "../model/viewer";
+} from "@/shared/ui/audio/definitions/viewer";
 import { getHeadphoneConnectionLabel, viewLabels } from "./viewer-labels";
 
 export function HeadphoneControls({

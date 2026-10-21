@@ -97,6 +97,26 @@
       "imageUrl": "https://m.media-amazon.com/images/I/81h4V4c6kGL._SL1500_.jpg",
       "productUrl": "https://amzn.to/4tREpdX",
       "tags": ["デザインパターン", "GoF"]
+    },
+    {
+      "id": "hd800s",
+      "title": "Sennheiser ゼンハイザー オープン型 ヘッドホン HD 800 S【VGP殿堂入り】フラッグシップ 開放型【国内正規品】",
+      "imageUrl": "https://m.media-amazon.com/images/I/61cUYuzyBDL._AC_SL1452_.jpg",
+      "productUrl": "https://link.amazon/B022bmpcZ",
+      "tags": ["オーディオ"]
+    },
+    {
+      "id": "clear-mg-pro",
+      "title": "FOCAL PROFESSIONAL/Clear MG Pro 開放型ヘッドフォン",
+      "imageUrl": "https://m.media-amazon.com/images/I/71eE3bMx3jL._AC_SL1200_.jpg",
+      "productUrl": "https://link.amazon/B08FFnBND",
+      "tags": ["オーディオ"]
+    },
+    {
+      "id": "ud-505-x",
+      "title": "TEAC(ティアック) UD-505-X/S シルバー USB DAC/ヘッドホンアンプ 小型コンパクト/Bluetooth/MQA/ハイレゾ/PC/スマホ/光入力/バランス/4.4mm/pentaconn",
+      "imageUrl": "https://m.media-amazon.com/images/I/51XSGoCVoNL._AC_SL1200_.jpg",
+      "productUrl": "https://link.amazon/B0dFVZx7M"
     }
   ],
   "links": [
@@ -194,6 +214,11 @@
       "id": "gof-design-patterns",
       "title": "Design Patterns: Elements of Reusable Object-Oriented Software (Addison-Wesley Professional Computing Series)",
       "productUrl": "https://amzn.to/4vwturC"
+    },
+    {
+      "id": "MDR-CD900ST",
+      "title": "SONY 有線 密閉型スタジオモニターヘッドホン 黒 MDR-CD900ST",
+      "productUrl": "https://link.amazon/B0ejmBaZZ"
     }
   ]
 }

@@ -143,12 +143,13 @@ export default async function Page({ params, locale }: PageProps) {
   }
   const prioritizedProducts = explicitProducts.slice(0, 3);
   const remainingSlots = 3 - prioritizedProducts.length;
+  const productMatchTags = category ? [category, ...tags] : tags;
   if (shouldLogPerf) {
     console.time(`[blog] tag products:${slug}`);
   }
   const tagProducts =
-    remainingSlots > 0 && tags.length > 0
-      ? await getAffiliateProductsByTags(tags, {
+    remainingSlots > 0 && productMatchTags.length > 0
+      ? await getAffiliateProductsByTags(productMatchTags, {
           excludeIds: [
             ...prioritizedProducts.map((product) => product.id),
             ...productIdsInContent,

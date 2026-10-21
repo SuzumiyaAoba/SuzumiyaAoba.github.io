@@ -17,6 +17,17 @@ vi.mock(import("@/shared/lib/mdx/components"), () => ({ mdxComponents: {} }));
 vi.mock(import("@/shared/lib/affiliate-products"), () => ({
   getAffiliateProductUrlById: vi.fn<typeof getAffiliateProductUrlById>(),
 }));
+// Next.js が管理する遅延境界を外し、実際のビューアーに渡る内容を検証する。
+vi.mock(import("@/shared/ui/mdx/audio-lazy"), async () => {
+  const [system, equipment] = await Promise.all([
+    import("@/shared/ui/audio/audio-system"),
+    import("@/shared/ui/audio/audio-equipment"),
+  ]);
+  return {
+    AudioSystem: system.AudioSystem,
+    AudioEquipment: equipment.AudioEquipment,
+  };
+});
 vi.mock(import("@/shared/ui/mdx/img"), () => ({
   Img: ({ src, alt, basePath }: MdxImgProps) => (
     <img
@@ -34,6 +45,30 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("MDX rendering", () => {
+  it("オーディオの接続全体と単体モデルを import なしで埋め込める", async () => {
+    const content = await renderMdx(
+      '<AudioSystem />\n\n<AudioEquipment model="hd-800s" />'
+    );
+    const html = renderToStaticMarkup(content);
+    expect(html).toContain('data-model="system"');
+    expect(html).toContain('data-model="hd-800s"');
+    expect(html).toContain("接続するヘッドホン");
+    expect(html).toContain("Sennheiser / HD 800 S");
+    expect(html).toContain("3Dモデルを読み込んでいます");
+  });
+
+  it("英語のオーディオ埋め込みにも機器情報と操作説明を渡す", async () => {
+    const { content, headings } = await renderMdxWithToc(
+      '## Audio\n\n<AudioEquipment model="ie-600" locale="en" />'
+    );
+    const html = renderToStaticMarkup(content);
+    expect(html).toContain('data-model="ie-600"');
+    expect(html).toContain("Sennheiser / IE 600");
+    expect(html).toContain("Loading the 3D model");
+    expect(html).toContain("Enable drag controls");
+    expect(headings).toStrictEqual([{ id: "audio", text: "Audio", level: 2 }]);
+  });
+
   it("本文と目次付き本文で同じHTMLを生成する", async () => {
     const source = "## Hello\n\nA **bold** paragraph.\n\n### Details";
     const plain = await renderMdx(source);

@@ -4,8 +4,8 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
-import { audioEquipment } from "../model/equipment";
-import type { AudioModel } from "../model/viewer";
+import { audioEquipment } from "@/shared/ui/audio/definitions/equipment";
+import type { AudioModel } from "@/shared/ui/audio/definitions/viewer";
 import { AudioViewer } from "./audio-viewer";
 import { EquipmentTabs } from "./equipment-tabs";
 

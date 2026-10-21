@@ -7,7 +7,7 @@ import type {
   ViewerHandle,
   ViewerStatus,
   ZoomDirection,
-} from "../model/viewer";
+} from "@/shared/ui/audio/definitions/viewer";
 
 export function useAudioViewer(model: AudioModel) {
   const container = useRef<HTMLDivElement>(null);

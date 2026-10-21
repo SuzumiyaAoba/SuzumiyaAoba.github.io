@@ -14,7 +14,7 @@ import type {
   AudioModel,
   HeadphoneModel,
   AudioModelBuilder,
-} from "../model/viewer";
+} from "@/shared/ui/audio/definitions/viewer";
 import { createViewerMeshBatches } from "./viewer-mesh-batches";
 import { createViewerEnvironment } from "./viewer-environment";
 

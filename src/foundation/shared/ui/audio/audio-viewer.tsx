@@ -5,8 +5,8 @@
 import { useId } from "react";
 import { Button } from "@/shared/ui/button";
 import type { Locale } from "@/shared/lib/routing";
-import { headphoneNames } from "../model/viewer";
-import type { AudioModel } from "../model/viewer";
+import { headphoneNames } from "@/shared/ui/audio/definitions/viewer";
+import type { AudioModel } from "@/shared/ui/audio/definitions/viewer";
 import { useAudioViewer } from "./use-audio-viewer";
 import { HeadphoneControls, ViewerControls } from "./viewer-controls";
 import { getHeadphoneConnectionLabel } from "./viewer-labels";

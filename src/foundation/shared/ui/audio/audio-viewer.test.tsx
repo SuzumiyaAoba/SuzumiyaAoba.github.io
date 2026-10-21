@@ -10,7 +10,7 @@ import type {
   AudioModel,
   ViewerHandle,
   AudioModelBuilder,
-} from "../model/viewer";
+} from "@/shared/ui/audio/definitions/viewer";
 import { AudioViewer } from "./audio-viewer";
 import { createAudioViewer } from "./viewer-runtime";
 import { loadAudioModel } from "./viewer-model-loader";

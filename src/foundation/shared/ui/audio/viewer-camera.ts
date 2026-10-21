@@ -1,6 +1,10 @@
 import { MathUtils, PerspectiveCamera, Spherical, TOUCH, Vector3 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import type { AudioModel, AudioView, ZoomDirection } from "../model/viewer";
+import type {
+  AudioModel,
+  AudioView,
+  ZoomDirection,
+} from "@/shared/ui/audio/definitions/viewer";
 import { getCameraPose } from "./viewer-camera-presets";
 
 const keyboardRotations: Record<string, readonly [number, number]> = {
