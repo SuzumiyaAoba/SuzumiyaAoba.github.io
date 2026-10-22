@@ -1,6 +1,106 @@
 version: 1
-updated: "2026-10-18"
+updated: "2026-10-22"
 events:
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Phonon"
+    summary_ja: |
+      Gradium が端末上で動作する音声合成モデルを公開。31M・40Mパラメータの2種類で、スマートフォン、PC、組み込み機器、ブラウザーでのローカル実行に対応。モデル重みと推論コードを Apache 2.0 で公開し、Rust・Python・Swift・WebAssembly 向けの実装を提供。
+
+      [Phonon の公開 | Gradium](https://gradium.ai/blog/gradium-releases-phonon)
+    tags: ["Gradium", "Phonon", "Open Weight Model", "Audio Model"]
+    series: ["Phonon"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Granite Speech 5.0 / Turbo CTC / 4.1 Plus 更新"
+    summary_ja: |
+      日本語を含む6言語の文字起こしと翻訳に対応する2Bパラメータの Granite Speech 5.0 を公開。470M の Turbo CTC は多言語対応と句読点・大文字の出力を追加し、4.1 Plus は話者識別・タイムスタンプ・長時間音声の精度を改善。3モデルとも重みを Apache 2.0 で提供。
+
+      [Granite Speech 5.0 と関連モデルの更新 | IBM Granite](https://huggingface.co/blog/ibm-granite/granite-speech-5)
+    tags: ["IBM", "Granite", "Open Weight Model", "Audio Model"]
+    series:
+      ["Granite Speech", "Granite Speech Turbo CTC", "Granite Speech Plus"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Kumo Structured (発表)"
+    summary_ja: |
+      表・リレーショナルデータ・時系列から予測する基盤モデル群を発表。分類・回帰向けの Relational / Tabular と、時系列予測の Forecast、異常検知の Anomaly を提供。重みを Hugging Face で公開し、構造化データ処理・学習・推論のためのライブラリも提供。
+
+      [Kumo Structured の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/open-models-europe-industry/) / [NVIDIA Kumo のモデルと提供形態 | NVIDIA Developer](https://developer.nvidia.com/topics/ai/agent-knowledge-foundation/kumo)
+    tags: ["NVIDIA", "Kumo", "Open Weight Model", "Structured Data Model"]
+    series: ["Kumo"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Alpamayo 2 Edge (発表)"
+    summary_ja: |
+      自動運転車内でのリアルタイムな状況理解と動作計画向けに、小型の推論モデルを発表。Cosmos を基盤とし、NVIDIA DRIVE AGX Thor 向けに最適化。GitHub・Hugging Face でのダウンロード提供は10月後半を予定し、発表時点では未公開。
+
+      [Alpamayo 2 Edge の発表と提供予定 | NVIDIA Blog](https://blogs.nvidia.com/blog/open-models-europe-industry/)
+    tags: ["NVIDIA", "Alpamayo", "Autonomous Driving Model"]
+    series: ["Alpamayo"]
+  - year: 2026
+    date: 2026-10-20
+    title_ja: "Voxtral 3 (Public Preview)"
+    summary_ja: |
+      音声認識の Small Transcribe / Mini Transcribe / Mini Transcribe Realtime と、音声合成の Mini TTS を API の公開プレビューで提供。多言語の文字起こし、話者識別、専門用語への対応、発話終了の検出を強化。LiveKit ベースの音声エージェント SDK も提供し、認識・推論・ツール利用・音声応答を連携。
+
+      [Voxtral 3 の公開 | Mistral](https://mistral.ai/news/voxtral-3/) / [各モデルの公開日 | Mistral Legal Center](https://legal.mistral.ai/ai-governance/models/voxtral-3/) / [公開プレビューの提供形態 | Mistral Docs](https://docs.mistral.ai/models/voxtral-small-transcribe-3-0)
+    tags: ["Mistral AI", "Voxtral", "Audio Model"]
+    series: ["Voxtral"]
+  - year: 2026
+    date: 2026-10-20
+    title_ja: "Eleven Realtime v1 Mini / Max"
+    summary_ja: |
+      音声認識・会話制御・推論・音声合成をまとめた音声対話モデルを提供開始。Mini は低コストの自然な会話、Max は推論や複数段階のツール利用向け。90以上の言語と17,000以上の音声に対応し、ElevenAgents と WebSocket の Realtime API で利用可能。
+
+      [Eleven Realtime の公開 | ElevenLabs](https://elevenlabs.io/blog/realtime)
+    tags: ["ElevenLabs", "Eleven Realtime", "Audio Model"]
+    series: ["Eleven Realtime Mini", "Eleven Realtime Max"]
+  - year: 2026
+    date: 2026-10-20
+    title_ja: "RFD4-Proteina (NIM)"
+    summary_ja: |
+      NVIDIA とワシントン大学 Baker Lab が共同開発したタンパク質設計モデルを、NVIDIA NIM の API とコンテナで提供開始。分子の条件に基づく構造・配列の生成と、評価に基づく候補探索に対応。一般公開のモデル重みとは異なるチェックポイントを含み、NIM 版の提供日として記録。
+
+      [RFD4-Proteina の NIM 提供日 | NVIDIA](https://build.nvidia.com/ipd/rfd4-proteina/modelcard) / [NIM 初期リリースの仕様 | NVIDIA Docs](https://docs.nvidia.com/nim/bionemo/rfd4-proteina/1.0.0/release-notes.html)
+    tags: ["NVIDIA", "Baker Lab", "BioNeMo", "Protein Design Model"]
+    series: ["RFD4-Proteina"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "MiniMax M3.1 Flash"
+    summary_ja: |
+      エージェント作業、コーディング、PC操作、サイバーセキュリティを強化したモデルを、MiniMax API・M Plan・MiniMax Code で提供開始。API 料金は100万トークン当たり入力0.15ドル・出力0.60ドル・キャッシュ入力0.015ドル。重みは後日公開予定で、発表時点では未公開。
+
+      [MiniMax M3.1 Flash の公開 | MiniMax](https://www.minimax.io/blog/minimax-m31f)
+    tags: ["MiniMax", "LLM Model"]
+    series: ["MiniMax Flash"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "Mercury 3"
+    summary_ja: |
+      Inception が拡散方式の言語モデルを API で提供開始。コンテキストを100万トークンに拡張し、リアルタイムの検索、ブラウザー操作、教育、顧客対応などを想定。同社測定では毎秒1,068トークンの生成速度を示し、OpenRouter・Baseten・Vercel からも利用可能。
+
+      [Mercury 3 の公開 | Inception](https://www.inceptionlabs.ai/blog/introducing-mercury-3)
+    tags: ["Inception", "Mercury", "LLM Model"]
+    series: ["Mercury"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "GoTo-AI-Gemma-3-27B-IT"
+    summary_ja: |
+      GoTo がインドネシアの言語・文化向けに学習した27Bパラメータのモデルを公開。Gemma 3 を基盤とし、インドネシア語・ジャワ語・スンダ語・バリ語・トバ・バタク語と英語に対応。128K のコンテキストを持ち、重みを Gemma License で提供。
+
+      [GoTo の27Bモデル公開 | GoTo](https://www.gotocompany.com/en/news/press/goto-releases-new-llm-2026) / [GoTo-AI-Gemma-3-27B-IT のモデルカード | GoTo](https://huggingface.co/GoToCompany/gemma3-27b-cpt-gotoai-v3-instruct)
+    tags: ["GoTo", "Open Weight Model", "LLM Model"]
+    series: ["GoTo AI"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "Maxwell (発表・早期アクセス受付)"
+    summary_ja: |
+      doubleAI が実行中のプログラムを高速化する Code Execution Model を発表し、早期アクセスの申し込みを開始。CPU・GPU と実行時データに合わせてバイナリを最適化し、置換前後の意味的同値性を形式的に検証する方式。一般向け API や重みの公開ではなく、提供前の受付段階。
+
+      [Maxwell の発表 | doubleAI](https://heymaxwell.ai/manifesto) / [10月19日の発表・報道履歴 | doubleAI](https://www.doubleai.com/news)
+    tags: ["doubleAI", "Maxwell", "Code Execution Model"]
+    series: ["Maxwell"]
   - year: 2026
     date: 2026-10-17
     title_ja: "DeepSeek-V4.1-Flash-1017"
@@ -19,6 +119,42 @@ events:
       [Beam の重み公開 | Reflection](https://reflection.ai/blog/beam-is-available) / [Beam の発表 | Reflection](https://reflection.ai/blog/introducing-beam)
     tags: ["Reflection", "Beam", "Open Weight Model", "LLM Model"]
     series: ["Beam"]
+  - year: 2026
+    date: 2026-10-16
+    title_ja: "Glimpse (Research Preview)"
+    summary_ja: |
+      Elorian が画像・動画の視覚推論モデルを研究プレビューとして API とチャットで提供。動く物体の追跡、視点の変化、空間関係の理解に対応し、推論中に画像や動画を再確認する仕組みを採用。料金は100万トークン当たり入力0.60ドル・出力3ドル。
+
+      [Introducing Glimpse | Elorian](https://elorian.ai/blog/introducing-glimpse)
+    tags: ["Elorian", "Glimpse", "LLM Model"]
+    series: ["Glimpse"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "MAI-Base-2 (事前学習完了の発表)"
+    summary_ja: |
+      Microsoft AI が総パラメータ2.8兆・活性化80Bの MoE 基盤モデルの事前学習完了を発表。テキストと画像を統合して学習し、16,000基の GB200 GPU で38日間の学習を実施。発表時点では事後学習中で、一般向け API やモデル重みは未公開。
+
+      [MAI-Base-2 の事前学習完了 | Microsoft AI](https://microsoft.ai/news/frontier-pre-training-at-microsoft-ai/)
+    tags: ["Microsoft", "MAI", "LLM Model"]
+    series: ["MAI Base"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "FLUX 3 Image Klein"
+    summary_ja: |
+      5.6Bパラメータの画像生成・編集モデルを、公開重みと BFL API で提供開始。最大10枚の参照画像、ネイティブ4K生成、領域を指定する編集に対応。学習向けのベース版と高速な蒸留版を公開し、商用利用には FLUX Kommunity License の条件が適用される。
+
+      [FLUX 3 Image Klein の公開 | Black Forest Labs](https://bfl.ai/blog/flux-3-image-klein)
+    tags: ["Black Forest Labs", "FLUX", "Open Weight Model", "Image Model"]
+    series: ["FLUX Image Klein"]
+  - year: 2026
+    date: 2026-10-15
+    title_ja: "Timestral"
+    summary_ja: |
+      多変量の確率的予測を行う時系列基盤モデルを、5M・28M・123M・209Mの4サイズで公開。過去の観測値と既知の将来条件を取り込み、最大32,768時点の入力と CPU での推論に対応。モデル重みを Modified MIT License、推論コードを Apache 2.0 で提供。
+
+      [Timestral の公開 | Mistral](https://mistral.ai/news/timestral/) / [Timestral の推論コードとモデル重み | Mistral](https://github.com/mistralai/timestral)
+    tags: ["Mistral AI", "Timestral", "Open Weight Model", "Time Series Model"]
+    series: ["Timestral"]
   - year: 2026
     date: 2026-10-15
     title_ja: "Muse Spark Open"
