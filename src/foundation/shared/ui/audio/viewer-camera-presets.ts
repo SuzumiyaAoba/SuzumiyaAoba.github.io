@@ -199,7 +199,7 @@ const nodePoses: Partial<Record<AudioView, CameraPose>> = {
   },
   headphones: {
     direction: [0.1, 0.06, 1],
-    target: [0, 10.2, 70.5],
+    target: [0, 15, 70.5],
     width: 55,
     height: 42,
     depth: 8,
@@ -207,6 +207,20 @@ const nodePoses: Partial<Record<AudioView, CameraPose>> = {
 };
 
 const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
+  headband: {
+    direction: [0.2, 0.12, 1],
+    target: [0, 241, 0],
+    width: 230,
+    height: 125,
+    depth: 35,
+  },
+  earpads: {
+    direction: [1, 0.05, 1.3],
+    target: [-65, 128, -4],
+    width: 110,
+    height: 145,
+    depth: 25,
+  },
   overview: {
     direction: [1, 0.32, 1.6],
     target: [0, 157, 0],
@@ -239,7 +253,7 @@ const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
 
 const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
   overview: {
-    direction: [1.3, 0.28, 1.35],
+    direction: [1.7, 0.28, 1.2],
     target: [0, 117, 0],
     width: 245,
     height: 260,
@@ -274,24 +288,24 @@ const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
     depth: 12,
   },
   earpads: {
-    direction: [1, 0.04, 1],
-    target: [-35, 66, 0],
-    width: 145,
-    height: 150,
-    depth: 35,
+    direction: [1, 0.05, 1.7],
+    target: [-53, 66, 0],
+    width: 110,
+    height: 140,
+    depth: 25,
   },
   headband: {
-    direction: [0.3, 0.45, 1],
-    target: [0, 197, 0],
+    direction: [0.25, 0.1, 1],
+    target: [0, 183, 0],
     width: 220,
-    height: 135,
+    height: 125,
     depth: 35,
   },
   connections: {
     direction: [0.85, -1, 1],
-    target: [75, 3, 0],
-    width: 65,
-    height: 65,
+    target: [50, 5, -0.5],
+    width: 50,
+    height: 50,
     depth: 18,
   },
 };
@@ -539,10 +553,17 @@ const modelPoses: Partial<
   "ie-600": {
     overview: {
       direction: [0.18, 0.6, 1],
-      target: [0, 22, 25],
+      target: [0, 22, 36],
       width: 145,
-      height: 95,
+      height: 100,
       depth: 60,
+    },
+    cable: {
+      direction: [0.15, 1.5, 1],
+      target: [-5, 4, 74],
+      width: 90,
+      height: 65,
+      depth: 30,
     },
     front: {
       direction: [0, 0.05, 1],
@@ -575,7 +596,7 @@ const modelPoses: Partial<
   },
   "ha-1a-mk2": {
     overview: {
-      direction: [0.95, 0.45, 1.3],
+      direction: [0.95, 0.72, 1.3],
       target: [0, 105, 0],
       width: 310,
       height: 290,

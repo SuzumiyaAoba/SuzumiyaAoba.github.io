@@ -12,6 +12,8 @@ import {
 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
+import { openIe600Vent } from "./ie-600-vent";
+
 const socketCenter = new Vector2(4.1, 10.8);
 const socketDirection = new Vector2(-0.4, 1).normalize();
 const socketAcross = new Vector2(socketDirection.y, -socketDirection.x);
@@ -46,14 +48,24 @@ function shellOutline() {
 }
 
 function badgeWeight(x: number, y: number) {
-  const radius = 1.65;
-  const dx = Math.abs(x + 2.2) - 6.2 + radius;
-  const dy = Math.abs(y + 1.1) - 3.9 + radius;
+  const radius = 1.3;
+  const dx = Math.abs(x + 2.2) - 5.3 + radius;
+  const dy = Math.abs(y + 1.1) - 3.4 + radius;
   const distance =
     Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) +
     Math.min(Math.max(dx, dy), 0) -
     radius;
-  return 1 - MathUtils.smoothstep(distance, -0.4, 0.55);
+  return 1 - MathUtils.smoothstep(distance, -0.3, 0.9);
+}
+
+function rearFacetWeight(x: number, y: number) {
+  const dx = Math.abs(x - 0.8 + y * 0.2) - 5.2;
+  const dy = Math.abs(y + 1.1) - 4.2;
+  const distance =
+    Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) +
+    Math.min(Math.max(dx, dy), 0) -
+    0.8;
+  return 1 - MathUtils.smoothstep(distance, -0.2, 0.85);
 }
 
 /** 押し出し板ではなく、表裏が連続した丸いシェル。ロゴ面の肩も一体で造形する。 */
@@ -94,9 +106,16 @@ export function ie600ShellGeometry() {
           socketAcross.y * (y - socketCenter.y);
         const roundNeck = Math.sqrt(Math.max(0, neckRadius ** 2 - across ** 2));
         z = MathUtils.lerp(z, roundNeck, MathUtils.smoothstep(axis, -5, -2));
-        if (side === 1) {
-          z = MathUtils.lerp(z, 3.95, badgeWeight(x, y));
-        }
+        z =
+          side === 1
+            ? MathUtils.lerp(z, 3.65, badgeWeight(x, y))
+            : MathUtils.lerp(
+                z,
+                3.7 - x * 0.035,
+                rearFacetWeight(x, y) *
+                  0.9 *
+                  MathUtils.smoothstep(1 - ratio, 0, 0.22)
+              );
         // 口元の円周だけ表裏を分け、端子の穴を塞ぐ面を作らない。
         const seamIndex =
           side === -1 && ring === rings && z < 0.00001
@@ -185,7 +204,7 @@ export function ie600ShellGeometry() {
   geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
   geometry.setIndex(solidIndices);
   geometry.computeVertexNormals();
-  return geometry;
+  return openIe600Vent(geometry);
 }
 
 export function ie600BoreGeometry(outer: number, inner: number, depth: number) {
@@ -236,17 +255,37 @@ export function ie600EarTipGeometry() {
 export function ie600TipGuardGeometry() {
   const outline = new Shape();
   outline.absarc(0, 0, 1.62, 0, Math.PI * 2, false);
-  for (let sector = 0; sector < 6; sector += 1) {
-    const start = (sector * Math.PI) / 3 + 0.12;
-    const end = ((sector + 1) * Math.PI) / 3 - 0.12;
-    const hole = new Path();
-    hole.moveTo(Math.cos(start) * 0.45, Math.sin(start) * 0.45);
-    hole.lineTo(Math.cos(start) * 1.35, Math.sin(start) * 1.35);
-    hole.absarc(0, 0, 1.35, start, end, false);
-    hole.lineTo(Math.cos(end) * 0.45, Math.sin(end) * 0.45);
-    hole.absarc(0, 0, 0.45, end, start, true);
-    hole.closePath();
-    outline.holes.push(hole);
+  const center = new Path();
+  for (let vertex = 0; vertex < 6; vertex += 1) {
+    const angle = (vertex * Math.PI) / 3;
+    const x = Math.cos(angle) * 0.29;
+    const y = Math.sin(angle) * 0.29;
+    if (vertex === 0) {
+      center.moveTo(x, y);
+    } else {
+      center.lineTo(x, y);
+    }
+  }
+  center.closePath();
+  outline.holes.push(center);
+  for (const [inner, outer] of [
+    [0.46, 0.84],
+    [1.03, 1.41],
+  ]) {
+    if (inner === undefined || outer === undefined) {
+      continue;
+    }
+    for (let sector = 0; sector < 6; sector += 1) {
+      const start = (sector * Math.PI) / 3 + 0.1;
+      const end = ((sector + 1) * Math.PI) / 3 - 0.1;
+      const hole = new Path();
+      hole.moveTo(Math.cos(start) * inner, Math.sin(start) * inner);
+      hole.lineTo(Math.cos(start) * outer, Math.sin(start) * outer);
+      hole.lineTo(Math.cos(end) * outer, Math.sin(end) * outer);
+      hole.lineTo(Math.cos(end) * inner, Math.sin(end) * inner);
+      hole.closePath();
+      outline.holes.push(hole);
+    }
   }
   return new ExtrudeGeometry(outline, {
     depth: 0.17,
@@ -258,7 +297,7 @@ export function ie600TipGuardGeometry() {
   });
 }
 
-export function ie600ConnectorGripGeometry() {
+function connectorGripProfile() {
   const profile = new Path();
   profile.moveTo(1.65, 2.15);
   profile.lineTo(2.65, 2.15);
@@ -266,11 +305,52 @@ export function ie600ConnectorGripGeometry() {
   profile.lineTo(2.82, 2.65);
   profile.bezierCurveTo(2.82, 5.4, 2.3, 8.7, 1.7, 10.15);
   profile.quadraticCurveTo(1.63, 10.55, 1.3, 10.55);
-  profile.lineTo(0.94, 10.55);
-  profile.lineTo(0.94, 10.1);
+  profile.lineTo(1.24, 10.55);
+  profile.lineTo(1.24, 10.1);
   profile.lineTo(1.65, 2.15);
-  const geometry = new LatheGeometry(profile.getPoints(40), 96);
+  return profile;
+}
+
+export function ie600ConnectorGripGeometry() {
+  const geometry = new LatheGeometry(connectorGripProfile().getPoints(40), 96);
   geometry.rotateX(Math.PI / 2);
+  return geometry;
+}
+
+export function ie600GripMarkGeometry() {
+  const profile = connectorGripProfile()
+    .getPoints(200)
+    .filter((point) => point.x > 1.8 && point.y > 2.6);
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+  for (let row = 0; row <= 12; row += 1) {
+    const z = 3.5 + (row / 12) * 1.8;
+    let sample = new Vector2(2.8, 3.5);
+    for (const point of profile) {
+      if (Math.abs(point.y - z) < Math.abs(sample.y - z)) {
+        sample = point;
+      }
+    }
+    for (let column = 0; column <= 16; column += 1) {
+      const angle = (column / 16 - 0.5) * 0.5;
+      positions.push(
+        Math.sin(angle) * (sample.x + 0.012),
+        -Math.cos(angle) * (sample.x + 0.012),
+        z
+      );
+      uvs.push(column / 16, row / 12);
+      if (row < 12 && column < 16) {
+        const a = row * 17 + column;
+        indices.push(a, a + 1, a + 18, a, a + 18, a + 17);
+      }
+    }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
   return geometry;
 }
 
@@ -283,11 +363,11 @@ export const ie600EarHookRelief = {
 /** 耳掛けを包む丸い肩から、細いケーブルまで段差なく絞る。 */
 export function ie600EarHookReliefGeometry() {
   const profile = new Path();
-  profile.moveTo(0.86, 0);
-  profile.lineTo(1.02, 0);
-  profile.quadraticCurveTo(1.15, 0, 1.15, 0.6);
-  profile.lineTo(1.15, 1.4);
-  profile.bezierCurveTo(1.15, 3.1, 0.6, 4.1, 0.6, 5.6);
+  profile.moveTo(1.2, 0);
+  profile.lineTo(1.32, 0);
+  profile.quadraticCurveTo(1.45, 0, 1.45, 0.6);
+  profile.lineTo(1.45, 1.4);
+  profile.bezierCurveTo(1.45, 3.1, 0.6, 4.1, 0.6, 5.6);
   profile.lineTo(ie600EarHookRelief.cableRadius, ie600EarHookRelief.length);
   profile.lineTo(0.5, ie600EarHookRelief.length);
   profile.lineTo(0.5, 0);
@@ -313,7 +393,8 @@ export function ie600SocketRimGeometry() {
 }
 
 export const ie600BalancedPlugDimensions = {
-  cableEntry: -12.4,
+  cableEntry: -24,
+  cableDepth: -6.4,
   shaftStart: 6.2,
   insulators: [3, 6.5, 10, 13.5],
 } as const;
@@ -321,16 +402,16 @@ export const ie600BalancedPlugDimensions = {
 /** 純正4.4 mmケーブルのL字形オーバーモールド。根元は細いケーブルへ絞る。 */
 export function ie600BalancedPlugBodyGeometry() {
   const outline = new Shape();
-  outline.moveTo(-3.5, -3.1);
-  outline.quadraticCurveTo(-3.5, -3.55, -2.8, -3.55);
-  outline.lineTo(2.7, -3.55);
-  outline.quadraticCurveTo(3.2, -3.55, 3.2, -2.95);
-  outline.lineTo(3.2, 5.55);
-  outline.quadraticCurveTo(3.2, 6.2, 2.6, 6.2);
-  outline.lineTo(-2.55, 6.2);
-  outline.quadraticCurveTo(-3.2, 6.2, -3.2, 5.55);
-  outline.lineTo(-3.2, 3.3);
-  outline.quadraticCurveTo(-3.2, 1.6, -3.5, 1.6);
+  outline.moveTo(3.4, -9.5);
+  outline.lineTo(3.4, 5.5);
+  outline.quadraticCurveTo(3.4, 6.2, 2.7, 6.2);
+  outline.lineTo(-2.8, 6.2);
+  outline.quadraticCurveTo(-3.5, 6.2, -3.5, 5.5);
+  outline.lineTo(-3.5, 0.5);
+  outline.bezierCurveTo(-3.5, -3.2, -5.2, -3.7, -8.3, -3.7);
+  outline.lineTo(-13.4, -3.9);
+  outline.lineTo(-13.4, -8.9);
+  outline.bezierCurveTo(-8, -9, -1, -9.5, 3.4, -9.5);
   outline.closePath();
   const geometry = new ExtrudeGeometry(outline, {
     depth: 5.4,
@@ -360,15 +441,19 @@ export function ie600BalancedPlugBodyGeometry() {
     new Vector2(1.4, 4.2),
     new Vector2(1.55, 6.2),
     new Vector2(1.75, 7.9),
-    new Vector2(1.9, 9.5),
-    new Vector2(0.85, 9.5),
+    new Vector2(2.45, 10.7),
+    new Vector2(0.85, 10.7),
     new Vector2(0.85, 0),
   ];
   const lathe = new LatheGeometry(reliefProfile, 64);
   const relief = lathe.toNonIndexed();
   lathe.dispose();
   relief.rotateZ(-Math.PI / 2);
-  relief.translate(ie600BalancedPlugDimensions.cableEntry, 0, 0);
+  relief.translate(
+    ie600BalancedPlugDimensions.cableEntry,
+    0,
+    ie600BalancedPlugDimensions.cableDepth
+  );
   const body = mergeGeometries([geometry, relief]);
   geometry.dispose();
   relief.dispose();

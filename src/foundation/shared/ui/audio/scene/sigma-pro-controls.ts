@@ -7,7 +7,7 @@ function displayGeometry(parts: SigmaParts) {
     const mesh = parts.text(
       value,
       height,
-      [-37.8 + x, 19.84, 46.7 + y],
+      [-37.8 + x, 19.37, 46.7 + y],
       `OLED vector glyphs: ${value}`,
       parts.screenInk
     );
@@ -35,7 +35,7 @@ function displayGeometry(parts: SigmaParts) {
     const glyph = parts.mesh(
       new ExtrudeGeometry(shape, { depth: 0.006, bevelEnabled: false }),
       parts.screenInk,
-      [-20.8, 19.84, 54.2],
+      [-20.8, 19.37, 54.2],
       name
     );
     glyph.rotation.x = -Math.PI / 2;
@@ -98,20 +98,18 @@ export function createSigmaControls(parts: SigmaParts) {
   parts.box(
     [35.5, 0.65, 16.8],
     [-20.8, 18.8, 54.2],
-    parts.insulator,
+    parts.cavity,
     "Recessed OLED substrate",
     0.5
   );
   displayGeometry(parts);
   const screenGlass = new MeshPhysicalMaterial({
-    color: 0xd8_e2_e9,
-    transparent: true,
-    opacity: 0.05,
-    roughness: 0.045,
-    clearcoat: 1,
-    clearcoatRoughness: 0.045,
-    envMapIntensity: 0.2,
-    depthWrite: false,
+    color: 0xff_ff_ff,
+    transmission: 1,
+    thickness: 0.18,
+    ior: 1.5,
+    roughness: 0.007,
+    envMapIntensity: 0.55,
   });
   const pane = parts.mesh(
     sigmaPlate(sigmaOutline(34.3, 15.45, 1.1), 0.18, 0.02),
@@ -120,12 +118,13 @@ export function createSigmaControls(parts: SigmaParts) {
     "Flush glossy OLED glass"
   );
   pane.rotation.x = -Math.PI / 2;
+  pane.userData["castShadow"] = false;
 
   const cap = new MeshPhysicalMaterial({
-    color: 0x32_35_38,
-    metalness: 0.92,
-    roughness: 0.27,
-    envMapIntensity: 0.75,
+    color: 0x9f_a6_ab,
+    metalness: 1,
+    roughness: 0.22,
+    envMapIntensity: 1,
   });
   for (const x of SIGMA_BUTTON_X) {
     const seat = parts.lathe(
@@ -148,13 +147,19 @@ export function createSigmaControls(parts: SigmaParts) {
         [3.02, 0.42],
         [2.98, 0.67],
         [2.72, 0.83],
-        [0, 0.88],
       ],
       [x, 19.48, 57],
       cap,
-      "Convex metal control button"
+      "Rounded polished perimeter of the control button"
     );
     button.rotation.x = 0;
+    const face = parts.disc(
+      2.72,
+      [x, 20.31, 57],
+      parts.aluminium,
+      "Flat anodized control-button face"
+    );
+    face.rotation.x = -Math.PI / 2;
     const rim = parts.ring(
       2.96,
       0.065,

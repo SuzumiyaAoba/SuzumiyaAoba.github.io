@@ -18,16 +18,16 @@ function usbPort(parts: SigmaParts, rear: Group, x: number, y: number) {
   surround.holes.push(sigmaOutline(8.1, 2.85, 1.35));
   port.add(
     parts.mesh(
-      sigmaPlate(surround, 1.65, 0.045),
+      sigmaPlate(surround, 6.2, 0.045),
       parts.machined,
-      [0, 0, 0.1],
+      [0, 0, -2.25],
       "Open capsule-shaped USB-C metal shell"
     )
   );
   port.add(
     parts.box(
-      [6.6, 0.6, 2.8],
-      [0, 0, -0.95],
+      [6.6, 0.6, 5],
+      [0, 0, -2],
       parts.insulator,
       "USB-C tongue recessed inside socket",
       0.15
@@ -37,8 +37,8 @@ function usbPort(parts: SigmaParts, rear: Group, x: number, y: number) {
     for (const row of [-0.36, 0.36]) {
       port.add(
         parts.box(
-          [0.17, 0.06, 1.9],
-          [-2.75 + index * 0.5, row, -1],
+          [0.17, 0.06, 3.8],
+          [-2.75 + index * 0.5, row, -2],
           parts.plated,
           "USB-C tongue contact",
           0.02
@@ -49,7 +49,7 @@ function usbPort(parts: SigmaParts, rear: Group, x: number, y: number) {
   port.add(
     parts.box(
       [7.9, 2.6, 0.2],
-      [0, 0, -2.75],
+      [0, 0, -5.5],
       parts.cavity,
       "Dark USB-C socket interior",
       1
@@ -94,45 +94,89 @@ function coaxialPort(parts: SigmaParts, rear: Group, x: number, y: number) {
     parts.mesh(
       sigmaPlate(nut, 0.5, 0.06),
       parts.plated,
-      [0, 0, 0.3],
+      [0, 0, -0.7],
       "Hexagonal gold-plated RCA retaining nut"
     )
   );
   port.add(
     parts.lathe(
       [
-        [4.4, -0.45],
-        [4.4, 0.95],
-        [4.2, 1.2],
-        [2.75, 1.2],
-        [2.55, 0.95],
-        [2.55, -0.7],
+        [4.45, -3.5],
+        [4.45, -0.25],
+        [4.3, 0],
+        [4.15, 0.18],
       ],
       [0, 0, 0],
       parts.plated,
-      "Hollow RCA outer contact barrel"
+      "RCA outer contact barrel wall"
+    )
+  );
+  port.add(
+    parts.lathe(
+      [
+        [2.75, 0.18],
+        [2.55, -0.05],
+        [2.55, -3.4],
+      ],
+      [0, 0, 0],
+      parts.plated,
+      "RCA inner contact barrel wall"
     )
   );
   port.add(
     parts.mesh(
-      new RingGeometry(2.75, 4.2, 96),
+      new RingGeometry(2.75, 4.15, 96),
       parts.plated,
-      [0, 0, 1.21],
+      [0, 0, 0.18],
       "RCA gold contact mouth"
-    ),
-    parts.mesh(
-      new RingGeometry(0.9, 2.55, 96),
+    )
+  );
+  port.add(
+    parts.lathe(
+      [
+        [2.55, -3.5],
+        [2.55, -0.15],
+      ],
+      [0, 0, 0],
       parts.insulator,
-      [0, 0, 0.5],
-      "RCA insulating inner ring"
-    ),
+      "RCA insulating sleeve outer wall"
+    )
+  );
+  port.add(
+    parts.lathe(
+      [
+        [1.72, -0.15],
+        [1.72, -3.5],
+      ],
+      [0, 0, 0],
+      parts.insulator,
+      "RCA insulating sleeve inner wall"
+    )
+  );
+  port.add(
     parts.mesh(
-      new RingGeometry(0.85, 1.2, 64),
+      new RingGeometry(1.72, 2.55, 96),
+      parts.insulator,
+      [0, 0, -0.15],
+      "RCA insulating inner ring"
+    )
+  );
+  port.add(
+    parts.lathe(
+      [
+        [1.7, -4],
+        [1.7, -0.25],
+        [1.62, -0.1],
+        [1.48, -0.25],
+        [1.48, -4.1],
+      ],
+      [0, 0, 0],
       parts.plated,
-      [0, 0, 0.55],
-      "RCA centre receptacle"
-    ),
-    parts.disc(0.85, [0, 0, -2.4], parts.cavity, "Open RCA centre contact")
+      "Hollow RCA centre receptacle"
+    )
+  );
+  port.add(
+    parts.disc(1.49, [0, 0, -4.2], parts.cavity, "Open RCA centre contact")
   );
   rear.add(port);
 }
@@ -201,7 +245,7 @@ export function createSigmaRear(parts: SigmaParts) {
   const rear = new Group();
   rear.name =
     "Digital, analogue and charging inputs aligned to the Questyle brochure";
-  rear.position.set(0, 0, SIGMA_REAR + 0.65);
+  rear.position.set(0, 0, SIGMA_REAR + 1);
   rear.rotation.y = Math.PI;
   parts.root.add(rear);
   rear.add(

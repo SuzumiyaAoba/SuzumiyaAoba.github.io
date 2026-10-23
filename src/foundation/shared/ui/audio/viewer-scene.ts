@@ -64,7 +64,7 @@ export function createViewerScene(
   const size = bounds.getSize(new Vector3());
   const span = Math.max(size.x, size.y, size.z, 50);
   scene.add(new HemisphereLight(0xff_ff_ff, 0x56_5b_66, 0.75));
-  const key = new DirectionalLight(0xff_f9_f2, 3.1);
+  const key = new DirectionalLight(0xff_f9_f2, 2.7);
   key.position.copy(center).add(new Vector3(-span * 0.75, span * 1.5, span));
   key.target.position.copy(center);
   key.castShadow = true;
@@ -80,7 +80,7 @@ export function createViewerScene(
   key.shadow.camera.far = span * 4;
   key.shadow.normalBias = Math.max(0.008, span * 0.00012);
   key.shadow.bias = -0.00005;
-  key.shadow.radius = 3;
+  key.shadow.radius = 5;
   scene.add(key, key.target);
 
   const fill = new DirectionalLight(0xe4_ed_ff, 0.7);
@@ -96,7 +96,7 @@ export function createViewerScene(
 
   const floorGeometry = new PlaneGeometry(span * 5, span * 5);
   const floorMaterial = new ShadowMaterial({
-    opacity: modelId === "system" ? 0.12 : 0.16,
+    opacity: modelId === "system" ? 0.1 : 0.12,
   });
   const floor = new Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;

@@ -4,6 +4,7 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
+  MeshPhysicalMaterial,
   Raycaster,
   Texture,
   Vector3,
@@ -13,6 +14,7 @@ import type { Object3D } from "three";
 import { createSigmaPro } from "./sigma-pro";
 import { sigmaLetteringGeometry } from "./sigma-pro-lettering";
 import { SIGMA_BOARD, sigmaBoardPoint } from "./sigma-pro-board-parts";
+import { SIGMA_FRONT } from "./sigma-pro-geometry";
 
 function isMesh(part: Object3D): part is Mesh {
   return part instanceof Mesh;
@@ -106,4 +108,114 @@ it("preserves the opening inside vector letter outlines", () => {
   expect(ray.intersectObject(letter).length).toBeGreaterThan(0);
   geometry.dispose();
   material.dispose();
+});
+
+it("keeps the machined socket recesses visible and the output legends above the bottom cover", () => {
+  const model = createSigmaPro();
+  model.group.updateMatrixWorld(true);
+  const ray = new Raycaster(new Vector3(-22, 10.5, 100), new Vector3(0, 0, -1));
+  const surround = ray
+    .intersectObject(model.group)
+    .find((hit) => hit.object.userData["castShadow"] !== false);
+  expect(surround?.object.name).toBe("6.35mm SE conical CNC counterbore");
+  expect(surround?.point.z).toBeLessThan(SIGMA_FRONT + 0.2);
+  const bottom = model.group.getObjectByName("Bevelled aluminium bottom cover");
+  const front = model.group.getObjectByName(
+    "Headphone panel with three bored sockets and recessed volume-knob seat"
+  );
+  if (!bottom || !front) {
+    throw new Error("Missing SIGMA enclosure panels.");
+  }
+  expect(new Box3().setFromObject(bottom).max.z).toBeLessThan(
+    new Box3().setFromObject(front).min.z
+  );
+  const size = new Box3().setFromObject(model.group).getSize(new Vector3());
+  expect(Math.abs(size.x - 85)).toBeLessThan(0.1);
+  expect(Math.abs(size.z - 155.7)).toBeLessThan(0.2);
+  ray.set(new Vector3(-28, 10.5, 100), new Vector3(0, 0, -1));
+  const floor = ray
+    .intersectObject(model.group)
+    .find((hit) => hit.object.userData["castShadow"] !== false);
+  expect(floor?.object.name).toBe("6.35mm SE dark socket interior");
+  expect(floor?.point.z).toBeCloseTo(SIGMA_FRONT + 0.08 - 11.2);
+  model.dispose();
+});
+
+it("recesses USB-C contacts, the RCA receptacle and analogue sockets behind open rear bores", () => {
+  const model = createSigmaPro();
+  model.group.updateMatrixWorld(true);
+  const rear = model.group.getObjectByName(
+    "Digital, analogue and charging inputs aligned to the Questyle brochure"
+  );
+  if (!rear) {
+    throw new Error("Missing SIGMA input panel.");
+  }
+  for (const [x, y, name, depth] of [
+    [-33.1, 8.6, "Dark USB-C socket interior", -5.4],
+    [-23.6, 8.6, "Dark USB-C socket interior", -5.4],
+    [-10.7, 8.6, "Open RCA centre contact", -3.33],
+    [19, 12.2, "4.4mm dark socket interior", -10.34],
+  ] as const) {
+    const ray = new Raycaster(
+      rear.localToWorld(new Vector3(x, y, 40)),
+      new Vector3(0, 0, -1).transformDirection(rear.matrixWorld)
+    );
+    const floor = ray
+      .intersectObject(model.group)
+      .find((hit) => hit.object.userData["castShadow"] !== false);
+    expect(floor?.object.name).toBe(name);
+    expect(floor && rear.worldToLocal(floor.point).z).toBeCloseTo(depth);
+  }
+  model.dispose();
+});
+
+it("separates clear glass from the circuit and display while retaining four operating indicators", () => {
+  const model = createSigmaPro();
+  const boardGlass = model.group.getObjectByName(
+    "Flush clear glass with physical reflections"
+  );
+  const screenGlass = model.group.getObjectByName("Flush glossy OLED glass");
+  for (const glass of [boardGlass, screenGlass]) {
+    if (
+      !(glass instanceof Mesh) ||
+      !(glass.material instanceof MeshPhysicalMaterial)
+    ) {
+      throw new Error("Missing physical SIGMA cover glass.");
+    }
+    expect(glass.material.transmission).toBe(1);
+    expect(glass.userData["castShadow"]).toBe(false);
+  }
+  const rate = model.group.getObjectByName("OLED vector glyphs: 768000");
+  if (!rate || !screenGlass || !boardGlass) {
+    throw new Error("Missing SIGMA display layers.");
+  }
+  expect(new Box3().setFromObject(screenGlass).min.y).toBeGreaterThan(
+    new Box3().setFromObject(rate).max.y + 0.3
+  );
+  expect(new Box3().setFromObject(boardGlass).min.y).toBeGreaterThan(
+    SIGMA_BOARD.top + 2
+  );
+  let indicators = 0;
+  model.group.traverse((part) => {
+    if (
+      part instanceof InstancedMesh &&
+      part.name.startsWith("Red current-mode amplifier operating indicator:")
+    ) {
+      indicators += part.count;
+    }
+  });
+  expect(indicators).toBe(4);
+  model.dispose();
+});
+
+it("seats the side screws in open counterbores instead of drawing a cross over a solid side wall", () => {
+  const model = createSigmaPro();
+  model.group.updateMatrixWorld(true);
+  const ray = new Raycaster(new Vector3(60, 6.3, 60), new Vector3(-1, 0, 0));
+  const [hit] = ray.intersectObject(model.group);
+  expect(hit?.object.name).toBe(
+    "Beveled screw head with a recessed Phillips drive"
+  );
+  expect(hit?.point.x).toBeLessThan(42.5);
+  model.dispose();
 });

@@ -1,4 +1,4 @@
-import { MeshPhysicalMaterial, ShaderChunk } from "three";
+import { MeshPhysicalMaterial } from "three";
 import type { Texture } from "three";
 
 const grainShader = `
@@ -27,16 +27,20 @@ float ie600Engraving(vec3 point) {
 }
 
 float ie600SurfaceHeight(vec3 point) {
-  return ie600SurfaceGrain(point).r * 0.12 - ie600Engraving(point) * 0.075;
+  return ie600SurfaceGrain(point).r * 0.075 - ie600Engraving(point) * 0.035;
 }
 
-vec2 ie600HeightGradient() {
-  float base = ie600SurfaceHeight(vIe600Position);
-  return vec2(
-    (ie600SurfaceHeight(vIe600Position + dFdx(vIe600Position)) - base) / max(length(dFdx(vIe600Position)), 0.00001),
-    (ie600SurfaceHeight(vIe600Position + dFdy(vIe600Position)) - base) / max(length(dFdy(vIe600Position)), 0.00001)
-  );
+vec3 ie600PerturbNormal(vec3 surfaceNormal, float facing) {
+  vec3 dx = dFdx(-vViewPosition);
+  vec3 dy = dFdy(-vViewPosition);
+  vec3 r1 = cross(dy, surfaceNormal);
+  vec3 r2 = cross(surfaceNormal, dx);
+  float determinant = dot(dx, r1) * facing;
+  float height = ie600SurfaceHeight(vIe600Position);
+  vec3 gradient = sign(determinant) * (dFdx(height) * r1 + dFdy(height) * r2);
+  return normalize(max(abs(determinant), 0.0000001) * surfaceNormal - gradient);
 }
+
 `;
 
 /** 三方向から同じ粒度を投影し、側面で金属模様が筋状に伸びるのを防ぐ。 */
@@ -47,15 +51,15 @@ export function ie600ZirconiumMaterial(
   marks: boolean
 ) {
   const material = new MeshPhysicalMaterial({
-    color: 0x84_87_86,
+    color: 0xa4_a6_a5,
     metalness: 0.9,
-    roughness: 0.78,
+    roughness: 0.66,
     bumpMap: grain,
     bumpScale: 1,
     roughnessMap: grain,
-    envMapIntensity: 0.8,
+    envMapIntensity: 1,
   });
-  material.customProgramCacheKey = () => "ie600-zirconium-grain-engraving-v1";
+  material.customProgramCacheKey = () => "ie600-zirconium-grain-engraving-v2";
   material.onBeforeCompile = (shader) => {
     shader.uniforms["ie600Grain"] = { value: grain };
     shader.uniforms["ie600FrontMarks"] = { value: frontMarks };
@@ -78,10 +82,7 @@ export function ie600ZirconiumMaterial(
       )
       .replace(
         "#include <normal_fragment_maps>",
-        ShaderChunk.normal_fragment_maps.replace(
-          "dHdxy_fwd()",
-          "ie600HeightGradient()"
-        )
+        "normal = ie600PerturbNormal(normal, faceDirection);"
       )
       .replace(
         "#include <color_fragment>",

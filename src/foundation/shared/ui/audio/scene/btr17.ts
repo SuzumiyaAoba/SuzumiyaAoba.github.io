@@ -1,26 +1,27 @@
 import {
-  BoxGeometry,
-  Matrix4,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
-  Vector3,
+  ShapeGeometry,
 } from "three";
 import {
   btr17EndPlateGeometry,
   btr17FrameGeometry,
   btr17FrontGlassGeometry,
+  btr17FrontOutline,
   btr17JackGeometry,
-  btr17KnobGeometry,
   btr17Outputs,
   btr17RearLeatherGeometry,
   btr17UsbPositions,
   btr17UsbRimGeometry,
+  btr17UsbLinerGeometry,
 } from "./btr17-geometry";
 import {
   btr17LeatherTexture,
   drawBtr17Display,
+  drawBtr17Logo,
   drawBtr17SideLabels,
 } from "./btr17-surface";
+import { btr17KnobGeometry } from "./btr17-knob";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { ModelParts } from "./parts";
@@ -39,7 +40,7 @@ function createHeadphoneOutputs(parts: ModelParts) {
       [output.x, 86.65, 0],
       `${output.label} recessed headphone socket`
     );
-    for (const depth of [1.4, 3.4]) {
+    for (const depth of [3.1, 7.8]) {
       parts.box(
         [0.22, 0.8, 0.65],
         [output.x + output.bore - 0.15, 86.4 - depth, 0],
@@ -58,7 +59,7 @@ function createHeadphoneOutputs(parts: ModelParts) {
     rim.rotation.x = -Math.PI / 2;
     const floor = parts.disc(
       output.bore,
-      [output.x, 81.9, 0],
+      [output.x, 75.8, 0],
       parts.cavity,
       `${output.label} recessed socket floor`
     );
@@ -88,25 +89,37 @@ function createUsbConnections(parts: ModelParts) {
     "BTR17 bottom panel with two open USB C ports"
   );
   const power = new MeshStandardMaterial({ color: 0xb8_43_20, roughness: 0.7 });
+  const shield = new MeshStandardMaterial({
+    color: 0x45_49_4d,
+    metalness: 0.75,
+    roughness: 0.48,
+    envMapIntensity: 0.5,
+  });
   for (const x of btr17UsbPositions) {
     const charging = x > 0;
     const label = charging ? "POWER IN" : "USB";
     parts.mesh(
       btr17UsbRimGeometry(),
-      charging ? parts.turned : parts.steel,
+      shield,
       [x, -0.03, 0],
       `${label} USB C metal shell`
     );
+    parts.mesh(
+      btr17UsbLinerGeometry(),
+      charging ? power : parts.black,
+      [x, 0.03, 0],
+      `${label} recessed moulded USB-C collar`
+    );
     parts.box(
       [8.2, 0.3, 2.5],
-      [x, 2.6, 0],
+      [x, 6.1, 0],
       parts.cavity,
       `${label} dark port cavity`,
       0.3
     );
     parts.box(
-      [6.3, 1.7, 0.6],
-      [x, 1.75, 0],
+      [6.3, 4.8, 0.6],
+      [x, 3.7, 0],
       charging ? power : parts.black,
       `${label} recessed USB C tongue`,
       0.2
@@ -114,8 +127,8 @@ function createUsbConnections(parts: ModelParts) {
     for (const side of [-1, 1]) {
       for (let contact = 0; contact < 12; contact += 1) {
         parts.box(
-          [0.16, 0.85, 0.035],
-          [x - 2.2 + contact * 0.4, 1.6, side * 0.315],
+          [0.16, 3.7, 0.035],
+          [x - 2.2 + contact * 0.4, 3.2, side * 0.315],
           parts.gold,
           `${label} USB contact`,
           0.01
@@ -141,65 +154,27 @@ function createUsbConnections(parts: ModelParts) {
 }
 
 function createControls(parts: ModelParts, metal: MeshPhysicalMaterial) {
-  const knobPosition = new Vector3(13.6, 81, 0);
   parts.mesh(
     btr17KnobGeometry(),
     metal,
     [13.6, 81, 0],
-    "BTR17 pressable volume knob"
+    "BTR17 volume wheel with helical grooves and a diamond knurl band"
   );
-  const count = 64 * 5 * 2;
-  const knurl = parts.instanced(
-    new BoxGeometry(0.56, 0.1, 0.22),
-    metal,
-    count,
-    "Cross cut diamond knurl on the volume wheel"
+  const face = parts.disc(
+    4.25,
+    [20.09, 81, 0],
+    parts.turnedFace(),
+    "Concentric turned metal volume wheel end disc"
   );
-  const matrix = new Matrix4();
-  const diagonal = new Matrix4();
-  let instance = 0;
-  for (let row = 0; row < 5; row += 1) {
-    for (let index = 0; index < 64; index += 1) {
-      const angle = ((index + (row % 2) / 2) / 64) * Math.PI * 2;
-      for (const slope of [-1, 1]) {
-        matrix.makeRotationX(angle);
-        diagonal.makeRotationY((slope * Math.PI) / 4);
-        matrix.multiply(diagonal);
-        matrix.setPosition(
-          knobPosition.x + 2.1 + row * 0.67,
-          knobPosition.y + 5.63 * Math.cos(angle),
-          5.63 * Math.sin(angle)
-        );
-        knurl.setMatrixAt(instance, matrix);
-        instance += 1;
-      }
-    }
-  }
-  for (const radius of [3.9, 3.3]) {
-    const ring = parts.ring(
-      radius,
-      0.12,
-      [20.13, 81, 0],
-      parts.turned,
-      "Engraved concentric knob face"
-    );
-    ring.rotation.y = Math.PI / 2;
-  }
-  const center = parts.disc(
-    3.05,
-    [20.14, 81, 0],
-    parts.rear,
-    "Recessed volume wheel centre"
-  );
-  center.rotation.y = Math.PI / 2;
+  face.rotation.y = Math.PI / 2;
   for (const [y, name] of [
     [58.5, "Power"],
     [50.2, "Previous track and EQ"],
     [42, "Next track and pairing"],
   ] as const) {
     parts.box(
-      [0.3, 3.7, 4.7],
-      [20.56, y, 0],
+      [0.3, 4.2, 5.2],
+      [19.6, y, 0],
       parts.cavity,
       `${name} button recess`,
       0.5
@@ -207,8 +182,8 @@ function createControls(parts: ModelParts, metal: MeshPhysicalMaterial) {
     parts.box([0.8, 2.6, 3.7], [20.75, y, 0], metal, `${name} button`, 0.35);
   }
   parts.box(
-    [0.2, 6.7, 3.8],
-    [20.57, 32.5, 0],
+    [0.2, 7.2, 4.3],
+    [19.6, 32.5, 0],
     parts.cavity,
     "PC BT PHONE selector slot",
     0.4
@@ -221,8 +196,8 @@ function createControls(parts: ModelParts, metal: MeshPhysicalMaterial) {
     0.25
   );
   parts.box(
-    [0.2, 5.3, 3.8],
-    [20.57, 21.3, 0],
+    [0.2, 5.8, 4.3],
+    [19.6, 21.3, 0],
     parts.cavity,
     "Desktop mode selector slot",
     0.4
@@ -244,7 +219,7 @@ function createControls(parts: ModelParts, metal: MeshPhysicalMaterial) {
   );
   const microphone = parts.disc(
     0.32,
-    [20.64, 63.8, 0],
+    [19.85, 63.8, 0],
     parts.cavity,
     "Side microphone aperture"
   );
@@ -272,27 +247,25 @@ export function createBtr17() {
       clearcoat: 0.12,
       clearcoatRoughness: 0.55,
     }),
-    { relief: 0.0045, roughness: 0.075 }
+    { scale: [24, 24, 24], relief: 0.0035, roughness: 0.055 }
   );
-  const front = new MeshPhysicalMaterial({
-    color: 0x19_1c_20,
-    metalness: 0.45,
-    roughness: 0.5,
-  });
   const glass = new MeshPhysicalMaterial({
-    color: 0x03_05_08,
-    metalness: 0.1,
-    roughness: 0.16,
-    clearcoat: 1,
-    clearcoatRoughness: 0.12,
+    color: 0xff_ff_ff,
+    metalness: 0,
+    roughness: 0.009,
+    transmission: 1,
+    thickness: 0.28,
+    ior: 1.5,
+    envMapIntensity: 0.6,
   });
   const leatherTexture = btr17LeatherTexture();
   const leather = new MeshPhysicalMaterial({
-    color: 0x1c_1e_21,
+    color: 0x45_49_4f,
     roughness: 0.86,
     metalness: 0,
-    bumpMap: leatherTexture,
-    bumpScale: 0.16,
+    map: leatherTexture.color,
+    bumpMap: leatherTexture.height,
+    bumpScale: 0.1,
   });
   parts.mesh(
     btr17FrameGeometry(),
@@ -300,50 +273,48 @@ export function createBtr17() {
     [0, 0, 0],
     "Chamfered aluminium chassis with recessed upper front"
   );
-  const lower = parts.facePlate(
-    [35.5, 38.4, 0.3],
-    [0, 22.2, 8.24],
-    front,
-    "Satin black lower front panel",
-    1.1
-  );
-  lower.userData["castShadow"] = false;
   parts.mesh(
+    new ShapeGeometry(btr17FrontOutline()),
+    parts.cavity,
+    [0, 0, 6.92],
+    "Black IPS display backing beneath glass"
+  );
+  const cover = parts.mesh(
     btr17FrontGlassGeometry(),
     glass,
-    [0, 0, 7.42],
-    "Recessed two section front glass panel"
+    [0, 0, 7.12],
+    "Recessed physical front cover glass"
   );
-  parts.print(
-    27,
-    27,
-    [-0.6, 60.2, 7.85],
+  cover.userData["castShadow"] = false;
+  const display = parts.print(
+    23.4,
+    23.4,
+    [-0.6, 60.2, 6.98],
     drawBtr17Display,
     "1.3 inch IPS display illustrative LDAC playback",
     1024,
     true
   );
-  const back = parts.mesh(
+  display.material.transparent = false;
+  display.material.depthWrite = true;
+  parts.mesh(
     btr17RearLeatherGeometry(),
     leather,
-    [0, 0, -8.49],
+    [0, 0, -7.98],
     "Grained black leather rear cover"
   );
   const logo = parts.print(
     18,
     8,
-    [-0.5, 62, -8.59],
+    [-0.5, 62, -8.065],
     (context) => {
-      context.fillStyle = "#0d0f12";
-      context.textAlign = "center";
-      context.font = "bold 6px Arial";
-      context.fillText("FiiO", 9, 6.3);
+      context.fillStyle = "#121416";
+      drawBtr17Logo(context, 0, 2.28, 18, 3.44);
     },
     "FiiO debossed rear leather logo",
     1024
   );
   logo.rotation.y = Math.PI;
-  back.userData["castShadow"] = false;
   createHeadphoneOutputs(parts);
   createUsbConnections(parts);
   createControls(parts, metal);
@@ -351,7 +322,8 @@ export function createBtr17() {
     group: parts.root,
     dispose() {
       parts.dispose();
-      leatherTexture.dispose();
+      leatherTexture.height.dispose();
+      leatherTexture.color.dispose();
     },
   };
 }

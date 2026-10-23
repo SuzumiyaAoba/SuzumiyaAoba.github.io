@@ -14,12 +14,15 @@ export function createHd800sTextures() {
     roughness: createPreparedTexture("hd-powder-roughness", false, true),
   };
   const cloth = createPreparedTexture("hd-cloth", false, true);
+  cloth.repeat.set(4, 4);
   const mesh = {
     mask: createPreparedTexture("hd-mesh-mask", false, true),
     height: createPreparedTexture("hd-mesh-height", false, true),
   };
   for (const texture of Object.values(mesh)) {
-    texture.repeat.set(100 / (32 * 0.4), 126 / (32 * 0.4));
+    texture.repeat.set(100 / (32 * 0.22), 126 / (32 * 0.22));
+    texture.center.set(0.5, 0.5);
+    texture.rotation = Math.PI / 4;
   }
   const grille = createPreparedTexture("hd-grille-mask");
   const textures = [

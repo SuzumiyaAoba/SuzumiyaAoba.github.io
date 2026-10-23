@@ -97,18 +97,24 @@ it("丸い筐体の前面と背面を外側へ向け、縁まで曲面をつな�
   material.dispose();
 });
 
-it("イヤーチップの保護格子に通気穴を残し、中心とスポークを保つ", () => {
+it("イヤーチップの二重の保護格子と中心に通気穴を残す", () => {
   const geometry = ie600TipGuardGeometry();
   const material = new MeshBasicMaterial({ side: DoubleSide });
   const guard = new Mesh(geometry, material);
   const ray = new Raycaster(new Vector3(0, 0, 3), new Vector3(0, 0, -1));
-  expect(ray.intersectObject(guard).length).toBeGreaterThan(0);
-  ray.set(
-    new Vector3(Math.cos(Math.PI / 6), Math.sin(Math.PI / 6), 3),
-    new Vector3(0, 0, -1)
-  );
   expect(ray.intersectObject(guard)).toHaveLength(0);
-  ray.set(new Vector3(1, 0, 3), new Vector3(0, 0, -1));
+  for (const radius of [0.6, 1.12]) {
+    ray.set(
+      new Vector3(
+        Math.cos(Math.PI / 6) * radius,
+        Math.sin(Math.PI / 6) * radius,
+        3
+      ),
+      new Vector3(0, 0, -1)
+    );
+    expect(ray.intersectObject(guard)).toHaveLength(0);
+  }
+  ray.set(new Vector3(0.7, 0, 3), new Vector3(0, 0, -1));
   expect(ray.intersectObject(guard).length).toBeGreaterThan(0);
   geometry.dispose();
   material.dispose();
@@ -200,12 +206,31 @@ it("バランスプラグのケーブル根元と差し込み軸をL字でつな
   const geometry = ie600BalancedPlugBodyGeometry();
   const material = new MeshBasicMaterial();
   const body = new Mesh(geometry, material);
-  const ray = new Raycaster(new Vector3(-10, -5, 0), new Vector3(0, 1, 0));
+  const ray = new Raycaster(new Vector3(-10, -5, -6.4), new Vector3(0, 1, 0));
   expect(ray.intersectObject(body).length).toBeGreaterThan(0);
   ray.set(new Vector3(0, -5, 5), new Vector3(0, 1, 0));
   expect(ray.intersectObject(body).length).toBeGreaterThan(0);
   ray.set(new Vector3(-10, -5, 5), new Vector3(0, 1, 0));
   expect(ray.intersectObject(body)).toHaveLength(0);
+  geometry.dispose();
+  material.dispose();
+});
+
+it("ロゴ下の細長い通気孔を曲面に開け、奥まで金属の壁を残す", () => {
+  const geometry = ie600ShellGeometry();
+  const material = new MeshBasicMaterial();
+  const shell = new Mesh(geometry, material);
+  const ray = new Raycaster(
+    new Vector3(-4.4, -5.9, 8),
+    new Vector3(0, 0, -1),
+    0,
+    6.1
+  );
+  expect(ray.intersectObject(shell)).toHaveLength(0);
+  ray.set(new Vector3(-4.4, -5.9, 1.6), new Vector3(0, 1, 0));
+  expect(ray.intersectObject(shell)[0]?.distance).toBeCloseTo(0.42, 2);
+  ray.set(new Vector3(-4.4, -5.35, 8), new Vector3(0, 0, -1));
+  expect(ray.intersectObject(shell)[0]?.point.z).toBeGreaterThan(2.5);
   geometry.dispose();
   material.dispose();
 });

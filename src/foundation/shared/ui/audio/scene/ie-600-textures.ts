@@ -9,7 +9,7 @@ import {
 } from "three";
 
 // Sennheiser のシンボル形状。Simple Icons の sennheiser と同じ輪郭。
-const symbolPath =
+export const ie600SymbolPath =
   "M0 3v18h24V3zm13.209 1.659c-1.428.548-2.799 1.757-3.905 4.182c-.321.703-.925 2.062-1.2 2.67c-2.224 4.882-3.364 5.932-6.72 5.932V4.35H13.15c.184-.011.235.25.06.309zm9.428 1.894V19.65H10.851c-.181.005-.227-.25-.055-.309c1.427-.548 2.798-1.757 3.904-4.182c.321-.703.926-2.062 1.2-2.67c2.22-4.882 3.36-5.932 6.716-5.932z";
 
 function sampleGrain(grid: Float32Array, size: number, x: number, y: number) {
@@ -74,6 +74,36 @@ export function ie600GrainTexture() {
   return texture;
 }
 
+/** 透明被覆越しの細い撚り線。色とは分けた線形の高さマップ。 */
+export function ie600CableTexture() {
+  const width = 512;
+  const height = 256;
+  const pixels = new Uint8Array(width * height * 4);
+  for (let row = 0; row < height; row += 1) {
+    for (let column = 0; column < width; column += 1) {
+      const ridge =
+        0.5 +
+        0.5 *
+          Math.sin(((row / height) * 24 - (column / width) * 24) * Math.PI * 2);
+      const level = Math.round(70 + 140 * ridge ** 0.65);
+      const index = (row * width + column) * 4;
+      pixels[index] = level;
+      pixels[index + 1] = level;
+      pixels[index + 2] = level;
+      pixels[index + 3] = 255;
+    }
+  }
+  const texture = new DataTexture(pixels, width, height, RGBAFormat);
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.generateMipmaps = true;
+  texture.magFilter = LinearFilter;
+  texture.minFilter = LinearMipmapLinearFilter;
+  texture.anisotropy = 8;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 export function ie600EngravingTexture(side: number, rear: boolean) {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
@@ -102,7 +132,7 @@ export function ie600EngravingTexture(side: number, rear: boolean) {
     context.translate(-2.8, -2.1);
     context.scale(5.6 / 24, 4.2 / 18);
     context.translate(0, -3);
-    context.fill(new Path2D(symbolPath));
+    context.fill(new Path2D(ie600SymbolPath));
   }
   const texture = new CanvasTexture(canvas);
   texture.anisotropy = 8;

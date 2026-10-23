@@ -2,10 +2,25 @@ import {
   ExtrudeGeometry,
   Group,
   MeshStandardMaterial,
+  Path,
+  RingGeometry,
   Shape,
   Vector2,
 } from "three";
+import type { Material } from "three";
 import type { ModelParts } from "./parts";
+import { createBncSocket } from "./bnc-socket";
+import { powerInlet } from "./reference-power-inlet";
+import {
+  createUd505RearPanel,
+  serviceUsbOutline,
+  serviceUsbOpening,
+} from "./ud-505-rear-panel";
+import {
+  connectorShellGeometry,
+  usbBOpening,
+  usbBOutline,
+} from "./connector-geometry";
 
 function rca(parts: ModelParts, x: number, y: number, color: number) {
   const insulator = new MeshStandardMaterial({ color, roughness: 0.5 });
@@ -22,50 +37,158 @@ function rca(parts: ModelParts, x: number, y: number, color: number) {
     parts.gold,
     "Gold-plated RCA shell"
   );
-  parts.cylinder(3.1, 0.65, [x, y, 5.7], insulator, "RCA colour insulator");
-  parts.disc(1.5, [x, y, 6.06], parts.cavity, "RCA centre socket");
-  parts.ring(1.65, 0.12, [x, y, 6.06], parts.gold, "RCA centre contact");
-}
-
-function xlr(parts: ModelParts, x: number) {
-  const y = 32;
-  parts.cylinder(11.6, 1.8, [x, y, 1.2], parts.black, "XLR mounting flange");
   parts.lathe(
     [
-      [10, 0],
-      [10, 4.5],
-      [8.9, 5],
-      [8.1, 5],
-      [8.1, 0],
+      [3.1, 1.2],
+      [3.1, 5.95],
     ],
-    [x, y, 1],
-    parts.black,
-    "XLR output housing"
+    [x, y, 0],
+    insulator,
+    "Annular RCA colour insulator with an open centre"
   );
-  parts.disc(8.1, [x, y, 1.1], parts.cavity, "XLR interior");
+  parts.lathe(
+    [
+      [1.72, 5.95],
+      [1.72, 1.2],
+    ],
+    [x, y, 0],
+    insulator,
+    "Inner wall of the RCA colour insulator"
+  );
+  parts.mesh(
+    new RingGeometry(1.72, 3.1, 64),
+    insulator,
+    [x, y, 5.95],
+    "Flat RCA colour-coding face"
+  );
+  parts.lathe(
+    [
+      [1.71, 2],
+      [1.71, 5.9],
+      [1.6, 6.05],
+      [1.48, 5.85],
+      [1.48, 2],
+    ],
+    [x, y, 0],
+    parts.gold,
+    "Recessed gold RCA centre-contact sleeve"
+  );
+  parts.disc(1.49, [x, y, 1.9], parts.cavity, "Deep RCA centre socket");
+}
+
+function xlr(parts: ModelParts, x: number, screwFinish: Material) {
+  const y = 32;
+  // 取付耳を本体と連続させ、ねじの周囲にも樹脂の肉厚を残す。
+  const flange = new Shape();
+  for (let step = 0; step <= 192; step += 1) {
+    const angle = (step / 192) * Math.PI * 2;
+    const dx = Math.cos(angle);
+    const dy = Math.sin(angle);
+    let radius = 11.6;
+    for (const [cx, cy] of [
+      [-10, 9],
+      [10, -9],
+    ] as const) {
+      const perpendicular = cx * dy - cy * dx;
+      const parallel = cx * dx + cy * dy;
+      if (Math.abs(perpendicular) < 3.1 && parallel > 0) {
+        radius = Math.max(
+          radius,
+          parallel + Math.sqrt(3.1 ** 2 - perpendicular ** 2)
+        );
+      }
+    }
+    if (step === 0) {
+      flange.moveTo(dx * radius, dy * radius);
+    } else {
+      flange.lineTo(dx * radius, dy * radius);
+    }
+  }
+  flange.closePath();
+  for (const [cx, cy, radius] of [
+    [0, 0, 8.1],
+    [-10, 9, 1.8],
+    [10, -9, 1.8],
+  ] as const) {
+    const hole = new Path();
+    hole.absarc(cx, cy, radius, 0, Math.PI * 2, true);
+    flange.holes.push(hole);
+  }
+  parts.mesh(
+    new ExtrudeGeometry(flange, {
+      depth: 1.5,
+      bevelEnabled: true,
+      bevelSize: 0.2,
+      bevelThickness: 0.15,
+      bevelSegments: 3,
+      curveSegments: 32,
+    }),
+    parts.black,
+    [x, y, 0.65],
+    "XLR flange with integral mounting ears and open screw seats"
+  );
+  parts.lathe(
+    [
+      [10, -6.6],
+      [10, 4.8],
+      [9.6, 5.7],
+      [8.5, 5.9],
+      [8.1, 5.3],
+      [8.1, -6.6],
+    ],
+    [x, y, 0],
+    parts.black,
+    "Deep XLR output housing"
+  );
+  parts.disc(8.15, [x, y, -6.55], parts.black, "Recessed XLR pin-carrier face");
   for (const [dx, dy] of [
     [-4, 2],
     [4, 2],
     [0, -3],
   ] as const) {
-    parts.cylinder(
-      0.75,
-      3.8,
-      [x + dx, y + dy, 3.1],
+    parts.lathe(
+      [
+        [0, -6.5],
+        [0.79, -6.5],
+        [0.79, 3.6],
+        [0.75, 3.9],
+        [0.55, 4.2],
+        [0.2, 4.38],
+        [0, 4.4],
+      ],
+      [x + dx, y + dy, 0],
       parts.gold,
-      "XLR output pin",
-      16
+      "Rounded gold XLR male pin"
     );
   }
-  parts.box(
-    [4, 0.6, 1.5],
-    [x, y + 8.1, 4.8],
-    parts.steel,
-    "XLR alignment key",
-    0.1
+  parts.print(
+    14,
+    14,
+    [x, y, -6.5],
+    (context) => {
+      context.fillStyle = "#5b5c5c";
+      context.font = "1.5px Arial";
+      context.textAlign = "center";
+      context.fillText("1", 2.5, 2.5);
+      context.fillText("2", 11.5, 2.5);
+      context.fillText("3", 7, 12.8);
+    },
+    "Molded XLR contact numbers",
+    256
   );
-  parts.screw([x - 10, y + 9, 1.3], "front", true);
-  parts.screw([x + 10, y - 9, 1.3], "front", true);
+  parts.box(
+    [4, 0.4, 2],
+    [x, y + 8, 4.3],
+    parts.steel,
+    "XLR polarising spring clip",
+    0.08
+  );
+  parts
+    .screw([x - 10, y + 9, 1.8], "front", true, screwFinish)
+    .scale.set(1.45, 1.45, 2.3);
+  parts
+    .screw([x + 10, y - 9, 1.8], "front", true, screwFinish)
+    .scale.set(1.45, 1.45, 2.3);
 }
 
 function polygon(
@@ -73,7 +196,7 @@ function polygon(
   points: readonly (readonly [number, number])[],
   depth: number,
   position: readonly [number, number, number],
-  material: ModelParts["steel"],
+  material: Material,
   name: string
 ) {
   const shape = new Shape(points.map(([x, y]) => new Vector2(x, y)));
@@ -86,81 +209,102 @@ function polygon(
 }
 
 function usb(parts: ModelParts) {
-  parts.box(
-    [9.7, 10.4, 1.1],
-    [25.5, 54, 1.1],
+  parts.mesh(
+    connectorShellGeometry(
+      [
+        [-4.85, -5.2],
+        [4.85, -5.2],
+        [4.85, 5.2],
+        [-4.85, 5.2],
+      ],
+      usbBOpening,
+      0.5,
+      0.1
+    ),
     parts.black,
-    "USB-B flange",
-    0.7
+    [25.5, 54, 0.65],
+    "Open USB-B mounting flange"
   );
-  const profile = [
-    [-4, -4],
-    [4, -4],
-    [4, 2],
-    [2, 4],
-    [-2, 4],
-    [-4, 2],
-  ] as const;
-  polygon(
-    parts,
-    profile,
-    1.5,
-    [25.5, 54, 1.4],
+  parts.mesh(
+    connectorShellGeometry(usbBOutline, usbBOpening, 12),
     parts.steel,
-    "USB-B chamfered shield"
+    [25.5, 54, -8.8],
+    "Hollow folded-metal USB-B shield"
   );
-  const inset = [
-    [-3.4, -3.5],
-    [3.4, -3.5],
-    [3.4, 1.6],
-    [1.7, 3.3],
-    [-1.7, 3.3],
-    [-3.4, 1.6],
-  ] as const;
   polygon(
     parts,
-    inset,
-    0.2,
-    [25.5, 54, 2.91],
-    parts.black,
+    usbBOpening,
+    0.04,
+    [25.5, 54, -8.85],
+    parts.cavity,
     "USB-B recessed socket"
   );
-  parts.box(
-    [4.8, 2.7, 0.6],
-    [25.5, 53.5, 3.2],
-    parts.rear,
-    "USB-B contact tongue",
-    0.05
-  );
-  for (const x of [24.3, 26.7]) {
-    for (const y of [53, 54]) {
+  const carrier = new Shape();
+  carrier.moveTo(-2.4, -1.6);
+  for (const x of [-1.25, 1.25]) {
+    carrier.lineTo(x - 0.45, -1.6);
+    carrier.lineTo(x - 0.45, -1.3);
+    carrier.lineTo(x + 0.45, -1.3);
+    carrier.lineTo(x + 0.45, -1.6);
+  }
+  carrier.lineTo(2.4, -1.6);
+  carrier.lineTo(2.4, 1.6);
+  for (const x of [1.25, -1.25]) {
+    carrier.lineTo(x + 0.45, 1.6);
+    carrier.lineTo(x + 0.45, 1.3);
+    carrier.lineTo(x - 0.45, 1.3);
+    carrier.lineTo(x - 0.45, 1.6);
+  }
+  carrier.lineTo(-2.4, 1.6);
+  carrier.closePath();
+  for (const dx of [-1.25, 1.25]) {
+    for (const dy of [-1.75, 1.75]) {
       parts.box(
-        [0.6, 0.28, 0.15],
-        [x, y, 3.57],
+        [0.8, 0.22, 8],
+        [25.5 + dx, 53.7 + dy, -3],
         parts.gold,
-        "USB-B contact",
-        0.03
+        "Recessed USB-B contact in an insulating channel",
+        0.035
       );
     }
   }
-  parts.box(
-    [8.2, 3, 0.9],
-    [47, 25, 1.3],
+  parts.mesh(
+    new ExtrudeGeometry(carrier, {
+      depth: 10.5,
+      bevelEnabled: true,
+      bevelSize: 0.04,
+      bevelThickness: 0.04,
+      bevelSegments: 2,
+    }),
+    parts.black,
+    [25.5, 53.7, -8.3],
+    "USB-B carrier with four open contact channels"
+  );
+  parts.mesh(
+    connectorShellGeometry(serviceUsbOutline, serviceUsbOpening, 5.3, 0.05),
     parts.steel,
-    "Service micro-USB shield",
-    1
+    [47, 25, -3.4],
+    "Hollow trapezoidal service micro-USB shield"
+  );
+  polygon(
+    parts,
+    serviceUsbOpening,
+    0.05,
+    [47, 25, -3.45],
+    parts.cavity,
+    "Service micro-USB deep cavity"
   );
   parts.box(
-    [7.2, 1.7, 0.2],
-    [47, 25, 1.82],
-    parts.cavity,
-    "Service micro-USB socket",
-    0.6
+    [5.6, 0.4, 2.7],
+    [47, 25, -0.3],
+    parts.black,
+    "Service micro-USB insulating tongue",
+    0.05
   );
   for (let index = 0; index < 5; index += 1) {
     parts.box(
-      [0.35, 0.28, 0.15],
-      [45.6 + index * 0.7, 25, 1.97],
+      [0.3, 0.08, 1.9],
+      [45.7 + index * 0.65, 24.76, -0.1],
       parts.gold,
       "Service connector contact",
       0.02
@@ -191,37 +335,7 @@ function digitalInputs(parts: ModelParts) {
     "Optical shutter hinge",
     0.1
   );
-  parts.cylinder(
-    6.5,
-    1.1,
-    [82, 32, 1.1],
-    parts.gold,
-    "10 MHz BNC mounting nut",
-    6
-  );
-  parts.lathe(
-    [
-      [5.6, 0],
-      [5.6, 6],
-      [4.8, 6.5],
-      [3.4, 6.5],
-      [3.4, 0],
-    ],
-    [82, 32, 1.7],
-    parts.gold,
-    "BNC bayonet shell"
-  );
-  parts.cylinder(3.3, 0.6, [82, 32, 7.9], parts.silver, "BNC dielectric");
-  parts.disc(1.25, [82, 32, 8.22], parts.cavity, "BNC centre contact");
-  for (const dx of [-5.8, 5.8]) {
-    parts.box(
-      [1.6, 1.7, 1.5],
-      [82 + dx, 32, 5.8],
-      parts.gold,
-      "BNC bayonet lug",
-      0.2
-    );
-  }
+  createBncSocket(parts, [82, 32, 0]);
   parts.cylinder(
     1.2,
     0.4,
@@ -230,47 +344,6 @@ function digitalInputs(parts: ModelParts) {
     "Clock input mounting detail",
     16
   );
-}
-
-export function powerInlet(parts: ModelParts) {
-  parts.box(
-    [23.5, 31.5, 3.7],
-    [110, 42, 1.8],
-    parts.black,
-    "IEC C14 mains inlet flange",
-    0.9
-  );
-  const outline = [
-    [-8.4, -12],
-    [3.8, -12],
-    [8.4, -7.5],
-    [8.4, 7.5],
-    [3.8, 12],
-    [-8.4, 12],
-  ] as const;
-  polygon(parts, outline, 0.6, [110, 42, 3.7], parts.steel, "IEC socket edge");
-  const opening = outline.map(([x, y]) => [x * 0.96, y * 0.96] as const);
-  polygon(
-    parts,
-    opening,
-    0.3,
-    [110, 42, 4.31],
-    parts.black,
-    "IEC inlet cavity"
-  );
-  for (const [dx, dy] of [
-    [-3, -7],
-    [1, 0],
-    [-3, 7],
-  ] as const) {
-    parts.box(
-      [3.1, 1, 3.5],
-      [110 + dx, 42 + dy, 4.9],
-      parts.steel,
-      "IEC mains contact",
-      0.1
-    );
-  }
 }
 
 function lettering(parts: ModelParts) {
@@ -298,12 +371,18 @@ function lettering(parts: ModelParts) {
       bar("LINE OUT", -63, 16, 126);
       bar("DIGITAL IN", 54, 15.8, 29);
       bar("CLOCK SYNC", 82, 15.8, 23);
-      text("R", -105, 58);
-      text("L", -21.5, 58);
+      const channel = (value: string, x: number, y: number) => {
+        context.strokeRect(x + 135, 69 - y - 2.8, 4, 3.4);
+        text(value, x, y, 2.6);
+      };
+      channel("R", -105, 58);
+      channel("L", -21.5, 58);
       text("XLR", -105, 50);
       text("XLR", -21.5, 50);
-      text("RCA   R", -78.5, 59.5);
-      text("L   RCA", -46.5, 59.5);
+      text("RCA", -79, 59.5);
+      text("RCA", -46.5, 59.5);
+      channel("R", -69, 59.5);
+      channel("L", -56, 59.5);
       text("RCA", -78.5, 36);
       text("RCA", -46.5, 36);
       text("USB", 25.5, 44);
@@ -313,15 +392,23 @@ function lettering(parts: ModelParts) {
       text("~ IN", 108, 62);
       text("CAN ICES-3(B)/NMB-3(B)", -109, 65, 1.8);
       text("CAUTION", 68, 61, 3.2);
-      text("RISK OF ELECTRIC SHOCK", 68, 57.5, 1.45);
-      text("DO NOT OPEN", 68, 55.5, 1.45);
-      text("AVIS · RISQUE DE CHOC ÉLECTRIQUE", 68, 52.5, 1.4);
+      text("RISK OF ELECTRIC SHOCK", 68, 58.9, 1.45);
+      text("DO NOT OPEN", 68, 56.9, 1.45);
+      text("AVIS · RISQUE DE CHOC ÉLECTRIQUE", 68, 54.5, 1.3);
+      text("NE PAS OUVRIR", 68, 52.9, 1.1);
       text("APPARATEN SKALL ANSLUTAS", 118, 66, 1.35);
       text("TILL JORDAT UTTAG.", 118, 63.8, 1.35);
       text("SERIAL", 101, 18.5, 1.9);
       text("NO.", 99, 15.8, 1.9);
       context.fillRect(107 + 137, 69 - 18.6, 25, 3.5);
-      context.strokeRect(56 + 137, 69 - 63.6, 23, 10.5);
+      context.strokeRect(56 + 137, 69 - 63.6, 23, 7.5);
+      context.strokeRect(126 + 137, 28, 3, 5);
+      context.beginPath();
+      context.moveTo(124 + 137, 27);
+      context.lineTo(131 + 137, 34);
+      context.moveTo(131 + 137, 27);
+      context.lineTo(124 + 137, 34);
+      context.stroke();
       context.strokeRect(-91 + 137, 69 - 66.5, 57, 24);
       context.beginPath();
       context.moveTo(137, 5);
@@ -353,13 +440,7 @@ function lettering(parts: ModelParts) {
 
 export function createRear(parts: ModelParts) {
   const firstChild = parts.root.children.length;
-  parts.box(
-    [274, 56, 1.1],
-    [0, 41, 0],
-    parts.rear,
-    "Black rear connection panel",
-    0.3
-  );
+  createUd505RearPanel(parts);
   parts.box(
     [274, 11.5, 1.7],
     [0, 75.3, -0.25],
@@ -367,8 +448,13 @@ export function createRear(parts: ModelParts) {
     "Brushed rear upper rail",
     0.4
   );
-  xlr(parts, -105);
-  xlr(parts, -21.5);
+  const screwFinish = new MeshStandardMaterial({
+    color: 0x68_6b_70,
+    metalness: 0.7,
+    roughness: 0.32,
+  });
+  xlr(parts, -105, screwFinish);
+  xlr(parts, -21.5, screwFinish);
   for (const y of [27, 54]) {
     rca(parts, -78.5, y, 0xb3_1e_26);
     rca(parts, -46.5, y, 0xe0_da_ce);
@@ -399,10 +485,12 @@ export function createRear(parts: ModelParts) {
   lettering(parts);
   for (const [x, y] of [
     [-130, 42],
-    [-92, 44],
-    [-59, 44],
+    [-92, 46],
+    [-55, 46],
+    [-71.5, 35.5],
+    [-40, 35.5],
     [8, 50],
-    [25.5, 59],
+    [25.5, 61.5],
     [42.5, 50],
     [20.5, 31.5],
     [55.5, 37],
@@ -411,7 +499,7 @@ export function createRear(parts: ModelParts) {
     [-49, 74],
     [51, 74],
   ] as const) {
-    parts.screw([x, y, 1], "front", y < 69);
+    parts.screw([x, y, 1], "front", y < 69, y < 69 ? screwFinish : parts.steel);
   }
   const group = new Group();
   group.name = "Rear connections";

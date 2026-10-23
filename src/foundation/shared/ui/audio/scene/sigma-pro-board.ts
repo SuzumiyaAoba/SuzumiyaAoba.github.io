@@ -1,4 +1,4 @@
-import { Path } from "three";
+import { MeshStandardMaterial, Path } from "three";
 import { SIGMA_WINDOW, sigmaOutline, sigmaPlate } from "./sigma-pro-geometry";
 import type { SigmaParts } from "./sigma-pro-parts";
 import {
@@ -150,8 +150,6 @@ function transistor(
       0.2
     );
   }
-  board.text("R20P06", x, y - 13, 0.4, 1.185, -Math.PI / 2);
-  board.text("R20N06", x + 9, y + 10, 0.3, 1.185, -Math.PI / 2);
 }
 
 function passiveCluster(board: SigmaBoardParts, x: number, y: number) {
@@ -577,8 +575,53 @@ function glassFrit(board: SigmaBoardParts) {
       const bottomFade = Math.max(0, 1 - (1536 - y) / 370);
       const fade = Math.max(sideFade, topFade, bottomFade);
       if (fade > 0.08) {
-        board.glassDot(x, y, 0.36 * Math.sqrt(fade));
+        board.glassDot(x, y, 0.68 * Math.sqrt(fade));
       }
+    }
+  }
+}
+
+function operatingIndicators(board: SigmaBoardParts, parts: SigmaParts) {
+  const light = new MeshStandardMaterial({
+    color: 0xe6_39_0c,
+    emissive: 0xff_36_08,
+    emissiveIntensity: 1.6,
+    roughness: 0.24,
+    toneMapped: false,
+  });
+  for (const x of [215, 680]) {
+    for (const y of [600, 873]) {
+      for (const side of [-1, 1]) {
+        board.box(
+          x + side * 9,
+          y,
+          5,
+          12,
+          0.12,
+          parts.solder,
+          "Indicator LED solder pad"
+        );
+      }
+      board.box(
+        x,
+        y,
+        14,
+        11,
+        0.2,
+        parts.ceramic,
+        "Ceramic carrier of the amplifier indicator",
+        0.12
+      );
+      board.box(
+        x,
+        y,
+        8,
+        8,
+        0.28,
+        light,
+        "Red current-mode amplifier operating indicator",
+        0.3
+      );
     }
   }
 }
@@ -596,6 +639,7 @@ export function createSigmaBoard(parts: SigmaParts) {
   }
   converters(board);
   currentModeMark(board, parts);
+  operatingIndicators(board, parts);
   glassFrit(board);
   board.finish();
 }

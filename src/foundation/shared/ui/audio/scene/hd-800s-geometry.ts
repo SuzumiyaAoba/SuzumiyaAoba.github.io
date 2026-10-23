@@ -1,4 +1,5 @@
 import { BufferGeometry, Float32BufferAttribute, Shape, Vector3 } from "three";
+import { hd800sGrilleHeight } from "./hd-800s-grille";
 
 export const hd800sDriver = { x: 2, y: -7, tilt: -0.16 } as const;
 
@@ -42,11 +43,12 @@ export function headbandCushionGeometry() {
     const theta = Math.PI * (0.15 + (index / segments) * 0.7);
     for (let section = 0; section <= sections; section += 1) {
       const phi = (section / sections) * Math.PI * 2;
-      const radius = 3.7 * Math.cos(phi);
+      const notch = 3.1 * Math.exp(-(((theta - Math.PI / 2) / 0.105) ** 4));
+      const radius = 3.7 * Math.cos(phi) + notch * Math.max(0, -Math.cos(phi));
       positions.push(
-        (76 + radius) * Math.cos(theta),
-        136 + (80 + radius) * Math.sin(theta),
-        11.8 * Math.sin(phi)
+        (91 + radius) * Math.cos(theta),
+        136 + (73 + radius) * Math.sin(theta),
+        17.5 * Math.sin(phi)
       );
       uvs.push(index / segments, section / sections);
       if (index < segments && section < sections) {
@@ -59,7 +61,7 @@ export function headbandCushionGeometry() {
   for (const end of [0, segments]) {
     const theta = Math.PI * (0.15 + (end / segments) * 0.7);
     const center = positions.length / 3;
-    positions.push(76 * Math.cos(theta), 136 + 80 * Math.sin(theta), 0);
+    positions.push(91 * Math.cos(theta), 136 + 73 * Math.sin(theta), 0);
     uvs.push(end / segments, 0.5);
     for (let section = 0; section < sections; section += 1) {
       const vertex = end * (sections + 1) + section;
@@ -78,15 +80,13 @@ export function headbandCushionGeometry() {
   return geometry;
 }
 
-function padPoint(theta: number, phi: number) {
-  const inset = 8.8 - 8.1 * Math.cos(phi);
+export function hd800sPadPoint(theta: number, phi: number) {
+  const radial = Math.sign(Math.cos(phi)) * Math.abs(Math.cos(phi)) ** 0.6;
+  const depth = Math.sign(Math.sin(phi)) * Math.abs(Math.sin(phi)) ** 0.6;
+  const inset = 9.7 - 9 * radial;
   const compression = 1 - 0.06 * Math.cos(theta * 2);
   const wrinkle = Math.sin(theta * 23 + phi * 3) * Math.sin(phi) * 0.08;
-  return cupContour(
-    theta,
-    inset,
-    -11.5 - 7.3 * Math.sin(phi) * compression + wrinkle
-  );
+  return cupContour(theta, inset, -11.5 - 8.5 * depth * compression + wrinkle);
 }
 
 /** The steel baffle rises from the perimeter to the angled, offset driver bezel. */
@@ -202,7 +202,7 @@ export function earPadGeometry() {
     const theta = (around / aroundSegments) * Math.PI * 2;
     for (let section = 0; section <= sectionSegments; section += 1) {
       const phi = (section / sectionSegments) * Math.PI * 2;
-      const point = padPoint(theta, phi);
+      const point = hd800sPadPoint(theta, phi);
       positions.push(point.x, point.y, point.z);
       uvs.push((around / aroundSegments) * 3, section / sectionSegments);
       if (around < aroundSegments && section < sectionSegments) {
@@ -220,10 +220,6 @@ export function earPadGeometry() {
   return geometry;
 }
 
-function domeHeight(x: number, y: number, radius: number) {
-  return 3.8 * Math.max(0, 1 - (x * x + y * y) / (radius * radius));
-}
-
 /** 遠景用のドーム。細かい開口は生成済みのアルファ画像で表す。 */
 export function distantGrilleGeometry() {
   const radius = 28.5;
@@ -238,7 +234,7 @@ export function distantGrilleGeometry() {
       const angle = (segment / segments) * Math.PI * 2;
       const x = Math.cos(angle) * r;
       const y = Math.sin(angle) * r;
-      positions.push(x, y, domeHeight(x, y, radius));
+      positions.push(x, y, hd800sGrilleHeight(x, y));
       uvs.push(x / (radius * 2) + 0.5, y / (radius * 2) + 0.5);
       if (ring > 0 && segment > 0) {
         const current = ring * (segments + 1) + segment;
@@ -262,62 +258,6 @@ export function distantGrilleGeometry() {
   return geometry;
 }
 
-/** Honeycomb apertures and beveled walls are actual geometry, shared by both ear cups. */
-export function honeycombGrilleGeometry() {
-  const radius = 28.5;
-  const cellRadius = 0.68;
-  const holeRadius = 0.51;
-  const rowHeight = Math.sqrt(3) * cellRadius;
-  const positions: number[] = [];
-  const uvs: number[] = [];
-  const indices: number[] = [];
-  for (let column = -28; column <= 28; column += 1) {
-    const centerX = column * cellRadius * 1.5;
-    for (let row = -27; row <= 27; row += 1) {
-      const centerY = (row + (Math.abs(column) % 2) * 0.5) * rowHeight;
-      if (Math.hypot(centerX, centerY) > radius - cellRadius) {
-        continue;
-      }
-      const start = positions.length / 3;
-      for (const [ringRadius, depth] of [
-        [cellRadius, 0],
-        [holeRadius + 0.045, 0],
-        [holeRadius, -0.14],
-        [holeRadius, -0.38],
-      ] as const) {
-        for (let corner = 0; corner < 6; corner += 1) {
-          const angle = (corner / 6) * Math.PI * 2;
-          const x = centerX + Math.cos(angle) * ringRadius;
-          const y = centerY + Math.sin(angle) * ringRadius;
-          positions.push(x, y, domeHeight(x, y, radius) + depth);
-          uvs.push(x / (radius * 2) + 0.5, y / (radius * 2) + 0.5);
-        }
-      }
-      for (let ring = 0; ring < 3; ring += 1) {
-        for (let corner = 0; corner < 6; corner += 1) {
-          const next = (corner + 1) % 6;
-          const outer = start + ring * 6;
-          const inner = outer + 6;
-          indices.push(
-            outer + corner,
-            outer + next,
-            inner + corner,
-            outer + next,
-            inner + next,
-            inner + corner
-          );
-        }
-      }
-    }
-  }
-  const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
 /** Short fiber blades soften the pad silhouette and share one draw call per ear cup. */
 export function microfiberPileGeometry() {
   const positions: number[] = [];
@@ -329,13 +269,14 @@ export function microfiberPileGeometry() {
   for (let fiber = 0; fiber < 9000; fiber += 1) {
     const theta = random() * Math.PI * 2;
     const phi = random() * Math.PI;
-    const point = padPoint(theta, phi);
-    const normal = new Vector3(
-      Math.cos(phi) * Math.cos(theta),
-      Math.cos(phi) * Math.sin(theta),
-      -Math.sin(phi)
-    ).normalize();
-    const tangent = new Vector3(-Math.sin(theta), Math.cos(theta), 0);
+    const point = hd800sPadPoint(theta, phi);
+    const tangent = hd800sPadPoint(theta + 0.001, phi)
+      .sub(point)
+      .normalize();
+    const section = hd800sPadPoint(theta, phi + 0.001)
+      .sub(point)
+      .normalize();
+    const normal = new Vector3().crossVectors(section, tangent).normalize();
     const bitangent = new Vector3().crossVectors(normal, tangent).normalize();
     const length = 0.11 + random() * 0.19;
     const width = 0.03 + random() * 0.025;
@@ -360,7 +301,8 @@ export function arcLabelGeometry(
   radius: number,
   height: number,
   start: number,
-  end: number
+  end: number,
+  slope = 0
 ) {
   const positions: number[] = [];
   const uvs: number[] = [];
@@ -372,7 +314,11 @@ export function arcLabelGeometry(
       [radius - height / 2, 1],
       [radius + height / 2, 0],
     ] as const) {
-      positions.push(Math.cos(theta) * r, Math.sin(theta) * r, 0);
+      positions.push(
+        Math.cos(theta) * r,
+        Math.sin(theta) * r,
+        (r - radius) * slope
+      );
       uvs.push(index / segments, v);
     }
     if (index < segments) {
@@ -401,12 +347,16 @@ export function headbandLabelGeometry() {
   const indices: number[] = [];
   const segments = 48;
   for (let index = 0; index <= segments; index += 1) {
-    const theta = Math.PI * (0.58 - (index / segments) * 0.16);
+    const theta = Math.PI * (0.568 - (index / segments) * 0.136);
     for (const [z, v] of [
       [-2.5, 1],
       [2.5, 0],
     ] as const) {
-      positions.push(85.58 * Math.cos(theta), 136 + 89.58 * Math.sin(theta), z);
+      positions.push(
+        100.58 * Math.cos(theta),
+        136 + 82.58 * Math.sin(theta),
+        z
+      );
       uvs.push(index / segments, v);
     }
     if (index < segments) {
@@ -420,6 +370,43 @@ export function headbandLabelGeometry() {
         vertex + 2
       );
     }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/** ケーブルの L / R 刻印を、円錐状のゴムスリーブへ沿わせる。 */
+export function cableLabelGeometry() {
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+  for (let row = 0; row < 2; row += 1) {
+    const y = -19 + row * 4;
+    const radius =
+      y >= -18 ? 2.25 + (y + 18) * 0.09 : 2.25 + ((y + 18) * 0.6) / 7;
+    for (let index = 0; index <= 16; index += 1) {
+      const angle = (index / 16 - 0.5) * 1.2;
+      positions.push(
+        (radius + 0.012) * Math.sin(angle),
+        y,
+        (radius + 0.012) * Math.cos(angle)
+      );
+      uvs.push(index / 16, row);
+    }
+  }
+  for (let index = 0; index < 16; index += 1) {
+    indices.push(
+      index,
+      index + 1,
+      index + 17,
+      index + 1,
+      index + 18,
+      index + 17
+    );
   }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));

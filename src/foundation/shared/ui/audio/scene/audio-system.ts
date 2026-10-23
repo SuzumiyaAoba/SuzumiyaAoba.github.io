@@ -26,12 +26,13 @@ function connectEquipment(
   const ampRear = getConnectionPoint(amp, "Rear connection panel");
   const usb = createAudioquestCinnamon(
     cableEndpoint(nodeRear, [27.5, 21.4, 2]),
-    cableEndpoint(dacRear, [25.5, 54, 3])
+    cableEndpoint(dacRear, [25.5, 54, 3]),
+    { usbAFlipped: true }
   );
   cables.group.add(usb.group);
   const clockCable = createCybershaftBnc(
-    cableEndpoint(clockRear, [25, 31.5, 8.5]),
-    cableEndpoint(dacRear, [82, 32, 8.5])
+    cableEndpoint(clockRear, [25, 31.5, 10.1]),
+    cableEndpoint(dacRear, [82, 32, 10.1])
   );
   cables.group.add(clockCable.group);
   for (const [channel, dacX, ampY, color, offset] of [

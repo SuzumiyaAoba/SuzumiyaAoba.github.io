@@ -1,0 +1,215 @@
+[
+  {
+    "metadata": {
+      "version": 4.7,
+      "type": "Curve",
+      "generator": "Curve.toJSON"
+    },
+    "arcLengthDivisions": 200,
+    "type": "Shape",
+    "autoClose": false,
+    "curves": [
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "LineCurve",
+        "v1": [37, 44.5],
+        "v2": [33.1, 36]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [33.1, 36],
+        "v1": [47.8, 31.3],
+        "v2": [75, 32.5],
+        "v3": [86.80000000000001, 38.6]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "LineCurve",
+        "v1": [86.80000000000001, 38.6],
+        "v2": [83.4, 46.2]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [83.4, 46.2],
+        "v1": [76.10000000000001, 45.2],
+        "v2": [63.7, 49.900000000000006],
+        "v3": [59.7, 52.7]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [59.7, 52.7],
+        "v1": [64.3, 53.5],
+        "v2": [72.60000000000001, 56.1],
+        "v3": [76.9, 57.900000000000006]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "LineCurve",
+        "v1": [76.9, 57.900000000000006],
+        "v2": [73.30000000000001, 65.5]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [73.30000000000001, 65.5],
+        "v1": [68, 66.9],
+        "v2": [61.5, 69],
+        "v3": [57.5, 75.8]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [57.5, 75.8],
+        "v1": [59.3, 79.1],
+        "v2": [62.4, 81.5],
+        "v3": [66.9, 83.1]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "LineCurve",
+        "v1": [66.9, 83.1],
+        "v2": [63.10000000000001, 91.69999999999999]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [63.10000000000001, 91.69999999999999],
+        "v1": [57.30000000000001, 88.6],
+        "v2": [52.80000000000001, 83.6],
+        "v3": [52.30000000000001, 77.89999999999999]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [52.30000000000001, 77.89999999999999],
+        "v1": [52.000000000000014, 75.19999999999999],
+        "v2": [52.90000000000001, 71.99999999999999],
+        "v3": [53.90000000000001, 69.99999999999999]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [53.90000000000001, 69.99999999999999],
+        "v1": [55.70000000000001, 66.79999999999998],
+        "v2": [60.30000000000001, 62.79999999999998],
+        "v3": [63.80000000000001, 61.499999999999986]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [63.80000000000001, 61.499999999999986],
+        "v1": [59, 60],
+        "v2": [49.9, 58.4],
+        "v3": [45, 58.2]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "LineCurve",
+        "v1": [45, 58.2],
+        "v2": [45.7, 50.5]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [45.7, 50.5],
+        "v1": [49.7, 47.7],
+        "v2": [58.300000000000004, 44.1],
+        "v3": [63.400000000000006, 42.8]
+      },
+      {
+        "metadata": {
+          "version": 4.7,
+          "type": "Curve",
+          "generator": "Curve.toJSON"
+        },
+        "arcLengthDivisions": 200,
+        "type": "CubicBezierCurve",
+        "v0": [63.400000000000006, 42.8],
+        "v1": [56.7, 42.199999999999996],
+        "v2": [43.60000000000001, 42.9],
+        "v3": [37.00000000000001, 44.5]
+      }
+    ],
+    "currentPoint": [0, 0],
+    "uuid": "d6908f72-609d-4cfb-92fd-b120f59c01a1",
+    "holes": []
+  }
+]

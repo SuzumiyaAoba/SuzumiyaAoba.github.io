@@ -15,15 +15,15 @@ it("ねじの十字穴を貫通させ、外側の面取りを残す", () => {
   material.dispose();
 });
 
-it.each([0, 64])("BNC の対向する L 字ロック溝を塞がない: %s", (side) => {
+it.each([0, Math.PI])("BNC の対向する L 字ロック溝を塞がない: %s", (side) => {
   const geometry = bncBayonetGeometry();
   const material = new MeshBasicMaterial();
   const collar = new Mesh(geometry, material);
-  for (const [column, depth] of [
-    [14, 2],
-    [22, 4],
+  for (const [offset, depth] of [
+    [-Math.PI / 4, 2],
+    [-0.1, 4.8],
   ] as const) {
-    const angle = ((column + side + 0.5) / 128) * Math.PI * 2;
+    const angle = offset + side;
     const direction = new Vector3(-Math.cos(angle), -Math.sin(angle), 0);
     const ray = new Raycaster(
       new Vector3(Math.cos(angle) * 9, Math.sin(angle) * 9, depth),

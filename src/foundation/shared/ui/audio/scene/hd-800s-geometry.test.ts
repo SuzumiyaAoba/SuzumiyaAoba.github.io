@@ -7,8 +7,8 @@ import {
   cupContour,
   headbandCushionGeometry,
   headbandLabelGeometry,
-  honeycombGrilleGeometry,
 } from "./hd-800s-geometry";
+import { hd800sPerforatedGrille } from "./hd-800s-grille";
 
 it("バッフルの中央を開け、外周からドライバーへ立体的につなぐ", () => {
   const geometry = acousticBaffleGeometry();
@@ -62,21 +62,36 @@ it("ヘッドバンドの接触面を丸め、頭部側から見える向きに�
   const cushion = new Mesh(geometry, material);
   const ray = new Raycaster(new Vector3(0, 200, 0), new Vector3(0, 1, 0));
   const [contact] = ray.intersectObject(cushion);
-  expect(contact?.point.y).toBeGreaterThan(211);
-  expect(contact?.point.y).toBeLessThan(214);
+  expect(contact?.point.y).toBeGreaterThan(208);
+  expect(contact?.point.y).toBeLessThan(209);
   expect(contact?.face?.normal.y).toBeLessThan(0);
   geometry.dispose();
   material.dispose();
 });
 
 it("leaves the honeycomb holes open while giving the metal webs real depth", () => {
-  const geometry = honeycombGrilleGeometry();
+  const geometry = hd800sPerforatedGrille();
   const material = new MeshBasicMaterial({ side: DoubleSide });
   const grille = new Mesh(geometry, material);
   const ray = new Raycaster(new Vector3(0, 0, 10), new Vector3(0, 0, -1));
   expect(ray.intersectObject(grille)).toHaveLength(0);
-  ray.set(new Vector3(0.52, 0.3, 10), new Vector3(0, 0, -1));
+  ray.set(new Vector3(0.73, 0.1, 10), new Vector3(0, 0, -1));
   expect(ray.intersectObject(grille).length).toBeGreaterThan(0);
+  for (let index = 0; index < 12; index += 1) {
+    const angle = (index / 12) * Math.PI * 2;
+    ray.set(
+      new Vector3(0.64 * Math.cos(angle), 0.64 * Math.sin(angle), 10),
+      new Vector3(0, 0, -1)
+    );
+    expect(ray.intersectObject(grille)).toHaveLength(0);
+    ray.set(
+      new Vector3(28.35 * Math.cos(angle), 28.35 * Math.sin(angle), 10),
+      new Vector3(0, 0, -1)
+    );
+    expect(ray.intersectObject(grille).length).toBeGreaterThan(0);
+  }
+  ray.set(new Vector3(0, 0, 5.85), new Vector3(1, 0, 0));
+  expect(ray.intersectObject(grille)[0]?.point.x).toBeCloseTo(0.66);
   geometry.dispose();
   material.dispose();
 });
@@ -102,7 +117,7 @@ it("faces the headband lettering outward above the beveled outer surface", () =>
   const ray = new Raycaster(new Vector3(0, 230, 0), new Vector3(0, -1, 0));
   const contacts = ray.intersectObject(label);
   expect(contacts.length).toBeGreaterThan(0);
-  expect(contacts[0]?.point.y).toBeGreaterThan(225.5);
+  expect(contacts[0]?.point.y).toBeGreaterThan(218.5);
   geometry.dispose();
   material.dispose();
 });

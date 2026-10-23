@@ -2,11 +2,11 @@ import {
   BufferGeometry,
   ExtrudeGeometry,
   Float32BufferAttribute,
-  LatheGeometry,
   Path,
   Shape,
   Vector2,
 } from "three";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 export const btr17Dimensions = {
   width: 41.2,
@@ -18,6 +18,13 @@ export const btr17Outputs = [
   { x: 0.5, bore: 1.75, rim: 2.65, label: "PO" },
 ] as const;
 export const btr17UsbPositions = [-8.4, 8.4] as const;
+export const btr17SideOpenings = [
+  { y: 58.5, width: 4.7, height: 3.7 },
+  { y: 50.2, width: 4.7, height: 3.7 },
+  { y: 42, width: 4.7, height: 3.7 },
+  { y: 32.5, width: 3.8, height: 6.7 },
+  { y: 21.3, width: 3.8, height: 5.3 },
+] as const;
 
 export function btr17RoundedRectangle(
   x: number,
@@ -42,16 +49,28 @@ export function btr17RoundedRectangle(
 
 /** 端面を塞がず、前面の段差とノブの切り欠きを一体の金属フレームにする。 */
 export function btr17FrameGeometry() {
-  const sections = [
+  const sections: (readonly [number, number, number, number, number])[] = [
     [0, -17.8, 17.8, 5.6, 5.6],
     [2.8, -20.6, 20.6, 8.15, 8.15],
-    [42, -20.6, 20.6, 8.15, 8.15],
-    [46.5, -20.6, 20.6, 7.4, 8.15],
+    [38, -20.6, 20.6, 8.15, 8.15],
+  ];
+  for (let step = 1; step <= 24; step += 1) {
+    const fraction = step / 24;
+    const easing = fraction * fraction * (3 - 2 * fraction);
+    sections.push([
+      38 + 5.4 * fraction,
+      -20.6,
+      20.6,
+      8.15 - 0.75 * easing,
+      8.15,
+    ]);
+  }
+  sections.push(
     [74.8, -20.6, 20.6, 7.4, 8.15],
     [78.3, -20.6, 13.5, 7.4, 8.15],
     [83.8, -20.6, 13.5, 7.4, 8.15],
-    [86.6, -17.8, 13.5, 5.6, 5.6],
-  ] as const;
+    [86.6, -17.8, 13.5, 5.6, 5.6]
+  );
   const positions: number[] = [];
   const indices: number[] = [];
   for (const [y, left, right, front, back] of sections) {
@@ -70,7 +89,15 @@ export function btr17FrameGeometry() {
     }
   }
   for (let section = 0; section < sections.length - 1; section += 1) {
+    const y = sections[section]?.[0] ?? 0;
     for (let side = 0; side < 8; side += 1) {
+      if (
+        (side === 0 && y >= 43.4 && y < 83.8) ||
+        (side === 4 && y >= 2.8 && y < 83.8) ||
+        (side === 2 && y >= 2.8 && y < 74.8)
+      ) {
+        continue;
+      }
       const a = section * 8 + side;
       const b = section * 8 + ((side + 1) % 8);
       indices.push(a, b, a + 8, b, b + 8, a + 8);
@@ -82,7 +109,73 @@ export function btr17FrameGeometry() {
   const geometry = indexed.toNonIndexed();
   indexed.dispose();
   geometry.computeVertexNormals();
-  return geometry;
+  const panels = btr17PerforatedPanels(sections);
+  const result = mergeGeometries([geometry, ...panels]);
+  for (const panel of [geometry, ...panels]) {
+    panel.dispose();
+  }
+  return result;
+}
+
+function btr17PerforatedPanels(
+  sections: readonly (readonly [number, number, number, number, number])[]
+) {
+  const front = new Shape([
+    new Vector2(-19.5, 43.4),
+    new Vector2(19.5, 43.4),
+    new Vector2(19.5, 74.8),
+    new Vector2(12.4, 78.3),
+    new Vector2(12.4, 83.8),
+    new Vector2(-19.5, 83.8),
+  ]);
+  front.holes.push(new Path(btr17FrontOutline().getPoints()));
+  const rear = new Shape([
+    new Vector2(-19.5, 2.8),
+    new Vector2(19.5, 2.8),
+    new Vector2(19.5, 74.8),
+    new Vector2(12.4, 78.3),
+    new Vector2(12.4, 83.8),
+    new Vector2(-19.5, 83.8),
+  ]);
+  rear.holes.push(new Path(btr17RearOutline().getPoints()));
+  const edge = sections.filter(([y]) => y >= 2.8 && y <= 74.8);
+  const side = new Shape([
+    ...edge.map((section) => new Vector2(-section[3] + 1.1, section[0])),
+    new Vector2(7.05, 74.8),
+    new Vector2(7.05, 2.8),
+  ]);
+  for (const { y, width, height } of btr17SideOpenings) {
+    side.holes.push(
+      new Path(
+        btr17RoundedRectangle(
+          -width / 2,
+          y - height / 2,
+          width,
+          height,
+          0.4
+        ).getPoints(16)
+      )
+    );
+  }
+  const microphone = new Path();
+  microphone.absarc(0, 63.8, 0.32, 0, Math.PI * 2, true);
+  side.holes.push(microphone);
+  const panels = [front, rear, side].map((shape) => {
+    shape.closePath();
+    const panel = new ExtrudeGeometry(shape, {
+      depth: 0.65,
+      bevelEnabled: false,
+      curveSegments: 24,
+    });
+    panel.deleteAttribute("uv");
+    return panel;
+  });
+  panels[0]?.translate(0, 0, 6.75);
+  panels[1]?.translate(0, 0, -8.15);
+  panels[2]?.translate(0, 0, -0.65);
+  panels[2]?.rotateY(Math.PI / 2);
+  panels[2]?.translate(20.6, 0, 0);
+  return panels;
 }
 
 /** 実際に穴の開いた端面。ヘッドホン出力と二つのUSB端子を埋めない。 */
@@ -120,40 +213,22 @@ export function btr17JackGeometry(bore: number, rim: number) {
   hole.absarc(0, 0, bore, 0, Math.PI * 2, true);
   shape.holes.push(hole);
   const geometry = new ExtrudeGeometry(shape, {
-    depth: 4.6,
+    depth: 10.8,
     bevelEnabled: false,
     curveSegments: 48,
   });
   geometry.rotateX(-Math.PI / 2);
-  geometry.translate(0, -4.6, 0);
-  return geometry;
-}
-
-export function btr17KnobGeometry() {
-  const profile = new Path();
-  profile.moveTo(0, 0);
-  profile.lineTo(4.2, 0);
-  profile.lineTo(4.2, 0.8);
-  profile.lineTo(4.8, 1.1);
-  profile.lineTo(4.8, 1.6);
-  profile.lineTo(5.6, 1.95);
-  profile.lineTo(5.6, 5.3);
-  profile.lineTo(4.8, 6.3);
-  profile.quadraticCurveTo(4.6, 6.5, 4.3, 6.5);
-  profile.lineTo(0, 6.5);
-  profile.closePath();
-  const geometry = new LatheGeometry(profile.getPoints(20), 96);
-  geometry.rotateZ(-Math.PI / 2);
+  geometry.translate(0, -10.8, 0);
   return geometry;
 }
 
 export function btr17UsbRimGeometry() {
   const outline = btr17RoundedRectangle(-4.5, -1.65, 9, 3.3, 1.6);
   outline.holes.push(
-    new Path(btr17RoundedRectangle(-4.15, -1.3, 8.3, 2.6, 1.25).getPoints(16))
+    new Path(btr17RoundedRectangle(-4.3, -1.45, 8.6, 2.9, 1.4).getPoints(16))
   );
   const geometry = new ExtrudeGeometry(outline, {
-    depth: 2.7,
+    depth: 6.2,
     bevelEnabled: false,
     curveSegments: 24,
   });
@@ -161,7 +236,21 @@ export function btr17UsbRimGeometry() {
   return geometry;
 }
 
-export function btr17FrontGlassGeometry() {
+export function btr17UsbLinerGeometry() {
+  const outline = btr17RoundedRectangle(-4.3, -1.45, 8.6, 2.9, 1.4);
+  outline.holes.push(
+    new Path(btr17RoundedRectangle(-4.15, -1.3, 8.3, 2.6, 1.25).getPoints(16))
+  );
+  const geometry = new ExtrudeGeometry(outline, {
+    depth: 1.2,
+    bevelEnabled: false,
+    curveSegments: 24,
+  });
+  geometry.rotateX(-Math.PI / 2);
+  return geometry;
+}
+
+export function btr17FrontOutline() {
   const shape = new Shape([
     new Vector2(-17.7, 43.8),
     new Vector2(16.5, 43.8),
@@ -170,16 +259,21 @@ export function btr17FrontGlassGeometry() {
     new Vector2(-17.7, 77.5),
   ]);
   shape.closePath();
+  return shape;
+}
+
+export function btr17FrontGlassGeometry() {
+  const shape = btr17FrontOutline();
   return new ExtrudeGeometry(shape, {
-    depth: 0.25,
+    depth: 0.2,
     bevelEnabled: true,
-    bevelThickness: 0.12,
-    bevelSize: 0.15,
+    bevelThickness: 0.04,
+    bevelSize: 0.05,
     bevelSegments: 3,
   });
 }
 
-export function btr17RearLeatherGeometry() {
+export function btr17RearOutline() {
   const shape = new Shape([
     new Vector2(-16.2, 3.2),
     new Vector2(16.2, 3.2),
@@ -192,6 +286,11 @@ export function btr17RearLeatherGeometry() {
     new Vector2(-18.1, 5.1),
   ]);
   shape.closePath();
+  return shape;
+}
+
+export function btr17RearLeatherGeometry() {
+  const shape = btr17RearOutline();
   const geometry = new ExtrudeGeometry(shape, {
     depth: 0.3,
     bevelEnabled: true,

@@ -1,165 +1,87 @@
-import {
-  Box3,
-  BoxGeometry,
-  CatmullRomCurve3,
-  CircleGeometry,
-  Object3D,
-  Shape,
-  TubeGeometry,
-  Vector3,
-} from "three";
+import { Box3, CatmullRomCurve3, TubeGeometry } from "three";
 import { createClearMgCup } from "./clear-mg-cups";
-import { createClearMgParts } from "./clear-mg-parts";
+import {
+  createClearFabricBores,
+  createClearFoamCore,
+  createClearMgParts,
+} from "./clear-mg-parts";
 import type { ClearMgParts } from "./clear-mg-parts";
-
-const bandCenter = 135;
-const bandStart = 0.085 * Math.PI;
-const bandEnd = 0.915 * Math.PI;
-
-function bandOutline(
-  outerX: number,
-  outerY: number,
-  innerX: number,
-  innerY: number
-) {
-  const shape = new Shape();
-  shape.absellipse(0, bandCenter, outerX, outerY, bandStart, bandEnd, false, 0);
-  shape.absellipse(0, bandCenter, innerX, innerY, bandEnd, bandStart, true, 0);
-  shape.closePath();
-  return shape;
-}
-
-function bandSeams(parts: ClearMgParts) {
-  const points: Vector3[] = [];
-  for (let index = 0; index <= 80; index += 1) {
-    const angle = bandStart + (index / 80) * (bandEnd - bandStart);
-    points.push(
-      new Vector3(
-        87.2 * Math.cos(angle),
-        bandCenter + 93.2 * Math.sin(angle),
-        17.5
-      )
-    );
-  }
-  for (const z of [-17.5, 17.5]) {
-    parts.mesh(
-      new TubeGeometry(
-        new CatmullRomCurve3(
-          points.map((point) => new Vector3(point.x, point.y, z))
-        ),
-        96,
-        0.14,
-        6,
-        false
-      ),
-      parts.rubber,
-      [0, 0, 0],
-      "Leather headband edge piping"
-    );
-  }
-  const stitches = parts.instanced(
-    new BoxGeometry(0.85, 0.16, 0.13),
-    parts.coated,
-    160,
-    "Fine headband edge stitching"
-  );
-  const placement = new Object3D();
-  let index = 0;
-  for (const z of [-17.55, 17.55]) {
-    for (const point of points.slice(0, 80)) {
-      placement.position.set(point.x, point.y, z);
-      placement.rotation.set(
-        0,
-        0,
-        Math.atan2(point.y - bandCenter, point.x) + 0.35
-      );
-      placement.updateMatrix();
-      stitches.setMatrixAt(index, placement.matrix);
-      index += 1;
-    }
-  }
-  stitches.computeBoundingSphere();
-}
-
-function bandPerforations(parts: ClearMgParts) {
-  const columns = 64;
-  const rows = [-10, -6, -2, 2, 6, 10];
-  const holes = parts.instanced(
-    new CircleGeometry(0.4, 10),
-    parts.perforation,
-    columns * rows.length,
-    "Perforations in the red headband lining"
-  );
-  const placement = new Object3D();
-  const normalAxis = new Vector3(0, 0, 1);
-  let index = 0;
-  for (let row = 0; row < rows.length; row += 1) {
-    for (let column = 0; column < columns; column += 1) {
-      const angle =
-        bandStart +
-        0.045 +
-        ((column + (row % 2) * 0.5) / columns) * (bandEnd - bandStart - 0.09);
-      placement.position.set(
-        73.15 * Math.cos(angle),
-        bandCenter + 74.15 * Math.sin(angle),
-        rows[row]
-      );
-      const normal = new Vector3(
-        -Math.cos(angle) / 73.15,
-        -Math.sin(angle) / 74.15,
-        0
-      ).normalize();
-      placement.quaternion.setFromUnitVectors(normalAxis, normal);
-      placement.updateMatrix();
-      holes.setMatrixAt(index, placement.matrix);
-      index += 1;
-    }
-  }
-  holes.computeBoundingSphere();
-}
+import {
+  clearMgBandGeometry,
+  clearMgBandPerforations,
+  clearMgBandPoint,
+  clearMgBandSeam,
+  clearMgSleeveGeometry,
+} from "./clear-mg-geometry";
+import { drawFocalWordmark } from "./focal-wordmark";
 
 function headband(parts: ClearMgParts) {
-  parts.plate(
-    bandOutline(88, 94, 81, 84),
-    30,
-    [0, 0, -15],
+  parts.mesh(
+    clearMgBandGeometry(-clearMgBandSeam, clearMgBandSeam),
     parts.leather,
-    "Rounded black leather headband cover",
-    2.5
+    [0, 0, 0],
+    "Rounded leather headband with a continuous cross section"
   );
-  parts.plate(
-    bandOutline(80.5, 83.5, 75, 76),
-    25,
-    [0, 0, -12.5],
-    parts.microfiber,
-    "Red microfiber cushion beneath the headband",
-    1.8
+  const lining = clearMgBandGeometry(
+    clearMgBandSeam,
+    Math.PI * 2 - clearMgBandSeam
   );
-  bandSeams(parts);
-  bandPerforations(parts);
-  for (const side of [-1, 1]) {
-    const sleeve = parts.box(
-      [12, 17, 31],
-      [side * 82.5, 153.5, 0],
-      parts.coated,
-      "Headband end cap and slider sleeve",
-      1.5
+  parts.mesh(
+    lining,
+    parts.bandFabric,
+    [0, 0, 0],
+    "Perforated red microfiber headband lining"
+  );
+  createClearFoamCore(
+    parts,
+    lining,
+    "Dark headband foam behind the perforated lining"
+  );
+  createClearFabricBores(
+    parts,
+    clearMgBandPerforations(),
+    "Recessed bores beneath the perforated headband lining"
+  );
+  for (const angle of [clearMgBandSeam, -clearMgBandSeam]) {
+    const points = Array.from({ length: 129 }, (_, index) =>
+      clearMgBandPoint(index / 128, angle)
     );
-    sleeve.rotation.z = side * 0.28;
+    parts.mesh(
+      new TubeGeometry(new CatmullRomCurve3(points), 192, 0.13, 6, false),
+      parts.lining,
+      [0, 0, 0],
+      "Sewn binding joining leather and microfiber"
+    );
+  }
+  for (const side of [-1, 1]) {
+    const sleeve = parts.mesh(
+      clearMgSleeveGeometry(16.5),
+      parts.coated,
+      [side * 86.5, 152.5, 0],
+      "Rounded metal headband end cap and slider sleeve"
+    );
+    sleeve.rotation.z = side * 0.267;
+    const lip = parts.mesh(
+      clearMgSleeveGeometry(0.25),
+      parts.polished,
+      [side * 88.7, 144.5, 0],
+      "Machined lower edge of the headband sleeve"
+    );
+    lip.rotation.z = side * 0.267;
     const branding = parts.print(
-      15,
-      5,
-      [side * 82.5, 153.5, 15.65],
-      (context) => {
-        context.fillStyle = "#e8e9ea";
-        context.textAlign = "center";
-        context.font = "bold 2.9px Arial";
-        context.fillText("FOCAL", 7.5, 3.5);
-      },
-      "Focal headband end-cap marking",
+      18,
+      3.7,
+      [side * 92.8, 154.2, 0],
+      drawFocalWordmark,
+      "Focal wordmark on the outer headband sleeve",
       512
     );
-    branding.rotation.z = side * 0.28;
+    branding.rotation.set(0, (side * Math.PI) / 2, side * 0.267, "ZYX");
+    for (const z of [-13.7, 13.7]) {
+      const screw = parts.screw([side * 88.8, 143.9, z], "bottom", true);
+      screw.scale.setScalar(0.5);
+      screw.rotation.z = side * 0.267;
+    }
   }
 }
 

@@ -13,7 +13,12 @@ import { z } from "zod";
 const root = path.resolve(import.meta.dirname, "..");
 const sceneDirectory = "src/foundation/shared/ui/audio/scene";
 const manifestPath = path.join(root, sceneDirectory, "audio-textures.json");
-const sourceFiles = ["catalog.ts", "hd-800s.ts", "ha-1a.ts"];
+const sourceFiles = [
+  "catalog.ts",
+  "hd-800s.ts",
+  "ha-1a.ts",
+  "../hd-800s-grille.ts",
+];
 const hash = createHash("sha256");
 const sources = await Promise.all(
   sourceFiles.map(async (file) => ({
@@ -70,6 +75,24 @@ if (process.argv.includes("--check")) {
   const server = await createServer({
     configFile: false,
     root,
+    plugins: [
+      {
+        name: "audio-texture-generator-entry",
+        configureServer(vite) {
+          vite.middlewares.use((request, response, next) => {
+            if (request.url !== "/") {
+              next();
+              return;
+            }
+            // Next.js の作業ツリーには Vite 用 index.html がない。
+            response.setHeader("Content-Type", "text/html; charset=utf-8");
+            response.end(
+              "<!doctype html><html><head><title>Audio textures</title></head><body></body></html>"
+            );
+          });
+        },
+      },
+    ],
     server: { host: "127.0.0.1", port: 0, strictPort: true },
   });
   let browser;

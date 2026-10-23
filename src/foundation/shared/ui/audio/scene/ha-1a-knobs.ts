@@ -56,12 +56,12 @@ function taperedSkirtGeometry(radius: number) {
 
 function diamondGripGeometry(radius: number) {
   const positions: number[] = [];
-  const columns = 64;
-  const rows = 12;
+  const columns = 96;
+  const rows = 16;
   const angularPitch = (Math.PI * 2) / columns;
   const halfHeight = GRIP_LENGTH / rows;
-  const valleyRadius = radius - 0.12;
-  const peakRadius = radius + 0.17;
+  const valleyRadius = radius - 0.06;
+  const peakRadius = radius + 0.06;
   for (let row = 0; row <= rows; row += 1) {
     const z = row * halfHeight;
     for (let column = 0; column < columns; column += 1) {
@@ -130,7 +130,6 @@ export function createHa1aKnob(
       [radius, 8.1],
       [radius, 8.55],
       [radius - 0.15, 8.7],
-      [0, 8.7],
     ],
     [x, y, HA1A_FRONT + NECK_DEPTH],
     parts.turned,
@@ -144,7 +143,7 @@ export function createHa1aKnob(
   );
   parts.disc(
     radius - 0.15,
-    [x, y, HA1A_FRONT + FACE_DEPTH + 0.01],
+    [x, y, HA1A_FRONT + FACE_DEPTH],
     parts.knobFace,
     `${name} flat radially machined face`
   );

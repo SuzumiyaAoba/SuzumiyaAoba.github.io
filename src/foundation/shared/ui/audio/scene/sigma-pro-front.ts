@@ -1,12 +1,51 @@
-import { TorusGeometry } from "three";
+import {
+  BackSide,
+  CylinderGeometry,
+  RingGeometry,
+  TorusGeometry,
+  Vector3,
+} from "three";
 import { createSigmaSocket } from "./sigma-pro-sockets";
 import type { SigmaParts } from "./sigma-pro-parts";
 import {
   SIGMA_FRONT,
+  SIGMA_KNOB_BORE,
   sigmaFrontGeometry,
   sigmaKnobGeometry,
   sigmaOutputs,
 } from "./sigma-pro-geometry";
+
+function knobSetScrew(parts: SigmaParts) {
+  const direction = new Vector3(
+    Math.cos(SIGMA_KNOB_BORE.angle),
+    Math.sin(SIGMA_KNOB_BORE.angle),
+    0
+  );
+  const center = new Vector3(27.5, 10, 67.8 + SIGMA_KNOB_BORE.z);
+  const wallMaterial = parts.machined.clone();
+  wallMaterial.side = BackSide;
+  const wall = parts.mesh(
+    new CylinderGeometry(1.02, 1.02, 1.8, 48, 1, true),
+    wallMaterial,
+    center.clone().addScaledVector(direction, 7.1).toArray(),
+    "Radial volume-knob set-screw bore wall"
+  );
+  wall.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), direction);
+  const rim = parts.mesh(
+    new RingGeometry(1.02, 1.26, 64),
+    parts.machined,
+    center.clone().addScaledVector(direction, 8.03).toArray(),
+    "Chamfered mouth of the radial knob set-screw bore"
+  );
+  rim.quaternion.setFromUnitVectors(new Vector3(0, 0, 1), direction);
+  const floor = parts.disc(
+    1.025,
+    center.clone().addScaledVector(direction, 6.2).toArray(),
+    parts.cavity,
+    "Deep volume-knob set-screw recess"
+  );
+  floor.quaternion.copy(rim.quaternion);
+}
 
 export function createSigmaFront(parts: SigmaParts) {
   parts.mesh(
@@ -70,8 +109,9 @@ export function createSigmaFront(parts: SigmaParts) {
     sigmaKnobGeometry(),
     parts.aluminium,
     [27.5, 10, 67.8],
-    "Volume knob with 72 physically milled axial grooves and bevelled ends"
+    "Volume knob with 72 helical milling grooves and an open set-screw bore"
   );
+  knobSetScrew(parts);
   parts.lathe(
     [
       [7.45, -0.18],

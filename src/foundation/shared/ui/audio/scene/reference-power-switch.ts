@@ -14,7 +14,7 @@ const ARC_SEGMENTS = 32;
 const LEVER_ANGLE = Math.PI / 18;
 const LEVER_LENGTH = 8.2;
 
-export function ud505PowerSwitchCutout(): Path {
+export function referencePowerSwitchCutout(): Path {
   const hole = new Path();
   hole.moveTo(SWITCH_X - 6, SWITCH_Y - 4);
   hole.lineTo(SWITCH_X - 6, SWITCH_Y + 4);
@@ -72,7 +72,10 @@ function bezelGeometry(): BufferGeometry {
   return geometry;
 }
 
-export function createUd505PowerSwitch(parts: ModelParts) {
+export function createReferencePowerSwitch(
+  parts: ModelParts,
+  model: "UD-505" | "CG-10M"
+) {
   const satin = new MeshPhysicalMaterial({
     color: 0xa0_a3_a6,
     metalness: 0.85,
@@ -83,13 +86,13 @@ export function createUd505PowerSwitch(parts: ModelParts) {
     bezelGeometry(),
     satin,
     [SWITCH_X, SWITCH_Y, FRONT],
-    "UD-505 countersunk capsule power-switch bezel"
+    `${model} countersunk capsule power-switch bezel`
   );
   parts.facePlate(
     [6.1, 13.1, 0.4],
     [SWITCH_X, SWITCH_Y, FRONT - 3.3],
     parts.cavity,
-    "UD-505 recessed power-switch cavity",
+    `${model} recessed power-switch cavity`,
     3.05
   );
 
@@ -99,7 +102,7 @@ export function createUd505PowerSwitch(parts: ModelParts) {
     new SphereGeometry(2.65, 48, 24),
     parts.steel,
     [SWITCH_X, pivotY, pivotZ],
-    "UD-505 power-toggle ball pivot"
+    `${model} power-toggle ball pivot`
   );
   const lever = parts.lathe(
     [
@@ -115,35 +118,20 @@ export function createUd505PowerSwitch(parts: ModelParts) {
     ],
     [SWITCH_X, pivotY, pivotZ],
     parts.turned,
-    "UD-505 power-toggle lever in ON position"
+    `${model} power-toggle lever in ON position`
   );
   lever.rotation.x = Math.PI / 2 - LEVER_ANGLE;
 
   const tip = LEVER_LENGTH + 0.015;
-  const face = parts.print(
-    4.3,
-    4.3,
+  const face = parts.disc(
+    2.15,
     [
       SWITCH_X,
       pivotY + Math.sin(LEVER_ANGLE) * tip,
       pivotZ + Math.cos(LEVER_ANGLE) * tip,
     ],
-    (context) => {
-      const radius = 2.15;
-      context.translate(radius, radius);
-      for (let segment = 0; segment < 360; segment += 1) {
-        const angle = (segment / 360) * Math.PI * 2;
-        const alpha = 0.04 + (Math.cos(angle * 2 + 0.9) + 1) * 0.16;
-        context.fillStyle = `rgb(15 20 25 / ${alpha})`;
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.arc(0, 0, radius, angle, angle + Math.PI / 180);
-        context.closePath();
-        context.fill();
-      }
-    },
-    "UD-505 power-toggle circular machined end face",
-    256
+    parts.turnedFace(),
+    `${model} concentric machined power-toggle end face`
   );
   face.rotation.x = -LEVER_ANGLE;
 }

@@ -23,10 +23,10 @@ export function createSigmaParts() {
     envMapIntensity: 0.65,
   });
   const plated = new MeshPhysicalMaterial({
-    color: 0xc9_a0_49,
-    metalness: 1,
+    color: 0xe7_c2_73,
+    metalness: 0.88,
     roughness: 0.22,
-    envMapIntensity: 0.75,
+    envMapIntensity: 1,
   });
   const insulator = new MeshStandardMaterial({
     color: 0x06_07_08,
@@ -34,16 +34,14 @@ export function createSigmaParts() {
     side: DoubleSide,
   });
   const windowGlass = new MeshPhysicalMaterial({
-    color: 0x63_72_7e,
-    transparent: true,
-    opacity: 0.075,
+    color: 0xff_ff_ff,
+    transmission: 1,
     thickness: 0.45,
     ior: 1.5,
-    roughness: 0.045,
-    envMapIntensity: 0.12,
-    clearcoat: 0.65,
-    clearcoatRoughness: 0.04,
-    depthWrite: false,
+    roughness: 0.007,
+    envMapIntensity: 0.55,
+    attenuationColor: 0xde_e7_ed,
+    attenuationDistance: 35,
   });
   const boardSurface = applySurfaceFinish(
     new MeshPhysicalMaterial({
@@ -79,7 +77,7 @@ export function createSigmaParts() {
     metalness: 0.3,
     roughness: 0.72,
   });
-  const silkscreen = new MeshBasicMaterial({ color: 0x69_7b_77 });
+  const silkscreen = new MeshBasicMaterial({ color: 0x95_a1_9a });
   const ink = new MeshBasicMaterial({ color: 0x77_7b_7e });
   const packageInk = new MeshBasicMaterial({ color: 0x49_50_4c });
   const screenInk = new MeshBasicMaterial({

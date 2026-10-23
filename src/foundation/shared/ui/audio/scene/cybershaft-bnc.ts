@@ -1,5 +1,6 @@
 import {
-  BoxGeometry,
+  ExtrudeGeometry,
+  Shape,
   CubicBezierCurve3,
   CurvePath,
   Group,
@@ -10,15 +11,15 @@ import {
   TubeGeometry,
   Vector3,
 } from "three";
-import { bncBayonetGeometry } from "./bnc-geometry";
+import { bncBayonetGeometry, bncGroundContactGeometry } from "./bnc-geometry";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { ModelParts } from "./parts";
 import type { CableEndpoint } from "./system-cables";
 
 const cableRadius = 2.1;
-const connectorLength = 31;
-const insertionDepth = 5.8;
+const connectorLength = 33;
+const insertionDepth = 8.3;
 
 /** セミリジッドの形状を保ち、端子直後の直線から緩やかな弧につなぐ。 */
 export function cybershaftCableCurve(start: CableEndpoint, end: CableEndpoint) {
@@ -56,15 +57,19 @@ function bncPlug(
   );
   const sleeve = parts.lathe(
     [
-      [5.2, 8],
-      [6.2, 8],
-      [5.3, 9],
-      [5.3, 16],
-      [3.2, 19],
-      [3.2, 22],
-      [2.2, 22],
-      [2.2, 9],
-      [5.2, 8],
+      [4.07, 8.7],
+      [5.45, 12.5],
+      [5.45, 13.3],
+      [5.2, 13.55],
+      [5.2, 14.5],
+      [5.4, 14.7],
+      [5.4, 15.1],
+      [5, 15.4],
+      [3.15, 17.2],
+      [3.15, 21.8],
+      [2.1, 21.8],
+      [2.1, 9],
+      [4.07, 8.7],
     ],
     [0, 0, 0],
     parts.turned,
@@ -76,60 +81,97 @@ function bncPlug(
     [0, 0, 0],
     "BNC rotating collar with two open L shaped bayonet slots"
   );
-  const knurlCount = 64;
+  const knurlCount = 96;
+  const tooth = new Shape();
+  tooth.moveTo(6.86, -0.14);
+  tooth.lineTo(7.04, 0);
+  tooth.lineTo(6.86, 0.14);
+  tooth.closePath();
   const knurl = parts.instanced(
-    new BoxGeometry(0.22, 0.16, 1.7),
+    new ExtrudeGeometry(tooth, {
+      depth: 3.85,
+      bevelEnabled: true,
+      bevelSize: 0.018,
+      bevelThickness: 0.05,
+      bevelSegments: 2,
+    }),
     parts.turned,
     knurlCount,
     "Fine longitudinal knurl on BNC collar"
   );
   const matrix = new Matrix4();
   for (let index = 0; index < knurlCount; index += 1) {
-    const angle = (index / knurlCount) * Math.PI * 2;
-    matrix.makeRotationZ(angle);
-    matrix.setPosition(Math.cos(angle) * 6.93, Math.sin(angle) * 6.93, 6.4);
+    matrix.makeRotationZ((index / knurlCount) * Math.PI * 2);
+    matrix.setPosition(0, 0, 7.95);
     knurl.setMatrixAt(index, matrix);
   }
   knurl.instanceMatrix.needsUpdate = true;
-  const shoulder = parts.ring(
-    5.35,
-    0.3,
-    [0, 0, 15.2],
-    parts.turned,
-    "BNC machined rear shoulder"
-  );
   const shrink = parts.lathe(
     [
-      [0, 18.5],
-      [3.4, 18.5],
-      [3.4, 23],
-      [2.65, 25.5],
-      [2.5, connectorLength],
-      [0, connectorLength],
+      [3.18, 18],
+      [3.48, 18],
+      [3.53, 18.25],
+      [3.48, 20],
+      [3.35, 22.2],
+      [3.2, 23],
+      [2.6, 24.2],
+      [2.48, 25.3],
+      [2.48, 30.7],
+      [2.5, 32.6],
+      [2.42, 33],
+      [2.1, 33],
+      [2.1, 25.3],
+      [2.3, 24],
+      [3.18, 22.2],
+      [3.18, 18],
     ],
     [0, 0, 0],
     parts.rubber,
     "Black tapered heat-shrink termination"
   );
-  connector.add(sleeve, collar, knurl, shoulder, shrink);
-  if (!connected) {
-    connector.add(
-      parts.cylinder(
-        4.55,
-        1.2,
-        [0, 0, 1.6],
-        new MeshStandardMaterial({ color: 0xeb_ea_e6, roughness: 0.75 }),
-        "Exposed BNC white dielectric"
-      ),
-      parts.cylinder(
-        0.65,
-        1.4,
-        [0, 0, 0.95],
-        parts.gold,
-        "Exposed BNC gold centre pin"
-      )
-    );
-  }
+  connector.add(sleeve, collar, knurl, shrink);
+  connector.add(
+    parts.mesh(
+      bncGroundContactGeometry(),
+      parts.turned,
+      [0, 0, 0.5],
+      "Four slotted BNC ground spring contacts"
+    )
+  );
+  const ptfe = new MeshStandardMaterial({ color: 0xf1_f0_e8, roughness: 0.64 });
+  // 50 Ω interface: 7 mm dielectric around a 4.93 mm mating bore.
+  connector.add(
+    parts.lathe(
+      [
+        [2.465, 5.4],
+        [2.465, 0.5],
+        [3.45, 0.5],
+        [3.48, 0.6],
+        [3.48, 8.9],
+        [0.68, 8.9],
+        [0.68, 5.4],
+        [2.465, 5.4],
+      ],
+      [0, 0, 0],
+      ptfe,
+      "Exposed BNC white dielectric"
+    )
+  );
+  connector.add(
+    parts.lathe(
+      [
+        [0, 0.45],
+        [0.25, 0.53],
+        [0.5, 0.85],
+        [0.675, 1.3],
+        [0.675, 7.8],
+        [0, 7.8],
+      ],
+      [0, 0, 0],
+      parts.gold,
+      "Exposed BNC gold centre pin"
+    )
+  );
   parts.root.add(connector);
   return {
     position: connector.position
@@ -149,6 +191,11 @@ export function createCybershaftBnc(
 ) {
   const parts = createModelParts({ brushed: false });
   parts.root.name = "Cybershaft 50Ω BNC semi-rigid cable — RG402";
+  parts.turned.color.setHex(0xd5_d6_d5);
+  parts.turned.roughness = 0.2;
+  parts.turned.metalness = 0.96;
+  parts.rubber.color.setHex(0x30_31_38);
+  parts.rubber.roughness = 0.7;
   const start = bncPlug(
     parts,
     clockOutput,
@@ -161,18 +208,17 @@ export function createCybershaftBnc(
     connected ? "UD-505 CLOCK SYNC IN" : "Second connector",
     connected
   );
-  // 照明下の色を写真に合わせ、ACESによる青の色相変化と白い反射を抑える。
+  // 青い樹脂被覆の弱い光沢と細かな成形肌。
   const jacket = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x00_50_a3,
-      toneMapped: false,
-      roughness: 0.55,
-      specularIntensity: 0.15,
-      envMapIntensity: 0.3,
-      clearcoat: 0.03,
-      clearcoatRoughness: 0.5,
+      color: 0x00_42_b5,
+      roughness: 0.48,
+      specularIntensity: 0.35,
+      envMapIntensity: 0.65,
+      clearcoat: 0.04,
+      clearcoatRoughness: 0.35,
     }),
-    { scale: [3, 3, 3], relief: 0.006, roughness: 0.04 }
+    { scale: [8, 8, 8], relief: 0.002, roughness: 0.04 }
   );
   parts.mesh(
     new TubeGeometry(

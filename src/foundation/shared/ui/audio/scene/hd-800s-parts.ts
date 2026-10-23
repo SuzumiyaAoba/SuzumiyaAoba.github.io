@@ -11,13 +11,13 @@ import {
   Vector3,
 } from "three";
 import type { Material, Camera } from "three";
-import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
+import { applySurfaceFinish } from "./surface-finish";
+import { hd800sPerforatedGrille } from "./hd-800s-grille";
 import { createModelParts } from "./parts";
 import type { Position } from "./parts";
 import {
   earPadGeometry,
   cupOutline,
-  honeycombGrilleGeometry,
   microfiberPileGeometry,
   distantGrilleGeometry,
 } from "./hd-800s-geometry";
@@ -42,25 +42,25 @@ export function createHd800sParts() {
   const detail = createDetailLevels();
   let detailedGrille: BufferGeometry | undefined;
   let detailedPile: BufferGeometry | undefined;
-  const matte = new MeshPhysicalMaterial({
-    color: 0x09_0a_0b,
-    roughness: 0.68,
-    roughnessMap: textures.powder.roughness,
-    bumpMap: textures.powder.height,
-    bumpScale: 0.045,
-    metalness: 0.05,
-    specularIntensity: 0.65,
-  });
-  const trim = new MeshPhysicalMaterial({
-    color: 0x15_17_1a,
-    roughness: 0.66,
-    roughnessMap: textures.powder.roughness,
-    metalness: 0.18,
-    bumpMap: textures.powder.height,
-    bumpScale: 0.015,
-  });
+  const matte = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x18_1a_1c,
+      roughness: 0.68,
+      metalness: 0.05,
+      specularIntensity: 0.65,
+    }),
+    { scale: [9, 9, 9], relief: 0.004, roughness: 0.06 }
+  );
+  const trim = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0x20_22_26,
+      roughness: 0.66,
+      metalness: 0.18,
+    }),
+    { scale: [12, 12, 12], relief: 0.003, roughness: 0.045 }
+  );
   const microfiber = new MeshPhysicalMaterial({
-    color: 0x1e_1e_20,
+    color: 0x29_29_2b,
     map: textures.fabric.color,
     roughness: 0.95,
     roughnessMap: textures.fabric.roughness,
@@ -88,10 +88,12 @@ export function createHd800sParts() {
     specularIntensity: 0.12,
   });
   const acoustic = new MeshStandardMaterial({
-    color: 0x20_22_24,
+    color: 0x16_18_1a,
     alphaMap: textures.cloth,
-    alphaTest: 0.2,
-    alphaToCoverage: true,
+    alphaTest: 0.03,
+    transparent: true,
+    opacity: 0.65,
+    depthWrite: false,
     roughness: 0.93,
     side: DoubleSide,
   });
@@ -99,7 +101,6 @@ export function createHd800sParts() {
     color: 0x27_29_2c,
     metalness: 0.82,
     roughness: 0.3,
-    roughnessMap: textures.powder.roughness,
     side: DoubleSide,
   });
   const distantGrilleMetal = grilleMetal.clone();
@@ -157,11 +158,7 @@ export function createHd800sParts() {
         );
       }
     }
-    const surface = toCreasedNormals(geometry, Math.PI / 3);
-    if (surface !== geometry) {
-      geometry.dispose();
-    }
-    return parts.mesh(surface, material, position, name);
+    return parts.mesh(geometry, material, position, name);
   };
 
   const ovalRing = (
@@ -285,13 +282,13 @@ export function createHd800sParts() {
           grilleGeometry,
           distantGrilleMetal,
           [0, 0, 15.1],
-          "Domed honeycomb metal grille with beveled apertures"
+          "Domed metal grille with hexagonally arranged round apertures"
         ),
         {
           radius: 28.5,
           pixels: 96,
           highMaterial: grilleMetal,
-          build: () => (detailedGrille ??= honeycombGrilleGeometry()),
+          build: () => (detailedGrille ??= hd800sPerforatedGrille()),
         }
       ),
     updateDetail: (camera: Camera, viewportHeight: number) =>

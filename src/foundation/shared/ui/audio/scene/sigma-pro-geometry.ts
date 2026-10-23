@@ -15,6 +15,12 @@ export const SIGMA_FRONT = 67.85;
 export const SIGMA_REAR = -77.85;
 export const SIGMA_WINDOW = { width: 79.2, depth: 115.6, z: -16 } as const;
 export const SIGMA_BUTTON_X = [4.5, 14.7, 24.9, 35.1] as const;
+export const SIGMA_KNOB_BORE = {
+  angle: Math.PI / 6,
+  z: 5.8,
+  radius: 1.08,
+} as const;
+const KNOB_TWIST = 0.45;
 export const sigmaOutputs = [
   { x: -28, y: 10.5, radius: 3.175, bezel: 8, label: "6.35mm SE" },
   { x: -10, y: 8.25, radius: 2.2, bezel: 5.4, label: "4.4mm BAL" },
@@ -86,8 +92,8 @@ export function sigmaPlate(shape: Shape, depth: number, bevel = 0.12) {
 
 export function sigmaFrontGeometry() {
   const shape = sigmaOutline(80.6, SIGMA_HEIGHT - 2.4, 0.8);
-  for (const { x, y, radius } of sigmaOutputs) {
-    shape.holes.push(circularHole(x, y - 10, radius + 0.45));
+  for (const { x, y, bezel } of sigmaOutputs) {
+    shape.holes.push(circularHole(x, y - 10, bezel));
   }
   shape.holes.push(circularHole(27.5, 0, 8.25));
   return sigmaPlate(shape, 1.5);
@@ -108,16 +114,17 @@ export function sigmaTopGeometry() {
 export function sigmaSideGeometry() {
   const shape = sigmaOutline(SIGMA_DEPTH - 0.5, SIGMA_HEIGHT - 0.4, 2);
   shape.holes.push(roundedHole(-72.6, 0, 5.6, 13.5, 1.9));
+  for (const y of [-4.3, 4.3]) {
+    shape.holes.push(circularHole(-59.5, y, 1.15));
+  }
   return sigmaPlate(shape, 2.15, 0.2);
 }
 
 export function sigmaRearGeometry() {
-  const shape = sigmaOutline(80.6, SIGMA_HEIGHT - 2.4, 0.8);
+  const shape = sigmaOutline(82.4, SIGMA_HEIGHT - 1.4, 1.4);
   for (const input of sigmaInputs) {
     if ("radius" in input) {
-      shape.holes.push(
-        circularHole(input.x, input.y - 10, input.radius + 0.35)
-      );
+      shape.holes.push(circularHole(input.x, input.y - 10, input.bezel));
     } else {
       shape.holes.push(
         roundedHole(
@@ -133,14 +140,16 @@ export function sigmaRearGeometry() {
   return sigmaPlate(shape, 1.5);
 }
 
-/** Axial milling grooves are actual geometry, including the bevels at both ends. */
+/** 斜めに走る切削溝と、側面から開く止めねじ穴を実形状にする。 */
 export function sigmaKnobGeometry() {
   const segments = 576;
   const profile = [
     [0, 7.65],
     [0.3, 7.95],
-    [0.55, 8.05],
-    [8.7, 8.05],
+    ...Array.from(
+      { length: 81 },
+      (_, row) => [0.55 + (8.15 * row) / 80, 8.05] as const
+    ),
     [9, 7.95],
     [9.3, 7.65],
   ] as const;
@@ -149,8 +158,9 @@ export function sigmaKnobGeometry() {
   const indices: number[] = [];
   for (const [row, [z, radius]] of profile.entries()) {
     for (let column = 0; column <= segments; column += 1) {
-      const angle = (column / segments) * Math.PI * 2;
-      const groove = (0.5 + 0.5 * Math.cos(angle * 72)) ** 4;
+      const phase = (column / segments) * Math.PI * 2;
+      const angle = phase + (z / 9.3) * KNOB_TWIST;
+      const groove = (0.5 + 0.5 * Math.cos(phase * 72)) ** 4;
       const inset = row === 0 || row === profile.length - 1 ? 0 : groove * 0.14;
       vertices.push(
         Math.cos(angle) * (radius - inset),
@@ -173,10 +183,35 @@ export function sigmaKnobGeometry() {
       );
     }
   }
+  const openIndices: number[] = [];
+  for (let face = 0; face < indices.length; face += 3) {
+    const triangle = indices.slice(face, face + 3);
+    let tangent = 0;
+    let axis = 0;
+    let outward = 0;
+    for (const vertex of triangle) {
+      const x = vertices[vertex * 3] ?? 0;
+      const y = vertices[vertex * 3 + 1] ?? 0;
+      tangent +=
+        -x * Math.sin(SIGMA_KNOB_BORE.angle) +
+        y * Math.cos(SIGMA_KNOB_BORE.angle);
+      outward +=
+        x * Math.cos(SIGMA_KNOB_BORE.angle) +
+        y * Math.sin(SIGMA_KNOB_BORE.angle);
+      axis += vertices[vertex * 3 + 2] ?? 0;
+    }
+    const insideBore =
+      outward > 0 &&
+      (tangent / 3) ** 2 + (axis / 3 - SIGMA_KNOB_BORE.z) ** 2 <
+        SIGMA_KNOB_BORE.radius ** 2;
+    if (!insideBore) {
+      openIndices.push(...triangle);
+    }
+  }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
   geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
-  geometry.setIndex(indices);
+  geometry.setIndex(openIndices);
   geometry.computeVertexNormals();
   return geometry;
 }

@@ -31,7 +31,7 @@ export function createSigmaSocket(
   group.add(
     parts.lathe(
       [
-        [radius + 0.05, -3.9],
+        [radius + 0.05, -11.1],
         [radius + 0.05, -1.3],
         [radius + 0.18, -0.91],
         [radius + 0.43, -0.79],
@@ -42,9 +42,9 @@ export function createSigmaSocket(
     )
   );
   const barrel = parts.mesh(
-    new CylinderGeometry(radius, radius, 3, 64, 1, true),
+    new CylinderGeometry(radius, radius, 10.3, 64, 1, true),
     parts.insulator,
-    [0, 0, -2.6],
+    [0, 0, -6],
     `${name} hollow socket barrel`
   );
   barrel.rotation.x = Math.PI / 2;
@@ -52,7 +52,7 @@ export function createSigmaSocket(
     barrel,
     parts.disc(
       radius,
-      [0, 0, -4.2],
+      [0, 0, -11.2],
       parts.cavity,
       `${name} dark socket interior`
     )
@@ -65,6 +65,17 @@ export function createSigmaSocket(
       `${name} flat recessed contact lip`
     )
   );
+  for (const depth of [-4.2, -8.5]) {
+    group.add(
+      parts.box(
+        [0.2, radius * 0.55, 2.3],
+        [radius - 0.11, 0, depth],
+        gold ? parts.plated : parts.machined,
+        `${name} recessed spring contact`,
+        0.04
+      )
+    );
+  }
   parts.root.add(group);
   return group;
 }

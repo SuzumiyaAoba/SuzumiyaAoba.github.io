@@ -12,7 +12,7 @@ import {
 } from "./system-cables";
 import type { CableEndpoint } from "./system-cables";
 
-type HeadphoneScene = AudioScene;
+type HeadphoneScene = AudioScene & { connect?: (dac: Object3D) => AudioScene };
 const headphoneBuilders: Record<
   HeadphoneModel,
   () => Promise<() => HeadphoneScene>
@@ -20,23 +20,26 @@ const headphoneBuilders: Record<
   "hd-800s": async () => createHd800s,
   "clear-mg-pro": async () => (await import("./clear-mg-pro")).createClearMgPro,
   "ie-600": async () => {
-    const { createIe600 } = await import("./ie-600");
-    return () => createIe600({ standaloneCable: false });
+    const [{ createIe600 }, { createIe600SystemCable }] = await Promise.all([
+      import("./ie-600"),
+      import("./ie-600-system-cable"),
+    ]);
+    return () => {
+      const model = createIe600({ standaloneCable: false });
+      return {
+        ...model,
+        connect: (dac: Object3D) => createIe600SystemCable(model.group, dac),
+      };
+    };
   },
 };
 
 function headphoneEndpoint(
   cables: ReturnType<typeof createSystemCables>,
   model: Object3D,
-  headphone: HeadphoneModel,
+  headphone: Exclude<HeadphoneModel, "ie-600">,
   side: "Left" | "Right"
 ): CableEndpoint {
-  if (headphone === "ie-600") {
-    return cableEndpoint(
-      getConnectionPoint(model, `IE 600 ${side} cable exit`),
-      [0, 0, 0]
-    );
-  }
   if (headphone === "hd-800s") {
     return cableEndpoint(
       getConnectionPoint(model, `HD 800 S ${side} cable exit`),
@@ -61,36 +64,25 @@ function headphoneEndpoint(
 function connectHeadphones(
   model: Object3D,
   amp: Object3D,
-  dac: Object3D,
-  headphone: HeadphoneModel
+  headphone: Exclude<HeadphoneModel, "ie-600">
 ) {
   const cables = createSystemCables();
-  const earphones = headphone === "ie-600";
-  const plug = earphones
-    ? cables.plug(
-        cableEndpoint(dac, [25.5, 30.8, 115.9]),
-        "balanced",
-        0x56_57_55,
-        "IE 600 4.4 mm balanced cable plug in UD-505"
-      )
-    : cables.plug(
-        cableEndpoint(amp, [-36, 31, 142.2]),
-        "headphone",
-        0x9d_a3_aa,
-        "HA-1A MK2 left PHONES A 6.35 mm"
-      );
+  const plug = cables.plug(
+    cableEndpoint(amp, [-36, 31, 142.2]),
+    "headphone",
+    0x9d_a3_aa,
+    "HA-1A MK2 left PHONES A 6.35 mm"
+  );
   const junction: CableEndpoint = {
     position: new Vector3(295, 10, 220),
     direction: new Vector3(0, 0, -1),
   };
   cables.cable(
-    earphones
-      ? "UD-505 4.4 mm balanced output → IE 600 Y split"
-      : "HA-1A MK2 left jack → headphone Y split",
+    "HA-1A MK2 left jack → headphone Y split",
     plug,
     { position: junction.position, direction: new Vector3(0, 0, 1) },
-    [new Vector3(earphones ? -35 : 150, 8, 235), new Vector3(245, 7, 275)],
-    earphones ? 0.85 : 2.2
+    [new Vector3(150, 8, 235), new Vector3(245, 7, 275)],
+    2.2
   );
   for (const side of ["Left", "Right"] as const) {
     const endpoint = headphoneEndpoint(cables, model, headphone, side);
@@ -102,7 +94,7 @@ function connectHeadphones(
         new Vector3(endpoint.position.x, 6, 145),
         new Vector3(endpoint.position.x + 12, 7, 70),
       ],
-      earphones ? 0.6 : 1.5
+      1.5
     );
   }
   return cables;
@@ -133,7 +125,13 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
     group.add(assembly);
     group.updateWorldMatrix(true, true);
     try {
-      const cables = connectHeadphones(model.group, amp, dac, selected);
+      const cables =
+        selected === "ie-600"
+          ? model.connect?.(dac)
+          : connectHeadphones(model.group, amp, selected);
+      if (!cables) {
+        throw new Error("Missing IE 600 balanced cable builder.");
+      }
       assembly.add(cables.group);
       return {
         group: assembly,

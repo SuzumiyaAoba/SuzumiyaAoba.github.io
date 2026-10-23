@@ -5,6 +5,7 @@ import {
   Vector3,
 } from "three";
 import type { Curve, Group } from "three";
+import { ie600CableTexture } from "./ie-600-textures";
 import type { Ie600Parts } from "./ie-600-parts";
 import type { CableEndpoint } from "./system-cables";
 
@@ -24,7 +25,8 @@ export function ie600Cable(
   parent: Group,
   curve: Curve<Vector3>,
   radius: number,
-  name: string
+  name: string,
+  reinforced = false
 ) {
   const turns = curve.getLength() / 1.8;
   const segments = Math.max(192, Math.ceil(turns) * 8);
@@ -47,7 +49,8 @@ export function ie600Cable(
       if (!normal || !binormal) {
         continue;
       }
-      const angle = (turns * ratio + strand / 4) * Math.PI * 2;
+      const angle =
+        ((reinforced ? 0 : turns * ratio) + strand / 4) * Math.PI * 2;
       point.addScaledVector(normal, Math.cos(angle) * radius * 0.43);
       point.addScaledVector(binormal, Math.sin(angle) * radius * 0.43);
       points.push(point);
@@ -67,9 +70,21 @@ export function ie600Cable(
       )
     );
   }
+  const jacket = parts.cableJacket.clone();
+  if (reinforced) {
+    jacket.opacity = 0.91;
+    jacket.roughness = 0.42;
+  } else {
+    const texture = ie600CableTexture();
+    texture.repeat.set(curve.getLength() / 4, 1);
+    jacket.bumpMap = texture;
+    jacket.bumpScale = 0.006;
+    jacket.roughness = 0.48;
+    jacket.addEventListener("dispose", () => texture.dispose());
+  }
   const sheath = parts.mesh(
     new TubeGeometry(curve, segments, radius, 16, false),
-    parts.cableJacket,
+    jacket,
     [0, 0, 0],
     `${name} translucent jacket`
   );

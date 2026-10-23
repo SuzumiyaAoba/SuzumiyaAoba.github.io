@@ -1,4 +1,5 @@
 import {
+  DoubleSide,
   ExtrudeGeometry,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -15,13 +16,13 @@ export function roundedOutline(width: number, height: number, radius: number) {
   const shape = new Shape();
   shape.moveTo(-x + radius, -y);
   shape.lineTo(x - radius, -y);
-  shape.quadraticCurveTo(x, -y, x, -y + radius);
+  shape.absarc(x - radius, -y + radius, radius, -Math.PI / 2, 0, false);
   shape.lineTo(x, y - radius);
-  shape.quadraticCurveTo(x, y, x - radius, y);
+  shape.absarc(x - radius, y - radius, radius, 0, Math.PI / 2, false);
   shape.lineTo(-x + radius, y);
-  shape.quadraticCurveTo(-x, y, -x, y - radius);
+  shape.absarc(-x + radius, y - radius, radius, Math.PI / 2, Math.PI, false);
   shape.lineTo(-x, -y + radius);
-  shape.quadraticCurveTo(-x, -y, -x + radius, -y);
+  shape.absarc(-x + radius, -y + radius, radius, Math.PI, Math.PI * 1.5, false);
   shape.closePath();
   return shape;
 }
@@ -30,12 +31,49 @@ export function createNodeParts() {
   const parts = createModelParts();
   const matte = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x12_13_14,
+      color: 0x20_21_23,
       roughness: 0.68,
-      specularIntensity: 0.3,
-      envMapIntensity: 0.45,
+      specularIntensity: 0.35,
+      envMapIntensity: 0.65,
+      shadowSide: DoubleSide,
     }),
-    { scale: [6, 6, 6], relief: 0.018, roughness: 0.1 }
+    { scale: [15, 15, 15], relief: 0.004, roughness: 0.06 }
+  );
+  const waist = new MeshPhysicalMaterial({
+    color: 0x05_06_07,
+    roughness: 0.6,
+    clearcoat: 0.1,
+    specularIntensity: 0.2,
+    envMapIntensity: 0.35,
+    shadowSide: DoubleSide,
+  });
+  const panel = new MeshPhysicalMaterial({
+    color: 0x0c_0d_0f,
+    roughness: 0.36,
+    clearcoat: 0.3,
+    clearcoatRoughness: 0.2,
+  });
+  const connectorMetal = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0xb1_b4_b7,
+      metalness: 1,
+      roughness: 0.24,
+    }),
+    { relief: 0.002, roughness: 0.04 }
+  );
+  const gold = new MeshStandardMaterial({
+    color: 0xd9_bb_70,
+    metalness: 1,
+    roughness: 0.23,
+  });
+  const ventMetal = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0x34_38_3d,
+      metalness: 0.55,
+      roughness: 0.55,
+      envMapIntensity: 0.65,
+    }),
+    { relief: 0.003, roughness: 0.04 }
   );
   const trim = new MeshStandardMaterial({
     color: 0x23_25_27,
@@ -44,12 +82,12 @@ export function createNodeParts() {
   });
   const screen = new MeshPhysicalMaterial({
     color: 0x01_02_03,
-    roughness: 0.15,
-    metalness: 0.1,
-    clearcoat: 0.5,
-    specularIntensity: 0.25,
+    roughness: 0.09,
+    metalness: 0,
+    clearcoat: 0.15,
+    specularIntensity: 0.1,
     clearcoatRoughness: 0.07,
-    envMapIntensity: 0.18,
+    envMapIntensity: 0.06,
   });
   const signal = new MeshBasicMaterial({
     color: 0x16_32_ff,
@@ -62,6 +100,11 @@ export function createNodeParts() {
   return {
     ...parts,
     matte,
+    waist,
+    panel,
+    connectorMetal,
+    gold,
+    ventMetal,
     trim,
     screen,
     signal,

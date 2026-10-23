@@ -1,9 +1,18 @@
-import { BoxGeometry, ExtrudeGeometry, Matrix4, Path, Shape } from "three";
-import type { ModelParts } from "./parts";
 import {
-  createUd505PowerSwitch,
-  ud505PowerSwitchCutout,
-} from "./ud-505-power-switch";
+  ExtrudeGeometry,
+  MeshPhysicalMaterial,
+  Path,
+  Shape,
+  SphereGeometry,
+} from "three";
+import { createUd505Controls, ud505CircularCutouts } from "./ud-505-controls";
+import { createUd505Display } from "./ud-505-display";
+import type { ModelParts } from "./parts";
+import { createTeacWordmark } from "./teac-wordmark";
+import {
+  createReferencePowerSwitch,
+  referencePowerSwitchCutout,
+} from "./reference-power-switch";
 
 const FRONT = 115;
 
@@ -27,115 +36,6 @@ function roundedPath(
   return shape;
 }
 
-function headphoneSocket(
-  parts: ModelParts,
-  x: number,
-  y: number,
-  radius: number,
-  bore: number
-) {
-  parts.lathe(
-    [
-      [radius + 2.4, 0],
-      [radius + 2.4, 0.3],
-      [radius + 1.3, 0.9],
-      [radius, 0.9],
-      [bore + 0.65, -2.8],
-    ],
-    [x, y, FRONT],
-    parts.turned,
-    "Recessed headphone surround"
-  );
-  parts.disc(
-    bore,
-    [x, y, FRONT - 4.35],
-    parts.cavity,
-    "Headphone socket cavity"
-  );
-  parts.lathe(
-    [
-      [bore + 0.65, -3],
-      [bore + 0.65, -0.4],
-      [bore + 0.22, -0.15],
-      [bore, -0.45],
-      [bore, -7.5],
-    ],
-    [x, y, FRONT],
-    parts.gold,
-    "Gold-plated headphone sleeve"
-  );
-  parts.box(
-    [0.65, 1.2, 1.1],
-    [x + bore - 0.25, y, FRONT - 3.8],
-    parts.gold,
-    "Headphone spring contact",
-    0.1
-  );
-}
-
-function knob(
-  parts: ModelParts,
-  x: number,
-  y: number,
-  radius: number,
-  depth: number,
-  knurled: boolean
-) {
-  parts.cylinder(
-    radius + 2.5,
-    0.7,
-    [x, y, FRONT + 0.2],
-    parts.silver,
-    "Counterbored dial seat"
-  );
-  parts.ring(
-    radius + 0.7,
-    0.35,
-    [x, y, FRONT + 0.8],
-    parts.cavity,
-    "Dial clearance"
-  );
-  parts.lathe(
-    [
-      [radius - 1, 0],
-      [radius, 1],
-      [radius, depth - 2],
-      [radius - 0.45, depth - 0.7],
-      [radius - 1.1, depth],
-      [0, depth],
-    ],
-    [x, y, FRONT + 1],
-    parts.turned,
-    knurled ? "Input selector" : "Volume control"
-  );
-  parts.disc(
-    radius - 1.12,
-    [x, y, FRONT + depth + 1.025],
-    parts.turnedFace(),
-    "Concentric turned aluminium dial face"
-  );
-  if (knurled) {
-    const count = 96;
-    const grips = parts.instanced(
-      new BoxGeometry(0.12, 0.12, 2),
-      parts.steel,
-      count,
-      "Input selector fine machined grip"
-    );
-    const matrix = new Matrix4();
-    for (let index = 0; index < count; index += 1) {
-      const angle = (index / count) * Math.PI * 2;
-      matrix.makeRotationZ(angle);
-      matrix.setPosition(
-        x + Math.cos(angle) * radius,
-        y + Math.sin(angle) * radius,
-        FRONT + depth - 2.6
-      );
-      grips.setMatrixAt(index, matrix);
-    }
-  }
-}
-
 function frontLettering(parts: ModelParts) {
   parts.print(
     274,
@@ -148,9 +48,6 @@ function frontLettering(parts: ModelParts) {
         context.font = `${size}px Arial, sans-serif`;
         context.fillText(value, x + 137, 80.5 - y);
       };
-      context.font = "bold 8px Georgia, serif";
-      context.fillStyle = "#74777a";
-      context.fillText("TEAC", 25, 13.5);
       context.fillStyle = "#35383b";
       text("POWER", -114, 54);
       text("ON", -114, 49.7, 1.9);
@@ -177,18 +74,13 @@ function frontLettering(parts: ModelParts) {
 
 export function createFront(parts: ModelParts) {
   const panel = roundedPath(-137, 12.5, 274, 68, 1.5);
-  for (const [x, y, radius] of [
-    [0, 27, 6.2],
-    [25.5, 30.8, 3.7],
-    [50.7, 27, 6.2],
-    [-90, 31, 3.6],
-  ] as const) {
+  for (const [x, y, radius] of ud505CircularCutouts) {
     const hole = new Path();
     hole.absarc(x, y, radius, 0, Math.PI * 2, true);
     panel.holes.push(hole);
   }
   panel.holes.push(roundedPath(-10, 44.5, 71, 24, 3));
-  panel.holes.push(ud505PowerSwitchCutout());
+  panel.holes.push(referencePowerSwitchCutout());
   const plateGeometry = new ExtrudeGeometry(panel, {
     depth: 3.2,
     bevelEnabled: true,
@@ -214,36 +106,11 @@ export function createFront(parts: ModelParts) {
     "Machined aluminium front plate with through-holes"
   );
 
-  parts.facePlate(
-    [70.8, 23.8, 1.8],
-    [25.5, 56.5, FRONT - 1.2],
-    parts.steel,
-    "Recessed display frame",
-    2.8
-  );
-  parts.facePlate(
-    [65.4, 18.4, 0.65],
-    [25.5, 56.5, FRONT - 0.2],
-    parts.glass,
-    "OLED glass",
-    1.6
-  );
-  parts.print(
-    65.4,
-    18.4,
-    [25.5, 56.5, FRONT + 0.15],
-    (context) => {
-      context.fillStyle = "#8acacd";
-      context.font = "7.5px monospace";
-      context.textBaseline = "middle";
-      context.fillText("USB", 9, 9.2);
-    },
-    "OLED input display",
-    512,
-    true
-  );
+  createUd505Display(parts);
+  createUd505Controls(parts);
 
-  createUd505PowerSwitch(parts);
+  createReferencePowerSwitch(parts, "UD-505");
+  createTeacWordmark(parts, [-112, 69.8, FRONT + 0.02]);
   parts.cylinder(
     1.65,
     0.8,
@@ -251,46 +118,19 @@ export function createFront(parts: ModelParts) {
     parts.steel,
     "Clock LED bezel"
   );
-  parts.disc(1.15, [-90, 55.5, FRONT + 0.75], parts.blue, "Blue clock LED");
-  parts.ring(
-    4.1,
-    0.6,
-    [-90, 31, FRONT + 0.2],
-    parts.steel,
-    "Combined optical / coaxial input rim"
+  const lamp = parts.mesh(
+    new SphereGeometry(1.1, 32, 16),
+    new MeshPhysicalMaterial({
+      color: 0x50_a9_f6,
+      emissive: 0x28_6b_e8,
+      emissiveIntensity: 0.8,
+      roughness: 0.16,
+      clearcoat: 1,
+      toneMapped: false,
+    }),
+    [-90, 55.5, FRONT + 0.83],
+    "Domed blue clock-lock indicator"
   );
-  parts.disc(
-    3.55,
-    [-90, 31, FRONT - 2],
-    parts.cavity,
-    "Combined optical / coaxial input"
-  );
-  parts.cylinder(
-    4.4,
-    0.6,
-    [-24, 55, FRONT + 0.2],
-    parts.steel,
-    "Menu button bezel"
-  );
-  parts.cylinder(3.4, 1.4, [-24, 55, FRONT + 0.8], parts.turned, "Menu button");
-  parts.cylinder(
-    3.9,
-    0.5,
-    [-24, 30.8, FRONT + 0.15],
-    parts.black,
-    "Infrared receiver bezel"
-  );
-  parts.disc(
-    3.6,
-    [-24, 30.8, FRONT + 0.43],
-    parts.glass,
-    "Infrared receiver window"
-  );
-
-  headphoneSocket(parts, 0, 27, 6.2, 3.15);
-  headphoneSocket(parts, 25.5, 30.8, 3.7, 2.2);
-  headphoneSocket(parts, 50.7, 27, 6.2, 3.15);
-  knob(parts, -50.5, 43, 10, 11.5, true);
-  knob(parts, 99.5, 43.5, 19.5, 15.7, false);
+  lamp.scale.z = 0.4;
   frontLettering(parts);
 }

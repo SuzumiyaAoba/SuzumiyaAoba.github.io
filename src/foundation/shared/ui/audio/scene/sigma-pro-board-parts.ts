@@ -279,14 +279,14 @@ export function createSigmaBoardParts(parts: SigmaParts) {
   };
   const glassDot = (x: number, y: number, radius: number) => {
     const [px, pz] = sigmaBoardPoint(x, y);
-    transform.position.set(px, 19.555, pz);
+    transform.position.set(px, 19.54, pz);
     transform.rotation.set(-Math.PI / 2, 0, 0);
     transform.scale.setScalar(radius);
     transform.updateMatrix();
     batch(
       "Individual ceramic frit dots beneath glass",
       parts.insulator,
-      () => new CircleGeometry(1, 10)
+      () => new CircleGeometry(1, 16)
     ).matrices.push(transform.matrix.clone());
   };
   return {

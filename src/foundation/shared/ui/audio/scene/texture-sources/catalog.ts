@@ -17,6 +17,8 @@ export function createAudioTextureSources() {
     "hd-mesh-height": hd.mesh.height,
     "hd-grille-mask": hd.grille,
     "ha-wood": ha.wood,
+    "ha-wood-height": ha.woodHeight,
+    "ha-wood-roughness": ha.woodRoughness,
     "ha-dial-anisotropy": ha.anisotropy,
     "ha-dial-bump": ha.bump,
   };

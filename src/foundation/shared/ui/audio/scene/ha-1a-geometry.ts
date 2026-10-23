@@ -4,10 +4,10 @@ export const HA1A_FRONT = 141.5;
 export const HA1A_WINDOW_Y = 159;
 export const HA1A_WINDOW_RADIUS = 34.5;
 
-function outline(width: number, height: number, radius: number) {
+function outline(width: number, height: number, radius: number, offsetY = 0) {
   const shape = new Shape();
   const x = -width / 2;
-  const y = -height / 2;
+  const y = -height / 2 + offsetY;
   shape.moveTo(x + radius, y);
   shape.lineTo(x + width - radius, y);
   shape.quadraticCurveTo(x + width, y, x + width, y + radius);
@@ -65,14 +65,15 @@ export function ha1aFrontGeometry() {
   shape.holes.push(window);
   for (const x of [-36, 36]) {
     const socket = new Path();
-    socket.absarc(x, 31 - 111, 4.5, 0, Math.PI * 2, true);
+    socket.absarc(x, 31 - 111, 5.5, 0, Math.PI * 2, true);
     shape.holes.push(socket);
   }
   return plate(shape, 4.6, 126.5, 208);
 }
 
 export function ha1aTopGeometry() {
-  const shape = outline(112, 284, 1);
+  // 厚い前板の天端と重ねず、その背面で天板を止める。
+  const shape = outline(112, 277.8, 1, 1.6);
   for (const region of [-1, 1]) {
     for (let row = 0; row < 23; row += 1) {
       const y = region * (49 + row * 3.8);
@@ -81,7 +82,7 @@ export function ha1aTopGeometry() {
       }
     }
   }
-  return plate(shape, 1.1, 112, 284);
+  return plate(shape, 1.1, 112, 277.8);
 }
 
 export function ha1aRearGeometry() {
@@ -91,6 +92,6 @@ export function ha1aRearGeometry() {
       shape.holes.push(rectangularHole(x, -55 - row * 5.2, 23, 2.2));
     }
   }
-  shape.holes.push(rectangularHole(0, 7, 29, 24));
+  shape.holes.push(rectangularHole(0, 7, 30, 32));
   return plate(shape, 1.6, 111, 205);
 }

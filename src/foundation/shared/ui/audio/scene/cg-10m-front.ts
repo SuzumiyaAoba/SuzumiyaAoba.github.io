@@ -1,154 +1,14 @@
-import {
-  ExtrudeGeometry,
-  MeshBasicMaterial,
-  MeshPhysicalMaterial,
-  Path,
-  Shape,
-  SphereGeometry,
-} from "three";
+import { ExtrudeGeometry, Path, Shape } from "three";
 import type { ModelParts } from "./parts";
+import {
+  createReferencePowerSwitch,
+  referencePowerSwitchCutout,
+} from "./reference-power-switch";
+import { createTeacWordmark } from "./teac-wordmark";
+import { cg10mMeter, createCg10mMeter } from "./cg-10m-meter";
 
-const FRONT = 115;
-const METER_Y = 44.5;
-const METER_RADIUS = 16.8;
-
-function dialFace(parts: ModelParts) {
-  const illumination = new MeshBasicMaterial({
-    color: 0xb0_d7_f3,
-    toneMapped: false,
-  });
-  parts.disc(
-    METER_RADIUS,
-    [0, METER_Y, FRONT - 0.6],
-    illumination,
-    "Backlit blue oven-status dial"
-  );
-  parts.print(
-    METER_RADIUS * 2,
-    METER_RADIUS * 2,
-    [0, METER_Y, FRONT - 0.55],
-    (context) => {
-      context.translate(METER_RADIUS, METER_RADIUS);
-      context.fillStyle = "#101d29";
-      context.strokeStyle = "#263746";
-      context.lineWidth = 0.17;
-      const radius = 13.3;
-      const start = -Math.PI * 0.77;
-      const sweep = Math.PI * 0.54;
-      for (let index = 0; index <= 20; index += 1) {
-        const angle = start + (index / 20) * sweep;
-        const tick = index % 4 === 0 ? 1.6 : 0.9;
-        context.strokeStyle = index > 12 ? "#aa4252" : "#263746";
-        context.beginPath();
-        context.moveTo(Math.cos(angle) * radius, 4 + Math.sin(angle) * radius);
-        context.lineTo(
-          Math.cos(angle) * (radius - tick),
-          4 + Math.sin(angle) * (radius - tick)
-        );
-        context.stroke();
-        if (index % 4 === 0) {
-          context.save();
-          context.translate(
-            Math.cos(angle) * (radius + 1.6),
-            4 + Math.sin(angle) * (radius + 1.6)
-          );
-          context.rotate(angle + Math.PI / 2);
-          context.fillStyle = index > 12 ? "#aa4252" : "#263746";
-          context.font = "1.8px Arial";
-          context.textAlign = "center";
-          context.fillText(String(index / 2), 0, 0);
-          context.restore();
-        }
-      }
-      context.strokeStyle = "#263746";
-      context.beginPath();
-      context.arc(0, 4, radius, start, start + sweep);
-      context.stroke();
-      context.beginPath();
-      context.arc(0, 4, radius - 1.8, start, start + sweep);
-      context.stroke();
-      context.fillStyle = "#263746";
-      context.font = "2.2px Arial";
-      context.textAlign = "center";
-      context.fillText("STATUS", 0, -4.8);
-      context.font = "1.5px Arial";
-      context.fillText("−", -12.6, -5);
-      context.fillStyle = "#aa4252";
-      context.fillText("+", 12.6, -5);
-    },
-    "Oven meter scale and legends",
-    1024,
-    true
-  );
-
-  const angle = 0.6;
-  const blade = new Shape();
-  blade.moveTo(-0.22, 0);
-  blade.lineTo(-0.055, 15);
-  blade.lineTo(0.055, 15);
-  blade.lineTo(0.22, 0);
-  blade.closePath();
-  const needle = parts.mesh(
-    new ExtrudeGeometry(blade, { depth: 0.12, bevelEnabled: false }),
-    parts.black,
-    [0, METER_Y - 4, FRONT - 0.3],
-    "Tapered oven-status needle above the dial scale"
-  );
-  needle.rotation.z = angle;
-
-  const cover = new Shape();
-  cover.moveTo(-16.8, -1);
-  cover.lineTo(-7.5, -1);
-  cover.quadraticCurveTo(0, 6, 7.5, -1);
-  cover.lineTo(16.8, -1);
-  cover.absarc(0, 0, 16.8, -0.06, -Math.PI + 0.06, true);
-  cover.closePath();
-  parts.mesh(
-    new ExtrudeGeometry(cover, {
-      depth: 0.4,
-      bevelEnabled: false,
-      curveSegments: 32,
-    }),
-    parts.cavity,
-    [0, METER_Y, FRONT - 0.2],
-    "Raised black meter movement cover"
-  );
-  parts.print(
-    24,
-    10,
-    [0, METER_Y - 6, FRONT + 0.23],
-    (context) => {
-      context.font = "2.2px Arial";
-      context.fillStyle = "#88929a";
-      context.textAlign = "center";
-      context.fillText("OVEN", 12, 5.8);
-    },
-    "Oven legend on meter cover",
-    512
-  );
-
-  const lensMaterial = new MeshPhysicalMaterial({
-    color: 0xe8_f3_ff,
-    transparent: true,
-    opacity: 0.045,
-    roughness: 0.07,
-    metalness: 0,
-    ior: 1.5,
-    clearcoat: 1,
-    specularIntensity: 0.25,
-    envMapIntensity: 0.3,
-    clearcoatRoughness: 0.06,
-    depthWrite: false,
-  });
-  const lens = parts.mesh(
-    new SphereGeometry(METER_RADIUS, 64, 24, 0, Math.PI * 2, 0, Math.PI / 2),
-    lensMaterial,
-    [0, METER_Y, FRONT + 0.55],
-    "Domed meter glass"
-  );
-  lens.scale.y = 0.025;
-  lens.rotation.x = Math.PI / 2;
-}
+const FRONT = cg10mMeter.front;
+const METER_Y = cg10mMeter.y;
 
 export function createCg10mFront(parts: ModelParts) {
   const plate = new Shape();
@@ -158,15 +18,9 @@ export function createCg10mFront(parts: ModelParts) {
   plate.lineTo(-137, 80.5);
   plate.closePath();
   const meterHole = new Path();
-  meterHole.absarc(0, METER_Y, 19.2, 0, Math.PI * 2, true);
+  meterHole.absarc(0, METER_Y, 20.4, 0, Math.PI * 2, true);
   plate.holes.push(meterHole);
-  const powerHole = new Path();
-  powerHole.moveTo(-120, 35);
-  powerHole.lineTo(-120, 43);
-  powerHole.absarc(-114, 43, 6, Math.PI, 0, true);
-  powerHole.lineTo(-108, 35);
-  powerHole.absarc(-114, 35, 6, 0, Math.PI, true);
-  plate.holes.push(powerHole);
+  plate.holes.push(referencePowerSwitchCutout());
   const geometry = new ExtrudeGeometry(plate, {
     depth: 3.2,
     bevelEnabled: true,
@@ -192,64 +46,37 @@ export function createCg10mFront(parts: ModelParts) {
   );
   parts.lathe(
     [
-      [19.4, 0],
-      [19.4, 0.4],
-      [18.4, 1.1],
-      [17.2, 0.5],
-      [16.8, -0.2],
-      [16.8, -2],
+      [20.4, -3.4],
+      [20.5, -0.45],
+      [20.35, -0.05],
+      [20, 0.05],
+      [19.3, -0.2],
+      [18.1, -1.2],
+      [17.15, -2.4],
+      [16.8, -3],
+      [16.8, -5],
     ],
     [0, METER_Y, FRONT],
     parts.turned,
-    "Countersunk silver meter bezel"
+    "Flush machined meter bezel with a deep conical countersink"
   );
   parts.ring(
-    16.9,
-    0.23,
-    [0, METER_Y, FRONT + 0.15],
+    16.85,
+    0.18,
+    [0, METER_Y, FRONT - 2.55],
     parts.black,
-    "Meter glass gasket"
+    "Recessed meter-glass gasket"
   );
-  dialFace(parts);
+  createCg10mMeter(parts);
 
-  parts.facePlate(
-    [11.7, 19.7, 1],
-    [-114, 39, FRONT - 0.3],
-    parts.steel,
-    "Power switch bezel",
-    5.5
-  );
-  parts.facePlate(
-    [5.9, 12.2, 1.2],
-    [-114, 38.2, FRONT + 0.3],
-    parts.cavity,
-    "Power switch opening",
-    2.9
-  );
-  const toggle = parts.lathe(
-    [
-      [0, 0],
-      [2.7, 0],
-      [2.7, 1],
-      [1.6, 1.7],
-      [1.6, 7],
-      [1.2, 7.5],
-      [0, 7.5],
-    ],
-    [-114, 40.4, FRONT + 1],
-    parts.turned,
-    "CG-10M power toggle"
-  );
-  toggle.rotation.x = Math.PI / 2 - 0.12;
+  createReferencePowerSwitch(parts, "CG-10M");
+  createTeacWordmark(parts, [-112, 69.8, FRONT + 0.02]);
   parts.print(
     274,
     68,
     [0, 46.5, FRONT + 0.45],
     (context) => {
       context.textAlign = "center";
-      context.font = "bold 8px Georgia, serif";
-      context.fillStyle = "#74777a";
-      context.fillText("TEAC", 25, 13.5);
       context.fillStyle = "#35383b";
       context.font = "2.2px Arial";
       context.fillText("POWER", 23, 26.5);

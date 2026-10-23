@@ -1,16 +1,13 @@
-import {
-  DoubleSide,
-  MeshBasicMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-} from "three";
+import { MeshPhysicalMaterial, MeshStandardMaterial } from "three";
 import { createPreparedTexture } from "./prepared-textures";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 
 export function createHa1aParts() {
-  const parts = createModelParts();
+  const parts = createModelParts({ brushed: false });
   const woodTexture = createPreparedTexture("ha-wood", true);
+  const woodHeight = createPreparedTexture("ha-wood-height");
+  const woodRoughness = createPreparedTexture("ha-wood-roughness");
   const faceTextures = {
     anisotropy: createPreparedTexture("ha-dial-anisotropy"),
     bump: createPreparedTexture("ha-dial-bump"),
@@ -18,19 +15,20 @@ export function createHa1aParts() {
   const knobFace = new MeshPhysicalMaterial({
     color: 0xc3_c5_c8,
     metalness: 1,
-    roughness: 0.28,
-    anisotropy: 0.8,
+    roughness: 0.34,
+    anisotropy: 0.68,
     anisotropyMap: faceTextures.anisotropy,
     bumpMap: faceTextures.bump,
-    bumpScale: 0.012,
+    bumpScale: 0.004,
   });
   const wood = new MeshPhysicalMaterial({
     map: woodTexture,
-    bumpMap: woodTexture,
-    bumpScale: 0.12,
-    roughness: 0.3,
-    clearcoat: 0.8,
-    clearcoatRoughness: 0.2,
+    bumpMap: woodHeight,
+    bumpScale: 0.01,
+    roughnessMap: woodRoughness,
+    roughness: 0.7,
+    clearcoat: 1,
+    clearcoatRoughness: 0.105,
     ior: 1.45,
   });
   const aluminium = applySurfaceFinish(
@@ -39,7 +37,7 @@ export function createHa1aParts() {
       metalness: 0.86,
       roughness: 0.34,
     }),
-    { scale: [8, 0.08, 8], relief: 0.022, roughness: 0.13 }
+    { scale: [12, 0.12, 12], relief: 0.0035, roughness: 0.065 }
   );
   const charcoal = applySurfaceFinish(
     new MeshStandardMaterial({
@@ -47,35 +45,32 @@ export function createHa1aParts() {
       metalness: 0.45,
       roughness: 0.64,
     }),
-    { relief: 0.018, roughness: 0.12 }
+    { scale: [15, 15, 15], relief: 0.003, roughness: 0.07 }
   );
   const tubeGlass = new MeshPhysicalMaterial({
-    color: 0xe7_ec_ef,
-    transparent: true,
-    opacity: 0.15,
-    roughness: 0.08,
-    metalness: 0.05,
-    clearcoat: 1,
-    side: DoubleSide,
-    depthWrite: false,
+    color: 0xff_ff_ff,
+    roughness: 0.035,
+    metalness: 0,
+    transmission: 0.99,
+    thickness: 0.45,
+    ior: 1.47,
+    attenuationColor: 0xe9_ee_e8,
+    attenuationDistance: 35,
   });
   const windowGlass = new MeshPhysicalMaterial({
-    color: 0xb7_c6_d0,
+    color: 0xe2_e7_e9,
     transparent: true,
-    opacity: 0.08,
-    roughness: 0.07,
-    metalness: 0.15,
+    opacity: 0.065,
+    roughness: 0.025,
+    metalness: 0,
     clearcoat: 1,
     depthWrite: false,
   });
-  const glow = new MeshStandardMaterial({
-    color: 0x4a_16_07,
-    emissive: 0xff_49_07,
-    emissiveIntensity: 0.6,
+  const filament = new MeshStandardMaterial({
+    color: 0xff_b0_35,
+    emissive: 0xff_59_0a,
+    emissiveIntensity: 3,
     roughness: 0.65,
-  });
-  const filament = new MeshBasicMaterial({
-    color: 0xff_b6_42,
     toneMapped: false,
   });
   return {
@@ -86,11 +81,12 @@ export function createHa1aParts() {
     charcoal,
     tubeGlass,
     windowGlass,
-    glow,
     filament,
     dispose() {
       parts.dispose();
       woodTexture.dispose();
+      woodHeight.dispose();
+      woodRoughness.dispose();
       faceTextures.anisotropy.dispose();
       faceTextures.bump.dispose();
     },

@@ -40,11 +40,10 @@ function resolveImages() {
 it("初回は軽量画像だけを読み込み、同じ画像の要求を共有する", async () => {
   const first = textures.preloadAudioTextures("system");
   const second = textures.preloadAudioTextures("hd-800s");
-  expect(requests.size).toBe(13);
   const previews = new Set(
     Object.values(manifest.textures).map((source) => source.previewUrl)
   );
-  expect([...requests.keys()].every((url) => previews.has(url))).toBe(true);
+  expect(new Set(requests.keys())).toStrictEqual(previews);
   resolveImages();
   await Promise.all([first, second]);
   const texture = textures.createPreparedTexture("hd-fabric-color", true, true);
@@ -57,15 +56,27 @@ it("詳細画像へ更新しても材質が参照するTextureを交換せず、
   resolveImages();
   await preview;
   const active = textures.createPreparedTexture("ha-wood");
+  const second = textures.createPreparedTexture("ha-wood");
   const disposed = textures.createPreparedTexture("ha-wood");
   const originalImage: unknown = active.image;
+  const originalSource = active.source;
+  active.repeat.set(3, 2);
+  const releaseGpu = vi.fn<() => void>();
+  active.addEventListener("dispose", releaseGpu);
   disposed.dispose();
   const upgrade = textures.upgradeAudioTextures("ha-1a-mk2");
   resolveImages();
   await expect(upgrade).resolves.toBe(true);
   expect(active.image).not.toBe(originalImage);
+  expect(second.image).toBe(active.image);
+  expect(active.source).not.toBe(originalSource);
+  expect(active.repeat.toArray()).toStrictEqual([3, 2]);
+  expect(releaseGpu).toHaveBeenCalledTimes(1);
   expect(disposed.image).toBe(originalImage);
+  await expect(textures.upgradeAudioTextures("ha-1a-mk2")).resolves.toBe(false);
+  expect(releaseGpu).toHaveBeenCalledTimes(1);
   active.dispose();
+  second.dispose();
 });
 
 it("詳細画像の取得失敗時は軽量画像を維持し、再要求できる", async () => {

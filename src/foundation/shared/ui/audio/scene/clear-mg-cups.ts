@@ -1,136 +1,20 @@
-import {
-  BufferGeometry,
-  DoubleSide,
-  Float32BufferAttribute,
-  Group,
-  Path,
-  Shape,
-  Vector3,
-} from "three";
-import type { Material } from "three";
+import { DoubleSide, Group, Path, Shape, Vector3 } from "three";
 import { clearOval, createClearPad } from "./clear-mg-parts";
 import type { ClearMgParts } from "./clear-mg-parts";
-
-type GrilleOptions = {
-  radiusX: number;
-  radiusY: number;
-  cellRadius: number;
-  opening: number;
-  depth: number;
-  dome: number;
-  z: number;
-  graded?: boolean;
-};
-
-function grillePoint(
-  x: number,
-  y: number,
-  options: GrilleOptions,
-  back: boolean
-) {
-  const warpedX = options.graded
-    ? x + 0.18 * ((x * x) / options.radiusX - options.radiusX)
-    : x;
-  const ellipse = (warpedX / options.radiusX) ** 2 + (y / options.radiusY) ** 2;
-  return new Vector3(
-    warpedX,
-    y,
-    options.z +
-      options.dome * Math.max(0, 1 - ellipse) -
-      (back ? options.depth : 0)
-  );
-}
-
-function addCellFaces(indices: number[], offset: number) {
-  for (let vertex = 0; vertex < 6; vertex += 1) {
-    const next = (vertex + 1) % 6;
-    for (const [a, b, c, d] of [
-      [vertex, next, next + 6, vertex + 6],
-      [vertex + 12, vertex + 18, next + 18, next + 12],
-      [vertex, vertex + 12, next + 12, next],
-      [vertex + 6, next + 6, next + 18, vertex + 18],
-    ] as const) {
-      indices.push(
-        offset + a,
-        offset + b,
-        offset + c,
-        offset + a,
-        offset + c,
-        offset + d
-      );
-    }
-  }
-}
-
-// The complete honeycomb is one mesh, including aperture walls and a convex face.
-function honeycomb(
-  parts: ClearMgParts,
-  options: GrilleOptions,
-  material: Material,
-  name: string
-) {
-  const positions: number[] = [];
-  const indices: number[] = [];
-  const columnCount =
-    Math.ceil(options.radiusX / (options.cellRadius * 1.5)) + 3;
-  const rowCount =
-    Math.ceil(options.radiusY / (options.cellRadius * Math.sqrt(3))) + 2;
-  for (let column = -columnCount; column <= columnCount; column += 1) {
-    for (let row = -rowCount; row <= rowCount; row += 1) {
-      const centerX = column * options.cellRadius * 1.5;
-      const centerY =
-        (row + (column % 2) * 0.5) * options.cellRadius * Math.sqrt(3);
-      const edge: Vector3[] = [];
-      for (let vertex = 0; vertex < 6; vertex += 1) {
-        const angle = (vertex * Math.PI) / 3;
-        edge.push(
-          grillePoint(
-            centerX + Math.cos(angle) * options.cellRadius,
-            centerY + Math.sin(angle) * options.cellRadius,
-            options,
-            false
-          )
-        );
-      }
-      const fits = edge.every(
-        (point) =>
-          (point.x / options.radiusX) ** 2 + (point.y / options.radiusY) ** 2 <=
-            1 && Math.hypot(point.x, point.y) >= options.opening
-      );
-      if (!fits) {
-        continue;
-      }
-      const offset = positions.length / 3;
-      for (const back of [false, true]) {
-        for (const radius of [options.cellRadius, options.cellRadius - 0.38]) {
-          for (let vertex = 0; vertex < 6; vertex += 1) {
-            const angle = (vertex * Math.PI) / 3;
-            const point = grillePoint(
-              centerX + Math.cos(angle) * radius,
-              centerY + Math.sin(angle) * radius,
-              options,
-              back
-            );
-            positions.push(point.x, point.y, point.z);
-          }
-        }
-      }
-      addCellFaces(indices, offset);
-    }
-  }
-  const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return parts.mesh(geometry, material, [0, 0, 0], name);
-}
+import {
+  clearMgDriverHeight,
+  clearMgGrilleGeometry,
+} from "./clear-mg-geometry";
+import { focalEmblemGeometry } from "./focal-emblem";
+import { clearMgShellGeometry } from "./clear-mg-shell";
 
 function arcText(
   context: CanvasRenderingContext2D,
   text: string,
   radius: number,
   middle: number,
-  span: number
+  span: number,
+  reverse = false
 ) {
   const letters = Array.from(
     new Intl.Segmenter("fr", { granularity: "grapheme" }).segment(text),
@@ -138,130 +22,127 @@ function arcText(
   );
   for (const [index, letter] of letters.entries()) {
     const angle =
-      middle - span / 2 + (index / Math.max(1, letters.length - 1)) * span;
+      middle +
+      (reverse ? -1 : 1) *
+        (-span / 2 + (index / Math.max(1, letters.length - 1)) * span);
     context.save();
     context.translate(
       20 + Math.sin(angle) * radius,
       20 - Math.cos(angle) * radius
     );
-    context.rotate(angle);
+    context.rotate(angle + (reverse ? Math.PI : 0));
     context.fillText(letter, 0, 0);
     context.restore();
   }
 }
 
-function focalLogo(context: CanvasRenderingContext2D) {
-  context.fillStyle = "#eeeeef";
-  context.beginPath();
-  context.moveTo(6, 3);
-  context.quadraticCurveTo(13, 1.3, 20, 3);
-  context.lineTo(18, 6.6);
-  context.quadraticCurveTo(12, 4.3, 6.5, 5.5);
-  context.closePath();
-  context.fill();
-  context.beginPath();
-  context.moveTo(9, 7.2);
-  context.quadraticCurveTo(14.4, 6.1, 17.2, 8.4);
-  context.lineTo(15.4, 11.1);
-  context.quadraticCurveTo(13, 9.5, 8.4, 9.1);
-  context.closePath();
-  context.fill();
-  context.beginPath();
-  context.moveTo(14.4, 12);
-  context.bezierCurveTo(6.3, 10.5, 6, 17.4, 11.2, 22);
-  context.bezierCurveTo(9.5, 17.8, 12.2, 14.8, 14.4, 12);
-  context.closePath();
-  context.fill();
-}
-
 function medallion(parts: ClearMgParts, cup: Group) {
+  const shape = clearOval(38.8, 38.8);
+  const center = new Path();
+  center.absarc(0, 0, 13.8, 0, Math.PI * 2, true);
+  shape.holes.push(center);
+  const screws = [-Math.PI / 3, Math.PI / 3, Math.PI];
+  for (const angle of screws) {
+    const aperture = new Path();
+    aperture.absarc(
+      Math.sin(angle) * 16.8,
+      Math.cos(angle) * 16.8,
+      1.48,
+      0,
+      Math.PI * 2,
+      true
+    );
+    shape.holes.push(aperture);
+    const screw = parts.screw(
+      [Math.sin(angle) * 16.8, Math.cos(angle) * 16.8, 11.7],
+      "front",
+      true
+    );
+    screw.scale.setScalar(0.76);
+    screw.rotation.z = angle;
+    cup.add(screw);
+  }
+  const mesh = parts.disc(
+    13.7,
+    [0, 0, 11.1],
+    parts.woven,
+    "Fine woven mesh beneath the Focal emblem"
+  );
+  const uv = mesh.geometry.getAttribute("uv");
+  for (let index = 0; index < uv.count; index += 1) {
+    uv.setXY(index, uv.getX(index) / 3, uv.getY(index) / 3);
+  }
   cup.add(
     parts.ovalRing(
-      [39, 39],
-      [28, 28],
-      1.7,
-      [0, 0, 13.3],
+      [40.5, 40.5],
+      [27, 27],
+      0.8,
+      [0, 0, 10.1],
+      parts.coated,
+      "Raised medallion mounting collar",
+      0.3
+    ),
+    parts.plate(
+      shape,
+      0.55,
+      [0, 0, 11.35],
       parts.polished,
-      "Machined central medallion",
-      0.55
+      "Machined annular medallion with three countersunk screw openings",
+      0.12
     ),
-    parts.ring(
-      19.2,
-      0.35,
-      [0, 0, 15.2],
-      parts.turned,
-      "Polished medallion perimeter"
+    parts.disc(13.8, [0, 0, 10.8], parts.black, "Logo acoustic backing"),
+    mesh,
+    parts.mesh(
+      focalEmblemGeometry(),
+      parts.polished,
+      [0, 0, 11.2],
+      "Raised metal Focal emblem with the original continuous outline"
     ),
-    parts.disc(13.8, [0, 0, 14.3], parts.black, "Logo acoustic backing"),
-    parts.disc(
-      13.7,
-      [0, 0, 14.45],
-      parts.woven,
-      "Fine mesh beneath the Focal emblem"
-    ),
-    parts.print(26, 25, [0, 0, 14.6], focalLogo, "Focal emblem", 512),
     parts.print(
       40,
       40,
-      [0, 0, 15.6],
+      [0, 0, 12.04],
       (context) => {
         context.fillStyle = "#e3e5e7";
         context.textAlign = "center";
-        context.font = "1.85px Arial";
-        arcText(context, "Clear Mg Professional", 16.5, 0, 2.25);
-        arcText(context, "Fabriqué en France", 16.4, -2.1, 1.75);
-        context.font = "1.5px Arial";
-        arcText(context, "Magnesium", 16.4, 2.25, 1.02);
+        context.font = "2.55px Arial";
+        arcText(context, "Clear Mg Professional", 16.5, 0, 2.2);
+        context.font = "2.4px Arial";
+        arcText(context, "Fabriqué en France", 16.4, -2.14, 1.66, true);
+        context.font = "2.1px Arial";
+        arcText(context, "Magnesium", 16.4, 2.28, 1.04, true);
       },
       "Circular model and manufacturing engravings",
       1024
     )
   );
-  for (const angle of [-Math.PI / 3, Math.PI / 3, Math.PI]) {
-    const recess = parts.disc(
-      1.65,
-      [Math.sin(angle) * 16.8, Math.cos(angle) * 16.8, 15.61],
-      parts.cavity,
-      "Medallion screw recess"
-    );
-    const head = parts.cylinder(
-      0.9,
-      0.32,
-      [Math.sin(angle) * 16.8, Math.cos(angle) * 16.8, 15.66],
-      parts.coated,
-      "Recessed medallion screw"
-    );
-    const slot = parts.box(
-      [1.05, 0.18, 0.1],
-      [Math.sin(angle) * 16.8, Math.cos(angle) * 16.8, 15.86],
-      parts.cavity,
-      "Medallion screw slot",
-      0.03
-    );
-    slot.rotation.z = angle;
-    cup.add(recess, head, slot);
-  }
 }
 
 function outerGrille(parts: ClearMgParts, cup: Group) {
   cup.add(
-    parts.ovalRing(
-      [94, 116],
-      [85, 106],
-      8.5,
-      [0, 0, -4],
+    parts.mesh(
+      clearMgShellGeometry(),
       parts.coated,
-      "Rounded open aluminum ear-cup shell",
-      1.2
+      [0, 0, 0],
+      "Rounded aluminum ear-cup shell with a true bottom socket opening"
     ),
     parts.ovalRing(
       [92, 114],
       [88, 110],
-      0.8,
-      [0, 0, 5.8],
-      parts.polished,
-      "Bright bevel around the outer grille",
+      2.2,
+      [0, 0, 5.5],
+      parts.coated,
+      "Continuous outer grille mounting rim",
       0.2
+    ),
+    parts.ovalRing(
+      [89.2, 109.2],
+      [88, 108],
+      0.12,
+      [0, 0, 7.75],
+      parts.polished,
+      "Narrow bright bevel around the outer grille",
+      0.12
     ),
     parts.plate(
       clearOval(87, 107),
@@ -271,9 +152,8 @@ function outerGrille(parts: ClearMgParts, cup: Group) {
       "Acoustically open fine grille backing",
       0
     ),
-    honeycomb(
-      parts,
-      {
+    parts.mesh(
+      clearMgGrilleGeometry({
         radiusX: 44,
         radiusY: 54,
         cellRadius: 3.05,
@@ -282,8 +162,9 @@ function outerGrille(parts: ClearMgParts, cup: Group) {
         dome: 2.7,
         z: 8.2,
         graded: true,
-      },
+      }),
       parts.grille,
+      [0, 0, 0],
       "Convex graduated external honeycomb grille"
     )
   );
@@ -293,7 +174,7 @@ function outerGrille(parts: ClearMgParts, cup: Group) {
 function innerDriver(parts: ClearMgParts, cup: Group) {
   const baffle = clearOval(85, 106);
   const opening = new Path();
-  opening.absarc(0, 0, 21, 0, Math.PI * 2, true);
+  opening.absellipse(0, 0, 35, 46, 0, Math.PI * 2, true, 0);
   baffle.holes.push(opening);
   cup.add(
     parts.plate(
@@ -301,46 +182,83 @@ function innerDriver(parts: ClearMgParts, cup: Group) {
       1.3,
       [0, 0, -5.2],
       parts.coated,
-      "Open acoustic baffle surrounding the 40 mm driver",
+      "Open oval acoustic basket surrounding the 40 mm driver",
       0.2
     )
   );
+  for (let index = 0; index < 6; index += 1) {
+    const angle = (index / 6) * Math.PI * 2;
+    const support = new Shape();
+    for (const [point, radiusX, radiusY, offset] of [
+      [0, 20.5, 20.5, -0.09],
+      [1, 36, 47, -0.055],
+      [2, 36, 47, 0.055],
+      [3, 20.5, 20.5, 0.09],
+    ] as const) {
+      const x = Math.cos(angle + offset) * radiusX;
+      const y = Math.sin(angle + offset) * radiusY;
+      if (point === 0) {
+        support.moveTo(x, y);
+      } else {
+        support.lineTo(x, y);
+      }
+    }
+    support.closePath();
+    cup.add(
+      parts.plate(
+        support,
+        1.4,
+        [0, 0, -5.2],
+        parts.coated,
+        "Six open radial driver basket supports",
+        0.25
+      )
+    );
+  }
+  cup.add(
+    parts.ovalRing(
+      [45, 45],
+      [40.5, 40.5],
+      2.3,
+      [0, 0, -8.7],
+      parts.black,
+      "Circular driver basket mounting rim",
+      0.25
+    )
+  );
   const diaphragm = parts.lathe(
-    [
-      [0, 0.25],
-      [4, 0.5],
-      [11, 1.8],
-      [14, 1.05],
-      [18, 2.6],
-      [20, 0.4],
-    ],
-    [0, 0, -5.5],
+    Array.from({ length: 65 }, (_, index) => {
+      const radius = (index / 64) * 20;
+      return [radius, clearMgDriverHeight(radius)] as const;
+    }),
+    [0, 0, -8.1],
     parts.magnesium,
     "40 mm M-profile magnesium diaphragm"
   );
-  diaphragm.rotation.x = -Math.PI / 2;
-  const innerMesh = honeycomb(
-    parts,
-    {
+  const innerMesh = parts.mesh(
+    clearMgGrilleGeometry({
       radiusX: 21.5,
       radiusY: 21.5,
-      cellRadius: 2.4,
+      cellRadius: 2.9,
       opening: 0,
       depth: 0.45,
       dome: -1.8,
       z: -9.8,
-    },
+      mProfile: true,
+    }),
     parts.grille,
+    [0, 0, 0],
     "M-profile internal protective honeycomb"
   );
   // Both sides remain visible through the open ear cup.
   innerMesh.material.side = DoubleSide;
   cup.add(diaphragm, innerMesh);
-  const { cushion, holes, seam } = createClearPad(parts);
+  const { cushion, holes, seam, core } = createClearPad(parts);
   cup.add(
     cushion,
     holes,
     seam,
+    core,
     parts.pile(),
     parts.ovalRing(
       [92, 114],
@@ -363,56 +281,83 @@ function innerDriver(parts: ClearMgParts, cup: Group) {
   );
 }
 
-function createYoke(parts: ClearMgParts, cup: Group) {
+function createYoke(parts: ClearMgParts, cup: Group, side: number) {
   const shape = new Shape();
   shape.moveTo(-46, 4);
-  shape.bezierCurveTo(-49, 40, -25, 50, -13, 70);
-  shape.lineTo(-13, 88);
-  shape.lineTo(13, 88);
-  shape.lineTo(13, 70);
-  shape.bezierCurveTo(25, 50, 49, 40, 46, 4);
+  shape.bezierCurveTo(-49, 40, -15, 55, -13, 70);
+  shape.bezierCurveTo(-13, 78, -8, 80, -8, 86);
+  shape.lineTo(8, 86);
+  shape.bezierCurveTo(8, 80, 13, 78, 13, 70);
+  shape.bezierCurveTo(15, 55, 49, 40, 46, 4);
   shape.lineTo(39.5, 4);
   shape.bezierCurveTo(40, 32, 17, 52, 0, 61);
   shape.bezierCurveTo(-17, 52, -40, 32, -39.5, 4);
   shape.closePath();
-  cup.add(
-    parts.plate(
-      shape,
-      4.2,
-      [0, 0, 3],
-      parts.coated,
-      "Solid aluminum arch yoke and adjustment stem",
-      0.8
-    )
+  const yoke = parts.plate(
+    shape,
+    4.2,
+    [0, 0, 3],
+    parts.coated,
+    "Solid aluminum arch yoke and adjustment stem",
+    0.8
   );
-  for (let index = 0; index < 5; index += 1) {
-    cup.add(
-      parts.box(
-        [7, 0.25, 0.12],
-        [0, 74 + index * 2.2, 8.08],
-        parts.black,
-        "Adjustment stem index",
-        0.02
-      )
-    );
+  // ヨークの上端をヘッドバンド内の回転軸へ曲げる。平板のままだと袖を突き抜ける。
+  const capAxis = new Vector3(1, 0, 0).applyAxisAngle(
+    new Vector3(0, 0, 1),
+    side * 0.267
+  );
+  const a = new Vector3(1, 0, 0).applyEuler(cup.rotation).dot(capAxis);
+  const b = new Vector3(0, 1, 0).applyEuler(cup.rotation).dot(capAxis);
+  const c = new Vector3(0, 0, 1).applyEuler(cup.rotation).dot(capAxis);
+  const d = cup.position
+    .clone()
+    .sub(new Vector3(side * 86.5, 152.5, 0))
+    .dot(capAxis);
+  const positions = yoke.geometry.getAttribute("position");
+  const normals = yoke.geometry.getAttribute("normal");
+  for (let index = 0; index < positions.count; index += 1) {
+    const x = positions.getX(index);
+    const y = positions.getY(index);
+    const z = positions.getZ(index) + 3;
+    const t = Math.max(0, Math.min(1, (y - 72) / 11));
+    const blend = t * t * (3 - 2 * t);
+    const derivative = (6 * t * (1 - t)) / 11;
+    const corrected = (side * 0.8 * (z - 5.1) - a * x - b * y - d) / c;
+    positions.setZ(index, z + blend * (corrected - z) - 3);
+    const dx = (-blend * a) / c;
+    const dy = (-blend * b) / c + derivative * (corrected - z);
+    const dz = 1 + blend * ((side * 0.8) / c - 1);
+    const normal = new Vector3(
+      normals.getX(index) - (dx * normals.getZ(index)) / dz,
+      normals.getY(index) - (dy * normals.getZ(index)) / dz,
+      normals.getZ(index) / dz
+    ).normalize();
+    normals.setXYZ(index, normal.x, normal.y, normal.z);
   }
-  for (const side of [-1, 1]) {
+  yoke.geometry.computeBoundingBox();
+  yoke.geometry.computeBoundingSphere();
+  cup.add(yoke);
+  for (const pivotSide of [-1, 1]) {
     cup.add(
       parts.cylinder(
         3.65,
         2.2,
-        [side * 44, 5, 7.7],
+        [pivotSide * 44, 5, 7.7],
         parts.coated,
         "Ear-cup pivot axle"
       ),
-      parts.ring(
-        3.5,
-        0.45,
-        [side * 44, 5, 9],
+      parts.lathe(
+        [
+          [3.65, -0.8],
+          [3.65, -0.3],
+          [3.45, -0.08],
+          [2.85, 0],
+          [0, 0],
+        ],
+        [pivotSide * 44, 5, 9.15],
         parts.polished,
-        "Polished pivot trim"
-      ),
-      parts.disc(2.9, [side * 44, 5, 9.05], parts.coated, "Dark pivot cap")
+        "Machined pivot face and chamfer"
+      )
     );
   }
 }
@@ -420,27 +365,27 @@ function createYoke(parts: ClearMgParts, cup: Group) {
 function socket(parts: ClearMgParts, cup: Group) {
   const jack = new Group();
   jack.name = "Recessed detachable 3.5 mm cable socket";
-  jack.position.set(0, -59.4, -0.5);
+  jack.position.set(0, -57.7, -0.5);
   jack.rotation.x = Math.PI / 2;
   jack.add(
     parts.lathe(
       [
-        [4.1, -3],
+        [4.1, -7],
         [4.1, 0.3],
         [3.65, 0.55],
         [2.25, 0.55],
         [1.75, 0.15],
-        [1.75, -4],
+        [1.75, -10],
       ],
       [0, 0, 0],
       parts.coated,
       "Hollow recessed connector surround"
     ),
     parts.ring(2.25, 0.38, [0, 0, 0.67], parts.polished, "3.5 mm socket rim"),
-    parts.disc(1.75, [0, 0, -4.1], parts.cavity, "Deep 3.5 mm connector bore"),
+    parts.disc(1.75, [0, 0, -10.1], parts.cavity, "Deep 3.5 mm connector bore"),
     parts.box(
-      [0.35, 1, 0.2],
-      [1.6, 0, -1.8],
+      [0.35, 1.1, 3.2],
+      [1.6, 0, -5.2],
       parts.gold,
       "Socket spring contact",
       0.04
@@ -455,14 +400,17 @@ export function createClearMgCup(parts: ClearMgParts, side: number) {
     side === 1
       ? "Clear Mg Professional right ear cup"
       : "Clear Mg Professional left ear cup";
+  cup.rotation.set(0, side * (Math.PI / 2 + 0.35), side * -0.25, "ZYX");
+  const stem = new Vector3(0, 85.5, 5.1).applyEuler(cup.rotation);
+  cup.position.copy(new Vector3(side * 86.5, 149, 0).sub(stem));
   outerGrille(parts, cup);
   innerDriver(parts, cup);
-  createYoke(parts, cup);
+  createYoke(parts, cup, side);
   socket(parts, cup);
   const channel = parts.print(
     5,
     5,
-    [0, 73, -0.02],
+    [0, 73, 2.15],
     (context) => {
       context.fillStyle = "#b3b5b9";
       context.textAlign = "center";
@@ -474,7 +422,5 @@ export function createClearMgCup(parts: ClearMgParts, side: number) {
   );
   channel.rotation.y = Math.PI;
   cup.add(channel);
-  cup.position.set(side * 61, 62, 0);
-  cup.rotation.set(0, side * (Math.PI / 2 - 0.12), side * -0.25, "ZYX");
   parts.root.add(cup);
 }

@@ -44,12 +44,26 @@ export function createIe600Parts() {
     anisotropy: 0.2,
     envMapIntensity: 1.25,
   });
+  const acousticFoam = new MeshStandardMaterial({
+    color: 0x09_0a_0b,
+    roughness: 1,
+    bumpMap: grain,
+    bumpScale: 0.06,
+  });
+  const splitterMetal = applySurfaceFinish(
+    new MeshStandardMaterial({
+      color: 0xb0_b2_b2,
+      metalness: 0.8,
+      roughness: 0.42,
+    }),
+    { scale: [20, 20, 0.3], relief: 0.002, roughness: 0.05 }
+  );
   const contactInsulator = new MeshStandardMaterial({
     color: 0xc5_c1_b2,
     roughness: 0.68,
   });
   const cableJacket = new MeshPhysicalMaterial({
-    color: 0x3f_47_41,
+    color: 0x46_47_46,
     roughness: 0.55,
     clearcoat: 0.3,
     clearcoatRoughness: 0.4,
@@ -58,12 +72,12 @@ export function createIe600Parts() {
     depthWrite: false,
   });
   const cableCore = new MeshStandardMaterial({
-    color: 0x37_3d_39,
+    color: 0x39_3a_39,
     metalness: 0.35,
     roughness: 0.53,
   });
   const wire = new MeshStandardMaterial({
-    color: 0x4d_55_4d,
+    color: 0x53_54_53,
     metalness: 0.15,
     roughness: 0.8,
   });
@@ -80,6 +94,8 @@ export function createIe600Parts() {
     connectorRubber,
     connectorGold,
     contactInsulator,
+    acousticFoam,
+    splitterMetal,
     cableJacket,
     cableCore,
     wire,

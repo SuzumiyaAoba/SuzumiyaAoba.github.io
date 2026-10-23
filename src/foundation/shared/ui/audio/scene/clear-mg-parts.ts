@@ -1,7 +1,6 @@
 import {
   BufferGeometry,
   CanvasTexture,
-  CircleGeometry,
   CatmullRomCurve3,
   TubeGeometry,
   DoubleSide,
@@ -11,6 +10,8 @@ import {
   MeshStandardMaterial,
   MeshBasicMaterial,
   Object3D,
+  LatheGeometry,
+  Vector2,
   Path,
   RepeatWrapping,
   Shape,
@@ -18,7 +19,15 @@ import {
   Vector3,
 } from "three";
 import type { Material } from "three";
-import { createClearMgPile } from "./clear-mg-fabric";
+import {
+  createClearMgFabricTextures,
+  createClearMgPile,
+} from "./clear-mg-fabric";
+import {
+  clearMgBandPerforations,
+  clearMgPadPerforations,
+  padPoint,
+} from "./clear-mg-geometry";
 import { createLeatherGrain } from "./leather-grain";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
@@ -28,38 +37,6 @@ export function clearOval(width: number, height: number) {
   const shape = new Shape();
   shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
   return shape;
-}
-
-function surfaceTexture(woven: boolean) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 256;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Cannot create the Clear Mg Professional surface texture.");
-  }
-  const pixels = context.createImageData(256, 256);
-  for (let index = 0; index < pixels.data.length; index += 4) {
-    const column = (index / 4) % 256;
-    const row = Math.floor(index / 1024);
-    const noise = (column * 47 + row * 67 + column * row * 13) % 59;
-    const weave = woven && (column % 4 === 0 || row % 4 === 0) ? 12 : 0;
-    const shade = (woven ? 180 : 104) + noise + weave;
-    pixels.data[index] = shade;
-    pixels.data[index + 1] = shade;
-    pixels.data[index + 2] = shade;
-    pixels.data[index + 3] = 255;
-  }
-  context.putImageData(pixels, 0, 0);
-  const texture = new CanvasTexture(canvas);
-  if (woven) {
-    texture.colorSpace = SRGBColorSpace;
-  }
-  texture.wrapS = RepeatWrapping;
-  texture.wrapT = RepeatWrapping;
-  texture.repeat.set(woven ? 12 : 3, woven ? 3 : 2);
-  texture.anisotropy = 8;
-  return texture;
 }
 
 function acousticMeshTexture() {
@@ -74,8 +51,46 @@ function acousticMeshTexture() {
   context.fillRect(0, 0, 256, 256);
   context.fillStyle = "#ffffff";
   for (let offset = 0; offset < 256; offset += 4) {
-    context.fillRect(offset, 0, 0.9, 256);
-    context.fillRect(0, offset, 256, 0.9);
+    context.fillRect(offset, 0, 1.1, 256);
+    context.fillRect(0, offset, 256, 1.1);
+  }
+  const texture = new CanvasTexture(canvas);
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.repeat.set(6, 6);
+  texture.center.set(0.5, 0.5);
+  texture.rotation = Math.PI / 4;
+  texture.anisotropy = 8;
+  return texture;
+}
+
+function createPerforationMask(
+  perforations: ReturnType<typeof clearMgPadPerforations>
+) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 2048;
+  canvas.height = 512;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    throw new Error("Cannot create the microfiber perforation mask.");
+  }
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "#000000";
+  for (const hole of perforations) {
+    for (const wrap of [-1, 0, 1]) {
+      context.beginPath();
+      context.ellipse(
+        (hole.u / (Math.PI * 2) + wrap) * canvas.width,
+        (1 - hole.v / (Math.PI * 2)) * canvas.height,
+        (hole.radiusU / (Math.PI * 2)) * canvas.width,
+        (hole.radiusV / (Math.PI * 2)) * canvas.height,
+        0,
+        0,
+        Math.PI * 2
+      );
+      context.fill();
+    }
   }
   const texture = new CanvasTexture(canvas);
   texture.anisotropy = 8;
@@ -84,40 +99,51 @@ function acousticMeshTexture() {
 
 export function createClearMgParts() {
   const parts = createModelParts();
-  const fabric = surfaceTexture(true);
-  const grain = createLeatherGrain(512, 512, 14);
-  grain.repeat.set(3, 2);
+  const fabric = createClearMgFabricTextures();
+  const perforationMask = createPerforationMask(clearMgPadPerforations());
+  const bandMask = createPerforationMask(clearMgBandPerforations());
+  const grain = createLeatherGrain(512, 512, 8);
+  grain.repeat.set(8, 2);
+  const leatherColor = grain.clone();
+  leatherColor.colorSpace = SRGBColorSpace;
   const meshTexture = acousticMeshTexture();
   const coated = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x0b_0c_0d,
-      metalness: 0.35,
+      color: 0x35_38_3a,
+      metalness: 0.55,
       roughness: 0.48,
-      specularIntensity: 0.45,
-      envMapIntensity: 0.65,
+      specularIntensity: 0.6,
+      envMapIntensity: 0.85,
     }),
-    { relief: 0.016, roughness: 0.09 }
+    { scale: [12, 12, 12], relief: 0.006, roughness: 0.08 }
   );
   const leather = new MeshPhysicalMaterial({
-    color: 0x0a_0b_0c,
-    roughness: 0.75,
-    specularIntensity: 0.3,
-    envMapIntensity: 0.4,
+    color: 0x40_42_44,
+    map: leatherColor,
+    roughness: 0.68,
+    specularIntensity: 0.42,
+    envMapIntensity: 0.6,
     bumpMap: grain,
-    bumpScale: 0.2,
+    bumpScale: 0.11,
   });
   const microfiber = new MeshPhysicalMaterial({
-    color: 0x92_27_40,
+    color: 0x9e_2f_45,
     roughness: 0.97,
     specularIntensity: 0.15,
-    sheen: 0.65,
-    sheenColor: 0xbe_65_76,
+    sheen: 0.85,
+    sheenColor: 0xb5_57_65,
     sheenRoughness: 0.95,
-    map: fabric,
-    roughnessMap: fabric,
-    bumpMap: fabric,
-    bumpScale: 0.085,
+    map: fabric.color,
+    roughnessMap: fabric.roughness,
+    bumpMap: fabric.height,
+    bumpScale: 0.16,
   });
+  const perforatedFabric = microfiber.clone();
+  perforatedFabric.alphaMap = perforationMask;
+  perforatedFabric.alphaTest = 0.45;
+  perforatedFabric.alphaToCoverage = true;
+  const bandFabric = perforatedFabric.clone();
+  bandFabric.alphaMap = bandMask;
   const pile = new MeshPhysicalMaterial({
     color: 0x97_31_48,
     roughness: 1,
@@ -131,25 +157,29 @@ export function createClearMgParts() {
   const lining = new MeshStandardMaterial({
     color: 0x35_0b_1d,
     roughness: 0.97,
-    bumpMap: fabric,
+    bumpMap: fabric.height,
     bumpScale: 0.06,
   });
   const perforation = new MeshBasicMaterial({ color: 0x28_08_14 });
+  const perforationWall = new MeshStandardMaterial({
+    color: 0x41_10_1a,
+    roughness: 1,
+  });
   const grille = new MeshStandardMaterial({
-    color: 0x28_2b_2e,
-    metalness: 0.75,
-    roughness: 0.46,
-    envMapIntensity: 0.65,
+    color: 0x5c_5f_61,
+    metalness: 0.85,
+    roughness: 0.38,
+    envMapIntensity: 0.85,
   });
   const polished = new MeshStandardMaterial({
-    color: 0x92_96_9a,
-    metalness: 0.92,
-    roughness: 0.28,
+    color: 0xc2_c4_c5,
+    metalness: 0.8,
+    roughness: 0.29,
   });
   const woven = new MeshStandardMaterial({
-    color: 0x14_16_18,
-    metalness: 0.4,
-    roughness: 0.65,
+    color: 0x2c_2f_31,
+    metalness: 0.55,
+    roughness: 0.57,
     alphaMap: meshTexture,
     alphaTest: 0.25,
     alphaToCoverage: true,
@@ -216,6 +246,8 @@ export function createClearMgParts() {
     coated,
     leather,
     microfiber,
+    perforatedFabric,
+    bandFabric,
     pile: () =>
       parts.mesh(
         pileGeometry,
@@ -225,6 +257,7 @@ export function createClearMgParts() {
       ),
     lining,
     perforation,
+    perforationWall,
     grille,
     polished,
     woven,
@@ -233,8 +266,13 @@ export function createClearMgParts() {
     ovalRing,
     dispose() {
       parts.dispose();
-      fabric.dispose();
+      for (const texture of Object.values(fabric)) {
+        texture.dispose();
+      }
+      perforationMask.dispose();
+      bandMask.dispose();
       grain.dispose();
+      leatherColor.dispose();
       meshTexture.dispose();
     },
   };
@@ -242,21 +280,64 @@ export function createClearMgParts() {
 
 export type ClearMgParts = ReturnType<typeof createClearMgParts>;
 
-// A softly squared cross-section preserves the broad cushion face and 20 mm depth.
-export function padPoint(u: number, v: number) {
-  const radial = Math.sign(Math.cos(v)) * Math.abs(Math.cos(v)) ** 0.65;
-  const depth = Math.sign(Math.sin(v)) * Math.abs(Math.sin(v)) ** 0.65;
-  return new Vector3(
-    (35 + 11 * radial) * Math.cos(u),
-    (46 + 11 * radial) * Math.sin(u),
-    -18 + 10 * depth
+export function createClearFoamCore(
+  parts: ClearMgParts,
+  surface: BufferGeometry,
+  name: string
+) {
+  const geometry = surface.clone();
+  const positions = geometry.getAttribute("position");
+  const normals = geometry.getAttribute("normal");
+  for (let index = 0; index < positions.count; index += 1) {
+    positions.setXYZ(
+      index,
+      positions.getX(index) - normals.getX(index) * 1.2,
+      positions.getY(index) - normals.getY(index) * 1.2,
+      positions.getZ(index) - normals.getZ(index) * 1.2
+    );
+  }
+  return parts.mesh(geometry, parts.perforation, [0, 0, 0], name);
+}
+
+export function createClearFabricBores(
+  parts: ClearMgParts,
+  perforations: ReturnType<typeof clearMgPadPerforations>,
+  name: string
+) {
+  const bore = new LatheGeometry(
+    [
+      new Vector2(0.57, -0.035),
+      new Vector2(0.43, -0.08),
+      new Vector2(0.33, -0.55),
+      new Vector2(0.27, -1.1),
+      new Vector2(0, -1.1),
+    ],
+    16
   );
+  bore.rotateX(Math.PI / 2);
+  const holes = parts.instanced(
+    bore,
+    parts.perforationWall,
+    perforations.length,
+    name
+  );
+  const placement = new Object3D();
+  const normalAxis = new Vector3(0, 0, 1);
+  for (const [index, hole] of perforations.entries()) {
+    placement.position.copy(hole.position);
+    placement.quaternion.setFromUnitVectors(normalAxis, hole.normal);
+    placement.updateMatrix();
+    holes.setMatrixAt(index, placement.matrix);
+  }
+  holes.computeBoundingSphere();
+  return holes;
 }
 
 export function createClearPad(parts: ClearMgParts) {
-  const segments = 128;
-  const sections = 32;
+  const segments = 256;
+  const sections = 96;
   const positions: number[] = [];
+  const normals: number[] = [];
   const uvs: number[] = [];
   const indices: number[] = [];
   for (let segment = 0; segment <= segments; segment += 1) {
@@ -265,7 +346,13 @@ export function createClearPad(parts: ClearMgParts) {
         (segment / segments) * Math.PI * 2,
         (section / sections) * Math.PI * 2
       );
+      const u = (segment / segments) * Math.PI * 2;
+      const v = (section / sections) * Math.PI * 2;
+      const along = padPoint(u + 0.0001, v).sub(padPoint(u - 0.0001, v));
+      const across = padPoint(u, v + 0.0001).sub(padPoint(u, v - 0.0001));
+      const normal = new Vector3().crossVectors(along, across).normalize();
       positions.push(point.x, point.y, point.z);
+      normals.push(normal.x, normal.y, normal.z);
       uvs.push(segment / segments, section / sections);
       if (segment < segments && section < sections) {
         const current = segment * (sections + 1) + section;
@@ -276,44 +363,21 @@ export function createClearPad(parts: ClearMgParts) {
   }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("normal", new Float32BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
   geometry.setIndex(indices);
-  geometry.computeVertexNormals();
   const cushion = parts.mesh(
     geometry,
-    parts.microfiber,
+    parts.perforatedFabric,
     [0, 0, 0],
     "20 mm perforated red microfiber cushion"
   );
 
-  const rows = [
-    -2.85, -2.55, -2.2, -1.85, -1.4, -1.05, -0.7, -0.35, 0.1, 0.5, 2.8,
-  ];
-  const columns = 80;
-  const holes = parts.instanced(
-    new CircleGeometry(0.42, 10),
-    parts.perforation,
-    rows.length * columns,
-    "Recessed microfiber perforations"
+  const holes = createClearFabricBores(
+    parts,
+    clearMgPadPerforations(),
+    "Recessed perforation walls and floors beneath the fabric openings"
   );
-  const placement = new Object3D();
-  const normalAxis = new Vector3(0, 0, 1);
-  let index = 0;
-  for (const [row, v] of rows.entries()) {
-    for (let column = 0; column < columns; column += 1) {
-      const u = ((column + (row % 2) * 0.5) / columns) * Math.PI * 2;
-      const position = padPoint(u, v);
-      const tangentU = padPoint(u + 0.001, v).sub(position);
-      const tangentV = padPoint(u, v + 0.001).sub(position);
-      const normal = tangentU.cross(tangentV).normalize();
-      placement.position.copy(position.addScaledVector(normal, 0.035));
-      placement.quaternion.setFromUnitVectors(normalAxis, normal);
-      placement.updateMatrix();
-      holes.setMatrixAt(index, placement.matrix);
-      index += 1;
-    }
-  }
-  holes.computeBoundingSphere();
   const seamPoints = Array.from({ length: 129 }, (_, segment) =>
     padPoint((segment / 128) * Math.PI * 2, 0.44)
   );
@@ -329,5 +393,10 @@ export function createClearPad(parts: ClearMgParts) {
     [0, 0, 0],
     "Fine sewn binding around the removable cushion"
   );
-  return { cushion, holes, seam };
+  const core = createClearFoamCore(
+    parts,
+    geometry,
+    "Dark memory foam inside the removable ear cushion"
+  );
+  return { cushion, holes, seam, core };
 }

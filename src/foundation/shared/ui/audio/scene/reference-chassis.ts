@@ -1,11 +1,26 @@
-import { Box3, ExtrudeGeometry, Path, Shape, Vector3 } from "three";
+import {
+  Box3,
+  ExtrudeGeometry,
+  MeshPhysicalMaterial,
+  Path,
+  Shape,
+  Vector3,
+} from "three";
 import type { ModelParts } from "./parts";
+import { createReferenceFeet } from "./reference-feet";
+import { applySurfaceFinish } from "./surface-finish";
+import { createReferenceBottom } from "./reference-bottom";
+import type { BottomMount } from "./reference-bottom";
 
-function sidePlate(parts: ModelParts, x: number) {
+function sidePlate(
+  parts: ModelParts,
+  x: number,
+  material: MeshPhysicalMaterial
+) {
   const front = -128;
   const rear = 115.75;
-  const bottom = 12;
-  const top = 84.5;
+  const bottom = 12.65;
+  const top = 83.85;
   const cornerRadius = 2.6;
   const plate = new Shape();
   plate.moveTo(front + cornerRadius, bottom);
@@ -39,6 +54,13 @@ function sidePlate(parts: ModelParts, x: number) {
   );
   handle.closePath();
   plate.holes.push(handle);
+  for (const y of [20, 75]) {
+    for (const z of [-96, 72]) {
+      const seat = new Path();
+      seat.absarc(2.75 - z, y, 1.9, 0, Math.PI * 2, true);
+      plate.holes.push(seat);
+    }
+  }
   const geometry = new ExtrudeGeometry(plate, {
     depth: 6.4,
     bevelEnabled: true,
@@ -58,105 +80,85 @@ function sidePlate(parts: ModelParts, x: number) {
   }
   const side = parts.mesh(
     geometry,
-    parts.silver,
+    material,
     [x > 0 ? 137.8 : -144.2, 0, 2.75],
     "Aluminium side cheek with carrying slot"
   );
   side.rotation.y = Math.PI / 2;
   for (const y of [20, 75]) {
     for (const z of [-96, 72]) {
-      parts.screw([x > 0 ? 145.05 : -145.05, y, z], x > 0 ? "right" : "left");
+      parts.screw([x > 0 ? 144.65 : -144.65, y, z], x > 0 ? "right" : "left");
     }
   }
 }
 
-function pinPointFeet(parts: ModelParts) {
-  for (const [x, z] of [
-    [-104, 88],
-    [104, 88],
-    [0, -83],
-  ] as const) {
-    const upper = parts.lathe(
-      [
-        [0, 5],
-        [19.8, 5],
-        [20.5, 5.5],
-        [20.5, 11.5],
-        [19.8, 12],
-        [0, 12],
-      ],
-      [x, 0, z],
-      parts.footMetal,
-      "Pin-point foot upper cup"
-    );
-    upper.rotation.x = 0;
-    const lower = parts.lathe(
-      [
-        [0, 0],
-        [19.8, 0],
-        [20.5, 0.4],
-        [20.5, 3],
-        [19.8, 3.4],
-        [0, 3.4],
-      ],
-      [x, 0, z],
-      parts.footMetal,
-      "Pin-point foot lower cup"
-    );
-    lower.rotation.x = 0;
-    const flange = parts.lathe(
-      [
-        [0, 3.4],
-        [7.8, 3.4],
-        [7.8, 4.5],
-        [9, 4.5],
-        [9, 4.8],
-        [0, 4.8],
-      ],
-      [x, 0, z],
-      parts.steel,
-      "Pin-point support flange"
-    );
-    flange.rotation.x = 0;
-    const spike = parts.lathe(
-      [
-        [0, 4.8],
-        [2.3, 5.6],
-        [2.3, 6],
-        [0, 6],
-      ],
-      [x, 0, z],
-      parts.turned,
-      "Pin-point support spike"
-    );
-    spike.rotation.x = 0;
+function topCover(parts: ModelParts) {
+  const cover = new Shape();
+  cover.moveTo(-137, -112.5);
+  cover.lineTo(137, -112.5);
+  cover.lineTo(137, 112.5);
+  cover.lineTo(-137, 112.5);
+  cover.closePath();
+  const fasteners = [
+    [-124, -101],
+    [-124, 0],
+    [-124, 101],
+    [124, -101],
+    [124, 0],
+    [124, 101],
+    [0, 101],
+  ] as const;
+  for (const [x, z] of fasteners) {
+    const hole = new Path();
+    hole.absarc(x, 1 - z, 1.85, 0, Math.PI * 2, true);
+    cover.holes.push(hole);
+  }
+  const lid = parts.mesh(
+    new ExtrudeGeometry(cover, {
+      depth: 1.2,
+      bevelEnabled: true,
+      bevelSize: 0.15,
+      bevelThickness: 0.15,
+      bevelSegments: 3,
+      curveSegments: 32,
+    }),
+    parts.silver,
+    [0, 80.65, 1],
+    "Brushed aluminium lid with countersunk fastener bores"
+  );
+  lid.rotation.x = -Math.PI / 2;
+  for (const [x, z] of fasteners) {
+    parts.screw([x, 81.66, z], "top");
   }
 }
 
-export function createReferenceChassis(parts: ModelParts) {
-  parts.box(
-    [272, 64, 221],
-    [0, 46, 0],
-    parts.black,
-    "Internal chassis shadow",
-    0.8
-  );
-  parts.box(
-    [274, 1.5, 225],
-    [0, 81.25, 1],
-    parts.silver,
-    "Brushed aluminium top cover",
-    0.4
-  );
-  parts.box(
-    [274, 1.6, 224],
-    [0, 13.3, 0.5],
-    parts.rear,
-    "Bottom chassis plate",
-    0.3
+export function createReferenceChassis(
+  parts: ModelParts,
+  bottomMounts: readonly BottomMount[] = []
+) {
+  // 空洞を保ち、メーターや端子の凹部へ内部ブロックを突き出さない。
+  for (const z of [-98, 100]) {
+    parts.box(
+      [268, 62, 1],
+      [0, 46, z],
+      parts.black,
+      "Recessed internal shield",
+      0.3
+    );
+  }
+  topCover(parts);
+  createReferenceBottom(parts, bottomMounts);
+  const sideFinish = applySurfaceFinish(
+    new MeshPhysicalMaterial({
+      color: 0xc1_c4_c7,
+      metalness: 0.68,
+      roughness: 0.44,
+      envMapIntensity: 0.9,
+    }),
+    { scale: [20, 20, 20], relief: 0.002, roughness: 0.04 }
   );
   for (const x of [-141, 141]) {
-    sidePlate(parts, x);
+    sidePlate(parts, x, sideFinish);
     parts.box(
       [0.6, 66, 224],
       [Math.sign(x) * 136.8, 47, 0],
@@ -164,15 +166,11 @@ export function createReferenceChassis(parts: ModelParts) {
       "Side-cover seam",
       0.1
     );
-    for (const z of [-101, 0, 101]) {
-      parts.screw([Math.sign(x) * 124, 82.25, z], "top");
-    }
   }
-  parts.screw([0, 82.25, 101], "top");
-  pinPointFeet(parts);
+  createReferenceFeet(parts);
   for (const x of [-129, 129]) {
     for (const z of [-99, -25, 50, 101]) {
-      parts.screw([x, 12.2, z], "bottom", true);
+      parts.screw([x, 12.27, z], "bottom", true);
     }
   }
 }

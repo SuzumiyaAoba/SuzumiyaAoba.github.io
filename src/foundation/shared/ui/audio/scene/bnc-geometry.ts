@@ -1,27 +1,46 @@
-import { BufferGeometry, Float32BufferAttribute, Vector3 } from "three";
+import {
+  BufferGeometry,
+  ExtrudeGeometry,
+  Float32BufferAttribute,
+  Shape,
+  Vector3,
+} from "three";
 import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
 /** 両側の L 字ロック溝を貫通させた BNC カップリング。 */
 export function bncBayonetGeometry() {
-  const around = 128;
-  const along = 32;
+  const around = 256;
+  const along = 84;
   const positions: number[] = [];
   const occupied = (column: number, row: number) => {
     if (row < 0 || row >= along) {
       return false;
     }
-    const angle = ((column % around) + around) % around;
-    const relative = angle % (around / 2);
-    const entry = relative >= 12 && relative < 17 && row < 19;
-    const lock = relative >= 12 && relative < 26 && row >= 14 && row < 19;
+    const angle =
+      (((column + 0.5) / around) * Math.PI * 2 + Math.PI * 2) % Math.PI;
+    const relative = angle > Math.PI / 2 ? angle - Math.PI : angle;
+    const z = ((row + 0.5) / along) * 12.6;
+    const entry = Math.abs(relative + Math.PI / 4) < 0.19 && z < 5.85;
+    const lock =
+      relative >= -Math.PI / 4 && relative < 0.2 && z >= 3.75 && z < 5.85;
     return !entry && !lock;
   };
   const point = (column: number, row: number, inside: boolean) => {
     const angle = (column / around) * Math.PI * 2;
-    const z = (row / along) * 8;
-    const shoulder = Math.min(1, Math.max(0, (z - 1.5) / 0.6));
-    const taper = Math.min(1, Math.max(0, (z - 7.2) / 0.8));
-    const radius = inside ? 5.2 : 6.2 + shoulder * 0.7 - taper * 0.7;
+    const z = (row / along) * 12.6;
+    let outer = 5.95;
+    if (z < 0.6) {
+      outer = 6.05 + z * 0.25;
+    } else if (z < 1.2) {
+      outer = 6.2 - (z - 0.6) * 0.42;
+    } else if (z >= 7.2 && z < 7.8) {
+      outer = 5.95 + (z - 7.2) * 1.58;
+    } else if (z >= 7.8 && z <= 12) {
+      outer = 6.9;
+    } else if (z > 12) {
+      outer = 6.9 - (z - 12) * 0.9;
+    }
+    const radius = inside ? 4.95 : outer;
     return new Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, z);
   };
   const quad = (a: Vector3, b: Vector3, c: Vector3, d: Vector3) => {
@@ -66,4 +85,26 @@ export function bncBayonetGeometry() {
     geometry.dispose();
   }
   return smooth;
+}
+
+/** Four spring leaves engage the inside of the jack barrel. */
+export function bncGroundContactGeometry() {
+  const leaves: Shape[] = [];
+  for (let index = 0; index < 4; index += 1) {
+    const start = (index * Math.PI) / 2 + 0.028;
+    const end = ((index + 1) * Math.PI) / 2 - 0.028;
+    const leaf = new Shape();
+    leaf.absarc(0, 0, 4.07, start, end, false);
+    leaf.absarc(0, 0, 3.5, end, start, true);
+    leaf.closePath();
+    leaves.push(leaf);
+  }
+  return new ExtrudeGeometry(leaves, {
+    depth: 8.4,
+    bevelEnabled: true,
+    bevelSize: 0.035,
+    bevelThickness: 0.035,
+    bevelSegments: 2,
+    curveSegments: 32,
+  });
 }

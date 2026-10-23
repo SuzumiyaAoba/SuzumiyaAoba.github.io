@@ -1,4 +1,3 @@
-import { Group } from "three";
 import { createSigmaBoard } from "./sigma-pro-board";
 import { createSigmaFront } from "./sigma-pro-front";
 import { createSigmaControls } from "./sigma-pro-controls";
@@ -17,9 +16,9 @@ import {
 
 function chassis(parts: SigmaParts) {
   const bottom = parts.mesh(
-    sigmaPlate(sigmaOutline(SIGMA_WIDTH - 0.5, 145.7, 2.15), 1.65, 0.18),
+    sigmaPlate(sigmaOutline(SIGMA_WIDTH - 0.5, 143.2, 2.15), 1.65, 0.18),
     parts.aluminium,
-    [0, 0.95, -5],
+    [0, 0.95, -5.75],
     "Bevelled aluminium bottom cover"
   );
   bottom.rotation.x = -Math.PI / 2;
@@ -32,43 +31,14 @@ function chassis(parts: SigmaParts) {
     );
     side.rotation.y = Math.PI / 2;
     for (const y of [5.7, 14.3]) {
-      const screw = new Group();
-      screw.name = "Recessed side-panel Phillips screw";
-      screw.position.set(x < 0 ? -42.46 : 42.46, y, 59.5);
-      screw.rotation.y = x < 0 ? -Math.PI / 2 : Math.PI / 2;
-      screw.add(
-        parts.cylinder(
-          1.05,
-          0.28,
-          [0, 0, 0],
-          parts.machined,
-          "Countersunk screw head",
-          32
-        ),
-        parts.cylinder(
-          0.85,
-          0.15,
-          [0, 0, 0.15],
-          parts.insulator,
-          "Black oxide screw head",
-          32
-        ),
-        parts.box(
-          [0.95, 0.2, 0.06],
-          [0, 0, 0.25],
-          parts.cavity,
-          "Phillips screw recess",
-          0.04
-        ),
-        parts.box(
-          [0.2, 0.95, 0.06],
-          [0, 0, 0.25],
-          parts.cavity,
-          "Phillips screw recess",
-          0.04
-        )
+      const screw = parts.screw(
+        [x < 0 ? -42.14 : 42.14, y, 59.5],
+        x < 0 ? "left" : "right",
+        true,
+        parts.machined
       );
-      parts.root.add(screw);
+      screw.name = "Recessed side-panel Phillips screw";
+      screw.scale.setScalar(0.63);
     }
   }
   const top = parts.mesh(
@@ -108,7 +78,7 @@ function chassis(parts: SigmaParts) {
     "Flush clear glass with physical reflections"
   );
   glass.rotation.x = -Math.PI / 2;
-  glass.renderOrder = 2;
+  glass.userData["castShadow"] = false;
 }
 
 /** SIGMA Pro Black, reconstructed from Questyle's product photographs in millimetres. */

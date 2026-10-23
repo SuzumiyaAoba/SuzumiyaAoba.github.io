@@ -1,23 +1,22 @@
 import {
   Box3,
-  BoxGeometry,
   CatmullRomCurve3,
   Group,
   Object3D,
   SphereGeometry,
+  ShapeGeometry,
   Vector3,
 } from "three";
 import {
   ie600BoreGeometry,
   ie600ConnectorGripGeometry,
+  ie600GripMarkGeometry,
   ie600ContactSleeveGeometry,
   ie600EarTipRim,
   ie600EarHookRelief,
   ie600EarHookReliefGeometry,
   ie600MmcxPinGeometry,
   ie600SocketRimGeometry,
-  ie600BalancedPlugGeometry,
-  ie600BalancedPlugBodyGeometry,
   ie600BalancedPlugDimensions,
   ie600TipGuardGeometry,
   ie600EarTipGeometry,
@@ -28,10 +27,13 @@ import { cableEndpoint } from "./system-cables";
 import { createIe600Parts } from "./ie-600-parts";
 import type { Ie600Parts } from "./ie-600-parts";
 
+import { ie600BalancedPlug, ie600Splitter } from "./ie-600-hardware";
+import { ie600Vent, ie600VentOutline } from "./ie-600-vent";
+
 const socketPosition = new Vector3(4.1, 10.8, 0);
 const connectorDirection = new Vector3(-0.4, 1, 0).normalize();
 const detachedOffset = 5.5;
-const seatedOffset = -0.7;
+const seatedOffset = -0.9;
 
 function nozzle(parts: Ie600Parts, shell: Group) {
   const group = new Group();
@@ -43,6 +45,22 @@ function nozzle(parts: Ie600Parts, shell: Group) {
   );
   shell.add(group);
   group.add(
+    parts.lathe(
+      [
+        [1.3, -1.2],
+        [3.4, -1.2],
+        [3.4, -0.7],
+        [3.2, 0],
+        [2.85, 0.7],
+        [2.6, 1.3],
+        [2.6, 2.8],
+        [1.3, 2.8],
+        [1.3, -1.2],
+      ],
+      [0, 0, 0],
+      parts.zirconium,
+      "Rounded zirconium shoulder beneath the sound nozzle"
+    ),
     parts.mesh(
       ie600BoreGeometry(2.6, 1.3, 4.5),
       parts.zirconium,
@@ -60,7 +78,7 @@ function nozzle(parts: Ie600Parts, shell: Group) {
       ie600TipGuardGeometry(),
       parts.connectorRubber,
       [0, 0, 10.75],
-      "Six aperture silicone sound channel guard"
+      "Two concentric hexagonal sound channel guards"
     )
   );
   group.add(
@@ -72,17 +90,14 @@ function nozzle(parts: Ie600Parts, shell: Group) {
       "Fine silicone mould seam"
     )
   );
-  for (const offset of [-0.7, 0, 0.7]) {
-    const chord = 2 * Math.sqrt(1.3 ** 2 - offset ** 2);
-    group.add(
-      parts.mesh(
-        new BoxGeometry(chord, 0.16, 0.15),
-        parts.steel,
-        [0, offset, 4.7],
-        "Recessed acoustic grille web"
-      )
-    );
-  }
+  group.add(
+    parts.disc(
+      1.55,
+      [0, 0, 9.9],
+      parts.acousticFoam,
+      "Recessed acoustic foam behind the ear tip guard"
+    )
+  );
 }
 
 function connector(
@@ -191,6 +206,33 @@ function connector(
       "Fine connector mould parting seam"
     )
   );
+  const lettering = parts.print(
+    1.4,
+    1.8,
+    [0, 0, 0],
+    (context) => {
+      if (side === -1) {
+        context.translate(1.4, 0);
+        context.scale(-1, 1);
+      }
+      context.fillStyle = "#5e6061";
+      context.font = "1.55px Arial";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillText(side === -1 ? "L" : "R", 0.7, 0.9);
+    },
+    "MMCX channel mark texture",
+    256
+  );
+  parts.root.remove(lettering);
+  group.add(
+    parts.mesh(
+      ie600GripMarkGeometry(),
+      lettering.material,
+      [0, 0, offset],
+      "Moulded channel letter on the curved cable grip"
+    )
+  );
   if (side === -1) {
     group.add(
       parts.mesh(
@@ -223,7 +265,14 @@ function earHook(
     new Vector3(39, 15, 6),
   ];
   const curve = new CatmullRomCurve3(points);
-  ie600Cable(parts, shell, curve, 0.9, "Adjustable reinforced over ear hook");
+  ie600Cable(
+    parts,
+    shell,
+    curve,
+    1.22,
+    "Adjustable reinforced over ear hook",
+    true
+  );
   const end = curve.getPoint(1);
   const direction = curve.getTangent(1);
   const relief = parts.mesh(
@@ -251,7 +300,7 @@ function earHook(
 }
 
 function displayCable(parts: Ie600Parts, exits: Object3D[]) {
-  const junction = new Vector3(0, 2.1, 48);
+  const junction = new Vector3(0, 2.8, 44);
   for (const exit of exits) {
     const endpoint = cableEndpoint(exit, [0, 0, 0]);
     const branchEntry = junction.clone();
@@ -265,62 +314,31 @@ function displayCable(parts: Ie600Parts, exits: Object3D[]) {
       "Shortened detachable earphone cable branch"
     );
   }
-  parts.lathe(
-    [
-      [0.65, 0],
-      [1.2, 0],
-      [1.8, 1.1],
-      [1.9, 4.6],
-      [1.4, 6.5],
-      [0.8, 6.5],
-      [0.65, 0],
-    ],
-    [0, 2.1, 46.5],
-    parts.connectorRubber,
-    "Tapered cable Y splitter"
-  );
+  ie600Splitter(parts, parts.root, junction);
   ie600Cable(
     parts,
     parts.root,
     new CatmullRomCurve3([
-      junction,
-      new Vector3(0, 2.1, 60),
-      new Vector3(-12, 2.1, 73),
-      new Vector3(-18, 2.1, 83),
-      new Vector3(ie600BalancedPlugDimensions.cableEntry - 4, 2.1, 85),
-      new Vector3(3 + ie600BalancedPlugDimensions.cableEntry, 2.1, 85),
+      new Vector3(0, 2.8, 66),
+      new Vector3(0, 2.8, 70),
+      new Vector3(-17, 2.8, 72),
+      new Vector3(-33, 2.8, 70),
+      new Vector3(-38, 2.1, 77),
+      new Vector3(
+        ie600BalancedPlugDimensions.cableEntry - 4,
+        2.1,
+        85 + ie600BalancedPlugDimensions.cableDepth
+      ),
+      new Vector3(
+        3 + ie600BalancedPlugDimensions.cableEntry,
+        2.1,
+        85 + ie600BalancedPlugDimensions.cableDepth
+      ),
     ]),
     0.85,
     "Shortened para aramid reinforced main cable"
   );
-  const plug = new Group();
-  plug.name = "4.4 mm balanced five-pole plug";
-  plug.position.set(3, 2.1, 85);
-  parts.root.add(plug);
-  plug.add(
-    parts.mesh(
-      ie600BalancedPlugBodyGeometry(),
-      parts.connectorRubber,
-      [0, 0, 0],
-      "Right angled balanced plug overmould and tapered strain relief"
-    ),
-    parts.mesh(
-      ie600BalancedPlugGeometry(),
-      parts.connectorGold,
-      [0, 0, ie600BalancedPlugDimensions.shaftStart],
-      "Machined 4.4 mm gold plated five-pole plug"
-    )
-  );
-  for (const length of ie600BalancedPlugDimensions.insulators) {
-    plug.add(
-      parts.mesh(
-        ie600BoreGeometry(2.2, 2.1, 0.5),
-        parts.black,
-        [0, 0, ie600BalancedPlugDimensions.shaftStart + length],
-        "Balanced plug insulating ring"
-      )
-    );
-  }
+  ie600BalancedPlug(parts, parts.root, new Vector3(3, 2.1, 85));
 }
 
 export function createIe600({ standaloneCable = true } = {}) {
@@ -340,6 +358,12 @@ export function createIe600({ standaloneCable = true } = {}) {
         side === -1 ? parts.leftHousing : parts.rightHousing,
         [0, 0, 0],
         "Amorphous zirconium ergonomic housing"
+      ),
+      parts.mesh(
+        new ShapeGeometry(ie600VentOutline()),
+        parts.cavity,
+        [0, 0, ie600Vent.floor],
+        "Dark floor inside the shell pressure vent"
       )
     );
     nozzle(parts, shell);

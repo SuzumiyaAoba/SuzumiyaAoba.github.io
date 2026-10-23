@@ -1,3 +1,4 @@
+import { TextureSource } from "three";
 import type { Texture } from "three";
 import type { AudioModel } from "@/shared/ui/audio/definitions/viewer";
 import manifest from "./audio-textures.json";
@@ -63,10 +64,16 @@ export async function upgradeAudioTextures(model: AudioModel) {
   let changed = false;
   for (const [name, source] of textures) {
     const image = decoded.get(source.url);
-    for (const texture of bindings.get(name) ?? []) {
+    // GPU 資源の破棄と再登録で Set が変わるため、更新対象を先に固定する。
+    const activeTextures = [...(bindings.get(name) ?? [])];
+    for (const texture of activeTextures) {
       if (image && texture.image !== image) {
-        texture.image = image;
+        // texStorage2D で確保された軽量画像の領域は needsUpdate だけでは拡張できない。
+        // 材質からの参照と UV 設定を保ち、GPU 領域と画像ソースを再作成する。
+        texture.dispose();
+        texture.source = new TextureSource(image);
         texture.needsUpdate = true;
+        bindTexture(name, texture);
         changed = true;
       }
     }
@@ -83,11 +90,13 @@ export function getTextureImage(name: TextureName) {
   return image;
 }
 
-export function bindTexture(name: TextureName, texture: Texture) {
+export function bindTexture(name: string, texture: Texture) {
   const textures = bindings.get(name) ?? new Set<Texture>();
   textures.add(texture);
   bindings.set(name, textures);
-  texture.addEventListener("dispose", () => {
+  const unbind = () => {
     textures.delete(texture);
-  });
+    texture.removeEventListener("dispose", unbind);
+  };
+  texture.addEventListener("dispose", unbind);
 }

@@ -8,19 +8,19 @@ import { createHa1aRear } from "./ha-1a-rear";
 function woodSides(parts: Ha1aParts) {
   for (const x of [-59.8, 59.8]) {
     parts.box(
-      [6.5, 207, 282],
+      [6.1, 207, 280],
       [x, 111, -1],
-      parts.steel,
+      parts.turned,
       "Metal backing visible in the wood-panel seams",
       0.6
     );
     for (let board = 0; board < 5; board += 1) {
       const panel = parts.box(
-        [6.7, 40.2, 282],
+        [6.7, 40.85, 282],
         [x, 28.1 + board * 41.3, -1],
         parts.wood,
         "Lacquered wood side panel",
-        1
+        0.8
       );
       const positions = panel.geometry.getAttribute("position");
       const uvs = panel.geometry.getAttribute("uv");
@@ -63,7 +63,7 @@ function topCover(parts: Ha1aParts) {
         [45, 10, "12DT5"],
       ] as const) {
         context.beginPath();
-        context.ellipse(x, y, 9.5, 7.5, 0, 0, Math.PI * 2);
+        context.ellipse(x, y, 9.5, 9.5, 0, 0, Math.PI * 2);
         context.stroke();
         context.font = "1.7px Arial";
         context.fillText(name, x, y + 0.6);
@@ -90,8 +90,8 @@ function underside(parts: Ha1aParts) {
   ] as const) {
     const foot = parts.cylinder(
       11.5,
-      5.6,
-      [x, 4.2, z],
+      5.75,
+      [x, 4.275, z],
       parts.steel,
       "Independent supporting foot"
     );
@@ -129,8 +129,8 @@ export function createHa1aMk2() {
     );
   }
   parts.box(
-    [102, 89, 126],
-    [0, 163, -72],
+    [98, 62, 64],
+    [0, 156, -95],
     parts.rubber,
     "Rear power-supply compartment",
     1

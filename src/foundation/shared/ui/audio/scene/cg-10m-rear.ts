@@ -1,71 +1,18 @@
-import { Group, MeshStandardMaterial } from "three";
+import {
+  ExtrudeGeometry,
+  Group,
+  MeshPhysicalMaterial,
+  Path,
+  Shape,
+} from "three";
 import type { ModelParts } from "./parts";
-import { powerInlet } from "./rear";
+import { powerInlet, powerInletCutout } from "./reference-power-inlet";
+import { createBncSocket } from "./bnc-socket";
 
 function clockOutput(parts: ModelParts, x: number) {
   const y = 31.5;
-  parts.lathe(
-    [
-      [0, 0],
-      [6.5, 0],
-      [6.5, 1.1],
-      [5.9, 1.5],
-      [0, 1.5],
-    ],
-    [x, y, 0.6],
-    parts.gold,
-    "Clock output mounting washer"
-  );
-  parts.lathe(
-    [
-      [5.6, 0],
-      [5.6, 6],
-      [4.8, 6.5],
-      [3.4, 6.5],
-      [3.4, 0],
-    ],
-    [x, y, 1.7],
-    parts.gold,
-    "Gold-plated 50-ohm BNC output shell"
-  );
-  parts.cylinder(
-    3.3,
-    0.6,
-    [x, y, 7.9],
-    new MeshStandardMaterial({ color: 0xf0_ef_e5, roughness: 0.8 }),
-    "BNC dielectric"
-  );
-  parts.disc(1.25, [x, y, 8.22], parts.cavity, "BNC centre socket");
-  parts.lathe(
-    [
-      [0.82, 0],
-      [0.82, 0.28],
-      [0.48, 0.28],
-      [0.48, 0],
-    ],
-    [x, y, 8.23],
-    parts.gold,
-    "Hollow BNC centre contact"
-  );
-  for (const offset of [-0.65, 0.65]) {
-    parts.box(
-      [0.13, 0.6, 0.06],
-      [x + offset, y, 8.54],
-      parts.cavity,
-      "BNC centre-contact spring split",
-      0.01
-    );
-  }
-  for (const offset of [-5.8, 5.8]) {
-    parts.box(
-      [1.6, 1.7, 1.5],
-      [x + offset, y, 5.8],
-      parts.gold,
-      "BNC bayonet lug",
-      0.2
-    );
-  }
-  parts.screw([x + 8, y + 7, 1], "front", true);
+  createBncSocket(parts, [x, y, 0]);
+  parts.screw([x + 8, y + 7, 1]);
   parts.cylinder(
     1.2,
     0.4,
@@ -170,14 +117,81 @@ function rearLettering(parts: ModelParts) {
   );
 }
 
+function brightnessControl(parts: ModelParts) {
+  const plastic = new MeshPhysicalMaterial({
+    color: 0x0b_0d_10,
+    roughness: 0.43,
+    specularIntensity: 0.5,
+  });
+  parts.cylinder(
+    2.9,
+    0.8,
+    [56, 28, 0.95],
+    parts.black,
+    "Illumination control mounting collar"
+  );
+  parts.lathe(
+    [
+      [2.5, 0],
+      [2.5, 2.5],
+      [2.3, 2.8],
+      [0, 2.8],
+    ],
+    [56, 28, 1.4],
+    plastic,
+    "Black molded illumination-control shaft"
+  );
+  const top = new Shape();
+  top.absarc(0, 0, 2.25, 0, Math.PI * 2, false);
+  const slot = new Path();
+  slot.moveTo(-0.28, -1.9);
+  slot.lineTo(0.28, -1.9);
+  slot.lineTo(0.28, 1.9);
+  slot.lineTo(-0.28, 1.9);
+  slot.closePath();
+  top.holes.push(slot);
+  parts.mesh(
+    new ExtrudeGeometry(top, {
+      depth: 0.5,
+      bevelEnabled: true,
+      bevelSize: 0.06,
+      bevelThickness: 0.06,
+      bevelSegments: 3,
+      curveSegments: 32,
+    }),
+    plastic,
+    [56, 28, 4.2],
+    "Recessed screwdriver slot in the black brightness control"
+  );
+  parts.box(
+    [0.56, 3.8, 0.1],
+    [56, 28, 4.21],
+    parts.cavity,
+    "Dark floor inside the brightness-control slot",
+    0.02
+  );
+}
+
 export function createCg10mRear(parts: ModelParts) {
   const firstChild = parts.root.children.length;
-  parts.box(
-    [274, 56, 1.1],
-    [0, 41, 0],
+  const panel = new Shape();
+  panel.moveTo(-137, 13);
+  panel.lineTo(137, 13);
+  panel.lineTo(137, 69);
+  panel.lineTo(-137, 69);
+  panel.closePath();
+  panel.holes.push(powerInletCutout());
+  parts.mesh(
+    new ExtrudeGeometry(panel, {
+      depth: 1.1,
+      bevelEnabled: true,
+      bevelSize: 0.1,
+      bevelThickness: 0.1,
+      bevelSegments: 2,
+    }),
     parts.rear,
-    "CG-10M black rear connection panel",
-    0.3
+    [0, 0, -0.55],
+    "CG-10M black rear connection panel"
   );
   parts.box(
     [274, 11.5, 1.7],
@@ -189,31 +203,7 @@ export function createCg10mRear(parts: ModelParts) {
   for (const x of [-95, -55, -15, 25]) {
     clockOutput(parts, x);
   }
-  parts.cylinder(
-    2.8,
-    1.3,
-    [56, 28, 1.4],
-    parts.steel,
-    "Meter brightness control seat"
-  );
-  parts.lathe(
-    [
-      [2.3, 0],
-      [2.3, 3],
-      [1.8, 3.3],
-      [0, 3.3],
-    ],
-    [56, 28, 1.5],
-    parts.turned,
-    "Rear illumination potentiometer"
-  );
-  parts.box(
-    [0.25, 2.5, 0.15],
-    [56, 28, 4.88],
-    parts.black,
-    "Brightness control screwdriver slot",
-    0.03
-  );
+  brightnessControl(parts);
   powerInlet(parts);
   rearLettering(parts);
   for (const [x, y] of [
@@ -223,7 +213,7 @@ export function createCg10mRear(parts: ModelParts) {
     [-49, 74],
     [51, 74],
   ] as const) {
-    parts.screw([x, y, 1], "front", y < 69);
+    parts.screw([x, y, 1]);
   }
   const group = new Group();
   group.name = "CG-10M rear connections";

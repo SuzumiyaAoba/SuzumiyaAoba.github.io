@@ -9,8 +9,8 @@ import {
 
 /** 交互に重なる黒い繊維束と、その縁の細い赤い糸を繰り返す編組。 */
 export function cinnamonBraidTextures(length: number, radius: number) {
-  const size = 256;
-  const bundle = 64;
+  const size = 512;
+  const bundle = 128;
   const pixels = new Uint8Array(size * size * 4);
   const relief = new Uint8Array(pixels.length);
   const roughness = new Uint8Array(pixels.length);
@@ -21,17 +21,23 @@ export function cinnamonBraidTextures(length: number, radius: number) {
       const over =
         (Math.floor(rising / bundle) + Math.floor(falling / bundle)) % 2 === 0;
       const strand = (over ? rising : falling) % bundle;
-      const red = strand < 7;
+      const red = strand < 12;
       const crown = Math.sin((strand / bundle) * Math.PI);
-      const fiber = Math.sin(strand * Math.PI * 0.5) * 5;
-      const shade = Math.round(24 + crown * 26 + fiber);
+      const thread = (strand / bundle) * 24;
+      const grain =
+        Math.sin(column * 17.13 + row * 91.7) *
+        Math.sin(column * 5.23 - row * 13.81);
+      const fiber = (0.5 + 0.5 * Math.cos(thread * Math.PI * 2)) ** 2;
+      const shade = Math.round(15 + crown * 24 + fiber * 30 + grain * 5);
       const index = (row * size + column) * 4;
-      pixels[index] = red ? 145 + Math.round(crown * 45) : shade;
-      pixels[index + 1] = red ? 25 + Math.round(crown * 18) : shade;
-      pixels[index + 2] = red ? 18 + Math.round(crown * 12) : shade + 2;
+      pixels[index] = red ? 105 + Math.round(crown * 38 + fiber * 28) : shade;
+      pixels[index + 1] = red ? 17 + Math.round(crown * 14 + fiber * 9) : shade;
+      pixels[index + 2] = red
+        ? 12 + Math.round(crown * 9 + fiber * 7)
+        : shade + 2;
       pixels[index + 3] = 255;
-      const height = 80 + crown * 115 + fiber * 2;
-      const matte = 200 + crown * 25 + (red ? -10 : 0);
+      const height = 55 + crown * 120 + fiber * 40 + grain * 6;
+      const matte = 190 + crown * 25 - fiber * 15 + (red ? -10 : 0);
       for (const channel of [0, 1, 2]) {
         relief[index + channel] = height;
         roughness[index + channel] = matte;
@@ -47,7 +53,7 @@ export function cinnamonBraidTextures(length: number, radius: number) {
   for (const texture of [color, height, matte]) {
     texture.wrapS = RepeatWrapping;
     texture.wrapT = RepeatWrapping;
-    texture.repeat.set(length / 16, (2 * Math.PI * radius) / 16);
+    texture.repeat.set(length / (Math.PI * radius), 2);
     texture.magFilter = LinearFilter;
     texture.minFilter = LinearMipmapLinearFilter;
     texture.generateMipmaps = true;
@@ -62,8 +68,11 @@ export function drawCinnamonMark(context: CanvasRenderingContext2D) {
   context.strokeStyle = "#eee9df";
   context.textAlign = "center";
   context.textBaseline = "middle";
+  context.textAlign = "left";
   context.font = "bold 1.75px Arial";
-  context.fillText("CINNAMON", 0, -4.5, 11.5);
+  context.fillText("C", -5.15, -4.5);
+  context.font = "bold 1.42px Arial";
+  context.fillText("INNAMON", -3.9, -4.4, 9.1);
   context.lineWidth = 0.35;
   context.lineCap = "round";
   context.lineJoin = "round";

@@ -1,6 +1,8 @@
 import { Box3, InstancedMesh, Mesh, Raycaster, Vector3 } from "three";
 import type { BufferGeometry, Material, Object3D } from "three";
 import { expect, it, vi } from "vitest";
+import { createModelParts } from "./parts";
+import { createBncSocket } from "./bnc-socket";
 import {
   createCybershaftBnc,
   createStandaloneCybershaftBnc,
@@ -104,4 +106,85 @@ it("追加したケーブルとBNC端子のGPUリソースを解放する", () =
   expect(disposed).toHaveBeenCalledTimes(
     geometries.size + materials.size + instancedMeshCount
   );
+});
+
+it("50Ωの絶縁体には深い嵌合穴を設け、接地ばねの間に四本のスリットを残す", () => {
+  const model = createStandaloneCybershaftBnc();
+  model.group.updateMatrixWorld(true);
+  const plug = model.group.getObjectByName(
+    "Cybershaft 50Ω BNC plug — First connector"
+  );
+  if (!plug) {
+    throw new Error("Missing BNC plug.");
+  }
+  const depths: number[] = [];
+  for (const radius of [2, 3]) {
+    const ray = new Raycaster(
+      plug.localToWorld(new Vector3(radius, 0, -1)),
+      new Vector3(0, 0, 1).transformDirection(plug.matrixWorld)
+    );
+    const [hit] = ray.intersectObject(plug);
+    expect(hit?.object.name).toBe("Exposed BNC white dielectric");
+    depths.push(hit?.distance ?? 0);
+  }
+  expect(depths[0]).toBeCloseTo(6.4, 1);
+  expect(depths[1]).toBeCloseTo(1.5, 1);
+  const springs = plug.getObjectByName(
+    "Four slotted BNC ground spring contacts"
+  );
+  if (!springs) {
+    throw new Error("Missing ground springs.");
+  }
+  for (let index = 0; index < 4; index += 1) {
+    const angle = (index * Math.PI) / 2;
+    const point = new Vector3(Math.cos(angle) * 3.8, Math.sin(angle) * 3.8, -1);
+    const ray = new Raycaster(
+      plug.localToWorld(point),
+      new Vector3(0, 0, 1).transformDirection(plug.matrixWorld)
+    );
+    expect(ray.intersectObject(springs)).toHaveLength(0);
+  }
+  model.dispose();
+});
+
+it("接続時にソケットの二本のピンがロック溝へ入り、金属筒がカップリングに収まる", () => {
+  const parts = createModelParts({ brushed: false });
+  createBncSocket(parts, [0, 0, 0]);
+  parts.root.updateMatrixWorld(true);
+  const cable = createCybershaftBnc(
+    { position: new Vector3(0, 0, 10.1), direction: new Vector3(0, 0, 1) },
+    { position: new Vector3(60, 0, 10.1), direction: new Vector3(0, 0, 1) }
+  );
+  cable.group.updateMatrixWorld(true);
+  const collar = cable.group.getObjectByName(
+    "BNC rotating collar with two open L shaped bayonet slots"
+  );
+  if (!collar) {
+    throw new Error("Missing BNC coupling.");
+  }
+  const rays = [-1, 1].map(
+    (side) =>
+      new Raycaster(
+        new Vector3(side * 9, 0, 6.65),
+        new Vector3(-side, 0, 0),
+        0,
+        4.1
+      )
+  );
+  for (const ray of rays) {
+    expect(ray.intersectObject(collar)).toHaveLength(0);
+    expect(ray.intersectObject(parts.root)[0]?.object.name).toBe(
+      "Cylindrical BNC bayonet locking pin"
+    );
+  }
+  const opening = new Raycaster(
+    new Vector3(4.85, 0, 11),
+    new Vector3(0, 0, -1),
+    0,
+    8
+  );
+  expect(opening.intersectObject(collar)).toHaveLength(0);
+  expect(opening.intersectObject(parts.root)).toHaveLength(0);
+  parts.dispose();
+  cable.dispose();
 });

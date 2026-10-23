@@ -9,6 +9,7 @@ import {
   sigmaRearGeometry,
   sigmaSideGeometry,
   sigmaTopGeometry,
+  SIGMA_KNOB_BORE,
 } from "./sigma-pro-geometry";
 
 function intersections(geometry: BufferGeometry, x: number, y: number) {
@@ -70,4 +71,22 @@ it("bores all three headphone sockets through the front panel", () => {
   }
   expect(intersections(geometry, -19, -1.4).length).toBeGreaterThan(0);
   geometry.dispose();
+});
+
+it("opens the radial set-screw hole through the helical knob shell", () => {
+  const geometry = sigmaKnobGeometry();
+  const material = new MeshBasicMaterial({ side: DoubleSide });
+  const knob = new Mesh(geometry, material);
+  const direction = new Vector3(
+    Math.cos(SIGMA_KNOB_BORE.angle),
+    Math.sin(SIGMA_KNOB_BORE.angle),
+    0
+  );
+  const origin = direction.clone().multiplyScalar(10).setZ(SIGMA_KNOB_BORE.z);
+  const ray = new Raycaster(origin, direction.clone().negate(), 0, 5);
+  expect(ray.intersectObject(knob)).toHaveLength(0);
+  ray.ray.origin.z += 1.5;
+  expect(ray.intersectObject(knob).length).toBeGreaterThan(0);
+  geometry.dispose();
+  material.dispose();
 });

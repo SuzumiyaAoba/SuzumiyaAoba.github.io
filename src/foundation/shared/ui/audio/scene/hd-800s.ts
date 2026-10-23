@@ -1,21 +1,14 @@
-import {
-  Box3,
-  CylinderGeometry,
-  Group,
-  Matrix4,
-  Path,
-  Shape,
-  Vector3,
-} from "three";
+import { Box3, CylinderGeometry, Group, Matrix4, Shape, Vector3 } from "three";
+import { drawSennheiserWordmark } from "./sennheiser-wordmark";
 import { createHd800sParts } from "./hd-800s-parts";
 import type { Hd800sParts } from "./hd-800s-parts";
 import {
   arcLabelGeometry,
   acousticBaffleGeometry,
   baffleBraceGeometry,
+  cableLabelGeometry,
   cupContour,
   cupContourPoints,
-  cupOutline,
   hd800sDriver,
   headbandCushionGeometry,
   headbandLabelGeometry,
@@ -38,7 +31,7 @@ function bandOutline(
 
 function createHeadband(parts: Hd800sParts) {
   parts.plate(
-    bandOutline(85, 89, 80, 84),
+    bandOutline(100, 82, 95, 77),
     28,
     [0, 0, -14],
     parts.trim,
@@ -46,7 +39,7 @@ function createHeadband(parts: Hd800sParts) {
   );
   for (const z of [-13.5, 12.5]) {
     parts.plate(
-      bandOutline(85.4, 89.4, 83.9, 87.9),
+      bandOutline(100.4, 82.4, 98.9, 80.9),
       1,
       [0, 0, z],
       parts.trim,
@@ -60,10 +53,20 @@ function createHeadband(parts: Hd800sParts) {
     [0, 0, 0],
     "Rounded microfiber cushion beneath the headband"
   );
+  for (const angle of [Math.PI * 0.15, Math.PI * 0.85]) {
+    const clip = parts.box(
+      [7, 8, 36.8],
+      [93 * Math.cos(angle), 136 + 75 * Math.sin(angle), 0],
+      parts.trim,
+      "Moulded retaining cap at the headband cushion end",
+      1.3
+    );
+    clip.rotation.z = angle - Math.PI / 2;
+  }
   for (const side of [-1, 1]) {
     const slider = parts.box(
-      [8, 37, 24],
-      [side * 82, 128, 0],
+      [8, 22, 24],
+      [side * 97, 142, 0],
       parts.trim,
       "Adjustable headband slider",
       0.8
@@ -71,7 +74,7 @@ function createHeadband(parts: Hd800sParts) {
     slider.rotation.z = side * -0.09;
     parts.box(
       [9, 18, 26],
-      [side * 81, 143, 0],
+      [side * 96, 143, 0],
       parts.matte,
       "Headband slider sleeve",
       1
@@ -79,21 +82,12 @@ function createHeadband(parts: Hd800sParts) {
     for (let index = 0; index < 5; index += 1) {
       parts.box(
         [0.3, 0.55, 7],
-        [side * 86.1, 118 + index * 3, 0],
+        [side * 101.1, 134 + index * 3, 0],
         parts.black,
         "Headband adjustment index",
         0.1
       );
     }
-    parts.screw([side * 86.3, 139, 0], side === 1 ? "right" : "left", true);
-    const hinge = parts.cylinder(
-      2.6,
-      16,
-      [side * 89, 145, 0],
-      parts.trim,
-      "Headband-to-yoke swivel axle"
-    );
-    hinge.rotation.y = Math.PI / 2;
   }
   parts.surfacePrint(
     headbandLabelGeometry(),
@@ -102,16 +96,14 @@ function createHeadband(parts: Hd800sParts) {
     [0, 0, 0],
     (context) => {
       context.fillStyle = "#9da1a5";
-      context.textAlign = "center";
-      context.font = "bold 3.5px Arial";
-      context.fillText("SENNHEISER", 20, 3.8);
+      drawSennheiserWordmark(context);
     },
     "Manufacturer marking following the headband curvature"
   );
-  for (const z of [-12.2, 12.2]) {
+  for (const z of [-17.3, 17.3]) {
     const seam = Array.from({ length: 100 }, (_, index) => {
       const angle = Math.PI * (0.16 + (index / 99) * 0.68);
-      return new Vector3(75.8 * Math.cos(angle), 136 + 80 * Math.sin(angle), z);
+      return new Vector3(91 * Math.cos(angle), 136 + 73 * Math.sin(angle), z);
     });
     seam.push(
       ...seam
@@ -157,8 +149,24 @@ function createDriver(parts: Hd800sParts, cup: Group, side: number) {
       parts.driver,
       "Central transducer back plate face"
     ),
-    parts.ring(13.6, 1.1, [0, 0, 9], parts.matte, "Inner driver basket ring"),
-    parts.ring(26.5, 1.2, [0, 0, 9], parts.matte, "Outer driver basket ring")
+    parts.ovalRing(
+      [28, 28],
+      [16.4, 16.4],
+      0.8,
+      [0, 0, 9],
+      parts.matte,
+      "Flat inner driver basket annulus",
+      0.12
+    ),
+    parts.ovalRing(
+      [56.6, 56.6],
+      [48.6, 48.6],
+      1.2,
+      [0, 0, 9],
+      parts.matte,
+      "Flat outer driver basket annulus",
+      0.15
+    )
   );
   for (let index = 0; index < 6; index += 1) {
     const angle = (index / 6) * Math.PI * 2;
@@ -183,63 +191,95 @@ function createDriver(parts: Hd800sParts, cup: Group, side: number) {
     driver.add(spoke);
   }
   driver.add(
-    parts.ovalRing(
-      [70, 70],
-      [57, 57],
-      3,
-      [0, 0, 12],
+    parts.lathe(
+      [
+        [28.5, 12],
+        [34.8, 12],
+        [35, 13.7],
+        [34.8, 14.8],
+        [33.6, 15.7],
+        [31, 16.1],
+        [29, 16.1],
+        [28.5, 15.7],
+        [28.5, 12],
+      ],
+      [0, 0, 0],
       parts.matte,
-      "Wide driver grille bezel",
-      0.65
-    ),
-    parts.ring(29, 0.45, [0, 0, 15.15], parts.trim, "Grille retaining lip"),
-    parts.ring(
-      34.2,
-      0.35,
-      [0, 0, 15.1],
-      parts.trim,
-      "Bezel machined outer edge"
+      "Chamfered driver grille bezel"
     ),
     parts.grille()
   );
   const specification = parts.surfacePrint(
-    arcLabelGeometry(32.4, 2.3, Math.PI * 1.02, Math.PI * 1.88),
-    87,
-    2.3,
-    [0, 0, 15.68],
+    arcLabelGeometry(32.25, 2.4, Math.PI * 1.12, Math.PI * 1.86, -0.4 / 2.6),
+    75,
+    2.4,
+    [0, 0, 15.93],
     (context) => {
       context.fillStyle = "#d7d9dc";
       context.textAlign = "center";
-      context.font = "2px Arial";
-      context.fillText("High Definition Driver  300 Ω", 43.5, 1.85);
+      context.font = "2.5px Arial";
+      const text = "High Definition Driver  300 Ω";
+      context.translate(37.5, 0);
+      context.scale(69 / context.measureText(text).width, 1);
+      context.fillText(text, 0, 2.25);
     },
     "Curved driver-bezel specification lettering"
   );
   specification.scale.x = side;
   driver.add(specification);
+  const basket = parts.driver.clone();
+  basket.color.setHex(0x27_29_2b);
+  basket.metalness = 0.08;
+  basket.roughness = 0.78;
   driver.add(
-    parts.ring(22.5, 1.25, [0, 0, -5], parts.trim, "Inner driver basket rim"),
     parts.ovalRing(
-      [24, 24],
-      [14, 14],
+      [57, 57],
+      [49, 49],
       0.8,
-      [0, 0, -5],
-      parts.trim,
-      "Inner driver basket hub",
+      [0, 0, -5.4],
+      basket,
+      "Inner driver basket outer ring",
+      0.15
+    ),
+    parts.ovalRing(
+      [40, 40],
+      [37, 37],
+      0.8,
+      [0, 0, -5.4],
+      basket,
+      "Inner driver basket intermediate ring",
+      0.15
+    ),
+    parts.ovalRing(
+      [18, 18],
+      [7.5, 7.5],
+      0.8,
+      [0, 0, -5.4],
+      basket,
+      "Inner driver basket hub with absorber opening",
       0.15
     )
   );
-  for (let index = 0; index < 6; index += 1) {
-    const spoke = parts.box(
-      [2, 13, 1],
-      [0, 17.5, -5],
-      parts.trim,
-      "Inner driver basket spoke",
-      0.25
+  for (let index = 0; index < 12; index += 1) {
+    const shape = new Shape();
+    shape.moveTo(-1, 8);
+    shape.lineTo(1, 8);
+    shape.lineTo(1, 13);
+    shape.lineTo(3.8, 18);
+    shape.lineTo(3.8, 25);
+    shape.lineTo(1.8, 25);
+    shape.lineTo(1.8, 19);
+    shape.lineTo(-1, 14);
+    shape.closePath();
+    const spoke = parts.plate(
+      shape,
+      0.8,
+      [0, 0, -5.4],
+      basket,
+      "Swept twelve-spoke inner driver support",
+      0.15
     );
-    const angle = (index / 6) * Math.PI * 2;
-    spoke.position.set(-17.5 * Math.sin(angle), 17.5 * Math.cos(angle), -5);
-    spoke.rotation.z = angle;
+    spoke.rotation.z = (index / 12) * Math.PI * 2;
     driver.add(spoke);
   }
   const innerGrille = parts.disc(
@@ -334,27 +374,6 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
       0.7
     )
   );
-  const innerBaffle = cupOutline(16);
-  const driverOpening = new Path();
-  driverOpening.absarc(
-    hd800sDriver.x,
-    hd800sDriver.y,
-    28.5,
-    0,
-    Math.PI * 2,
-    true
-  );
-  innerBaffle.holes.push(driverOpening);
-  cup.add(
-    parts.plate(
-      innerBaffle,
-      0.8,
-      [0, 0, -6.5],
-      parts.black,
-      "Recessed inner baffle surrounding the driver opening",
-      0.2
-    )
-  );
   const stitchCount = 128;
   const stitches = parts.instanced(
     new CylinderGeometry(0.105, 0.105, 1.1, 6),
@@ -390,53 +409,42 @@ function createFrameDetails(parts: Hd800sParts, cup: Group) {
       "Inset perimeter highlight"
     )
   );
-  for (const [x, y, z] of [
-    [-9, 71, 15.9],
-    [10, 69, 15.9],
-    [38, -30, 19.4],
-  ] as const) {
-    const head = parts.cylinder(
-      1.6,
-      0.6,
-      [x, y, z],
-      parts.trim,
-      "Recessed pivot fastener",
-      32
-    );
-    const slot = parts.box(
-      [1.8, 0.28, 0.15],
-      [x, y, z + 0.37],
-      parts.black,
-      "Pivot fastener slot",
-      0.06
-    );
-    cup.add(head, slot);
-  }
-  for (let index = 0; index < 4; index += 1) {
-    cup.add(
-      parts.disc(
-        0.65,
-        [17, 73 - index * 2, 15.85],
-        parts.black,
-        "Yoke adjustment witness mark"
-      )
-    );
-  }
-  const channel = parts.print(
-    5,
-    5,
-    [-1, 70, 15.85],
-    (context) => {
-      context.fillStyle = "#a5a9ad";
-      context.textAlign = "center";
-      context.font = "bold 3px Arial";
-      context.fillText(cup.name === "Right ear cup" ? "R" : "L", 2.5, 3.7);
-    },
-    "Left or right channel identification",
-    256
+  cup.add(
+    parts.cylinder(
+      2.1,
+      0.5,
+      [-9, 71, 7],
+      parts.turned,
+      "Inner headband-yoke pivot pin"
+    )
   );
-  channel.scale.x = cup.scale.x;
-  cup.add(channel);
+  const pin = parts.cylinder(
+    2.1,
+    0.65,
+    [-9, 78.6, 11.5],
+    parts.turned,
+    "Polished headband hinge pin cap"
+  );
+  pin.rotation.set(0, 0, 0);
+  cup.add(pin);
+  if (cup.name === "Left ear cup") {
+    for (let index = 0; index < 3; index += 1) {
+      cup.add(
+        parts.lathe(
+          [
+            [0, 0],
+            [0.5, 0],
+            [0.46, 0.12],
+            [0.25, 0.24],
+            [0, 0.27],
+          ],
+          [17, 73 - index * 2.8, 15.85],
+          parts.trim,
+          "Three tactile dots identifying the left ear cup"
+        )
+      );
+    }
+  }
 }
 
 function createCupCable(parts: Hd800sParts, cup: Group) {
@@ -454,25 +462,24 @@ function createCupCable(parts: Hd800sParts, cup: Group) {
   );
   socket.rotation.x = Math.PI / 2;
   cable.add(socket);
-  const connector = parts.cylinder(
-    2.9,
-    12,
-    [0, -6, 0],
+  const connector = parts.lathe(
+    [
+      [0, -12],
+      [2.7, -12],
+      [2.7, -10.5],
+      [2.95, -10.4],
+      [2.95, -2.3],
+      [3.1, -2.2],
+      [3.1, -1.2],
+      [2.85, -1],
+      [2.85, 0],
+      [0, 0],
+    ],
+    [0, 0, 0],
     parts.turned,
-    "Detachable cable connector"
+    "Stepped precision ODU cable connector"
   );
   connector.rotation.x = 0;
-  for (const y of [-1.3, -2.5, -10.7]) {
-    const collar = parts.ring(
-      2.91,
-      0.16,
-      [0, y, 0],
-      parts.trim,
-      "Connector sleeve circumferential groove"
-    );
-    collar.rotation.x = Math.PI / 2;
-    cable.add(collar);
-  }
   const sleeve = parts.lathe(
     [
       [1.5, -28],
@@ -499,6 +506,21 @@ function createCupCable(parts: Hd800sParts, cup: Group) {
       "Shortened cable for display"
     )
   );
+  const channel = parts.surfacePrint(
+    cableLabelGeometry(),
+    3,
+    4,
+    [0, 0, 0],
+    (context) => {
+      context.fillStyle = "#25282b";
+      context.textAlign = "center";
+      context.font = "2.8px Arial";
+      context.fillText(cup.name.startsWith("Right") ? "R" : "L", 1.5, 3.2);
+    },
+    "Recessed channel marking on the ODU strain relief"
+  );
+  channel.scale.x = cup.scale.x;
+  cable.add(channel);
   const exit = new Group();
   exit.name = `HD 800 S ${cup.name.startsWith("Right") ? "Right" : "Left"} cable exit`;
   exit.position.set(-8, -90, 2);
@@ -516,23 +538,12 @@ function createEarCup(parts: Hd800sParts, side: number) {
   createCupFrame(parts, cup);
   createDriver(parts, cup, side);
   createCupCable(parts, cup);
-  const modelName = parts.print(
-    28,
-    4,
-    [1, 76, 15.9],
-    (context) => {
-      context.fillStyle = "#c0c4c8";
-      context.textAlign = "center";
-      context.font = "2px Arial";
-      context.fillText("HD 800 S", 14, 3);
-    },
-    "Ear-cup model marking",
-    512
-  );
-  modelName.scale.x = side;
-  cup.add(modelName);
-  cup.position.set(side * 82, 72, 0);
-  cup.rotation.set(0.06, side * (Math.PI / 2 - 0.16), side * -0.1);
+  // 耳側への傾斜をワールド Z 軸で適用し、ヨークの軸をバンドの付け根へ合わせる。
+  cup.rotation.set(0.06, side * (Math.PI / 2 - 0.16), side * -0.27, "ZYX");
+  const pivot = new Vector3(-9, 71, 11.5)
+    .multiply(cup.scale)
+    .applyEuler(cup.rotation);
+  cup.position.set(side * 97 - pivot.x, 143 - pivot.y, -pivot.z);
   parts.root.add(cup);
 }
 

@@ -21,6 +21,7 @@ import { screwHeadGeometry } from "./hardware-geometry";
 import { applySurfaceFinish } from "./surface-finish";
 import { createTurnedFace } from "./turned-metal";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
 export type Position = readonly [number, number, number];
 
@@ -126,6 +127,22 @@ export function createModelParts({
     position: Position,
     name: string
   ) => {
+    // 押し出し形状の面取りを滑らかにつなぎ、端子穴などの直角は残す。
+    // 同じねじ形状を再利用するときは法線を再計算しない。
+    if (geometry instanceof ExtrudeGeometry && !geometries.has(geometry)) {
+      const originalNormals = geometry.getAttribute("normal").clone();
+      toCreasedNormals(geometry, Math.PI / 4);
+      const normals = geometry.getAttribute("normal");
+      for (let index = 0; index < normals.count; index += 1) {
+        const x = originalNormals.getX(index);
+        const y = originalNormals.getY(index);
+        const z = originalNormals.getZ(index);
+        // 平面へ面取りの法線を広げると、長い三角形の対角線が反射に現れる。
+        if (Math.abs(x) === 1 || Math.abs(y) === 1 || Math.abs(z) === 1) {
+          normals.setXYZ(index, x, y, z);
+        }
+      }
+    }
     geometries.add(geometry);
     materials.add(material);
     const part = new Mesh(geometry, material);
@@ -329,7 +346,8 @@ export function createModelParts({
   const screw = (
     position: Position,
     face: "front" | "rear" | "top" | "bottom" | "left" | "right" = "front",
-    dark = false
+    dark = false,
+    finish?: Material
   ) => {
     const group = new Group();
     group.position.set(...position);
@@ -351,7 +369,7 @@ export function createModelParts({
     screwGeometry ??= screwHeadGeometry();
     const head = mesh(
       screwGeometry,
-      dark ? black : steel,
+      finish ?? (dark ? black : steel),
       [0, 0, 0],
       "Beveled screw head with a recessed Phillips drive"
     );
@@ -363,6 +381,7 @@ export function createModelParts({
     );
     group.add(head, recess);
     root.add(group);
+    return group;
   };
 
   return {

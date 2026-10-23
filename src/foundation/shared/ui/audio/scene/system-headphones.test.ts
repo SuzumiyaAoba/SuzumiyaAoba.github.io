@@ -1,4 +1,4 @@
-import { Group, Object3D } from "three";
+import { Group, Object3D, Vector3 } from "three";
 import { afterEach, beforeEach, expect, it, vi } from "vite-plus/test";
 import { createClearMgPro } from "./clear-mg-pro";
 import { createHd800s } from "./hd-800s";
@@ -44,7 +44,24 @@ function model(name: string) {
   };
 }
 
+function noop() {}
+
 beforeEach(() => {
+  const context = {
+    scale: noop,
+    translate: noop,
+    rotate: noop,
+    fill: noop,
+    fillRect: noop,
+    fillText: noop,
+    strokeText: noop,
+    save: noop,
+    restore: noop,
+  };
+  vi.stubGlobal("document", {
+    createElement: () => ({ width: 0, height: 0, getContext: () => context }),
+  });
+  vi.stubGlobal("Path2D", noop);
   disposals.length = 0;
   // oxlint-disable vitest/prefer-mock-return-shorthand -- 遅延生成を検証するため、呼び出し時にモデルを作る。
   vi.mocked(createHd800s)
@@ -62,6 +79,7 @@ beforeEach(() => {
 afterEach(() => {
   headphones?.dispose();
   headphones = undefined;
+  vi.unstubAllGlobals();
 });
 
 it("初期選択だけを生成し、切り替えたモデルと配線を再利用する", async () => {
@@ -95,7 +113,14 @@ it("IE 600 は単体ケーブルを作らず、UD-505 のバランス出力へ�
   const plug = assembly?.getObjectByName(
     "IE 600 4.4 mm balanced cable plug in UD-505 metal collar"
   );
-  expect(plug?.position.toArray()).toStrictEqual([25.5, 30.8, 120.4]);
+  expect(plug?.getWorldPosition(new Vector3()).toArray()).toStrictEqual([
+    expect.closeTo(25.5),
+    expect.closeTo(30.8),
+    expect.closeTo(116.4),
+  ]);
+  expect(
+    assembly?.getObjectByName("Brushed silver cable splitter barrel")
+  ).toBeDefined();
   expect(assembly?.children[0]?.position.toArray()).toStrictEqual([
     390, 32, 25,
   ]);
