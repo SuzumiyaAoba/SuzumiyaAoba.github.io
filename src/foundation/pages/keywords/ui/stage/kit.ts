@@ -6,12 +6,10 @@ import {
   Color,
   ConeGeometry,
   CylinderGeometry,
-  DoubleSide,
   Group,
   Mesh,
   MeshStandardMaterial,
   NormalBlending,
-  PlaneGeometry,
   Points,
   Quaternion,
   ShaderMaterial,
@@ -413,28 +411,6 @@ export function pointCloud(
   });
 }
 
-/** 地面に置く半透明の板（領域の強調表示用）。 */
-export function panel(
-  width: number,
-  depth: number,
-  color: ColorRepresentation,
-  opacity = 0.18
-) {
-  const mesh = new Mesh(
-    new PlaneGeometry(width, depth),
-    new MeshStandardMaterial({
-      color,
-      transparent: true,
-      opacity,
-      side: DoubleSide,
-      depthWrite: false,
-      roughness: 1,
-    })
-  );
-  mesh.rotation.x = -Math.PI / 2;
-  return mesh;
-}
-
 /** HSL のグラデーション上の色を返す（0〜1）。 */
 export function ramp(
   t: number,
@@ -500,8 +476,6 @@ export function disposeObject(root: Object3D) {
     }
   });
 }
-
-export const v3 = (x = 0, y = 0, z = 0) => new Vector3(x, y, z);
 
 /** 通った位置を記録して、先端ほど明るい光の尾を描く（加算合成）。 */
 export function trail(

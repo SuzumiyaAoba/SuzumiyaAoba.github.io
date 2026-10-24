@@ -9,10 +9,3 @@ export {
   getNoteVariants,
   getPublishedNoteSlugs,
 } from "./model/note";
-export type {
-  LocalizedNote,
-  LocalizedNoteSummary,
-  Note,
-  NoteFrontmatter,
-  NoteSummary,
-} from "./model/note";

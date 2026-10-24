@@ -8,7 +8,7 @@ import {
 } from "three";
 
 export const SIGMA_WIDTH = 85;
-export const SIGMA_DEPTH = 155.7;
+const SIGMA_DEPTH = 155.7;
 // Thickness and individual component dimensions are measured proportionally from photos.
 export const SIGMA_HEIGHT = 20;
 export const SIGMA_FRONT = 67.85;

@@ -1,6 +1,6 @@
 import type { Camera, Group } from "three";
 
-export const viewNames = [
+const viewNames = [
   "overview",
   "front",
   "rear",

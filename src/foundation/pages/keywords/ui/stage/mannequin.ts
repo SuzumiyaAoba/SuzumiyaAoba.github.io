@@ -282,12 +282,7 @@ const worldRotation = new Quaternion();
  * 骨の向きを、局所 -Y が from → to を向き、局所 +Z が pole の側を向くように設定する。
  * 位置は変えず、回転だけを親の座標系に直して書き込む。
  */
-export function aimBone(
-  bone: Object3D,
-  from: Vector3,
-  to: Vector3,
-  pole: Vector3
-) {
+function aimBone(bone: Object3D, from: Vector3, to: Vector3, pole: Vector3) {
   yAxis.subVectors(from, to).normalize(); // 骨は -Y 方向に伸びる
   zAxis.subVectors(pole, from);
   zAxis.addScaledVector(yAxis, -zAxis.dot(yAxis));
@@ -306,7 +301,7 @@ export function aimBone(
  * 2 ボーン IK：付け根 root、長さ l1・l2 の 2 本の骨の先を target に届かせる中間関節（肘・膝）の位置を求める。
  * pole は関節を曲げたい側を指す点。届かない場合はまっすぐ伸ばす。
  */
-export function solveTwoBone(
+function solveTwoBone(
   root: Vector3,
   target: Vector3,
   pole: Vector3,

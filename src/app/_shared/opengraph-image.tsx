@@ -123,7 +123,7 @@ function titleFontSize(title: string): number {
 /**
  * OGP 画像の共通の枠。上に小さな推論図、下に墨の罫とドメインを置き、中央に内容を入れる。
  */
-export function OpengraphFrame({
+function OpengraphFrame({
   children,
   footer,
 }: {
@@ -168,7 +168,7 @@ export function OpengraphFrame({
 }
 
 /** タグを文字だけで並べる（サイトの記事ヘッダーと同じ表記）。 */
-export function OpengraphTags({ tags }: { tags: string[] }) {
+function OpengraphTags({ tags }: { tags: string[] }) {
   if (tags.length === 0) {
     return null;
   }

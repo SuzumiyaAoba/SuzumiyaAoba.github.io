@@ -120,47 +120,6 @@ float perlinFbm(vec2 p, int octaves, float lacunarity, float gain) {
 }
 `;
 
-/** value2(p) : 格子点の乱数値を補間する 2D 値ノイズ（0〜1）。 */
-export const glslValue = /* glsl */ `
-float value2(vec2 p) {
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  float a = hash12(i);
-  float b = hash12(i + vec2(1.0, 0.0));
-  float c = hash12(i + vec2(0.0, 1.0));
-  float d = hash12(i + vec2(1.0, 1.0));
-  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-}
-`;
-
-/** worley2(p, t) : 近い特徴点への距離 (F1, F2) と最近傍セルの ID。 */
-export const glslWorley = /* glsl */ `
-vec3 worley2(vec2 p, float t) {
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-  float f1 = 8.0;
-  float f2 = 8.0;
-  float id = 0.0;
-  for (int y = -1; y <= 1; y++) {
-    for (int x = -1; x <= 1; x++) {
-      vec2 cell = vec2(float(x), float(y));
-      vec2 h = hash22(i + cell);
-      vec2 feature = cell + 0.5 + 0.4 * sin(t + 6.2831853 * h);
-      float d = length(feature - f);
-      if (d < f1) {
-        f2 = f1;
-        f1 = d;
-        id = hash12(i + cell + 7.0);
-      } else if (d < f2) {
-        f2 = d;
-      }
-    }
-  }
-  return vec3(f1, f2, id);
-}
-`;
-
 /** snoise2(vec2) : -1〜1 の 2D simplex noise。 */
 export const glslSimplex2 = /* glsl */ `
 vec3 sxMod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }

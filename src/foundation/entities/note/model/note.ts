@@ -6,24 +6,8 @@ import {
   listContentSlugs,
   normalizeArticleFrontmatter,
 } from "@/shared/lib/content-file";
-import type {
-  ArticleFrontmatter,
-  ContentSummary,
-  LocalizedContent,
-} from "@/shared/lib/content-file";
 
 const NOTE_COLLECTION_DIR = "notes";
-
-export type NoteFrontmatter = ArticleFrontmatter;
-
-export type Note = {
-  slug: string;
-  content: string;
-  format: "md" | "mdx";
-  frontmatter: NoteFrontmatter;
-};
-
-export type NoteSummary = ContentSummary<Note>;
 
 export const getNoteSlugs = cache(
   async (): Promise<string[]> => await listContentSlugs(NOTE_COLLECTION_DIR)
@@ -40,10 +24,6 @@ const collection = createContentCollection({
 });
 
 export const getNoteSummary = collection.getSummary;
-
-export type LocalizedNote = LocalizedContent<Note>;
-
-export type LocalizedNoteSummary = LocalizedContent<NoteSummary>;
 
 export const getNoteVariants = collection.getVariants;
 

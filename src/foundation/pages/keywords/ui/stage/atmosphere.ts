@@ -14,8 +14,8 @@ const ATMOSPHERE_RADIUS = 6420;
 const RAYLEIGH_HEIGHT = 8;
 const MIE_HEIGHT = 1.2;
 /** 波長 680 / 550 / 440 nm のレイリー散乱係数（1/km）。 */
-export const RAYLEIGH = new Vector3(5.8e-3, 13.5e-3, 33.1e-3);
-export const MIE = 21e-3;
+const RAYLEIGH = new Vector3(5.8e-3, 13.5e-3, 33.1e-3);
+const MIE = 21e-3;
 
 /**
  * 大気の単一散乱を画面全体に描く（Nishita 型の数値積分）。

@@ -18,7 +18,7 @@ export function circumcircle(a: Point2, b: Point2, c: Point2): Circle {
 }
 
 /** 1 点を追加したときの様子（アニメーション用）。 */
-export type InsertStep = {
+type InsertStep = {
   point: number;
   /** 外接円の中に新しい点が入ってしまった三角形（取り除く）。 */
   bad: Triangle[];

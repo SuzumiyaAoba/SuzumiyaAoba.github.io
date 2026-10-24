@@ -18,7 +18,7 @@ export const btr17Outputs = [
   { x: 0.5, bore: 1.75, rim: 2.65, label: "PO" },
 ] as const;
 export const btr17UsbPositions = [-8.4, 8.4] as const;
-export const btr17SideOpenings = [
+const btr17SideOpenings = [
   { y: 58.5, width: 4.7, height: 3.7 },
   { y: 50.2, width: 4.7, height: 3.7 },
   { y: 42, width: 4.7, height: 3.7 },
@@ -26,7 +26,7 @@ export const btr17SideOpenings = [
   { y: 21.3, width: 3.8, height: 5.3 },
 ] as const;
 
-export function btr17RoundedRectangle(
+function btr17RoundedRectangle(
   x: number,
   y: number,
   width: number,
@@ -273,7 +273,7 @@ export function btr17FrontGlassGeometry() {
   });
 }
 
-export function btr17RearOutline() {
+function btr17RearOutline() {
   const shape = new Shape([
     new Vector2(-16.2, 3.2),
     new Vector2(16.2, 3.2),

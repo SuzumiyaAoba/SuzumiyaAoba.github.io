@@ -199,8 +199,6 @@ import type { IconData } from "./types";
 ${docComment}
  */
 export const ICONS = ${JSON.stringify(Object.fromEntries(entries), null, 2)} satisfies Record<string, IconData>;
-
-export type IconName = keyof typeof ICONS;
 `;
   writeFileSync(path.join(ICON_DIR, file), body);
 }

@@ -40,7 +40,7 @@ export function blinnPhongD(cosH: number, roughness: number) {
 }
 
 /** Smith の幾何減衰（GGX 用、高さ相関なしの近似）。 */
-export function smithG(cosL: number, cosV: number, roughness: number) {
+function smithG(cosL: number, cosV: number, roughness: number) {
   const k = ((roughness + 1) * (roughness + 1)) / 8;
   const g1 = (c: number) => c / (c * (1 - k) + k);
   return g1(Math.max(cosL, 1e-4)) * g1(Math.max(cosV, 1e-4));

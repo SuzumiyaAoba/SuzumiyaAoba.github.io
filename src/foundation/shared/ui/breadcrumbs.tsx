@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 
-export type BreadcrumbItem = {
+type BreadcrumbItem = {
   name: string;
   path: string;
 };

@@ -30,15 +30,11 @@ const ScrollContext = createContext<RefObject<HTMLElement | null>>({
 });
 const TOCContext = createContext<TOCItemType[]>([]);
 
-export function useActiveAnchors(): string[] {
+function useActiveAnchors(): string[] {
   return useContext(ActiveAnchorContext);
 }
 
-export function useActiveAnchor(): string | undefined {
-  return useContext(ActiveAnchorContext)[0];
-}
-
-export function useTOCItems(): TOCItemType[] {
+function useTOCItems(): TOCItemType[] {
   return useContext(TOCContext);
 }
 
@@ -106,11 +102,11 @@ export function TOCScrollArea({
   );
 }
 
-export type TOCItemProps = {
+type TOCItemProps = {
   href: string;
 } & Omit<ComponentProps<"a">, "href">;
 
-export function TOCItem({ ref, ...props }: TOCItemProps) {
+function TOCItem({ ref, ...props }: TOCItemProps) {
   const containerRef = useContext(ScrollContext);
   const anchorRef = useRef<HTMLAnchorElement>(null);
   const activeAnchors = useActiveAnchors();
@@ -149,64 +145,6 @@ export function TOCItem({ ref, ...props }: TOCItemProps) {
     <a ref={mergeRefs(anchorRef, ref)} data-active={isActive} {...props}>
       {props.children}
     </a>
-  );
-}
-
-export type TOCItemsProps = {
-  emptyText?: string;
-} & ComponentProps<"div">;
-
-export function TOCItems({
-  ref,
-  className,
-  emptyText = "No Headings",
-  ...props
-}: TOCItemsProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const items = useTOCItems();
-  const active = useActiveAnchors();
-
-  if (items.length === 0) {
-    return (
-      <div className="rounded-lg border bg-card p-3 text-xs text-muted-foreground">
-        {emptyText}
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <TocThumb
-        containerRef={containerRef}
-        active={active}
-        className="absolute top-[var(--toc-top)] h-[var(--toc-height)] w-px bg-primary transition-[top,height]"
-      />
-      <div
-        ref={mergeRefs(ref, containerRef)}
-        className={cn("flex flex-col border-s border-foreground/10", className)}
-        {...props}
-      >
-        {items.map((item) => (
-          <SimpleTOCItem key={item.url} item={item} />
-        ))}
-      </div>
-    </>
-  );
-}
-
-function SimpleTOCItem({ item }: { item: TOCItemType }) {
-  return (
-    <TOCItem
-      href={item.url}
-      className={cn(
-        "py-1.5 text-[0.8125rem] leading-relaxed [overflow-wrap:anywhere] text-muted-foreground transition-colors first:pt-0 last:pb-0 hover:text-foreground data-[active=true]:text-brand",
-        item.depth <= 2 && "ps-3",
-        item.depth === 3 && "ps-6",
-        item.depth >= 4 && "ps-8"
-      )}
-    >
-      {item.title}
-    </TOCItem>
   );
 }
 
@@ -394,39 +332,5 @@ function ClerkTOCItemElement({
       />
       {item.title}
     </TOCItem>
-  );
-}
-
-export type PageTOCProps = {
-  children?: ReactNode;
-} & ComponentProps<"div">;
-
-export function PageTOC({ className, children, ...props }: PageTOCProps) {
-  return (
-    <div className={cn("flex flex-col gap-3", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-export type PageTOCItemsProps = {
-  variant?: "default" | "clerk";
-  emptyText?: string;
-} & ComponentProps<"div">;
-
-export function PageTOCItems({
-  variant = "default",
-  emptyText,
-  ...props
-}: PageTOCItemsProps) {
-  const emptyTextProp = emptyText === undefined ? {} : { emptyText };
-  return (
-    <TOCScrollArea>
-      {variant === "clerk" ? (
-        <ClerkTOCItems {...emptyTextProp} {...props} />
-      ) : (
-        <TOCItems {...emptyTextProp} {...props} />
-      )}
-    </TOCScrollArea>
   );
 }

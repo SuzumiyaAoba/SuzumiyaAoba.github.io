@@ -21,7 +21,6 @@ export {
   getAllBlogTags,
   getPopularBlogTags,
   rankBlogTags,
-  type BlogTagCount,
 } from "./model/blog-tags";
 export { PostIndex } from "./ui/post-index";
 export {
@@ -32,10 +31,4 @@ export {
   BlogListingContent,
   type BlogListingContentProps,
 } from "./ui/blog-listing-content";
-export type {
-  BlogPost,
-  BlogPostSummary,
-  BlogFrontmatter,
-  LocalizedBlogPost,
-  LocalizedBlogPostSummary,
-} from "./model/blog";
+export type { BlogPostSummary, LocalizedBlogPostSummary } from "./model/blog";

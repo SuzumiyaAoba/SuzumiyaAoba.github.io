@@ -4,7 +4,7 @@ import { createCinnamonBraidTextures } from "./cinnamon";
 import { DataTexture } from "three";
 
 /** ビルド専用。ブラウザーへ配るモデルからはインポートしない。 */
-export function createAudioTextureSources() {
+function createAudioTextureSources() {
   const hd = createHd800sTextures();
   const ha = createHa1aTextures();
   const cinnamon = createCinnamonBraidTextures();

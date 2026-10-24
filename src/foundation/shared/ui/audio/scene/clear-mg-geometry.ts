@@ -141,8 +141,8 @@ export function clearMgGrilleGeometry(options: GrilleOptions) {
   return curved;
 }
 
-export const clearMgBandStart = 0.085 * Math.PI;
-export const clearMgBandEnd = 0.915 * Math.PI;
+const clearMgBandStart = 0.085 * Math.PI;
+const clearMgBandEnd = 0.915 * Math.PI;
 export const clearMgBandSeam = 2.35;
 
 export function clearMgBandPoint(u: number, v: number) {

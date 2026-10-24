@@ -24,10 +24,7 @@ export type GridMap = {
   kind: string[];
 };
 
-export const TERRAIN: Record<
-  string,
-  { cost: number; color: string; name: string }
-> = {
+const TERRAIN: Record<string, { cost: number; color: string; name: string }> = {
   ".": { cost: 1, color: "#2a3646", name: "平地" },
   ",": { cost: 2, color: "#2d5a3c", name: "林" },
   "~": { cost: 4, color: "#4d4330", name: "沼" },
@@ -55,9 +52,8 @@ export function parseMap(lines: readonly string[], cell = 0.5): GridMap {
   return { cols, rows, cell, blocked, cost, kind };
 }
 
-export const colOf = (map: GridMap, index: number) => index % map.cols;
-export const rowOf = (map: GridMap, index: number) =>
-  Math.floor(index / map.cols);
+const colOf = (map: GridMap, index: number) => index % map.cols;
+const rowOf = (map: GridMap, index: number) => Math.floor(index / map.cols);
 
 /** セルの中心（地図の中心が原点、y = 0）。 */
 export function cellCenter(map: GridMap, index: number, out = new Vector3()) {
@@ -190,7 +186,7 @@ export class MinHeap {
 }
 
 /** 斜め移動ありの格子での、最小コスト 1 の場合の距離の見積もり（オクタイル距離）。 */
-export function octile(map: GridMap, a: number, b: number, diagonal: boolean) {
+function octile(map: GridMap, a: number, b: number, diagonal: boolean) {
   const dx = Math.abs(colOf(map, a) - colOf(map, b));
   const dy = Math.abs(rowOf(map, a) - rowOf(map, b));
   return diagonal ? dx + dy + (Math.SQRT2 - 2) * Math.min(dx, dy) : dx + dy;

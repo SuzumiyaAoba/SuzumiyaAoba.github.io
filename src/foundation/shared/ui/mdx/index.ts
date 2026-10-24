@@ -23,4 +23,3 @@ export { TwitterWidgets } from "./twitter-widgets";
 
 export { HoverContainer, MdxLink } from "./codehike-mentions";
 export { Message } from "./message";
-export { Column } from "./column";

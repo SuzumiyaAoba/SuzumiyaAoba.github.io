@@ -1293,5 +1293,3 @@ export const ICONS = {
     "height": "1em"
   }
 } satisfies Record<string, IconData>;
-
-export type IconName = keyof typeof ICONS;

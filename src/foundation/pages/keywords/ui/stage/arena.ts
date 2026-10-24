@@ -21,7 +21,7 @@ import type { DemoContext } from "./types";
 import { handle } from "./widgets";
 
 /** 判断（AI）のデモで共通に使う、部屋と柱のある小さな地図。 */
-export const ARENA = [
+const ARENA = [
   "############################",
   "#..........#...............#",
   "#..........#...............#",
@@ -60,7 +60,7 @@ export function lineOfSight(map: GridMap, a: Vector3, b: Vector3) {
 }
 
 /** 位置に最も近い歩けるセル（壁の中にいても抜け出せるように）。 */
-export function nearestWalkable(map: GridMap, point: Vector3) {
+function nearestWalkable(map: GridMap, point: Vector3) {
   const center = cellAt(map, point.x, point.z);
   if (walkable(map, center)) {
     return center;
@@ -81,7 +81,7 @@ export function nearestWalkable(map: GridMap, point: Vector3) {
 }
 
 /** 格子の A* で経路を求め、見通しのきく点を飛ばして折れ線を短くする。 */
-export function routeTo(map: GridMap, from: Vector3, to: Vector3) {
+function routeTo(map: GridMap, from: Vector3, to: Vector3) {
   const start = nearestWalkable(map, from);
   const goal = nearestWalkable(map, to);
   if (start < 0 || goal < 0) {

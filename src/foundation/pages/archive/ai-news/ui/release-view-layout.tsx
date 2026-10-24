@@ -3,8 +3,6 @@ import type { ComponentProps, ReactNode } from "react";
 export const releaseSelectClass =
   "h-11 min-w-0 rounded-lg border bg-background px-3 text-base text-foreground shadow-none focus-visible:outline-2 focus-visible:outline-ring sm:text-sm";
 
-export const releaseActionClass = "h-11 rounded-lg px-3 text-sm shadow-none";
-
 /** ページの @container を基準に、スクロールバーを除く画面幅まで表示枠を広げる。 */
 export function ReleaseScrollArea({
   children,

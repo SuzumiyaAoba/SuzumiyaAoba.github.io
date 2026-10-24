@@ -24,7 +24,7 @@ import {
 import { createHd800sTextures } from "./hd-800s-textures";
 import { createDetailLevels } from "./detail-levels";
 
-export function ellipticalOutline(width: number, height: number) {
+function ellipticalOutline(width: number, height: number) {
   const shape = new Shape();
   shape.absellipse(0, 0, width / 2, height / 2, 0, Math.PI * 2, false, 0);
   return shape;

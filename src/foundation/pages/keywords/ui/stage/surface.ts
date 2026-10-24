@@ -1,11 +1,9 @@
 import {
   BufferAttribute,
   Color,
-  DoubleSide,
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
-  ShaderMaterial,
   Vector2,
   Vector3,
   Vector4,
@@ -199,50 +197,4 @@ export function gridTerrain(options: {
     geometry.computeBoundingSphere();
   };
   return Object.assign(mesh, { update });
-}
-
-/**
- * 模様を描く光源の影響を受けない板。
- * fragment には vec3 pattern(vec2 uv) を定義する（uv は 0〜1、色は sRGB）。
- */
-export function patternPlane(options: {
-  width: number;
-  depth?: number;
-  functions: string;
-  uniforms?: SurfaceUniforms;
-  /** true なら xz 平面に寝かせる。 */
-  horizontal?: boolean;
-}) {
-  const uniforms: SurfaceUniforms = {
-    uTime: { value: 0 },
-    ...options.uniforms,
-  };
-  const material = new ShaderMaterial({
-    uniforms,
-    vertexShader: /* glsl */ `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: /* glsl */ `
-      varying vec2 vUv;
-      ${declareUniforms(uniforms)}
-      ${options.functions}
-      void main() {
-        gl_FragColor = vec4(pow(max(pattern(vUv), vec3(0.0)), vec3(2.2)), 1.0);
-        #include <colorspace_fragment>
-      }
-    `,
-    side: DoubleSide,
-  });
-  const mesh = new Mesh(
-    new PlaneGeometry(options.width, options.depth ?? options.width),
-    material
-  );
-  if (options.horizontal ?? true) {
-    mesh.rotation.x = -Math.PI / 2;
-  }
-  return Object.assign(mesh, { uniforms });
 }

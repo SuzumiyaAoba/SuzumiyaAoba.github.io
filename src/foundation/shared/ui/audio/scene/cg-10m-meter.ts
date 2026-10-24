@@ -84,7 +84,7 @@ function drawScale(context: CanvasRenderingContext2D) {
   context.fillText("+", 14, -4.1);
 }
 
-export function cg10mMovementCoverGeometry() {
+function cg10mMovementCoverGeometry() {
   const { radius } = cg10mMeter;
   const edge = Math.sqrt(radius ** 2 - 1.1 ** 2);
   const cover = new Shape();

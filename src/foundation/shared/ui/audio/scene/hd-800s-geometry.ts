@@ -80,7 +80,7 @@ export function headbandCushionGeometry() {
   return geometry;
 }
 
-export function hd800sPadPoint(theta: number, phi: number) {
+function hd800sPadPoint(theta: number, phi: number) {
   const radial = Math.sign(Math.cos(phi)) * Math.abs(Math.cos(phi)) ** 0.6;
   const depth = Math.sign(Math.sin(phi)) * Math.abs(Math.sin(phi)) ** 0.6;
   const inset = 9.7 - 9 * radial;

@@ -8,7 +8,7 @@ import {
 } from "../model/release-timeline";
 import type { ReleaseTimelineRange } from "../model/release-timeline";
 
-export const SERIES_WIDTH = 176;
+const SERIES_WIDTH = 176;
 export const AXIS_PADDING = 24;
 const ZOOM_LEVELS = [0.25, 0.5, 1, 2, 3, 6, 12];
 

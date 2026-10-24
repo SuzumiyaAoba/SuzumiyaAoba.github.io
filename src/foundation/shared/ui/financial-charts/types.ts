@@ -1,11 +1,9 @@
 import { z } from "zod";
 
-export const SeriesDataSchema = z.object({
+const SeriesDataSchema = z.object({
   year: z.string(),
   values: z.record(z.string(), z.number().nullable()),
 });
-
-export type SeriesData = z.infer<typeof SeriesDataSchema>;
 
 export const SheetDataSchema = z.object({
   metadata: z.object({

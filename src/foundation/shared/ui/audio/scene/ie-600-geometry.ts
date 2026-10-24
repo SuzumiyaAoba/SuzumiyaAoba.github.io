@@ -223,7 +223,7 @@ export function ie600BoreGeometry(outer: number, inner: number, depth: number) {
 export const ie600EarTipRim = { radius: 6.3, depth: 1 } as const;
 
 /** ノズルを覆う軸と薄い傘をつなぎ、傘の根元側に空洞を残す。 */
-export function ie600EarTipProfile() {
+function ie600EarTipProfile() {
   const profile = new Path();
   profile.moveTo(2.65, 0);
   profile.lineTo(3.05, 0);

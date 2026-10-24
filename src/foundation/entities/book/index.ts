@@ -5,10 +5,4 @@ export {
   getBookSlugs,
   getBookToc,
 } from "./model/book";
-export type {
-  BookChapter,
-  BookFrontmatter,
-  BookMeta,
-  BookSection,
-  SectionRef,
-} from "./model/types";
+export type { BookChapter, SectionRef } from "./model/types";

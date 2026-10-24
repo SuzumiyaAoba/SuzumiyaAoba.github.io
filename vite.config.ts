@@ -21,7 +21,7 @@ export default defineConfig({
     // Ultracite のプリセットを Baseline とし、rules / overrides でプロジェクト固有の調整を行う。
     // plugins / categories はプリセット側で定義済みのためここでは指定しない。
     extends: [ultraciteCore, ultraciteReact, ultraciteNext, ultraciteVitest],
-    // @shadcn/lint は Oxlint の JS プラグインとして読み込む（Knip 等のためルートでも宣言）。
+    // @shadcn/lint は Oxlint の JS プラグインとして読み込む（依存解析のためルートでも宣言）。
     jsPlugins: [{ name: "shadcn", specifier: "@shadcn/lint" }],
     options: {
       typeAware: true,
@@ -216,8 +216,11 @@ export default defineConfig({
         rules: { "import/unambiguous": "off" },
       },
       {
-        // ストーリー用セグメントに実行時エクスポートを公開しない。
-        files: ["src/foundation/shared/ui/storybook/index.ts"],
+        // 空の公開境界には実行時エクスポートを公開しない。
+        files: [
+          "src/foundation/shared/ui/storybook/index.ts",
+          "src/foundation/shared/ui/llm-anatomy/index.ts",
+        ],
         rules: { "unicorn/require-module-specifiers": "off" },
       },
       {

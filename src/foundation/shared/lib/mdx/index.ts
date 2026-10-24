@@ -4,7 +4,6 @@ export { renderMdx, renderMdxWithToc } from "./render-mdx";
 // 実行時に読み込むローダーだけを公開する。
 export { loadFinancialDataComponents } from "./load-financial-data-components";
 
-export { getTocHeadings } from "./toc";
 export type { TocHeading } from "./toc";
 
 export { extractAmazonProductIdsFromMdx } from "./amazon-product-ids";
