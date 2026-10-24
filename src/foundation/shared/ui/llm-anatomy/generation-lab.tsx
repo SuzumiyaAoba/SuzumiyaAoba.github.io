@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { CinemaMap } from "./cinema-map";
@@ -88,12 +87,6 @@ export function LlmAnatomyLab() {
               </label>
             </>
           )}
-          <Link
-            href="/blog/post/2026-10-22-llm-anatomy/"
-            className="ml-2 text-xs text-muted-foreground underline underline-offset-4"
-          >
-            解説記事へ戻る
-          </Link>
         </div>
       </header>
       <CinemaMap stage={frame.stage} progress={frame.progress} />

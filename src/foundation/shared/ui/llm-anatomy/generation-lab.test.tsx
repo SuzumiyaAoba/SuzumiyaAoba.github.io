@@ -181,10 +181,6 @@ it("開始操作なしで171秒の自動再生を始め、全体の現在地と�
   expect(host.querySelector("[data-cinema-explanation]")?.textContent).toBe(
     frame.explanation
   );
-  expect(host.querySelector("a")?.getAttribute("href")).toBe(
-    "/blog/post/2026-10-22-llm-anatomy/"
-  );
-  expect(host.querySelector("a")?.textContent).toBe("解説記事へ戻る");
 });
 
 it("全体を流れる時間が進んでも同じtraceを保ち、全体図と説明を同期する", async () => {
