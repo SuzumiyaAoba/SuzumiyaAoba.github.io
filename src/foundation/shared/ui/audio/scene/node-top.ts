@@ -3,11 +3,18 @@ import type { NodeParts } from "./node-parts";
 import { nodeVentGeometry } from "./node-geometry";
 
 function perforatedSurround(parts: NodeParts) {
-  const grille = parts.mesh(
-    nodeVentGeometry(),
-    parts.ventMetal,
-    [0, 44.65, 0],
-    "Continuous perforated touch-panel ventilation surround"
+  const grille = parts.detail.add(
+    parts.mesh(
+      nodeVentGeometry({ detailed: false }),
+      parts.ventMetal,
+      [0, 44.65, 0],
+      "Continuous perforated touch-panel ventilation surround"
+    ),
+    {
+      radius: 82,
+      pixels: 480,
+      build: () => nodeVentGeometry(),
+    }
   );
   grille.rotation.x = -Math.PI / 2;
   const gasket = roundedOutline(133.4, 63.9, 5.4);

@@ -10,6 +10,11 @@ import {
   cinnamonMarkGeometry,
 } from "./cinnamon-geometry";
 
+vi.mock(import("./prepared-textures"), async () => {
+  const { Texture } = await import("three");
+  return { createPreparedTexture: () => new Texture() };
+});
+
 afterEach(() => vi.unstubAllGlobals());
 
 function noop() {}

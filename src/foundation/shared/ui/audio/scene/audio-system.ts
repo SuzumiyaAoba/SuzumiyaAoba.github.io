@@ -1,5 +1,5 @@
 import { Group, Vector3 } from "three";
-import type { Object3D } from "three";
+import type { Camera, Object3D } from "three";
 import { createAudioquestCinnamon } from "./audioquest-cinnamon";
 import { createCg10m } from "./cg-10m";
 import { createCybershaftBnc } from "./cybershaft-bnc";
@@ -98,7 +98,11 @@ export function createAudioSystem() {
   return {
     group,
     setHeadphones: headphones.setHeadphones,
-    updateDetail: headphones.updateDetail,
+    updateDetail(camera: Camera, viewportHeight: number) {
+      const nodeChanged = node.updateDetail(camera, viewportHeight);
+      const headphonesChanged = headphones.updateDetail(camera, viewportHeight);
+      return nodeChanged || headphonesChanged;
+    },
     dispose() {
       for (const model of [node, dac, clock, amp, headphones]) {
         model.dispose();

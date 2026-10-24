@@ -1,5 +1,5 @@
 {
-  "sourceHash": "becab95fd6d59fcf0b25e30e357c86839170285d33ff9d47fc21b0de4d648c5f",
+  "sourceHash": "5ffe770e90660f9f389897309ffd63c798b257860491611caf3e6df283d02707",
   "textures": {
     "hd-fabric-color": {
       "url": "/assets/audio/textures/hd-fabric-color.c45d88b4b2b9.webp",
@@ -120,6 +120,30 @@
       "height": 512,
       "digest": "8d7e84c6520eca72d535cb79aa2ed38778beee86b7435207eaaf50d337b538c8",
       "previewDigest": "6856d935c734a2b984bcae78a0f6bdf8b5b109f55b982d4bbcc114a4a895dd4e"
+    },
+    "cinnamon-braid-color": {
+      "url": "/assets/audio/textures/cinnamon-braid-color.682eaa75ce9c.webp",
+      "previewUrl": "/assets/audio/textures/cinnamon-braid-color.de0f8845bd57.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "682eaa75ce9c64eab9863e0f69546ee7cf6c2ded519470cfe079209d3813f897",
+      "previewDigest": "de0f8845bd57be5a24168e1547f79cc60284d7fbcef8e48dc5ef02dd7192c8f1"
+    },
+    "cinnamon-braid-height": {
+      "url": "/assets/audio/textures/cinnamon-braid-height.0145ef828412.webp",
+      "previewUrl": "/assets/audio/textures/cinnamon-braid-height.d35a613a96ba.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "0145ef8284126ec4d3f947e2494c717e31d29ce4839594d7c5e870e451e6a617",
+      "previewDigest": "d35a613a96ba7cb809f704f8870bc2128a90d620ec71fc4c4cc5c8a08cd2834e"
+    },
+    "cinnamon-braid-roughness": {
+      "url": "/assets/audio/textures/cinnamon-braid-roughness.b2afdb987287.webp",
+      "previewUrl": "/assets/audio/textures/cinnamon-braid-roughness.d0cdaf7d44c2.webp",
+      "width": 512,
+      "height": 512,
+      "digest": "b2afdb987287ce2f24a8ce8f4824ace93b7835394761afc0a53b962fca8ff0fa",
+      "previewDigest": "d0cdaf7d44c2172cdb4de426c114798ad77e7bbe80a2ec241f897424b51664e3"
     }
   }
 }

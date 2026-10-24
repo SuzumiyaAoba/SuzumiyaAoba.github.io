@@ -1,10 +1,13 @@
 import { createHd800sTextures } from "./hd-800s";
 import { createHa1aTextures } from "./ha-1a";
+import { createCinnamonBraidTextures } from "./cinnamon";
+import { DataTexture } from "three";
 
 /** ビルド専用。ブラウザーへ配るモデルからはインポートしない。 */
 export function createAudioTextureSources() {
   const hd = createHd800sTextures();
   const ha = createHa1aTextures();
+  const cinnamon = createCinnamonBraidTextures();
   return {
     "hd-fabric-color": hd.fabric.color,
     "hd-fabric-height": hd.fabric.height,
@@ -21,12 +24,32 @@ export function createAudioTextureSources() {
     "ha-wood-roughness": ha.woodRoughness,
     "ha-dial-anisotropy": ha.anisotropy,
     "ha-dial-bump": ha.bump,
+    "cinnamon-braid-color": cinnamon.color,
+    "cinnamon-braid-height": cinnamon.height,
+    "cinnamon-braid-roughness": cinnamon.roughness,
   };
 }
 
 export function captureAudioTextureSources() {
   return Object.entries(createAudioTextureSources()).map(([name, texture]) => {
-    const image: unknown = texture.image;
+    let image: unknown = texture.image;
+    if (texture instanceof DataTexture) {
+      const source = texture.image;
+      if (source.data === null) {
+        throw new Error(`Audio texture has no pixel data: ${name}`);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = source.width;
+      canvas.height = source.height;
+      const context = canvas.getContext("2d");
+      if (!context) {
+        throw new Error(`Cannot capture audio texture: ${name}`);
+      }
+      const pixels = context.createImageData(source.width, source.height);
+      pixels.data.set(source.data);
+      context.putImageData(pixels, 0, 0);
+      image = canvas;
+    }
     if (!(image instanceof HTMLCanvasElement)) {
       throw new Error(`Audio texture source is not a canvas: ${name}`);
     }

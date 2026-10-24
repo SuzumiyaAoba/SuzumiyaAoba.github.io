@@ -10,16 +10,20 @@ import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 /** 両側の L 字ロック溝を貫通させた BNC カップリング。 */
 export function bncBayonetGeometry() {
   const around = 256;
-  const along = 84;
+  // 直線の筒を等間隔に細分化せず、径とロック溝が変わる位置だけをつなぐ。
+  const depths = [0, 0.6, 1.2, 3.75, 5.85, 7.2, 7.8, 12, 12.6];
+  const along = depths.length - 1;
   const positions: number[] = [];
   const occupied = (column: number, row: number) => {
-    if (row < 0 || row >= along) {
+    const start = depths[row];
+    const end = depths[row + 1];
+    if (start === undefined || end === undefined) {
       return false;
     }
     const angle =
       (((column + 0.5) / around) * Math.PI * 2 + Math.PI * 2) % Math.PI;
     const relative = angle > Math.PI / 2 ? angle - Math.PI : angle;
-    const z = ((row + 0.5) / along) * 12.6;
+    const z = (start + end) / 2;
     const entry = Math.abs(relative + Math.PI / 4) < 0.19 && z < 5.85;
     const lock =
       relative >= -Math.PI / 4 && relative < 0.2 && z >= 3.75 && z < 5.85;
@@ -27,7 +31,10 @@ export function bncBayonetGeometry() {
   };
   const point = (column: number, row: number, inside: boolean) => {
     const angle = (column / around) * Math.PI * 2;
-    const z = (row / along) * 12.6;
+    const z = depths[row];
+    if (z === undefined) {
+      throw new Error("Missing BNC coupling profile depth.");
+    }
     let outer = 5.95;
     if (z < 0.6) {
       outer = 6.05 + z * 0.25;

@@ -1,4 +1,12 @@
-import { Box3, Mesh, MeshBasicMaterial, Raycaster, Vector3 } from "three";
+import {
+  Box3,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Raycaster,
+  Vector3,
+} from "three";
+import type { BufferGeometry, Material, Object3D } from "three";
 import { afterEach, expect, it, vi } from "vitest";
 import {
   nodeFrontGeometry,
@@ -14,6 +22,12 @@ import { createNodeTop } from "./node-top";
 afterEach(() => vi.unstubAllGlobals());
 
 function noop() {}
+
+function isMesh(
+  part: Object3D | undefined
+): part is Mesh<BufferGeometry, Material> {
+  return part instanceof Mesh;
+}
 
 function stubLetteringCanvas() {
   const context = {
@@ -87,8 +101,8 @@ it("前面ジャックと背面の全接続端子を筐体で塞がない", () =
   material.dispose();
 });
 
-it("タッチパネルの通気穴を貫通させ、外周の縁を途切れさせない", () => {
-  const geometry = nodeVentGeometry();
+it.each([true, false])("通気板の詳細度 %s で穴と外周の縁を保つ", (detailed) => {
+  const geometry = nodeVentGeometry({ detailed });
   const material = new MeshBasicMaterial();
   const vent = new Mesh(geometry, material);
   const ray = new Raycaster(
@@ -100,6 +114,39 @@ it("タッチパネルの通気穴を貫通させ、外周の縁を途切れさ�
   expect(ray.intersectObject(vent).length).toBeGreaterThan(0);
   geometry.dispose();
   material.dispose();
+});
+
+it("通気板の詳細形状は拡大時だけ生成し、再利用して破棄する", () => {
+  const parts = createNodeParts();
+  createNodeTop({ ...parts, print: () => new Mesh(undefined, parts.black) });
+  parts.root.updateMatrixWorld(true);
+  const grille = parts.root.getObjectByName(
+    "Continuous perforated touch-panel ventilation surround"
+  );
+  if (!isMesh(grille)) {
+    throw new Error("Missing NODE ventilation surround.");
+  }
+  const lowGeometry = grille.geometry;
+  expect(lowGeometry.getAttribute("position").count).toBeLessThan(36_000);
+  const camera = new PerspectiveCamera(35);
+  camera.position.set(0, 44.65, 1000);
+  expect(parts.detail.update(camera, 600)).toBe(false);
+  camera.position.z = 100;
+  expect(parts.detail.update(camera, 600)).toBe(true);
+  const highGeometry = grille.geometry;
+  expect(highGeometry.getAttribute("position").count).toBeGreaterThan(
+    lowGeometry.getAttribute("position").count
+  );
+  const disposed = vi.fn<() => void>();
+  highGeometry.addEventListener("dispose", disposed);
+  camera.position.z = 1000;
+  expect(parts.detail.update(camera, 600)).toBe(true);
+  expect(grille.geometry).toBe(lowGeometry);
+  camera.position.z = 100;
+  expect(parts.detail.update(camera, 600)).toBe(true);
+  expect(grille.geometry).toBe(highGeometry);
+  parts.dispose();
+  expect(disposed).toHaveBeenCalledTimes(1);
 });
 
 it("USB・HDMI・電源・RCA の開口から奥の床まで見通せる", () => {

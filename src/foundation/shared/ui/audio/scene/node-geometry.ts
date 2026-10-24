@@ -282,7 +282,7 @@ function roundedDistance(
 }
 
 /** 個々の六角形を重ねず、細い内外周を残した一枚の通気板を作る。 */
-export function nodeVentGeometry() {
+export function nodeVentGeometry({ detailed = true } = {}) {
   const outline = roundedOutline(144, 76, 8);
   outline.holes.push(roundedOutline(133.5, 64, 5.5));
   const cellRadius = 1.3;
@@ -311,6 +311,12 @@ export function nodeVentGeometry() {
       aperture.closePath();
       outline.holes.push(aperture);
     }
+  }
+  if (!detailed) {
+    // 遠景では穴のある表面だけを使い、見分けられない穴壁の押し出しを省く。
+    const geometry = new ShapeGeometry(outline, 8);
+    geometry.translate(0, 0, 0.28);
+    return geometry;
   }
   return new ExtrudeGeometry(outline, {
     depth: 0.28,

@@ -9,6 +9,7 @@ import {
 import type { Material } from "three";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
+import { createDetailLevels } from "./detail-levels";
 
 export function roundedOutline(width: number, height: number, radius: number) {
   const x = width / 2;
@@ -29,6 +30,7 @@ export function roundedOutline(width: number, height: number, radius: number) {
 
 export function createNodeParts() {
   const parts = createModelParts();
+  const detail = createDetailLevels();
   const matte = applySurfaceFinish(
     new MeshPhysicalMaterial({
       color: 0x20_21_23,
@@ -99,6 +101,7 @@ export function createNodeParts() {
   });
   return {
     ...parts,
+    detail,
     matte,
     waist,
     panel,
@@ -110,6 +113,7 @@ export function createNodeParts() {
     signal,
     whiteLed,
     dispose() {
+      detail.dispose();
       parts.dispose();
     },
   };

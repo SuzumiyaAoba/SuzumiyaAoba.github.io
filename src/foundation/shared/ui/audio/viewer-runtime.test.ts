@@ -26,6 +26,7 @@ import { upgradeAudioTextures } from "./scene/texture-images";
 
 const renderer = vi.hoisted(() => ({
   shadowMap: { enabled: false, type: 0 },
+  transmissionResolutionScale: 1,
   setPixelRatio: vi.fn<Three.WebGLRenderer["setPixelRatio"]>(),
   setSize: vi.fn<Three.WebGLRenderer["setSize"]>(),
   render: vi.fn<Three.WebGLRenderer["render"]>(),
@@ -121,6 +122,7 @@ function create() {
 it("視点変更は再描画だけを要求し、静的な模型と影を更新し直さない", async () => {
   expect.hasAssertions();
   viewer = create();
+  expect(renderer.transmissionResolutionScale).toBe(0.5);
   await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
   scene.refresh.mockClear();
   vi.mocked(createViewerCamera).mock.calls[0]?.[0].onChange();

@@ -17,6 +17,7 @@ const sourceFiles = [
   "catalog.ts",
   "hd-800s.ts",
   "ha-1a.ts",
+  "cinnamon.ts",
   "../hd-800s-grille.ts",
 ];
 const hash = createHash("sha256");

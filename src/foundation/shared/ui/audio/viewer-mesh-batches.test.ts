@@ -101,10 +101,7 @@ it("透過・独自シェーダー・インスタンス描画と少数の部品�
   const transparentParts = parts(new Group(), transparent);
   const customParts = parts(new Group(), custom);
   const small = parts();
-  const [removed] = small.meshes;
-  if (removed) {
-    small.parent.remove(removed);
-  }
+  small.parent.remove(...small.meshes.slice(1));
   const instanced = new InstancedMesh(small.geometry, small.material, 4);
   root.add(
     transparentParts.parent,
@@ -114,9 +111,16 @@ it("透過・独自シェーダー・インスタンス描画と少数の部品�
   );
   disposals.push(() => instanced.dispose());
   optimize(root);
-  expect(visibleMeshes(root)).toHaveLength(12);
+  expect(visibleMeshes(root)).toHaveLength(10);
   expect(transparentParts.meshes.every((mesh) => mesh.visible)).toBe(true);
   expect(customParts.meshes.every((mesh) => mesh.visible)).toBe(true);
+});
+
+it.each([2, 3])("材質を共有する %s 個の静的な部品も一度に描画する", (count) => {
+  const { parent, meshes } = parts();
+  parent.remove(...meshes.slice(count));
+  optimize(parent);
+  expect(visibleMeshes(parent)).toHaveLength(1);
 });
 
 it("ヘッドホンを切り替えても親グループの表示状態を保ち、追加モデルだけを結合する", () => {

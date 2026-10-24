@@ -1,4 +1,5 @@
 import { Box3, Vector3 } from "three";
+import type { Camera } from "three";
 import { createNodeParts, horizontalPlate, roundedOutline } from "./node-parts";
 import type { NodeParts } from "./node-parts";
 import { createNodeRear } from "./node-rear";
@@ -190,5 +191,10 @@ export function createNodeN130() {
   const size = bounds.getSize(new Vector3());
   parts.root.scale.set(220 / size.x, 46 / size.y, 146 / size.z);
   parts.root.position.y = -bounds.min.y * parts.root.scale.y;
-  return { group: parts.root, dispose: () => parts.dispose() };
+  return {
+    group: parts.root,
+    updateDetail: (camera: Camera, viewportHeight: number) =>
+      parts.detail.update(camera, viewportHeight),
+    dispose: () => parts.dispose(),
+  };
 }

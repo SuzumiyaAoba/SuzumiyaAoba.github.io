@@ -85,7 +85,7 @@ function createBatch(
   parent: Object3D
 ): StaticMesh | undefined {
   const [first] = originals;
-  if (!first || originals.length < 4) {
+  if (!first || originals.length < 2) {
     return;
   }
   const inverse = parent.matrixWorld.clone().invert();

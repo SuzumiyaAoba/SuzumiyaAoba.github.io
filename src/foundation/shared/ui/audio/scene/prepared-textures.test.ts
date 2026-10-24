@@ -51,6 +51,17 @@ it("初回は軽量画像だけを読み込み、同じ画像の要求を共有�
   texture.dispose();
 });
 
+it("USBケーブル単体では生成済みの編組画像だけを読み込む", async () => {
+  const loading = textures.preloadAudioTextures("audioquest-cinnamon");
+  const previews = Object.entries(manifest.textures)
+    .filter(([name]) => name.startsWith("cinnamon-"))
+    .map(([, source]) => source.previewUrl);
+  expect(previews).toHaveLength(3);
+  expect([...requests.keys()]).toStrictEqual(previews);
+  resolveImages();
+  await loading;
+});
+
 it("詳細画像へ更新しても材質が参照するTextureを交換せず、破棄済み資源は更新しない", async () => {
   const preview = textures.preloadAudioTextures("ha-1a-mk2");
   resolveImages();

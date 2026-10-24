@@ -8,7 +8,8 @@ const decoded = new Map<string, HTMLImageElement>();
 const pending = new Map<string, Promise<void>>();
 const bindings = new Map<string, Set<Texture>>();
 const groups: Partial<Record<AudioModel, readonly string[]>> = {
-  system: ["hd-", "ha-"],
+  system: ["hd-", "ha-", "cinnamon-"],
+  "audioquest-cinnamon": ["cinnamon-"],
   "hd-800s": ["hd-"],
   "ha-1a-mk2": ["ha-"],
 };

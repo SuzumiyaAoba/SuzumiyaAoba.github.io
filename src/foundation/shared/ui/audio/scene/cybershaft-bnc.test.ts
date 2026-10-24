@@ -3,6 +3,7 @@ import type { BufferGeometry, Material, Object3D } from "three";
 import { expect, it, vi } from "vitest";
 import { createModelParts } from "./parts";
 import { createBncSocket } from "./bnc-socket";
+import { bncBayonetGeometry } from "./bnc-geometry";
 import {
   createCybershaftBnc,
   createStandaloneCybershaftBnc,
@@ -12,6 +13,12 @@ import {
 function isMesh(part: Object3D): part is Mesh {
   return part instanceof Mesh;
 }
+
+it("BNCカップリングの直線部分を過剰に分割しない", () => {
+  const geometry = bncBayonetGeometry();
+  expect(geometry.getAttribute("position").count / 3).toBeLessThan(10_000);
+  geometry.dispose();
+});
 
 it.each([-35, 35])("単体ケーブルの端子 %s の中心ピンと絶縁体が見える", (x) => {
   const cable = createStandaloneCybershaftBnc();

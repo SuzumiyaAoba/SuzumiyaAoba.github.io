@@ -45,6 +45,8 @@ export function createAudioViewer({
     powerPreference: "low-power",
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // 屈折用の背景は半分の解像度で描き、ガラスのための追加描画を軽くする。
+  renderer.transmissionResolutionScale = 0.5;
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;

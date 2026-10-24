@@ -304,8 +304,10 @@ export function createModelParts({
     illuminated = false
   ) => {
     const canvas = document.createElement("canvas");
-    canvas.width = resolution;
-    canvas.height = Math.round((height / width) * resolution);
+    // 縦長の印字も長辺を上限とし、画像とミップマップの過大な確保を避ける。
+    const pixelsPerMillimetre = resolution / Math.max(width, height);
+    canvas.width = Math.max(1, Math.round(width * pixelsPerMillimetre));
+    canvas.height = Math.max(1, Math.round(height * pixelsPerMillimetre));
     const context = canvas.getContext("2d");
     if (!context) {
       throw new Error("Cannot create the product lettering texture.");
