@@ -9,11 +9,17 @@ import {
 } from "vite-plus/test";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { MdxImgProps } from "@/shared/ui/mdx/img";
+import { readFile } from "node:fs/promises";
+import matter from "gray-matter";
 
 import { renderMdx, renderMdxWithToc } from "./render-mdx";
 import { getAffiliateProductUrlById } from "@/shared/lib/affiliate-products";
 
-vi.mock(import("@/shared/lib/mdx/components"), () => ({ mdxComponents: {} }));
+vi.mock(import("@/shared/lib/mdx/components"), async () => {
+  const { YouTubeEmbed } = await import("@/shared/ui/mdx/youtube-embed");
+  const { Message } = await import("@/shared/ui/mdx/message");
+  return { mdxComponents: { Message, YouTubeEmbed } };
+});
 vi.mock(import("@/shared/lib/affiliate-products"), () => ({
   getAffiliateProductUrlById: vi.fn<typeof getAffiliateProductUrlById>(),
 }));
@@ -45,6 +51,43 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("MDX rendering", () => {
+  it("GPT-3解説記事の全文と操作図、数式、目次を描画できる", async () => {
+    const source = await readFile(
+      "content/blog/2026-10-22-llm-anatomy/index.mdx",
+      "utf-8"
+    );
+    const { content, headings } = await renderMdxWithToc(
+      matter(source).content
+    );
+    const html = renderToStaticMarkup(content);
+    expect(html).toContain("GPT-6.1 Sol (xhigh)");
+    expect(html).toContain('src="https://www.youtube.com/embed/g_7Lsfpcd6U"');
+    expect(html).toContain('aria-label="因果マスクとAttentionの実験"');
+    expect(html).toContain('aria-label="温度とサンプリングの実験"');
+    expect(html).toContain('aria-label="埋め込みと位置情報の可視化"');
+    expect(html).toContain('aria-label="LLMの構造を示す操作可能な3D図"');
+    expect(html).toContain(
+      'aria-label="LLMの計算とIDの復元を追うデータフロー"'
+    );
+    expect(html).toContain("文字列へ復元");
+    expect(html).toContain("モデル全体");
+    expect(html).toContain("1ブロックを展開");
+    expect(html).toContain(
+      'aria-label="Transformerブロックと残差接続の可視化"'
+    );
+    expect(html).toContain('aria-label="MLPと非線形変換の可視化"');
+    expect(html).toContain('aria-label="損失と勾配による学習の可視化"');
+    expect(html).toContain("乱数を生成する");
+    expect(html).toContain("<math");
+    expect(html).not.toContain("katex-error");
+    expect(
+      headings.some(({ text }) => text === "Attentionによる情報の集約")
+    ).toBe(true);
+    expect(
+      headings.some(({ text }) => text === "次のトークン予測による学習")
+    ).toBe(true);
+  }, 20_000);
+
   it("オーディオの接続全体と単体モデルを import なしで埋め込める", async () => {
     const content = await renderMdx(
       '<AudioSystem />\n\n<AudioEquipment model="hd-800s" />'

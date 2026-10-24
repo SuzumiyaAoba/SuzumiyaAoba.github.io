@@ -83,6 +83,60 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
     components["AudioEquipment"] = audio.AudioEquipment;
   }
 
+  const [
+    flow,
+    structure,
+    block,
+    representation,
+    attention,
+    sampling,
+    training,
+  ] = await Promise.all([
+    /<LlmGenerationFlow[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/generation-demo")
+      : undefined,
+    /<LlmArchitecture3D[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/structure-demo")
+      : undefined,
+    /<LlmBlockDemo[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/architecture-demo")
+      : undefined,
+    /<Llm(?:Embedding|Mlp)Demo[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/representation-demos")
+      : undefined,
+    /<LlmAttentionDemo[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/attention-demo")
+      : undefined,
+    /<LlmSamplingDemo[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/sampling-demo")
+      : undefined,
+    /<LlmTrainingDemo[\s/>]/u.test(source)
+      ? import("@/shared/ui/llm-anatomy/training-demo")
+      : undefined,
+  ]);
+  if (flow) {
+    components["LlmGenerationFlow"] = flow.LlmGenerationFlow;
+  }
+  if (structure) {
+    components["LlmArchitecture3D"] = structure.LlmArchitecture3D;
+  }
+  if (block) {
+    components["LlmBlockDemo"] = block.LlmBlockDemo;
+  }
+  if (representation) {
+    components["LlmEmbeddingDemo"] = representation.LlmEmbeddingDemo;
+    components["LlmMlpDemo"] = representation.LlmMlpDemo;
+  }
+  if (attention) {
+    components["LlmAttentionDemo"] = attention.LlmAttentionDemo;
+  }
+  if (sampling) {
+    components["LlmSamplingDemo"] = sampling.LlmSamplingDemo;
+  }
+  if (training) {
+    components["LlmTrainingDemo"] = training.LlmTrainingDemo;
+  }
+
   return components;
 }
 
