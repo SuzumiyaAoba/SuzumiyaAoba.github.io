@@ -1,5 +1,5 @@
 import path from "node:path";
-import { notFound } from "next/navigation";
+import { notFound, toLocalePath, resolveLocale } from "@/shared/lib/routing";
 import type { ReactElement } from "react";
 
 import { getNoteVariants } from "@/entities/note";
@@ -11,7 +11,6 @@ import {
   loadMdxScope,
   renderMdx,
 } from "@/shared/lib/mdx";
-import { toLocalePath, resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { NotesDetailPageContent } from "./page-content";
 

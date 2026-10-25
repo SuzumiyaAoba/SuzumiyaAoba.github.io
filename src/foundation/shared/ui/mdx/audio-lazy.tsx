@@ -1,6 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import dynamic from "@/shared/ui/lazy-component";
 
 // 使用する記事でのみこの境界を登録し、3D 実装は画面に近づいてから読み込む。
 export const AudioSystem = dynamic(async () => {

@@ -1,16 +1,15 @@
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-
-import { SiteLayout } from "@/widgets/site-layout";
-import { loadMdxScope, renderMdx } from "@/shared/lib/mdx";
 import {
+  notFound,
   buildBreadcrumbList,
   buildListBreadcrumbItems,
   toLocalePath,
 } from "@/shared/lib/routing";
+
+import { SiteLayout } from "@/widgets/site-layout";
+import { loadMdxScope, renderMdx } from "@/shared/lib/mdx";
 import type { Locale } from "@/shared/lib/routing";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import { JsonLd } from "@/shared/ui/seo";
@@ -166,9 +165,9 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                   {locale === "ja" ? "項目" : "items"}
                 </p>
                 <h2 className="index-column-title">
-                  <Link href={toLocalePath(keywordPath(category.id), locale)}>
+                  <a href={toLocalePath(keywordPath(category.id), locale)}>
                     {locale === "ja" ? category.name : category.english}
-                  </Link>
+                  </a>
                 </h2>
                 <p className="index-column-note">{category.description}</p>
                 <nav
@@ -181,7 +180,7 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                   <ul className="index-column-list">
                     {category.subcategories.map((subcategory) => (
                       <li key={subcategory.id}>
-                        <Link
+                        <a
                           href={toLocalePath(
                             keywordPath(category.id, subcategory.id),
                             locale
@@ -194,7 +193,7 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                               : subcategory.english}
                           </span>
                           <span>{subcategory.keywords.length}</span>
-                        </Link>
+                        </a>
                       </li>
                     ))}
                   </ul>
@@ -219,14 +218,14 @@ export async function KeywordsIndexPage({ locale }: { locale: Locale }) {
                 <ul className="recipe-terms">
                   {recipe.terms.map(([category, subcategory, slug, name]) => (
                     <li key={slug}>
-                      <Link
+                      <a
                         href={toLocalePath(
                           keywordPath(category, subcategory, slug),
                           locale
                         )}
                       >
                         {name}
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -278,7 +277,7 @@ export async function KeywordCategoryPage({
         <ul className="collection-card-list">
           {category.subcategories.map((subcategory) => (
             <li key={subcategory.id}>
-              <Link
+              <a
                 href={toLocalePath(keywordPath(id, subcategory.id), locale)}
                 className="collection-card-link"
               >
@@ -294,7 +293,7 @@ export async function KeywordCategoryPage({
                     {locale === "ja" ? "項目" : "items"}
                   </span>
                 </p>
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
@@ -350,7 +349,7 @@ export async function KeywordSubcategoryPage({
         <ol className="glossary-list">
           {subcategory.keywords.map((keyword) => (
             <li key={keyword.slug}>
-              <Link
+              <a
                 href={toLocalePath(
                   keywordPath(categoryId, subcategoryId, keyword.slug),
                   locale
@@ -367,7 +366,7 @@ export async function KeywordSubcategoryPage({
                   {locale === "ja" ? keyword.english : keyword.name}
                 </span>
                 <span className="glossary-definition">{keyword.effect}</span>
-              </Link>
+              </a>
             </li>
           ))}
         </ol>
@@ -500,7 +499,7 @@ export async function KeywordDetailPage({
             <ul className="glossary-list">
               {related.map((item) => (
                 <li key={`${item.subcategoryId}/${item.slug}`}>
-                  <Link
+                  <a
                     href={toLocalePath(
                       keywordPath(
                         item.categoryId,
@@ -521,7 +520,7 @@ export async function KeywordDetailPage({
                       {locale === "ja" ? item.english : item.name}
                     </span>
                     <span className="glossary-definition">{item.effect}</span>
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -557,14 +556,14 @@ export async function KeywordDetailPage({
           }
           className="keyword-pager"
         >
-          <Link
+          <a
             href={toLocalePath(keywordPath(categoryId, subcategoryId), locale)}
             className="arrow-link"
           >
             ↑ {locale === "ja" ? "一覧へ戻る" : "Back to list"}
-          </Link>
+          </a>
           {previous && (
-            <Link
+            <a
               href={toLocalePath(
                 keywordPath(categoryId, subcategoryId, previous.slug),
                 locale
@@ -572,10 +571,10 @@ export async function KeywordDetailPage({
               className="arrow-link"
             >
               ← {locale === "ja" ? previous.name : previous.english}
-            </Link>
+            </a>
           )}
           {next && (
-            <Link
+            <a
               href={toLocalePath(
                 keywordPath(categoryId, subcategoryId, next.slug),
                 locale
@@ -583,7 +582,7 @@ export async function KeywordDetailPage({
               className="arrow-link"
             >
               {locale === "ja" ? next.name : next.english} →
-            </Link>
+            </a>
           )}
         </nav>
       </main>

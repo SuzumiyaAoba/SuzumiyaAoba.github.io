@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/shared/lib/site/metadata";
 import { getSiteUrl } from "@/shared/lib/site/site-url";
 import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";

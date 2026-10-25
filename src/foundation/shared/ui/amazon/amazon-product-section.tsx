@@ -30,7 +30,6 @@ export function AmazonProductSection({
               rel="noopener noreferrer"
               className="flex w-full justify-center sm:w-36 sm:justify-start"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={product.imageUrl}
                 alt={product.title}

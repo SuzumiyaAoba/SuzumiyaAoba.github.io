@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowLeft, ChevronDown, List } from "lucide-react";
 import type { AwesomeItem } from "../model/awesome-item";
 import {
@@ -44,7 +43,7 @@ function SubcategoryNavigation({
         },
         ...category.subcategories,
       ].map((entry) => (
-        <Link
+        <a
           key={entry.id ?? "all"}
           href={toLocalePath(getAwesomePath(category.id, entry.id), locale)}
           aria-current={entry.id === subcategoryId ? "page" : undefined}
@@ -52,7 +51,7 @@ function SubcategoryNavigation({
         >
           {entry.name[locale]}
           <span className="text-xs tabular-nums">{entry.count}</span>
-        </Link>
+        </a>
       ))}
     </nav>
   );
@@ -123,21 +122,21 @@ export function AwesomeCategoryPageContent({
         </header>
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-            <Link
+            <a
               href={toLocalePath("/awesome-something", locale)}
               className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="size-4" aria-hidden="true" />
               {isEnglish ? "Browse categories" : "カテゴリから探す"}
-            </Link>
+            </a>
             {category && (
-              <Link
+              <a
                 href={toLocalePath(getAwesomePath("all"), locale)}
                 className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <List className="size-4" aria-hidden="true" />
                 {isEnglish ? "All items" : "すべての項目"}
-              </Link>
+              </a>
             )}
           </div>
           {catalogCategory && (

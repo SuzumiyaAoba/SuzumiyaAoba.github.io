@@ -1,7 +1,6 @@
 "use client";
 
 import { lazy, Suspense, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { Button } from "@/shared/ui/button";
 import {
   chooseGeneration,
@@ -53,7 +52,7 @@ export function LlmGenerationFlow() {
       description="全体の流れを約36秒で示すプレビュー。専用ページでは全体図と数値を同じ画面に並べ、入力・重み・計算・出力をゆっくり追える。"
     >
       <Button asChild>
-        <Link href="/tools/llm-anatomy/">全体図と数値を並べて見る</Link>
+        <a href="/tools/llm-anatomy/">全体図と数値を並べて見る</a>
       </Button>
       <div
         className="space-y-4"

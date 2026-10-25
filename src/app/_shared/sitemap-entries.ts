@@ -1,9 +1,9 @@
-import type { MetadataRoute } from "next";
+import type { Sitemap } from "@/shared/lib/site/metadata";
 import type { LocalizedContent } from "@/shared/lib/content-file";
 import { resolveLocalizedValue, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 
-type SitemapEntry = MetadataRoute.Sitemap[number];
+type SitemapEntry = Sitemap[number];
 export type SitemapPage = Omit<SitemapEntry, "url"> & { path: string };
 
 /** 対称なページを日本語・英語の順に展開する。 */
@@ -11,7 +11,7 @@ export function buildTranslatedSitemapEntries(
   pages: SitemapPage[],
   siteUrl: string,
   buildTime: Date
-): MetadataRoute.Sitemap {
+): Sitemap {
   return (["ja", "en"] as const).flatMap((locale) =>
     pages.map(({ path, ...metadata }) => ({
       lastModified: buildTime,
@@ -37,9 +37,9 @@ export function buildContentSitemapEntries(
     priority: number;
     buildTime: Date;
   }
-): MetadataRoute.Sitemap {
+): Sitemap {
   const pagesForLocale = (locale: Locale) =>
-    entries.flatMap((entry): MetadataRoute.Sitemap => {
+    entries.flatMap((entry): Sitemap => {
       if (locale === "en" && !entry.en) {
         return [];
       }

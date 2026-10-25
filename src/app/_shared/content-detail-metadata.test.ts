@@ -12,6 +12,10 @@ import { buildSeriesPageMetadata } from "./series-page-metadata";
 let contentRoot = "";
 vi.mock(import("@/shared/lib/content-file/content-root"), () => ({
   resolveContentRoot: async () => contentRoot,
+  resolveContentDeps: async () => {
+    const fs = await import("node:fs/promises");
+    return { fs, path, root: contentRoot };
+  },
 }));
 vi.mock(import("@/shared/lib/site/site-url"), () => ({
   getSiteUrl: () => "https://example.com",

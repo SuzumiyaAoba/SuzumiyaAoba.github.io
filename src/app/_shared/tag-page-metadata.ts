@@ -1,6 +1,6 @@
 import { decodePathParam } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
-import type { Metadata } from "next";
+import type { Metadata } from "@/shared/lib/site/metadata";
 import { getAllBlogTags, getBlogTagIndex } from "@/entities/blog";
 import { buildPageMetadata } from "./page-metadata";
 

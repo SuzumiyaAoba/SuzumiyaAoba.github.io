@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from "react";
-import { ImageResponse } from "next/og";
+import { ImageResponse } from "@vercel/og";
 import { loadOpengraphFonts } from "./opengraph-font";
 
 export const OPENGRAPH_IMAGE_SIZE = { width: 1200, height: 630 };

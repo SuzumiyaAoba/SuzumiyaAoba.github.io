@@ -47,7 +47,7 @@ export function GoogleAdsenseAd({
         pushedRef.current = true;
       }
     } catch (error) {
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env["NODE_ENV"] !== "production") {
         console.warn("Adsbygoogle push error:", error);
       }
     }

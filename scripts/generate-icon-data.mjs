@@ -200,7 +200,10 @@ ${docComment}
  */
 export const ICONS = ${JSON.stringify(Object.fromEntries(entries), null, 2)} satisfies Record<string, IconData>;
 `;
-  writeFileSync(path.join(ICON_DIR, file), body);
+  const output = path.join(ICON_DIR, file);
+  if (!existsSync(output) || readFileSync(output, "utf-8") !== body) {
+    writeFileSync(output, body);
+  }
 }
 
 emit(

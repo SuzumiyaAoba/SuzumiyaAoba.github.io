@@ -1,5 +1,4 @@
 import type { AwesomeItem } from "../model/awesome-item";
-import Link from "next/link";
 import { getAwesomeCatalog } from "../model/awesome-catalog";
 import { getAwesomePath } from "../model/awesome-categories";
 import { SiteLayout } from "@/widgets/site-layout";
@@ -39,12 +38,12 @@ export function AwesomeSomethingPageContent({
           <div>
             <h1 className="page-title">Awesome Something</h1>
             {items.length > 0 && (
-              <Link
+              <a
                 href={toLocalePath(getAwesomePath("all"), locale)}
                 className="arrow-link"
               >
                 {isEnglish ? "All items" : "すべての項目"}
-              </Link>
+              </a>
             )}
           </div>
           <p className="page-count">
@@ -76,11 +75,9 @@ export function AwesomeSomethingPageContent({
                   id={`category-${category.id}`}
                   className="index-column-title"
                 >
-                  <Link
-                    href={toLocalePath(getAwesomePath(category.id), locale)}
-                  >
+                  <a href={toLocalePath(getAwesomePath(category.id), locale)}>
                     {category.name[locale]}
-                  </Link>
+                  </a>
                 </h2>
                 <nav
                   aria-label={
@@ -92,7 +89,7 @@ export function AwesomeSomethingPageContent({
                   <ul className="index-column-list">
                     {category.subcategories.map((subcategory) => (
                       <li key={subcategory.id}>
-                        <Link
+                        <a
                           href={toLocalePath(
                             getAwesomePath(category.id, subcategory.id),
                             locale
@@ -101,7 +98,7 @@ export function AwesomeSomethingPageContent({
                         >
                           <span>{subcategory.name[locale]}</span>
                           <span>{subcategory.count}</span>
-                        </Link>
+                        </a>
                       </li>
                     ))}
                   </ul>

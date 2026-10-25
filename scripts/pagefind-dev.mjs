@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { cpSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 
@@ -9,11 +9,12 @@ if (!force && existsSync(target)) {
   console.log(
     "[pagefind:dev] out/pagefind already exists — skipping build. Use 'npm run pagefind:dev:force' to rebuild."
   );
+  cpSync(target, "public/pagefind", { recursive: true });
   process.exit(0);
 }
 
 const steps = [
-  ["npm", ["run", "-s", "build:next"]],
+  ["npm", ["run", "-s", "build:astro"]],
   ["npm", ["run", "-s", "build:pagefind"]],
 ];
 
@@ -23,3 +24,5 @@ for (const [cmd, args] of steps) {
     process.exit(result.status ?? 1);
   }
 }
+
+cpSync(target, "public/pagefind", { recursive: true });

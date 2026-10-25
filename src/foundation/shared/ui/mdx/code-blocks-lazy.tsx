@@ -1,6 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import dynamic from "@/shared/ui/lazy-component";
 
 /**
  * codehike の `highlight` を使うコードブロック群の遅延境界。

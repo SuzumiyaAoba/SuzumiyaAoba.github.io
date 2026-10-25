@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import type { ImgHTMLAttributes } from "react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -54,13 +53,13 @@ export function Img({
   return (
     <span className="my-4 block">
       <Zoom>
-        <Image
+        <img
           src={resolvedSrc}
           alt={props.alt ?? ""}
           width={resolvedWidth}
           height={resolvedHeight}
           className={cn("mx-auto block", className)}
-          unoptimized
+          loading="lazy"
         />
       </Zoom>
     </span>

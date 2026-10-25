@@ -3,7 +3,6 @@
 import { useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import Link from "next/link";
 import type { AwesomeItem, AwesomeLink } from "../model/awesome-item";
 import {
   getAwesomeCatalog,
@@ -247,12 +246,12 @@ export function AwesomeList({
                       className="flex min-w-0 items-center gap-2 text-sm leading-7 font-medium"
                     >
                       <CategoryIcon category={categoryId} />
-                      <Link
+                      <a
                         href={toLocalePath(path, locale)}
                         className="min-w-0 break-words underline-offset-4 hover:underline"
                       >
                         {name}
-                      </Link>
+                      </a>
                     </h2>
                     <span
                       className="text-xs text-muted-foreground tabular-nums"

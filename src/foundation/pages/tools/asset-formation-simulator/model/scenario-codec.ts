@@ -1,9 +1,10 @@
-import {
-  compressToEncodedURIComponent,
-  decompressFromEncodedURIComponent,
-} from "lz-string";
+import LZString from "lz-string";
+
 import { isRecord } from "@/shared/lib/types";
 import type { ColorState, ScenarioInput, VisibleState } from "./types";
+
+const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } =
+  LZString;
 
 const normalizeScenarioList = (list: ScenarioInput[]) =>
   list.map((item, index) => ({

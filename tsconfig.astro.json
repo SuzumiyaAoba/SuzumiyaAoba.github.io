@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "plugins": [],
+    "types": ["astro/client"]
+  },
+  "include": [
+    "src/astro/**/*.ts",
+    "src/astro/**/*.tsx",
+    "src/astro/**/*.astro",
+    "src/types/**/*.d.ts",
+    ".astro/types.d.ts"
+  ],
+  "exclude": ["node_modules", "out-astro", ".next"]
+}

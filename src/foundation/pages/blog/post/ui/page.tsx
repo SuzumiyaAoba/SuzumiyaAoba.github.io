@@ -2,10 +2,10 @@ import {
   resolveLocalizedValue,
   toLocalePath,
   resolveLocale,
+  notFound,
 } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import path from "node:path";
-import { notFound } from "next/navigation";
 
 import { getAdjacentPostSummariesVariants, getBlogPost } from "@/entities/blog";
 import { getSeriesForPostSlug } from "@/entities/series-item";

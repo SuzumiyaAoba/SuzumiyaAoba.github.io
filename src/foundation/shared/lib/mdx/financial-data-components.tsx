@@ -1,6 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 
-import { FinancialChartLazy } from "@/shared/ui/financial-data/financial-chart-lazy";
+import { FinancialChartLazy } from "@/shared/ui/financial-data";
 
 /**
  * financial-data 系チャートのコンポーネントマップ。

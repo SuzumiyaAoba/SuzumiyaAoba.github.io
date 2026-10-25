@@ -32,11 +32,10 @@ export function ThemeToggle({ locale = "ja" }: { locale?: Locale }) {
   const state = mounted ? (isDark ? "dark" : "light") : "unknown";
 
   const toggleTheme = () => {
-    if (theme === "system") {
-      setTheme(isDark ? "light" : "dark");
-    } else {
-      setTheme(theme === "dark" ? "light" : "dark");
-    }
+    const currentDark = theme === "system" ? isDark : theme === "dark";
+    const nextTheme = currentDark ? "light" : "dark";
+    setTheme(nextTheme);
+    window.dispatchEvent(new CustomEvent("site:theme", { detail: nextTheme }));
   };
 
   const label = isDark ? labels.toLight : labels.toDark;

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/shared/lib/site/metadata";
 import { getBookMeta } from "@/entities/book";
 import { buildPageMetadata } from "./page-metadata";
 

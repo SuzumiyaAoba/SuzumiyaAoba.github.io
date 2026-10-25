@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheAsync } from "./cache-async";
 import type { Locale } from "@/shared/lib/routing";
 import { resolveContentDeps } from "./content-root";
 
@@ -13,7 +13,7 @@ export type ReadContentOptions = { locale?: Locale; fallback?: boolean };
 export function createArticleFileLister(
   collectionDir: string
 ): (slug: string) => Promise<Set<string>> {
-  return cache(async (slug: string): Promise<Set<string>> => {
+  return cacheAsync(async (slug: string): Promise<Set<string>> => {
     const { fs, path, root } = await resolveContentDeps();
     const dir = path.join(root, collectionDir, slug);
     try {

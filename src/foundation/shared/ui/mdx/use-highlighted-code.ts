@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { highlight } from "codehike/code";
 import type { HighlightedCode, RawCode } from "codehike/code";
 
 type HighlightState = {
@@ -24,7 +23,13 @@ export function useHighlightedCode(source: RawCode | RawCode[]) {
       try {
         const inputs = Array.isArray(source) ? source : [source];
         const blocks = await Promise.all(
-          inputs.map(async (code) => await highlight(code, "github-from-css"))
+          inputs.map(async (code) => {
+            if (isHighlightedCode(code)) {
+              return code;
+            }
+            const { highlight } = await import("codehike/code");
+            return await highlight(code, "github-from-css");
+          })
         );
         if (!cancelled) {
           setState({ source, blocks, hasError: false });
@@ -44,4 +49,20 @@ export function useHighlightedCode(source: RawCode | RawCode[]) {
   return state.source === source
     ? state
     : { source, blocks: [], hasError: false };
+}
+
+function isHighlightedCode(code: RawCode): code is HighlightedCode {
+  return (
+    "tokens" in code &&
+    Array.isArray(code.tokens) &&
+    "annotations" in code &&
+    Array.isArray(code.annotations) &&
+    "code" in code &&
+    typeof code.code === "string" &&
+    "themeName" in code &&
+    typeof code.themeName === "string" &&
+    "style" in code &&
+    typeof code.style === "object" &&
+    code.style !== null
+  );
 }

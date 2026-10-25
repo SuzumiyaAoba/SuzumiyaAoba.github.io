@@ -55,3 +55,7 @@ apm_modules/
 
 # Local investigation documents
 .mdxr/
+
+# Astro migration preview
+.astro/
+out-astro/

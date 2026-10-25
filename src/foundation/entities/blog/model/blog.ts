@@ -1,7 +1,6 @@
 import { cache } from "react";
-import { unstable_cache } from "next/cache";
-
 import {
+  cacheAsync,
   createContentReader,
   createContentCollection,
   listContentSlugs,
@@ -9,6 +8,7 @@ import {
   asString,
   normalizeArticleFrontmatter,
 } from "@/shared/lib/content-file";
+
 import type {
   ArticleFrontmatter,
   ContentSummary,
@@ -51,7 +51,7 @@ export type BlogPostSummary = ContentSummary<BlogPost>;
  * @returns スラッグの配列
  */
 export const getBlogSlugs = cache(
-  unstable_cache(
+  cacheAsync(
     async (): Promise<string[]> => await listContentSlugs(BLOG_COLLECTION_DIR),
     ["blog-slugs"]
   )
@@ -141,7 +141,7 @@ export const getBlogPostVariants = collection.getVariants;
  * @returns 多言語対応記事の配列
  */
 export const getBlogPostsVariants = cache(
-  unstable_cache(collection.getAllVariants, ["blog-posts-variants"])
+  cacheAsync(collection.getAllVariants, ["blog-posts-variants"])
 );
 
 /**
@@ -156,9 +156,7 @@ export const getBlogPostSummaryVariants = collection.getSummaryVariants;
  * @returns 多言語対応記事サマリーの配列
  */
 export const getBlogPostSummariesVariants = cache(
-  unstable_cache(collection.getAllSummaryVariants, [
-    "blog-post-summaries-variants",
-  ])
+  cacheAsync(collection.getAllSummaryVariants, ["blog-post-summaries-variants"])
 );
 
 /**

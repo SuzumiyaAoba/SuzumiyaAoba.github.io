@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, resolveLocale } from "@/shared/lib/routing";
 import { getSeriesBySlug } from "@/entities/series-item";
 import { getBlogPost } from "@/entities/blog";
-import { resolveLocale } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { SeriesDetailPageContent } from "./page-content";
 

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- MDX の img 出力と基準パスを検証するためのモック。 */
 import {
   afterEach,
   beforeEach,

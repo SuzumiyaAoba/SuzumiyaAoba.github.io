@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheAsync } from "./cache-async";
 import { resolveLocalizedValue } from "@/shared/lib/routing";
 import type { LocalizedValue, Locale } from "@/shared/lib/routing";
 import {
@@ -26,7 +26,7 @@ export function createContentCollection<T extends CollectionEntry>({
   getSlugs: () => Promise<string[]>;
   getContent: (slug: string, options?: ReadContentOptions) => Promise<T | null>;
 }) {
-  const readSummary = cache(
+  const readSummary = cacheAsync(
     async (
       slug: string,
       locale: Locale,
@@ -45,19 +45,21 @@ export function createContentCollection<T extends CollectionEntry>({
   function createVariantsReader<Entry>(
     read: (slug: string, options?: ReadContentOptions) => Promise<Entry | null>
   ) {
-    return cache(async (slug: string): Promise<LocalizedContent<Entry>> => {
-      const [ja, en] = await Promise.all([
-        read(slug, { locale: "ja", fallback: false }),
-        read(slug, { locale: "en", fallback: false }),
-      ]);
-      return { slug, ja, en };
-    });
+    return cacheAsync(
+      async (slug: string): Promise<LocalizedContent<Entry>> => {
+        const [ja, en] = await Promise.all([
+          read(slug, { locale: "ja", fallback: false }),
+          read(slug, { locale: "en", fallback: false }),
+        ]);
+        return { slug, ja, en };
+      }
+    );
   }
 
   const getVariants = createVariantsReader(getContent);
   const getSummaryVariants = createVariantsReader(getSummary);
 
-  const getAll = cache(async (): Promise<T[]> => {
+  const getAll = cacheAsync(async (): Promise<T[]> => {
     const slugs = await getSlugs();
     const entries: (T | null)[] = await Promise.all(
       slugs.map(async (slug) => await getContent(slug))
@@ -70,7 +72,7 @@ export function createContentCollection<T extends CollectionEntry>({
   function createVariantsList<Entry extends CollectionEntry>(
     read: (slug: string) => Promise<LocalizedContent<Entry>>
   ) {
-    return cache(async (): Promise<LocalizedContent<Entry>[]> => {
+    return cacheAsync(async (): Promise<LocalizedContent<Entry>[]> => {
       const slugs = await getSlugs();
       const entries = await Promise.all(
         slugs.map(async (slug) => await read(slug))

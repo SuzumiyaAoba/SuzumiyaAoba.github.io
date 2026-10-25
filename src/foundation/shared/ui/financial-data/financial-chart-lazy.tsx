@@ -1,6 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import dynamic from "@/shared/ui/lazy-component";
 import { useMemo } from "react";
 import type { ComponentType } from "react";
 import { isRecord } from "@/shared/lib/types/is-record";
@@ -34,10 +34,12 @@ export function FinancialChartLazy({ name }: FinancialChartLazyProps) {
           // 動的パスは webpackInclude の context module として
           // チャートごとに分割される意図的な構成。
           // react-doctor-disable-next-line no-dynamic-import-path
-          const chartModule: unknown = await import(
-            /* webpackInclude: /ChartWrapper\.tsx$/ */
-            `./${name}`
-          );
+          const charts = import.meta.glob("./*ChartWrapper.tsx");
+          const loader = charts[`./${name}.tsx`];
+          if (!loader) {
+            throw new Error(`Unknown chart component: ${name}`);
+          }
+          const chartModule: unknown = await loader();
           const chart = isRecord(chartModule) ? chartModule[name] : undefined;
           if (!isChartComponent(chart)) {
             throw new TypeError(`Unknown chart component: ${name}`);

@@ -1,0 +1,10 @@
+---
+import "../../app/styles/globals.css";
+import { createElement } from "react";
+import { renderHtml } from "@/shared/lib/presentation/islands/server";
+import NotFound from "@/pages/site/not-found";
+
+const html = await renderHtml(createElement(NotFound, { locale: "ja" }));
+---
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><meta name="robots" content="noindex" /><title>404 | SuzumiyaAoba</title></head><body><Fragment set:html={html} /><script>import "@/shared/lib/presentation/islands/client";</script></body></html>

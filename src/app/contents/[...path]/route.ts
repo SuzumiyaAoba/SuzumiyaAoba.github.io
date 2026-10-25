@@ -1,11 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { NextResponse } from "next/server";
 import sharp from "sharp";
 
 import { resolveContentRoot } from "@/shared/lib/content-file";
-
-export const dynamic = "force-static";
 
 const contentTypeMap: Record<string, string> = {
   ".png": "image/png",
@@ -94,7 +91,7 @@ export async function GET(
       const ext = path.extname(filePath).toLowerCase();
       const contentType = contentTypeMap[ext] ?? "application/octet-stream";
 
-      return new NextResponse(new Uint8Array(file), {
+      return new Response(new Uint8Array(file), {
         headers: {
           "Content-Type": contentType,
           "Cache-Control": "public, max-age=31536000, immutable",
@@ -117,7 +114,7 @@ export async function GET(
           const source = await readFileHelper(sourcePath);
           const webp = await sharp(source).webp().toBuffer();
 
-          return new NextResponse(new Uint8Array(webp), {
+          return new Response(new Uint8Array(webp), {
             headers: {
               "Content-Type": "image/webp",
               "Cache-Control": "public, max-age=31536000, immutable",
@@ -129,6 +126,6 @@ export async function GET(
       throw error;
     }
   } catch {
-    return new NextResponse("Not Found", { status: 404 });
+    return new Response("Not Found", { status: 404 });
   }
 }

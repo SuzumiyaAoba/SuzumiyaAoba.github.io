@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound } from "@/shared/lib/routing";
 import {
   getAwesomeItems,
   getAwesomeStaticParams,

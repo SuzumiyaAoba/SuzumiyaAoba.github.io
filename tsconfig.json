@@ -14,11 +14,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "types": ["astro/client"],
     "paths": {
       "@/*": ["./src/*"],
       "@/content/*": ["./content/*"],
@@ -35,16 +31,19 @@
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
     "**/*.mts",
     "scripts/**/*.mjs",
-    "next.config.mjs",
     "postcss.config.mjs",
     "public/pagefind-adapter.js"
   ],
-  "exclude": ["node_modules", "apm_modules"]
+  "exclude": [
+    "node_modules",
+    "apm_modules",
+    ".next",
+    "out",
+    "out-astro",
+    "next-env.d.ts"
+  ]
 }

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, toLocalePath } from "@/shared/lib/routing";
 
 import {
   getAdjacentSections,
@@ -8,7 +8,6 @@ import {
 } from "@/entities/book";
 import { bookContentBasePath } from "@/shared/lib/books";
 import { renderMdxWithToc } from "@/shared/lib/mdx";
-import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { BookSectionPageContent } from "./page-content";
 

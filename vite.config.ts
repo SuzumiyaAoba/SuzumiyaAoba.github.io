@@ -6,7 +6,6 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "vite-plus/test/browser-playwright";
 import ultraciteCore from "ultracite/oxlint/core";
 import ultraciteReact from "ultracite/oxlint/react";
-import ultraciteNext from "ultracite/oxlint/next";
 import ultraciteVitest from "ultracite/oxlint/vitest";
 import ultraciteFmt from "ultracite/oxfmt";
 
@@ -20,7 +19,7 @@ export default defineConfig({
   lint: {
     // Ultracite のプリセットを Baseline とし、rules / overrides でプロジェクト固有の調整を行う。
     // plugins / categories はプリセット側で定義済みのためここでは指定しない。
-    extends: [ultraciteCore, ultraciteReact, ultraciteNext, ultraciteVitest],
+    extends: [ultraciteCore, ultraciteReact, ultraciteVitest],
     // @shadcn/lint は Oxlint の JS プラグインとして読み込む（依存解析のためルートでも宣言）。
     jsPlugins: [{ name: "shadcn", specifier: "@shadcn/lint" }],
     options: {
@@ -41,7 +40,6 @@ export default defineConfig({
     },
     rules: {
       // App Router と react-jsx は従来の Pages Router / React import を要求しない。
-      "nextjs/no-html-link-for-pages": "off",
       "react/react-in-jsx-scope": "off",
       "react/jsx-filename-extension": [
         "error",
@@ -93,7 +91,14 @@ export default defineConfig({
       "import/no-relative-parent-imports": "off",
       "import/no-unassigned-import": [
         "error",
-        { allow: ["**/*.css", "d3-transition", "ts-reset"] },
+        {
+          allow: [
+            "**/*.css",
+            "d3-transition",
+            "ts-reset",
+            "@/shared/lib/presentation/islands/client",
+          ],
+        },
       ],
       // Node.js のビルド処理、ESM、React の props / render API で必要な構文。
       "import/no-nodejs-modules": "off",
@@ -201,6 +206,12 @@ export default defineConfig({
       "shadcn/require-static-classes": "error",
     },
     overrides: [
+      { files: ["src/**/*.astro"], rules: { "unicorn/prefer-module": "off" } },
+      // React のサーバー描画と部品の復元を結ぶランタイム。Fast Refresh の対象外。
+      {
+        files: ["src/foundation/shared/lib/presentation/islands/*.tsx"],
+        rules: { "react/only-export-components": "off" },
+      },
       {
         // 固定の別オリジンに埋め込む YouTube / Google Forms は scripts と same-origin の両方が必要。
         // 親と同一オリジンの場合に sandbox を解除できる組み合わせとして一律に検出される。
@@ -300,6 +311,7 @@ export default defineConfig({
         // Next.js と Storybook は default export とメタデータの同居が規約。
         files: [
           "src/app/**",
+          "src/site/routes/**",
           "src/foundation/pages/**/ui/page.tsx",
           "src/foundation/pages/**/index.ts",
           "**/*.stories.tsx",
@@ -403,6 +415,8 @@ export default defineConfig({
         extends: true,
         test: {
           name: "unit",
+          sequence: { groupOrder: 0 },
+          maxWorkers: 4,
           include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
           exclude: ["node_modules", ".storybook"],
           environment: "node",
@@ -421,6 +435,7 @@ export default defineConfig({
         ],
         test: {
           name: "storybook",
+          sequence: { groupOrder: 1 },
           browser: {
             enabled: true,
             headless: true,

@@ -1,0 +1,74 @@
+---
+import "../../app/styles/globals.css";
+import "katex/dist/katex.min.css";
+import { createElement } from "react";
+import { renderHtml } from "@/shared/lib/presentation/islands/server";
+import { RouteError } from "@/shared/lib/routing";
+import { getSiteRoutes } from "../../site/routes";
+import type { SiteRoute } from "../../site/routes";
+import { buildRootMetadata } from "@/app/_shared/root-layout";
+import { getSiteConfig } from "@/shared/lib/site/site-config";
+import { SITE_TITLE } from "@/shared/lib/site/site-title";
+import { buildWebsiteJsonLd } from "@/shared/lib/site/website-jsonld";
+
+export async function getStaticPaths() {
+  return (await getSiteRoutes()).map(({ module: _module, ...route }) => ({ params: { path: route.path }, props: { route } }));
+}
+type Props = { route: Omit<SiteRoute, "module"> };
+const { route } = Astro.props;
+const entry = (await getSiteRoutes()).find((candidate) => candidate.path === route.path);
+if (!entry) {throw new Error(`Unknown page: ${route.path}`);}
+const params = Promise.resolve(route.params);
+const metadata = { ...buildRootMetadata(route.locale), ...(entry.module.generateMetadata ? await entry.module.generateMetadata({ params }) : entry.module.metadata ?? {}) };
+const rawTitle = metadata.title;
+const title = typeof rawTitle === "string" ? `${rawTitle} | ${SITE_TITLE}` : rawTitle?.absolute ?? rawTitle?.default ?? SITE_TITLE;
+const config = getSiteConfig();
+const canonical = new URL(metadata.alternates?.canonical ?? Astro.url.pathname, config.siteUrl).href;
+let html = "";
+try { html = await renderHtml(createElement(entry.module.default, { params })); }
+catch (error) {
+  if (error instanceof RouteError && error.status === 301 && error.destination) {return Astro.redirect(error.destination, error.status);}
+  throw error;
+}
+const image = new URL(route.image, config.siteUrl).href;
+const og = metadata.openGraph;
+const websiteJson = JSON.stringify(buildWebsiteJsonLd(route.locale)).replaceAll("<", "\\u003c");
+---
+<!doctype html>
+<html lang={route.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={metadata.description} />
+    <link rel="canonical" href={canonical} />
+    {Object.entries(metadata.alternates?.languages ?? {}).map(([locale, href]) => <link rel="alternate" hreflang={locale} href={href} />)}
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" href={route.locale === "en" ? "/en/rss.xml" : "/rss.xml"} title={SITE_TITLE} />
+    <meta name="robots" content={`${metadata.robots?.index === false ? "noindex" : "index"}, ${metadata.robots?.follow === false ? "nofollow" : "follow"}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={og?.description ?? metadata.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={og?.type ?? "website"} />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:locale" content={route.locale === "en" ? "en_US" : "ja_JP"} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {og?.publishedTime && <meta property="article:published_time" content={og.publishedTime} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={metadata.description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="google-site-verification" content={metadata.verification?.google} />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" />
+    <script type="application/ld+json" set:html={websiteJson} />
+    {import.meta.env.PROD && config.googleAnalyticsId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`} />}
+    {import.meta.env.PROD && config.googleAnalyticsId && <script is:inline define:vars={{ gaId: config.googleAnalyticsId }}>window.dataLayer ||= []; window.gtag = (...args) => window.dataLayer.push(args); window.gtag('js', new Date()); window.gtag('config', gaId);</script>}
+    {import.meta.env.PROD && config.googleAdsenseClientId && <script is:inline async crossorigin="anonymous" src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.googleAdsenseClientId}`} />}
+  </head>
+  <body class="font-sans antialiased">
+    <Fragment set:html={html} />
+    <script>import "@/shared/lib/presentation/islands/client";</script>
+  </body>
+</html>

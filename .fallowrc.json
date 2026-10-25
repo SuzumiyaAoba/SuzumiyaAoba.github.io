@@ -5,7 +5,11 @@
     "steiger.config.ts",
     "public/pagefind-adapter.js",
     // 記事本文は import ではなく fs 経由で読み込んで MDX に変換する。
-    "content/**/*.mdx"
+    "content/**/*.mdx",
+    // Astro が呼び出すページと、Vite の仮想モジュールから読み込む hydration エントリー。
+    "src/astro/pages/**/*.{astro,ts}",
+    "src/site/routes/**/*.{ts,tsx}",
+    "src/foundation/shared/lib/presentation/islands/client.tsx"
   ],
   // Steiger が要求する直接読み込む UI セグメントの空の公開境界。
   "ignorePatterns": [
@@ -15,11 +19,11 @@
   // generate-icon-data.mjs が記事中の prefix から動的にコレクションを解決する。
   "ignoreDependencies": ["@iconify-json/*"],
   // build:pagefind が out/pagefind に生成するブラウザー用モジュール。
-  "ignoreUnresolvedImports": ["/pagefind/pagefind.js"],
+  "ignoreUnresolvedImports": ["/pagefind/pagefind.js", "virtual:react-islands"],
   "ignoreExports": [
     // Next.js が呼び出す規約エクスポート（通常の page.tsx は自動検出される）。
     {
-      "file": "src/app/**/opengraph-image.tsx",
+      "file": "src/site/routes/**/opengraph-image.tsx",
       "exports": ["generateStaticParams"]
     },
     { "file": "src/app/**/route.ts", "exports": ["generateStaticParams"] },

@@ -53,6 +53,19 @@ afterEach(async () => {
 });
 
 describe("CodeSwitcher", () => {
+  it("uses build-time highlighted code without fetching grammars again", async () => {
+    const code = highlighted({
+      value: "const value = 1;",
+      lang: "ts",
+      meta: "",
+    });
+    await act(async () => root.render(<CodeSwitcher code={[code]} />));
+    expect(container.querySelector("pre")?.textContent).toBe(
+      "const value = 1;"
+    );
+    expect(highlight).not.toHaveBeenCalled();
+  });
+
   it("空のコードとコードありの表示を切り替えられる", async () => {
     await act(async () => root.render(<CodeSwitcher code={[]} />));
     expect(container.textContent).toBe("");

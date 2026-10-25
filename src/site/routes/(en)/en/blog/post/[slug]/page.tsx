@@ -1,0 +1,28 @@
+import type { Metadata } from "@/shared/lib/site/metadata";
+import { getPublishedBlogSlugs } from "@/entities/blog";
+import { buildBlogPostMetadata } from "@/app/_shared/blog-post-metadata";
+import BlogPostPage from "@/pages/blog/post";
+
+type PageProps = {
+  params: Promise<{ slug?: string }>;
+};
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const resolvedParams = await Promise.resolve(params);
+  return await buildBlogPostMetadata(resolvedParams.slug, "en");
+}
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const slugs = await getPublishedBlogSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+type PageComponentProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <BlogPostPage {...props} locale="en" />;
+}

@@ -1,6 +1,6 @@
 # suzumiyaaoba.com
 
-Next.js App Router、React、TypeScript で構築した個人サイトです。日本語・英語のブログとノート、書籍、ツールを静的出力し、GitHub Pages に公開します。
+Astro、React、TypeScript で構築した個人サイトです。日本語・英語のブログとノート、書籍、ツールを静的出力し、GitHub Pages に公開します。
 
 ## 開発
 
@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-開発サーバーは `http://localhost:3000` で起動します。検索に必要な Pagefind インデックスは、別途生成します。
+開発サーバーは `http://127.0.0.1:4321` で起動します。検索に必要な Pagefind インデックスは、別途生成します。
 
 ```sh
 npm run pagefind:dev
@@ -23,7 +23,9 @@ npm run pagefind:dev:force
 
 | パス | 役割 |
 | --- | --- |
-| `src/app` | ルーティング、レイアウト、メタデータ、OGP画像、サイトマップ |
+| `src/astro/pages` | Astro のページ、RSS、OGP画像、サイトマップ、記事アセット |
+| `src/site/routes` | ページのメタデータと静的パラメーターの定義 |
+| `src/app` | 共通メタデータとサイトのスタイル |
 | `src/foundation/pages` | 各ページのデータ取得と表示 |
 | `src/foundation/widgets` | ヘッダー・フッターなどのページ共通領域 |
 | `src/foundation/entities` | ブログ、ノート、書籍、シリーズのモデルと公開API |
@@ -36,6 +38,10 @@ npm run pagefind:dev:force
 依存方向は `pages → widgets / entities → shared` を基本とし、Steiger で確認します。スライス外からの参照には各 `index.ts` の公開APIを使います。
 
 各ページの外枠は `widgets/site-layout` の `SiteLayout` を使います。ヘッダー・フッターとナビゲーションの定義はこのスライス内で管理し、メニュー操作と読書進捗の監視は個別のフックに分離しています。ページ固有の本文・パンくず・構造化データは各ページが担当します。
+
+Astro のページは `src/site/routes` の定義から既存の URL とメタデータを生成します。操作が必要な React 部品は `use client` を付けたモジュールを境界にして個別に読み込みます。`src/site/react-islands-plugin.ts` が境界を生成し、`shared/lib/presentation/islands` がサーバー描画とブラウザーでの復元を担当します。部品に渡すデータはシリアライズ可能な値を使い、イベントハンドラーは部品の内側で定義します。
+
+MDX は `@mdx-js/mdx` と Code Hike でビルド時にコンパイルします。コード切り替え部品でも生成済みのハイライトを再利用し、辞書をブラウザーから再取得しません。OGP は PNG として出力し、旧来の拡張子なし URL も維持します。
 
 トップページは `pages/site/home/ui/page.tsx` でデータを取得し、`page-content.tsx` で冒頭（サイト名と目次）・最新記事・連載・キーワードと資料のセクションを組み立てます。各セクションの表示は独立したコンポーネントで管理します。
 
@@ -166,12 +172,12 @@ npm run build
 
 `vite.config.ts` に Vite+ のテスト・lint・整形設定をまとめています。`npm run lint` は `vp lint` と Steiger、`npm run test` は `vp test run`、`npm run format` は `vp fmt` を実行します。テストを監視しながら実行するには `npm run test:watch` を使用します。型検査は `npm run typecheck` で TypeScript を実行します。
 
-Oxlint は全カテゴリを `error` にし、TypeScript の型情報を使った検査、React / Next.js、アクセシビリティ、import、Promise、Node.js、JSDoc のルールを有効にしています。Vitest のルールは単体テストに適用します。警告と不要になった無効化コメントも lint を失敗させます。
+Oxlint は全カテゴリを `error` にし、TypeScript の型情報を使った検査、React、アクセシビリティ、import、Promise、Node.js、JSDoc のルールを有効にしています。Vitest のルールは単体テストに適用します。警告と不要になった無効化コメントも lint を失敗させます。
 
 競合するルールやフレームワークの規約に合わない制限は、`vite.config.ts` に理由を記載して調整しています。生成ファイルは対象から除外し、生成元を検査します。新たな例外は必要なファイル・行に限定し、理由をコメントに残してください。`nursery` を含むため、Vite+ の更新時は追加ルールの指摘と自動修正後の整形結果も確認します。
 
-Vite+ の `vp dev` / `vp build` は Vite 向けのコマンドです。このサイトの開発・静的出力は Next.js を使用するため、`npm run dev` / `npm run build` を使います。
+Vite+ の `vp dev` / `vp build` は Vite 向けのコマンドです。このサイトの開発・静的出力は Astro を使用するため、`npm run dev` / `npm run build` を使います。
 
 Vite+ は Storybook 10.6 の対応範囲に合わせて 0.2.9 に固定しています。更新するときは Storybook の対応範囲を確認し、`vite` のエイリアスと overrides、`vitest`・`@vitest/browser-playwright`・`@vitest/coverage-v8` も同梱バージョンに揃えてください。これらの直接依存は Storybook の peer dependency とブラウザテスト・カバレッジに必要です。TypeScript のパスエイリアスは Vite の `resolve.tsconfigPaths` で解決します。
 
-`npm run build` はアイコン生成、Next.js の静的出力、Pagefind のインデックス生成を順に行い、公開用ファイルを `out/` に出力します。PRでは型検査・lint・テスト・ビルドを実行し、`master` への push 時に GitHub Pages へデプロイします。
+`npm run build` はアイコン生成、Astro の静的出力、Pagefind のインデックス生成を順に行い、公開用ファイルを `out/` に出力します。PRでは型検査・lint・テスト・ビルドを実行し、`master` への push 時に GitHub Pages へデプロイします。

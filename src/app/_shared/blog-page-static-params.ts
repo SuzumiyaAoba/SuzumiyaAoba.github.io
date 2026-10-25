@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/shared/lib/site/metadata";
 import { getBlogPostSummariesVariants } from "@/entities/blog";
 import { getPageCount } from "@/shared/lib/presentation";
 

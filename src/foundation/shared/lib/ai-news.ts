@@ -124,7 +124,7 @@ function sortEntries(entries: AiNewsEntry[]): AiNewsEntry[] {
 async function loadAiNews(): Promise<AiNewsIndex> {
   const { fs, path, root } = await resolveContentDeps();
   const filePath = path.join(root, "tools", "ai-news.yaml");
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = process.env["NODE_ENV"] === "development";
 
   if (cachedIndex && !isDev) {
     return cachedIndex;

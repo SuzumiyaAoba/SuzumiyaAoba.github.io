@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound } from "@/shared/lib/routing";
 import { getAwesomeItems } from "../model/awesome-items";
 import { resolveAwesomeSelection } from "../model/awesome-categories";
 import type { Locale } from "@/shared/lib/routing";

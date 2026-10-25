@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, toLocalePath } from "@/shared/lib/routing";
 
 import { getBookMeta, getBookToc } from "@/entities/book";
 import { bookContentBasePath } from "@/shared/lib/books";
 import { renderMdx } from "@/shared/lib/mdx";
-import { toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { BookDetailPageContent } from "./page-content";
 

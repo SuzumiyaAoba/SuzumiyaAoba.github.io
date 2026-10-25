@@ -1,6 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import dynamic from "@/shared/ui/lazy-component";
 
 type MermaidLazyProps = {
   /** Mermaid.js の記法で記述されたコード */

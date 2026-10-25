@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Script from "next/script";
+import Script from "@/shared/ui/external-script";
 import { SiteLayout } from "@/widgets/site-layout";
 
 import { SearchPanel } from "./search-panel";

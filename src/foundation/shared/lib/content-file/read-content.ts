@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheAsync } from "./cache-async";
 import type { Locale } from "@/shared/lib/routing";
 import { parseContent } from "./parse-content";
 import {
@@ -20,7 +20,7 @@ export function createContentReader<Frontmatter>(
   normalizeFrontmatter: (data: Record<string, unknown>) => Frontmatter
 ) {
   const listFiles = createArticleFileLister(collectionDir);
-  const readContent = cache(
+  const readContent = cacheAsync(
     async (
       slug: string,
       locale: Locale,
@@ -47,7 +47,7 @@ export function createContentReader<Frontmatter>(
     }
   );
 
-  // React.cache は引数を参照比較するため、都度生成される options をキーにしない。
+  // options をプリミティブに正規化し、同じ読み込みのキャッシュキーを共有する。
   return async (slug: string, options?: ReadContentOptions) =>
     await readContent(slug, options?.locale ?? "ja", options?.fallback ?? true);
 }

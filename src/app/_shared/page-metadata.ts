@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/shared/lib/site/metadata";
 import type { Locale } from "@/shared/lib/routing";
 import { buildLocaleAlternates } from "./locale-alternates";
 import type { BuildLocaleAlternatesOptions } from "./locale-alternates";

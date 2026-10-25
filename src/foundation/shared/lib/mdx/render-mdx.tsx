@@ -6,7 +6,7 @@ import "katex/dist/katex.min.css";
 import type { ComponentProps, ReactElement } from "react";
 import { cache } from "react";
 import type { MDXComponents } from "mdx/types";
-import { compileMDX } from "next-mdx-remote/rsc";
+import { compileMDX } from "./compile-mdx";
 import type { CodeHikeConfig } from "codehike/mdx";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -237,7 +237,7 @@ async function compileContent(
   ]);
   // コンポーネント関数はシリアライズできないため、追加マップがある場合は開発キャッシュを使わない。
   const useDevCache =
-    process.env.NODE_ENV === "development" && !options.extraComponents;
+    process.env["NODE_ENV"] === "development" && !options.extraComponents;
   const cacheKey = useDevCache
     ? JSON.stringify([
         collectHeadings,

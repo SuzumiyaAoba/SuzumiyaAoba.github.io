@@ -8,3 +8,5 @@ export * from "./read-content";
 export * from "./compare-content";
 export * from "./content-collection";
 export { parseContent } from "./parse-content";
+
+export { cacheAsync } from "./cache-async";

@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+import type { Sitemap } from "@/shared/lib/site/metadata";
 import { getAllBlogTags, getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
 import { getKeywordCategories } from "@/pages/keywords";
@@ -13,9 +13,7 @@ import {
 import type { SitemapPage } from "./_shared/sitemap-entries";
 import { buildAwesomeCategoryStaticParams } from "./_shared/awesome-category-page";
 
-export const dynamic = "force-static";
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap(): Promise<Sitemap> {
   const siteUrl = getSiteUrl();
 
   const buildTime = new Date();
@@ -28,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     siteUrl,
     buildTime
   );
-  const aiNewsPages: MetadataRoute.Sitemap = [
+  const aiNewsPages: Sitemap = [
     "/archive/ai-news/",
     "/archive/ai-news/timeline/",
   ].map((path) => ({
@@ -126,7 +124,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModifiedForBook = (slug: string) =>
     bookLastModified.get(slug) ?? buildTime;
 
-  const bookIndexPages: MetadataRoute.Sitemap = [
+  const bookIndexPages: Sitemap = [
     {
       url: `${siteUrl}/books/`,
       lastModified: buildTime,
@@ -140,7 +138,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     })),
   ];
-  const bookSectionPages: MetadataRoute.Sitemap = [];
+  const bookSectionPages: Sitemap = [];
   const booksWithToc = await Promise.all(
     bookSlugs.map(async (slug) => ({ slug, toc: await getBookToc(slug) }))
   );

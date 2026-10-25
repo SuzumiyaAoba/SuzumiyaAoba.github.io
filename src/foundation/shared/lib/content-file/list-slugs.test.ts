@@ -9,6 +9,10 @@ let contentRoot = "";
 
 vi.mock(import("./content-root"), () => ({
   resolveContentRoot: async () => contentRoot,
+  resolveContentDeps: async () => {
+    const fs = await import("node:fs/promises");
+    return { fs, path, root: contentRoot };
+  },
 }));
 
 describe("listContentSlugs", () => {

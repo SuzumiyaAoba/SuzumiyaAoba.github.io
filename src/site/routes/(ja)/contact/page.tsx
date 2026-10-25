@@ -1,0 +1,12 @@
+import type { Metadata } from "@/shared/lib/site/metadata";
+import ContactPage from "@/pages/site/contact";
+import { buildLocaleAlternates } from "@/app/_shared/locale-alternates";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  alternates: buildLocaleAlternates("/contact", "ja"),
+};
+
+export default function Page() {
+  return <ContactPage locale="ja" />;
+}

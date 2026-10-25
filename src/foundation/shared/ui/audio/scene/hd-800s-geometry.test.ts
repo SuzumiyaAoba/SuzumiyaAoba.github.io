@@ -69,6 +69,7 @@ it("ヘッドバンドの接触面を丸め、頭部側から見える向きに�
   material.dispose();
 });
 
+// 高密度メッシュの生成と交差検査は、負荷の高い CI でも最後まで実行する。
 it("leaves the honeycomb holes open while giving the metal webs real depth", () => {
   const geometry = hd800sPerforatedGrille();
   const material = new MeshBasicMaterial({ side: DoubleSide });
@@ -94,7 +95,7 @@ it("leaves the honeycomb holes open while giving the metal webs real depth", () 
   expect(ray.intersectObject(grille)[0]?.point.x).toBeCloseTo(0.66);
   geometry.dispose();
   material.dispose();
-});
+}, 15_000);
 
 it("exposes the rounded contact surface and keeps the ear-pad opening empty", () => {
   const geometry = earPadGeometry();

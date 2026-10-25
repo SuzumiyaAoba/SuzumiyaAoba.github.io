@@ -9,6 +9,10 @@ import { asDateString, asStringWithDefault } from "./frontmatter";
 let contentRoot = "";
 vi.mock(import("./content-root"), () => ({
   resolveContentRoot: async () => contentRoot,
+  resolveContentDeps: async () => {
+    const fs = await import("node:fs/promises");
+    return { fs, path, root: contentRoot };
+  },
 }));
 
 const readBlog = createContentReader("blog", (data) => ({

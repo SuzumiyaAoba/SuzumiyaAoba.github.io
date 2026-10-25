@@ -1,0 +1,20 @@
+import type { Metadata } from "@/shared/lib/site/metadata";
+import { buildTagPageMetadata } from "@/app/_shared/tag-page-metadata";
+import type { TagPageMetadataProps } from "@/app/_shared/tag-page-metadata";
+import TagPage from "@/pages/tags/tag";
+
+export { buildTagPageStaticParams as generateStaticParams } from "@/app/_shared/tag-page-metadata";
+
+export async function generateMetadata(
+  props: TagPageMetadataProps
+): Promise<Metadata> {
+  return await buildTagPageMetadata(props, "en");
+}
+
+type PageComponentProps = {
+  params: Promise<{ tag: string }>;
+};
+
+export default function Page(props: PageComponentProps) {
+  return <TagPage {...props} locale="en" />;
+}
