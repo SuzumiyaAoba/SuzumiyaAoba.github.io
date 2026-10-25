@@ -5,6 +5,9 @@ import type { Plugin } from "vite";
 
 const CLIENT_DIRECTIVE = /^\s*["']use client["'];/u;
 const COMPONENT_NAME = /^[A-Z][a-zA-Z0-9]*$/u;
+const VISIBLE_ISLANDS = new Set([
+  "/src/foundation/shared/ui/financial-data/financial-chart-lazy.tsx",
+]);
 
 function clientFiles(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -106,10 +109,13 @@ export function reactIslands(): Plugin {
         code = code.slice(0, start) + code.slice(end);
       }
       const moduleId = `/${path.relative(root, id)}`;
+      const hydrationOptions = VISIBLE_ISLANDS.has(moduleId)
+        ? ', { hydrate: "visible" }'
+        : "";
       code +=
         '\nimport { createIsland as __createIsland } from "@/shared/lib/presentation/islands/server";\n';
       for (const name of names) {
-        code += `const __island_${name} = __createIsland(${name}, ${JSON.stringify(moduleId)}, ${JSON.stringify(name)}); export { __island_${name} as ${name} };\n`;
+        code += `const __island_${name} = __createIsland(${name}, ${JSON.stringify(moduleId)}, ${JSON.stringify(name)}${hydrationOptions}); export { __island_${name} as ${name} };\n`;
       }
       return { code, map: null };
     },

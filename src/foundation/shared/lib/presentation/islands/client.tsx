@@ -11,8 +11,11 @@ import { isRecord } from "@/shared/lib/types/is-record";
 class ReactIsland extends HTMLElement {
   private root: Root | undefined;
   private loading = false;
+  private observer: IntersectionObserver | undefined;
 
   disconnectedCallback() {
+    this.observer?.disconnect();
+    this.observer = undefined;
     queueMicrotask(() => {
       if (!this.isConnected) {
         this.root?.unmount();
@@ -21,6 +24,30 @@ class ReactIsland extends HTMLElement {
     });
   }
   connectedCallback() {
+    if (this.root || this.loading) {
+      return;
+    }
+    if (
+      this.dataset["hydrate"] === "visible" &&
+      "IntersectionObserver" in window
+    ) {
+      this.observer ??= new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            this.startHydration();
+          }
+        },
+        { rootMargin: "300px" }
+      );
+      this.observer.observe(this);
+      return;
+    }
+    this.startHydration();
+  }
+
+  private startHydration() {
+    this.observer?.disconnect();
+    this.observer = undefined;
     if (this.root || this.loading) {
       return;
     }

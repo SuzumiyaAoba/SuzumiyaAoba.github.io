@@ -160,6 +160,26 @@ void test("financial chart tabs preserve labels and load charts after switching"
   await page.close();
 });
 
+void test("offscreen financial charts load when scrolled into view", async () => {
+  const page = await newPage();
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(`${baseUrl}/blog/post/2026-01-01-kakekin/`);
+  await page.waitForSelector("react-island:not([ssr])");
+  const charts = page.locator('react-island[data-hydrate="visible"]:visible');
+  assert.ok((await charts.count()) > 20);
+  const lastChart = charts.last();
+  assert.equal(await lastChart.getAttribute("ssr"), "");
+  const bounds = await lastChart.boundingBox();
+  assert.ok(bounds && bounds.height >= 400);
+
+  await lastChart.scrollIntoViewIfNeeded();
+  await lastChart.locator("svg").first().waitFor();
+  assert.equal(await lastChart.getAttribute("ssr"), null);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 void test("simulator inputs update calculations and persist through the URL", async () => {
   const page = await newPage();
   const errors: string[] = [];

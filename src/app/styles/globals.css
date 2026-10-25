@@ -1552,7 +1552,8 @@
   font-size: 0.8125rem;
 }
 
-react-island,
+/* 可視判定を行う island は、監視できるボックスを自身に持つ。 */
+react-island:not([data-hydrate="visible"]),
 astro-slot {
   display: contents;
 }

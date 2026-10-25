@@ -8,6 +8,8 @@ import { restoreValue } from "./props";
 import type { SerializedValue } from "./props";
 import { isRecord } from "@/shared/lib/types/is-record";
 
+type IslandOptions = { hydrate?: "visible" };
+
 export async function renderHtml(
   content: ReactNode,
   prefix = "page-"
@@ -96,11 +98,13 @@ async function Island({
   moduleId,
   exportName,
   props,
+  options,
 }: {
   component: ComponentType<Record<string, unknown>>;
   moduleId: string;
   exportName: string;
   props: Record<string, unknown>;
+  options: IslandOptions;
 }) {
   const serialized = await serialize(props);
   const restored = restoreValue(serialized);
@@ -120,6 +124,9 @@ async function Island({
     "data-export": exportName,
     "data-props": JSON.stringify(serialized),
     "data-prefix": prefix,
+    "data-hydrate": options.hydrate,
+    // クライアント描画だけのグラフも監視でき、読み込み前後のレイアウトを安定させる。
+    className: options.hydrate === "visible" ? "block min-h-100" : undefined,
     ssr: "",
     dangerouslySetInnerHTML: { __html: html },
   });
@@ -128,7 +135,8 @@ async function Island({
 export function createIsland(
   Component: ComponentType<Record<string, unknown>>,
   moduleId: string,
-  exportName: string
+  exportName: string,
+  options: IslandOptions = {}
 ) {
   function IslandBoundary(props: Record<string, unknown>) {
     const nested = useContext(IslandContext);
@@ -140,6 +148,7 @@ export function createIsland(
         moduleId={moduleId}
         exportName={exportName}
         props={props}
+        options={options}
       />
     );
   }

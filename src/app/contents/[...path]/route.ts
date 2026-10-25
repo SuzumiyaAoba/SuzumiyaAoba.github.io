@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import sharp from "sharp";
+import { convertWebp } from "@/shared/lib/content-file/convert-webp";
 
 import { resolveContentRoot } from "@/shared/lib/content-file";
 
@@ -112,7 +112,7 @@ export async function GET(
 
         if (sourcePath) {
           const source = await readFileHelper(sourcePath);
-          const webp = await sharp(source).webp().toBuffer();
+          const webp = await convertWebp(source);
 
           return new Response(new Uint8Array(webp), {
             headers: {

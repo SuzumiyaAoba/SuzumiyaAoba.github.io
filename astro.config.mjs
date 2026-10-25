@@ -11,6 +11,8 @@ export default defineConfig({
   outDir: "./out",
   output: "static",
   trailingSlash: "always",
+  // 画像変換や OGP の I/O を重ねる。メモリー使用量を抑えるため 2 件までに制限する。
+  build: { concurrency: 2 },
   integrations: [react(), staticAssets()],
   vite: {
     build: {
