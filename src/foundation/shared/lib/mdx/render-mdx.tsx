@@ -83,6 +83,11 @@ async function loadHeavyComponents(source: string): Promise<MDXComponents> {
     components["AudioEquipment"] = audio.AudioEquipment;
   }
 
+  return { ...components, ...(await loadLlmComponents(source)) };
+}
+
+async function loadLlmComponents(source: string): Promise<MDXComponents> {
+  const components: MDXComponents = {};
   const [
     flow,
     structure,

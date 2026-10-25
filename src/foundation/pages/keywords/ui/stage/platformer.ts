@@ -122,19 +122,7 @@ export class Player {
     const wantsJump = this.sincePressed <= buffer + 1e-6;
     const canJump =
       !this.jumped && (this.onGround || this.sinceGround <= coyote);
-    if (wantsJump && canJump) {
-      this.velocity.y = PLAYER.jump;
-      this.jumped = true;
-      let kind: JumpEvent["kind"] = "coyote";
-      if (this.onGround) {
-        kind = this.sincePressed > 1e-6 ? "buffer" : "jump";
-      }
-      this.events.push({ time: this.time, kind });
-      this.sincePressed = Number.POSITIVE_INFINITY;
-      this.onGround = false;
-    } else if (input.jumpPressed && !canJump && !(buffer > 0)) {
-      this.events.push({ time: this.time, kind: "miss" });
-    }
+    this.applyBufferedJump(wantsJump, canJump, input, buffer);
     // 重力：頂点付近で弱める・ボタンを離したら強める
     let { gravity } = PLAYER;
     if (
@@ -167,6 +155,43 @@ export class Player {
     const hitY = this.overlaps(x, y);
     const wasGround = this.onGround;
     this.onGround = false;
+    y = this.resolveVerticalCollision(hitY, options, x, y, wasGround);
+    if (wasGround && !this.onGround) {
+      this.leftGroundAt = this.time;
+    }
+    this.position.y = y;
+  }
+
+  private applyBufferedJump(
+    wantsJump: boolean,
+    canJump: boolean,
+    input: Input,
+    buffer: number
+  ) {
+    if (wantsJump && canJump) {
+      this.velocity.y = PLAYER.jump;
+      this.jumped = true;
+      let kind: JumpEvent["kind"] = "coyote";
+      if (this.onGround) {
+        kind = this.sincePressed > 1e-6 ? "buffer" : "jump";
+      }
+      this.events.push({ time: this.time, kind });
+      this.sincePressed = Number.POSITIVE_INFINITY;
+      this.onGround = false;
+    } else if (input.jumpPressed && !canJump && !(buffer > 0)) {
+      this.events.push({ time: this.time, kind: "miss" });
+    }
+  }
+
+  private resolveVerticalCollision(
+    hitY: Block | null,
+    options: PlayerOptions,
+    x: number,
+    initialY: number,
+    wasGround: boolean
+  ) {
+    let y = initialY;
+
     if (hitY) {
       if (this.velocity.y > 0) {
         // 天井の角：少しだけ横にずらせば通れるなら通す（コーナー補正）
@@ -202,10 +227,7 @@ export class Player {
         }
       }
     }
-    if (wasGround && !this.onGround) {
-      this.leftGroundAt = this.time;
-    }
-    this.position.y = y;
+    return y;
   }
 
   /** 足元の少し先に地面があるか（自動操縦用）。 */

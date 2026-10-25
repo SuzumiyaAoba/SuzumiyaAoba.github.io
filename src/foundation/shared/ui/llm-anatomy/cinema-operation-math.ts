@@ -7,13 +7,27 @@ export function cinemaOutputLayout(
   mobile: boolean,
   originY?: number
 ) {
+  const layout = mobile
+    ? { columns: 4, width: 124, height: 48, gapX: 136, gapY: 57, startX: 96 }
+    : count <= 4
+      ? {
+          columns: 2,
+          width: 132,
+          height: 66,
+          gapX: 148,
+          gapY: 84,
+          startX: 1170,
+        }
+      : {
+          columns: 4,
+          width: 94,
+          height: 66,
+          gapX: 102,
+          gapY: 84,
+          startX: 1070,
+        };
   return {
-    columns: mobile ? 4 : count <= 4 ? 2 : 4,
-    width: mobile ? 124 : count <= 4 ? 132 : 94,
-    height: mobile ? 48 : 66,
-    gapX: mobile ? 136 : count <= 4 ? 148 : 102,
-    gapY: mobile ? 57 : 84,
-    startX: mobile ? 96 : count <= 4 ? 1170 : 1070,
+    ...layout,
     startY:
       originY ?? (mobile ? (count > 8 ? 632 : 665) : count > 8 ? 210 : 260),
   };

@@ -253,20 +253,19 @@ export function gridSearch(
     if (current === goal) {
       break;
     }
-    for (const [next, stepCost] of neighbors(map, current, options.diagonal)) {
-      if ((closedAt[next] ?? -1) >= 0) {
-        continue;
-      }
-      const candidate = (g[current] ?? 0) + stepCost;
-      if (candidate < (g[next] ?? 0) && candidate <= limit) {
-        g[next] = candidate;
-        parent[next] = current;
-        if ((openedAt[next] ?? -1) < 0) {
-          openedAt[next] = step;
-        }
-        heap.push(next, priority(next));
-      }
-    }
+    relaxNeighborEdges(
+      map,
+      current,
+      options,
+      closedAt,
+      g,
+      limit,
+      parent,
+      openedAt,
+      step,
+      heap,
+      priority
+    );
   }
   const path: number[] = [];
   if (goal >= 0 && (closedAt[goal] ?? -1) >= 0) {
@@ -276,6 +275,40 @@ export function gridSearch(
     path.reverse();
   }
   return { g, parent, openedAt, closedAt, order, path, steps: step };
+}
+
+function relaxNeighborEdges(
+  map: GridMap,
+  current: number,
+  options: {
+    mode: SearchMode;
+    diagonal: boolean;
+    weight?: number;
+    limit?: number;
+  },
+  closedAt: Int32Array<ArrayBuffer>,
+  g: Float32Array<ArrayBuffer>,
+  limit: number,
+  parent: Int32Array<ArrayBuffer>,
+  openedAt: Int32Array<ArrayBuffer>,
+  step: number,
+  heap: MinHeap,
+  priority: (index: number) => number
+) {
+  for (const [next, stepCost] of neighbors(map, current, options.diagonal)) {
+    if ((closedAt[next] ?? -1) >= 0) {
+      continue;
+    }
+    const candidate = (g[current] ?? 0) + stepCost;
+    if (candidate < (g[next] ?? 0) && candidate <= limit) {
+      g[next] = candidate;
+      parent[next] = current;
+      if ((openedAt[next] ?? -1) < 0) {
+        openedAt[next] = step;
+      }
+      heap.push(next, priority(next));
+    }
+  }
 }
 
 /** 格子の床と壁を描く。tint でセルの色を上書きできる（null で地形の色に戻す）。 */

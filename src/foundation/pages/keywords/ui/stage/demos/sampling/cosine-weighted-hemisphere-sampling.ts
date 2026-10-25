@@ -242,27 +242,15 @@ export const demo: DemoModule = {
         let dotCount = 0;
         for (const m of ["uniform", "cosine"] as const) {
           let sum = 0;
-          for (let k = 0; k < rays; k++) {
-            sampleDirection(m, random, direction, disk);
-            const distance = occluded
-              ? hitDistance(direction)
-              : Number.POSITIVE_INFINITY;
-            const visible = !Number.isFinite(distance);
-            sum += contribution(m, visible, direction.y);
-            if (m !== method) {
-              continue;
-            }
-            const end = direction
-              .clone()
-              .multiplyScalar(Math.min(distance, RAY_LENGTH));
-            (visible ? shown.miss : shown.hit).push(new Vector3(), end);
-            if (dotCount < SHOWN) {
-              const onDisk = disk.clone().multiplyScalar(DOME);
-              diskDots.positions.set([onDisk.x, 0, onDisk.z], dotCount * 3);
-              dotCount++;
-              shown.lift.push(onDisk, direction.clone().multiplyScalar(DOME));
-            }
-          }
+          ({ sum, dotCount } = accumulateRaySamples(
+            rays,
+            m,
+            occluded,
+            sum,
+            method,
+            shown,
+            dotCount
+          ));
           const list = estimates[m];
           list.push(sum / rays);
           if (list.length > HISTORY) {
@@ -302,5 +290,41 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function accumulateRaySamples(
+      rays: number,
+      m: "uniform" | "cosine",
+      occluded: boolean,
+      initialSum: number,
+      method: Method,
+      shown: Record<"hit" | "miss" | "lift", Vector3[]>,
+      initialDotCount: number
+    ) {
+      let sum = initialSum;
+      let dotCount = initialDotCount;
+
+      for (let k = 0; k < rays; k++) {
+        sampleDirection(m, random, direction, disk);
+        const distance = occluded
+          ? hitDistance(direction)
+          : Number.POSITIVE_INFINITY;
+        const visible = !Number.isFinite(distance);
+        sum += contribution(m, visible, direction.y);
+        if (m !== method) {
+          continue;
+        }
+        const end = direction
+          .clone()
+          .multiplyScalar(Math.min(distance, RAY_LENGTH));
+        (visible ? shown.miss : shown.hit).push(new Vector3(), end);
+        if (dotCount < SHOWN) {
+          const onDisk = disk.clone().multiplyScalar(DOME);
+          diskDots.positions.set([onDisk.x, 0, onDisk.z], dotCount * 3);
+          dotCount++;
+          shown.lift.push(onDisk, direction.clone().multiplyScalar(DOME));
+        }
+      }
+      return { sum, dotCount };
+    }
   },
 };

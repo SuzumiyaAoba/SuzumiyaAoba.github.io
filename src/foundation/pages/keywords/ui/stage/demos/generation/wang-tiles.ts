@@ -92,34 +92,8 @@ function drawAtlas(showEdges: boolean) {
       drawRiver(10, "#6fb2ec");
     }
     // 岩：川と重ならない角のあたりに
-    if (random() < 0.6) {
-      const corner = Math.floor(random() * 4);
-      const cx = corner % 2 === 0 ? 26 : PX - 26;
-      const cy = corner < 2 ? 26 : PX - 26;
-      context.fillStyle = "#8e8a80";
-      context.beginPath();
-      context.ellipse(cx, cy, 11, 8, random(), 0, Math.PI * 2);
-      context.fill();
-    }
-    if (showEdges) {
-      // 辺の色（川あり＝赤、なし＝青）
-      for (const [bit, [x, y, w, h]] of [
-        [EDGE.top, [0, 0, PX, 8]],
-        [EDGE.right, [PX - 8, 0, 8, PX]],
-        [EDGE.bottom, [0, PX - 8, PX, 8]],
-        [EDGE.left, [0, 0, 8, PX]],
-      ] as const) {
-        context.fillStyle = (tile & bit) === 0 ? palette.sky : palette.coral;
-        context.fillRect(x, y, w, h);
-      }
-      context.fillStyle = "rgba(16,22,31,0.75)";
-      context.fillRect(PX / 2 - 16, PX / 2 - 12, 32, 24);
-      context.fillStyle = "#ffffff";
-      context.font = "bold 18px sans-serif";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText(String(tile), PX / 2, PX / 2);
-    }
+    drawTileCorner(random, context);
+    drawTileEdges(showEdges, context, tile);
     context.restore();
   }
   return canvas;
@@ -191,43 +165,7 @@ export const demo: DemoModule = {
       const random = rng(seed);
       const mode = String(params["mode"]);
       const chance = Number(params["river"]);
-      for (let y = 0; y < ROWS; y++) {
-        for (let x = 0; x < COLS; x++) {
-          let tile = 0;
-          if (mode === "repeat") {
-            tile = 0b0101; // 上下に川が通る 1 枚
-          } else if (mode === "random") {
-            tile = Math.floor(random() * 16);
-          } else {
-            const left =
-              x > 0
-                ? (tiles[y * COLS + x - 1] ?? 0)
-                : random() < chance
-                  ? EDGE.right
-                  : 0;
-            const top =
-              y > 0
-                ? (tiles[(y - 1) * COLS + x] ?? 0)
-                : random() < chance
-                  ? EDGE.bottom
-                  : 0;
-            if ((left & EDGE.right) !== 0) {
-              tile += EDGE.left;
-            }
-            if ((top & EDGE.bottom) !== 0) {
-              tile += EDGE.top;
-            }
-            // 外周では川を外へ出さない
-            if (x < COLS - 1 && random() < chance) {
-              tile += EDGE.right;
-            }
-            if (y < ROWS - 1 && random() < chance) {
-              tile += EDGE.bottom;
-            }
-          }
-          tiles[y * COLS + x] = tile;
-        }
-      }
+      populateTiles(mode, random, chance);
       // 四角形を並べ、タイル番号に合わせて画像のどの区画を貼るか（UV）を決める
       let v = 0;
       for (let y = 0; y < ROWS; y++) {
@@ -273,23 +211,7 @@ export const demo: DemoModule = {
       const used = new Set(tiles).size;
       let broken = 0;
       for (let y = 0; y < ROWS; y++) {
-        for (let x = 0; x < COLS; x++) {
-          const tile = tiles[y * COLS + x] ?? 0;
-          const right = x < COLS - 1 ? (tiles[y * COLS + x + 1] ?? 0) : null;
-          const below = y < ROWS - 1 ? (tiles[(y + 1) * COLS + x] ?? 0) : null;
-          if (
-            right !== null &&
-            ((tile & EDGE.right) !== 0) !== ((right & EDGE.left) !== 0)
-          ) {
-            broken++;
-          }
-          if (
-            below !== null &&
-            ((tile & EDGE.bottom) !== 0) !== ((below & EDGE.top) !== 0)
-          ) {
-            broken++;
-          }
-        }
+        broken = repairTileEdges(y, broken);
       }
       context.readout("使ったタイルの種類", `${used} / 16`);
       context.readout("川が途切れた境目", `${broken}`);
@@ -324,5 +246,140 @@ export const demo: DemoModule = {
         labelled.dispose();
       },
     };
+
+    function populateTiles(mode: string, random: () => number, chance: number) {
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          // 繰り返しモードは上下に川が通る同じタイルを並べる。
+          const tile =
+            mode === "repeat"
+              ? 0b0101
+              : chooseTile(mode, 0, random, x, y, chance);
+          tiles[y * COLS + x] = tile;
+        }
+      }
+    }
+
+    function chooseTile(
+      mode: string,
+      initialTile: number,
+      random: () => number,
+      x: number,
+      y: number,
+      chance: number
+    ) {
+      let tile = initialTile;
+
+      if (mode === "random") {
+        tile = Math.floor(random() * 16);
+      } else {
+        const left = calculateLeftEdge(x, y, random, chance);
+        const top = calculateTopEdge(y, x, random, chance);
+        if ((left & EDGE.right) !== 0) {
+          tile += EDGE.left;
+        }
+        if ((top & EDGE.bottom) !== 0) {
+          tile += EDGE.top;
+        }
+        // 外周では川を外へ出さない
+        if (x < COLS - 1 && random() < chance) {
+          tile += EDGE.right;
+        }
+        if (y < ROWS - 1 && random() < chance) {
+          tile += EDGE.bottom;
+        }
+      }
+      return tile;
+    }
+
+    function calculateLeftEdge(
+      x: number,
+      y: number,
+      random: () => number,
+      chance: number
+    ) {
+      return x > 0
+        ? (tiles[y * COLS + x - 1] ?? 0)
+        : random() < chance
+          ? EDGE.right
+          : 0;
+    }
+
+    function calculateTopEdge(
+      y: number,
+      x: number,
+      random: () => number,
+      chance: number
+    ) {
+      return y > 0
+        ? (tiles[(y - 1) * COLS + x] ?? 0)
+        : random() < chance
+          ? EDGE.bottom
+          : 0;
+    }
+
+    function repairTileEdges(y: number, initialBroken: number) {
+      let broken = initialBroken;
+
+      for (let x = 0; x < COLS; x++) {
+        const tile = tiles[y * COLS + x] ?? 0;
+        const right = x < COLS - 1 ? (tiles[y * COLS + x + 1] ?? 0) : null;
+        const below = y < ROWS - 1 ? (tiles[(y + 1) * COLS + x] ?? 0) : null;
+        if (
+          right !== null &&
+          ((tile & EDGE.right) !== 0) !== ((right & EDGE.left) !== 0)
+        ) {
+          broken++;
+        }
+        if (
+          below !== null &&
+          ((tile & EDGE.bottom) !== 0) !== ((below & EDGE.top) !== 0)
+        ) {
+          broken++;
+        }
+      }
+      return broken;
+    }
   },
 };
+
+function drawTileCorner(
+  random: () => number,
+  context: CanvasRenderingContext2D
+) {
+  if (random() < 0.6) {
+    const corner = Math.floor(random() * 4);
+    const cx = corner % 2 === 0 ? 26 : PX - 26;
+    const cy = corner < 2 ? 26 : PX - 26;
+    context.fillStyle = "#8e8a80";
+    context.beginPath();
+    context.ellipse(cx, cy, 11, 8, random(), 0, Math.PI * 2);
+    context.fill();
+  }
+}
+
+function drawTileEdges(
+  showEdges: boolean,
+  context: CanvasRenderingContext2D,
+  tile: number
+) {
+  if (showEdges) {
+    // 辺の色（川あり＝赤、なし＝青）
+    for (const [bit, [x, y, w, h]] of [
+      [EDGE.top, [0, 0, PX, 8]],
+      [EDGE.right, [PX - 8, 0, 8, PX]],
+      [EDGE.bottom, [0, PX - 8, PX, 8]],
+      [EDGE.left, [0, 0, 8, PX]],
+    ] as const) {
+      context.fillStyle = (tile & bit) === 0 ? palette.sky : palette.coral;
+      context.fillRect(x, y, w, h);
+    }
+    context.fillStyle = "rgba(16,22,31,0.75)";
+    context.fillRect(PX / 2 - 16, PX / 2 - 12, 32, 24);
+    context.fillStyle = "#ffffff";
+    context.font = "bold 18px sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(String(tile), PX / 2, PX / 2);
+  }
+}

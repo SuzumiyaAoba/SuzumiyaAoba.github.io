@@ -136,78 +136,11 @@ export const demo: DemoModule = {
       const damping = 0.9995;
       // 1. 水面の高さの差から、隣へ流れ出す量を更新する
       for (let j = 0; j < N; j++) {
-        for (let i = 0; i < N; i++) {
-          const index = j * N + i;
-          const surface = (ground[index] ?? 0) + (depth[index] ?? 0);
-          const neighbors = [
-            i > 0 ? index - 1 : -1,
-            i < N - 1 ? index + 1 : -1,
-            j > 0 ? index - N : -1,
-            j < N - 1 ? index + N : -1,
-          ];
-          let total = 0;
-          for (let side = 0; side < 4; side++) {
-            const other = neighbors[side] ?? -1;
-            let value = 0;
-            if (other >= 0) {
-              const difference =
-                surface - ((ground[other] ?? 0) + (depth[other] ?? 0));
-              value = Math.max(
-                0,
-                (flux[index * 4 + side] ?? 0) * damping +
-                  dt * GRAVITY * difference * CELL
-              );
-            }
-            flux[index * 4 + side] = value;
-            total += value;
-          }
-          // 持っている水より多くは流せない
-          const available = ((depth[index] ?? 0) * CELL * CELL) / dt;
-          if (total > available && total > 0) {
-            const scale = available / total;
-            for (let side = 0; side < 4; side++) {
-              flux[index * 4 + side] = (flux[index * 4 + side] ?? 0) * scale;
-            }
-          }
-        }
+        updateFluxRow(j, damping, dt);
       }
       // 2. 流れ込んだ量と流れ出た量の差で深さを更新する
       for (let j = 0; j < N; j++) {
-        for (let i = 0; i < N; i++) {
-          const index = j * N + i;
-          const inflow =
-            (i > 0 ? (flux[(index - 1) * 4 + 1] ?? 0) : 0) +
-            (i < N - 1 ? (flux[(index + 1) * 4] ?? 0) : 0) +
-            (j > 0 ? (flux[(index - N) * 4 + 3] ?? 0) : 0) +
-            (j < N - 1 ? (flux[(index + N) * 4 + 2] ?? 0) : 0);
-          const outflow =
-            (flux[index * 4] ?? 0) +
-            (flux[index * 4 + 1] ?? 0) +
-            (flux[index * 4 + 2] ?? 0) +
-            (flux[index * 4 + 3] ?? 0);
-          depth[index] = Math.max(
-            0,
-            (depth[index] ?? 0) + (dt * (inflow - outflow)) / (CELL * CELL)
-          );
-          const vx =
-            ((i > 0 ? (flux[(index - 1) * 4 + 1] ?? 0) : 0) -
-              (flux[index * 4] ?? 0) +
-              (flux[index * 4 + 1] ?? 0) -
-              (i < N - 1 ? (flux[(index + 1) * 4] ?? 0) : 0)) /
-            2;
-          const vz =
-            ((j > 0 ? (flux[(index - N) * 4 + 3] ?? 0) : 0) -
-              (flux[index * 4 + 2] ?? 0) +
-              (flux[index * 4 + 3] ?? 0) -
-              (j < N - 1 ? (flux[(index + N) * 4 + 2] ?? 0) : 0)) /
-            2;
-          speed[index] =
-            Math.hypot(vx, vz) / Math.max(CELL * (depth[index] ?? 0), 1e-3);
-          // 画面の端から水が抜ける（下流側）
-          if (i === N - 1) {
-            depth[index] = (depth[index] ?? 0) * 0.9;
-          }
-        }
+        integrateWaterRow(j, dt);
       }
     };
 
@@ -291,5 +224,93 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateFluxRow(j: number, damping: number, dt: number) {
+      for (let i = 0; i < N; i++) {
+        const index = j * N + i;
+        const surface = (ground[index] ?? 0) + (depth[index] ?? 0);
+        const neighbors = [
+          i > 0 ? index - 1 : -1,
+          i < N - 1 ? index + 1 : -1,
+          j > 0 ? index - N : -1,
+          j < N - 1 ? index + N : -1,
+        ];
+        let total = 0;
+        for (let side = 0; side < 4; side++) {
+          const other = neighbors[side] ?? -1;
+          let value = 0;
+          if (other >= 0) {
+            const difference =
+              surface - ((ground[other] ?? 0) + (depth[other] ?? 0));
+            value = Math.max(
+              0,
+              (flux[index * 4 + side] ?? 0) * damping +
+                dt * GRAVITY * difference * CELL
+            );
+          }
+          flux[index * 4 + side] = value;
+          total += value;
+        }
+        // 持っている水より多くは流せない
+        const available = ((depth[index] ?? 0) * CELL * CELL) / dt;
+        limitOutgoingFlux(total, available, index);
+      }
+    }
+
+    function limitOutgoingFlux(
+      total: number,
+      available: number,
+      index: number
+    ) {
+      if (total > available && total > 0) {
+        const scale = available / total;
+        for (let side = 0; side < 4; side++) {
+          flux[index * 4 + side] = (flux[index * 4 + side] ?? 0) * scale;
+        }
+      }
+    }
+
+    function integrateWaterRow(j: number, dt: number) {
+      for (let i = 0; i < N; i++) {
+        const index = j * N + i;
+        const inflow = calculateIncomingFlux(i, index, j);
+        const outflow =
+          (flux[index * 4] ?? 0) +
+          (flux[index * 4 + 1] ?? 0) +
+          (flux[index * 4 + 2] ?? 0) +
+          (flux[index * 4 + 3] ?? 0);
+        depth[index] = Math.max(
+          0,
+          (depth[index] ?? 0) + (dt * (inflow - outflow)) / (CELL * CELL)
+        );
+        const vx =
+          ((i > 0 ? (flux[(index - 1) * 4 + 1] ?? 0) : 0) -
+            (flux[index * 4] ?? 0) +
+            (flux[index * 4 + 1] ?? 0) -
+            (i < N - 1 ? (flux[(index + 1) * 4] ?? 0) : 0)) /
+          2;
+        const vz =
+          ((j > 0 ? (flux[(index - N) * 4 + 3] ?? 0) : 0) -
+            (flux[index * 4 + 2] ?? 0) +
+            (flux[index * 4 + 3] ?? 0) -
+            (j < N - 1 ? (flux[(index + N) * 4 + 2] ?? 0) : 0)) /
+          2;
+        speed[index] =
+          Math.hypot(vx, vz) / Math.max(CELL * (depth[index] ?? 0), 1e-3);
+        // 画面の端から水が抜ける（下流側）
+        if (i === N - 1) {
+          depth[index] = (depth[index] ?? 0) * 0.9;
+        }
+      }
+    }
+
+    function calculateIncomingFlux(i: number, index: number, j: number) {
+      return (
+        (i > 0 ? (flux[(index - 1) * 4 + 1] ?? 0) : 0) +
+        (i < N - 1 ? (flux[(index + 1) * 4] ?? 0) : 0) +
+        (j > 0 ? (flux[(index - N) * 4 + 3] ?? 0) : 0) +
+        (j < N - 1 ? (flux[(index + N) * 4 + 2] ?? 0) : 0)
+      );
+    }
   },
 };

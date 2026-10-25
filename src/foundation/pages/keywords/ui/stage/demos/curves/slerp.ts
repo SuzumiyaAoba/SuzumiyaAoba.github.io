@@ -196,31 +196,7 @@ export const demo: DemoModule = {
         }
       },
       update({ dt }) {
-        if (dirty) {
-          dirty = false;
-          for (const [index, method] of methods.entries()) {
-            const points: Vector3[] = [];
-            for (let sample = 0; sample <= SAMPLES; sample++) {
-              points.push(tipOf(method, sample / SAMPLES, new Vector3()));
-            }
-            paths[index]?.setPoints(points);
-            const mesh = ticks[index];
-            if (mesh) {
-              for (let step = 0; step <= STEPS; step++) {
-                tipOf(method, step / STEPS, tip);
-                matrix.makeTranslation(tip.x, tip.y, tip.z);
-                mesh.setMatrixAt(step, matrix);
-              }
-              mesh.instanceMatrix.needsUpdate = true;
-            }
-          }
-          endLabels[0]?.position
-            .copy(tipOf("slerp", 0, new Vector3()))
-            .add(new Vector3(0, 0.25, 0));
-          endLabels[1]?.position
-            .copy(tipOf("slerp", 1, new Vector3()))
-            .add(new Vector3(0, 0.25, 0));
-        }
+        rebuildInterpolationPaths();
         const duration = Number(params["duration"]);
         clock += dt;
         const cycle = duration * 2 + 1.2;
@@ -259,5 +235,33 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function rebuildInterpolationPaths() {
+      if (dirty) {
+        dirty = false;
+        for (const [index, method] of methods.entries()) {
+          const points: Vector3[] = [];
+          for (let sample = 0; sample <= SAMPLES; sample++) {
+            points.push(tipOf(method, sample / SAMPLES, new Vector3()));
+          }
+          paths[index]?.setPoints(points);
+          const mesh = ticks[index];
+          if (mesh) {
+            for (let step = 0; step <= STEPS; step++) {
+              tipOf(method, step / STEPS, tip);
+              matrix.makeTranslation(tip.x, tip.y, tip.z);
+              mesh.setMatrixAt(step, matrix);
+            }
+            mesh.instanceMatrix.needsUpdate = true;
+          }
+        }
+        endLabels[0]?.position
+          .copy(tipOf("slerp", 0, new Vector3()))
+          .add(new Vector3(0, 0.25, 0));
+        endLabels[1]?.position
+          .copy(tipOf("slerp", 1, new Vector3()))
+          .add(new Vector3(0, 0.25, 0));
+      }
+    }
   },
 };

@@ -234,14 +234,7 @@ export const demo: DemoModule = {
         const eased = 1 - (1 - Math.min(1, phase * 1.4)) ** 3;
         const radius = burst ? RADIUS * (0.08 + eased * 1.5) : RADIUS;
         const banded = params["bands"] === true;
-        for (let i = 0; i < made; i++) {
-          const x = directions[i * 3] ?? 0;
-          const y = directions[i * 3 + 1] ?? 0;
-          const z = directions[i * 3 + 2] ?? 0;
-          dots.positions.set([x * radius, y * radius, z * radius], i * 3);
-          const color = banded ? (bandOf(y) % 2 === 0 ? even : odd) : plain;
-          dots.colors.set([color.r, color.g, color.b], i * 3);
-        }
+        renderSphereSamples(radius, banded);
         dots.geometry.setDrawRange(0, made);
         dots.commit();
         globe.visible = !burst;
@@ -272,5 +265,16 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function renderSphereSamples(radius: number, banded: boolean) {
+      for (let i = 0; i < made; i++) {
+        const x = directions[i * 3] ?? 0;
+        const y = directions[i * 3 + 1] ?? 0;
+        const z = directions[i * 3 + 2] ?? 0;
+        dots.positions.set([x * radius, y * radius, z * radius], i * 3);
+        const color = banded ? (bandOf(y) % 2 === 0 ? even : odd) : plain;
+        dots.colors.set([color.r, color.g, color.b], i * 3);
+      }
+    }
   },
 };

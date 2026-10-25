@@ -159,17 +159,7 @@ export function createViewerMeshBatches(root: Object3D) {
             candidates.set(key, [child]);
           }
         }
-        for (const originals of candidates.values()) {
-          const mesh = createBatch(originals, parent);
-          if (mesh) {
-            parent.add(mesh);
-            mergedMeshes.add(mesh);
-            batches.push({ mesh, originals });
-            for (const original of originals) {
-              original.visible = false;
-            }
-          }
-        }
+        attachMeshBatches(candidates, parent);
       }
     },
     dispose() {
@@ -187,4 +177,21 @@ export function createViewerMeshBatches(root: Object3D) {
       batches.length = 0;
     },
   };
+
+  function attachMeshBatches(
+    candidates: Map<string, StaticMesh[]>,
+    parent: Object3D
+  ) {
+    for (const originals of candidates.values()) {
+      const mesh = createBatch(originals, parent);
+      if (mesh) {
+        parent.add(mesh);
+        mergedMeshes.add(mesh);
+        batches.push({ mesh, originals });
+        for (const original of originals) {
+          original.visible = false;
+        }
+      }
+    }
+  }
 }

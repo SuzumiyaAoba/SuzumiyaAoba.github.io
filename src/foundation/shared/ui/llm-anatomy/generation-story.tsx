@@ -238,20 +238,7 @@ function OperationCardView({
         {node.label}
       </text>
       {known ? (
-        <g data-stored-result={shown.key}>
-          <TensorGlyph payload={shown} />
-          <text
-            x={shown.rows || shown.values ? 25 : 0}
-            y="9"
-            textAnchor="middle"
-            fontSize="24"
-            className="fill-foreground font-medium"
-          >
-            {shown.rows || shown.values
-              ? payloadSymbol(shown)
-              : nodeResult(shown)}
-          </text>
-        </g>
+        <StoredOperationResult shown={shown} />
       ) : (
         <text
           y="9"
@@ -282,6 +269,23 @@ function OperationCardView({
 }
 
 const OperationCard = memo(OperationCardView);
+
+function StoredOperationResult({ shown }: { shown: GenerationPayload }) {
+  return (
+    <g data-stored-result={shown.key}>
+      <TensorGlyph payload={shown} />
+      <text
+        x={shown.rows || shown.values ? 25 : 0}
+        y="9"
+        textAnchor="middle"
+        fontSize="24"
+        className="fill-foreground font-medium"
+      >
+        {shown.rows || shown.values ? payloadSymbol(shown) : nodeResult(shown)}
+      </text>
+    </g>
+  );
+}
 
 function EdgeView({
   edge,

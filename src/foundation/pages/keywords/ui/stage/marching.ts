@@ -130,70 +130,23 @@ export function marchCubes(
       (out[offset + 2] ?? 0) - (at(i, j, k + 1) - at(i, j, k - 1)) * weight;
   };
   for (let k = 0; k < nz - 1; k++) {
-    for (let j = 0; j < ny - 1; j++) {
-      for (let i = 0; i < nx - 1; i++) {
-        let cubeIndex = 0;
-        for (const [corner, [dx, dy, dz]] of CUBE_CORNERS.entries()) {
-          const value = at(i + dx, j + dy, k + dz);
-          cornerValue[corner] = value;
-          if (value > iso) {
-            cubeIndex |= 1 << corner;
-          }
-        }
-        const bits = edgeTable[cubeIndex] ?? 0;
-        if (bits === 0) {
-          continue;
-        }
-        activeCells++;
-        for (const [edge, [a, b]] of CUBE_EDGES.entries()) {
-          if ((bits & (1 << edge)) === 0) {
-            continue;
-          }
-          const va = cornerValue[a] ?? 0;
-          const vb = cornerValue[b] ?? 0;
-          const t =
-            interpolate && Math.abs(vb - va) > 1e-9
-              ? (iso - va) / (vb - va)
-              : 0.5;
-          const ca = CUBE_CORNERS[a] ?? CUBE_CORNERS[0];
-          const cb = CUBE_CORNERS[b] ?? CUBE_CORNERS[0];
-          const offset = edge * 3;
-          for (let axis = 0; axis < 3; axis++) {
-            const cellCoordinate = [i, j, k][axis] ?? 0;
-            const pa = cellCoordinate + (ca[axis] ?? 0);
-            const pb = cellCoordinate + (cb[axis] ?? 0);
-            edgePoint[offset + axis] =
-              (origin[axis] ?? 0) + (pa + (pb - pa) * t) * spacing;
-            edgeNormal[offset + axis] = 0;
-          }
-          gradient(i + ca[0], j + ca[1], k + ca[2], edgeNormal, offset, 1 - t);
-          gradient(i + cb[0], j + cb[1], k + cb[2], edgeNormal, offset, t);
-        }
-        const base = cubeIndex * 16;
-        for (let n = 0; n < 16; n += 3) {
-          const e0 = triTable[base + n] ?? -1;
-          if (e0 < 0) {
-            break;
-          }
-          const e1 = triTable[base + n + 1] ?? 0;
-          const e2 = triTable[base + n + 2] ?? 0;
-          // 表の三角形は内側から見て反時計回りなので、外から見て反時計回りになるよう並べ替える
-          for (const edge of [e0, e2, e1]) {
-            const offset = edge * 3;
-            positions.push(
-              edgePoint[offset] ?? 0,
-              edgePoint[offset + 1] ?? 0,
-              edgePoint[offset + 2] ?? 0
-            );
-            const gx = edgeNormal[offset] ?? 0;
-            const gy = edgeNormal[offset + 1] ?? 0;
-            const gz = edgeNormal[offset + 2] ?? 0;
-            const length = Math.hypot(gx, gy, gz) || 1;
-            normals.push(gx / length, gy / length, gz / length);
-          }
-        }
-      }
-    }
+    activeCells = polygonizeCubeLayer(
+      ny,
+      nx,
+      at,
+      k,
+      cornerValue,
+      iso,
+      activeCells,
+      interpolate,
+      edgePoint,
+      origin,
+      spacing,
+      edgeNormal,
+      gradient,
+      positions,
+      normals
+    );
   }
   return {
     positions: new Float32Array(positions),
@@ -246,6 +199,144 @@ export type MarchedContour = {
   cases: Uint8Array;
 };
 
+function polygonizeCubeLayer(
+  ny: number,
+  nx: number,
+  at: (i: number, j: number, k: number) => number,
+  k: number,
+  cornerValue: Float64Array<ArrayBuffer>,
+  iso: number,
+  initialActiveCells: number,
+  interpolate: boolean,
+  edgePoint: Float64Array<ArrayBuffer>,
+  origin: readonly [number, number, number],
+  spacing: number,
+  edgeNormal: Float64Array<ArrayBuffer>,
+  gradient: (
+    i: number,
+    j: number,
+    k: number,
+    out: Float64Array,
+    offset: number,
+    weight: number
+  ) => void,
+  positions: number[],
+  normals: number[]
+) {
+  let activeCells = initialActiveCells;
+
+  for (let j = 0; j < ny - 1; j++) {
+    for (let i = 0; i < nx - 1; i++) {
+      let cubeIndex = 0;
+      for (const [corner, [dx, dy, dz]] of CUBE_CORNERS.entries()) {
+        const value = at(i + dx, j + dy, k + dz);
+        cornerValue[corner] = value;
+        if (value > iso) {
+          cubeIndex |= 1 << corner;
+        }
+      }
+      const bits = edgeTable[cubeIndex] ?? 0;
+      if (bits === 0) {
+        continue;
+      }
+      activeCells++;
+      interpolateCubeEdges(
+        bits,
+        cornerValue,
+        interpolate,
+        iso,
+        i,
+        j,
+        k,
+        edgePoint,
+        origin,
+        spacing,
+        edgeNormal,
+        gradient
+      );
+      const base = cubeIndex * 16;
+      appendCubeTriangles(base, positions, edgePoint, edgeNormal, normals);
+    }
+  }
+  return activeCells;
+}
+
+function appendCubeTriangles(
+  base: number,
+  positions: number[],
+  edgePoint: Float64Array<ArrayBuffer>,
+  edgeNormal: Float64Array<ArrayBuffer>,
+  normals: number[]
+) {
+  for (let n = 0; n < 16; n += 3) {
+    const e0 = triTable[base + n] ?? -1;
+    if (e0 < 0) {
+      break;
+    }
+    const e1 = triTable[base + n + 1] ?? 0;
+    const e2 = triTable[base + n + 2] ?? 0;
+    // 表の三角形は内側から見て反時計回りなので、外から見て反時計回りになるよう並べ替える
+    for (const edge of [e0, e2, e1]) {
+      const offset = edge * 3;
+      positions.push(
+        edgePoint[offset] ?? 0,
+        edgePoint[offset + 1] ?? 0,
+        edgePoint[offset + 2] ?? 0
+      );
+      const gx = edgeNormal[offset] ?? 0;
+      const gy = edgeNormal[offset + 1] ?? 0;
+      const gz = edgeNormal[offset + 2] ?? 0;
+      const length = Math.hypot(gx, gy, gz) || 1;
+      normals.push(gx / length, gy / length, gz / length);
+    }
+  }
+}
+
+function interpolateCubeEdges(
+  bits: number,
+  cornerValue: Float64Array<ArrayBuffer>,
+  interpolate: boolean,
+  iso: number,
+  i: number,
+  j: number,
+  k: number,
+  edgePoint: Float64Array<ArrayBuffer>,
+  origin: readonly [number, number, number],
+  spacing: number,
+  edgeNormal: Float64Array<ArrayBuffer>,
+  gradient: (
+    i: number,
+    j: number,
+    k: number,
+    out: Float64Array,
+    offset: number,
+    weight: number
+  ) => void
+) {
+  for (const [edge, [a, b]] of CUBE_EDGES.entries()) {
+    if ((bits & (1 << edge)) === 0) {
+      continue;
+    }
+    const va = cornerValue[a] ?? 0;
+    const vb = cornerValue[b] ?? 0;
+    const t =
+      interpolate && Math.abs(vb - va) > 1e-9 ? (iso - va) / (vb - va) : 0.5;
+    const ca = CUBE_CORNERS[a] ?? CUBE_CORNERS[0];
+    const cb = CUBE_CORNERS[b] ?? CUBE_CORNERS[0];
+    const offset = edge * 3;
+    for (let axis = 0; axis < 3; axis++) {
+      const cellCoordinate = [i, j, k][axis] ?? 0;
+      const pa = cellCoordinate + (ca[axis] ?? 0);
+      const pb = cellCoordinate + (cb[axis] ?? 0);
+      edgePoint[offset + axis] =
+        (origin[axis] ?? 0) + (pa + (pb - pa) * t) * spacing;
+      edgeNormal[offset + axis] = 0;
+    }
+    gradient(i + ca[0], j + ca[1], k + ca[2], edgeNormal, offset, 1 - t);
+    gradient(i + cb[0], j + cb[1], k + cb[2], edgeNormal, offset, t);
+  }
+}
+
 /**
  * マーチングスクエア：2 次元の格子の値から、iso を境にした輪郭線と内側の塗りを作る。
  * values は (nx × ny) 個の格子点の値（x が速く変わる並び）。
@@ -267,69 +358,138 @@ export function marchSquares(
   const edgeY = new Float64Array(4);
   const polygon: number[] = [];
   for (let j = 0; j < ny - 1; j++) {
-    for (let i = 0; i < nx - 1; i++) {
-      let index = 0;
-      for (const [c, [dx, dy]] of SQUARE_CORNERS.entries()) {
-        const value = values[i + dx + nx * (j + dy)] ?? 0;
-        corner[c] = value;
-        if (value > iso) {
-          index |= 1 << c;
-        }
-      }
-      cases[i + (nx - 1) * j] = index;
-      if (index === 0) {
-        continue;
-      }
-      // 辺 e は角 e と角 (e+1)%4 を結ぶ
-      for (let e = 0; e < 4; e++) {
-        const a = e;
-        const b = (e + 1) % 4;
-        const va = corner[a] ?? 0;
-        const vb = corner[b] ?? 0;
-        const t =
-          interpolate && Math.abs(vb - va) > 1e-9
-            ? (iso - va) / (vb - va)
-            : 0.5;
-        const [ax, ay] = SQUARE_CORNERS[a] ?? SQUARE_CORNERS[0];
-        const [bx, by] = SQUARE_CORNERS[b] ?? SQUARE_CORNERS[0];
-        edgeX[e] = origin[0] + (i + ax + (bx - ax) * t) * spacing;
-        edgeY[e] = origin[1] + (j + ay + (by - ay) * t) * spacing;
-      }
-      for (const [e0, e1] of SQUARE_SEGMENTS[index] ?? []) {
-        lines.push(
-          edgeX[e0] ?? 0,
-          edgeY[e0] ?? 0,
-          edgeX[e1] ?? 0,
-          edgeY[e1] ?? 0
-        );
-      }
-      // 塗り：角と辺の点を反時計回りにたどり、内側の角と境界の点だけで多角形を作る
-      polygon.length = 0;
-      for (let c = 0; c < 4; c++) {
-        const inside = (index & (1 << c)) !== 0;
-        const nextInside = (index & (1 << ((c + 1) % 4))) !== 0;
-        if (inside) {
-          const [cx, cy] = SQUARE_CORNERS[c] ?? SQUARE_CORNERS[0];
-          polygon.push(
-            origin[0] + (i + cx) * spacing,
-            origin[1] + (j + cy) * spacing
-          );
-        }
-        if (inside !== nextInside) {
-          polygon.push(edgeX[c] ?? 0, edgeY[c] ?? 0);
-        }
-      }
-      for (let p = 2; p + 3 < polygon.length; p += 2) {
-        fill.push(
-          polygon[0] ?? 0,
-          polygon[1] ?? 0,
-          polygon[p] ?? 0,
-          polygon[p + 1] ?? 0,
-          polygon[p + 2] ?? 0,
-          polygon[p + 3] ?? 0
-        );
-      }
-    }
+    contourGridRow(
+      nx,
+      values,
+      j,
+      corner,
+      iso,
+      cases,
+      interpolate,
+      edgeX,
+      origin,
+      spacing,
+      edgeY,
+      lines,
+      polygon,
+      fill
+    );
   }
   return { lines, fill, cases };
+}
+
+function contourGridRow(
+  nx: number,
+  values: Float32Array,
+  j: number,
+  corner: Float64Array<ArrayBuffer>,
+  iso: number,
+  cases: Uint8Array<ArrayBuffer>,
+  interpolate: boolean,
+  edgeX: Float64Array<ArrayBuffer>,
+  origin: readonly [number, number],
+  spacing: number,
+  edgeY: Float64Array<ArrayBuffer>,
+  lines: number[],
+  polygon: number[],
+  fill: number[]
+) {
+  for (let i = 0; i < nx - 1; i++) {
+    let index = 0;
+    for (const [c, [dx, dy]] of SQUARE_CORNERS.entries()) {
+      const value = values[i + dx + nx * (j + dy)] ?? 0;
+      corner[c] = value;
+      if (value > iso) {
+        index |= 1 << c;
+      }
+    }
+    cases[i + (nx - 1) * j] = index;
+    if (index === 0) {
+      continue;
+    }
+    // 辺 e は角 e と角 (e+1)%4 を結ぶ
+    interpolateSquareEdges(
+      corner,
+      interpolate,
+      iso,
+      edgeX,
+      origin,
+      i,
+      spacing,
+      edgeY,
+      j
+    );
+    for (const [e0, e1] of SQUARE_SEGMENTS[index] ?? []) {
+      lines.push(
+        edgeX[e0] ?? 0,
+        edgeY[e0] ?? 0,
+        edgeX[e1] ?? 0,
+        edgeY[e1] ?? 0
+      );
+    }
+    // 塗り：角と辺の点を反時計回りにたどり、内側の角と境界の点だけで多角形を作る
+    polygon.length = 0;
+    appendCellPolygon(index, polygon, origin, i, spacing, j, edgeX, edgeY);
+    for (let p = 2; p + 3 < polygon.length; p += 2) {
+      fill.push(
+        polygon[0] ?? 0,
+        polygon[1] ?? 0,
+        polygon[p] ?? 0,
+        polygon[p + 1] ?? 0,
+        polygon[p + 2] ?? 0,
+        polygon[p + 3] ?? 0
+      );
+    }
+  }
+}
+
+function interpolateSquareEdges(
+  corner: Float64Array<ArrayBuffer>,
+  interpolate: boolean,
+  iso: number,
+  edgeX: Float64Array<ArrayBuffer>,
+  origin: readonly [number, number],
+  i: number,
+  spacing: number,
+  edgeY: Float64Array<ArrayBuffer>,
+  j: number
+) {
+  for (let e = 0; e < 4; e++) {
+    const a = e;
+    const b = (e + 1) % 4;
+    const va = corner[a] ?? 0;
+    const vb = corner[b] ?? 0;
+    const t =
+      interpolate && Math.abs(vb - va) > 1e-9 ? (iso - va) / (vb - va) : 0.5;
+    const [ax, ay] = SQUARE_CORNERS[a] ?? SQUARE_CORNERS[0];
+    const [bx, by] = SQUARE_CORNERS[b] ?? SQUARE_CORNERS[0];
+    edgeX[e] = origin[0] + (i + ax + (bx - ax) * t) * spacing;
+    edgeY[e] = origin[1] + (j + ay + (by - ay) * t) * spacing;
+  }
+}
+
+function appendCellPolygon(
+  index: number,
+  polygon: number[],
+  origin: readonly [number, number],
+  i: number,
+  spacing: number,
+  j: number,
+  edgeX: Float64Array<ArrayBuffer>,
+  edgeY: Float64Array<ArrayBuffer>
+) {
+  for (let c = 0; c < 4; c++) {
+    const inside = (index & (1 << c)) !== 0;
+    const nextInside = (index & (1 << ((c + 1) % 4))) !== 0;
+    if (inside) {
+      const [cx, cy] = SQUARE_CORNERS[c] ?? SQUARE_CORNERS[0];
+      polygon.push(
+        origin[0] + (i + cx) * spacing,
+        origin[1] + (j + cy) * spacing
+      );
+    }
+    if (inside !== nextInside) {
+      polygon.push(edgeX[c] ?? 0, edgeY[c] ?? 0);
+    }
+  }
 }

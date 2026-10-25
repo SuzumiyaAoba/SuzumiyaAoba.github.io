@@ -273,13 +273,7 @@ export const demo: DemoModule = {
           steps: ["追加した点"],
           triangulate: ["三角形", "いちばん小さい角"],
         };
-        for (const [owner, keys] of Object.entries(labels)) {
-          if (owner !== mode) {
-            for (const label of keys) {
-              context.readout(label, "");
-            }
-          }
-        }
+        updateModeLabels(labels, mode);
         for (const [index, handle] of handles.entries()) {
           handle.visible = mode !== "dungeon" && index < count;
         }
@@ -310,73 +304,7 @@ export const demo: DemoModule = {
         if (mode === "dungeon") {
           showAll(false);
           const key = `dungeon|${seed}|${count}|${params["loops"]}`;
-          if (key !== signature) {
-            signature = key;
-            makeRooms();
-            const centers = rooms.map((room) => ({ x: room.x, y: room.y }));
-            const { triangles } = delaunaySteps(centers);
-            const edges = uniqueEdges(triangles);
-            const { tree, rest } = minimumSpanningTree(centers, edges);
-            // 最小全域木だけだと行き止まりばかりになるので、残りの辺を少しだけ足して輪を作る
-            const random = rng(seed * 13);
-            const loops = rest.filter(() => random() < Number(params["loops"]));
-            // 通路は L 字に曲げて描く
-            const corridor = (list: [number, number][]) => {
-              const result: Vector3[] = [];
-              for (const [a, b] of list) {
-                const pa = centers[a];
-                const pb = centers[b];
-                if (pa && pb) {
-                  result.push(
-                    new Vector3(pa.x, pa.y, 0.02),
-                    new Vector3(pb.x, pa.y, 0.02),
-                    new Vector3(pb.x, pa.y, 0.02),
-                    new Vector3(pb.x, pb.y, 0.02)
-                  );
-                }
-              }
-              return result;
-            };
-            treeLines.setPoints(corridor(tree));
-            loopLines.setPoints(corridor(loops));
-            edgeLines.setPoints(edgePoints(centers, edges));
-            const positions: number[] = [];
-            for (const room of rooms) {
-              const x0 = room.x - room.w / 2;
-              const y0 = room.y - room.h / 2;
-              const x1 = room.x + room.w / 2;
-              const y1 = room.y + room.h / 2;
-              positions.push(
-                x0,
-                y0,
-                0,
-                x1,
-                y0,
-                0,
-                x1,
-                y1,
-                0,
-                x0,
-                y0,
-                0,
-                x1,
-                y1,
-                0,
-                x0,
-                y1,
-                0
-              );
-            }
-            roomMesh.geometry.setAttribute(
-              "position",
-              new BufferAttribute(new Float32Array(positions), 3)
-            );
-            context.readout("部屋", `${rooms.length}`);
-            context.readout(
-              "ドロネーの辺 → 通路",
-              `${edges.length} → ${tree.length + loops.length}`
-            );
-          }
+          rebuildRoomConnections(key);
           edgeLines.visible = true;
           edgeLines.material.opacity = 0.25;
           treeLines.visible = true;
@@ -396,10 +324,7 @@ export const demo: DemoModule = {
           fillMesh.visible = true;
           const run = delaunaySteps(points);
           stepClock += dt;
-          if (stepClock > 1.4) {
-            stepClock = 0;
-            stepIndex = (stepIndex + 1) % (run.steps.length + 2);
-          }
+          advanceInsertionClock(run.steps.length);
           const step = run.steps[Math.min(stepIndex, run.steps.length - 1)];
           if (!step) {
             return;
@@ -416,29 +341,7 @@ export const demo: DemoModule = {
           edgeLines.setPoints(
             edgePoints(run.all, uniqueEdges(visibleTriangles))
           );
-          if (showing) {
-            const p = run.all[step.point];
-            newPoint.visible = true;
-            newPoint.position.set(p?.x ?? 0, p?.y ?? 0, 0.15);
-            if (phaseBefore) {
-              badMesh.visible = true;
-              badMesh.geometry = triangleGeometry(
-                run.all,
-                step.bad.filter(real),
-                0.005
-              );
-              boundaryLines.visible = true;
-              boundaryLines.setPoints(
-                edgePoints(
-                  run.all,
-                  step.boundary.filter(
-                    ([a, b]) => a < points.length && b < points.length
-                  ),
-                  0.02
-                )
-              );
-            }
-          }
+          renderInsertionStep(showing, run, step, phaseBefore, real, points);
           for (const [index, handle] of handles.entries()) {
             handle.visible = index < Math.min(count, stepIndex + 1);
           }
@@ -457,56 +360,7 @@ export const demo: DemoModule = {
         showAll(true);
         const key = `${points.map((p) => `${p.x.toFixed(3)},${p.y.toFixed(3)}`).join(";")}|${params["circles"]}|${params["voronoi"]}`;
         const { triangles } = delaunaySteps(points);
-        if (key !== signature) {
-          signature = key;
-          fillMesh.geometry = triangleGeometry(points, triangles);
-          edgeLines.setPoints(edgePoints(points, uniqueEdges(triangles)));
-          const circles: Vector3[] = [];
-          if (params["circles"] === true) {
-            for (const t of triangles) {
-              const c = circumcircle(at(t[0]), at(t[1]), at(t[2]));
-              const ring = circlePoints(c.x, c.y, c.r);
-              for (let index = 0; index + 1 < ring.length; index++) {
-                circles.push(
-                  ring[index] ?? new Vector3(),
-                  ring[index + 1] ?? new Vector3()
-                );
-              }
-            }
-          }
-          allCircles.setPoints(circles);
-          // ボロノイ図：隣り合う 2 つの三角形の外接円の中心を結ぶ
-          const voronoi: Vector3[] = [];
-          if (params["voronoi"] === true) {
-            const owners = new Map<string, Point2[]>();
-            for (const t of triangles) {
-              const c = circumcircle(at(t[0]), at(t[1]), at(t[2]));
-              for (const [a, b] of [
-                [t[0], t[1]],
-                [t[1], t[2]],
-                [t[2], t[0]],
-              ] as const) {
-                const edgeKey = a < b ? `${a},${b}` : `${b},${a}`;
-                owners.set(edgeKey, [...(owners.get(edgeKey) ?? []), c]);
-              }
-            }
-            for (const centers of owners.values()) {
-              const [c0, c1] = centers;
-              if (c0 && c1) {
-                voronoi.push(
-                  new Vector3(c0.x, c0.y, 0.015),
-                  new Vector3(c1.x, c1.y, 0.015)
-                );
-              }
-            }
-          }
-          voronoiLines.setPoints(voronoi);
-          context.readout("三角形", `${triangles.length}`);
-          context.readout(
-            "いちばん小さい角",
-            `${minimumAngle(points, triangles).toFixed(1)}°`
-          );
-        }
+        rebuildTriangulationMesh(key, points, triangles, at);
         // ポインターの下の三角形の外接円
         const hit = context.pointerOnPlane({ normal: [0, 0, 1] }, pointerPoint);
         const focus = hit
@@ -521,27 +375,239 @@ export const demo: DemoModule = {
           : undefined;
         focusCircle.visible = focus !== undefined;
         focusTriangle.visible = focus !== undefined;
-        if (focus) {
-          const [a, b, c] = focus.map(
-            (index) => points[index] ?? { x: 0, y: 0 }
-          );
-          if (a && b && c) {
-            const circle = circumcircle(a, b, c);
-            focusCircle.setPoints(
-              circlePoints(circle.x, circle.y, circle.r, 0.03)
-            );
-            focusTriangle.setPoints([
-              new Vector3(a.x, a.y, 0.03),
-              new Vector3(b.x, b.y, 0.03),
-              new Vector3(c.x, c.y, 0.03),
-              new Vector3(a.x, a.y, 0.03),
-            ]);
-          }
-        }
+        renderFocusedTriangle(focus, points);
         context.caption(
           "どの三角形も、3 つの頂点を通る円（外接円）の中にほかの点を含まない。この条件を満たすつなぎ方は、いちばん小さい角が最も大きくなる（細長い三角形が最も少ない）ことが知られている。点をドラッグすると、条件が崩れた所だけ辺がつなぎ変わる。"
         );
       },
     };
+
+    function renderFocusedTriangle(
+      focus: Triangle | undefined,
+      points: Point2[]
+    ) {
+      if (focus) {
+        const [a, b, c] = focus.map((index) => points[index] ?? { x: 0, y: 0 });
+        if (a && b && c) {
+          const circle = circumcircle(a, b, c);
+          focusCircle.setPoints(
+            circlePoints(circle.x, circle.y, circle.r, 0.03)
+          );
+          focusTriangle.setPoints([
+            new Vector3(a.x, a.y, 0.03),
+            new Vector3(b.x, b.y, 0.03),
+            new Vector3(c.x, c.y, 0.03),
+            new Vector3(a.x, a.y, 0.03),
+          ]);
+        }
+      }
+    }
+
+    function renderInsertionStep(
+      showing: boolean,
+      run: {
+        steps: {
+          point: number;
+          bad: Triangle[];
+          boundary: [number, number][];
+          after: Triangle[];
+        }[];
+        triangles: Triangle[];
+        all: Point2[];
+      },
+      step: {
+        point: number;
+        bad: Triangle[];
+        boundary: [number, number][];
+        after: Triangle[];
+      },
+      phaseBefore: boolean,
+      real: (t: Triangle) => boolean,
+      points: Point2[]
+    ) {
+      if (showing) {
+        const p = run.all[step.point];
+        newPoint.visible = true;
+        newPoint.position.set(p?.x ?? 0, p?.y ?? 0, 0.15);
+        if (phaseBefore) {
+          badMesh.visible = true;
+          badMesh.geometry = triangleGeometry(
+            run.all,
+            step.bad.filter(real),
+            0.005
+          );
+          boundaryLines.visible = true;
+          boundaryLines.setPoints(
+            edgePoints(
+              run.all,
+              step.boundary.filter(
+                ([a, b]) => a < points.length && b < points.length
+              ),
+              0.02
+            )
+          );
+        }
+      }
+    }
+
+    function updateModeLabels(labels: Record<string, string[]>, mode: string) {
+      for (const [owner, keys] of Object.entries(labels)) {
+        if (owner !== mode) {
+          for (const label of keys) {
+            context.readout(label, "");
+          }
+        }
+      }
+    }
+
+    function rebuildRoomConnections(key: string) {
+      if (key !== signature) {
+        signature = key;
+        makeRooms();
+        const centers = rooms.map((room) => ({ x: room.x, y: room.y }));
+        const { triangles } = delaunaySteps(centers);
+        const edges = uniqueEdges(triangles);
+        const { tree, rest } = minimumSpanningTree(centers, edges);
+        // 最小全域木だけだと行き止まりばかりになるので、残りの辺を少しだけ足して輪を作る
+        const random = rng(seed * 13);
+        const loops = rest.filter(() => random() < Number(params["loops"]));
+        // 通路は L 字に曲げて描く
+        const corridor = (list: [number, number][]) => {
+          const result: Vector3[] = [];
+          for (const [a, b] of list) {
+            const pa = centers[a];
+            const pb = centers[b];
+            if (pa && pb) {
+              result.push(
+                new Vector3(pa.x, pa.y, 0.02),
+                new Vector3(pb.x, pa.y, 0.02),
+                new Vector3(pb.x, pa.y, 0.02),
+                new Vector3(pb.x, pb.y, 0.02)
+              );
+            }
+          }
+          return result;
+        };
+        treeLines.setPoints(corridor(tree));
+        loopLines.setPoints(corridor(loops));
+        edgeLines.setPoints(edgePoints(centers, edges));
+        const positions: number[] = [];
+        for (const room of rooms) {
+          const x0 = room.x - room.w / 2;
+          const y0 = room.y - room.h / 2;
+          const x1 = room.x + room.w / 2;
+          const y1 = room.y + room.h / 2;
+          positions.push(
+            x0,
+            y0,
+            0,
+            x1,
+            y0,
+            0,
+            x1,
+            y1,
+            0,
+            x0,
+            y0,
+            0,
+            x1,
+            y1,
+            0,
+            x0,
+            y1,
+            0
+          );
+        }
+        roomMesh.geometry.setAttribute(
+          "position",
+          new BufferAttribute(new Float32Array(positions), 3)
+        );
+        context.readout("部屋", `${rooms.length}`);
+        context.readout(
+          "ドロネーの辺 → 通路",
+          `${edges.length} → ${tree.length + loops.length}`
+        );
+      }
+    }
+
+    function rebuildTriangulationMesh(
+      key: string,
+      points: Point2[],
+      triangles: Triangle[],
+      at: (index: number) => Point2
+    ) {
+      if (key !== signature) {
+        signature = key;
+        fillMesh.geometry = triangleGeometry(points, triangles);
+        edgeLines.setPoints(edgePoints(points, uniqueEdges(triangles)));
+        const circles: Vector3[] = [];
+        if (params["circles"] === true) {
+          for (const t of triangles) {
+            const c = circumcircle(at(t[0]), at(t[1]), at(t[2]));
+            const ring = circlePoints(c.x, c.y, c.r);
+            for (let index = 0; index + 1 < ring.length; index++) {
+              circles.push(
+                ring[index] ?? new Vector3(),
+                ring[index + 1] ?? new Vector3()
+              );
+            }
+          }
+        }
+        allCircles.setPoints(circles);
+        // ボロノイ図：隣り合う 2 つの三角形の外接円の中心を結ぶ
+        const voronoi: Vector3[] = [];
+        renderVoronoiEdges(triangles, at, voronoi);
+        voronoiLines.setPoints(voronoi);
+        context.readout("三角形", `${triangles.length}`);
+        context.readout(
+          "いちばん小さい角",
+          `${minimumAngle(points, triangles).toFixed(1)}°`
+        );
+      }
+    }
+
+    function renderVoronoiEdges(
+      triangles: Triangle[],
+      at: (index: number) => Point2,
+      voronoi: Vector3[]
+    ) {
+      if (params["voronoi"] === true) {
+        const owners = new Map<string, Point2[]>();
+        collectCircumcenterOwners(triangles, at, owners);
+        for (const centers of owners.values()) {
+          const [c0, c1] = centers;
+          if (c0 && c1) {
+            voronoi.push(
+              new Vector3(c0.x, c0.y, 0.015),
+              new Vector3(c1.x, c1.y, 0.015)
+            );
+          }
+        }
+      }
+    }
+    function advanceInsertionClock(stepCount: number) {
+      if (stepClock > 1.4) {
+        stepClock = 0;
+        stepIndex = (stepIndex + 1) % (stepCount + 2);
+      }
+    }
   },
 };
+
+function collectCircumcenterOwners(
+  triangles: Triangle[],
+  at: (index: number) => Point2,
+  owners: Map<string, Point2[]>
+) {
+  for (const t of triangles) {
+    const c = circumcircle(at(t[0]), at(t[1]), at(t[2]));
+    for (const [a, b] of [
+      [t[0], t[1]],
+      [t[1], t[2]],
+      [t[2], t[0]],
+    ] as const) {
+      const edgeKey = a < b ? `${a},${b}` : `${b},${a}`;
+      owners.set(edgeKey, [...(owners.get(edgeKey) ?? []), c]);
+    }
+  }
+}

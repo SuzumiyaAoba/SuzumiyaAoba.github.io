@@ -191,106 +191,7 @@ export const demo: DemoModule = {
         const steps = 4;
         const h = dt / steps;
 
-        for (const body of bodies) {
-          let submerged = 0;
-          for (let step = 0; step < steps; step++) {
-            totalForce.set(0, -body.mass * GRAVITY, 0);
-            torque.set(0, 0, 0);
-            submerged = 0;
-            const [w, hh, d] = body.spec.size;
-            const cellHeight = hh / n;
-            const last = step === steps - 1;
-            for (let k = 0; k < n; k++) {
-              for (let j = 0; j < n; j++) {
-                for (let i = 0; i < n; i++) {
-                  // 物体を n×n×n の小さな箱に分け、その中心で水面との上下を調べる
-                  local.set(
-                    ((i + 0.5) / n - 0.5) * w,
-                    ((j + 0.5) / n - 0.5) * hh,
-                    ((k + 0.5) / n - 0.5) * d
-                  );
-                  arm.copy(local).applyQuaternion(body.orientation);
-                  world.copy(arm).add(body.position);
-                  const depth = waterHeight(state, world.x, world.z) - world.y;
-                  const fraction = Math.min(
-                    1,
-                    Math.max(0, depth / cellHeight + 0.5)
-                  );
-                  if (fraction > 0) {
-                    // アルキメデスの原理：押しのけた水の重さだけ上向きの力
-                    const cellVolume = body.volume / n ** 3;
-                    force.set(
-                      0,
-                      WATER_DENSITY * GRAVITY * cellVolume * fraction,
-                      0
-                    );
-                    // 水中の点は、その点の速度に逆らう抵抗を受ける
-                    pointVelocity
-                      .copy(body.angular)
-                      .cross(arm)
-                      .add(body.velocity);
-                    force.addScaledVector(
-                      pointVelocity,
-                      -drag * WATER_DENSITY * cellVolume * fraction * 2
-                    );
-                    totalForce.add(force);
-                    torque.add(arm.clone().cross(force));
-                    submerged += fraction / n ** 3;
-                  }
-                  if (last && show) {
-                    matrix.makeTranslation(world.x, world.y, world.z);
-                    dots.setMatrixAt(dotIndex, matrix);
-                    dots.setColorAt(dotIndex, fraction > 0 ? wet : dry);
-                    dotIndex++;
-                    if (fraction > 0) {
-                      arrowPoints.push(
-                        world.clone(),
-                        world
-                          .clone()
-                          .add(new Vector3(0, fraction * 0.5 * (4 / n), 0))
-                      );
-                    }
-                  }
-                }
-              }
-            }
-            // 並進と回転を半陰的オイラー法で進める
-            body.velocity.addScaledVector(totalForce, h / body.mass);
-            body.position.addScaledVector(body.velocity, h);
-            // 沈んだ物体は海底で止める
-            if (body.position.y < -4) {
-              body.position.y = -4;
-              body.velocity.set(0, 0, 0);
-            }
-            inverse.copy(body.orientation).invert();
-            torque.applyQuaternion(inverse);
-            torque.divide(body.inertia);
-            torque.applyQuaternion(body.orientation);
-            body.angular.addScaledVector(torque, h);
-            body.angular.multiplyScalar(1 - 0.2 * h);
-            spin
-              .set(
-                body.angular.x * h * 0.5,
-                body.angular.y * h * 0.5,
-                body.angular.z * h * 0.5,
-                0
-              )
-              .multiply(body.orientation);
-            body.orientation.set(
-              body.orientation.x + spin.x,
-              body.orientation.y + spin.y,
-              body.orientation.z + spin.z,
-              body.orientation.w + spin.w
-            );
-            body.orientation.normalize();
-          }
-          body.mesh.position.copy(body.position);
-          body.mesh.quaternion.copy(body.orientation);
-          context.readout(
-            body.spec.name,
-            `${Math.round(submerged * 100)}% 沈む`
-          );
-        }
+        dotIndex = simulateBuoyantBodies(steps, n, dotIndex, drag, show, h);
 
         dots.count = dotIndex;
         dots.visible = show;
@@ -309,5 +210,139 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function simulateBuoyantBodies(
+      steps: number,
+      n: number,
+      initialDotIndex: number,
+      drag: number,
+      show: boolean,
+      h: number
+    ) {
+      let dotIndex = initialDotIndex;
+
+      for (const body of bodies) {
+        let submerged = 0;
+        for (let step = 0; step < steps; step++) {
+          totalForce.set(0, -body.mass * GRAVITY, 0);
+          torque.set(0, 0, 0);
+          submerged = 0;
+          const [w, hh, d] = body.spec.size;
+          const cellHeight = hh / n;
+          const last = step === steps - 1;
+          for (let k = 0; k < n; k++) {
+            for (let j = 0; j < n; j++) {
+              ({ submerged, dotIndex } = accumulateSubmergedSamples(
+                n,
+                w,
+                j,
+                hh,
+                k,
+                d,
+                body,
+                cellHeight,
+                drag,
+                submerged,
+                last,
+                show,
+                dotIndex
+              ));
+            }
+          }
+          // 並進と回転を半陰的オイラー法で進める
+          body.velocity.addScaledVector(totalForce, h / body.mass);
+          body.position.addScaledVector(body.velocity, h);
+          // 沈んだ物体は海底で止める
+          if (body.position.y < -4) {
+            body.position.y = -4;
+            body.velocity.set(0, 0, 0);
+          }
+          inverse.copy(body.orientation).invert();
+          torque.applyQuaternion(inverse);
+          torque.divide(body.inertia);
+          torque.applyQuaternion(body.orientation);
+          body.angular.addScaledVector(torque, h);
+          body.angular.multiplyScalar(1 - 0.2 * h);
+          spin
+            .set(
+              body.angular.x * h * 0.5,
+              body.angular.y * h * 0.5,
+              body.angular.z * h * 0.5,
+              0
+            )
+            .multiply(body.orientation);
+          body.orientation.set(
+            body.orientation.x + spin.x,
+            body.orientation.y + spin.y,
+            body.orientation.z + spin.z,
+            body.orientation.w + spin.w
+          );
+          body.orientation.normalize();
+        }
+        body.mesh.position.copy(body.position);
+        body.mesh.quaternion.copy(body.orientation);
+        context.readout(body.spec.name, `${Math.round(submerged * 100)}% 沈む`);
+      }
+      return dotIndex;
+    }
+
+    function accumulateSubmergedSamples(
+      n: number,
+      w: number,
+      j: number,
+      hh: number,
+      k: number,
+      d: number,
+      body: (typeof bodies)[number],
+      cellHeight: number,
+      drag: number,
+      initialSubmerged: number,
+      last: boolean,
+      show: boolean,
+      initialDotIndex: number
+    ) {
+      let submerged = initialSubmerged;
+      let dotIndex = initialDotIndex;
+
+      for (let i = 0; i < n; i++) {
+        // 物体を n×n×n の小さな箱に分け、その中心で水面との上下を調べる
+        local.set(
+          ((i + 0.5) / n - 0.5) * w,
+          ((j + 0.5) / n - 0.5) * hh,
+          ((k + 0.5) / n - 0.5) * d
+        );
+        arm.copy(local).applyQuaternion(body.orientation);
+        world.copy(arm).add(body.position);
+        const depth = waterHeight(state, world.x, world.z) - world.y;
+        const fraction = Math.min(1, Math.max(0, depth / cellHeight + 0.5));
+        if (fraction > 0) {
+          // アルキメデスの原理：押しのけた水の重さだけ上向きの力
+          const cellVolume = body.volume / n ** 3;
+          force.set(0, WATER_DENSITY * GRAVITY * cellVolume * fraction, 0);
+          // 水中の点は、その点の速度に逆らう抵抗を受ける
+          pointVelocity.copy(body.angular).cross(arm).add(body.velocity);
+          force.addScaledVector(
+            pointVelocity,
+            -drag * WATER_DENSITY * cellVolume * fraction * 2
+          );
+          totalForce.add(force);
+          torque.add(arm.clone().cross(force));
+          submerged += fraction / n ** 3;
+        }
+        if (last && show) {
+          matrix.makeTranslation(world.x, world.y, world.z);
+          dots.setMatrixAt(dotIndex, matrix);
+          dots.setColorAt(dotIndex, fraction > 0 ? wet : dry);
+          dotIndex++;
+          if (fraction > 0) {
+            arrowPoints.push(
+              world.clone(),
+              world.clone().add(new Vector3(0, fraction * 0.5 * (4 / n), 0))
+            );
+          }
+        }
+      }
+      return { submerged, dotIndex };
+    }
   },
 };

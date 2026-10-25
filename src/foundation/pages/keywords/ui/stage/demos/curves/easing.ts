@@ -208,20 +208,32 @@ export const demo: DemoModule = {
 
         context.readout("経過 t", t.toFixed(2));
         context.readout("イージング後", eased.toFixed(3));
-        context.caption(
-          key === "outBack"
-            ? "Out Back：一度目標を少し行き過ぎてから戻る。UI のポップアップに勢いが出る。"
-            : key === "inBack"
-              ? "In Back：動き出す前に少し逆へ引く。溜めを作る『予備動作』の表現。"
-              : key === "outBounce"
-                ? "Out Bounce：着地して何度か跳ねる。落下したアイテムやコインに。"
-                : key === "outElastic"
-                  ? "Out Elastic：ばねのように振動しながら収まる。強調したい通知やアイコンに。"
-                  : key === "inOutCubic"
-                    ? "InOut Cubic：ゆっくり出てゆっくり止まる。カメラ移動や画面遷移の基本。"
-                    : "Linear：等速。機械的で、始まりと終わりが唐突に感じられる。"
-        );
+        updateEasingCaption(key);
       },
     };
+
+    function updateEasingCaption(
+      key:
+        | "linear"
+        | "inOutCubic"
+        | "outBack"
+        | "outBounce"
+        | "outElastic"
+        | "inBack"
+    ) {
+      context.caption(
+        key === "outBack"
+          ? "Out Back：一度目標を少し行き過ぎてから戻る。UI のポップアップに勢いが出る。"
+          : key === "inBack"
+            ? "In Back：動き出す前に少し逆へ引く。溜めを作る『予備動作』の表現。"
+            : key === "outBounce"
+              ? "Out Bounce：着地して何度か跳ねる。落下したアイテムやコインに。"
+              : key === "outElastic"
+                ? "Out Elastic：ばねのように振動しながら収まる。強調したい通知やアイコンに。"
+                : key === "inOutCubic"
+                  ? "InOut Cubic：ゆっくり出てゆっくり止まる。カメラ移動や画面遷移の基本。"
+                  : "Linear：等速。機械的で、始まりと終わりが唐突に感じられる。"
+      );
+    }
   },
 };

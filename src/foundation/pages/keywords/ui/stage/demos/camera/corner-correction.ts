@@ -107,45 +107,7 @@ export const demo: DemoModule = {
           clock = 0;
         }
         for (const lane of lanes) {
-          if (restart || lane.player === null) {
-            // 体の右端が、足場の左端より overlap だけ内側に入る位置
-            lane.player = new Player(
-              BLOCKS,
-              new Vector2(LEDGE_X + overlap - PLAYER.width / 2, 0)
-            );
-            lane.points.length = 0;
-            lane.corners = 0;
-          }
-          const { player } = lane;
-          const input = {
-            move: clock > RUN_AT ? 1 : 0,
-            jumpPressed: clock >= JUMP_AT && clock - h < JUMP_AT,
-            jumpHeld: true,
-          };
-          const before = player.events.length;
-          player.update(h, input, { corner: lane.corrected ? corner : 0 });
-          lane.corners += player.events
-            .slice(before)
-            .filter((event) => event.kind === "corner").length;
-          lane.avatar.update(player);
-          lane.points.push(
-            new Vector3(
-              player.position.x + PLAYER.width / 2,
-              player.position.y + PLAYER.height,
-              0.5
-            )
-          );
-          lane.path.setPoints(lane.points);
-          lane.sliver.scale.x = overlap;
-          lane.sliver.position.x = LEDGE_X + overlap / 2;
-          lane.sliver.visible = clock < JUMP_AT + 0.2;
-          const onLedge = player.onGround && player.position.y > 1;
-          let text = lane.corners > 0 ? "角をよけて横へずらした" : "";
-          if (clock > JUMP_AT + 0.9) {
-            text = onLedge ? "上の足場に乗れた" : "頭を打って落ちた";
-          }
-          lane.result.setText(text);
-          lane.result.visible = text !== "";
+          advanceLane(lane, restart, overlap, h, corner);
         }
         const corrected = overlap <= corner;
         context.readout("頭の重なり", `${Math.round(overlap * 100)} cm`);
@@ -160,5 +122,52 @@ export const demo: DemoModule = {
         );
       },
     };
+    function advanceLane(
+      lane: (typeof lanes)[number],
+      restart: boolean,
+      overlap: number,
+      h: number,
+      corner: number
+    ) {
+      if (restart || lane.player === null) {
+        // 体の右端が、足場の左端より overlap だけ内側に入る位置
+        lane.player = new Player(
+          BLOCKS,
+          new Vector2(LEDGE_X + overlap - PLAYER.width / 2, 0)
+        );
+        lane.points.length = 0;
+        lane.corners = 0;
+      }
+      const { player } = lane;
+      const input = {
+        move: clock > RUN_AT ? 1 : 0,
+        jumpPressed: clock >= JUMP_AT && clock - h < JUMP_AT,
+        jumpHeld: true,
+      };
+      const before = player.events.length;
+      player.update(h, input, { corner: lane.corrected ? corner : 0 });
+      lane.corners += player.events
+        .slice(before)
+        .filter((event) => event.kind === "corner").length;
+      lane.avatar.update(player);
+      lane.points.push(
+        new Vector3(
+          player.position.x + PLAYER.width / 2,
+          player.position.y + PLAYER.height,
+          0.5
+        )
+      );
+      lane.path.setPoints(lane.points);
+      lane.sliver.scale.x = overlap;
+      lane.sliver.position.x = LEDGE_X + overlap / 2;
+      lane.sliver.visible = clock < JUMP_AT + 0.2;
+      const onLedge = player.onGround && player.position.y > 1;
+      let text = lane.corners > 0 ? "角をよけて横へずらした" : "";
+      if (clock > JUMP_AT + 0.9) {
+        text = onLedge ? "上の足場に乗れた" : "頭を打って落ちた";
+      }
+      lane.result.setText(text);
+      lane.result.visible = text !== "";
+    }
   },
 };

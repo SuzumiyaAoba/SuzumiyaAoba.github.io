@@ -1,3 +1,4 @@
+import type { InterleavedBufferAttribute } from "three";
 import {
   BufferAttribute,
   Color,
@@ -249,17 +250,7 @@ export const demo: DemoModule = {
         if (mode === "height") {
           // 比較用：標高だけで色を決める
           const level = (h - SEA) / 0.5;
-          color.set(
-            h < SEA
-              ? "#2a6f9e"
-              : level < 0.05
-                ? "#e3d29a"
-                : level < 0.4
-                  ? "#6aa04f"
-                  : level < 0.7
-                    ? "#7c7266"
-                    : "#eef2f6"
-          );
+          setTerrainColor(h, level);
         } else if (mode === "temperature") {
           color.copy(cold).lerp(hot, Math.max(0, Math.min(1, t)));
         } else if (mode === "moisture") {
@@ -269,42 +260,18 @@ export const demo: DemoModule = {
         }
         colors.set([color.r, color.g, color.b], index * 3);
         // 木：バイオームごとの密度で生やす
-        if (
-          params["trees"] === true &&
-          h >= SEA + 0.03 &&
-          random() < biome.trees * 0.35
-        ) {
-          const x = positions.getX(index) + (random() - 0.5) * 0.05;
-          const z = positions.getZ(index) + (random() - 0.5) * 0.05;
-          const s = 0.7 + random() * 0.6;
-          if (biome.kind === "cone" && coneCount < MAX_TREES) {
-            matrix.compose(
-              new Vector3(x, y + 0.14 * s, z),
-              quaternion,
-              new Vector3(s, s, s)
-            );
-            cones.setMatrixAt(coneCount, matrix);
-            coneCount++;
-          } else if (biome.kind === "round" && roundCount < MAX_TREES) {
-            matrix.compose(
-              new Vector3(x, y + 0.09 * s, z),
-              quaternion,
-              new Vector3(s, s * 1.1, s)
-            );
-            rounds.setMatrixAt(roundCount, matrix);
-            rounds.setColorAt(
-              roundCount,
-              color.set(
-                biome === BIOMES["rainforest"]
-                  ? "#1f6a2c"
-                  : biome === BIOMES["savanna"]
-                    ? "#7c8f3a"
-                    : "#3f7d34"
-              )
-            );
-            roundCount++;
-          }
-        }
+        ({ coneCount, roundCount } = plantBiomeTrees(
+          h,
+          random,
+          biome,
+          positions,
+          index,
+          coneCount,
+          matrix,
+          y,
+          quaternion,
+          roundCount
+        ));
       }
       cones.count = coneCount;
       rounds.count = roundCount;
@@ -391,5 +358,73 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function setTerrainColor(h: number, level: number) {
+      color.set(
+        h < SEA
+          ? "#2a6f9e"
+          : level < 0.05
+            ? "#e3d29a"
+            : level < 0.4
+              ? "#6aa04f"
+              : level < 0.7
+                ? "#7c7266"
+                : "#eef2f6"
+      );
+    }
+
+    function plantBiomeTrees(
+      h: number,
+      random: () => number,
+      biome: Biome,
+      positions: BufferAttribute | InterleavedBufferAttribute,
+      index: number,
+      initialConeCount: number,
+      matrix: Matrix4,
+      y: number,
+      quaternion: Quaternion,
+      initialRoundCount: number
+    ) {
+      let coneCount = initialConeCount;
+      let roundCount = initialRoundCount;
+
+      if (
+        params["trees"] === true &&
+        h >= SEA + 0.03 &&
+        random() < biome.trees * 0.35
+      ) {
+        const x = positions.getX(index) + (random() - 0.5) * 0.05;
+        const z = positions.getZ(index) + (random() - 0.5) * 0.05;
+        const s = 0.7 + random() * 0.6;
+        if (biome.kind === "cone" && coneCount < MAX_TREES) {
+          matrix.compose(
+            new Vector3(x, y + 0.14 * s, z),
+            quaternion,
+            new Vector3(s, s, s)
+          );
+          cones.setMatrixAt(coneCount, matrix);
+          coneCount++;
+        } else if (biome.kind === "round" && roundCount < MAX_TREES) {
+          matrix.compose(
+            new Vector3(x, y + 0.09 * s, z),
+            quaternion,
+            new Vector3(s, s * 1.1, s)
+          );
+          rounds.setMatrixAt(roundCount, matrix);
+          rounds.setColorAt(
+            roundCount,
+            color.set(
+              biome === BIOMES["rainforest"]
+                ? "#1f6a2c"
+                : biome === BIOMES["savanna"]
+                  ? "#7c8f3a"
+                  : "#3f7d34"
+            )
+          );
+          roundCount++;
+        }
+      }
+      return { coneCount, roundCount };
+    }
   },
 };

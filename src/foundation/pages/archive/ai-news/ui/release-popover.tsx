@@ -13,7 +13,7 @@ import { Pin, X } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { formatReleaseDate } from "../model/release-calendar";
-import type { Release } from "../model/release-calendar";
+import type { Release, ReleaseInterval } from "../model/release-calendar";
 import { ProviderIcon } from "./provider-identity";
 import { ReleaseCard } from "./release-card";
 
@@ -291,32 +291,13 @@ function ReleasePopover({
     >
       {active.pinned ? (
         <>
-          <div className="flex shrink-0 items-start justify-between gap-3 border-b p-4">
-            <div className="min-w-0 space-y-1">
-              <p className="flex items-center gap-1.5 text-label text-muted-foreground">
-                <Pin className="size-3" aria-hidden="true" />
-                {en ? "Release details" : "リリースの詳細"}
-              </p>
-              <h2 id={`${id}-title`} className="text-sm font-semibold">
-                {dateLabel}
-                {active.series && ` · ${active.series}`}
-              </h2>
-              <p className="text-label text-muted-foreground">
-                {active.releases.length}
-                {en ? " releases" : " 件のリリース"}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => onClose(true)}
-              aria-label={
-                en ? "Close release details" : "リリースの詳細を閉じる"
-              }
-              className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-            >
-              <X className="size-4" aria-hidden="true" />
-            </button>
-          </div>
+          <PinnedReleaseHeader
+            en={en}
+            id={id}
+            dateLabel={dateLabel}
+            active={active}
+            onClose={onClose}
+          />
           <div className="min-h-0 space-y-3 overflow-y-auto overscroll-contain p-3">
             {active.releases.length > 0 ? (
               active.releases.map((release) => (
@@ -336,42 +317,137 @@ function ReleasePopover({
           </div>
         </>
       ) : (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            {providers.map((provider) => (
-              <ProviderIcon
-                key={provider}
-                provider={provider}
-                className="size-7 rounded-lg"
-              />
-            ))}
-            <p className="text-muted-foreground">
-              {dateLabel}
-              {active.series && ` · ${active.series}`}
-            </p>
-          </div>
-          <p className="leading-5 font-semibold">
-            {active.releases.map((release) => release.title).join(" / ") ||
-              (en ? "No releases recorded" : "リリース記録なし")}
-          </p>
-          {interval && (
-            <div className="space-y-1 border-t pt-2">
-              <p className="font-medium">
-                {en
-                  ? `After ${interval.days} days`
-                  : `前回から ${interval.days} 日`}
-              </p>
-              <p className="leading-5 text-muted-foreground">
-                {interval.previousDate} · {interval.previousTitles.join(" / ")}
-              </p>
-            </div>
-          )}
-          <p className="text-mini text-muted-foreground">
-            {en ? "Click to pin release details" : "クリックで詳細を固定表示"}
-          </p>
-        </div>
+        <ReleaseTooltip
+          providers={providers}
+          dateLabel={dateLabel}
+          active={active}
+          en={en}
+          interval={interval}
+        />
       )}
     </div>,
     portalContainer
+  );
+}
+
+function ReleaseTooltip({
+  providers,
+  dateLabel,
+  active,
+  en,
+  interval,
+}: {
+  providers: (
+    | "OpenAI"
+    | "Anthropic"
+    | "Google"
+    | "DeepSeek"
+    | "Alibaba"
+    | "Moonshot AI"
+    | "Meta"
+    | "Mistral AI"
+    | "xAI"
+    | "Z.ai"
+    | "MiniMax"
+    | "Microsoft"
+    | "Cohere"
+    | "AI21 Labs"
+    | "Amazon"
+    | "NVIDIA"
+    | "IBM"
+    | "Ai2"
+    | "Hugging Face"
+    | "Tencent"
+    | "Baidu"
+    | "01.AI"
+    | "TII"
+    | "Databricks"
+    | "Preferred Networks"
+    | "ELYZA"
+    | "SB Intuitions"
+    | "LLM-jp"
+    | "Other"
+  )[];
+  dateLabel: string;
+  active: OpenPopover;
+  en: boolean;
+  interval: ReleaseInterval | undefined;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        {providers.map((provider) => (
+          <ProviderIcon
+            key={provider}
+            provider={provider}
+            className="size-7 rounded-lg"
+          />
+        ))}
+        <p className="text-muted-foreground">
+          {dateLabel}
+          {active.series && ` · ${active.series}`}
+        </p>
+      </div>
+      <p className="leading-5 font-semibold">
+        {active.releases.map((release) => release.title).join(" / ") ||
+          (en ? "No releases recorded" : "リリース記録なし")}
+      </p>
+      {interval && (
+        <div className="space-y-1 border-t pt-2">
+          <p className="font-medium">
+            {en
+              ? `After ${interval.days} days`
+              : `前回から ${interval.days} 日`}
+          </p>
+          <p className="leading-5 text-muted-foreground">
+            {interval.previousDate} · {interval.previousTitles.join(" / ")}
+          </p>
+        </div>
+      )}
+      <p className="text-mini text-muted-foreground">
+        {en ? "Click to pin release details" : "クリックで詳細を固定表示"}
+      </p>
+    </div>
+  );
+}
+
+function PinnedReleaseHeader({
+  en,
+  id,
+  dateLabel,
+  active,
+  onClose,
+}: {
+  en: boolean;
+  id: string;
+  dateLabel: string;
+  active: OpenPopover;
+  onClose: (restoreFocus?: boolean) => void;
+}) {
+  return (
+    <div className="flex shrink-0 items-start justify-between gap-3 border-b p-4">
+      <div className="min-w-0 space-y-1">
+        <p className="flex items-center gap-1.5 text-label text-muted-foreground">
+          <Pin className="size-3" aria-hidden="true" />
+          {en ? "Release details" : "リリースの詳細"}
+        </p>
+        <h2 id={`${id}-title`} className="text-sm font-semibold">
+          {dateLabel}
+          {active.series && ` · ${active.series}`}
+        </h2>
+        <p className="text-label text-muted-foreground">
+          {active.releases.length}
+          {en ? " releases" : " 件のリリース"}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => onClose(true)}
+        aria-label={en ? "Close release details" : "リリースの詳細を閉じる"}
+        className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+      >
+        <X className="size-4" aria-hidden="true" />
+      </button>
+    </div>
   );
 }

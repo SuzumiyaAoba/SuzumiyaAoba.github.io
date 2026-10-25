@@ -31,28 +31,32 @@ type Field = Float32Array<ArrayBuffer>; // RGB × N × N
 function initialImage(): Field {
   const field = new Float32Array(N * N * 3);
   for (let j = 0; j < N; j++) {
-    for (let i = 0; i < N; i++) {
-      const x = i / N;
-      const y = j / N;
-      const checker = (Math.floor(x * 8) + Math.floor(y * 8)) % 2;
-      let r = checker ? 0.9 : 0.12;
-      let g = checker ? 0.85 : 0.14;
-      let b = checker ? 0.75 : 0.2;
-      const d = Math.hypot(x - 0.5, y - 0.68);
-      if (d < 0.16) {
-        r = 1;
-        g = 0.45;
-        b = 0.2;
-      }
-      if (Math.abs(x - 0.5) < 0.03 && y > 0.2 && y < 0.5) {
-        r = 0.25;
-        g = 0.75;
-        b = 1;
-      }
-      field.set([r, g, b], (j * N + i) * 3);
-    }
+    generateVelocityRow(j, field);
   }
   return field;
+}
+
+function generateVelocityRow(j: number, field: Float32Array<ArrayBuffer>) {
+  for (let i = 0; i < N; i++) {
+    const x = i / N;
+    const y = j / N;
+    const checker = (Math.floor(x * 8) + Math.floor(y * 8)) % 2;
+    let r = checker ? 0.9 : 0.12;
+    let g = checker ? 0.85 : 0.14;
+    let b = checker ? 0.75 : 0.2;
+    const d = Math.hypot(x - 0.5, y - 0.68);
+    if (d < 0.16) {
+      r = 1;
+      g = 0.45;
+      b = 0.2;
+    }
+    if (Math.abs(x - 0.5) < 0.03 && y > 0.2 && y < 0.5) {
+      r = 0.25;
+      g = 0.75;
+      b = 1;
+    }
+    field.set([r, g, b], (j * N + i) * 3);
+  }
 }
 
 /** 流れの速度（マス/秒）。「ねじって戻す」は時間とともに向きが反転し、周期の終わりに元の絵に戻るはずの流れ。 */
@@ -269,31 +273,7 @@ export const demo: DemoModule = {
         const stepDt = Number(params["cfl"]) / maxSpeed;
         accumulator += dt * 0.6;
         let steps = 0;
-        while (accumulator >= stepDt && steps < 4) {
-          accumulator -= stepDt;
-          steps++;
-          const [naive, semi, mac] = panels;
-          if (naive && semi && mac) {
-            forwardEuler(naive.field, naive.next, flow, time, stepDt);
-            semiLagrangian(semi.field, semi.next, flow, time, stepDt);
-            macCormack(
-              mac.field,
-              mac.next,
-              scratch,
-              scratch2,
-              flow,
-              time,
-              stepDt
-            );
-            for (const panel of panels) {
-              [panel.field, panel.next] = [panel.next, panel.field];
-            }
-          }
-          time += stepDt;
-          if (flow === "twist" && time >= PERIOD) {
-            time -= PERIOD;
-          }
-        }
+        steps = advanceAdvectionSteps(stepDt, steps, flow);
         for (const panel of panels) {
           for (let k = 0; k < N * N; k++) {
             for (let c = 0; c < 3; c++) {
@@ -309,26 +289,7 @@ export const demo: DemoModule = {
         // 中央のパネルに、逆向きにたどる線を描く
         const showTrace = params["trace"] === true;
         traces.visible = showTrace;
-        if (showTrace) {
-          const center = panels[1]?.x ?? 0;
-          const points: Vector3[] = [];
-          for (let j = 8; j < N; j += 16) {
-            for (let i = 8; i < N; i += 16) {
-              // 8 ステップ分、逆向きにたどった道筋
-              let x = i;
-              let y = j;
-              for (let k = 0; k < TRACE_STEPS; k++) {
-                const { u, v } = velocity(flow, x, y, time);
-                const nx = x - u * stepDt;
-                const ny = y - v * stepDt;
-                points.push(toWorld(center, x, y), toWorld(center, nx, ny));
-                x = nx;
-                y = ny;
-              }
-            }
-          }
-          traces.setPoints(points);
-        }
+        renderBacktrace(showTrace, flow, stepDt);
         context.readout("格子", `${N}×${N}`);
         if (flow === "twist") {
           context.readout(
@@ -341,5 +302,63 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderBacktrace(showTrace: boolean, flow: string, stepDt: number) {
+      if (showTrace) {
+        const center = panels[1]?.x ?? 0;
+        const points: Vector3[] = [];
+        for (let j = 8; j < N; j += 16) {
+          for (let i = 8; i < N; i += 16) {
+            // 8 ステップ分、逆向きにたどった道筋
+            let x = i;
+            let y = j;
+            for (let k = 0; k < TRACE_STEPS; k++) {
+              const { u, v } = velocity(flow, x, y, time);
+              const nx = x - u * stepDt;
+              const ny = y - v * stepDt;
+              points.push(toWorld(center, x, y), toWorld(center, nx, ny));
+              x = nx;
+              y = ny;
+            }
+          }
+        }
+        traces.setPoints(points);
+      }
+    }
+
+    function advanceAdvectionSteps(
+      stepDt: number,
+      initialSteps: number,
+      flow: string
+    ) {
+      let steps = initialSteps;
+
+      while (accumulator >= stepDt && steps < 4) {
+        accumulator -= stepDt;
+        steps++;
+        const [naive, semi, mac] = panels;
+        if (naive && semi && mac) {
+          forwardEuler(naive.field, naive.next, flow, time, stepDt);
+          semiLagrangian(semi.field, semi.next, flow, time, stepDt);
+          macCormack(
+            mac.field,
+            mac.next,
+            scratch,
+            scratch2,
+            flow,
+            time,
+            stepDt
+          );
+          for (const panel of panels) {
+            [panel.field, panel.next] = [panel.next, panel.field];
+          }
+        }
+        time += stepDt;
+        if (flow === "twist" && time >= PERIOD) {
+          time -= PERIOD;
+        }
+      }
+      return steps;
+    }
   },
 };

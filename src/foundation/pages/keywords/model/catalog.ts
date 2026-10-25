@@ -133,30 +133,7 @@ const getGameSubcategories = async (): Promise<KeywordSubcategory[]> => {
     if (!current) {
       throw new Error(`Keyword without subcategory: ${line}`);
     }
-    const [name, english, effect] = line.split("|");
-    if (!(name && english && effect)) {
-      throw new Error(`Invalid keyword: ${line}`);
-    }
-    const slug = slugify(english.split(" / ")[0] ?? english);
-    if (current.keywords.some((keyword) => keyword.slug === slug)) {
-      throw new Error(`Duplicate keyword slug: ${current.id}/${slug}`);
-    }
-    const subcategoryId = current.id;
-    const category = categoryDefinitions.find((entry) =>
-      entry.subcategoryIds.some((id) => id === subcategoryId)
-    );
-    if (!category) {
-      throw new Error(`Unmapped keyword subcategory: ${current.id}`);
-    }
-    current.keywords.push({
-      slug,
-      name,
-      english,
-      effect,
-      categoryId: category.id,
-      subcategoryId: current.id,
-      demoKey: `${current.id}/${slug}`,
-    });
+    appendGameKeyword(line, current);
   }
   if (
     subcategories.length !== 20 ||
@@ -286,3 +263,30 @@ export const getLegacyKeywordSubcategory = async (id: string) =>
       category.subcategories.map((subcategory) => ({ category, subcategory }))
     )
     .find(({ subcategory }) => subcategory.id === id);
+
+function appendGameKeyword(line: string, current: KeywordSubcategory) {
+  const [name, english, effect] = line.split("|");
+  if (!(name && english && effect)) {
+    throw new Error(`Invalid keyword: ${line}`);
+  }
+  const slug = slugify(english.split(" / ")[0] ?? english);
+  if (current.keywords.some((keyword) => keyword.slug === slug)) {
+    throw new Error(`Duplicate keyword slug: ${current.id}/${slug}`);
+  }
+  const subcategoryId = current.id;
+  const category = categoryDefinitions.find((entry) =>
+    entry.subcategoryIds.some((id) => id === subcategoryId)
+  );
+  if (!category) {
+    throw new Error(`Unmapped keyword subcategory: ${current.id}`);
+  }
+  current.keywords.push({
+    slug,
+    name,
+    english,
+    effect,
+    categoryId: category.id,
+    subcategoryId: current.id,
+    demoKey: `${current.id}/${slug}`,
+  });
+}

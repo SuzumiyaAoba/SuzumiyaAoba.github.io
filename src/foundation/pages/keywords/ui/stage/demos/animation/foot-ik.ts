@@ -151,71 +151,8 @@ export const demo: DemoModule = {
           hipDrop = Math.min(hipDrop, t.y - fk[side].y);
         }
         // 着地の判定：アニメーション上で足が床に近い間は「着地中」
-        for (const side of SIDES) {
-          const planted = fk[side].y < ANKLE + 0.025;
-          const state = lock[side];
-          if (planted && !state.active) {
-            state.active = true;
-            state.position.copy(targets[side]);
-            state.slide = [targets[side].clone()];
-            const print = prints[printIndex % PRINTS];
-            printIndex++;
-            if (print) {
-              print.visible = true;
-              print.position.set(
-                targets[side].x,
-                ground(targets[side].x, targets[side].z) + 0.006,
-                targets[side].z + 0.05
-              );
-            }
-          } else if (!planted || state.position.distanceTo(fk[side]) > 0.3) {
-            // 足が浮いた、または固定した位置から離れすぎた（脚が伸び切る）ら固定を外す
-            state.active = false;
-          }
-          if (state.active) {
-            if (useLock) {
-              targets[side].x = state.position.x;
-              targets[side].z = state.position.z;
-            } else {
-              const last = state.slide.at(-1);
-              if (last) {
-                slideTotal += Math.hypot(
-                  targets[side].x - last.x,
-                  targets[side].z - last.z
-                );
-              }
-              state.slide.push(targets[side].clone());
-            }
-          }
-        }
-        if (useIk || useLock) {
-          man.hips.position.y += useIk ? hipDrop : 0;
-          world.updateMatrixWorld(true);
-          for (const side of SIDES) {
-            const hip = man.upperLeg[side].getWorldPosition(new Vector3());
-            const pole = hip.clone().add(new Vector3(0, -0.2, 1));
-            targetPosition.copy(targets[side]);
-            world.localToWorld(targetPosition);
-            applyTwoBone(
-              man.upperLeg[side],
-              man.lowerLeg[side],
-              targetPosition,
-              pole,
-              BODY.upperLeg,
-              BODY.lowerLeg
-            );
-            // 足の裏を地面の傾きに合わせる
-            const tz = targets[side].z;
-            const slope = useIk
-              ? Math.atan2(ground(0, tz + 0.05) - ground(0, tz - 0.05), 0.1)
-              : 0;
-            levelFoot(
-              man.foot[side],
-              0,
-              lock[side].active ? slope : slope - 0.3
-            );
-          }
-        }
+        updateFootLocks(targets, useLock);
+        applyFootIk(useIk, useLock, hipDrop, targets);
         for (const [index, side] of SIDES.entries()) {
           const line = slides[index];
           if (line) {
@@ -237,5 +174,89 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateFootLocks(
+      targets: { L: Vector3; R: Vector3 },
+      useLock: boolean
+    ) {
+      for (const side of SIDES) {
+        const planted = fk[side].y < ANKLE + 0.025;
+        const state = lock[side];
+        if (planted && !state.active) {
+          state.active = true;
+          state.position.copy(targets[side]);
+          state.slide = [targets[side].clone()];
+          const print = prints[printIndex % PRINTS];
+          printIndex++;
+          if (print) {
+            print.visible = true;
+            print.position.set(
+              targets[side].x,
+              ground(targets[side].x, targets[side].z) + 0.006,
+              targets[side].z + 0.05
+            );
+          }
+        } else if (!planted || state.position.distanceTo(fk[side]) > 0.3) {
+          // 足が浮いた、または固定した位置から離れすぎた（脚が伸び切る）ら固定を外す
+          state.active = false;
+        }
+        updateLockedFootTarget(state, useLock, targets, side);
+      }
+    }
+
+    function updateLockedFootTarget(
+      state: { active: boolean; position: Vector3; slide: Vector3[] },
+      useLock: boolean,
+      targets: { L: Vector3; R: Vector3 },
+      side: Side
+    ) {
+      if (state.active) {
+        if (useLock) {
+          targets[side].x = state.position.x;
+          targets[side].z = state.position.z;
+        } else {
+          const last = state.slide.at(-1);
+          if (last) {
+            slideTotal += Math.hypot(
+              targets[side].x - last.x,
+              targets[side].z - last.z
+            );
+          }
+          state.slide.push(targets[side].clone());
+        }
+      }
+    }
+
+    function applyFootIk(
+      useIk: boolean,
+      useLock: boolean,
+      hipDrop: number,
+      targets: { L: Vector3; R: Vector3 }
+    ) {
+      if (useIk || useLock) {
+        man.hips.position.y += useIk ? hipDrop : 0;
+        world.updateMatrixWorld(true);
+        for (const side of SIDES) {
+          const hip = man.upperLeg[side].getWorldPosition(new Vector3());
+          const pole = hip.clone().add(new Vector3(0, -0.2, 1));
+          targetPosition.copy(targets[side]);
+          world.localToWorld(targetPosition);
+          applyTwoBone(
+            man.upperLeg[side],
+            man.lowerLeg[side],
+            targetPosition,
+            pole,
+            BODY.upperLeg,
+            BODY.lowerLeg
+          );
+          // 足の裏を地面の傾きに合わせる
+          const tz = targets[side].z;
+          const slope = useIk
+            ? Math.atan2(ground(0, tz + 0.05) - ground(0, tz - 0.05), 0.1)
+            : 0;
+          levelFoot(man.foot[side], 0, lock[side].active ? slope : slope - 0.3);
+        }
+      }
+    }
   },
 };

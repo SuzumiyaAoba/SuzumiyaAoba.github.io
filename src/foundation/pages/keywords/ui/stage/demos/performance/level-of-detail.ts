@@ -107,16 +107,7 @@ export const demo: DemoModule = {
           // 画面の高さに対する見かけの大きさ（半径 0.6 の物体）
           const size = ((0.6 / distance) * focal) / bias;
           let level = 0;
-          if (useLod) {
-            level = THRESHOLDS.filter((threshold) => size < threshold).length;
-            // 余裕：今のレベルから離れるには、境目を少し余分に越える必要がある
-            if (margin > 0 && level !== item.level) {
-              const boundary = THRESHOLDS[Math.min(level, item.level)] ?? 0;
-              if (Math.abs(size - boundary) < boundary * margin) {
-                ({ level } = item);
-              }
-            }
-          }
+          level = chooseDetailLevel(useLod, level, size, margin, item);
           if (
             level !== item.level ||
             item.mesh.geometry !== geometries[level]
@@ -142,5 +133,27 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function chooseDetailLevel(
+      useLod: boolean,
+      initialLevel: number,
+      size: number,
+      margin: number,
+      item: (typeof items)[number]
+    ) {
+      let level = initialLevel;
+
+      if (useLod) {
+        level = THRESHOLDS.filter((threshold) => size < threshold).length;
+        // 余裕：今のレベルから離れるには、境目を少し余分に越える必要がある
+        if (margin > 0 && level !== item.level) {
+          const boundary = THRESHOLDS[Math.min(level, item.level)] ?? 0;
+          if (Math.abs(size - boundary) < boundary * margin) {
+            ({ level } = item);
+          }
+        }
+      }
+      return level;
+    }
   },
 };

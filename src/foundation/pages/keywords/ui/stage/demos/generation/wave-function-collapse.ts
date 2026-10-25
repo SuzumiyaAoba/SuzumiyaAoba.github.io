@@ -197,12 +197,7 @@ export const demo: DemoModule = {
           }
           // 今のマスの候補のどれかと隣り合えるタイルだけを、隣のマスに残す
           let allowed = 0;
-          for (let t = 0; t < tileset.names.length; t++) {
-            if ((domain >> t) & 1) {
-              // 和集合（OR）を取る
-              allowed ^= (tileset.compat[t]?.[d] ?? 0) & ~allowed;
-            }
-          }
+          allowed = combineAllowedTiles(domain, allowed, d);
           const neighbor = ny * COLS + nx;
           const before = domains[neighbor] ?? 0;
           const after = before & allowed;
@@ -226,22 +221,7 @@ export const demo: DemoModule = {
       // 道路は外周の外へ伸びないように、外向きの辺に道があるタイルを最初から除く
       const { sockets } = tileset;
       if (sockets) {
-        for (let cell = 0; cell < count; cell++) {
-          const x = cell % COLS;
-          const y = Math.floor(cell / COLS);
-          let mask = domains[cell] ?? 0;
-          for (const [t, sides] of sockets.entries()) {
-            const outward =
-              (y === 0 && sides[0] === 1) ||
-              (x === COLS - 1 && sides[1] === 1) ||
-              (y === ROWS - 1 && sides[2] === 1) ||
-              (x === 0 && sides[3] === 1);
-            if (outward) {
-              mask &= ~(1 << t);
-            }
-          }
-          domains[cell] = mask;
-        }
+        constrainBoundaryCells(sockets);
         for (let cell = 0; cell < count; cell++) {
           propagate(cell);
         }
@@ -252,16 +232,7 @@ export const demo: DemoModule = {
     const step = () => {
       let best = -1;
       let bestScore = Number.POSITIVE_INFINITY;
-      for (let cell = 0; cell < count; cell++) {
-        const n = bitCount(domains[cell] ?? 0);
-        if (n > 1) {
-          const score = n + random() * 0.5;
-          if (score < bestScore) {
-            bestScore = score;
-            best = cell;
-          }
-        }
-      }
+      ({ bestScore, best } = findLowestEntropyCell(bestScore, best));
       if (best < 0) {
         return false;
       }
@@ -366,39 +337,7 @@ export const demo: DemoModule = {
               )
             : hidden
         );
-        for (const [d, [dx, dy]] of DIRS.entries()) {
-          const on = sockets?.[d] === 1;
-          const center = new Vector3(
-            (x + dx * 0.27) * CELL,
-            0.1,
-            (z + dy * 0.27) * CELL
-          );
-          const size =
-            dx === 0
-              ? new Vector3(CELL * 0.42, 0.04, CELL * 0.3)
-              : new Vector3(CELL * 0.3, 0.04, CELL * 0.42);
-          roads.setMatrixAt(
-            cell * 5 + 1 + d,
-            on ? new Matrix4().compose(center, quaternion, size) : hidden
-          );
-          const lineSize =
-            dx === 0
-              ? new Vector3(CELL * 0.05, 0.05, CELL * 0.4)
-              : new Vector3(CELL * 0.4, 0.05, CELL * 0.05);
-          lines.setMatrixAt(
-            cell * 4 + d,
-            on
-              ? new Matrix4().compose(
-                  center
-                    .clone()
-                    .setY(0.11)
-                    .add(new Vector3(dx * 0.03, 0, dy * 0.03)),
-                  quaternion,
-                  lineSize
-                )
-              : hidden
-          );
-        }
+        renderCellRoads(sockets, x, z, cell);
       }
       tiles.instanceMatrix.needsUpdate = true;
       if (tiles.instanceColor) {
@@ -452,5 +391,101 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderCellRoads(
+      sockets: number[] | undefined,
+      x: number,
+      z: number,
+      cell: number
+    ) {
+      for (const [d, [dx, dy]] of DIRS.entries()) {
+        const on = sockets?.[d] === 1;
+        const center = new Vector3(
+          (x + dx * 0.27) * CELL,
+          0.1,
+          (z + dy * 0.27) * CELL
+        );
+        const size =
+          dx === 0
+            ? new Vector3(CELL * 0.42, 0.04, CELL * 0.3)
+            : new Vector3(CELL * 0.3, 0.04, CELL * 0.42);
+        roads.setMatrixAt(
+          cell * 5 + 1 + d,
+          on ? new Matrix4().compose(center, quaternion, size) : hidden
+        );
+        const lineSize =
+          dx === 0
+            ? new Vector3(CELL * 0.05, 0.05, CELL * 0.4)
+            : new Vector3(CELL * 0.4, 0.05, CELL * 0.05);
+        lines.setMatrixAt(
+          cell * 4 + d,
+          on
+            ? new Matrix4().compose(
+                center
+                  .clone()
+                  .setY(0.11)
+                  .add(new Vector3(dx * 0.03, 0, dy * 0.03)),
+                quaternion,
+                lineSize
+              )
+            : hidden
+        );
+      }
+    }
+
+    function findLowestEntropyCell(
+      initialBestScore: number,
+      initialBest: number
+    ) {
+      let bestScore = initialBestScore;
+      let best = initialBest;
+
+      for (let cell = 0; cell < count; cell++) {
+        const n = bitCount(domains[cell] ?? 0);
+        if (n > 1) {
+          const score = n + random() * 0.5;
+          if (score < bestScore) {
+            bestScore = score;
+            best = cell;
+          }
+        }
+      }
+      return { bestScore, best };
+    }
+
+    function constrainBoundaryCells(sockets: number[][]) {
+      for (let cell = 0; cell < count; cell++) {
+        const x = cell % COLS;
+        const y = Math.floor(cell / COLS);
+        let mask = domains[cell] ?? 0;
+        for (const [t, sides] of sockets.entries()) {
+          const outward =
+            (y === 0 && sides[0] === 1) ||
+            (x === COLS - 1 && sides[1] === 1) ||
+            (y === ROWS - 1 && sides[2] === 1) ||
+            (x === 0 && sides[3] === 1);
+          if (outward) {
+            mask &= ~(1 << t);
+          }
+        }
+        domains[cell] = mask;
+      }
+    }
+
+    function combineAllowedTiles(
+      domain: number,
+      initialAllowed: number,
+      d: number
+    ) {
+      let allowed = initialAllowed;
+
+      for (let t = 0; t < tileset.names.length; t++) {
+        if ((domain >> t) & 1) {
+          // 和集合（OR）を取る
+          allowed ^= (tileset.compat[t]?.[d] ?? 0) & ~allowed;
+        }
+      }
+      return allowed;
+    }
   },
 };

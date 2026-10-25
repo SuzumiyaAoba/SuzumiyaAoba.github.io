@@ -179,25 +179,7 @@ export const demo: DemoModule = {
           shown = Math.min(total, shown + dt * Number(params["speed"]));
         }
         const step = Math.floor(shown);
-        for (let index = 0; index < map.blocked.length; index++) {
-          if (!walkable(map, index)) {
-            continue;
-          }
-          const closed =
-            (result.closedAt[index] ?? -1) >= 0 &&
-            (result.closedAt[index] ?? 0) <= step;
-          const open =
-            !closed &&
-            (result.openedAt[index] ?? -1) >= 0 &&
-            (result.openedAt[index] ?? 0) <= step;
-          if (closed) {
-            view.tint(index, palette.sky, 0.45);
-          } else if (open) {
-            view.tint(index, palette.amber, 0.6);
-          } else {
-            view.tint(index, null);
-          }
-        }
+        renderSearchGrid(step);
         const finished = shown >= total;
         if (finished && !walking) {
           walking = true;
@@ -217,23 +199,7 @@ export const demo: DemoModule = {
             view.tint(index, palette.coral, 0.55);
           }
           const { done } = agent.update(dt);
-          if (done) {
-            pause += dt;
-            if (pause > 1.6) {
-              // 次のゴールを自動で選ぶ（スタートから遠い所）
-              let candidate = goal;
-              for (let tries = 0; tries < 200; tries++) {
-                const index = Math.floor(random() * map.blocked.length);
-                const far =
-                  cellCenter(map, index).distanceTo(agent.position) > 5;
-                if (walkable(map, index) && far) {
-                  candidate = index;
-                  break;
-                }
-              }
-              retarget(candidate);
-            }
-          }
+          chooseNextGoal(done, dt);
         } else {
           agent.update(0);
         }
@@ -260,5 +226,46 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function renderSearchGrid(step: number) {
+      for (let index = 0; index < map.blocked.length; index++) {
+        if (!walkable(map, index)) {
+          continue;
+        }
+        const closed =
+          (result.closedAt[index] ?? -1) >= 0 &&
+          (result.closedAt[index] ?? 0) <= step;
+        const open =
+          !closed &&
+          (result.openedAt[index] ?? -1) >= 0 &&
+          (result.openedAt[index] ?? 0) <= step;
+        if (closed) {
+          view.tint(index, palette.sky, 0.45);
+        } else if (open) {
+          view.tint(index, palette.amber, 0.6);
+        } else {
+          view.tint(index, null);
+        }
+      }
+    }
+
+    function chooseNextGoal(done: boolean, dt: number) {
+      if (done) {
+        pause += dt;
+        if (pause > 1.6) {
+          // 次のゴールを自動で選ぶ（スタートから遠い所）
+          let candidate = goal;
+          for (let tries = 0; tries < 200; tries++) {
+            const index = Math.floor(random() * map.blocked.length);
+            const far = cellCenter(map, index).distanceTo(agent.position) > 5;
+            if (walkable(map, index) && far) {
+              candidate = index;
+              break;
+            }
+          }
+          retarget(candidate);
+        }
+      }
+    }
   },
 };

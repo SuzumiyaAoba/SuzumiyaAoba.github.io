@@ -205,22 +205,7 @@ export const demo: DemoModule = {
         const smooth = params["smooth"] === true;
         const steps = smooth ? SUBDIVISIONS : 1;
         const sampled: [Vector3, Vector3][] = [];
-        for (let index = 0; index < rows.length - 1; index++) {
-          const r0 = rows[Math.max(0, index - 1)];
-          const r1 = rows[index];
-          const r2 = rows[index + 1];
-          const r3 = rows[Math.min(rows.length - 1, index + 2)];
-          if (!(r0 && r1 && r2 && r3)) {
-            continue;
-          }
-          for (let step = 0; step < steps; step++) {
-            const t = step / steps;
-            sampled.push([
-              catmull(r0[0], r1[0], r2[0], r3[0], t, new Vector3()),
-              catmull(r0[1], r1[1], r2[1], r3[1], t, new Vector3()),
-            ]);
-          }
-        }
+        interpolateRibbonRows(rows, steps, sampled);
         const last = rows.at(-1);
         if (last) {
           sampled.push(last);
@@ -243,16 +228,7 @@ export const demo: DemoModule = {
         positionAttribute.needsUpdate = true;
         trailAttribute.needsUpdate = true;
 
-        for (let index = 0; index < MAX_SAMPLES * 2; index++) {
-          const row = rows[Math.floor(index / 2)];
-          const source = row ? row[index % 2] : undefined;
-          if (source) {
-            point.copy(source);
-          } else {
-            point.set(0, -100, 0);
-          }
-          dots.positions.set([point.x, point.y, point.z], index * 3);
-        }
+        updateRibbonVertices(rows);
         dots.commit();
         const pointsOnly = params["mode"] === "points";
         ribbon.visible = !pointsOnly;
@@ -267,5 +243,41 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateRibbonVertices(rows: [Vector3, Vector3][]) {
+      for (let index = 0; index < MAX_SAMPLES * 2; index++) {
+        const row = rows[Math.floor(index / 2)];
+        const source = row ? row[index % 2] : undefined;
+        if (source) {
+          point.copy(source);
+        } else {
+          point.set(0, -100, 0);
+        }
+        dots.positions.set([point.x, point.y, point.z], index * 3);
+      }
+    }
+
+    function interpolateRibbonRows(
+      rows: [Vector3, Vector3][],
+      steps: number,
+      sampled: [Vector3, Vector3][]
+    ) {
+      for (let index = 0; index < rows.length - 1; index++) {
+        const r0 = rows[Math.max(0, index - 1)];
+        const r1 = rows[index];
+        const r2 = rows[index + 1];
+        const r3 = rows[Math.min(rows.length - 1, index + 2)];
+        if (!(r0 && r1 && r2 && r3)) {
+          continue;
+        }
+        for (let step = 0; step < steps; step++) {
+          const t = step / steps;
+          sampled.push([
+            catmull(r0[0], r1[0], r2[0], r3[0], t, new Vector3()),
+            catmull(r0[1], r1[1], r2[1], r3[1], t, new Vector3()),
+          ]);
+        }
+      }
+    }
   },
 };

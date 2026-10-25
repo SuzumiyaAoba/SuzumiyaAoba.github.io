@@ -334,21 +334,7 @@ export const demo: DemoModule = {
         }
 
         timer -= dt;
-        if (timer <= 0) {
-          timer = 0.12;
-          estimates.uniform.push(estimate("uniform"));
-          estimates.chosen.push(estimate(chosen));
-          for (const list of [estimates.uniform, estimates.chosen]) {
-            if (list.length > 90) {
-              list.shift();
-            }
-          }
-          graph.push([
-            estimates.uniform.at(-1) ?? 0,
-            estimates.chosen.at(-1) ?? 0,
-            truth,
-          ]);
-        }
+        updateEstimates(chosen);
         context.readout("選んだ標本の数", `${sampled}`);
         context.readout(
           "ばらつき（正解に対する割合：一様 / 選んだ分布）",
@@ -366,5 +352,23 @@ export const demo: DemoModule = {
         barMaterial.dispose();
       },
     };
+
+    function updateEstimates(chosen: Proposal) {
+      if (timer <= 0) {
+        timer = 0.12;
+        estimates.uniform.push(estimate("uniform"));
+        estimates.chosen.push(estimate(chosen));
+        for (const list of [estimates.uniform, estimates.chosen]) {
+          if (list.length > 90) {
+            list.shift();
+          }
+        }
+        graph.push([
+          estimates.uniform.at(-1) ?? 0,
+          estimates.chosen.at(-1) ?? 0,
+          truth,
+        ]);
+      }
+    }
   },
 };

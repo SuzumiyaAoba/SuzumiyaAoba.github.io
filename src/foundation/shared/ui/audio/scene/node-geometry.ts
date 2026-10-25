@@ -88,6 +88,40 @@ export function nodeShellGeometry(upper: boolean) {
   const uvs: number[] = [];
   const indices: number[] = [];
   const count = shellLoop(0).length;
+  appendShellSections(sections, positions, normals, uvs, count, upper, indices);
+  const wall = new BufferGeometry();
+  wall.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  wall.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+  wall.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+  wall.setIndex(indices);
+  if (!upper) {
+    return wall;
+  }
+  const top = new Shape(
+    shellLoop(1).map((point) => new Vector2(point.x, -point.z))
+  );
+  top.holes.push(roundedOutline(145.8, 77.8, 8.7));
+  const cap = new ShapeGeometry(top, 64);
+  cap.rotateX(-Math.PI / 2);
+  cap.translate(0, nodeDimensions.height, 0);
+  const combined = mergeGeometries([wall, cap]);
+  wall.dispose();
+  cap.dispose();
+  if (combined === null) {
+    throw new Error("Cannot join the NODE enclosure surfaces.");
+  }
+  return combined;
+}
+
+function appendShellSections(
+  sections: ShellSection[],
+  positions: number[],
+  normals: number[],
+  uvs: number[],
+  count: number,
+  upper: boolean,
+  indices: number[]
+) {
   for (const [row, section] of sections.entries()) {
     const loop = shellLoop(section.inset);
     for (const [column, point] of loop.entries()) {
@@ -123,28 +157,6 @@ export function nodeShellGeometry(upper: boolean) {
       indices.push(a, a + count, b, b, a + count, b + count);
     }
   }
-  const wall = new BufferGeometry();
-  wall.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  wall.setAttribute("normal", new Float32BufferAttribute(normals, 3));
-  wall.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
-  wall.setIndex(indices);
-  if (!upper) {
-    return wall;
-  }
-  const top = new Shape(
-    shellLoop(1).map((point) => new Vector2(point.x, -point.z))
-  );
-  top.holes.push(roundedOutline(145.8, 77.8, 8.7));
-  const cap = new ShapeGeometry(top, 64);
-  cap.rotateX(-Math.PI / 2);
-  cap.translate(0, nodeDimensions.height, 0);
-  const combined = mergeGeometries([wall, cap]);
-  wall.dispose();
-  cap.dispose();
-  if (combined === null) {
-    throw new Error("Cannot join the NODE enclosure surfaces.");
-  }
-  return combined;
 }
 
 /** 背面の接続パネルを別体にし、端子の奥へ筐体が食い込まない薄肉の側壁。 */

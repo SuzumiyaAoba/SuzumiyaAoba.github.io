@@ -31,9 +31,11 @@ import {
   toggleSelection,
 } from "../model/release-calendar";
 import type {
+  Release,
   ReleaseFilters,
   RenderedRelease,
 } from "../model/release-calendar";
+import type { ReleaseTimelineRange } from "../model/release-timeline";
 import { getReleaseTimelineRange } from "../model/release-timeline";
 import { useCurrentDate } from "../model/use-current-date";
 import { ReleaseCalendarStrip } from "./release-calendar-strip";
@@ -311,195 +313,35 @@ export function ReleaseExplorer({
               locale={locale}
             />
           </div>
-          <div className="border-b">
-            <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-6">
-              <search className="relative col-span-2 sm:col-span-1">
-                <label htmlFor={`${id}-search`} className="sr-only">
-                  {en ? "Search models" : "モデルを検索"}
-                </label>
-                <Search
-                  className="pointer-events-none absolute top-3 left-3 size-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Input
-                  id={`${id}-search`}
-                  type="search"
-                  variant="icon"
-                  value={filters.query}
-                  onChange={(event) =>
-                    updateFilters({ query: event.target.value })
-                  }
-                  placeholder={
-                    en
-                      ? "Find a model, series, or provider…"
-                      : "モデル名・系列で検索…"
-                  }
-                />
-              </search>
-              <select
-                aria-label={en ? "Release type" : "リリースの種類"}
-                className={releaseSelectClass}
-                value={filters.kind}
-                onChange={(event) =>
-                  updateFilters({ kind: event.target.value })
-                }
-              >
-                {kindOptions.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 sm:px-6">
-              <fieldset
-                aria-label={en ? "Display mode" : "表示形式"}
-                className="flex max-w-full min-w-0 gap-1 rounded-lg bg-muted/50 p-1"
-              >
-                {(
-                  [
-                    [
-                      "intervals",
-                      en ? "Timeline" : "時間軸",
-                      en ? "All dates" : "全期間の比較",
-                      GitCommitHorizontal,
-                    ],
-                    [
-                      "calendar",
-                      en ? "Calendar" : "カレンダー",
-                      en ? "Calendar" : "カレンダー",
-                      CalendarDays,
-                    ],
-                    ["list", en ? "List" : "一覧", en ? "List" : "一覧", List],
-                  ] as const
-                ).map(([value, label, ariaLabel, Icon]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    aria-label={ariaLabel}
-                    aria-pressed={view === value}
-                    onClick={() => {
-                      popover.dismiss();
-                      setView(value);
-                    }}
-                    className={cn(
-                      "relative flex h-11 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4 sm:text-sm",
-                      view === value
-                        ? "bg-background font-semibold text-ai-accent-ink shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    <Icon className="size-4" aria-hidden="true" />
-                    {label}
-                  </button>
-                ))}
-              </fieldset>
-              <div className="flex min-h-10 items-center gap-3">
-                <output className="flex items-center gap-1.5 text-xs text-muted-foreground tabular-nums">
-                  <SlidersHorizontal
-                    className="hidden size-3 sm:block"
-                    aria-hidden="true"
-                  />
-                  <span className="sm:hidden">
-                    {filtered.length}/{releases.length}
-                  </span>
-                  <span className="hidden sm:inline">
-                    {en
-                      ? `${filtered.length} of ${releases.length} releases`
-                      : `${releases.length} 件中 ${filtered.length} 件`}
-                  </span>
-                </output>
-                {hasFilters && (
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="h-11"
-                    onClick={() => updateFilters(INITIAL_FILTERS)}
-                    aria-label={en ? "Clear filters" : "絞り込みを解除"}
-                  >
-                    <X className="size-3" aria-hidden="true" />
-                    {en ? "Clear" : "解除"}
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
+          <ReleaseFilterToolbar
+            id={id}
+            en={en}
+            filters={filters}
+            updateFilters={updateFilters}
+            kindOptions={kindOptions}
+            view={view}
+            popover={popover}
+            setView={setView}
+            filtered={filtered}
+            releases={releases}
+            hasFilters={hasFilters}
+          />
         </div>
 
-        {filtered.length === 0 ? (
-          <div className="space-y-2 p-12 text-center">
-            <Search
-              className="mx-auto mb-4 size-6 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <p className="font-medium">
-              {en
-                ? "No matching releases."
-                : "条件に一致するリリースがありません。"}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {en
-                ? "Try another model name or clear the filters."
-                : "別のモデル名で検索するか、絞り込みを解除してください。"}
-            </p>
-          </div>
-        ) : view === "list" ? (
-          <ReleaseList releases={filtered} locale={locale} />
-        ) : (
-          <div>
-            {view === "calendar"
-              ? today && (
-                  <ReleaseCalendarStrip
-                    releases={filtered}
-                    range={timelineRange}
-                    today={today}
-                    selectedDate={selectedDate}
-                    onSelectDate={setCalendarDate}
-                    locale={locale}
-                    popover={popover}
-                  />
-                )
-              : dated.length > 0 &&
-                timelineRange && (
-                  <section
-                    className="min-w-0"
-                    aria-label={
-                      en ? "All release intervals" : "全期間のリリース比較"
-                    }
-                  >
-                    <ReleaseTimeline
-                      locale={locale}
-                      range={timelineRange}
-                      releases={filtered}
-                      selectedDate={selectedDate}
-                      onSelectDate={setTimelineDate}
-                      today={today}
-                      popover={popover}
-                    />
-                  </section>
-                )}
-            {filtered.length > dated.length && (
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t p-4 text-xs text-muted-foreground sm:px-6">
-                <p>
-                  {en
-                    ? `${filtered.length - dated.length} entries have no exact date and are shown in the list.`
-                    : `日付が未詳の ${filtered.length - dated.length} 件は、一覧で確認できます。`}
-                </p>
-                <Button
-                  variant="flat"
-                  size="xs"
-                  className="h-9"
-                  onClick={() => {
-                    popover.dismiss();
-                    setView("list");
-                  }}
-                >
-                  {en ? "View list" : "一覧で見る"}
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
+        <ReleaseResults
+          filtered={filtered}
+          en={en}
+          view={view}
+          locale={locale}
+          today={today}
+          timelineRange={timelineRange}
+          selectedDate={selectedDate}
+          setCalendarDate={setCalendarDate}
+          popover={popover}
+          dated={dated}
+          setTimelineDate={setTimelineDate}
+          setView={setView}
+        />
       </div>
       <p className="px-1 text-label leading-6 text-muted-foreground">
         {en
@@ -508,5 +350,269 @@ export function ReleaseExplorer({
       </p>
       {popover.content}
     </div>
+  );
+}
+
+function ReleaseResults({
+  filtered,
+  en,
+  view,
+  locale,
+  today,
+  timelineRange,
+  selectedDate,
+  setCalendarDate,
+  popover,
+  dated,
+  setTimelineDate,
+  setView,
+}: {
+  filtered: Release[];
+  en: boolean;
+  view: "calendar" | "intervals" | "list";
+  locale: Locale;
+  today: string;
+  timelineRange: ReleaseTimelineRange | null;
+  selectedDate: string;
+  setCalendarDate: (date: string | null) => void;
+  popover: ReturnType<typeof useReleasePopover>;
+  dated: Release[];
+  setTimelineDate: (date: string | null) => void;
+  setView: (view: "calendar" | "intervals" | "list") => void;
+}) {
+  if (filtered.length === 0) {
+    return (
+      <div className="space-y-2 p-12 text-center">
+        <Search
+          className="mx-auto mb-4 size-6 text-muted-foreground"
+          aria-hidden="true"
+        />
+        <p className="font-medium">
+          {en
+            ? "No matching releases."
+            : "条件に一致するリリースがありません。"}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {en
+            ? "Try another model name or clear the filters."
+            : "別のモデル名で検索するか、絞り込みを解除してください。"}
+        </p>
+      </div>
+    );
+  }
+  if (view === "list") {
+    return <ReleaseList releases={filtered} locale={locale} />;
+  }
+  return (
+    <div>
+      {view === "calendar"
+        ? today && (
+            <ReleaseCalendarStrip
+              releases={filtered}
+              range={timelineRange}
+              today={today}
+              selectedDate={selectedDate}
+              onSelectDate={setCalendarDate}
+              locale={locale}
+              popover={popover}
+            />
+          )
+        : dated.length > 0 &&
+          timelineRange && (
+            <section
+              className="min-w-0"
+              aria-label={en ? "All release intervals" : "全期間のリリース比較"}
+            >
+              <ReleaseTimeline
+                locale={locale}
+                range={timelineRange}
+                releases={filtered}
+                selectedDate={selectedDate}
+                onSelectDate={setTimelineDate}
+                today={today}
+                popover={popover}
+              />
+            </section>
+          )}
+      {filtered.length > dated.length && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t p-4 text-xs text-muted-foreground sm:px-6">
+          <p>
+            {en
+              ? `${filtered.length - dated.length} entries have no exact date and are shown in the list.`
+              : `日付が未詳の ${filtered.length - dated.length} 件は、一覧で確認できます。`}
+          </p>
+          <Button
+            variant="flat"
+            size="xs"
+            className="h-9"
+            onClick={() => {
+              popover.dismiss();
+              setView("list");
+            }}
+          >
+            {en ? "View list" : "一覧で見る"}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ReleaseFilterToolbar({
+  id,
+  en,
+  filters,
+  updateFilters,
+  kindOptions,
+  view,
+  popover,
+  setView,
+  filtered,
+  releases,
+  hasFilters,
+}: {
+  id: string;
+  en: boolean;
+  filters: ReleaseFilters;
+  updateFilters: (next: Partial<ReleaseFilters>) => void;
+  kindOptions: string[][];
+  view: "calendar" | "intervals" | "list";
+  popover: ReturnType<typeof useReleasePopover>;
+  setView: (view: "calendar" | "intervals" | "list") => void;
+  filtered: Release[];
+  releases: Release[];
+  hasFilters: boolean;
+}) {
+  return (
+    <div className="border-b">
+      <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-6">
+        <search className="relative col-span-2 sm:col-span-1">
+          <label htmlFor={`${id}-search`} className="sr-only">
+            {en ? "Search models" : "モデルを検索"}
+          </label>
+          <Search
+            className="pointer-events-none absolute top-3 left-3 size-4 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            id={`${id}-search`}
+            type="search"
+            variant="icon"
+            value={filters.query}
+            onChange={(event) => updateFilters({ query: event.target.value })}
+            placeholder={
+              en
+                ? "Find a model, series, or provider…"
+                : "モデル名・系列で検索…"
+            }
+          />
+        </search>
+        <select
+          aria-label={en ? "Release type" : "リリースの種類"}
+          className={releaseSelectClass}
+          value={filters.kind}
+          onChange={(event) => updateFilters({ kind: event.target.value })}
+        >
+          {kindOptions.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t px-4 py-3 sm:px-6">
+        <ReleaseViewTabs
+          en={en}
+          view={view}
+          popover={popover}
+          setView={setView}
+        />
+        <div className="flex min-h-10 items-center gap-3">
+          <output className="flex items-center gap-1.5 text-xs text-muted-foreground tabular-nums">
+            <SlidersHorizontal
+              className="hidden size-3 sm:block"
+              aria-hidden="true"
+            />
+            <span className="sm:hidden">
+              {filtered.length}/{releases.length}
+            </span>
+            <span className="hidden sm:inline">
+              {en
+                ? `${filtered.length} of ${releases.length} releases`
+                : `${releases.length} 件中 ${filtered.length} 件`}
+            </span>
+          </output>
+          {hasFilters && (
+            <Button
+              variant="ghost"
+              size="xs"
+              className="h-11"
+              onClick={() => updateFilters(INITIAL_FILTERS)}
+              aria-label={en ? "Clear filters" : "絞り込みを解除"}
+            >
+              <X className="size-3" aria-hidden="true" />
+              {en ? "Clear" : "解除"}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReleaseViewTabs({
+  en,
+  view,
+  popover,
+  setView,
+}: {
+  en: boolean;
+  view: "calendar" | "intervals" | "list";
+  popover: ReturnType<typeof useReleasePopover>;
+  setView: (view: "calendar" | "intervals" | "list") => void;
+}) {
+  return (
+    <fieldset
+      aria-label={en ? "Display mode" : "表示形式"}
+      className="flex max-w-full min-w-0 gap-1 rounded-lg bg-muted/50 p-1"
+    >
+      {(
+        [
+          [
+            "intervals",
+            en ? "Timeline" : "時間軸",
+            en ? "All dates" : "全期間の比較",
+            GitCommitHorizontal,
+          ],
+          [
+            "calendar",
+            en ? "Calendar" : "カレンダー",
+            en ? "Calendar" : "カレンダー",
+            CalendarDays,
+          ],
+          ["list", en ? "List" : "一覧", en ? "List" : "一覧", List],
+        ] as const
+      ).map(([value, label, ariaLabel, Icon]) => (
+        <button
+          key={value}
+          type="button"
+          aria-label={ariaLabel}
+          aria-pressed={view === value}
+          onClick={() => {
+            popover.dismiss();
+            setView(value);
+          }}
+          className={cn(
+            "relative flex h-11 cursor-pointer items-center gap-1 rounded-md px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:gap-1.5 sm:px-4 sm:text-sm",
+            view === value
+              ? "bg-background font-semibold text-ai-accent-ink shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <Icon className="size-4" aria-hidden="true" />
+          {label}
+        </button>
+      ))}
+    </fieldset>
   );
 }

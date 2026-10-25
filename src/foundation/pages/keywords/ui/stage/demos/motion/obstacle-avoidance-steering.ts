@@ -106,67 +106,14 @@ export const demo: DemoModule = {
         const strength = Number(params["strength"]);
         const quietPoints: Vector3[] = [];
         const alertPoints: Vector3[] = [];
-        for (let index = 0; index < AGENTS; index++) {
-          const position = positions[index];
-          const velocity = velocities[index];
-          if (!(position && velocity)) {
-            continue;
-          }
-          // 目標：右へ進みつつ自分の列（z）に戻る
-          desired.set(1.6, 0, ((lanes[index] ?? 0) - position.z) * 0.8);
-          steer.copy(desired).sub(velocity).multiplyScalar(2);
-          heading.copy(velocity).normalize();
-          ahead.copy(position).addScaledVector(heading, lookAhead);
-          let threat: Pillar | undefined;
-          let nearest = Number.POSITIVE_INFINITY;
-          for (const pillar of pillars) {
-            // 先読み線分上で柱の中心に最も近い点を求める
-            toCenter.copy(pillar.center).setY(HEIGHT).sub(position);
-            const along = Math.max(
-              0,
-              Math.min(lookAhead, toCenter.dot(heading))
-            );
-            closest.copy(position).addScaledVector(heading, along);
-            const gap = closest.distanceTo(pillar.center.clone().setY(HEIGHT));
-            if (gap < pillar.radius + AGENT_RADIUS + 0.1 && along < nearest) {
-              nearest = along;
-              threat = pillar;
-            }
-          }
-          if (threat && avoid) {
-            // 柱の中心から見て先読み点が外れる向きへ、横方向の力をかける
-            const away = ahead.clone().sub(threat.center.clone().setY(HEIGHT));
-            away.addScaledVector(heading, -away.dot(heading));
-            if (away.lengthSq() < 1e-4) {
-              away.set(-heading.z, 0, heading.x);
-            }
-            steer.addScaledVector(
-              away.normalize(),
-              strength * (1 - nearest / (lookAhead + 1e-3) + 0.3)
-            );
-          }
-          velocity.addScaledVector(limit(steer, 30), dt);
-          limit(velocity, 2.2);
-          position.addScaledVector(velocity, dt);
-          // 柱にめり込んだら押し戻す（回避しない場合はここで詰まる）
-          for (const pillar of pillars) {
-            toCenter.copy(position).sub(pillar.center.clone().setY(HEIGHT));
-            const overlap = pillar.radius + AGENT_RADIUS - toCenter.length();
-            if (overlap > 0) {
-              position.addScaledVector(toCenter.normalize(), overlap);
-              velocity.addScaledVector(toCenter, -velocity.dot(toCenter));
-              bumps += dt;
-            }
-          }
-          if (position.x > END_X) {
-            position.x = START_X;
-          }
-          agents.set(index, position, velocity);
-          (threat ? alertPoints : quietPoints).push(
-            position.clone().setY(0.2),
-            ahead.clone().setY(0.2)
-          );
-        }
+        advanceSteeringAgents(
+          lookAhead,
+          avoid,
+          strength,
+          dt,
+          alertPoints,
+          quietPoints
+        );
         agents.commit();
         const showFeelers = params["feelers"] === true;
         quiet.visible = showFeelers && quietPoints.length > 0;
@@ -192,5 +139,101 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceSteeringAgents(
+      lookAhead: number,
+      avoid: boolean,
+      strength: number,
+      dt: number,
+      alertPoints: Vector3[],
+      quietPoints: Vector3[]
+    ) {
+      for (let index = 0; index < AGENTS; index++) {
+        const position = positions[index];
+        const velocity = velocities[index];
+        if (!(position && velocity)) {
+          continue;
+        }
+        // 目標：右へ進みつつ自分の列（z）に戻る
+        desired.set(1.6, 0, ((lanes[index] ?? 0) - position.z) * 0.8);
+        steer.copy(desired).sub(velocity).multiplyScalar(2);
+        heading.copy(velocity).normalize();
+        ahead.copy(position).addScaledVector(heading, lookAhead);
+        let threat: Pillar | undefined;
+        let nearest = Number.POSITIVE_INFINITY;
+        ({ nearest, threat } = findThreateningPillar(
+          position,
+          lookAhead,
+          nearest,
+          threat
+        ));
+        steerAwayFromThreat(threat, avoid, strength, nearest, lookAhead);
+        velocity.addScaledVector(limit(steer, 30), dt);
+        limit(velocity, 2.2);
+        position.addScaledVector(velocity, dt);
+        // 柱にめり込んだら押し戻す（回避しない場合はここで詰まる）
+        for (const pillar of pillars) {
+          toCenter.copy(position).sub(pillar.center.clone().setY(HEIGHT));
+          const overlap = pillar.radius + AGENT_RADIUS - toCenter.length();
+          if (overlap > 0) {
+            position.addScaledVector(toCenter.normalize(), overlap);
+            velocity.addScaledVector(toCenter, -velocity.dot(toCenter));
+            bumps += dt;
+          }
+        }
+        if (position.x > END_X) {
+          position.x = START_X;
+        }
+        agents.set(index, position, velocity);
+        (threat ? alertPoints : quietPoints).push(
+          position.clone().setY(0.2),
+          ahead.clone().setY(0.2)
+        );
+      }
+    }
+
+    function steerAwayFromThreat(
+      threat: Pillar | undefined,
+      avoid: boolean,
+      strength: number,
+      nearest: number,
+      lookAhead: number
+    ) {
+      if (threat && avoid) {
+        // 柱の中心から見て先読み点が外れる向きへ、横方向の力をかける
+        const away = ahead.clone().sub(threat.center.clone().setY(HEIGHT));
+        away.addScaledVector(heading, -away.dot(heading));
+        if (away.lengthSq() < 1e-4) {
+          away.set(-heading.z, 0, heading.x);
+        }
+        steer.addScaledVector(
+          away.normalize(),
+          strength * (1 - nearest / (lookAhead + 1e-3) + 0.3)
+        );
+      }
+    }
+
+    function findThreateningPillar(
+      position: Vector3,
+      lookAhead: number,
+      initialNearest: number,
+      initialThreat: Pillar | undefined
+    ) {
+      let nearest = initialNearest;
+      let threat = initialThreat;
+
+      for (const pillar of pillars) {
+        // 先読み線分上で柱の中心に最も近い点を求める
+        toCenter.copy(pillar.center).setY(HEIGHT).sub(position);
+        const along = Math.max(0, Math.min(lookAhead, toCenter.dot(heading)));
+        closest.copy(position).addScaledVector(heading, along);
+        const gap = closest.distanceTo(pillar.center.clone().setY(HEIGHT));
+        if (gap < pillar.radius + AGENT_RADIUS + 0.1 && along < nearest) {
+          nearest = along;
+          threat = pillar;
+        }
+      }
+      return { nearest, threat };
+    }
   },
 };

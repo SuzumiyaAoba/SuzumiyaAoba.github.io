@@ -271,16 +271,7 @@ export const demo: DemoModule = {
           const frame = accumulate.frames;
           let errorWhite = 0;
           let errorBlue = 0;
-          for (let y = 0; y < 128; y++) {
-            for (let x = 0; x < 128; x++) {
-              const index = y * 128 + x;
-              const g = gradient(x);
-              const w = g > random2() ? 1 : 0;
-              const b = g > (noiseAt(blue, x, y) + frame * phi) % 1 ? 1 : 0;
-              accumulate.white[index] = (accumulate.white[index] ?? 0) + w;
-              accumulate.blue[index] = (accumulate.blue[index] ?? 0) + b;
-            }
-          }
+          renderNoiseComparison(frame);
           accumulate.frames++;
           const { frames } = accumulate;
           for (let index = 0; index < 128 * 128; index++) {
@@ -347,5 +338,18 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function renderNoiseComparison(frame: number) {
+      for (let y = 0; y < 128; y++) {
+        for (let x = 0; x < 128; x++) {
+          const index = y * 128 + x;
+          const g = gradient(x);
+          const w = g > random2() ? 1 : 0;
+          const b = g > (noiseAt(blue, x, y) + frame * phi) % 1 ? 1 : 0;
+          accumulate.white[index] = (accumulate.white[index] ?? 0) + w;
+          accumulate.blue[index] = (accumulate.blue[index] ?? 0) + b;
+        }
+      }
+    }
   },
 };

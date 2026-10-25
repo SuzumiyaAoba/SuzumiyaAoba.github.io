@@ -3,6 +3,7 @@ import { getAllBlogTags, getBlogPostSummariesVariants } from "@/entities/blog";
 import { getNoteSummariesVariants } from "@/entities/note";
 import { getKeywordCategories } from "@/pages/keywords";
 import { getBookSlugs, getBookToc, getBookMeta } from "@/entities/book";
+import type { SeriesDefinition } from "@/entities/series-item";
 import { getSeriesList } from "@/entities/series-item";
 import { getSiteUrl } from "@/shared/lib/site/site-url";
 import { resolveLocalizedValue } from "@/shared/lib/routing";
@@ -163,18 +164,11 @@ export default async function sitemap(): Promise<Sitemap> {
   }
 
   const seriesLastModified = new Map<string, Date>();
-  for (const series of seriesList) {
-    let latest: Date | undefined;
-    for (const postSlug of series.posts) {
-      const postDate = postLastModifiedBySlug.get(postSlug);
-      if (postDate && (!latest || postDate > latest)) {
-        latest = postDate;
-      }
-    }
-    if (latest) {
-      seriesLastModified.set(series.slug, latest);
-    }
-  }
+  indexSeriesLastModified(
+    seriesList,
+    postLastModifiedBySlug,
+    seriesLastModified
+  );
 
   const seriesPages = buildTranslatedSitemapEntries(
     seriesList.map((series): SitemapPage => ({
@@ -210,4 +204,23 @@ export default async function sitemap(): Promise<Sitemap> {
     ...seriesPages,
     ...tagPages,
   ];
+}
+
+function indexSeriesLastModified(
+  seriesList: SeriesDefinition[],
+  postLastModifiedBySlug: Map<string, Date>,
+  seriesLastModified: Map<string, Date>
+) {
+  for (const series of seriesList) {
+    let latest: Date | undefined;
+    for (const postSlug of series.posts) {
+      const postDate = postLastModifiedBySlug.get(postSlug);
+      if (postDate && (!latest || postDate > latest)) {
+        latest = postDate;
+      }
+    }
+    if (latest) {
+      seriesLastModified.set(series.slug, latest);
+    }
+  }
 }

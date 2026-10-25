@@ -153,90 +153,9 @@ export const demo: DemoModule = {
         }
         const usePool = mode === "pool";
         budget += dt * Number(params["rate"]);
-        while (budget >= 1) {
-          budget -= 1;
-          angle += 0.37;
-          const direction = new Vector3(Math.cos(angle), 0, Math.sin(angle));
-          const speed = 3 + Math.sin(angle * 0.13) * 0.8;
-          if (usePool) {
-            // 空いている枠を 1 つ取り出して使い回す（新しく作らない）
-            const slot = free.pop();
-            const bullet = slot === undefined ? undefined : pool[slot];
-            if (bullet) {
-              bullet.position.set(0, 0.5, 0);
-              bullet.velocity.copy(direction).multiplyScalar(speed);
-              bullet.age = 0;
-              bullet.active = true;
-            } else {
-              dropped++;
-            }
-          } else {
-            // 毎回新しい弾を作る（位置と速度のベクトルも含めてメモリを確保する）
-            live.push({
-              position: new Vector3(0, 0.5, 0),
-              velocity: direction.multiplyScalar(speed),
-              age: 0,
-              active: true,
-            });
-            allocations++;
-          }
-        }
+        spawnBullets(usePool);
         let drawn = 0;
-        if (usePool) {
-          for (const [i, bullet] of pool.entries()) {
-            if (!bullet.active) {
-              continue;
-            }
-            bullet.age += dt;
-            if (bullet.age > LIFE) {
-              // 消えた弾は捨てずに空きへ戻す
-              bullet.active = false;
-              free.push(i);
-              continue;
-            }
-            bullet.position.addScaledVector(bullet.velocity, dt);
-            if (drawn < MAX_DRAW) {
-              matrix.makeTranslation(
-                bullet.position.x,
-                bullet.position.y,
-                bullet.position.z
-              );
-              bulletsMesh.setMatrixAt(drawn++, matrix);
-            }
-          }
-          for (const [i, rect] of rects.entries()) {
-            rect.setAttribute(
-              "fill",
-              pool[i]?.active === true ? palette.lime : "#2b3748"
-            );
-          }
-        } else {
-          const survivors: Bullet[] = [];
-          for (const bullet of live) {
-            bullet.age += dt;
-            if (bullet.age > LIFE) {
-              // 捨てた弾はごみになる
-              garbage += BYTES_PER_BULLET;
-              continue;
-            }
-            bullet.position.addScaledVector(bullet.velocity, dt);
-            survivors.push(bullet);
-            if (drawn < MAX_DRAW) {
-              matrix.makeTranslation(
-                bullet.position.x,
-                bullet.position.y,
-                bullet.position.z
-              );
-              bulletsMesh.setMatrixAt(drawn++, matrix);
-            }
-          }
-          live = survivors;
-          if (garbage > GC_THRESHOLD) {
-            garbage = 0;
-            collections++;
-            gcFlash = 0.25;
-          }
-        }
+        drawn = updateBulletStorage(usePool, drawn, dt);
         bulletsMesh.count = drawn;
         bulletsMesh.instanceMatrix.needsUpdate = true;
         gcFlash = Math.max(0, gcFlash - dt);
@@ -266,5 +185,119 @@ export const demo: DemoModule = {
         bulletsMesh.dispose();
       },
     };
+
+    function updateBulletStorage(
+      usePool: boolean,
+      initialDrawn: number,
+      dt: number
+    ) {
+      let drawn = initialDrawn;
+
+      if (usePool) {
+        drawn = advancePooledBullets(dt, drawn);
+        for (const [i, rect] of rects.entries()) {
+          rect.setAttribute(
+            "fill",
+            pool[i]?.active === true ? palette.lime : "#2b3748"
+          );
+        }
+      } else {
+        const survivors: Bullet[] = [];
+        drawn = advanceAllocatedBullets(dt, survivors, drawn);
+        live = survivors;
+        if (garbage > GC_THRESHOLD) {
+          garbage = 0;
+          collections++;
+          gcFlash = 0.25;
+        }
+      }
+      return drawn;
+    }
+
+    function advanceAllocatedBullets(
+      dt: number,
+      survivors: Bullet[],
+      initialDrawn: number
+    ) {
+      let drawn = initialDrawn;
+
+      for (const bullet of live) {
+        bullet.age += dt;
+        if (bullet.age > LIFE) {
+          // 捨てた弾はごみになる
+          garbage += BYTES_PER_BULLET;
+          continue;
+        }
+        bullet.position.addScaledVector(bullet.velocity, dt);
+        survivors.push(bullet);
+        if (drawn < MAX_DRAW) {
+          matrix.makeTranslation(
+            bullet.position.x,
+            bullet.position.y,
+            bullet.position.z
+          );
+          bulletsMesh.setMatrixAt(drawn++, matrix);
+        }
+      }
+      return drawn;
+    }
+
+    function advancePooledBullets(dt: number, initialDrawn: number) {
+      let drawn = initialDrawn;
+
+      for (const [i, bullet] of pool.entries()) {
+        if (!bullet.active) {
+          continue;
+        }
+        bullet.age += dt;
+        if (bullet.age > LIFE) {
+          // 消えた弾は捨てずに空きへ戻す
+          bullet.active = false;
+          free.push(i);
+          continue;
+        }
+        bullet.position.addScaledVector(bullet.velocity, dt);
+        if (drawn < MAX_DRAW) {
+          matrix.makeTranslation(
+            bullet.position.x,
+            bullet.position.y,
+            bullet.position.z
+          );
+          bulletsMesh.setMatrixAt(drawn++, matrix);
+        }
+      }
+      return drawn;
+    }
+
+    function spawnBullets(usePool: boolean) {
+      while (budget >= 1) {
+        budget -= 1;
+        angle += 0.37;
+        const direction = new Vector3(Math.cos(angle), 0, Math.sin(angle));
+        const speed = 3 + Math.sin(angle * 0.13) * 0.8;
+        if (usePool) {
+          // 空いている枠を 1 つ取り出して使い回す（新しく作らない）
+          const slot = free.pop();
+          const bullet = slot === undefined ? undefined : pool[slot];
+          if (bullet) {
+            bullet.position.set(0, 0.5, 0);
+            bullet.velocity.copy(direction).multiplyScalar(speed);
+            bullet.age = 0;
+            bullet.active = true;
+          } else {
+            dropped++;
+          }
+        } else {
+          // 毎回新しい弾を作る（位置と速度のベクトルも含めてメモリを確保する）
+          live.push({
+            position: new Vector3(0, 0.5, 0),
+            velocity: direction.multiplyScalar(speed),
+            age: 0,
+            active: true,
+          });
+          allocations++;
+        }
+      }
+    }
   },
 };

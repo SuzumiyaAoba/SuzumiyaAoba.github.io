@@ -14,35 +14,7 @@ function extractIds(value: unknown): string[] {
   }
 
   if (typeof value === "string") {
-    const normalized = value.trim();
-    if (!normalized) {
-      return [];
-    }
-
-    if (
-      (normalized.startsWith("[") && normalized.endsWith("]")) ||
-      (normalized.startsWith("{") && normalized.endsWith("}"))
-    ) {
-      try {
-        return extractIds(JSON.parse(normalized) as unknown);
-      } catch {
-        const quoted = [...normalized.matchAll(/"([^"]+)"|'([^']+)'/gu)]
-          .map((match) => match[1] ?? match[2])
-          .filter((item): item is string => Boolean(item));
-        if (quoted.length > 0) {
-          return quoted;
-        }
-      }
-    }
-
-    if (normalized.includes(",")) {
-      return normalized
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
-    }
-
-    return [normalized];
+    return extractStringIds(value);
   }
 
   if (typeof value === "number" || typeof value === "boolean") {
@@ -54,6 +26,38 @@ function extractIds(value: unknown): string[] {
   }
 
   return [];
+}
+
+function extractStringIds(value: string): string[] {
+  const normalized = value.trim();
+  if (!normalized) {
+    return [];
+  }
+
+  if (
+    (normalized.startsWith("[") && normalized.endsWith("]")) ||
+    (normalized.startsWith("{") && normalized.endsWith("}"))
+  ) {
+    try {
+      return extractIds(JSON.parse(normalized) as unknown);
+    } catch {
+      const quoted = [...normalized.matchAll(/"([^"]+)"|'([^']+)'/gu)]
+        .map((match) => match[1] ?? match[2])
+        .filter((item): item is string => Boolean(item));
+      if (quoted.length > 0) {
+        return quoted;
+      }
+    }
+  }
+
+  if (normalized.includes(",")) {
+    return normalized
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [normalized];
 }
 
 /**

@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { useId, useMemo } from "react";
 import { ArrowRight, ChevronDown, Clock3 } from "lucide-react";
 import type { Locale } from "@/shared/lib/routing";
 import { cn } from "@/shared/lib/utils";
 import { dateTimestamp, formatReleaseDate } from "../model/release-calendar";
-import type { Release } from "../model/release-calendar";
+import type { Release, ReleaseInterval } from "../model/release-calendar";
 import {
   ProviderIcon,
   providerStyles,
@@ -30,7 +31,7 @@ export function ReleaseCard({
       }),
     [locale]
   );
-  const style = providerStyles[release.provider];
+  const providerStyle = providerStyles[release.provider];
   const dateLabel = release.date
     ? formatReleaseDate(release.date, locale)
     : `${release.entry.date || release.entry.year} · ${en ? "Exact date unknown" : "日付未詳"}`;
@@ -49,41 +50,7 @@ export function ReleaseCard({
     </div>
   );
   const intervals = (
-    <div className="space-y-3">
-      {release.intervals.map((interval) => (
-        <div
-          key={interval.series}
-          className={cn("rounded-xl border p-4", style.badge, style.border)}
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-semibold">{interval.series}</span>
-            <span className="inline-flex items-baseline gap-1.5 text-xs">
-              {en ? "After " : "前回から "}
-              <strong className="text-3xl font-semibold tracking-tight tabular-nums">
-                {interval.days}
-              </strong>
-              {en ? " days" : " 日"}
-            </span>
-          </div>
-          <p className="mt-3 text-xs leading-5">
-            {interval.previousTitles.join(" / ")}
-          </p>
-          <div className="mt-2 flex items-center gap-2 text-label tabular-nums opacity-75">
-            <time dateTime={interval.previousDate}>
-              {interval.previousDate.replaceAll("-", ".")}
-            </time>
-            <span
-              className="h-px flex-1 bg-current opacity-25"
-              aria-hidden="true"
-            />
-            <ArrowRight className="size-3" aria-hidden="true" />
-            <time dateTime={release.date ?? undefined}>
-              {release.date?.replaceAll("-", ".")}
-            </time>
-          </div>
-        </div>
-      ))}
-    </div>
+    <ReleaseIntervals release={release} providerStyle={providerStyle} en={en} />
   );
   const tags =
     (release.entry.tags?.length ?? 0) > 0 ? (
@@ -96,93 +63,19 @@ export function ReleaseCard({
 
   if (compact) {
     return (
-      <article
-        aria-labelledby={titleId}
-        className="group px-4 py-5 transition-colors hover:bg-muted/25 sm:px-6"
-      >
-        <div className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 sm:grid-cols-[4.5rem_2.75rem_minmax(0,1fr)_auto] sm:gap-x-5">
-          <div className="col-span-2 flex items-center gap-2 text-xs text-muted-foreground sm:col-span-1 sm:flex-col sm:items-start sm:gap-0">
-            {release.date ? (
-              <>
-                <time
-                  dateTime={release.date}
-                  className="text-lg font-semibold whitespace-nowrap text-foreground tabular-nums sm:text-3xl"
-                >
-                  <span className="sm:hidden">{release.date.slice(5, 7)}.</span>
-                  {release.date.slice(-2)}
-                </time>
-                <span className="sm:mt-1">
-                  {weekdayFormatter.format(dateTimestamp(release.date))}
-                </span>
-              </>
-            ) : (
-              <span>{dateLabel}</span>
-            )}
-          </div>
-          <ProviderIcon
-            provider={release.provider}
-            className="size-11 rounded-xl"
-          />
-          <div className="min-w-0 space-y-2">
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-label text-muted-foreground">
-              <span className={cn("font-semibold", style.ink)}>
-                {providerLabel(release.provider, locale)}
-              </span>
-              <span aria-hidden="true">/</span>
-              <span>{kindLabel(release.kind, locale)}</span>
-            </div>
-            <h3
-              id={titleId}
-              className="text-base leading-6 font-semibold tracking-tight sm:text-lg"
-            >
-              {release.title}
-            </h3>
-            <p className="text-xs leading-5 text-muted-foreground">
-              {release.series.join(" · ")}
-            </p>
-          </div>
-          <div className="col-start-2 sm:col-start-auto sm:pt-1 sm:text-right">
-            {primaryInterval ? (
-              <div
-                className={cn(
-                  "inline-flex items-baseline gap-1.5 rounded-lg px-3 py-1.5 text-label",
-                  style.badge
-                )}
-              >
-                {en ? "After " : "前回から "}
-                <strong className="text-xl font-semibold tabular-nums">
-                  {primaryInterval.days}
-                </strong>
-                {en ? " days" : " 日"}
-                {release.intervals.length > 1 && (
-                  <span className="ml-1">+{release.intervals.length - 1}</span>
-                )}
-              </div>
-            ) : (
-              <span className="rounded-lg bg-muted px-3 py-2 text-label text-muted-foreground">
-                {release.date && release.series.length > 0
-                  ? en
-                    ? "First recorded"
-                    : "系列の初回記録"
-                  : en
-                    ? "No predecessor"
-                    : "比較元なし"}
-              </span>
-            )}
-          </div>
-        </div>
-        <details className="mt-3 pl-14 sm:pl-34">
-          <summary className="flex w-fit cursor-pointer list-none items-center gap-1.5 rounded py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
-            {en ? "Release details" : "リリースの詳細"}
-            <ChevronDown className="size-3.5" aria-hidden="true" />
-          </summary>
-          <div className="mt-3 max-w-3xl space-y-4 border-l-2 border-border pl-4">
-            {description}
-            {release.intervals.length > 0 && intervals}
-            {tags}
-          </div>
-        </details>
-      </article>
+      <CompactReleaseCard
+        titleId={titleId}
+        release={release}
+        weekdayFormatter={weekdayFormatter}
+        dateLabel={dateLabel}
+        providerStyle={providerStyle}
+        locale={locale}
+        primaryInterval={primaryInterval}
+        en={en}
+        description={description}
+        intervals={intervals}
+        tags={tags}
+      />
     );
   }
 
@@ -235,5 +128,194 @@ export function ReleaseCard({
         {tags}
       </div>
     </article>
+  );
+}
+
+function ReleaseIntervals({
+  release,
+  providerStyle,
+  en,
+}: {
+  release: Release;
+  providerStyle: (typeof providerStyles)[Release["provider"]];
+  en: boolean;
+}) {
+  return (
+    <div className="space-y-3">
+      {release.intervals.map((interval) => (
+        <div
+          key={interval.series}
+          className={cn(
+            "rounded-xl border p-4",
+            providerStyle.badge,
+            providerStyle.border
+          )}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-xs font-semibold">{interval.series}</span>
+            <span className="inline-flex items-baseline gap-1.5 text-xs">
+              {en ? "After " : "前回から "}
+              <strong className="text-3xl font-semibold tracking-tight tabular-nums">
+                {interval.days}
+              </strong>
+              {en ? " days" : " 日"}
+            </span>
+          </div>
+          <p className="mt-3 text-xs leading-5">
+            {interval.previousTitles.join(" / ")}
+          </p>
+          <div className="mt-2 flex items-center gap-2 text-label tabular-nums opacity-75">
+            <time dateTime={interval.previousDate}>
+              {interval.previousDate.replaceAll("-", ".")}
+            </time>
+            <span
+              className="h-px flex-1 bg-current opacity-25"
+              aria-hidden="true"
+            />
+            <ArrowRight className="size-3" aria-hidden="true" />
+            <time dateTime={release.date ?? undefined}>
+              {release.date?.replaceAll("-", ".")}
+            </time>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CompactReleaseCard({
+  titleId,
+  release,
+  weekdayFormatter,
+  dateLabel,
+  providerStyle,
+  locale,
+  primaryInterval,
+  en,
+  description,
+  intervals,
+  tags,
+}: {
+  titleId: string;
+  release: Release;
+  weekdayFormatter: Intl.DateTimeFormat;
+  dateLabel: string;
+  providerStyle: (typeof providerStyles)[Release["provider"]];
+  locale: Locale;
+  primaryInterval: ReleaseInterval | undefined;
+  en: boolean;
+  description: ReactNode;
+  intervals: ReactNode;
+  tags: ReactNode;
+}) {
+  return (
+    <article
+      aria-labelledby={titleId}
+      className="group px-4 py-5 transition-colors hover:bg-muted/25 sm:px-6"
+    >
+      <div className="grid grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 gap-y-3 sm:grid-cols-[4.5rem_2.75rem_minmax(0,1fr)_auto] sm:gap-x-5">
+        <div className="col-span-2 flex items-center gap-2 text-xs text-muted-foreground sm:col-span-1 sm:flex-col sm:items-start sm:gap-0">
+          {release.date ? (
+            <>
+              <time
+                dateTime={release.date}
+                className="text-lg font-semibold whitespace-nowrap text-foreground tabular-nums sm:text-3xl"
+              >
+                <span className="sm:hidden">{release.date.slice(5, 7)}.</span>
+                {release.date.slice(-2)}
+              </time>
+              <span className="sm:mt-1">
+                {weekdayFormatter.format(dateTimestamp(release.date))}
+              </span>
+            </>
+          ) : (
+            <span>{dateLabel}</span>
+          )}
+        </div>
+        <ProviderIcon
+          provider={release.provider}
+          className="size-11 rounded-xl"
+        />
+        <div className="min-w-0 space-y-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-label text-muted-foreground">
+            <span className={cn("font-semibold", providerStyle.ink)}>
+              {providerLabel(release.provider, locale)}
+            </span>
+            <span aria-hidden="true">/</span>
+            <span>{kindLabel(release.kind, locale)}</span>
+          </div>
+          <h3
+            id={titleId}
+            className="text-base leading-6 font-semibold tracking-tight sm:text-lg"
+          >
+            {release.title}
+          </h3>
+          <p className="text-xs leading-5 text-muted-foreground">
+            {release.series.join(" · ")}
+          </p>
+        </div>
+        <ReleaseIntervalBadge
+          primaryInterval={primaryInterval}
+          providerStyle={providerStyle}
+          en={en}
+          release={release}
+        />
+      </div>
+      <details className="mt-3 pl-14 sm:pl-34">
+        <summary className="flex w-fit cursor-pointer list-none items-center gap-1.5 rounded py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+          {en ? "Release details" : "リリースの詳細"}
+          <ChevronDown className="size-3.5" aria-hidden="true" />
+        </summary>
+        <div className="mt-3 max-w-3xl space-y-4 border-l-2 border-border pl-4">
+          {description}
+          {release.intervals.length > 0 && intervals}
+          {tags}
+        </div>
+      </details>
+    </article>
+  );
+}
+
+function ReleaseIntervalBadge({
+  primaryInterval,
+  providerStyle,
+  en,
+  release,
+}: {
+  primaryInterval: ReleaseInterval | undefined;
+  providerStyle: (typeof providerStyles)[Release["provider"]];
+  en: boolean;
+  release: Release;
+}) {
+  return (
+    <div className="col-start-2 sm:col-start-auto sm:pt-1 sm:text-right">
+      {primaryInterval ? (
+        <div
+          className={cn(
+            "inline-flex items-baseline gap-1.5 rounded-lg px-3 py-1.5 text-label",
+            providerStyle.badge
+          )}
+        >
+          {en ? "After " : "前回から "}
+          <strong className="text-xl font-semibold tabular-nums">
+            {primaryInterval.days}
+          </strong>
+          {en ? " days" : " 日"}
+          {release.intervals.length > 1 && (
+            <span className="ml-1">+{release.intervals.length - 1}</span>
+          )}
+        </div>
+      ) : (
+        <span className="rounded-lg bg-muted px-3 py-2 text-label text-muted-foreground">
+          {release.date && release.series.length > 0
+            ? en
+              ? "First recorded"
+              : "系列の初回記録"
+            : en
+              ? "No predecessor"
+              : "比較元なし"}
+        </span>
+      )}
+    </div>
   );
 }

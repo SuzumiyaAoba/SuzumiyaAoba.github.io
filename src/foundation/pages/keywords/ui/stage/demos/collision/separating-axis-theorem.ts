@@ -207,21 +207,15 @@ export const demo: DemoModule = {
         });
         const colliding = separating < 0;
         let pushed = false;
-        if (colliding && params["resolve"] === true) {
-          const axis = axes[smallestAxis]?.n ?? { x: 1, y: 0 };
-          const centerA = { x: grip.position.x, y: grip.position.z };
-          const centerB = { x: 0.4, y: 0.1 };
-          const sign =
-            (centerA.x - centerB.x) * axis.x +
-              (centerA.y - centerB.y) * axis.y <
-            0
-              ? -1
-              : 1;
-          grip.position.x += axis.x * smallest * sign;
-          grip.position.z += axis.y * smallest * sign;
-          polyA = transform(SHAPE_A, grip.position.x, grip.position.z, angleA);
-          pushed = true;
-        }
+        ({ polyA, pushed } = resolveOverlap(
+          colliding,
+          axes,
+          smallestAxis,
+          smallest,
+          polyA,
+          angleA,
+          pushed
+        ));
         a.set(polyA);
         b.set(polyB);
 
@@ -234,40 +228,7 @@ export const demo: DemoModule = {
               : Math.max(0, separating);
         const current = axes[shown];
         const result = results[shown];
-        if (current && result) {
-          const { n } = current;
-          const perp = { x: -n.y, y: n.x };
-          // 軸は図形から AXIS_OFFSET だけ離した直線として描く
-          const base = { x: perp.x * AXIS_OFFSET, y: perp.y * AXIS_OFFSET };
-          const onAxis = (t: number) =>
-            toWorld({ x: base.x + n.x * t, y: base.y + n.y * t }, 0.05);
-          axisLine.setPoints([onAxis(-6), onAxis(6)]);
-          shadowA.setPoints([onAxis(result.pa.min), onAxis(result.pa.max)]);
-          shadowB.setPoints([onAxis(result.pb.min), onAxis(result.pb.max)]);
-          const hasGap = result.overlap < 0;
-          gap.visible = hasGap;
-          if (hasGap) {
-            const from = Math.min(result.pa.max, result.pb.max);
-            const to = Math.max(result.pa.min, result.pb.min);
-            gap.setPoints([onAxis(from).setY(0.08), onAxis(to).setY(0.08)]);
-          }
-          // 頂点から軸へ下ろした補助線（影の両端だけ）
-          const extremes: Vector3[] = [];
-          for (const poly of [polyA, polyB]) {
-            const values = poly.map((p) => p.x * n.x + p.y * n.y);
-            for (const value of [Math.min(...values), Math.max(...values)]) {
-              const p = poly[values.indexOf(value)];
-              if (p) {
-                extremes.push(toWorld(p, 0.05), onAxis(value));
-              }
-            }
-          }
-          guides.setPoints(extremes);
-          axisLabel.setText(
-            `軸 ${shown + 1} / ${axes.length}（${current.owner} の辺の法線）：${hasGap ? "隙間あり → 分離軸" : `重なり ${result.overlap.toFixed(2)}`}`
-          );
-          axisLabel.position.copy(onAxis(-2.6)).setY(0.3);
-        }
+        renderProjectionAxis(current, result, polyA, polyB, shown, axes);
         mtv.visible = colliding && !pushed;
         if (colliding && !pushed) {
           const axis = axes[smallestAxis]?.n ?? { x: 1, y: 0 };
@@ -304,5 +265,84 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function resolveOverlap(
+      colliding: boolean,
+      axes: { n: { x: number; y: number }; owner: string }[],
+      smallestAxis: number,
+      smallest: number,
+      initialPolyA: { x: number; y: number }[],
+      angleA: number,
+      initialPushed: boolean
+    ) {
+      let polyA = initialPolyA;
+      let pushed = initialPushed;
+
+      if (colliding && params["resolve"] === true) {
+        const axis = axes[smallestAxis]?.n ?? { x: 1, y: 0 };
+        const centerA = { x: grip.position.x, y: grip.position.z };
+        const centerB = { x: 0.4, y: 0.1 };
+        const sign =
+          (centerA.x - centerB.x) * axis.x + (centerA.y - centerB.y) * axis.y <
+          0
+            ? -1
+            : 1;
+        grip.position.x += axis.x * smallest * sign;
+        grip.position.z += axis.y * smallest * sign;
+        polyA = transform(SHAPE_A, grip.position.x, grip.position.z, angleA);
+        pushed = true;
+      }
+      return { polyA, pushed };
+    }
+
+    function renderProjectionAxis(
+      current: { n: { x: number; y: number }; owner: string } | undefined,
+      result:
+        | {
+            pa: { min: number; max: number };
+            pb: { min: number; max: number };
+            overlap: number;
+          }
+        | undefined,
+      polyA: { x: number; y: number }[],
+      polyB: { x: number; y: number }[],
+      shown: number,
+      axes: { n: { x: number; y: number }; owner: string }[]
+    ) {
+      if (current && result) {
+        const { n } = current;
+        const perp = { x: -n.y, y: n.x };
+        // 軸は図形から AXIS_OFFSET だけ離した直線として描く
+        const base = { x: perp.x * AXIS_OFFSET, y: perp.y * AXIS_OFFSET };
+        const onAxis = (t: number) =>
+          toWorld({ x: base.x + n.x * t, y: base.y + n.y * t }, 0.05);
+        axisLine.setPoints([onAxis(-6), onAxis(6)]);
+        shadowA.setPoints([onAxis(result.pa.min), onAxis(result.pa.max)]);
+        shadowB.setPoints([onAxis(result.pb.min), onAxis(result.pb.max)]);
+        const hasGap = result.overlap < 0;
+        gap.visible = hasGap;
+        if (hasGap) {
+          const from = Math.min(result.pa.max, result.pb.max);
+          const to = Math.max(result.pa.min, result.pb.min);
+          gap.setPoints([onAxis(from).setY(0.08), onAxis(to).setY(0.08)]);
+        }
+        // 頂点から軸へ下ろした補助線（影の両端だけ）
+        const extremes: Vector3[] = [];
+        for (const poly of [polyA, polyB]) {
+          const values = poly.map((p) => p.x * n.x + p.y * n.y);
+          for (const value of [Math.min(...values), Math.max(...values)]) {
+            const p = poly[values.indexOf(value)];
+            if (p) {
+              extremes.push(toWorld(p, 0.05), onAxis(value));
+            }
+          }
+        }
+        guides.setPoints(extremes);
+        axisLabel.setText(
+          `軸 ${shown + 1} / ${axes.length}（${current.owner} の辺の法線）：${hasGap ? "隙間あり → 分離軸" : `重なり ${result.overlap.toFixed(2)}`}`
+        );
+        axisLabel.position.copy(onAxis(-2.6)).setY(0.3);
+      }
+    }
   },
 };

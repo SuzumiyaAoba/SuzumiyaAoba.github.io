@@ -206,28 +206,7 @@ export const demo: DemoModule = {
         mode = nextMode;
         gridLines.visible = params["grid"] === true;
         const { done } = agent.update(dt);
-        if (done) {
-          pause += dt;
-          if (pause > 1.4) {
-            pause = 0;
-            const here = agent.position;
-            position = { x: here.x, y: here.z };
-            for (let tries = 0; tries < 50; tries++) {
-              const candidate = {
-                x: NAV_BOUNDS.x0 + random() * (NAV_BOUNDS.x1 - NAV_BOUNDS.x0),
-                y: NAV_BOUNDS.y0 + random() * (NAV_BOUNDS.y1 - NAV_BOUNDS.y0),
-              };
-              const far =
-                Math.hypot(candidate.x - position.x, candidate.y - position.y) >
-                6;
-              if (far && locate(mesh, candidate) >= 0) {
-                goal = candidate;
-                break;
-              }
-            }
-            plan();
-          }
-        }
+        restartNavigationRoute(done, dt);
         context.readout(
           "ノードの数（三角形 / 同じ範囲の格子）",
           `${mesh.triangles.length} / ${gridCells}`
@@ -248,5 +227,30 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function restartNavigationRoute(done: boolean, dt: number) {
+      if (done) {
+        pause += dt;
+        if (pause > 1.4) {
+          pause = 0;
+          const here = agent.position;
+          position = { x: here.x, y: here.z };
+          for (let tries = 0; tries < 50; tries++) {
+            const candidate = {
+              x: NAV_BOUNDS.x0 + random() * (NAV_BOUNDS.x1 - NAV_BOUNDS.x0),
+              y: NAV_BOUNDS.y0 + random() * (NAV_BOUNDS.y1 - NAV_BOUNDS.y0),
+            };
+            const far =
+              Math.hypot(candidate.x - position.x, candidate.y - position.y) >
+              6;
+            if (far && locate(mesh, candidate) >= 0) {
+              goal = candidate;
+              break;
+            }
+          }
+          plan();
+        }
+      }
+    }
   },
 };

@@ -183,89 +183,9 @@ export function qemSequence(
   }
   const quadrics = Array.from({ length: vertexCount }, quadric);
   const edgeUse = new Map<string, number>();
-  for (let t = 0; t < triCount; t++) {
-    const a = tris[t * 3] ?? 0;
-    const b = tris[t * 3 + 1] ?? 0;
-    const c = tris[t * 3 + 2] ?? 0;
-    const ux = (pos[b * 3] ?? 0) - (pos[a * 3] ?? 0);
-    const uy = (pos[b * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
-    const uz = (pos[b * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
-    const vx = (pos[c * 3] ?? 0) - (pos[a * 3] ?? 0);
-    const vy = (pos[c * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
-    const vz = (pos[c * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
-    let nx = uy * vz - uz * vy;
-    let ny = uz * vx - ux * vz;
-    let nz = ux * vy - uy * vx;
-    const area = Math.hypot(nx, ny, nz);
-    if (area < 1e-12) {
-      continue;
-    }
-    nx /= area;
-    ny /= area;
-    nz /= area;
-    const d = -(
-      nx * (pos[a * 3] ?? 0) +
-      ny * (pos[a * 3 + 1] ?? 0) +
-      nz * (pos[a * 3 + 2] ?? 0)
-    );
-    for (const v of [a, b, c]) {
-      addPlane(quadrics[v] ?? quadric(), nx, ny, nz, d, area);
-    }
-    for (const [p, q] of [
-      [a, b],
-      [b, c],
-      [c, a],
-    ] as const) {
-      const key = p < q ? `${p},${q}` : `${q},${p}`;
-      edgeUse.set(key, (edgeUse.get(key) ?? 0) + 1);
-    }
-  }
+  countEdgeUsage(triCount, tris, pos, quadrics, edgeUse);
   // 境界の辺：辺を含み、面に垂直な平面を強い重みで足す（輪郭が崩れないように）
-  for (let t = 0; t < triCount; t++) {
-    const a = tris[t * 3] ?? 0;
-    const b = tris[t * 3 + 1] ?? 0;
-    const c = tris[t * 3 + 2] ?? 0;
-    for (const [p, q] of [
-      [a, b],
-      [b, c],
-      [c, a],
-    ] as const) {
-      const key = p < q ? `${p},${q}` : `${q},${p}`;
-      if (edgeUse.get(key) !== 1) {
-        continue;
-      }
-      const ex = (pos[q * 3] ?? 0) - (pos[p * 3] ?? 0);
-      const ey = (pos[q * 3 + 1] ?? 0) - (pos[p * 3 + 1] ?? 0);
-      const ez = (pos[q * 3 + 2] ?? 0) - (pos[p * 3 + 2] ?? 0);
-      const fx = (pos[c * 3] ?? 0) - (pos[a * 3] ?? 0);
-      const fy = (pos[c * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
-      const fz = (pos[c * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
-      const gx = (pos[b * 3] ?? 0) - (pos[a * 3] ?? 0);
-      const gy = (pos[b * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
-      const gz = (pos[b * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
-      const fnx = gy * fz - gz * fy;
-      const fny = gz * fx - gx * fz;
-      const fnz = gx * fy - gy * fx;
-      let nx = ey * fnz - ez * fny;
-      let ny = ez * fnx - ex * fnz;
-      let nz = ex * fny - ey * fnx;
-      const length = Math.hypot(nx, ny, nz);
-      if (length < 1e-12) {
-        continue;
-      }
-      nx /= length;
-      ny /= length;
-      nz /= length;
-      const d = -(
-        nx * (pos[p * 3] ?? 0) +
-        ny * (pos[p * 3 + 1] ?? 0) +
-        nz * (pos[p * 3 + 2] ?? 0)
-      );
-      const weight = Math.hypot(ex, ey, ez) * 1000;
-      addPlane(quadrics[p] ?? quadric(), nx, ny, nz, d, weight);
-      addPlane(quadrics[q] ?? quadric(), nx, ny, nz, d, weight);
-    }
-  }
+  collectValidTriangles(triCount, tris, edgeUse, pos, quadrics);
 
   const stamps = new Uint32Array(vertexCount);
   const removed = new Uint8Array(vertexCount);
@@ -395,27 +315,14 @@ export function qemSequence(
       continue;
     }
     // b を a にまとめる
-    for (const t of vertexTris[b] ?? []) {
-      const corners = [
-        tris[t * 3] ?? 0,
-        tris[t * 3 + 1] ?? 0,
-        tris[t * 3 + 2] ?? 0,
-      ];
-      if (corners.includes(a)) {
-        alive[t] = 0;
-        triangleCount--;
-        for (const c of corners) {
-          vertexTris[c]?.delete(t);
-        }
-      } else {
-        for (let k = 0; k < 3; k++) {
-          if (tris[t * 3 + k] === b) {
-            tris[t * 3 + k] = a;
-          }
-        }
-        vertexTris[a]?.add(t);
-      }
-    }
+    triangleCount = remapCollapsedTriangles(
+      vertexTris,
+      b,
+      tris,
+      a,
+      alive,
+      triangleCount
+    );
     vertexTris[b]?.clear();
     removed[b] = 1;
     pos[a * 3] = x;
@@ -439,6 +346,140 @@ export function qemSequence(
     pushEdges(a);
   }
   return sequence;
+}
+
+function countEdgeUsage(
+  triCount: number,
+  tris: Int32Array<ArrayBuffer>,
+  pos: Float64Array<ArrayBuffer>,
+  quadrics: Float64Array<ArrayBuffer>[],
+  edgeUse: Map<string, number>
+) {
+  for (let t = 0; t < triCount; t++) {
+    const a = tris[t * 3] ?? 0;
+    const b = tris[t * 3 + 1] ?? 0;
+    const c = tris[t * 3 + 2] ?? 0;
+    const ux = (pos[b * 3] ?? 0) - (pos[a * 3] ?? 0);
+    const uy = (pos[b * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
+    const uz = (pos[b * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
+    const vx = (pos[c * 3] ?? 0) - (pos[a * 3] ?? 0);
+    const vy = (pos[c * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
+    const vz = (pos[c * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
+    let nx = uy * vz - uz * vy;
+    let ny = uz * vx - ux * vz;
+    let nz = ux * vy - uy * vx;
+    const area = Math.hypot(nx, ny, nz);
+    if (area < 1e-12) {
+      continue;
+    }
+    nx /= area;
+    ny /= area;
+    nz /= area;
+    const d = -(
+      nx * (pos[a * 3] ?? 0) +
+      ny * (pos[a * 3 + 1] ?? 0) +
+      nz * (pos[a * 3 + 2] ?? 0)
+    );
+    for (const v of [a, b, c]) {
+      addPlane(quadrics[v] ?? quadric(), nx, ny, nz, d, area);
+    }
+    for (const [p, q] of [
+      [a, b],
+      [b, c],
+      [c, a],
+    ] as const) {
+      const key = p < q ? `${p},${q}` : `${q},${p}`;
+      edgeUse.set(key, (edgeUse.get(key) ?? 0) + 1);
+    }
+  }
+}
+
+function collectValidTriangles(
+  triCount: number,
+  tris: Int32Array<ArrayBuffer>,
+  edgeUse: Map<string, number>,
+  pos: Float64Array<ArrayBuffer>,
+  quadrics: Float64Array<ArrayBuffer>[]
+) {
+  for (let t = 0; t < triCount; t++) {
+    const a = tris[t * 3] ?? 0;
+    const b = tris[t * 3 + 1] ?? 0;
+    const c = tris[t * 3 + 2] ?? 0;
+    for (const [p, q] of [
+      [a, b],
+      [b, c],
+      [c, a],
+    ] as const) {
+      const key = p < q ? `${p},${q}` : `${q},${p}`;
+      if (edgeUse.get(key) !== 1) {
+        continue;
+      }
+      const ex = (pos[q * 3] ?? 0) - (pos[p * 3] ?? 0);
+      const ey = (pos[q * 3 + 1] ?? 0) - (pos[p * 3 + 1] ?? 0);
+      const ez = (pos[q * 3 + 2] ?? 0) - (pos[p * 3 + 2] ?? 0);
+      const fx = (pos[c * 3] ?? 0) - (pos[a * 3] ?? 0);
+      const fy = (pos[c * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
+      const fz = (pos[c * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
+      const gx = (pos[b * 3] ?? 0) - (pos[a * 3] ?? 0);
+      const gy = (pos[b * 3 + 1] ?? 0) - (pos[a * 3 + 1] ?? 0);
+      const gz = (pos[b * 3 + 2] ?? 0) - (pos[a * 3 + 2] ?? 0);
+      const fnx = gy * fz - gz * fy;
+      const fny = gz * fx - gx * fz;
+      const fnz = gx * fy - gy * fx;
+      let nx = ey * fnz - ez * fny;
+      let ny = ez * fnx - ex * fnz;
+      let nz = ex * fny - ey * fnx;
+      const length = Math.hypot(nx, ny, nz);
+      if (length < 1e-12) {
+        continue;
+      }
+      nx /= length;
+      ny /= length;
+      nz /= length;
+      const d = -(
+        nx * (pos[p * 3] ?? 0) +
+        ny * (pos[p * 3 + 1] ?? 0) +
+        nz * (pos[p * 3 + 2] ?? 0)
+      );
+      const weight = Math.hypot(ex, ey, ez) * 1000;
+      addPlane(quadrics[p] ?? quadric(), nx, ny, nz, d, weight);
+      addPlane(quadrics[q] ?? quadric(), nx, ny, nz, d, weight);
+    }
+  }
+}
+
+function remapCollapsedTriangles(
+  vertexTris: Set<number>[],
+  b: number,
+  tris: Int32Array<ArrayBuffer>,
+  a: number,
+  alive: Uint8Array<ArrayBuffer>,
+  initialTriangleCount: number
+) {
+  let triangleCount = initialTriangleCount;
+
+  for (const t of vertexTris[b] ?? []) {
+    const corners = [
+      tris[t * 3] ?? 0,
+      tris[t * 3 + 1] ?? 0,
+      tris[t * 3 + 2] ?? 0,
+    ];
+    if (corners.includes(a)) {
+      alive[t] = 0;
+      triangleCount--;
+      for (const c of corners) {
+        vertexTris[c]?.delete(t);
+      }
+    } else {
+      for (let k = 0; k < 3; k++) {
+        if (tris[t * 3 + k] === b) {
+          tris[t * 3 + k] = a;
+        }
+      }
+      vertexTris[a]?.add(t);
+    }
+  }
+  return triangleCount;
 }
 
 /** 縮約の列の先頭 count 個を適用した形（三角形ごとの位置の配列）。 */

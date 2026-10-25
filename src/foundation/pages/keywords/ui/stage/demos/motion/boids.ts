@@ -154,79 +154,15 @@ export const demo: DemoModule = {
         shark.lookAt(sharkPosition.clone().add(sharkVelocity));
 
         neighborFlags.fill(0);
-        for (let i = 0; i < COUNT; i++) {
-          const position = positions[i];
-          const velocity = velocities[i];
-          if (!(position && velocity)) {
-            continue;
-          }
-          separation.set(0, 0, 0);
-          alignment.set(0, 0, 0);
-          cohesion.set(0, 0, 0);
-          let neighbors = 0;
-          let crowded = 0;
-          for (let j = 0; j < COUNT; j++) {
-            if (i === j) {
-              continue;
-            }
-            const other = positions[j];
-            const otherVelocity = velocities[j];
-            if (!(other && otherVelocity)) {
-              continue;
-            }
-            offset.copy(position).sub(other);
-            const distanceSq = offset.lengthSq();
-            if (distanceSq < radiusSq && distanceSq > 1e-6) {
-              // 分離はごく近い相手だけから受ける（近傍半径の 0.45 倍）
-              if (distanceSq < separationSq) {
-                separation.addScaledVector(offset, 1 / distanceSq);
-                crowded++;
-              }
-              alignment.add(otherVelocity);
-              cohesion.add(other);
-              neighbors++;
-              if (i === 0) {
-                neighborFlags[j] = 1;
-              }
-            }
-          }
-          steer.set(0, 0, 0);
-          if (neighbors > 0) {
-            alignment
-              .divideScalar(neighbors)
-              .setLength(MAX_SPEED)
-              .sub(velocity);
-            cohesion
-              .divideScalar(neighbors)
-              .sub(position)
-              .setLength(MAX_SPEED)
-              .sub(velocity);
-            if (crowded > 0) {
-              separation.setLength(MAX_SPEED).sub(velocity);
-            }
-            steer
-              .addScaledVector(limit(separation, MAX_FORCE), wSeparation)
-              .addScaledVector(limit(alignment, MAX_FORCE), wAlignment)
-              .addScaledVector(limit(cohesion, MAX_FORCE), wCohesion);
-          }
-          // 水槽の外へ出ないように中心へ引き戻す
-          offset.copy(position).sub(CENTER);
-          offset.y *= 1.8;
-          const outside = offset.length() - BOUNDS;
-          if (outside > 0) {
-            steer.addScaledVector(offset.normalize(), -outside * 8);
-          }
-          if (predator) {
-            offset.copy(position).sub(sharkPosition);
-            const distance = offset.length();
-            if (distance < 2.2) {
-              steer.addScaledVector(offset.normalize(), (2.2 - distance) * 18);
-            }
-          }
-          velocity.addScaledVector(steer, step);
-          const speed = velocity.length();
-          velocity.setLength(Math.min(MAX_SPEED, Math.max(MIN_SPEED, speed)));
-        }
+        steerFlock(
+          radiusSq,
+          separationSq,
+          wSeparation,
+          wAlignment,
+          wCohesion,
+          predator,
+          step
+        );
         for (let i = 0; i < COUNT; i++) {
           const position = positions[i];
           const velocity = velocities[i];
@@ -241,23 +177,12 @@ export const demo: DemoModule = {
         const [focus] = positions;
         const linkPoints: Vector3[] = [];
         let neighborCount = 0;
-        for (let i = 0; i < COUNT; i++) {
-          const isNeighbor = neighborFlags[i] === 1;
-          if (isNeighbor) {
-            neighborCount++;
-          }
-          if (i === 0 && showNeighbors) {
-            fish.paint(i, palette.amber);
-          } else if (isNeighbor && showNeighbors) {
-            fish.paint(i, palette.cyan);
-            const other = positions[i];
-            if (focus && other) {
-              linkPoints.push(focus, other);
-            }
-          } else {
-            fish.paint(i, baseColors[i] ?? palette.ink);
-          }
-        }
+        neighborCount = renderNeighborLinks(
+          neighborCount,
+          showNeighbors,
+          focus,
+          linkPoints
+        );
         fish.commit();
         bubble.visible = showNeighbors;
         links.visible = showNeighbors && linkPoints.length > 0;
@@ -275,5 +200,156 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function steerFlock(
+      radiusSq: number,
+      separationSq: number,
+      wSeparation: number,
+      wAlignment: number,
+      wCohesion: number,
+      predator: boolean,
+      step: number
+    ) {
+      for (let i = 0; i < COUNT; i++) {
+        const position = positions[i];
+        const velocity = velocities[i];
+        if (!(position && velocity)) {
+          continue;
+        }
+        separation.set(0, 0, 0);
+        alignment.set(0, 0, 0);
+        cohesion.set(0, 0, 0);
+        let neighbors = 0;
+        let crowded = 0;
+        ({ crowded, neighbors } = accumulateNeighborForces(
+          i,
+          position,
+          radiusSq,
+          separationSq,
+          crowded,
+          neighbors
+        ));
+        steer.set(0, 0, 0);
+        applyFlockingForces(
+          neighbors,
+          velocity,
+          position,
+          crowded,
+          wSeparation,
+          wAlignment,
+          wCohesion
+        );
+        // 水槽の外へ出ないように中心へ引き戻す
+        offset.copy(position).sub(CENTER);
+        offset.y *= 1.8;
+        const outside = offset.length() - BOUNDS;
+        if (outside > 0) {
+          steer.addScaledVector(offset.normalize(), -outside * 8);
+        }
+        if (predator) {
+          offset.copy(position).sub(sharkPosition);
+          const distance = offset.length();
+          if (distance < 2.2) {
+            steer.addScaledVector(offset.normalize(), (2.2 - distance) * 18);
+          }
+        }
+        velocity.addScaledVector(steer, step);
+        const speed = velocity.length();
+        velocity.setLength(Math.min(MAX_SPEED, Math.max(MIN_SPEED, speed)));
+      }
+    }
+
+    function applyFlockingForces(
+      neighbors: number,
+      velocity: Vector3,
+      position: Vector3,
+      crowded: number,
+      wSeparation: number,
+      wAlignment: number,
+      wCohesion: number
+    ) {
+      if (neighbors > 0) {
+        alignment.divideScalar(neighbors).setLength(MAX_SPEED).sub(velocity);
+        cohesion
+          .divideScalar(neighbors)
+          .sub(position)
+          .setLength(MAX_SPEED)
+          .sub(velocity);
+        if (crowded > 0) {
+          separation.setLength(MAX_SPEED).sub(velocity);
+        }
+        steer
+          .addScaledVector(limit(separation, MAX_FORCE), wSeparation)
+          .addScaledVector(limit(alignment, MAX_FORCE), wAlignment)
+          .addScaledVector(limit(cohesion, MAX_FORCE), wCohesion);
+      }
+    }
+
+    function renderNeighborLinks(
+      initialNeighborCount: number,
+      showNeighbors: boolean,
+      focus: Vector3 | undefined,
+      linkPoints: Vector3[]
+    ) {
+      let neighborCount = initialNeighborCount;
+
+      for (let i = 0; i < COUNT; i++) {
+        const isNeighbor = neighborFlags[i] === 1;
+        if (isNeighbor) {
+          neighborCount++;
+        }
+        if (i === 0 && showNeighbors) {
+          fish.paint(i, palette.amber);
+        } else if (isNeighbor && showNeighbors) {
+          fish.paint(i, palette.cyan);
+          const other = positions[i];
+          if (focus && other) {
+            linkPoints.push(focus, other);
+          }
+        } else {
+          fish.paint(i, baseColors[i] ?? palette.ink);
+        }
+      }
+      return neighborCount;
+    }
+
+    function accumulateNeighborForces(
+      i: number,
+      position: Vector3,
+      radiusSq: number,
+      separationSq: number,
+      initialCrowded: number,
+      initialNeighbors: number
+    ) {
+      let crowded = initialCrowded;
+      let neighbors = initialNeighbors;
+
+      for (let j = 0; j < COUNT; j++) {
+        if (i === j) {
+          continue;
+        }
+        const other = positions[j];
+        const otherVelocity = velocities[j];
+        if (!(other && otherVelocity)) {
+          continue;
+        }
+        offset.copy(position).sub(other);
+        const distanceSq = offset.lengthSq();
+        if (distanceSq < radiusSq && distanceSq > 1e-6) {
+          // 分離はごく近い相手だけから受ける（近傍半径の 0.45 倍）
+          if (distanceSq < separationSq) {
+            separation.addScaledVector(offset, 1 / distanceSq);
+            crowded++;
+          }
+          alignment.add(otherVelocity);
+          cohesion.add(other);
+          neighbors++;
+          if (i === 0) {
+            neighborFlags[j] = 1;
+          }
+        }
+      }
+      return { crowded, neighbors };
+    }
   },
 };

@@ -157,37 +157,16 @@ export const demo: DemoModule = {
         }
         // 2. 運べる土の量：速くて水が多く、急に下るほど多い
         const capacity = Math.max(-deltaHeight * speed * water * 4, 0.01);
-        if (sediment > capacity || deltaHeight > 0) {
-          // 3a. 運びきれない分（上り坂ならくぼみを埋める分）を元の位置に落とす
-          const amount =
-            deltaHeight > 0
-              ? Math.min(deltaHeight, sediment)
-              : (sediment - capacity) * 0.3;
-          sediment -= amount;
-          const index = j * N + i;
-          heights[index] = (heights[index] ?? 0) + amount * (1 - u) * (1 - v);
-          heights[index + 1] = (heights[index + 1] ?? 0) + amount * u * (1 - v);
-          heights[index + N] = (heights[index + N] ?? 0) + amount * (1 - u) * v;
-          heights[index + N + 1] =
-            (heights[index + N + 1] ?? 0) + amount * u * v;
-        } else {
-          // 3b. 余裕がある分だけ周りを削って運ぶ（下った高さより深くは削らない）
-          const amount = Math.min((capacity - sediment) * erode, -deltaHeight);
-          for (const { dx: bx, dz: bz, weight } of brush) {
-            const ci = i + bx;
-            const cj = j + bz;
-            if (ci < 0 || ci >= N || cj < 0 || cj >= N) {
-              continue;
-            }
-            const index = cj * N + ci;
-            const removed = Math.min(
-              heights[index] ?? 0,
-              (amount * weight) / weightSum
-            );
-            heights[index] = (heights[index] ?? 0) - removed;
-            sediment += removed;
-          }
-        }
+        sediment = exchangeSediment(
+          sediment,
+          capacity,
+          deltaHeight,
+          j,
+          i,
+          u,
+          v,
+          erode
+        );
         // 4. 下れば速くなり、水は少しずつ蒸発する
         speed = Math.sqrt(Math.max(0, speed * speed - deltaHeight * 4));
         water *= 0.99;
@@ -238,5 +217,50 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function exchangeSediment(
+      initialSediment: number,
+      capacity: number,
+      deltaHeight: number,
+      j: number,
+      i: number,
+      u: number,
+      v: number,
+      erode: number
+    ) {
+      let sediment = initialSediment;
+
+      if (sediment > capacity || deltaHeight > 0) {
+        // 3a. 運びきれない分（上り坂ならくぼみを埋める分）を元の位置に落とす
+        const amount =
+          deltaHeight > 0
+            ? Math.min(deltaHeight, sediment)
+            : (sediment - capacity) * 0.3;
+        sediment -= amount;
+        const index = j * N + i;
+        heights[index] = (heights[index] ?? 0) + amount * (1 - u) * (1 - v);
+        heights[index + 1] = (heights[index + 1] ?? 0) + amount * u * (1 - v);
+        heights[index + N] = (heights[index + N] ?? 0) + amount * (1 - u) * v;
+        heights[index + N + 1] = (heights[index + N + 1] ?? 0) + amount * u * v;
+      } else {
+        // 3b. 余裕がある分だけ周りを削って運ぶ（下った高さより深くは削らない）
+        const amount = Math.min((capacity - sediment) * erode, -deltaHeight);
+        for (const { dx: bx, dz: bz, weight } of brush) {
+          const ci = i + bx;
+          const cj = j + bz;
+          if (ci < 0 || ci >= N || cj < 0 || cj >= N) {
+            continue;
+          }
+          const index = cj * N + ci;
+          const removed = Math.min(
+            heights[index] ?? 0,
+            (amount * weight) / weightSum
+          );
+          heights[index] = (heights[index] ?? 0) - removed;
+          sediment += removed;
+        }
+      }
+      return sediment;
+    }
   },
 };

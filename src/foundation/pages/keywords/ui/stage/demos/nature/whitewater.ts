@@ -145,33 +145,7 @@ export const demo: DemoModule = {
         const threshold = Number(params["threshold"]);
 
         // 1. 波頭を探して粒子を生む
-        if (dt > 0) {
-          for (let sample = 0; sample < 260; sample++) {
-            const x = (random() - 0.5) * 2 * AREA;
-            const z = (random() - 0.5) * 2 * AREA;
-            const { point, jacobian, velocity } = probe(x, z);
-            if (jacobian > threshold || velocity.y < -0.2) {
-              continue;
-            }
-            const amount = Math.ceil(((threshold - jacobian) / threshold) * 6);
-            for (let n = 0; n < amount; n++) {
-              const roll = random();
-              const type = roll < 0.55 ? SPRAY : roll < 0.8 ? FOAM : BUBBLE;
-              const spread = 0.8;
-              emit(
-                point.x + (random() - 0.5) * 0.4,
-                point.y + (type === BUBBLE ? -0.2 - random() * 0.4 : 0.05),
-                point.z + (random() - 0.5) * 0.4,
-                velocity.x * 1.1 + (random() - 0.5) * spread,
-                type === SPRAY
-                  ? Math.max(velocity.y, 0) + 1 + random() * 2.5
-                  : 0,
-                velocity.z * 1.1 + (random() - 0.5) * spread,
-                type
-              );
-            }
-          }
-        }
+        sampleWhitewaterSources(dt, threshold);
 
         // 2. 水面との位置関係で、飛沫・泡・気泡の動きを切り替える
         counts.fill(0);
@@ -185,28 +159,7 @@ export const demo: DemoModule = {
           let z = pz[index] ?? 0;
           const surface = waterHeight(state, x, z);
           let type = SPRAY;
-          if (y > surface + 0.06) {
-            // 飛沫：重力と空気抵抗だけで飛ぶ
-            vy[index] = (vy[index] ?? 0) - GRAVITY * dt;
-            const drag = 1 - 0.4 * dt;
-            vx[index] = (vx[index] ?? 0) * drag;
-            vz[index] = (vz[index] ?? 0) * drag;
-          } else if (y < surface - 0.12) {
-            // 気泡：浮力で浮かび、水の抵抗で横の動きは止まる
-            type = BUBBLE;
-            vy[index] = (vy[index] ?? 0) + (2.2 - (vy[index] ?? 0) * 3) * dt;
-            const drag = 1 - 3 * dt;
-            vx[index] = (vx[index] ?? 0) * drag;
-            vz[index] = (vz[index] ?? 0) * drag;
-          } else {
-            // 泡：水面に張り付き、少しずつ減速しながら波に運ばれる
-            type = FOAM;
-            y = surface + 0.02;
-            vy[index] = 0;
-            const drag = 1 - 0.8 * dt;
-            vx[index] = (vx[index] ?? 0) * drag;
-            vz[index] = (vz[index] ?? 0) * drag;
-          }
+          ({ y, type } = applyWaterPhaseForces(y, surface, index, dt, type));
           x += (vx[index] ?? 0) * dt;
           y += (vy[index] ?? 0) * dt;
           z += (vz[index] ?? 0) * dt;
@@ -240,5 +193,76 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function applyWaterPhaseForces(
+      initialY: number,
+      surface: number,
+      index: number,
+      dt: number,
+      initialType: number
+    ) {
+      let y = initialY;
+      let type = initialType;
+
+      if (y > surface + 0.06) {
+        // 飛沫：重力と空気抵抗だけで飛ぶ
+        vy[index] = (vy[index] ?? 0) - GRAVITY * dt;
+        const drag = 1 - 0.4 * dt;
+        vx[index] = (vx[index] ?? 0) * drag;
+        vz[index] = (vz[index] ?? 0) * drag;
+      } else if (y < surface - 0.12) {
+        // 気泡：浮力で浮かび、水の抵抗で横の動きは止まる
+        type = BUBBLE;
+        vy[index] = (vy[index] ?? 0) + (2.2 - (vy[index] ?? 0) * 3) * dt;
+        const drag = 1 - 3 * dt;
+        vx[index] = (vx[index] ?? 0) * drag;
+        vz[index] = (vz[index] ?? 0) * drag;
+      } else {
+        // 泡：水面に張り付き、少しずつ減速しながら波に運ばれる
+        type = FOAM;
+        y = surface + 0.02;
+        vy[index] = 0;
+        const drag = 1 - 0.8 * dt;
+        vx[index] = (vx[index] ?? 0) * drag;
+        vz[index] = (vz[index] ?? 0) * drag;
+      }
+      return { y, type };
+    }
+
+    function sampleWhitewaterSources(dt: number, threshold: number) {
+      if (dt > 0) {
+        for (let sample = 0; sample < 260; sample++) {
+          const x = (random() - 0.5) * 2 * AREA;
+          const z = (random() - 0.5) * 2 * AREA;
+          const { point, jacobian, velocity } = probe(x, z);
+          if (jacobian > threshold || velocity.y < -0.2) {
+            continue;
+          }
+          const amount = Math.ceil(((threshold - jacobian) / threshold) * 6);
+          emitWhitewaterParticles(amount, point, velocity);
+        }
+      }
+    }
+
+    function emitWhitewaterParticles(
+      amount: number,
+      point: { x: number; y: number; z: number },
+      velocity: { x: number; y: number; z: number }
+    ) {
+      for (let n = 0; n < amount; n++) {
+        const roll = random();
+        const type = roll < 0.55 ? SPRAY : roll < 0.8 ? FOAM : BUBBLE;
+        const spread = 0.8;
+        emit(
+          point.x + (random() - 0.5) * 0.4,
+          point.y + (type === BUBBLE ? -0.2 - random() * 0.4 : 0.05),
+          point.z + (random() - 0.5) * 0.4,
+          velocity.x * 1.1 + (random() - 0.5) * spread,
+          type === SPRAY ? Math.max(velocity.y, 0) + 1 + random() * 2.5 : 0,
+          velocity.z * 1.1 + (random() - 0.5) * spread,
+          type
+        );
+      }
+    }
   },
 };

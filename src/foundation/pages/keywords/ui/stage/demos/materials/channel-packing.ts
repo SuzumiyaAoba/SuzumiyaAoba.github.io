@@ -22,43 +22,7 @@ function buildTextures() {
   const packed = new Uint8Array(SIZE * SIZE * 4);
   const albedo = new Uint8Array(SIZE * SIZE * 4);
   for (let y = 0; y < SIZE; y++) {
-    for (let x = 0; x < SIZE; x++) {
-      const u = x / SIZE;
-      const v = y / SIZE;
-      const cellX = Math.floor(u * 4);
-      const cellY = Math.floor(v * 4);
-      const fx = fract(u * 4);
-      const fy = fract(v * 4);
-      const edge = Math.min(fx, 1 - fx, fy, 1 - fy);
-      const groove = clamp(edge / 0.07);
-      const seed = hash2(cellX + 0.5, cellY + 0.5);
-      const painted = seed > 0.45;
-      const stripe = painted && seed > 0.8 && fract((u + v) * 12) < 0.5;
-      const scratch = clamp(perlin2(u * 60, v * 8) * 3 - 0.9);
-      const light =
-        !painted && Math.abs(fy - 0.5) < 0.05 && fx > 0.2 && fx < 0.8 ? 1 : 0;
-      const ao = 0.35 + 0.65 * groove;
-      const roughness = painted
-        ? 0.7 - scratch * 0.4
-        : 0.25 + perlin2(u * 30, v * 30) * 0.15;
-      const metal = painted ? scratch : 1;
-      const index = (y * SIZE + x) * 4;
-      packed[index] = ao * 255;
-      packed[index + 1] = clamp(roughness) * 255;
-      packed[index + 2] = clamp(metal) * 255;
-      packed[index + 3] = light * 255;
-      const base = stripe
-        ? [230, 180, 40]
-        : painted
-          ? [60 + seed * 60, 90 + seed * 40, 110 + seed * 30]
-          : [170, 175, 185];
-      const worn = painted ? scratch : 0;
-      const [red = 0, green = 0, blue = 0] = base;
-      albedo[index] = red * (1 - worn) + 175 * worn;
-      albedo[index + 1] = green * (1 - worn) + 178 * worn;
-      albedo[index + 2] = blue * (1 - worn) + 185 * worn;
-      albedo[index + 3] = 255;
-    }
+    paintMaterialRow(y, packed, albedo);
   }
   const make = (data: Uint8Array) => {
     const texture = new DataTexture(data, SIZE, SIZE, RGBAFormat);
@@ -193,3 +157,51 @@ export const demo: DemoModule = {
     };
   },
 };
+
+function paintMaterialRow(
+  y: number,
+  packed: Uint8Array<ArrayBuffer>,
+  albedo: Uint8Array<ArrayBuffer>
+) {
+  for (let x = 0; x < SIZE; x++) {
+    const u = x / SIZE;
+    const v = y / SIZE;
+    const cellX = Math.floor(u * 4);
+    const cellY = Math.floor(v * 4);
+    const fx = fract(u * 4);
+    const fy = fract(v * 4);
+    const edge = Math.min(fx, 1 - fx, fy, 1 - fy);
+    const groove = clamp(edge / 0.07);
+    const seed = hash2(cellX + 0.5, cellY + 0.5);
+    const painted = seed > 0.45;
+    const stripe = painted && seed > 0.8 && fract((u + v) * 12) < 0.5;
+    const scratch = clamp(perlin2(u * 60, v * 8) * 3 - 0.9);
+    const light =
+      !painted && Math.abs(fy - 0.5) < 0.05 && fx > 0.2 && fx < 0.8 ? 1 : 0;
+    const ao = 0.35 + 0.65 * groove;
+    const roughness = painted
+      ? 0.7 - scratch * 0.4
+      : 0.25 + perlin2(u * 30, v * 30) * 0.15;
+    const metal = painted ? scratch : 1;
+    const index = (y * SIZE + x) * 4;
+    packed[index] = ao * 255;
+    packed[index + 1] = clamp(roughness) * 255;
+    packed[index + 2] = clamp(metal) * 255;
+    packed[index + 3] = light * 255;
+    const base = calculateBaseColor(stripe, painted, seed);
+    const worn = painted ? scratch : 0;
+    const [red = 0, green = 0, blue = 0] = base;
+    albedo[index] = red * (1 - worn) + 175 * worn;
+    albedo[index + 1] = green * (1 - worn) + 178 * worn;
+    albedo[index + 2] = blue * (1 - worn) + 185 * worn;
+    albedo[index + 3] = 255;
+  }
+}
+
+function calculateBaseColor(stripe: boolean, painted: boolean, seed: number) {
+  return stripe
+    ? [230, 180, 40]
+    : painted
+      ? [60 + seed * 60, 90 + seed * 40, 110 + seed * 30]
+      : [170, 175, 185];
+}

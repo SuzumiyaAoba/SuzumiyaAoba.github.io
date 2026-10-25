@@ -164,38 +164,7 @@ export const demo: DemoModule = {
         folded.visible = showChart;
         axis.visible = showChart;
         zeroLabel.visible = showChart;
-        if (showChart) {
-          const rawPoints: Vector3[] = [];
-          const foldedPoints: Vector3[] = [];
-          for (let sample = 0; sample <= SAMPLES; sample++) {
-            const u = sample / SAMPLES;
-            const x = (u - 0.5) * CHART_WIDTH;
-            let sum = 0;
-            let amp = 0.5;
-            let norm = 0;
-            let first = 0;
-            for (let index = 0; index < octaves; index++) {
-              const frequency = 2 ** index * 5;
-              const n =
-                perlin2(
-                  u * frequency + clock * 0.2 * (index + 1),
-                  0.37 + index
-                ) * 1.4;
-              if (index === 0) {
-                first = n;
-              }
-              sum += (turbulence ? Math.abs(n) : n) * amp;
-              norm += amp;
-              amp *= 0.5;
-            }
-            rawPoints.push(new Vector3(x, CHART_Y + first * 0.7, 2.2));
-            foldedPoints.push(
-              new Vector3(x, CHART_Y + (sum / norm) * 1.3, 2.2)
-            );
-          }
-          raw.setPoints(rawPoints);
-          folded.setPoints(foldedPoints);
-        }
+        renderTurbulenceWaves(showChart, octaves, turbulence);
         context.caption(
           turbulence
             ? "負の値を折り返す（絶対値）と、0 を横切る場所が鋭い谷になる。重ねると炎やガスの筋が現れる。"
@@ -203,5 +172,40 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderTurbulenceWaves(
+      showChart: boolean,
+      octaves: number,
+      turbulence: boolean
+    ) {
+      if (showChart) {
+        const rawPoints: Vector3[] = [];
+        const foldedPoints: Vector3[] = [];
+        for (let sample = 0; sample <= SAMPLES; sample++) {
+          const u = sample / SAMPLES;
+          const x = (u - 0.5) * CHART_WIDTH;
+          let sum = 0;
+          let amp = 0.5;
+          let norm = 0;
+          let first = 0;
+          for (let index = 0; index < octaves; index++) {
+            const frequency = 2 ** index * 5;
+            const n =
+              perlin2(u * frequency + clock * 0.2 * (index + 1), 0.37 + index) *
+              1.4;
+            if (index === 0) {
+              first = n;
+            }
+            sum += (turbulence ? Math.abs(n) : n) * amp;
+            norm += amp;
+            amp *= 0.5;
+          }
+          rawPoints.push(new Vector3(x, CHART_Y + first * 0.7, 2.2));
+          foldedPoints.push(new Vector3(x, CHART_Y + (sum / norm) * 1.3, 2.2));
+        }
+        raw.setPoints(rawPoints);
+        folded.setPoints(foldedPoints);
+      }
+    }
   },
 };

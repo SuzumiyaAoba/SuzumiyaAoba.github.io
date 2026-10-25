@@ -147,30 +147,7 @@ export const demo: DemoModule = {
           raw === "none" || raw === "frustum" ? raw : "occlusion";
         // 1. 壁だけを描いて深度バッファを作る（欄ごとに最も近い距離）
         depth.fill(FAR);
-        for (const wall of WALLS) {
-          const steps = 60;
-          const corners: [number, number][] = [
-            [wall.x0, wall.z0],
-            [wall.x1, wall.z0],
-            [wall.x1, wall.z1],
-            [wall.x0, wall.z1],
-          ];
-          for (let e = 0; e < 4; e++) {
-            const [ax, az] = corners[e] ?? [0, 0];
-            const [bx, bz] = corners[(e + 1) % 4] ?? [0, 0];
-            for (let s = 0; s <= steps; s++) {
-              const x = ax + ((bx - ax) * s) / steps;
-              const z = az + ((bz - az) * s) / steps;
-              const bin = binOf(relativeAngle(x, z, yaw));
-              if (bin >= 0 && bin < BINS) {
-                depth[bin] = Math.min(
-                  depth[bin] ?? FAR,
-                  Math.hypot(x - EYE.x, z - EYE.z)
-                );
-              }
-            }
-          }
-        }
+        rasterizeOccluders(yaw);
         // 2. 物体ごとに判定
         let drawn = 0;
         let hidden = 0;
@@ -180,24 +157,7 @@ export const demo: DemoModule = {
           const distance = Math.hypot(p.x - EYE.x, p.z - EYE.z);
           const inFrustum = Math.abs(angle) < FOV / 2 && distance < FAR;
           let state: keyof typeof colors = "draw";
-          if (mode !== "none" && !inFrustum) {
-            state = "outside";
-          } else if (mode === "occlusion" && inFrustum) {
-            // 物体が占める方向の範囲で、どこか 1 か所でも壁より手前なら見える
-            const spread = Math.atan2(0.15, distance);
-            const from = Math.max(0, binOf(angle - spread));
-            const to = Math.min(BINS - 1, binOf(angle + spread));
-            let visible = false;
-            for (let b = from; b <= to; b++) {
-              if (distance - 0.15 < (depth[b] ?? FAR)) {
-                visible = true;
-                break;
-              }
-            }
-            if (!visible) {
-              state = "hidden";
-            }
-          }
+          state = classifyVisibility(mode, inFrustum, state, distance, angle);
           if (state === "draw") {
             drawn++;
           } else if (state === "hidden") {
@@ -232,5 +192,62 @@ export const demo: DemoModule = {
         boxes.dispose();
       },
     };
+
+    function rasterizeOccluders(yaw: number) {
+      for (const wall of WALLS) {
+        const steps = 60;
+        const corners: [number, number][] = [
+          [wall.x0, wall.z0],
+          [wall.x1, wall.z0],
+          [wall.x1, wall.z1],
+          [wall.x0, wall.z1],
+        ];
+        for (let e = 0; e < 4; e++) {
+          const [ax, az] = corners[e] ?? [0, 0];
+          const [bx, bz] = corners[(e + 1) % 4] ?? [0, 0];
+          for (let s = 0; s <= steps; s++) {
+            const x = ax + ((bx - ax) * s) / steps;
+            const z = az + ((bz - az) * s) / steps;
+            const bin = binOf(relativeAngle(x, z, yaw));
+            if (bin >= 0 && bin < BINS) {
+              depth[bin] = Math.min(
+                depth[bin] ?? FAR,
+                Math.hypot(x - EYE.x, z - EYE.z)
+              );
+            }
+          }
+        }
+      }
+    }
+
+    function classifyVisibility(
+      mode: Mode,
+      inFrustum: boolean,
+      initialState: "draw" | "hidden" | "outside",
+      distance: number,
+      angle: number
+    ) {
+      let state = initialState;
+
+      if (mode !== "none" && !inFrustum) {
+        state = "outside";
+      } else if (mode === "occlusion" && inFrustum) {
+        // 物体が占める方向の範囲で、どこか 1 か所でも壁より手前なら見える
+        const spread = Math.atan2(0.15, distance);
+        const from = Math.max(0, binOf(angle - spread));
+        const to = Math.min(BINS - 1, binOf(angle + spread));
+        let visible = false;
+        for (let b = from; b <= to; b++) {
+          if (distance - 0.15 < (depth[b] ?? FAR)) {
+            visible = true;
+            break;
+          }
+        }
+        if (!visible) {
+          state = "hidden";
+        }
+      }
+      return state;
+    }
   },
 };

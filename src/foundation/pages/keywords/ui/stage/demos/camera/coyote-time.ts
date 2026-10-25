@@ -92,18 +92,7 @@ export const demo: DemoModule = {
             pending = 1e-6;
           }
         }
-        if (jumpPressed) {
-          const last = player.events.at(-1);
-          jumpedOk =
-            last !== undefined &&
-            last.time === player.time &&
-            last.kind !== "miss";
-          if (jumpedOk) {
-            success++;
-          } else {
-            fail++;
-          }
-        }
+        recordJumpResult(jumpPressed);
         // 落ちたら、直前の足場からやり直す。コースの端まで来たら最初へ
         if (
           player.position.y < -7 ||
@@ -153,5 +142,20 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function recordJumpResult(jumpPressed: boolean) {
+      if (jumpPressed) {
+        const last = player.events.at(-1);
+        jumpedOk =
+          last !== undefined &&
+          last.time === player.time &&
+          last.kind !== "miss";
+        if (jumpedOk) {
+          success++;
+        } else {
+          fail++;
+        }
+      }
+    }
   },
 };

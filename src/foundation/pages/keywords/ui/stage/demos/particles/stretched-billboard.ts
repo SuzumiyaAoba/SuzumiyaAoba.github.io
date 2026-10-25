@@ -119,37 +119,7 @@ export const demo: DemoModule = {
           emit -= 1;
           spawnSpark();
         }
-        for (let index = 0; index < SPARKS; index++) {
-          const age = (sparkAge[index] ?? 99) + dt;
-          sparkAge[index] = age;
-          const life = sparkLife[index] ?? 1;
-          const i3 = index * 3;
-          if (age > life) {
-            sparksStretched.sizes[index] = 0;
-            continue;
-          }
-          const vy = (sparksStretched.velocities[i3 + 1] ?? 0) - GRAVITY * dt;
-          sparksStretched.velocities[i3 + 1] = vy;
-          for (let axis = 0; axis < 3; axis++) {
-            sparksStretched.positions[i3 + axis] =
-              (sparksStretched.positions[i3 + axis] ?? 0) +
-              (sparksStretched.velocities[i3 + axis] ?? 0) * dt;
-          }
-          if ((sparksStretched.positions[i3 + 1] ?? 0) < 0.02 && vy < 0) {
-            sparksStretched.positions[i3 + 1] = 0.02;
-            sparksStretched.velocities[i3 + 1] = -vy * 0.35;
-            sparksStretched.velocities[i3] =
-              (sparksStretched.velocities[i3] ?? 0) * 0.6;
-            sparksStretched.velocities[i3 + 2] =
-              (sparksStretched.velocities[i3 + 2] ?? 0) * 0.6;
-          }
-          const t = age / life;
-          sparksStretched.sizes[index] = 0.045 * (1 - t * 0.5);
-          sparksStretched.colors.set(
-            [2.2, 1.1 - t * 0.6, 0.35 - t * 0.3, 1 - t * t],
-            index * 4
-          );
-        }
+        animateSparkBillboards(dt);
         for (let index = 0; index < RAIN; index++) {
           const i3 = index * 3;
           let y =
@@ -198,5 +168,39 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function animateSparkBillboards(dt: number) {
+      for (let index = 0; index < SPARKS; index++) {
+        const age = (sparkAge[index] ?? 99) + dt;
+        sparkAge[index] = age;
+        const life = sparkLife[index] ?? 1;
+        const i3 = index * 3;
+        if (age > life) {
+          sparksStretched.sizes[index] = 0;
+          continue;
+        }
+        const vy = (sparksStretched.velocities[i3 + 1] ?? 0) - GRAVITY * dt;
+        sparksStretched.velocities[i3 + 1] = vy;
+        for (let axis = 0; axis < 3; axis++) {
+          sparksStretched.positions[i3 + axis] =
+            (sparksStretched.positions[i3 + axis] ?? 0) +
+            (sparksStretched.velocities[i3 + axis] ?? 0) * dt;
+        }
+        if ((sparksStretched.positions[i3 + 1] ?? 0) < 0.02 && vy < 0) {
+          sparksStretched.positions[i3 + 1] = 0.02;
+          sparksStretched.velocities[i3 + 1] = -vy * 0.35;
+          sparksStretched.velocities[i3] =
+            (sparksStretched.velocities[i3] ?? 0) * 0.6;
+          sparksStretched.velocities[i3 + 2] =
+            (sparksStretched.velocities[i3 + 2] ?? 0) * 0.6;
+        }
+        const t = age / life;
+        sparksStretched.sizes[index] = 0.045 * (1 - t * 0.5);
+        sparksStretched.colors.set(
+          [2.2, 1.1 - t * 0.6, 0.35 - t * 0.3, 1 - t * t],
+          index * 4
+        );
+      }
+    }
   },
 };

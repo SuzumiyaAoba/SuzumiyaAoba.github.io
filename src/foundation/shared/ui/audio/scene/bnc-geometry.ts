@@ -56,33 +56,7 @@ export function bncBayonetGeometry() {
     }
   };
   for (let column = 0; column < around; column += 1) {
-    for (let row = 0; row < along; row += 1) {
-      if (!occupied(column, row)) {
-        continue;
-      }
-      const a = point(column, row, false);
-      const b = point(column + 1, row, false);
-      const c = point(column + 1, row + 1, false);
-      const d = point(column, row + 1, false);
-      const ai = point(column, row, true);
-      const bi = point(column + 1, row, true);
-      const ci = point(column + 1, row + 1, true);
-      const di = point(column, row + 1, true);
-      quad(a, b, c, d);
-      quad(bi, ai, di, ci);
-      if (!occupied(column, row - 1)) {
-        quad(b, a, ai, bi);
-      }
-      if (!occupied(column, row + 1)) {
-        quad(d, c, ci, di);
-      }
-      if (!occupied(column - 1, row)) {
-        quad(a, d, di, ai);
-      }
-      if (!occupied(column + 1, row)) {
-        quad(c, b, bi, ci);
-      }
-    }
+    appendBayonetColumn(along, occupied, column, point, quad);
   }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
@@ -92,6 +66,42 @@ export function bncBayonetGeometry() {
     geometry.dispose();
   }
   return smooth;
+}
+
+function appendBayonetColumn(
+  along: number,
+  occupied: (column: number, row: number) => boolean,
+  column: number,
+  point: (column: number, row: number, inside: boolean) => Vector3,
+  quad: (a: Vector3, b: Vector3, c: Vector3, d: Vector3) => void
+) {
+  for (let row = 0; row < along; row += 1) {
+    if (!occupied(column, row)) {
+      continue;
+    }
+    const a = point(column, row, false);
+    const b = point(column + 1, row, false);
+    const c = point(column + 1, row + 1, false);
+    const d = point(column, row + 1, false);
+    const ai = point(column, row, true);
+    const bi = point(column + 1, row, true);
+    const ci = point(column + 1, row + 1, true);
+    const di = point(column, row + 1, true);
+    quad(a, b, c, d);
+    quad(bi, ai, di, ci);
+    if (!occupied(column, row - 1)) {
+      quad(b, a, ai, bi);
+    }
+    if (!occupied(column, row + 1)) {
+      quad(d, c, ci, di);
+    }
+    if (!occupied(column - 1, row)) {
+      quad(a, d, di, ai);
+    }
+    if (!occupied(column + 1, row)) {
+      quad(c, b, bi, ci);
+    }
+  }
 }
 
 /** Four spring leaves engage the inside of the jack barrel. */

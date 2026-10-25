@@ -38,10 +38,5 @@
     "postcss.config.mjs",
     "public/pagefind-adapter.js"
   ],
-  "exclude": [
-    "node_modules",
-    "apm_modules",
-    "out",
-    ".astro"
-  ]
+  "exclude": ["node_modules", "apm_modules", "out", ".astro"]
 }

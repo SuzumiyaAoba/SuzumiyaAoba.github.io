@@ -93,35 +93,7 @@ export const demo: DemoModule = {
         const early = Number(params["early"]);
         let jumpPressed = false;
         // 自動操縦：落下中、着地までの時間が early を切ったらボタンを押す
-        if (player.onGround) {
-          pressedThisAir = false;
-          // 最初の足場では、自分で跳び始める
-          if (
-            player.position.x >= TAKEOFF &&
-            player.position.x < TAKEOFF + 0.5 &&
-            !player.jumped
-          ) {
-            jumpPressed = true;
-          }
-        } else if (!pressedThisAir && player.velocity.y < 0) {
-          const ground = groundBelow(
-            blocks,
-            player.position.x + player.velocity.x * 0.1,
-            player.position.y
-          );
-          if (Number.isFinite(ground)) {
-            const drop = player.position.y - ground;
-            const v = -player.velocity.y;
-            const g = PLAYER.gravity * 1.2;
-            const timeToLand = (-v + Math.sqrt(v * v + 2 * g * drop)) / g;
-            if (timeToLand <= early + h) {
-              jumpPressed = true;
-              pressedThisAir = true;
-              pressedAt = player.time + h;
-              waitingResult = true;
-            }
-          }
-        }
+        jumpPressed = updateAirborneInput(jumpPressed, early, h);
         const wasGround = player.onGround;
         player.update(h, { move: 1, jumpPressed, jumpHeld: true }, { buffer });
         if (!wasGround && player.onGround) {
@@ -183,5 +155,44 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateAirborneInput(
+      initialJumpPressed: boolean,
+      early: number,
+      h: number
+    ) {
+      let jumpPressed = initialJumpPressed;
+
+      if (player.onGround) {
+        pressedThisAir = false;
+        // 最初の足場では、自分で跳び始める
+        if (
+          player.position.x >= TAKEOFF &&
+          player.position.x < TAKEOFF + 0.5 &&
+          !player.jumped
+        ) {
+          jumpPressed = true;
+        }
+      } else if (!pressedThisAir && player.velocity.y < 0) {
+        const ground = groundBelow(
+          blocks,
+          player.position.x + player.velocity.x * 0.1,
+          player.position.y
+        );
+        if (Number.isFinite(ground)) {
+          const drop = player.position.y - ground;
+          const v = -player.velocity.y;
+          const g = PLAYER.gravity * 1.2;
+          const timeToLand = (-v + Math.sqrt(v * v + 2 * g * drop)) / g;
+          if (timeToLand <= early + h) {
+            jumpPressed = true;
+            pressedThisAir = true;
+            pressedAt = player.time + h;
+            waitingResult = true;
+          }
+        }
+      }
+      return jumpPressed;
+    }
   },
 };

@@ -93,27 +93,7 @@ function cinnamonUsbAShield() {
     }
     // The inside of the lower hemisphere is the shallow stamped depression.
     const attributes = Object.values(depression.attributes);
-    for (
-      let index = 0;
-      index < depression.getAttribute("position").count;
-      index += 3
-    ) {
-      for (const attribute of attributes) {
-        for (
-          let component = 0;
-          component < attribute.itemSize;
-          component += 1
-        ) {
-          const value = attribute.getComponent(index + 1, component);
-          attribute.setComponent(
-            index + 1,
-            component,
-            attribute.getComponent(index + 2, component)
-          );
-          attribute.setComponent(index + 2, component, value);
-        }
-      }
-    }
+    appendShieldDepressions(depression, attributes);
     if (side < 0) {
       depression.rotateZ(Math.PI);
     }
@@ -142,6 +122,29 @@ function cinnamonUsbAShield() {
 
 export const cinnamonShoulder = 12;
 export const cinnamonTail = 40;
+
+function appendShieldDepressions(
+  depression: BufferGeometry,
+  attributes: ReturnType<BufferGeometry["getAttribute"]>[]
+) {
+  for (
+    let index = 0;
+    index < depression.getAttribute("position").count;
+    index += 3
+  ) {
+    for (const attribute of attributes) {
+      for (let component = 0; component < attribute.itemSize; component += 1) {
+        const value = attribute.getComponent(index + 1, component);
+        attribute.setComponent(
+          index + 1,
+          component,
+          attribute.getComponent(index + 2, component)
+        );
+        attribute.setComponent(index + 2, component, value);
+      }
+    }
+  }
+}
 
 function housingSection(type: CinnamonConnector, z: number) {
   const taper = MathUtils.smoothstep(z, 20, cinnamonTail);
@@ -175,6 +178,42 @@ export function cinnamonHousingGeometry(
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];
+  appendHousingRings(along, around, section, type, positions, normals, indices);
+  // Separate vertices keep the shoulder planar without smoothing triangle fans.
+  const z = section === "cover" ? cinnamonShoulder : cinnamonTail;
+  const firstCap = positions.length / 3;
+  positions.push(0, 0, z);
+  normals.push(0, 0, section === "cover" ? -1 : 1);
+  for (let column = 0; column <= around; column += 1) {
+    positions.push(
+      ...housingPoint(type, (column / around) * Math.PI * 2, z).toArray()
+    );
+    normals.push(0, 0, section === "cover" ? -1 : 1);
+    if (column < around) {
+      const next = firstCap + column + 1;
+      indices.push(
+        ...(section === "cover"
+          ? [firstCap, next + 1, next]
+          : [firstCap, next, next + 1])
+      );
+    }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("normal", new Float32BufferAttribute(normals, 3));
+  geometry.setIndex(indices);
+  return geometry;
+}
+
+function appendHousingRings(
+  along: number,
+  around: number,
+  section: "cover" | "boot",
+  type: CinnamonConnector,
+  positions: number[],
+  normals: number[],
+  indices: number[]
+) {
   for (let row = 0; row <= along; row += 1) {
     for (let column = 0; column <= around; column += 1) {
       const angle = (column / around) * Math.PI * 2;
@@ -202,30 +241,6 @@ export function cinnamonHousingGeometry(
       }
     }
   }
-  // Separate vertices keep the shoulder planar without smoothing triangle fans.
-  const z = section === "cover" ? cinnamonShoulder : cinnamonTail;
-  const firstCap = positions.length / 3;
-  positions.push(0, 0, z);
-  normals.push(0, 0, section === "cover" ? -1 : 1);
-  for (let column = 0; column <= around; column += 1) {
-    positions.push(
-      ...housingPoint(type, (column / around) * Math.PI * 2, z).toArray()
-    );
-    normals.push(0, 0, section === "cover" ? -1 : 1);
-    if (column < around) {
-      const next = firstCap + column + 1;
-      indices.push(
-        ...(section === "cover"
-          ? [firstCap, next + 1, next]
-          : [firstCap, next, next + 1])
-      );
-    }
-  }
-  const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("normal", new Float32BufferAttribute(normals, 3));
-  geometry.setIndex(indices);
-  return geometry;
 }
 
 /** 印字を湾曲した赤い塗装面へ密着させる。 */

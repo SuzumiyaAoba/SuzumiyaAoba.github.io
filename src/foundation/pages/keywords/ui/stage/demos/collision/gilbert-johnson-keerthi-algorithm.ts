@@ -83,6 +83,18 @@ function reduce(simplex: Vertex[]): {
     return { simplex, closest: origin, inside: true };
   }
   let best: { simplex: Vertex[]; closest: V2; inside: boolean } | null = null;
+  best = findClosestSimplexEdge(p, q, r, best);
+  return best ?? { simplex, closest: origin, inside: false };
+}
+
+function findClosestSimplexEdge(
+  p: Vertex,
+  q: Vertex,
+  r: Vertex,
+  initialBest: { simplex: Vertex[]; closest: V2; inside: boolean } | null
+) {
+  let best = initialBest;
+
   for (const pair of [
     [p, q],
     [q, r],
@@ -97,7 +109,7 @@ function reduce(simplex: Vertex[]): {
       best = candidate;
     }
   }
-  return best ?? { simplex, closest: origin, inside: false };
+  return best;
 }
 
 /** GJK：ミンコフスキー差 A − B の上で、原点に最も近い点を単体を育てながら探す。 */
@@ -293,23 +305,7 @@ export const demo: DemoModule = {
       update({ dt }) {
         dragging = Math.max(0, dragging - dt);
         const auto = params["auto"] === true && dragging === 0;
-        if (auto && moving) {
-          moveTime += dt;
-          const target = poses[pose] ?? { x: LEFT, z: 0 };
-          const t = Math.min(1, moveTime / 1.2);
-          const eased = t * t * (3 - 2 * t);
-          grip.position.set(
-            from.x + (target.x - from.x) * eased,
-            0.1,
-            from.z + (target.z - from.z) * eased
-          );
-          if (t >= 1) {
-            moving = false;
-            hold = 0;
-            stepIndex = 0;
-            timer = 0;
-          }
-        }
+        advanceMovingPose(auto, dt);
         const polyA = SHAPE_A.map((p) => ({
           x: p.x + grip.position.x,
           y: p.y + grip.position.z,
@@ -342,16 +338,7 @@ export const demo: DemoModule = {
           stepIndex = result.steps.length - 1;
         }
         const done = stepIndex >= result.steps.length - 1;
-        if (auto && !moving && done) {
-          hold += dt;
-          if (hold > 2.2) {
-            from.x = grip.position.x;
-            from.z = grip.position.z;
-            pose = (pose + 1) % poses.length;
-            moveTime = 0;
-            moving = true;
-          }
-        }
+        startNextPose(auto, done, dt);
         timer += dt;
         if (
           timer > Number(params["interval"]) &&
@@ -362,40 +349,7 @@ export const demo: DemoModule = {
         }
         const step = result.steps[Math.min(stepIndex, result.steps.length - 1)];
         const finished = stepIndex >= result.steps.length - 1;
-        if (step) {
-          const points = step.simplex.map((v) => panel(v.w, 0.07));
-          simplexLine.setPoints(
-            step.simplex.length === 3
-              ? [...points, points[0] ?? new Vector3()]
-              : points.length === 1
-                ? [
-                    points[0] ?? new Vector3(),
-                    (points[0] ?? new Vector3())
-                      .clone()
-                      .add(new Vector3(0.001, 0, 0)),
-                  ]
-                : points
-          );
-          closestMarker.position.copy(panel(step.closest, 0.09));
-          closestLine.setPoints([
-            panel({ x: 0, y: 0 }, 0.08),
-            panel(step.closest, 0.08),
-          ]);
-          closestLine.visible = !result.inside || !finished;
-          const d = step.direction;
-          const length = Math.hypot(d.x, d.y);
-          direction.visible = !finished && length > EPS;
-          if (length > EPS) {
-            direction.set(
-              panel(step.closest, 0.1),
-              new Vector3(d.x / length, 0, d.y / length).multiplyScalar(0.7)
-            );
-          }
-          added.visible = step.added !== null && !finished;
-          if (step.added) {
-            added.position.copy(panel(step.added, 0.1));
-          }
-        }
+        renderSimplex(step, finished);
         between.visible = finished && !result.inside;
         between.setPoints([
           world(result.pointA, 0.08),
@@ -414,14 +368,88 @@ export const demo: DemoModule = {
             : "探索中"
         );
         context.readout("単体の頂点の数", `${step?.simplex.length ?? 0}`);
-        context.caption(
-          finished
-            ? result.inside
-              ? "単体（黄色の三角形）が原点を囲んだので、ミンコフスキー差は原点を含む。つまり A と B は重なっている。"
-              : "もうどの方向にも原点へ近づけないので終わり。ミンコフスキー差の上の最近点（赤）までの距離が、2 つの形の最短距離で、左の赤い線がそれを結ぶ 2 点。"
-            : "今の単体の中で原点に最も近い点（赤）から、原点の方向（黄色の矢印）にいちばん遠いミンコフスキー差の点（サポート点）を 1 つ足し、原点に近づくのに要らない頂点を捨てる。サポート点は「A でその方向にいちばん遠い点 − B で逆向きにいちばん遠い点」なので、差の形を全部作らなくても求まる。"
-        );
+        updateCollisionCaption(finished);
       },
     };
+
+    function updateCollisionCaption(finished: boolean) {
+      context.caption(
+        finished
+          ? result.inside
+            ? "単体（黄色の三角形）が原点を囲んだので、ミンコフスキー差は原点を含む。つまり A と B は重なっている。"
+            : "もうどの方向にも原点へ近づけないので終わり。ミンコフスキー差の上の最近点（赤）までの距離が、2 つの形の最短距離で、左の赤い線がそれを結ぶ 2 点。"
+          : "今の単体の中で原点に最も近い点（赤）から、原点の方向（黄色の矢印）にいちばん遠いミンコフスキー差の点（サポート点）を 1 つ足し、原点に近づくのに要らない頂点を捨てる。サポート点は「A でその方向にいちばん遠い点 − B で逆向きにいちばん遠い点」なので、差の形を全部作らなくても求まる。"
+      );
+    }
+
+    function startNextPose(auto: boolean, done: boolean, dt: number) {
+      if (auto && !moving && done) {
+        hold += dt;
+        if (hold > 2.2) {
+          from.x = grip.position.x;
+          from.z = grip.position.z;
+          pose = (pose + 1) % poses.length;
+          moveTime = 0;
+          moving = true;
+        }
+      }
+    }
+
+    function advanceMovingPose(auto: boolean, dt: number) {
+      if (auto && moving) {
+        moveTime += dt;
+        const target = poses[pose] ?? { x: LEFT, z: 0 };
+        const t = Math.min(1, moveTime / 1.2);
+        const eased = t * t * (3 - 2 * t);
+        grip.position.set(
+          from.x + (target.x - from.x) * eased,
+          0.1,
+          from.z + (target.z - from.z) * eased
+        );
+        if (t >= 1) {
+          moving = false;
+          hold = 0;
+          stepIndex = 0;
+          timer = 0;
+        }
+      }
+    }
+
+    function renderSimplex(step: Step | undefined, finished: boolean) {
+      if (step) {
+        const points = step.simplex.map((v) => panel(v.w, 0.07));
+        simplexLine.setPoints(
+          step.simplex.length === 3
+            ? [...points, points[0] ?? new Vector3()]
+            : points.length === 1
+              ? [
+                  points[0] ?? new Vector3(),
+                  (points[0] ?? new Vector3())
+                    .clone()
+                    .add(new Vector3(0.001, 0, 0)),
+                ]
+              : points
+        );
+        closestMarker.position.copy(panel(step.closest, 0.09));
+        closestLine.setPoints([
+          panel({ x: 0, y: 0 }, 0.08),
+          panel(step.closest, 0.08),
+        ]);
+        closestLine.visible = !result.inside || !finished;
+        const d = step.direction;
+        const length = Math.hypot(d.x, d.y);
+        direction.visible = !finished && length > EPS;
+        if (length > EPS) {
+          direction.set(
+            panel(step.closest, 0.1),
+            new Vector3(d.x / length, 0, d.y / length).multiplyScalar(0.7)
+          );
+        }
+        added.visible = step.added !== null && !finished;
+        if (step.added) {
+          added.position.copy(panel(step.added, 0.1));
+        }
+      }
+    }
   },
 };

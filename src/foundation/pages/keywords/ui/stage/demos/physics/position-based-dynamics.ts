@@ -115,25 +115,7 @@ export const demo: DemoModule = {
       }
     }
     for (let j = 0; j < ROWS; j++) {
-      for (let i = 0; i < COLUMNS; i++) {
-        if (i < COLUMNS - 1) {
-          system.connect(index(i, j), index(i + 1, j), 0, STRETCH);
-        }
-        if (j < ROWS - 1) {
-          system.connect(index(i, j), index(i, j + 1), 0, STRETCH);
-        }
-        if (i < COLUMNS - 1 && j < ROWS - 1) {
-          system.connect(index(i, j), index(i + 1, j + 1), 0, SHEAR);
-          system.connect(index(i + 1, j), index(i, j + 1), 0, SHEAR);
-        }
-        // 1 つ飛ばしの点をつなぐと、折れ曲がりにくくなる（簡易的な曲げの拘束）
-        if (i < COLUMNS - 2) {
-          system.connect(index(i, j), index(i + 2, j), 0, BEND);
-        }
-        if (j < ROWS - 2) {
-          system.connect(index(i, j), index(i, j + 2), 0, BEND);
-        }
-      }
+      connectClothConstraints(system, index, j);
     }
     const pin = (mode: string) => {
       for (let i = 0; i < COLUMNS; i++) {
@@ -203,27 +185,14 @@ export const demo: DemoModule = {
         const bend = params["bend"] === true;
         const windOn = params["wind"] === true;
         const substeps = 2;
-        if (dt > 0) {
-          const h = dt / substeps;
-          for (let s = 0; s < substeps; s++) {
-            time += h;
-            // 1. 予測：力で速度を変え、仮の位置へ動かす
-            system.predict(h, 9.81, 0.002, windOn ? wind : undefined);
-            // 2. 補正：拘束（距離・衝突）を満たすよう位置を直接直す
-            for (let iteration = 0; iteration < iterations; iteration++) {
-              system.solveDistances(
-                h,
-                "pbd",
-                stiffness,
-                (constraint) => bend || constraint.kind !== BEND
-              );
-              system.collideSphere(ball.position, BALL_RADIUS + 0.04);
-              system.collideFloor(0.02);
-            }
-            // 3. 速度の更新：位置の変化 ÷ 時間
-            system.updateVelocities(h);
-          }
-        }
+        simulateClothSubsteps(
+          dt,
+          substeps,
+          windOn,
+          iterations,
+          stiffness,
+          bend
+        );
         geometry.update(system.positions);
 
         const showMesh = params["mesh"] === true;
@@ -259,5 +228,62 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function simulateClothSubsteps(
+      dt: number,
+      substeps: number,
+      windOn: boolean,
+      iterations: number,
+      stiffness: number,
+      bend: boolean
+    ) {
+      if (dt > 0) {
+        const h = dt / substeps;
+        for (let s = 0; s < substeps; s++) {
+          time += h;
+          // 1. 予測：力で速度を変え、仮の位置へ動かす
+          system.predict(h, 9.81, 0.002, windOn ? wind : undefined);
+          // 2. 補正：拘束（距離・衝突）を満たすよう位置を直接直す
+          for (let iteration = 0; iteration < iterations; iteration++) {
+            system.solveDistances(
+              h,
+              "pbd",
+              stiffness,
+              (constraint) => bend || constraint.kind !== BEND
+            );
+            system.collideSphere(ball.position, BALL_RADIUS + 0.04);
+            system.collideFloor(0.02);
+          }
+          // 3. 速度の更新：位置の変化 ÷ 時間
+          system.updateVelocities(h);
+        }
+      }
+    }
   },
 };
+
+function connectClothConstraints(
+  system: ParticleSystem,
+  index: (i: number, j: number) => number,
+  j: number
+) {
+  for (let i = 0; i < COLUMNS; i++) {
+    if (i < COLUMNS - 1) {
+      system.connect(index(i, j), index(i + 1, j), 0, STRETCH);
+    }
+    if (j < ROWS - 1) {
+      system.connect(index(i, j), index(i, j + 1), 0, STRETCH);
+    }
+    if (i < COLUMNS - 1 && j < ROWS - 1) {
+      system.connect(index(i, j), index(i + 1, j + 1), 0, SHEAR);
+      system.connect(index(i + 1, j), index(i, j + 1), 0, SHEAR);
+    }
+    // 1 つ飛ばしの点をつなぐと、折れ曲がりにくくなる（簡易的な曲げの拘束）
+    if (i < COLUMNS - 2) {
+      system.connect(index(i, j), index(i + 2, j), 0, BEND);
+    }
+    if (j < ROWS - 2) {
+      system.connect(index(i, j), index(i, j + 2), 0, BEND);
+    }
+  }
+}

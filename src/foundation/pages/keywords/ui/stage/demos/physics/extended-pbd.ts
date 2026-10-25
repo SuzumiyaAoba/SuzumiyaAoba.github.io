@@ -130,21 +130,7 @@ export const demo: DemoModule = {
         const compliance = softness * 0.0018;
         // PBD：1 回の補正の割合。反復 10 回・分割 4 のときに XPBD と近い見た目になるよう合わせた値
         const stiffness = Math.min(1, 0.087 / softness);
-        if (dt > 0) {
-          const h = dt / substeps;
-          for (const cord of cords) {
-            for (const constraint of cord.system.constraints) {
-              constraint.compliance = compliance;
-            }
-            for (let s = 0; s < substeps; s++) {
-              cord.system.predict(h, GRAVITY, 0.004);
-              for (let iteration = 0; iteration < iterations; iteration++) {
-                cord.system.solveDistances(h, cord.mode, stiffness);
-              }
-              cord.system.updateVelocities(h);
-            }
-          }
-        }
+        simulateCordSubsteps(dt, substeps, compliance, iterations, stiffness);
         for (const cord of cords) {
           const points: Vector3[] = [];
           for (let i = 0; i <= SEGMENTS; i++) {
@@ -177,5 +163,29 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function simulateCordSubsteps(
+      dt: number,
+      substeps: number,
+      compliance: number,
+      iterations: number,
+      stiffness: number
+    ) {
+      if (dt > 0) {
+        const h = dt / substeps;
+        for (const cord of cords) {
+          for (const constraint of cord.system.constraints) {
+            constraint.compliance = compliance;
+          }
+          for (let s = 0; s < substeps; s++) {
+            cord.system.predict(h, GRAVITY, 0.004);
+            for (let iteration = 0; iteration < iterations; iteration++) {
+              cord.system.solveDistances(h, cord.mode, stiffness);
+            }
+            cord.system.updateVelocities(h);
+          }
+        }
+      }
+    }
   },
 };

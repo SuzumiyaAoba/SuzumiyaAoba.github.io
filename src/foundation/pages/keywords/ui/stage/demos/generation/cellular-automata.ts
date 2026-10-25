@@ -129,30 +129,9 @@ export const demo: DemoModule = {
       for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
           let n = 0;
-          for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-              if (dx !== 0 || dy !== 0) {
-                // ライフゲームは外側を「死」、洞窟は外側を「壁」とみなす
-                n += life
-                  ? x + dx < 0 || y + dy < 0 || x + dx >= COLS || y + dy >= ROWS
-                    ? 0
-                    : (grid[(y + dy) * COLS + x + dx] ?? 0)
-                  : at(x + dx, y + dy);
-              }
-            }
-          }
+          n = countCellNeighbors(n, life, x, y);
           const alive = grid[y * COLS + x] === 1;
-          if (life) {
-            next[y * COLS + x] = n === 3 || (alive && n === 2) ? 1 : 0;
-          } else {
-            next[y * COLS + x] = alive
-              ? n >= survive
-                ? 1
-                : 0
-              : n >= birth
-                ? 1
-                : 0;
-          }
+          applyCellRule(life, next, y, x, n, alive, survive, birth);
         }
       }
       grid = next;
@@ -226,16 +205,15 @@ export const demo: DemoModule = {
           isWall = true;
         }
         let height = 0.05;
-        if (life) {
-          height = isWall ? 0.25 : 0.02;
-          color.copy(isWall ? alive : dead);
-        } else if (isWall) {
-          walls++;
-          height = 0.55;
-          color.copy(wall).multiplyScalar(0.85 + ((index * 7919) % 13) / 60);
-        } else {
-          color.copy(showRegions && region !== largest ? small : floor);
-        }
+        ({ height, walls } = styleCell(
+          life,
+          height,
+          isWall,
+          walls,
+          index,
+          showRegions,
+          region
+        ));
         matrix.compose(
           new Vector3(x * CELL, height / 2, z * CELL),
           quaternion,
@@ -274,25 +252,7 @@ export const demo: DemoModule = {
         clock += dt;
         const life = mode === "life";
         const target = Number(params["steps"]);
-        if (life && clock > 0.12) {
-          clock = 0;
-          advance();
-        } else if (!life && clock > 0.55) {
-          clock = 0;
-          if (step < target) {
-            advance();
-          } else if (step > target) {
-            seedGrid();
-          } else {
-            // 最後まで来たら、しばらく見せてから別の乱数でばらまき直す
-            hold += 0.55;
-            if (hold > 4) {
-              hold = 0;
-              seed++;
-              signature = "";
-            }
-          }
-        }
+        advanceAutomatonClock(life, target);
         labelRegions();
         const walls = draw();
         if (life) {
@@ -316,5 +276,98 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function advanceAutomatonClock(life: boolean, target: number) {
+      if (life && clock > 0.12) {
+        clock = 0;
+        advance();
+      } else if (!life && clock > 0.55) {
+        clock = 0;
+        if (step < target) {
+          advance();
+        } else if (step > target) {
+          seedGrid();
+        } else {
+          // 最後まで来たら、しばらく見せてから別の乱数でばらまき直す
+          hold += 0.55;
+          if (hold > 4) {
+            hold = 0;
+            seed++;
+            signature = "";
+          }
+        }
+      }
+    }
+
+    function styleCell(
+      life: boolean,
+      initialHeight: number,
+      isWall: boolean,
+      initialWalls: number,
+      index: number,
+      showRegions: boolean,
+      region: number
+    ) {
+      let height = initialHeight;
+      let walls = initialWalls;
+
+      if (life) {
+        height = isWall ? 0.25 : 0.02;
+        color.copy(isWall ? alive : dead);
+      } else if (isWall) {
+        walls++;
+        height = 0.55;
+        color.copy(wall).multiplyScalar(0.85 + ((index * 7919) % 13) / 60);
+      } else {
+        color.copy(showRegions && region !== largest ? small : floor);
+      }
+      return { height, walls };
+    }
+
+    function applyCellRule(
+      life: boolean,
+      next: Uint8Array<ArrayBuffer>,
+      y: number,
+      x: number,
+      n: number,
+      wasAlive: boolean,
+      survive: number,
+      birth: number
+    ) {
+      if (life) {
+        next[y * COLS + x] = n === 3 || (wasAlive && n === 2) ? 1 : 0;
+      } else {
+        next[y * COLS + x] = wasAlive
+          ? n >= survive
+            ? 1
+            : 0
+          : n >= birth
+            ? 1
+            : 0;
+      }
+    }
+
+    function countCellNeighbors(
+      initialN: number,
+      life: boolean,
+      x: number,
+      y: number
+    ) {
+      let n = initialN;
+
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx !== 0 || dy !== 0) {
+            // ライフゲームは外側を「死」、洞窟は外側を「壁」とみなす
+            n += life
+              ? x + dx < 0 || y + dy < 0 || x + dx >= COLS || y + dy >= ROWS
+                ? 0
+                : (grid[(y + dy) * COLS + x + dx] ?? 0)
+              : at(x + dx, y + dy);
+          }
+        }
+      }
+      return n;
+    }
   },
 };

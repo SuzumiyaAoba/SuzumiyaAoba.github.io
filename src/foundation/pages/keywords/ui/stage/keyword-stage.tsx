@@ -319,43 +319,14 @@ export function KeywordStage({
           ) : (
             <span />
           )}
-          <div className="pointer-events-auto flex gap-1.5">
-            <button
-              type="button"
-              className="keyword-stage-icon-button"
-              onClick={() => setPlaying(!isPlaying)}
-              disabled={!ready}
-              aria-label={
-                isPlaying ? (ja ? "一時停止" : "Pause") : ja ? "再生" : "Play"
-              }
-            >
-              {isPlaying ? (
-                <Pause className="size-4" aria-hidden="true" />
-              ) : (
-                <Play className="size-4" aria-hidden="true" />
-              )}
-            </button>
-            <button
-              type="button"
-              className="keyword-stage-icon-button"
-              onClick={() => handle.current?.restart()}
-              disabled={!ready}
-              aria-label={ja ? "最初からやり直す" : "Restart"}
-            >
-              <RotateCcw className="size-4" aria-hidden="true" />
-            </button>
-            {orbit && (
-              <button
-                type="button"
-                className="keyword-stage-icon-button"
-                onClick={() => handle.current?.resetCamera()}
-                disabled={!ready}
-                aria-label={ja ? "視点を戻す" : "Reset view"}
-              >
-                <Scan className="size-4" aria-hidden="true" />
-              </button>
-            )}
-          </div>
+          <StagePlaybackControls
+            setPlaying={setPlaying}
+            isPlaying={isPlaying}
+            ready={ready}
+            ja={ja}
+            handle={handle}
+            orbit={orbit}
+          />
         </div>
         {status !== "ready" && (
           <output className="keyword-stage-overlay">
@@ -399,5 +370,61 @@ export function KeywordStage({
           .join(" ")}
       </figcaption>
     </figure>
+  );
+}
+
+function StagePlaybackControls({
+  setPlaying,
+  isPlaying,
+  ready,
+  ja,
+  handle,
+  orbit,
+}: {
+  setPlaying: (playing: boolean) => void;
+  isPlaying: boolean;
+  ready: boolean;
+  ja: boolean;
+  handle: { current: StageHandle | null };
+  orbit: boolean;
+}) {
+  return (
+    <div className="pointer-events-auto flex gap-1.5">
+      <button
+        type="button"
+        className="keyword-stage-icon-button"
+        onClick={() => setPlaying(!isPlaying)}
+        disabled={!ready}
+        aria-label={
+          isPlaying ? (ja ? "一時停止" : "Pause") : ja ? "再生" : "Play"
+        }
+      >
+        {isPlaying ? (
+          <Pause className="size-4" aria-hidden="true" />
+        ) : (
+          <Play className="size-4" aria-hidden="true" />
+        )}
+      </button>
+      <button
+        type="button"
+        className="keyword-stage-icon-button"
+        onClick={() => handle.current?.restart()}
+        disabled={!ready}
+        aria-label={ja ? "最初からやり直す" : "Restart"}
+      >
+        <RotateCcw className="size-4" aria-hidden="true" />
+      </button>
+      {orbit && (
+        <button
+          type="button"
+          className="keyword-stage-icon-button"
+          onClick={() => handle.current?.resetCamera()}
+          disabled={!ready}
+          aria-label={ja ? "視点を戻す" : "Reset view"}
+        >
+          <Scan className="size-4" aria-hidden="true" />
+        </button>
+      )}
+    </div>
   );
 }

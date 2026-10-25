@@ -261,18 +261,24 @@ export const demo: DemoModule = {
           wall: "max(壁, −min(穴₁, 穴₂, …))",
         } as const;
         context.readout("距離の式", formula[mode]);
-        context.caption(
-          mode === "union"
-            ? "和は 2 つの距離の小さいほう。どちらかの内側なら内側になる。"
-            : mode === "subtract"
-              ? "差は B の符号を反転して最大値を取る。B の内側だった部分が削られ、削った面は B の形（赤）になる。"
-              : mode === "intersect"
-                ? "交差は大きいほう。両方の内側にある部分だけが残る。"
-                : mode === "tree"
-                  ? "箱と球の交差から 3 本の円柱を引く。min と max の組み合わせだけで、機械部品のような形が作れる。"
-                  : "壁から球を引くだけで弾痕や破壊口になる。メッシュを作り直さずに、形を何度でも削れる。"
-        );
+        updateOperationCaption(mode);
       },
     };
+
+    function updateOperationCaption(
+      mode: "tree" | "union" | "subtract" | "intersect" | "wall"
+    ) {
+      context.caption(
+        mode === "union"
+          ? "和は 2 つの距離の小さいほう。どちらかの内側なら内側になる。"
+          : mode === "subtract"
+            ? "差は B の符号を反転して最大値を取る。B の内側だった部分が削られ、削った面は B の形（赤）になる。"
+            : mode === "intersect"
+              ? "交差は大きいほう。両方の内側にある部分だけが残る。"
+              : mode === "tree"
+                ? "箱と球の交差から 3 本の円柱を引く。min と max の組み合わせだけで、機械部品のような形が作れる。"
+                : "壁から球を引くだけで弾痕や破壊口になる。メッシュを作り直さずに、形を何度でも削れる。"
+      );
+    }
   },
 };

@@ -114,29 +114,54 @@ export class FluidTank {
         if (gy < 0 || gy >= gridHeight) {
           continue;
         }
-        for (let ox = -1; ox <= 1; ox++) {
-          const gx = cx + ox;
-          if (gx < 0 || gx >= gridWidth) {
-            continue;
-          }
-          for (
-            let j = head[gy * gridWidth + gx] ?? -1;
-            j >= 0;
-            j = next[j] ?? -1
-          ) {
-            if (j === i) {
-              continue;
-            }
-            const dx = (this.x[j] ?? 0) - xi;
-            const dy = (this.y[j] ?? 0) - yi;
-            if (dx * dx + dy * dy < r2 && cursor < this.neighbors.length) {
-              this.neighbors[cursor++] = j;
-            }
-          }
-        }
+        cursor = this.collectNeighborCells(
+          cx,
+          gridWidth,
+          head,
+          gy,
+          next,
+          i,
+          xi,
+          yi,
+          r2,
+          cursor
+        );
       }
     }
     this.neighborStart[this.count] = cursor;
+  }
+
+  private collectNeighborCells(
+    cx: number,
+    gridWidth: number,
+    head: Int32Array,
+    gy: number,
+    next: Int32Array,
+    i: number,
+    xi: number,
+    yi: number,
+    r2: number,
+    initialCursor: number
+  ) {
+    let cursor = initialCursor;
+
+    for (let ox = -1; ox <= 1; ox++) {
+      const gx = cx + ox;
+      if (gx < 0 || gx >= gridWidth) {
+        continue;
+      }
+      for (let j = head[gy * gridWidth + gx] ?? -1; j >= 0; j = next[j] ?? -1) {
+        if (j === i) {
+          continue;
+        }
+        const dx = (this.x[j] ?? 0) - xi;
+        const dy = (this.y[j] ?? 0) - yi;
+        if (dx * dx + dy * dy < r2 && cursor < this.neighbors.length) {
+          this.neighbors[cursor++] = j;
+        }
+      }
+    }
+    return cursor;
   }
 
   /** 壁と、円形の棒（obstacle）から粒子を押し出す。 */

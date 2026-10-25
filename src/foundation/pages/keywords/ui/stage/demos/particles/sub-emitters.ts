@@ -129,120 +129,14 @@ export const demo: DemoModule = {
         const useCrackle = params["crackle"] === true;
         let alive = 0;
         let flashLevel = 0;
-        for (let index = 0; index < CAPACITY; index++) {
-          const lifetime = life[index] ?? -1;
-          if (lifetime < 0) {
-            system.sizes[index] = 0;
-            continue;
-          }
-          const current = (age[index] ?? 0) + dt;
-          age[index] = current;
-          const i3 = index * 3;
-          const type = kind[index] ?? Kind.Trail;
-          const x = system.positions[i3] ?? 0;
-          const y = system.positions[i3 + 1] ?? 0;
-          const z = system.positions[i3 + 2] ?? 0;
-          if (current >= lifetime) {
-            life[index] = -1;
-            system.sizes[index] = 0;
-            // 死亡イベント：子の粒子を生む
-            if (type === Kind.Rocket && useBurst) {
-              events++;
-              const tint = color
-                .set(
-                  starColors[Math.floor(random() * starColors.length)] ?? "#fff"
-                )
-                .multiplyScalar(3.2);
-              const speed = 3 + random() * 1.5;
-              for (let star = 0; star < 140; star++) {
-                const theta = random() * TAU;
-                const phi = Math.acos(2 * random() - 1);
-                const s = speed * (0.85 + random() * 0.3);
-                spawn(
-                  Kind.Star,
-                  x,
-                  y,
-                  z,
-                  Math.sin(phi) * Math.cos(theta) * s,
-                  Math.cos(phi) * s,
-                  Math.sin(phi) * Math.sin(theta) * s,
-                  1.3 + random() * 0.6,
-                  tint,
-                  0.11
-                );
-              }
-              flash.position.set(x, y, z);
-              flashLevel = 1;
-            } else if (type === Kind.Star && useCrackle && random() < 0.25) {
-              events++;
-              for (let spark = 0; spark < 3; spark++) {
-                spawn(
-                  Kind.Crackle,
-                  x,
-                  y,
-                  z,
-                  (random() - 0.5) * 1.5,
-                  (random() - 0.5) * 1.5,
-                  (random() - 0.5) * 1.5,
-                  0.15 + random() * 0.15,
-                  color.set("#ffffff").multiplyScalar(3),
-                  0.035
-                );
-              }
-            }
-            continue;
-          }
-          alive++;
-          const t = current / lifetime;
-          const drag =
-            type === Kind.Star ? 1.6 : type === Kind.Trail ? 2.5 : 0.1;
-          for (let axis = 0; axis < 3; axis++) {
-            const velocity =
-              (system.velocities[i3 + axis] ?? 0) * Math.exp(-drag * dt);
-            system.velocities[i3 + axis] =
-              velocity -
-              (axis === 1
-                ? GRAVITY * dt * (type === Kind.Rocket ? 0.4 : 1)
-                : 0);
-            system.positions[i3 + axis] =
-              (system.positions[i3 + axis] ?? 0) +
-              (system.velocities[i3 + axis] ?? 0) * dt;
-          }
-          // 移動イベント：上昇中の玉から尾の火の粉を出す
-          if (type === Kind.Rocket && useTrail) {
-            for (let spark = 0; spark < 3; spark++) {
-              spawn(
-                Kind.Trail,
-                x,
-                y,
-                z,
-                (random() - 0.5) * 0.8,
-                -0.5 - random(),
-                (random() - 0.5) * 0.8,
-                0.4 + random() * 0.4,
-                color.set("#ffb86b").multiplyScalar(1.6),
-                0.03
-              );
-            }
-          }
-          const fade =
-            type === Kind.Star
-              ? Math.min(1, current * 6) *
-                (1 - t) ** 1.5 *
-                (0.7 + 0.3 * Math.sin(current * 30 + index))
-              : 1 - t;
-          system.sizes[index] =
-            (size[index] ?? 0.05) * (type === Kind.Crackle ? 1 + t : 1);
-          system.colors.set(
-            [
-              (baseColor[i3] ?? 1) * fade,
-              (baseColor[i3 + 1] ?? 1) * fade,
-              (baseColor[i3 + 2] ?? 1) * fade,
-              fade,
-            ],
-            index * 4
-          );
-        }
+        ({ flashLevel, alive } = advanceSubEmitterParticles(
+          dt,
+          flashLevel,
+          useBurst,
+          useCrackle,
+          alive,
+          useTrail
+        ));
         system.setCount(CAPACITY);
         system.commit();
         flash.intensity = Math.max(
@@ -256,5 +150,170 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceSubEmitterParticles(
+      dt: number,
+      initialFlashLevel: number,
+      useBurst: boolean,
+      useCrackle: boolean,
+      initialAlive: number,
+      useTrail: boolean
+    ) {
+      let flashLevel = initialFlashLevel;
+      let alive = initialAlive;
+
+      for (let index = 0; index < CAPACITY; index++) {
+        const lifetime = life[index] ?? -1;
+        if (lifetime < 0) {
+          system.sizes[index] = 0;
+          continue;
+        }
+        const current = (age[index] ?? 0) + dt;
+        age[index] = current;
+        const i3 = index * 3;
+        const type = kind[index] ?? Kind.Trail;
+        const x = system.positions[i3] ?? 0;
+        const y = system.positions[i3 + 1] ?? 0;
+        const z = system.positions[i3 + 2] ?? 0;
+        if (current >= lifetime) {
+          life[index] = -1;
+          system.sizes[index] = 0;
+          // 死亡イベント：子の粒子を生む
+          flashLevel = emitRocketBurst(
+            type,
+            useBurst,
+            x,
+            y,
+            z,
+            flashLevel,
+            useCrackle
+          );
+          continue;
+        }
+        alive++;
+        const t = current / lifetime;
+        const drag = type === Kind.Star ? 1.6 : type === Kind.Trail ? 2.5 : 0.1;
+        integrateParticleAxes(i3, drag, dt, type);
+        // 移動イベント：上昇中の玉から尾の火の粉を出す
+        emitRocketTrail(type, useTrail, x, y, z);
+        const fade =
+          type === Kind.Star
+            ? Math.min(1, current * 6) *
+              (1 - t) ** 1.5 *
+              (0.7 + 0.3 * Math.sin(current * 30 + index))
+            : 1 - t;
+        system.sizes[index] =
+          (size[index] ?? 0.05) * (type === Kind.Crackle ? 1 + t : 1);
+        system.colors.set(
+          [
+            (baseColor[i3] ?? 1) * fade,
+            (baseColor[i3 + 1] ?? 1) * fade,
+            (baseColor[i3 + 2] ?? 1) * fade,
+            fade,
+          ],
+          index * 4
+        );
+      }
+      return { flashLevel, alive };
+    }
+
+    function emitRocketTrail(
+      type: number,
+      useTrail: boolean,
+      x: number,
+      y: number,
+      z: number
+    ) {
+      if (type === Kind.Rocket && useTrail) {
+        for (let spark = 0; spark < 3; spark++) {
+          spawn(
+            Kind.Trail,
+            x,
+            y,
+            z,
+            (random() - 0.5) * 0.8,
+            -0.5 - random(),
+            (random() - 0.5) * 0.8,
+            0.4 + random() * 0.4,
+            color.set("#ffb86b").multiplyScalar(1.6),
+            0.03
+          );
+        }
+      }
+    }
+
+    function integrateParticleAxes(
+      i3: number,
+      drag: number,
+      dt: number,
+      type: number
+    ) {
+      for (let axis = 0; axis < 3; axis++) {
+        const velocity =
+          (system.velocities[i3 + axis] ?? 0) * Math.exp(-drag * dt);
+        system.velocities[i3 + axis] =
+          velocity -
+          (axis === 1 ? GRAVITY * dt * (type === Kind.Rocket ? 0.4 : 1) : 0);
+        system.positions[i3 + axis] =
+          (system.positions[i3 + axis] ?? 0) +
+          (system.velocities[i3 + axis] ?? 0) * dt;
+      }
+    }
+
+    function emitRocketBurst(
+      type: number,
+      useBurst: boolean,
+      x: number,
+      y: number,
+      z: number,
+      initialFlashLevel: number,
+      useCrackle: boolean
+    ) {
+      let flashLevel = initialFlashLevel;
+
+      if (type === Kind.Rocket && useBurst) {
+        events++;
+        const tint = color
+          .set(starColors[Math.floor(random() * starColors.length)] ?? "#fff")
+          .multiplyScalar(3.2);
+        const speed = 3 + random() * 1.5;
+        for (let star = 0; star < 140; star++) {
+          const theta = random() * TAU;
+          const phi = Math.acos(2 * random() - 1);
+          const s = speed * (0.85 + random() * 0.3);
+          spawn(
+            Kind.Star,
+            x,
+            y,
+            z,
+            Math.sin(phi) * Math.cos(theta) * s,
+            Math.cos(phi) * s,
+            Math.sin(phi) * Math.sin(theta) * s,
+            1.3 + random() * 0.6,
+            tint,
+            0.11
+          );
+        }
+        flash.position.set(x, y, z);
+        flashLevel = 1;
+      } else if (type === Kind.Star && useCrackle && random() < 0.25) {
+        events++;
+        for (let spark = 0; spark < 3; spark++) {
+          spawn(
+            Kind.Crackle,
+            x,
+            y,
+            z,
+            (random() - 0.5) * 1.5,
+            (random() - 0.5) * 1.5,
+            (random() - 0.5) * 1.5,
+            0.15 + random() * 0.15,
+            color.set("#ffffff").multiplyScalar(3),
+            0.035
+          );
+        }
+      }
+      return flashLevel;
+    }
   },
 };

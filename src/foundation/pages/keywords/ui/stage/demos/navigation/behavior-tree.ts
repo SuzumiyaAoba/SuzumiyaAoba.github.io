@@ -380,24 +380,7 @@ export const demo: DemoModule = {
         }
         running = now;
 
-        for (const node of all) {
-          const shape = shapes.get(node.id);
-          if (!shape) {
-            continue;
-          }
-          const status = statuses.get(node.id);
-          const color = status ? STATUS_COLOR[status] : "#51607a";
-          shape.box.setAttribute("stroke", color);
-          shape.box.setAttribute(
-            "fill",
-            status === "running"
-              ? "#3a3016"
-              : status === "success"
-                ? "#1f3318"
-                : "#101826"
-          );
-          shape.text.setAttribute("fill", status ? "#e8eef6" : "#6f7d92");
-        }
+        renderBehaviorTree();
         const branch = columns.find(
           (child) => statuses.get(child.id) === "running"
         );
@@ -414,17 +397,7 @@ export const demo: DemoModule = {
         hpLabel.position.copy(guard.position).setY(1.7);
         context.readout("実行中の枝", branch?.label ?? "—");
         context.readout("体力", Math.max(0, hp).toFixed(0));
-        context.caption(
-          branch?.id === "heal"
-            ? "補給：体力が 30 を切ると、ほかの何よりも優先して回復地点へ向かう。いちばん左の枝ほど優先度が高い。回復中に「体力が少ない?」が失敗しないよう、満タンになるまで回復を続ける印を覚えておく。"
-            : branch?.id === "attack"
-              ? "攻撃：「敵が近い?」が成功したので、その右の「攻撃する」を実行している。反撃で体力が減っていく。"
-              : branch?.id === "chase"
-                ? "追跡：上の枝（補給・攻撃）の条件が失敗したので、「敵が見える?」を試して成功し、「敵へ走る」を実行中。毎フレーム根から評価し直すので、近づけばすぐ「攻撃」の枝に切り替わる。"
-                : branch?.id === "investigate"
-                  ? "調べる：物音を聞いたので、音の所へ行って見回す。途中でプレイヤーが見えると、優先度の高い「追跡」の枝に割り込まれ、見回しは中断される。"
-                  : "巡回：上の枝の条件がすべて失敗したので、最後の「巡回」を実行している。床をクリックして物音を立てると、「調べる」の枝が動き出す。"
-        );
+        updateBehaviorCaption(branch);
       },
       action(key) {
         if (key === "hurt") {
@@ -435,5 +408,40 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function updateBehaviorCaption(branch: BtNode | undefined) {
+      context.caption(
+        branch?.id === "heal"
+          ? "補給：体力が 30 を切ると、ほかの何よりも優先して回復地点へ向かう。いちばん左の枝ほど優先度が高い。回復中に「体力が少ない?」が失敗しないよう、満タンになるまで回復を続ける印を覚えておく。"
+          : branch?.id === "attack"
+            ? "攻撃：「敵が近い?」が成功したので、その右の「攻撃する」を実行している。反撃で体力が減っていく。"
+            : branch?.id === "chase"
+              ? "追跡：上の枝（補給・攻撃）の条件が失敗したので、「敵が見える?」を試して成功し、「敵へ走る」を実行中。毎フレーム根から評価し直すので、近づけばすぐ「攻撃」の枝に切り替わる。"
+              : branch?.id === "investigate"
+                ? "調べる：物音を聞いたので、音の所へ行って見回す。途中でプレイヤーが見えると、優先度の高い「追跡」の枝に割り込まれ、見回しは中断される。"
+                : "巡回：上の枝の条件がすべて失敗したので、最後の「巡回」を実行している。床をクリックして物音を立てると、「調べる」の枝が動き出す。"
+      );
+    }
+
+    function renderBehaviorTree() {
+      for (const node of all) {
+        const shape = shapes.get(node.id);
+        if (!shape) {
+          continue;
+        }
+        const status = statuses.get(node.id);
+        const color = status ? STATUS_COLOR[status] : "#51607a";
+        shape.box.setAttribute("stroke", color);
+        shape.box.setAttribute(
+          "fill",
+          status === "running"
+            ? "#3a3016"
+            : status === "success"
+              ? "#1f3318"
+              : "#101826"
+        );
+        shape.text.setAttribute("fill", status ? "#e8eef6" : "#6f7d92");
+      }
+    }
   },
 };

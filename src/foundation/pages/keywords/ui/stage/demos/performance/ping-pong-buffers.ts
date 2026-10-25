@@ -163,19 +163,7 @@ export const demo: DemoModule = {
         return;
       }
       for (let y = 0; y < H; y++) {
-        for (let x = 0; x < W; x++) {
-          let n = 0;
-          for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-              if (dx !== 0 || dy !== 0) {
-                // その場で書き換える場合、source はすでに一部が次の世代になっている
-                n += source[((y + dy + H) % H) * W + ((x + dx + W) % W)] ?? 0;
-              }
-            }
-          }
-          const alive = source[y * W + x] === 1;
-          target[y * W + x] = n === 3 || (alive && n === 2) ? 1 : 0;
-        }
+        advanceCellRow(source, y, target);
       }
       if (!inPlace) {
         read = 1 - read;
@@ -215,14 +203,7 @@ export const demo: DemoModule = {
               : "B を読み → A に書く"
         );
         context.readout("世代", `${generation}`);
-        context.readout(
-          "読むバッファ / 書くバッファ",
-          inPlace
-            ? `${read === 0 ? "A" : "B"} / 同じ`
-            : read === 0
-              ? "A / B"
-              : "B / A"
-        );
+        updateBufferReadout(inPlace);
         context.caption(
           inPlace
             ? "1 枚のバッファをその場で書き換えると、左上から順に更新するうちに、すでに次の世代になった隣のセルを「今の状態」として読んでしまう。規則が崩れ、グライダーが壊れて広がっていく。"
@@ -235,5 +216,36 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function updateBufferReadout(inPlace: boolean) {
+      context.readout(
+        "読むバッファ / 書くバッファ",
+        inPlace
+          ? `${read === 0 ? "A" : "B"} / 同じ`
+          : read === 0
+            ? "A / B"
+            : "B / A"
+      );
+    }
+
+    function advanceCellRow(
+      source: Uint8Array<ArrayBuffer>,
+      y: number,
+      target: Uint8Array<ArrayBuffer>
+    ) {
+      for (let x = 0; x < W; x++) {
+        let n = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx !== 0 || dy !== 0) {
+              // その場で書き換える場合、source はすでに一部が次の世代になっている
+              n += source[((y + dy + H) % H) * W + ((x + dx + W) % W)] ?? 0;
+            }
+          }
+        }
+        const alive = source[y * W + x] === 1;
+        target[y * W + x] = n === 3 || (alive && n === 2) ? 1 : 0;
+      }
+    }
   },
 };

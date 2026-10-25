@@ -210,46 +210,98 @@ export const demo: DemoModule = {
           P_MASS * c11;
         const vx = v[2 * p] ?? 0;
         const vy = v[2 * p + 1] ?? 0;
-        for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 3; j++) {
-            const dpx = (i - fx) * DX;
-            const dpy = (j - fy) * DX;
-            const weight = (wx[i] ?? 0) * (wy[j] ?? 0);
-            const node = (bx + i) * (GRID + 1) + (by + j);
-            if (node < 0 || node >= gridM.length) {
-              continue;
-            }
-            gridV[2 * node] =
-              (gridV[2 * node] ?? 0) +
-              weight * (P_MASS * vx + s00 * dpx + s01 * dpy);
-            gridV[2 * node + 1] =
-              (gridV[2 * node + 1] ?? 0) +
-              weight * (P_MASS * vy + s10 * dpx + s11 * dpy);
-            gridM[node] = (gridM[node] ?? 0) + weight * P_MASS;
-          }
-        }
+        transferParticleToGrid(
+          fx,
+          fy,
+          wx,
+          wy,
+          bx,
+          by,
+          vx,
+          s00,
+          s01,
+          vy,
+          s10,
+          s11
+        );
       }
       // 2. 格子：運動量を質量で割って速度にし、重力と壁を扱う
       for (let i = 0; i <= GRID; i++) {
-        for (let j = 0; j <= GRID; j++) {
-          const node = i * (GRID + 1) + j;
-          const m = gridM[node] ?? 0;
-          if (m <= 0) {
-            continue;
-          }
-          let gvx = (gridV[2 * node] ?? 0) / m;
-          let gvy = (gridV[2 * node + 1] ?? 0) / m - DT * 50;
-          if ((i < 3 && gvx < 0) || (i > GRID - 3 && gvx > 0)) {
-            gvx = 0;
-          }
-          if ((j < 3 && gvy < 0) || (j > GRID - 3 && gvy > 0)) {
-            gvy = 0;
-          }
-          gridV[2 * node] = gvx;
-          gridV[2 * node + 1] = gvy;
-        }
+        advanceGridColumn(i);
       }
       // 3. 格子 → 粒子：速度と、その傾き（APIC と同じ C）を集めて粒子を動かす
+      transferGridToParticles();
+    };
+
+    return {
+      action(key) {
+        if (key === "drop") {
+          drop();
+        }
+      },
+      update({ dt }) {
+        if (dt > 0) {
+          const youngs = Number(params["stiffness"]);
+          const hardening = Number(params["hardening"]);
+          for (let s = 0; s < 24; s++) {
+            step(youngs, hardening);
+          }
+        }
+        view.update(
+          COUNT,
+          (p) => [(x[2 * p] ?? 0) * WORLD, (x[2 * p + 1] ?? 0) * WORLD],
+          () => 0,
+          (p, out) => {
+            out
+              .copy(colors[material[p] ?? 0] ?? colors[0] ?? out)
+              .multiplyScalar(
+                material[p] === SNOW ? 0.75 + 0.25 * Math.min(1, jp[p] ?? 1) : 1
+              );
+          }
+        );
+        context.readout("粒子", `${COUNT}`);
+        context.readout("格子", `${GRID}×${GRID}`);
+        context.caption(
+          "粒子は材料そのもので、質量・速度・変形の履歴を持つ。毎ステップ、粒子から格子へ質量と運動量を集め、格子の上で重力や壁との衝突を扱い、格子の速度を粒子へ戻す。応力の計算だけを材料ごとに変えれば、流れる水、弾むゼリー、崩れる雪を同じ仕組みで扱える。"
+        );
+      },
+    };
+
+    function transferParticleToGrid(
+      fx: number,
+      fy: number,
+      wx: number[],
+      wy: number[],
+      bx: number,
+      by: number,
+      vx: number,
+      s00: number,
+      s01: number,
+      vy: number,
+      s10: number,
+      s11: number
+    ) {
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          const dpx = (i - fx) * DX;
+          const dpy = (j - fy) * DX;
+          const weight = (wx[i] ?? 0) * (wy[j] ?? 0);
+          const node = (bx + i) * (GRID + 1) + (by + j);
+          if (node < 0 || node >= gridM.length) {
+            continue;
+          }
+          gridV[2 * node] =
+            (gridV[2 * node] ?? 0) +
+            weight * (P_MASS * vx + s00 * dpx + s01 * dpy);
+          gridV[2 * node + 1] =
+            (gridV[2 * node + 1] ?? 0) +
+            weight * (P_MASS * vy + s10 * dpx + s11 * dpy);
+          gridM[node] = (gridM[node] ?? 0) + weight * P_MASS;
+        }
+      }
+    }
+
+    function transferGridToParticles() {
       for (let p = 0; p < COUNT; p++) {
         const px = (x[2 * p] ?? 0) * INV_DX;
         const py = (x[2 * p + 1] ?? 0) * INV_DX;
@@ -307,40 +359,26 @@ export const demo: DemoModule = {
           Math.max(2 * DX, (x[2 * p + 1] ?? 0) + DT * nvy)
         );
       }
-    };
+    }
 
-    return {
-      action(key) {
-        if (key === "drop") {
-          drop();
+    function advanceGridColumn(i: number) {
+      for (let j = 0; j <= GRID; j++) {
+        const node = i * (GRID + 1) + j;
+        const m = gridM[node] ?? 0;
+        if (m <= 0) {
+          continue;
         }
-      },
-      update({ dt }) {
-        if (dt > 0) {
-          const youngs = Number(params["stiffness"]);
-          const hardening = Number(params["hardening"]);
-          for (let s = 0; s < 24; s++) {
-            step(youngs, hardening);
-          }
+        let gvx = (gridV[2 * node] ?? 0) / m;
+        let gvy = (gridV[2 * node + 1] ?? 0) / m - DT * 50;
+        if ((i < 3 && gvx < 0) || (i > GRID - 3 && gvx > 0)) {
+          gvx = 0;
         }
-        view.update(
-          COUNT,
-          (p) => [(x[2 * p] ?? 0) * WORLD, (x[2 * p + 1] ?? 0) * WORLD],
-          () => 0,
-          (p, out) => {
-            out
-              .copy(colors[material[p] ?? 0] ?? colors[0] ?? out)
-              .multiplyScalar(
-                material[p] === SNOW ? 0.75 + 0.25 * Math.min(1, jp[p] ?? 1) : 1
-              );
-          }
-        );
-        context.readout("粒子", `${COUNT}`);
-        context.readout("格子", `${GRID}×${GRID}`);
-        context.caption(
-          "粒子は材料そのもので、質量・速度・変形の履歴を持つ。毎ステップ、粒子から格子へ質量と運動量を集め、格子の上で重力や壁との衝突を扱い、格子の速度を粒子へ戻す。応力の計算だけを材料ごとに変えれば、流れる水、弾むゼリー、崩れる雪を同じ仕組みで扱える。"
-        );
-      },
-    };
+        if ((j < 3 && gvy < 0) || (j > GRID - 3 && gvy > 0)) {
+          gvy = 0;
+        }
+        gridV[2 * node] = gvx;
+        gridV[2 * node + 1] = gvy;
+      }
+    }
   },
 };

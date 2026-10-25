@@ -105,18 +105,7 @@ export const demo: DemoModule = {
     return {
       update({ dt, time }) {
         const speed = Number(params["speed"]);
-        for (let i = 0; i < COUNT; i++) {
-          x[i] = (x[i] ?? 0) + (vx[i] ?? 0) * dt * speed;
-          y[i] = (y[i] ?? 0) + (vy[i] ?? 0) * dt * speed;
-          if (Math.abs(x[i] ?? 0) > WIDTH / 2) {
-            vx[i] = -(vx[i] ?? 0);
-            x[i] = Math.sign(x[i] ?? 0) * (WIDTH / 2);
-          }
-          if (Math.abs(y[i] ?? 0) > DEPTH / 2) {
-            vy[i] = -(vy[i] ?? 0);
-            y[i] = Math.sign(y[i] ?? 0) * (DEPTH / 2);
-          }
-        }
+        advanceHashParticles(dt, speed);
         // 表を作る：数える → 累積和で置き場所を決める → 入れる（数え上げソート）
         const size = 2 ** Number(params["table"]);
         if (bucketStart.length !== size + 1) {
@@ -161,55 +150,19 @@ export const demo: DemoModule = {
         const visited = new Set<number>();
         const cellLines: Vector3[] = [];
         for (let dy = -1; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++) {
-            const cx = qx + dx;
-            const cy = qy + dy;
-            const x0 = cx * RADIUS;
-            const y0 = cy * RADIUS;
-            cellLines.push(
-              new Vector3(x0, 0.02, y0),
-              new Vector3(x0 + RADIUS, 0.02, y0),
-              new Vector3(x0 + RADIUS, 0.02, y0),
-              new Vector3(x0 + RADIUS, 0.02, y0 + RADIUS),
-              new Vector3(x0 + RADIUS, 0.02, y0 + RADIUS),
-              new Vector3(x0, 0.02, y0 + RADIUS),
-              new Vector3(x0, 0.02, y0 + RADIUS),
-              new Vector3(x0, 0.02, y0)
-            );
-            const bucket = hashCell(cx, cy, size);
-            // 同じ入れ物を 2 回見ないようにする（衝突したセルどうし）
-            if (visited.has(bucket)) {
-              continue;
-            }
-            visited.add(bucket);
-            for (
-              let k = bucketStart[bucket] ?? 0;
-              k < (bucketStart[bucket + 1] ?? 0);
-              k++
-            ) {
-              const i = bucketItems[k] ?? 0;
-              candidates++;
-              const inNeighborhood =
-                Math.abs((cellX[i] ?? 0) - qx) <= 1 &&
-                Math.abs((cellY[i] ?? 0) - qy) <= 1;
-              if (!inNeighborhood) {
-                // 別の場所のセルが、たまたま同じ入れ物に入っていた
-                foreign++;
-                colors[i] = coral;
-                continue;
-              }
-              const distance = Math.hypot(
-                (x[i] ?? 0) - query.x,
-                (y[i] ?? 0) - query.y
-              );
-              if (distance < RADIUS) {
-                found++;
-                colors[i] = lime;
-              } else {
-                colors[i] = sky;
-              }
-            }
-          }
+          ({ candidates, foreign, found } = collectQueryNeighbors(
+            qx,
+            qy,
+            dy,
+            cellLines,
+            size,
+            visited,
+            candidates,
+            foreign,
+            colors,
+            query,
+            found
+          ));
         }
         for (let i = 0; i < COUNT; i++) {
           dots.positions.set([x[i] ?? 0, 0.05, y[i] ?? 0], i * 3);
@@ -244,5 +197,89 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceHashParticles(dt: number, speed: number) {
+      for (let i = 0; i < COUNT; i++) {
+        x[i] = (x[i] ?? 0) + (vx[i] ?? 0) * dt * speed;
+        y[i] = (y[i] ?? 0) + (vy[i] ?? 0) * dt * speed;
+        if (Math.abs(x[i] ?? 0) > WIDTH / 2) {
+          vx[i] = -(vx[i] ?? 0);
+          x[i] = Math.sign(x[i] ?? 0) * (WIDTH / 2);
+        }
+        if (Math.abs(y[i] ?? 0) > DEPTH / 2) {
+          vy[i] = -(vy[i] ?? 0);
+          y[i] = Math.sign(y[i] ?? 0) * (DEPTH / 2);
+        }
+      }
+    }
+
+    function collectQueryNeighbors(
+      qx: number,
+      qy: number,
+      dy: number,
+      cellLines: Vector3[],
+      size: number,
+      visited: Set<number>,
+      initialCandidates: number,
+      initialForeign: number,
+      colors: Color[],
+      query: { x: number; y: number },
+      initialFound: number
+    ) {
+      let candidates = initialCandidates;
+      let foreign = initialForeign;
+      let found = initialFound;
+
+      for (let dx = -1; dx <= 1; dx++) {
+        const cx = qx + dx;
+        const cy = qy + dy;
+        const x0 = cx * RADIUS;
+        const y0 = cy * RADIUS;
+        cellLines.push(
+          new Vector3(x0, 0.02, y0),
+          new Vector3(x0 + RADIUS, 0.02, y0),
+          new Vector3(x0 + RADIUS, 0.02, y0),
+          new Vector3(x0 + RADIUS, 0.02, y0 + RADIUS),
+          new Vector3(x0 + RADIUS, 0.02, y0 + RADIUS),
+          new Vector3(x0, 0.02, y0 + RADIUS),
+          new Vector3(x0, 0.02, y0 + RADIUS),
+          new Vector3(x0, 0.02, y0)
+        );
+        const bucket = hashCell(cx, cy, size);
+        // 同じ入れ物を 2 回見ないようにする（衝突したセルどうし）
+        if (visited.has(bucket)) {
+          continue;
+        }
+        visited.add(bucket);
+        for (
+          let k = bucketStart[bucket] ?? 0;
+          k < (bucketStart[bucket + 1] ?? 0);
+          k++
+        ) {
+          const i = bucketItems[k] ?? 0;
+          candidates++;
+          const inNeighborhood =
+            Math.abs((cellX[i] ?? 0) - qx) <= 1 &&
+            Math.abs((cellY[i] ?? 0) - qy) <= 1;
+          if (!inNeighborhood) {
+            // 別の場所のセルが、たまたま同じ入れ物に入っていた
+            foreign++;
+            colors[i] = coral;
+            continue;
+          }
+          const distance = Math.hypot(
+            (x[i] ?? 0) - query.x,
+            (y[i] ?? 0) - query.y
+          );
+          if (distance < RADIUS) {
+            found++;
+            colors[i] = lime;
+          } else {
+            colors[i] = sky;
+          }
+        }
+      }
+      return { candidates, foreign, found };
+    }
   },
 };

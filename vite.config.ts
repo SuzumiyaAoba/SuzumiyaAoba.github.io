@@ -14,14 +14,22 @@ const dirname =
     ? path.dirname(fileURLToPath(import.meta.url))
     : __dirname;
 
+const generatedIconFiles = [
+  "src/foundation/shared/ui/icon/icon-data.ts",
+  "src/foundation/shared/ui/icon/icon-data.client.ts",
+];
+
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   lint: {
     // Ultracite のプリセットを Baseline とし、rules / overrides でプロジェクト固有の調整を行う。
     // plugins / categories はプリセット側で定義済みのためここでは指定しない。
     extends: [ultraciteCore, ultraciteReact, ultraciteVitest],
-    // @shadcn/lint は Oxlint の JS プラグインとして読み込む（依存解析のためルートでも宣言）。
-    jsPlugins: [{ name: "shadcn", specifier: "@shadcn/lint" }],
+    // デザインシステムと Cognitive Complexity を Oxlint の JS プラグインで検査する。
+    jsPlugins: [
+      { name: "shadcn", specifier: "@shadcn/lint" },
+      { name: "sonarjs", specifier: "eslint-plugin-sonarjs" },
+    ],
     options: {
       typeAware: true,
       denyWarnings: true,
@@ -31,8 +39,7 @@ export default defineConfig({
     // 生成物の修正は生成元で行う。
     ignorePatterns: [
       ...(ultraciteCore.ignorePatterns ?? []),
-      "src/foundation/shared/ui/icon/icon-data.ts",
-      "src/foundation/shared/ui/icon/icon-data.client.ts",
+      ...generatedIconFiles,
     ],
     // 共有 UI は @/shared/ui/* エイリアスで import される（components.json の @/components/ui は未使用）。
     settings: {
@@ -155,7 +162,9 @@ export default defineConfig({
       "max-lines": "off",
       "max-lines-per-function": "off",
       "max-statements": "off",
+      // 分岐数だけでなくネストの深さを含む Cognitive Complexity で可読性を検査する。
       complexity: "off",
+      "sonarjs/cognitive-complexity": ["error", 15],
       "import/max-dependencies": "off",
       "react/jsx-max-depth": "off",
       // 外部ライブラリの位置引数・コールバック・正規表現の形式を許容する。
@@ -395,6 +404,11 @@ export default defineConfig({
   },
   fmt: {
     ...ultraciteFmt,
+    // 生成アイコンの書式は生成元に任せ、ビルド後の再整形を不要にする。
+    ignorePatterns: [
+      ...(ultraciteFmt.ignorePatterns ?? []),
+      ...generatedIconFiles,
+    ],
     // import 並べ替えと package.json ソートは既存の判断で無効のままにする。
     sortImports: false,
     sortPackageJson: false,

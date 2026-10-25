@@ -171,16 +171,7 @@ export const demo: DemoModule = {
         const forward = new Vector3(Math.sin(yaw), 0, Math.cos(yaw));
         // カリング（本来は GPU のコンピュートシェーダーで行う）：見える物体の番号を詰めて並べる
         const list: number[] = [];
-        for (const [i, p] of positions.entries()) {
-          const distance = p.length();
-          const inside =
-            distance < RANGE &&
-            (distance < 0.5 || forward.angleTo(p) < FOV / 2);
-          visible[i] = inside ? 1 : 0;
-          if (inside) {
-            list.push(i);
-          }
-        }
+        collectVisibleInstances(forward, list);
         history.push(list);
         const latency = Number(params["latency"]);
         while (history.length > latency + 1) {
@@ -199,15 +190,7 @@ export const demo: DemoModule = {
         drawn.count = used.length;
         drawn.instanceMatrix.needsUpdate = true;
         let missed = 0;
-        for (const i of list) {
-          if (!usedSet.has(i)) {
-            const p = positions[i];
-            if (p) {
-              matrix.makeTranslation(p.x, 0, p.z);
-              missing.setMatrixAt(missed++, matrix);
-            }
-          }
-        }
+        missed = renderMissingInstances(list, usedSet, missed);
         missing.count = missed;
         missing.instanceMatrix.needsUpdate = true;
         const wasted = used.filter((i) => visible[i] === 0).length;
@@ -236,5 +219,36 @@ export const demo: DemoModule = {
         missing.dispose();
       },
     };
+
+    function renderMissingInstances(
+      list: number[],
+      usedSet: Set<number>,
+      initialMissed: number
+    ) {
+      let missed = initialMissed;
+
+      for (const i of list) {
+        if (!usedSet.has(i)) {
+          const p = positions[i];
+          if (p) {
+            matrix.makeTranslation(p.x, 0, p.z);
+            missing.setMatrixAt(missed++, matrix);
+          }
+        }
+      }
+      return missed;
+    }
+
+    function collectVisibleInstances(forward: Vector3, list: number[]) {
+      for (const [i, p] of positions.entries()) {
+        const distance = p.length();
+        const inside =
+          distance < RANGE && (distance < 0.5 || forward.angleTo(p) < FOV / 2);
+        visible[i] = inside ? 1 : 0;
+        if (inside) {
+          list.push(i);
+        }
+      }
+    }
   },
 };

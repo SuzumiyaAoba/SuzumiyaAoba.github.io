@@ -416,40 +416,7 @@ export const demo: DemoModule = {
           }
         } else {
           const action = plan[step];
-          if (action) {
-            if (
-              !usable(
-                action,
-                withBits(worldFacts(), facts & withBits(HAS_AXE, HAS_WOOD))
-              )
-            ) {
-              // 前提が崩れた（斧がなくなった、お金を失った）ので計画し直す
-              replan();
-            } else if (
-              villager.position.distanceTo(places[action.place]) > 0.35
-            ) {
-              villager.goTo(places[action.place]);
-              villager.update(dt, 1.8);
-              villager.setIcon("");
-            } else {
-              villager.stop();
-              villager.update(dt);
-              villager.setIcon(action.name);
-              working += dt;
-              if (action.key === "chop" || action.key === "gather") {
-                villager.man.upperArm.R.rotation.x =
-                  -1.2 + Math.sin(time * 12) * 0.7;
-              }
-              if (working > (action.key === "gather" ? 3 : 1.2)) {
-                working = 0;
-                facts = apply(action, facts);
-                step++;
-                villager.setIcon("");
-              }
-            }
-          } else if (plan.length === 0) {
-            villager.update(dt);
-          }
+          executePlannedAction(action, dt, time);
         }
         // 見た目：斧・薪・火
         const holding = (facts & HAS_AXE) !== 0;
@@ -492,5 +459,44 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function executePlannedAction(
+      action: Action | undefined,
+      dt: number,
+      time: number
+    ) {
+      if (action) {
+        if (
+          !usable(
+            action,
+            withBits(worldFacts(), facts & withBits(HAS_AXE, HAS_WOOD))
+          )
+        ) {
+          // 前提が崩れた（斧がなくなった、お金を失った）ので計画し直す
+          replan();
+        } else if (villager.position.distanceTo(places[action.place]) > 0.35) {
+          villager.goTo(places[action.place]);
+          villager.update(dt, 1.8);
+          villager.setIcon("");
+        } else {
+          villager.stop();
+          villager.update(dt);
+          villager.setIcon(action.name);
+          working += dt;
+          if (action.key === "chop" || action.key === "gather") {
+            villager.man.upperArm.R.rotation.x =
+              -1.2 + Math.sin(time * 12) * 0.7;
+          }
+          if (working > (action.key === "gather" ? 3 : 1.2)) {
+            working = 0;
+            facts = apply(action, facts);
+            step++;
+            villager.setIcon("");
+          }
+        }
+      } else if (plan.length === 0) {
+        villager.update(dt);
+      }
+    }
   },
 };

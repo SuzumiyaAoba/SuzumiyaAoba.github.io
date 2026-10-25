@@ -162,26 +162,7 @@ export const demo: DemoModule = {
     const computeDivergence = () => {
       let total = 0;
       for (let j = 0; j < H; j++) {
-        for (let i = 0; i < W; i++) {
-          const k = j * W + i;
-          if (solid[k] === 1) {
-            divergence[k] = 0;
-            continue;
-          }
-          // 壁の向こうの速度は 0（壁を通り抜ける流れはない）
-          const ur = isSolid(i + 1, j)
-            ? i + 1 >= W
-              ? (u[k] ?? 0)
-              : 0
-            : (u[k + 1] ?? 0);
-          const ul = isSolid(i - 1, j) ? 0 : (u[k - 1] ?? 0);
-          const vt = isSolid(i, j + 1) ? 0 : (v[k + W] ?? 0);
-          const vb = isSolid(i, j - 1) ? 0 : (v[k - W] ?? 0);
-          divergence[k] = 0.5 * (ur - ul + vt - vb);
-          if (i > 2 && i < W - 2) {
-            total += Math.abs(divergence[k] ?? 0);
-          }
-        }
+        total = calculateDivergenceRow(j, total);
       }
       return total / (W * H);
     };
@@ -191,39 +172,13 @@ export const demo: DemoModule = {
       // ∇²p = ∇·u を解く（ヤコビ法）。壁では圧力の傾きを 0、右の出口では圧力 0
       for (let it = 0; it < iterations; it++) {
         for (let j = 0; j < H; j++) {
-          for (let i = 0; i < W; i++) {
-            const k = j * W + i;
-            if (solid[k] === 1) {
-              nextPressure[k] = 0;
-              continue;
-            }
-            const p = pressure[k] ?? 0;
-            const pr =
-              i + 1 >= W ? 0 : isSolid(i + 1, j) ? p : (pressure[k + 1] ?? 0);
-            const pl = isSolid(i - 1, j) ? p : (pressure[k - 1] ?? 0);
-            const pt = isSolid(i, j + 1) ? p : (pressure[k + W] ?? 0);
-            const pb = isSolid(i, j - 1) ? p : (pressure[k - W] ?? 0);
-            nextPressure[k] = (pr + pl + pt + pb - (divergence[k] ?? 0)) * 0.25;
-          }
+          relaxPressureRow(j);
         }
         pressure.set(nextPressure);
       }
       // 圧力の傾きを速度から引く：圧力の高い所から低い所へ押し出される
       for (let j = 0; j < H; j++) {
-        for (let i = 0; i < W; i++) {
-          const k = j * W + i;
-          if (solid[k] === 1) {
-            continue;
-          }
-          const p = pressure[k] ?? 0;
-          const pr =
-            i + 1 >= W ? 0 : isSolid(i + 1, j) ? p : (pressure[k + 1] ?? 0);
-          const pl = isSolid(i - 1, j) ? p : (pressure[k - 1] ?? 0);
-          const pt = isSolid(i, j + 1) ? p : (pressure[k + W] ?? 0);
-          const pb = isSolid(i, j - 1) ? p : (pressure[k - W] ?? 0);
-          u[k] = (u[k] ?? 0) - 0.5 * (pr - pl);
-          v[k] = (v[k] ?? 0) - 0.5 * (pt - pb);
-        }
+        projectVelocityRow(j);
       }
     };
 
@@ -279,25 +234,7 @@ export const demo: DemoModule = {
         }
         const residual = computeDivergence();
         const showPressure = params["view"] === "pressure";
-        for (let k = 0; k < W * H; k++) {
-          // 流入口のすぐそばは境界の都合で値が大きくなるので表示しない
-          const inlet = k % W < 3;
-          const value = inlet
-            ? 0
-            : showPressure
-              ? (pressure[k] ?? 0) * 0.25
-              : (divergence[k] ?? 0) * 0.35;
-          const strength = Math.min(1, Math.abs(value));
-          const base = [16, 20, 28];
-          const hot = [245, 115, 111];
-          const cold = [90, 169, 255];
-          const target = value > 0 ? hot : cold;
-          for (let c = 0; c < 3; c++) {
-            data[k * 4 + c] =
-              (base[c] ?? 0) + ((target[c] ?? 0) - (base[c] ?? 0)) * strength;
-          }
-          data[k * 4 + 3] = 255;
-        }
+        renderDivergenceCells(showPressure);
         texture.needsUpdate = true;
         for (let k = 0; k < TRACERS; k++) {
           const p = toWorld(tx[k] ?? 0, ty[k] ?? 0, 0.04);
@@ -308,23 +245,7 @@ export const demo: DemoModule = {
         tracers.commit();
         const showArrows = params["arrows"] === true;
         arrows.visible = showArrows;
-        if (showArrows) {
-          const points: Vector3[] = [];
-          for (let j = 2; j < H; j += 3) {
-            for (let i = 2; i < W; i += 3) {
-              const k = j * W + i;
-              if (solid[k] === 1) {
-                continue;
-              }
-              const scale = 0.11;
-              points.push(
-                toWorld(i, j, 0.03),
-                toWorld(i + (u[k] ?? 0) * scale, j + (v[k] ?? 0) * scale, 0.03)
-              );
-            }
-          }
-          arrows.setPoints(points);
-        }
+        renderVelocityArrows(showArrows);
         context.readout("発散の平均", residual.toFixed(3));
         context.caption(
           useProjection
@@ -333,5 +254,111 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderVelocityArrows(showArrows: boolean) {
+      if (showArrows) {
+        const points: Vector3[] = [];
+        for (let j = 2; j < H; j += 3) {
+          for (let i = 2; i < W; i += 3) {
+            const k = j * W + i;
+            if (solid[k] === 1) {
+              continue;
+            }
+            const scale = 0.11;
+            points.push(
+              toWorld(i, j, 0.03),
+              toWorld(i + (u[k] ?? 0) * scale, j + (v[k] ?? 0) * scale, 0.03)
+            );
+          }
+        }
+        arrows.setPoints(points);
+      }
+    }
+
+    function renderDivergenceCells(showPressure: boolean) {
+      for (let k = 0; k < W * H; k++) {
+        // 流入口のすぐそばは境界の都合で値が大きくなるので表示しない
+        const inlet = k % W < 3;
+        const value = inlet
+          ? 0
+          : showPressure
+            ? (pressure[k] ?? 0) * 0.25
+            : (divergence[k] ?? 0) * 0.35;
+        const strength = Math.min(1, Math.abs(value));
+        const base = [16, 20, 28];
+        const hot = [245, 115, 111];
+        const cold = [90, 169, 255];
+        const target = value > 0 ? hot : cold;
+        for (let c = 0; c < 3; c++) {
+          data[k * 4 + c] =
+            (base[c] ?? 0) + ((target[c] ?? 0) - (base[c] ?? 0)) * strength;
+        }
+        data[k * 4 + 3] = 255;
+      }
+    }
+
+    function projectVelocityRow(j: number) {
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i;
+        if (solid[k] === 1) {
+          continue;
+        }
+        const p = pressure[k] ?? 0;
+        const pr =
+          i + 1 >= W ? 0 : isSolid(i + 1, j) ? p : (pressure[k + 1] ?? 0);
+        const pl = isSolid(i - 1, j) ? p : (pressure[k - 1] ?? 0);
+        const pt = isSolid(i, j + 1) ? p : (pressure[k + W] ?? 0);
+        const pb = isSolid(i, j - 1) ? p : (pressure[k - W] ?? 0);
+        u[k] = (u[k] ?? 0) - 0.5 * (pr - pl);
+        v[k] = (v[k] ?? 0) - 0.5 * (pt - pb);
+      }
+    }
+
+    function relaxPressureRow(j: number) {
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i;
+        if (solid[k] === 1) {
+          nextPressure[k] = 0;
+          continue;
+        }
+        const p = pressure[k] ?? 0;
+        const pr =
+          i + 1 >= W ? 0 : isSolid(i + 1, j) ? p : (pressure[k + 1] ?? 0);
+        const pl = isSolid(i - 1, j) ? p : (pressure[k - 1] ?? 0);
+        const pt = isSolid(i, j + 1) ? p : (pressure[k + W] ?? 0);
+        const pb = isSolid(i, j - 1) ? p : (pressure[k - W] ?? 0);
+        nextPressure[k] = (pr + pl + pt + pb - (divergence[k] ?? 0)) * 0.25;
+      }
+    }
+
+    function calculateDivergenceRow(j: number, initialTotal: number) {
+      let total = initialTotal;
+
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i;
+        if (solid[k] === 1) {
+          divergence[k] = 0;
+          continue;
+        }
+        // 壁の向こうの速度は 0（壁を通り抜ける流れはない）
+        const ur = calculateRightVelocity(i, j, k);
+        const ul = isSolid(i - 1, j) ? 0 : (u[k - 1] ?? 0);
+        const vt = isSolid(i, j + 1) ? 0 : (v[k + W] ?? 0);
+        const vb = isSolid(i, j - 1) ? 0 : (v[k - W] ?? 0);
+        divergence[k] = 0.5 * (ur - ul + vt - vb);
+        if (i > 2 && i < W - 2) {
+          total += Math.abs(divergence[k] ?? 0);
+        }
+      }
+      return total;
+    }
+
+    function calculateRightVelocity(i: number, j: number, k: number) {
+      return isSolid(i + 1, j)
+        ? i + 1 >= W
+          ? (u[k] ?? 0)
+          : 0
+        : (u[k + 1] ?? 0);
+    }
   },
 };

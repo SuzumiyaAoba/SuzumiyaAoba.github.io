@@ -146,29 +146,7 @@ export const demo: DemoModule = {
                 current
               )
             : null;
-          if (hit) {
-            if (dragging) {
-              const a = toUv(last);
-              const b = toUv(current);
-              const dx = (b.u - a.u) * 6000;
-              const dy = (b.v - a.v) * 6000;
-              if (Math.hypot(dx, dy) > 1) {
-                const hue = (time * 0.15) % 1;
-                fluid.splat(
-                  b.u,
-                  b.v,
-                  dx,
-                  dy,
-                  new Color().setHSL(hue, 0.9, 0.5).multiplyScalar(1.6),
-                  0.0015
-                );
-              }
-            }
-            last.copy(current);
-            dragging = true;
-          } else {
-            dragging = false;
-          }
+          injectPointerFluid(hit);
           const iterations = Number(params["iterations"]);
           fluid.step({
             dt: Math.min(dt, 1 / 30),
@@ -192,5 +170,31 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function injectPointerFluid(hit: Vector3 | null) {
+      if (hit) {
+        if (dragging) {
+          const a = toUv(last);
+          const b = toUv(current);
+          const dx = (b.u - a.u) * 6000;
+          const dy = (b.v - a.v) * 6000;
+          if (Math.hypot(dx, dy) > 1) {
+            const hue = (time * 0.15) % 1;
+            fluid.splat(
+              b.u,
+              b.v,
+              dx,
+              dy,
+              new Color().setHSL(hue, 0.9, 0.5).multiplyScalar(1.6),
+              0.0015
+            );
+          }
+        }
+        last.copy(current);
+        dragging = true;
+      } else {
+        dragging = false;
+      }
+    }
   },
 };

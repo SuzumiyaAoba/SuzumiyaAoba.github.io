@@ -84,18 +84,7 @@ export function ReleaseTimeline({
     (date, index) =>
       index === 0 || (Number(date.slice(5, 7)) - 1) % monthStep === 0
   );
-  const yearTicks: { year: number; date: string }[] = [];
-  for (const year of range.years) {
-    const date = `${year}-01-01` < range.start ? range.start : `${year}-01-01`;
-    const previous = yearTicks.at(-1);
-    if (
-      !previous ||
-      (daysBetween(previous.date, date) * pixelsPerDay >= 64 &&
-        daysBetween(date, range.end) * pixelsPerDay >= 48)
-    ) {
-      yearTicks.push({ year, date });
-    }
-  }
+  const yearTicks = buildYearTicks(range, pixelsPerDay);
 
   if (!hasRows) {
     return (
@@ -109,142 +98,24 @@ export function ReleaseTimeline({
 
   return (
     <div>
-      <ReleaseViewHeader
-        title={en ? "Release intervals · All dates" : "全期間のリリース間隔"}
-        aside={
-          <p className="text-label leading-7 text-muted-foreground tabular-nums">
-            {range.firstDate.replaceAll("-", ".")} —{" "}
-            {range.lastDate.replaceAll("-", ".")}
-          </p>
-        }
-      >
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Button
-              variant="flat"
-              size="icon-lg"
-              aria-label={
-                en ? "Scroll to earlier releases" : "過去へスクロール"
-              }
-              onClick={() => scrollPage(-1)}
-            >
-              <ArrowLeft aria-hidden="true" />
-            </Button>
-            <Button
-              variant="flat"
-              size="icon-lg"
-              aria-label={en ? "Scroll to later releases" : "未来へスクロール"}
-              onClick={() => scrollPage(1)}
-            >
-              <ArrowRight aria-hidden="true" />
-            </Button>
-            <select
-              aria-label={en ? "Jump to year" : "年へ移動"}
-              className={releaseSelectClass}
-              value=""
-              onChange={(event) => scrollToDate(`${event.target.value}-01-01`)}
-            >
-              <option value="" disabled>
-                {en ? "Jump to year" : "年へ移動"}
-              </option>
-              {range.years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                  {!en && "年"}
-                </option>
-              ))}
-            </select>
-            <Button
-              variant="ghost"
-              size="xl"
-              onClick={() => {
-                const date = releases.findLast((release) => release.date)?.date;
-                if (date) {
-                  onSelectDate(date);
-                  scrollToDate(date);
-                }
-              }}
-            >
-              {en ? "Earliest" : "最初の記録"}
-            </Button>
-            <Button
-              variant="ghost"
-              size="xl"
-              onClick={() => {
-                const date = releases.find((release) => release.date)?.date;
-                if (date) {
-                  onSelectDate(date);
-                  scrollToDate(date);
-                }
-              }}
-            >
-              {en ? "Latest" : "最新の記録"}
-            </Button>
-          </div>
-          <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <Button
-              variant={grouped ? "secondary" : "flat"}
-              size="xl"
-              aria-pressed={grouped}
-              onClick={() => {
-                popover.dismiss();
-                setGrouped(!grouped);
-              }}
-            >
-              {grouped ? (
-                <Group aria-hidden="true" />
-              ) : (
-                <Ungroup aria-hidden="true" />
-              )}
-              {en ? "Group by series" : "系列でグループ化"}
-            </Button>
-            <fieldset
-              aria-label={en ? "Timeline zoom" : "時間軸の表示倍率"}
-              className="flex min-w-0 flex-wrap items-center gap-1.5"
-            >
-              <Button
-                variant="flat"
-                size="icon-lg"
-                aria-label={en ? "Zoom out" : "縮小"}
-                disabled={
-                  smallerZoom === undefined || plotWidth <= availableWidth
-                }
-                onClick={() => {
-                  if (smallerZoom !== undefined) {
-                    setZoom(smallerZoom);
-                  }
-                }}
-              >
-                <ZoomOut aria-hidden="true" />
-              </Button>
-              <span className="min-w-12 text-center text-xs text-muted-foreground tabular-nums">
-                {Math.round((pixelsPerDay / 3) * 100)}%
-              </span>
-              <Button
-                variant="flat"
-                size="icon-lg"
-                aria-label={en ? "Zoom in" : "拡大"}
-                disabled={largerZoom === undefined}
-                onClick={() => {
-                  if (largerZoom !== undefined) {
-                    setZoom(largerZoom);
-                  }
-                }}
-              >
-                <ZoomIn aria-hidden="true" />
-              </Button>
-              <Button
-                variant={zoom === "fit" ? "secondary" : "flat"}
-                size="xl"
-                aria-pressed={zoom === "fit"}
-                onClick={() => setZoom("fit")}
-              >
-                {en ? "Fit all dates" : "全期間を表示"}
-              </Button>
-            </fieldset>
-          </div>
-        </div>
-      </ReleaseViewHeader>
+      <TimelineControls
+        en={en}
+        range={range}
+        scrollPage={scrollPage}
+        scrollToDate={scrollToDate}
+        releases={releases}
+        onSelectDate={onSelectDate}
+        grouped={grouped}
+        popover={popover}
+        setGrouped={setGrouped}
+        smallerZoom={smallerZoom}
+        plotWidth={plotWidth}
+        availableWidth={availableWidth}
+        setZoom={setZoom}
+        pixelsPerDay={pixelsPerDay}
+        largerZoom={largerZoom}
+        zoom={zoom}
+      />
       <ReleaseScrollArea
         ref={scrollRef}
         aria-label={
@@ -491,6 +362,179 @@ export function ReleaseTimeline({
   );
 }
 
+function TimelineControls({
+  en,
+  range,
+  scrollPage,
+  scrollToDate,
+  releases,
+  onSelectDate,
+  grouped,
+  popover,
+  setGrouped,
+  smallerZoom,
+  plotWidth,
+  availableWidth,
+  setZoom,
+  pixelsPerDay,
+  largerZoom,
+  zoom,
+}: {
+  en: boolean;
+  range: ReleaseTimelineRange;
+  scrollPage: (direction: number) => void;
+  scrollToDate: (date: string) => void;
+  releases: Release[];
+  onSelectDate: (date: string) => void;
+  grouped: boolean;
+  popover: ReleasePopoverControls;
+  setGrouped: (grouped: boolean) => void;
+  smallerZoom: number | undefined;
+  plotWidth: number;
+  availableWidth: number;
+  setZoom: (zoom: number | "fit") => void;
+  pixelsPerDay: number;
+  largerZoom: number | undefined;
+  zoom: number | "fit";
+}) {
+  return (
+    <ReleaseViewHeader
+      title={en ? "Release intervals · All dates" : "全期間のリリース間隔"}
+      aside={
+        <p className="text-label leading-7 text-muted-foreground tabular-nums">
+          {range.firstDate.replaceAll("-", ".")} —{" "}
+          {range.lastDate.replaceAll("-", ".")}
+        </p>
+      }
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Button
+            variant="flat"
+            size="icon-lg"
+            aria-label={en ? "Scroll to earlier releases" : "過去へスクロール"}
+            onClick={() => scrollPage(-1)}
+          >
+            <ArrowLeft aria-hidden="true" />
+          </Button>
+          <Button
+            variant="flat"
+            size="icon-lg"
+            aria-label={en ? "Scroll to later releases" : "未来へスクロール"}
+            onClick={() => scrollPage(1)}
+          >
+            <ArrowRight aria-hidden="true" />
+          </Button>
+          <select
+            aria-label={en ? "Jump to year" : "年へ移動"}
+            className={releaseSelectClass}
+            value=""
+            onChange={(event) => scrollToDate(`${event.target.value}-01-01`)}
+          >
+            <option value="" disabled>
+              {en ? "Jump to year" : "年へ移動"}
+            </option>
+            {range.years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+                {!en && "年"}
+              </option>
+            ))}
+          </select>
+          <Button
+            variant="ghost"
+            size="xl"
+            onClick={() => {
+              const date = releases.findLast((release) => release.date)?.date;
+              if (date) {
+                onSelectDate(date);
+                scrollToDate(date);
+              }
+            }}
+          >
+            {en ? "Earliest" : "最初の記録"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="xl"
+            onClick={() => {
+              const date = releases.find((release) => release.date)?.date;
+              if (date) {
+                onSelectDate(date);
+                scrollToDate(date);
+              }
+            }}
+          >
+            {en ? "Latest" : "最新の記録"}
+          </Button>
+        </div>
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <Button
+            variant={grouped ? "secondary" : "flat"}
+            size="xl"
+            aria-pressed={grouped}
+            onClick={() => {
+              popover.dismiss();
+              setGrouped(!grouped);
+            }}
+          >
+            {grouped ? (
+              <Group aria-hidden="true" />
+            ) : (
+              <Ungroup aria-hidden="true" />
+            )}
+            {en ? "Group by series" : "系列でグループ化"}
+          </Button>
+          <fieldset
+            aria-label={en ? "Timeline zoom" : "時間軸の表示倍率"}
+            className="flex min-w-0 flex-wrap items-center gap-1.5"
+          >
+            <Button
+              variant="flat"
+              size="icon-lg"
+              aria-label={en ? "Zoom out" : "縮小"}
+              disabled={
+                smallerZoom === undefined || plotWidth <= availableWidth
+              }
+              onClick={() => {
+                if (smallerZoom !== undefined) {
+                  setZoom(smallerZoom);
+                }
+              }}
+            >
+              <ZoomOut aria-hidden="true" />
+            </Button>
+            <span className="min-w-12 text-center text-xs text-muted-foreground tabular-nums">
+              {Math.round((pixelsPerDay / 3) * 100)}%
+            </span>
+            <Button
+              variant="flat"
+              size="icon-lg"
+              aria-label={en ? "Zoom in" : "拡大"}
+              disabled={largerZoom === undefined}
+              onClick={() => {
+                if (largerZoom !== undefined) {
+                  setZoom(largerZoom);
+                }
+              }}
+            >
+              <ZoomIn aria-hidden="true" />
+            </Button>
+            <Button
+              variant={zoom === "fit" ? "secondary" : "flat"}
+              size="xl"
+              aria-pressed={zoom === "fit"}
+              onClick={() => setZoom("fit")}
+            >
+              {en ? "Fit all dates" : "全期間を表示"}
+            </Button>
+          </fieldset>
+        </div>
+      </div>
+    </ReleaseViewHeader>
+  );
+}
+
 function TimelineRowGuides({
   ticks,
   range,
@@ -537,4 +581,21 @@ function TimelineRowGuides({
       )}
     </>
   );
+}
+
+function buildYearTicks(range: ReleaseTimelineRange, pixelsPerDay: number) {
+  const yearTicks: { year: number; date: string }[] = [];
+  for (const year of range.years) {
+    const date = `${year}-01-01` < range.start ? range.start : `${year}-01-01`;
+    const previous = yearTicks.at(-1);
+    if (
+      !previous ||
+      (daysBetween(previous.date, date) * pixelsPerDay >= 64 &&
+        daysBetween(date, range.end) * pixelsPerDay >= 48)
+    ) {
+      yearTicks.push({ year, date });
+    }
+  }
+
+  return yearTicks;
 }

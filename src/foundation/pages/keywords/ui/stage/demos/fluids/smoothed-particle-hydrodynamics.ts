@@ -118,36 +118,7 @@ export const demo: DemoModule = {
       }
       tank.findNeighbors();
       // 2. 粘り気：近づき合う 2 粒子の速度差を少し打ち消す
-      if (viscosity > 0) {
-        for (let i = 0; i < tank.count; i++) {
-          for (
-            let t = tank.neighborStart[i] ?? 0;
-            t < (tank.neighborStart[i + 1] ?? 0);
-            t++
-          ) {
-            const j = tank.neighbors[t] ?? 0;
-            if (j < i) {
-              continue;
-            }
-            const dx = (x[j] ?? 0) - (x[i] ?? 0);
-            const dy = (y[j] ?? 0) - (y[i] ?? 0);
-            const r = Math.hypot(dx, dy);
-            const q = r / RADIUS;
-            const nx = dx / r;
-            const ny = dy / r;
-            const u =
-              ((vx[i] ?? 0) - (vx[j] ?? 0)) * nx +
-              ((vy[i] ?? 0) - (vy[j] ?? 0)) * ny;
-            if (u > 0) {
-              const impulse = h * (1 - q) * viscosity * u * 0.5;
-              vx[i] = (vx[i] ?? 0) - impulse * nx;
-              vy[i] = (vy[i] ?? 0) - impulse * ny;
-              vx[j] = (vx[j] ?? 0) + impulse * nx;
-              vy[j] = (vy[j] ?? 0) + impulse * ny;
-            }
-          }
-        }
-      }
+      applyViscosity(viscosity, x, y, vx, vy, h);
       for (let i = 0; i < tank.count; i++) {
         px[i] = x[i] ?? 0;
         py[i] = y[i] ?? 0;
@@ -263,5 +234,45 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function applyViscosity(
+      viscosity: number,
+      x: Float64Array,
+      y: Float64Array,
+      vx: Float64Array,
+      vy: Float64Array,
+      h: number
+    ) {
+      if (viscosity > 0) {
+        for (let i = 0; i < tank.count; i++) {
+          for (
+            let t = tank.neighborStart[i] ?? 0;
+            t < (tank.neighborStart[i + 1] ?? 0);
+            t++
+          ) {
+            const j = tank.neighbors[t] ?? 0;
+            if (j < i) {
+              continue;
+            }
+            const dx = (x[j] ?? 0) - (x[i] ?? 0);
+            const dy = (y[j] ?? 0) - (y[i] ?? 0);
+            const r = Math.hypot(dx, dy);
+            const q = r / RADIUS;
+            const nx = dx / r;
+            const ny = dy / r;
+            const u =
+              ((vx[i] ?? 0) - (vx[j] ?? 0)) * nx +
+              ((vy[i] ?? 0) - (vy[j] ?? 0)) * ny;
+            if (u > 0) {
+              const impulse = h * (1 - q) * viscosity * u * 0.5;
+              vx[i] = (vx[i] ?? 0) - impulse * nx;
+              vy[i] = (vy[i] ?? 0) - impulse * ny;
+              vx[j] = (vx[j] ?? 0) + impulse * nx;
+              vy[j] = (vy[j] ?? 0) + impulse * ny;
+            }
+          }
+        }
+      }
+    }
   },
 };

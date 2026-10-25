@@ -262,6 +262,29 @@ export function funnel(portals: readonly Portal[]) {
   }
   const path: Point2[] = [first.left];
   const steps: FunnelStep[] = [];
+  const { apex, left, right } = tightenFunnel(portals, first, path, steps);
+  const last = portals.at(-1);
+  if (last && !same(path.at(-1) ?? last.left, last.left)) {
+    path.push(last.left);
+  }
+  steps.push({
+    apex,
+    left,
+    right,
+    portal: portals.length - 1,
+    path: [...path],
+  });
+  return { path, steps };
+}
+
+export const toVector = (p: Point2, y = 0) => new Vector3(p.x, y, p.y);
+
+function tightenFunnel(
+  portals: readonly Portal[],
+  first: Portal,
+  path: Point2[],
+  steps: FunnelStep[]
+) {
   let apex = first.left;
   let { left, right } = first;
   let apexIndex = 0;
@@ -269,6 +292,7 @@ export function funnel(portals: readonly Portal[]) {
   let rightIndex = 0;
   const record = (portal: number) =>
     steps.push({ apex, left, right, portal, path: [...path] });
+
   for (let i = 1; i < portals.length; i++) {
     const portal = portals[i];
     if (!portal) {
@@ -311,21 +335,8 @@ export function funnel(portals: readonly Portal[]) {
     }
     record(i);
   }
-  const last = portals.at(-1);
-  if (last && !same(path.at(-1) ?? last.left, last.left)) {
-    path.push(last.left);
-  }
-  steps.push({
-    apex,
-    left,
-    right,
-    portal: portals.length - 1,
-    path: [...path],
-  });
-  return { path, steps };
+  return { apex, right, left };
 }
-
-export const toVector = (p: Point2, y = 0) => new Vector3(p.x, y, p.y);
 
 /** ナビメッシュの三角形（色分けできる）と、辺の線。 */
 export function navMeshView(mesh: NavMesh, y = 0.02) {

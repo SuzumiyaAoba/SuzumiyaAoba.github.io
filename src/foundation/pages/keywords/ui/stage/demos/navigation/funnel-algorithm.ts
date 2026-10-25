@@ -204,28 +204,7 @@ export const demo: DemoModule = {
           pathLine.visible = true;
         }
         const { done } = agent.update(walking ? dt : 0);
-        if (walking && done) {
-          pause += dt;
-          if (pause > 1.2) {
-            pause = 0;
-            const here = agent.position;
-            position = { x: here.x, y: here.z };
-            for (let tries = 0; tries < 60; tries++) {
-              const candidate = {
-                x: NAV_BOUNDS.x0 + random() * (NAV_BOUNDS.x1 - NAV_BOUNDS.x0),
-                y: NAV_BOUNDS.y0 + random() * (NAV_BOUNDS.y1 - NAV_BOUNDS.y0),
-              };
-              const far =
-                Math.hypot(candidate.x - position.x, candidate.y - position.y) >
-                7;
-              if (far && locate(mesh, candidate) >= 0) {
-                goal = candidate;
-                break;
-              }
-            }
-            plan();
-          }
-        }
+        restartFunnelRoute(done, dt);
         context.readout("ポータルの数", `${Math.max(0, portals.length - 2)}`);
         context.readout("曲がり角の数", `${Math.max(0, finalPath.length - 2)}`);
         context.readout(
@@ -249,5 +228,30 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function restartFunnelRoute(done: boolean, dt: number) {
+      if (walking && done) {
+        pause += dt;
+        if (pause > 1.2) {
+          pause = 0;
+          const here = agent.position;
+          position = { x: here.x, y: here.z };
+          for (let tries = 0; tries < 60; tries++) {
+            const candidate = {
+              x: NAV_BOUNDS.x0 + random() * (NAV_BOUNDS.x1 - NAV_BOUNDS.x0),
+              y: NAV_BOUNDS.y0 + random() * (NAV_BOUNDS.y1 - NAV_BOUNDS.y0),
+            };
+            const far =
+              Math.hypot(candidate.x - position.x, candidate.y - position.y) >
+              7;
+            if (far && locate(mesh, candidate) >= 0) {
+              goal = candidate;
+              break;
+            }
+          }
+          plan();
+        }
+      }
+    }
   },
 };

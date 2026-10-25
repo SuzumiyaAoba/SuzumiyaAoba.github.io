@@ -181,32 +181,7 @@ export const demo: DemoModule = {
       update({ dt }) {
         const limit = Number(params["limit"]);
         budget += dt * Number(params["speed"]);
-        while (budget >= 1 && count < limit) {
-          budget -= 1;
-          for (const [p, panel] of panels.entries()) {
-            const [u, v] = panel.point(count, random);
-            panel.dots.positions.set([u * SIZE, v * SIZE, 0], count * 3);
-            if (u * u + v * v < 1) {
-              panel.inside++;
-            }
-            const cellsOf = cells[p];
-            if (cellsOf) {
-              const cell =
-                Math.min(7, Math.floor(v * 8)) * 8 +
-                Math.min(7, Math.floor(u * 8));
-              cellsOf[cell] = (cellsOf[cell] ?? 0) + 1;
-            }
-          }
-          count++;
-          if (count % 4 === 0) {
-            const pointCount = count;
-            graph.push(
-              panels.map((panel) =>
-                Math.abs(panel.inside / pointCount - Math.PI / 4)
-              )
-            );
-          }
-        }
+        generateSequenceSamples(limit);
         if (count >= limit) {
           hold += dt;
           if (hold > 3) {
@@ -256,5 +231,34 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function generateSequenceSamples(limit: number) {
+      while (budget >= 1 && count < limit) {
+        budget -= 1;
+        for (const [p, panel] of panels.entries()) {
+          const [u, v] = panel.point(count, random);
+          panel.dots.positions.set([u * SIZE, v * SIZE, 0], count * 3);
+          if (u * u + v * v < 1) {
+            panel.inside++;
+          }
+          const cellsOf = cells[p];
+          if (cellsOf) {
+            const cell =
+              Math.min(7, Math.floor(v * 8)) * 8 +
+              Math.min(7, Math.floor(u * 8));
+            cellsOf[cell] = (cellsOf[cell] ?? 0) + 1;
+          }
+        }
+        count++;
+        if (count % 4 === 0) {
+          const pointCount = count;
+          graph.push(
+            panels.map((panel) =>
+              Math.abs(panel.inside / pointCount - Math.PI / 4)
+            )
+          );
+        }
+      }
+    }
   },
 };

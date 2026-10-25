@@ -141,31 +141,9 @@ export const demo: DemoModule = {
             box.y = Math.sign(box.y) * (DEPTH / 2 - box.h / 2);
           }
         }
-        for (const endpoint of endpoints) {
-          const box = boxes[endpoint.box];
-          if (box) {
-            endpoint.value = endpoint.start
-              ? box.x - box.w / 2
-              : box.x + box.w / 2;
-          }
-        }
+        updateEndpointPositions();
         let swaps = 0;
-        for (let i = 1; i < endpoints.length; i++) {
-          let j = i;
-          while (
-            j > 0 &&
-            (endpoints[j - 1]?.value ?? 0) > (endpoints[j]?.value ?? 0)
-          ) {
-            const a = endpoints[j - 1];
-            const b = endpoints[j];
-            if (a && b) {
-              endpoints[j - 1] = b;
-              endpoints[j] = a;
-            }
-            swaps++;
-            j--;
-          }
-        }
+        swaps = sortEndpoints(swaps);
 
         // 左から順に見ていく（アニメーションでは、スイープ線より左の端点だけを処理する）
         sweepTime = (sweepTime + dt) % SWEEP_SECONDS;
@@ -175,19 +153,7 @@ export const demo: DemoModule = {
           : Infinity;
         const active = new Set<number>();
         const candidates: [number, number][] = [];
-        for (const endpoint of endpoints) {
-          if (endpoint.value > sweepX) {
-            break;
-          }
-          if (endpoint.start) {
-            for (const other of active) {
-              candidates.push([other, endpoint.box]);
-            }
-            active.add(endpoint.box);
-          } else {
-            active.delete(endpoint.box);
-          }
-        }
+        collectActivePairs(sweepX, active, candidates);
         const hits = candidates.filter(([a, b]) => {
           const p = boxes[a];
           const q = boxes[b];
@@ -199,21 +165,7 @@ export const demo: DemoModule = {
           const box = boxes[i];
           return new Vector3(box?.x ?? 0, y, box?.y ?? 0);
         };
-        for (const [i, box] of boxes.entries()) {
-          matrix.makeScale(box.w, 1, box.h).setPosition(box.x, 0.02, box.y);
-          rects.setMatrixAt(i, matrix);
-          rects.setColorAt(
-            i,
-            touching.has(i) ? coral : active.has(i) ? amber : base
-          );
-          const lane = AXIS_Z + (i % LANES) * 0.17;
-          matrix.makeScale(box.w, 1, 0.12).setPosition(box.x, 0.02, lane);
-          bars.setMatrixAt(i, matrix);
-          bars.setColorAt(
-            i,
-            active.has(i) ? amber : touching.has(i) ? coral : base
-          );
-        }
+        renderSweepBoxes(touching, active);
         for (const mesh of [rects, bars]) {
           mesh.instanceMatrix.needsUpdate = true;
           if (mesh.instanceColor) {
@@ -251,5 +203,76 @@ export const demo: DemoModule = {
         bars.dispose();
       },
     };
+
+    function updateEndpointPositions() {
+      for (const endpoint of endpoints) {
+        const box = boxes[endpoint.box];
+        if (box) {
+          endpoint.value = endpoint.start
+            ? box.x - box.w / 2
+            : box.x + box.w / 2;
+        }
+      }
+    }
+
+    function sortEndpoints(initialSwaps: number) {
+      let swaps = initialSwaps;
+
+      for (let i = 1; i < endpoints.length; i++) {
+        let j = i;
+        while (
+          j > 0 &&
+          (endpoints[j - 1]?.value ?? 0) > (endpoints[j]?.value ?? 0)
+        ) {
+          const a = endpoints[j - 1];
+          const b = endpoints[j];
+          if (a && b) {
+            endpoints[j - 1] = b;
+            endpoints[j] = a;
+          }
+          swaps++;
+          j--;
+        }
+      }
+      return swaps;
+    }
+
+    function collectActivePairs(
+      sweepX: number,
+      active: Set<number>,
+      candidates: [number, number][]
+    ) {
+      for (const endpoint of endpoints) {
+        if (endpoint.value > sweepX) {
+          break;
+        }
+        if (endpoint.start) {
+          for (const other of active) {
+            candidates.push([other, endpoint.box]);
+          }
+          active.add(endpoint.box);
+        } else {
+          active.delete(endpoint.box);
+        }
+      }
+    }
+
+    function renderSweepBoxes(touching: Set<number>, active: Set<number>) {
+      for (const [i, box] of boxes.entries()) {
+        matrix.makeScale(box.w, 1, box.h).setPosition(box.x, 0.02, box.y);
+        rects.setMatrixAt(i, matrix);
+        rects.setColorAt(
+          i,
+          touching.has(i) ? coral : active.has(i) ? amber : base
+        );
+        const lane = AXIS_Z + (i % LANES) * 0.17;
+        matrix.makeScale(box.w, 1, 0.12).setPosition(box.x, 0.02, lane);
+        bars.setMatrixAt(i, matrix);
+        bars.setColorAt(
+          i,
+          active.has(i) ? amber : touching.has(i) ? coral : base
+        );
+      }
+    }
   },
 };

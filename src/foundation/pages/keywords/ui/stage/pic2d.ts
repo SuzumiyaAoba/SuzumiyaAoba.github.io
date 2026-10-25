@@ -154,42 +154,62 @@ export class PicFluid {
         const py = this.pos[2 * i + 1] ?? 0;
         const pxi = Math.floor(px * pInvSpacing);
         const pyi = Math.floor(py * pInvSpacing);
+        this.separateNeighborParticles(
+          pxi,
+          pNumX,
+          pyi,
+          pNumY,
+          i,
+          minDist2,
+          minDist
+        );
+      }
+    }
+  }
+
+  private separateNeighborParticles(
+    pxi: number,
+    pNumX: number,
+    pyi: number,
+    pNumY: number,
+    i: number,
+    minDist2: number,
+    minDist: number
+  ) {
+    for (
+      let xi = Math.max(pxi - 1, 0);
+      xi <= Math.min(pxi + 1, pNumX - 1);
+      xi++
+    ) {
+      for (
+        let yi = Math.max(pyi - 1, 0);
+        yi <= Math.min(pyi + 1, pNumY - 1);
+        yi++
+      ) {
+        const cell = xi * pNumY + yi;
         for (
-          let xi = Math.max(pxi - 1, 0);
-          xi <= Math.min(pxi + 1, pNumX - 1);
-          xi++
+          let k = this.firstCellParticle[cell] ?? 0;
+          k < (this.firstCellParticle[cell + 1] ?? 0);
+          k++
         ) {
-          for (
-            let yi = Math.max(pyi - 1, 0);
-            yi <= Math.min(pyi + 1, pNumY - 1);
-            yi++
-          ) {
-            const cell = xi * pNumY + yi;
-            for (
-              let k = this.firstCellParticle[cell] ?? 0;
-              k < (this.firstCellParticle[cell + 1] ?? 0);
-              k++
-            ) {
-              const id = this.cellParticleIds[k] ?? 0;
-              if (id === i) {
-                continue;
-              }
-              let dx = (this.pos[2 * id] ?? 0) - (this.pos[2 * i] ?? 0);
-              let dy = (this.pos[2 * id + 1] ?? 0) - (this.pos[2 * i + 1] ?? 0);
-              const d2 = dx * dx + dy * dy;
-              if (d2 > minDist2 || d2 === 0) {
-                continue;
-              }
-              const d = Math.sqrt(d2);
-              const s = (0.5 * (minDist - d)) / d;
-              dx *= s;
-              dy *= s;
-              this.pos[2 * i] = (this.pos[2 * i] ?? 0) - dx;
-              this.pos[2 * i + 1] = (this.pos[2 * i + 1] ?? 0) - dy;
-              this.pos[2 * id] = (this.pos[2 * id] ?? 0) + dx;
-              this.pos[2 * id + 1] = (this.pos[2 * id + 1] ?? 0) + dy;
-            }
+          const id = this.cellParticleIds[k] ?? 0;
+          if (id === i) {
+            continue;
           }
+          let dx = (this.pos[2 * id] ?? 0) - (this.pos[2 * i] ?? 0);
+          let dy = (this.pos[2 * id + 1] ?? 0) - (this.pos[2 * i + 1] ?? 0);
+          const d2 = dx * dx + dy * dy;
+          if (d2 > minDist2 || d2 === 0) {
+            continue;
+          }
+          const d = Math.sqrt(d2);
+          const s = (0.5 * (minDist - d)) / d;
+          dx *= s;
+          dy *= s;
+          this.pos[2 * i] = (this.pos[2 * i] ?? 0) - dx;
+          this.pos[2 * i + 1] = (this.pos[2 * i + 1] ?? 0) - dy;
+          this.pos[2 * id] = (this.pos[2 * id] ?? 0) + dx;
+          this.pos[2 * id + 1] = (this.pos[2 * id + 1] ?? 0) + dy;
         }
       }
     }
@@ -243,6 +263,29 @@ export class PicFluid {
     const h2 = 0.5 * h;
     const d = this.particleDensity;
     d.fill(0);
+    this.accumulateParticleDensity(h, h2, invH, d, n);
+    if (this.restDensity === 0) {
+      let sum = 0;
+      let fluidCells = 0;
+      for (let i = 0; i < this.numCells; i++) {
+        if (this.cellType[i] === FLUID) {
+          sum += d[i] ?? 0;
+          fluidCells++;
+        }
+      }
+      if (fluidCells > 0) {
+        this.restDensity = sum / fluidCells;
+      }
+    }
+  }
+
+  private accumulateParticleDensity(
+    h: number,
+    h2: number,
+    invH: number,
+    d: Float32Array,
+    n: number
+  ) {
     for (let i = 0; i < this.count; i++) {
       const x = Math.max(
         h,
@@ -273,56 +316,18 @@ export class PicFluid {
         d[x0 * n + y1] = (d[x0 * n + y1] ?? 0) + sx * ty;
       }
     }
-    if (this.restDensity === 0) {
-      let sum = 0;
-      let fluidCells = 0;
-      for (let i = 0; i < this.numCells; i++) {
-        if (this.cellType[i] === FLUID) {
-          sum += d[i] ?? 0;
-          fluidCells++;
-        }
-      }
-      if (fluidCells > 0) {
-        this.restDensity = sum / fluidCells;
-      }
-    }
   }
 
   /** 粒子 ↔ 格子の速度の受け渡し。toGrid = true で粒子から格子へ、false で格子から粒子へ。 */
   private transfer(toGrid: boolean, mode: Transfer, flipRatio: number) {
     const { numY: n, h, invH } = this;
     const h2 = 0.5 * h;
-    if (toGrid) {
-      this.prevU.set(this.u);
-      this.prevV.set(this.v);
-      this.du.fill(0);
-      this.dv.fill(0);
-      this.u.fill(0);
-      this.v.fill(0);
-      for (let i = 0; i < this.numCells; i++) {
-        this.cellType[i] = this.solid[i] === 0 ? SOLID : AIR;
-      }
-      for (let i = 0; i < this.count; i++) {
-        const xi = Math.max(
-          0,
-          Math.min(this.numX - 1, Math.floor((this.pos[2 * i] ?? 0) * invH))
-        );
-        const yi = Math.max(
-          0,
-          Math.min(this.numY - 1, Math.floor((this.pos[2 * i + 1] ?? 0) * invH))
-        );
-        const cell = xi * n + yi;
-        if (this.cellType[cell] === AIR) {
-          this.cellType[cell] = FLUID;
-        }
-      }
-    }
+    this.prepareGridTransfer(toGrid, invH, n);
     for (let component = 0; component < 2; component++) {
-      const dx = component === 0 ? 0 : h2;
-      const dy = component === 0 ? h2 : 0;
-      const f = component === 0 ? this.u : this.v;
-      const prevF = component === 0 ? this.prevU : this.prevV;
-      const d = component === 0 ? this.du : this.dv;
+      const { dx, dy, f, prevF, d } =
+        component === 0
+          ? { dx: 0, dy: h2, f: this.u, prevF: this.prevU, d: this.du }
+          : { dx: h2, dy: 0, f: this.v, prevF: this.prevV, d: this.dv };
       for (let i = 0; i < this.count; i++) {
         const px = this.pos[2 * i] ?? 0;
         const py = this.pos[2 * i + 1] ?? 0;
@@ -349,87 +354,200 @@ export class PicFluid {
         const cy = this.affine[4 * i + component * 2 + 1] ?? 0;
         if (toGrid) {
           const pv = this.vel[2 * i + component] ?? 0;
-          for (let k = 0; k < 4; k++) {
-            const node = nodes[k] ?? 0;
-            const w = weights[k] ?? 0;
-            const [ox, oy] = offsets[k] ?? [0, 0];
-            // APIC：粒子の速度に、速度の傾き × 格子点までの距離を足して渡す
-            const value =
-              mode === "apic" ? pv + cx * (ox ?? 0) + cy * (oy ?? 0) : pv;
-            f[node] = (f[node] ?? 0) + value * w;
-            d[node] = (d[node] ?? 0) + w;
-          }
-        } else {
-          const offset = component === 0 ? n : 1;
-          const valid = nodes.map((node) =>
-            this.cellType[node] !== AIR || this.cellType[node - offset] !== AIR
-              ? 1
-              : 0
+          PicFluid.depositParticleVelocity(
+            nodes,
+            weights,
+            offsets,
+            mode,
+            pv,
+            cx,
+            cy,
+            f,
+            d
           );
-          let weightSum = 0;
-          for (let k = 0; k < 4; k++) {
-            weightSum += (valid[k] ?? 0) * (weights[k] ?? 0);
-          }
-          if (weightSum <= 0) {
-            continue;
-          }
-          let picV = 0;
-          let corr = 0;
-          let gradX = 0;
-          let gradY = 0;
-          const gradWeights = [
-            [-sy * invH, -sx * invH],
-            [sy * invH, -tx * invH],
-            [ty * invH, tx * invH],
-            [-ty * invH, sx * invH],
-          ];
-          for (let k = 0; k < 4; k++) {
-            const node = nodes[k] ?? 0;
-            const w = (valid[k] ?? 0) * (weights[k] ?? 0);
-            picV += w * (f[node] ?? 0);
-            corr += w * ((f[node] ?? 0) - (prevF[node] ?? 0));
-            const [gx, gy] = gradWeights[k] ?? [0, 0];
-            gradX += (valid[k] ?? 0) * (gx ?? 0) * (f[node] ?? 0);
-            gradY += (valid[k] ?? 0) * (gy ?? 0) * (f[node] ?? 0);
-          }
-          picV /= weightSum;
-          corr /= weightSum;
-          const current = this.vel[2 * i + component] ?? 0;
-          if (mode === "pic") {
-            this.vel[2 * i + component] = picV;
-          } else if (mode === "flip") {
-            this.vel[2 * i + component] =
-              (1 - flipRatio) * picV + flipRatio * (current + corr);
-          } else {
-            this.vel[2 * i + component] = picV;
-            this.affine[4 * i + component * 2] = gradX;
-            this.affine[4 * i + component * 2 + 1] = gradY;
-          }
+        } else {
+          this.gatherParticleVelocity(
+            i,
+            component,
+            mode,
+            flipRatio,
+            nodes,
+            weights,
+            sx,
+            sy,
+            tx,
+            ty,
+            f,
+            prevF
+          );
         }
       }
-      if (toGrid) {
-        for (let i = 0; i < f.length; i++) {
-          if ((d[i] ?? 0) > 0) {
-            f[i] = (f[i] ?? 0) / (d[i] ?? 1);
-          }
+      this.normalizeGridVelocity(toGrid, f, d, n);
+    }
+  }
+
+  private gatherParticleVelocity(
+    i: number,
+    component: number,
+    mode: Transfer,
+    flipRatio: number,
+    nodes: number[],
+    weights: number[],
+    sx: number,
+    sy: number,
+    tx: number,
+    ty: number,
+    f: Float32Array,
+    prevF: Float32Array
+  ) {
+    const { numY: n, invH } = this;
+    const offset = component === 0 ? n : 1;
+    const valid = nodes.map((node) =>
+      this.cellType[node] !== AIR || this.cellType[node - offset] !== AIR
+        ? 1
+        : 0
+    );
+    let weightSum = 0;
+    for (let k = 0; k < 4; k++) {
+      weightSum += (valid[k] ?? 0) * (weights[k] ?? 0);
+    }
+    if (weightSum <= 0) {
+      return;
+    }
+    let picV = 0;
+    let corr = 0;
+    let gradX = 0;
+    let gradY = 0;
+    const gradWeights = [
+      [-sy * invH, -sx * invH],
+      [sy * invH, -tx * invH],
+      [ty * invH, tx * invH],
+      [-ty * invH, sx * invH],
+    ];
+    for (let k = 0; k < 4; k++) {
+      const node = nodes[k] ?? 0;
+      const w = (valid[k] ?? 0) * (weights[k] ?? 0);
+      picV += w * (f[node] ?? 0);
+      corr += w * ((f[node] ?? 0) - (prevF[node] ?? 0));
+      const [gx, gy] = gradWeights[k] ?? [0, 0];
+      gradX += (valid[k] ?? 0) * (gx ?? 0) * (f[node] ?? 0);
+      gradY += (valid[k] ?? 0) * (gy ?? 0) * (f[node] ?? 0);
+    }
+    picV /= weightSum;
+    corr /= weightSum;
+    const current = this.vel[2 * i + component] ?? 0;
+    this.applyParticleVelocity(
+      mode,
+      i,
+      component,
+      picV,
+      flipRatio,
+      current,
+      corr,
+      gradX,
+      gradY
+    );
+  }
+
+  private normalizeGridVelocity(
+    toGrid: boolean,
+    f: Float32Array,
+    d: Float32Array,
+    n: number
+  ) {
+    if (toGrid) {
+      for (let i = 0; i < f.length; i++) {
+        if ((d[i] ?? 0) > 0) {
+          f[i] = (f[i] ?? 0) / (d[i] ?? 1);
         }
-        // 壁に接する速度は 0 に戻す
-        for (let i = 0; i < this.numX; i++) {
-          for (let j = 0; j < this.numY; j++) {
-            const solidCell = this.cellType[i * n + j] === SOLID;
-            if (
-              solidCell ||
-              (i > 0 && this.cellType[(i - 1) * n + j] === SOLID)
-            ) {
-              this.u[i * n + j] = this.prevU[i * n + j] ?? 0;
-            }
-            if (
-              solidCell ||
-              (j > 0 && this.cellType[i * n + j - 1] === SOLID)
-            ) {
-              this.v[i * n + j] = this.prevV[i * n + j] ?? 0;
-            }
-          }
+      }
+      // 壁に接する速度は 0 に戻す
+      this.restoreSolidVelocities(n);
+    }
+  }
+
+  private static depositParticleVelocity(
+    nodes: number[],
+    weights: number[],
+    offsets: number[][],
+    mode: Transfer,
+    pv: number,
+    cx: number,
+    cy: number,
+    f: Float32Array,
+    d: Float32Array
+  ) {
+    for (let k = 0; k < 4; k++) {
+      const node = nodes[k] ?? 0;
+      const w = weights[k] ?? 0;
+      const [ox, oy] = offsets[k] ?? [0, 0];
+      // APIC：粒子の速度に、速度の傾き × 格子点までの距離を足して渡す
+      const value = mode === "apic" ? pv + cx * (ox ?? 0) + cy * (oy ?? 0) : pv;
+      f[node] = (f[node] ?? 0) + value * w;
+      d[node] = (d[node] ?? 0) + w;
+    }
+  }
+
+  private applyParticleVelocity(
+    mode: Transfer,
+    i: number,
+    component: number,
+    picV: number,
+    flipRatio: number,
+    current: number,
+    corr: number,
+    gradX: number,
+    gradY: number
+  ) {
+    if (mode === "pic") {
+      this.vel[2 * i + component] = picV;
+    } else if (mode === "flip") {
+      this.vel[2 * i + component] =
+        (1 - flipRatio) * picV + flipRatio * (current + corr);
+    } else {
+      this.vel[2 * i + component] = picV;
+      this.affine[4 * i + component * 2] = gradX;
+      this.affine[4 * i + component * 2 + 1] = gradY;
+    }
+  }
+
+  private prepareGridTransfer(toGrid: boolean, invH: number, n: number) {
+    if (toGrid) {
+      this.prevU.set(this.u);
+      this.prevV.set(this.v);
+      this.du.fill(0);
+      this.dv.fill(0);
+      this.u.fill(0);
+      this.v.fill(0);
+      for (let i = 0; i < this.numCells; i++) {
+        this.cellType[i] = this.solid[i] === 0 ? SOLID : AIR;
+      }
+      for (let i = 0; i < this.count; i++) {
+        const xi = Math.max(
+          0,
+          Math.min(this.numX - 1, Math.floor((this.pos[2 * i] ?? 0) * invH))
+        );
+        const yi = Math.max(
+          0,
+          Math.min(this.numY - 1, Math.floor((this.pos[2 * i + 1] ?? 0) * invH))
+        );
+        const cell = xi * n + yi;
+        if (this.cellType[cell] === AIR) {
+          this.cellType[cell] = FLUID;
+        }
+      }
+    }
+  }
+
+  private restoreSolidVelocities(n: number) {
+    for (let i = 0; i < this.numX; i++) {
+      for (let j = 0; j < this.numY; j++) {
+        const solidCell = this.cellType[i * n + j] === SOLID;
+        if (solidCell || (i > 0 && this.cellType[(i - 1) * n + j] === SOLID)) {
+          this.u[i * n + j] = this.prevU[i * n + j] ?? 0;
+        }
+        if (solidCell || (j > 0 && this.cellType[i * n + j - 1] === SOLID)) {
+          this.v[i * n + j] = this.prevV[i * n + j] ?? 0;
         }
       }
     }
@@ -444,43 +562,52 @@ export class PicFluid {
     const cp = (1000 * this.h) / dt;
     for (let iteration = 0; iteration < iterations; iteration++) {
       for (let i = 1; i < this.numX - 1; i++) {
-        for (let j = 1; j < this.numY - 1; j++) {
-          if (this.cellType[i * n + j] !== FLUID) {
-            continue;
-          }
-          const center = i * n + j;
-          const left = (i - 1) * n + j;
-          const right = (i + 1) * n + j;
-          const bottom = i * n + j - 1;
-          const top = i * n + j + 1;
-          const sx0 = this.solid[left] ?? 0;
-          const sx1 = this.solid[right] ?? 0;
-          const sy0 = this.solid[bottom] ?? 0;
-          const sy1 = this.solid[top] ?? 0;
-          const s = sx0 + sx1 + sy0 + sy1;
-          if (s === 0) {
-            continue;
-          }
-          let divergence =
-            (this.u[right] ?? 0) -
-            (this.u[center] ?? 0) +
-            (this.v[top] ?? 0) -
-            (this.v[center] ?? 0);
-          if (this.restDensity > 0) {
-            const compression =
-              (this.particleDensity[center] ?? 0) - this.restDensity;
-            if (compression > 0) {
-              divergence -= compression;
-            }
-          }
-          const p = (-divergence / s) * overRelaxation;
-          this.pressure[center] = (this.pressure[center] ?? 0) + cp * p;
-          this.u[center] = (this.u[center] ?? 0) - sx0 * p;
-          this.u[right] = (this.u[right] ?? 0) + sx1 * p;
-          this.v[center] = (this.v[center] ?? 0) - sy0 * p;
-          this.v[top] = (this.v[top] ?? 0) + sy1 * p;
+        this.projectPressureColumn(i, n, overRelaxation, cp);
+      }
+    }
+  }
+
+  private projectPressureColumn(
+    i: number,
+    n: number,
+    overRelaxation: number,
+    cp: number
+  ) {
+    for (let j = 1; j < this.numY - 1; j++) {
+      if (this.cellType[i * n + j] !== FLUID) {
+        continue;
+      }
+      const center = i * n + j;
+      const left = (i - 1) * n + j;
+      const right = (i + 1) * n + j;
+      const bottom = i * n + j - 1;
+      const top = i * n + j + 1;
+      const sx0 = this.solid[left] ?? 0;
+      const sx1 = this.solid[right] ?? 0;
+      const sy0 = this.solid[bottom] ?? 0;
+      const sy1 = this.solid[top] ?? 0;
+      const s = sx0 + sx1 + sy0 + sy1;
+      if (s === 0) {
+        continue;
+      }
+      let divergence =
+        (this.u[right] ?? 0) -
+        (this.u[center] ?? 0) +
+        (this.v[top] ?? 0) -
+        (this.v[center] ?? 0);
+      if (this.restDensity > 0) {
+        const compression =
+          (this.particleDensity[center] ?? 0) - this.restDensity;
+        if (compression > 0) {
+          divergence -= compression;
         }
       }
+      const p = (-divergence / s) * overRelaxation;
+      this.pressure[center] = (this.pressure[center] ?? 0) + cp * p;
+      this.u[center] = (this.u[center] ?? 0) - sx0 * p;
+      this.u[right] = (this.u[right] ?? 0) + sx1 * p;
+      this.v[center] = (this.v[center] ?? 0) - sy0 * p;
+      this.v[top] = (this.v[top] ?? 0) + sy1 * p;
     }
   }
 

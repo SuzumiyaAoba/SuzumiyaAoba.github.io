@@ -168,27 +168,7 @@ export const demo: DemoModule = {
         uniforms.uHover.value.set(0, 0, 0);
         const spokePoints: Vector3[] = [];
         let used = 0;
-        if (inside) {
-          const qx = hover.x / CELL + offset.x;
-          const qy = hover.z / CELL + offset.y;
-          uniforms.uHover.value.set(qx, qy, 1);
-          probe.position.set(hover.x, 0.05, hover.z);
-          for (const [cx, cy] of cellCorners(qx, qy, simplex)) {
-            const item = corners[used];
-            if (!item) {
-              continue;
-            }
-            item.position.set(
-              (cx - offset.x) * CELL,
-              0.05,
-              (cy - offset.y) * CELL
-            );
-            spokePoints.push(probe.position.clone(), item.position.clone());
-            used++;
-          }
-          probeLabel.position.set(hover.x, 0.45, hover.z);
-          probeLabel.setText(`格子点 ${used} 個から計算`);
-        }
+        used = renderSimplexLattice(inside, simplex, used, spokePoints);
         probe.visible = inside;
         probeLabel.visible = inside;
         spokes.visible = inside;
@@ -209,5 +189,37 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderSimplexLattice(
+      inside: boolean,
+      simplex: boolean,
+      initialUsed: number,
+      spokePoints: Vector3[]
+    ) {
+      let used = initialUsed;
+
+      if (inside) {
+        const qx = hover.x / CELL + offset.x;
+        const qy = hover.z / CELL + offset.y;
+        uniforms.uHover.value.set(qx, qy, 1);
+        probe.position.set(hover.x, 0.05, hover.z);
+        for (const [cx, cy] of cellCorners(qx, qy, simplex)) {
+          const item = corners[used];
+          if (!item) {
+            continue;
+          }
+          item.position.set(
+            (cx - offset.x) * CELL,
+            0.05,
+            (cy - offset.y) * CELL
+          );
+          spokePoints.push(probe.position.clone(), item.position.clone());
+          used++;
+        }
+        probeLabel.position.set(hover.x, 0.45, hover.z);
+        probeLabel.setText(`格子点 ${used} 個から計算`);
+      }
+      return used;
+    }
   },
 };

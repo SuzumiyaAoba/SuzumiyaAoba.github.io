@@ -6,6 +6,7 @@ import {
   CinemaValue,
 } from "./cinema-operation-primitives";
 import type { CinemaSceneProps } from "./cinema-operation-primitives";
+import type { GenerationSelection, GenerationTrace } from "./generation-math";
 import { decodeFlow, FLOW_VOCABULARY } from "./generation-math";
 import { approximateGelu } from "./representation-math";
 import { svgNumber } from "./svg-number";
@@ -284,73 +285,119 @@ function ProbabilityRows({
           tokenId === selection.id;
         const packetX = (mobile ? 233 : 475) + arrived * (mobile ? 28 : 165);
         return (
-          <g
+          <ProbabilityRow
             key={tokenId}
-            data-cinema-probability-id={tokenId}
-            data-selected={active ? "true" : "false"}
-          >
-            <CinemaLabel
-              x={mobile ? 52 : 100}
-              y={y + 6}
-              size={mobile ? 24 : 28}
-              active={active}
-            >
-              {tokenId}{" "}
-              {FLOW_VOCABULARY[tokenId]?.isEnd
-                ? "終"
-                : FLOW_VOCABULARY[tokenId]?.piece}
-            </CinemaLabel>
-            <CinemaValue
-              x={mobile ? 165 : 330}
-              y={y}
-              width={mobile ? 120 : 220}
-              height={mobile ? 42 : 46}
-              value={requiredValue(trace.logits, tokenId)}
-              limit={maximum}
-              active={active}
-            />
-            <CinemaArrow
-              path={`M${mobile ? "233" : "475"} ${svgNumber(y)} H${mobile ? "262" : "640"}`}
-              marker={marker}
-              width={2}
-            />
-            {arrived < 1 && (
-              <circle
-                cx={svgNumber(packetX)}
-                cy={svgNumber(y)}
-                r="5"
-                className="fill-primary"
-              />
-            )}
-            <rect
-              x={svgNumber(left)}
-              y={svgNumber(y - 13)}
-              width={svgNumber(scale)}
-              height="26"
-              rx="4"
-              className="fill-muted"
-            />
-            <rect
-              x={svgNumber(left)}
-              y={svgNumber(y - 13)}
-              width={svgNumber(probability * scale)}
-              height="26"
-              rx="4"
-              fillOpacity={svgNumber(0.25 + arrived * 0.75)}
-              className={active ? "fill-chart-2" : "fill-primary"}
-              data-cinema-probability-width={svgNumber(probability)}
-            />
-            <CinemaLabel
-              x={mobile ? 548 : 1260}
-              y={y + 7}
-              size={mobile ? 24 : 30}
-              active={active}
-            >
-              {(probability * 100).toFixed(1)}%
-            </CinemaLabel>
-          </g>
+            tokenId={tokenId}
+            active={active}
+            mobile={mobile}
+            y={y}
+            trace={trace}
+            maximum={maximum}
+            marker={marker}
+            arrived={arrived}
+            packetX={packetX}
+            left={left}
+            scale={scale}
+            probability={probability}
+          />
         );
       })}
+    </g>
+  );
+}
+
+function ProbabilityRow({
+  tokenId,
+  active,
+  mobile,
+  y,
+  trace,
+  maximum,
+  marker,
+  arrived,
+  packetX,
+  left,
+  scale,
+  probability,
+}: {
+  tokenId: number;
+  active: boolean;
+  mobile: boolean;
+  y: number;
+  trace: GenerationTrace;
+  maximum: number;
+  marker: string;
+  arrived: number;
+  packetX: number;
+  left: number;
+  scale: number;
+  probability: number;
+}) {
+  return (
+    <g
+      key={tokenId}
+      data-cinema-probability-id={tokenId}
+      data-selected={active ? "true" : "false"}
+    >
+      <CinemaLabel
+        x={mobile ? 52 : 100}
+        y={y + 6}
+        size={mobile ? 24 : 28}
+        active={active}
+      >
+        {tokenId}{" "}
+        {FLOW_VOCABULARY[tokenId]?.isEnd
+          ? "終"
+          : FLOW_VOCABULARY[tokenId]?.piece}
+      </CinemaLabel>
+      <CinemaValue
+        x={mobile ? 165 : 330}
+        y={y}
+        width={mobile ? 120 : 220}
+        height={mobile ? 42 : 46}
+        value={requiredValue(trace.logits, tokenId)}
+        limit={maximum}
+        active={active}
+      />
+      <CinemaArrow
+        path={`M${mobile ? "233" : "475"} ${svgNumber(y)} H${mobile ? "262" : "640"}`}
+        marker={marker}
+        width={2}
+      />
+      {arrived < 1 && (
+        <circle
+          cx={svgNumber(packetX)}
+          cy={svgNumber(y)}
+          r="5"
+          className="fill-primary"
+        />
+      )}
+      <rect
+        x={svgNumber(left)}
+        y={svgNumber(y - 13)}
+        width={svgNumber(scale)}
+        height="26"
+        rx="4"
+        className="fill-muted"
+      />
+      <rect
+        x={svgNumber(left)}
+        y={svgNumber(y - 13)}
+        width={svgNumber(probability * scale)}
+        height="26"
+        rx="4"
+        fillOpacity={svgNumber(0.25 + arrived * 0.75)}
+        className={active ? "fill-chart-2" : "fill-primary"}
+        data-cinema-probability-width={svgNumber(probability)}
+      />
+      <CinemaLabel
+        x={mobile ? 548 : 1260}
+        y={y + 7}
+        size={mobile ? 24 : 30}
+        active={active}
+      >
+        {(probability * 100).toFixed(1)}%
+      </CinemaLabel>
     </g>
   );
 }
@@ -387,32 +434,15 @@ function ProbabilityIntervals({
   );
   return (
     <g data-cinema-intervals>
-      <CinemaLabel
-        x={mobile ? 300 : 270}
-        y={mobile ? 480 : 515}
-        size={mobile ? 25 : 28}
-      >
-        ID {representative}：{cinemaNumber(numerator)} /{" "}
-        {cinemaNumber(denominator)} ≈{" "}
-        {cinemaNumber(requiredValue(trace.probabilities, representative))}
-      </CinemaLabel>
-      <CinemaLabel
-        x={mobile ? 300 : 1200}
-        y={mobile ? 515 : 505}
-        size={mobile ? 25 : 28}
-      >
-        Σa = {cinemaNumber(denominator)} ／ Σπ = {sum.toFixed(3)}
-      </CinemaLabel>
-      <CinemaLabel x={mobile ? 300 : 200} y={mobile ? 697 : 565} size={24}>
-        aᵢ = exp((zᵢ − max z) / T)
-      </CinemaLabel>
-      <CinemaLabel
-        x={mobile ? 300 : 200}
-        y={mobile ? (selecting ? 835 : 735) : 610}
-        size={24}
-      >
-        T = {cinemaNumber(trace.temperature)} ／ πᵢ = aᵢ / Σa
-      </CinemaLabel>
+      <ProbabilityFormula
+        mobile={mobile}
+        representative={representative}
+        numerator={numerator}
+        denominator={denominator}
+        trace={trace}
+        sum={sum}
+        selecting={selecting}
+      />
       {intervals.map((interval) => {
         const active = selected && interval.id === selection.id;
         return (
@@ -488,6 +518,55 @@ function ProbabilityIntervals({
           )}
         </g>
       )}
+    </g>
+  );
+}
+
+function ProbabilityFormula({
+  mobile,
+  representative,
+  numerator,
+  denominator,
+  trace,
+  sum,
+  selecting,
+}: {
+  mobile: boolean;
+  representative: number;
+  numerator: number;
+  denominator: number;
+  trace: GenerationTrace;
+  sum: number;
+  selecting: boolean;
+}) {
+  return (
+    <g data-cinema-probability-formula>
+      <CinemaLabel
+        x={mobile ? 300 : 270}
+        y={mobile ? 480 : 515}
+        size={mobile ? 25 : 28}
+      >
+        ID {representative}：{cinemaNumber(numerator)} /{" "}
+        {cinemaNumber(denominator)} ≈{" "}
+        {cinemaNumber(requiredValue(trace.probabilities, representative))}
+      </CinemaLabel>
+      <CinemaLabel
+        x={mobile ? 300 : 1200}
+        y={mobile ? 515 : 505}
+        size={mobile ? 25 : 28}
+      >
+        Σa = {cinemaNumber(denominator)} ／ Σπ = {sum.toFixed(3)}
+      </CinemaLabel>
+      <CinemaLabel x={mobile ? 300 : 200} y={mobile ? 697 : 565} size={24}>
+        aᵢ = exp((zᵢ − max z) / T)
+      </CinemaLabel>
+      <CinemaLabel
+        x={mobile ? 300 : 200}
+        y={mobile ? (selecting ? 835 : 735) : 610}
+        size={24}
+      >
+        T = {cinemaNumber(trace.temperature)} ／ πᵢ = aᵢ / Σa
+      </CinemaLabel>
     </g>
   );
 }
@@ -707,13 +786,11 @@ export function CinemaDecode({
   const oldText = decodeFlow(trace.ids);
   const nextIds = selection.isEnd ? trace.ids : [...trace.ids, selection.id];
   const text = ready && !selection.isEnd ? decodeFlow(nextIds) : oldText;
-  const source = { x: mobile ? 300 : 150, y: mobile ? 56 : 285 };
-  const lookupY = (mobile ? 170 : 135) + selection.id * (mobile ? 34 : 49);
-  const kept = { x: mobile ? 300 : 1060, y: mobile ? 665 : 385 };
-  const nextY = mobile ? 785 : 535;
-  const gap = mobile ? 138 : 120;
-  const firstX = (mobile ? 300 : 1110) - ((nextIds.length - 1) * gap) / 2;
-  const finalX = firstX + (nextIds.length - 1) * gap;
+  const { kept, finalX, nextY, source, lookupY, firstX, gap } = decodeLayout(
+    mobile,
+    selection,
+    nextIds
+  );
   const flight = returning && !selection.isEnd ? progress : 0;
   const flightPoint = pathPoint(
     [
@@ -747,6 +824,90 @@ export function CinemaDecode({
         }
         marker={marker}
       />
+      <DecodedText
+        mobile={mobile}
+        ready={ready}
+        selection={selection}
+        text={text}
+      />
+      <CinemaArrow
+        path={mobile ? "M233 56 H45 V665 H226" : "M150 322 V585 H1060 V425"}
+        marker={marker}
+        secondary
+      />
+      <CinemaLabel
+        x={mobile ? 300 : 620}
+        y={mobile ? 625 : 620}
+        size={mobile ? 24 : 29}
+      >
+        同じ整数IDを保持
+      </CinemaLabel>
+      <IdTile x={kept.x} y={kept.y} id={selection.id} active />
+      {returning && !selection.isEnd && (
+        <DecodeNextInput
+          kept={kept}
+          finalX={finalX}
+          nextY={nextY}
+          marker={marker}
+          mobile={mobile}
+          nextIds={nextIds}
+          progress={progress}
+          firstX={firstX}
+          gap={gap}
+          flight={flight}
+          selection={selection}
+          flightPoint={flightPoint}
+        />
+      )}
+      {selection.isEnd && ready && (
+        <CinemaLabel
+          x={mobile ? 300 : 1110}
+          y={mobile ? 790 : 540}
+          size={30}
+          active
+        >
+          生成終了
+        </CinemaLabel>
+      )}
+      {!returning && (
+        <LookupFlight
+          selection={selection}
+          mobile={mobile}
+          progress={progress}
+        />
+      )}
+    </g>
+  );
+}
+
+function decodeLayout(
+  mobile: boolean,
+  selection: GenerationSelection,
+  nextIds: readonly number[]
+) {
+  const source = { x: mobile ? 300 : 150, y: mobile ? 56 : 285 };
+  const lookupY = (mobile ? 170 : 135) + selection.id * (mobile ? 34 : 49);
+  const kept = { x: mobile ? 300 : 1060, y: mobile ? 665 : 385 };
+  const nextY = mobile ? 785 : 535;
+  const gap = mobile ? 138 : 120;
+  const firstX = (mobile ? 300 : 1110) - ((nextIds.length - 1) * gap) / 2;
+  const finalX = firstX + (nextIds.length - 1) * gap;
+  return { kept, finalX, nextY, source, lookupY, firstX, gap };
+}
+
+function DecodedText({
+  mobile,
+  ready,
+  selection,
+  text,
+}: {
+  mobile: boolean;
+  ready: boolean;
+  selection: GenerationSelection;
+  text: string;
+}) {
+  return (
+    <g data-cinema-decoded-text>
       <rect
         x={mobile ? "100" : "865"}
         y={mobile ? "505" : "120"}
@@ -771,81 +932,78 @@ export function CinemaDecode({
       >
         {selection.isEnd && ready ? "終了：表示文字なし" : `「${text}」`}
       </CinemaLabel>
+    </g>
+  );
+}
+
+function DecodeNextInput({
+  kept,
+  finalX,
+  nextY,
+  marker,
+  mobile,
+  nextIds,
+  progress,
+  firstX,
+  gap,
+  flight,
+  selection,
+  flightPoint,
+}: {
+  kept: { x: number; y: number };
+  finalX: number;
+  nextY: number;
+  marker: string;
+  mobile: boolean;
+  nextIds: readonly number[];
+  progress: number;
+  firstX: number;
+  gap: number;
+  flight: number;
+  selection: GenerationSelection;
+  flightPoint: { x: number; y: number };
+}) {
+  return (
+    <g data-cinema-next-input>
       <CinemaArrow
-        path={mobile ? "M233 56 H45 V665 H226" : "M150 322 V585 H1060 V425"}
+        path={`M${svgNumber(kept.x + 67)} ${svgNumber(kept.y)} H${svgNumber(finalX)} V${svgNumber(nextY - 40)}`}
         marker={marker}
-        secondary
       />
       <CinemaLabel
-        x={mobile ? 300 : 620}
-        y={mobile ? 625 : 620}
-        size={mobile ? 24 : 29}
+        x={mobile ? 300 : 1110}
+        y={mobile ? 729 : 480}
+        size={mobile ? 26 : 28}
       >
-        同じ整数IDを保持
+        次の予測に渡すID列
       </CinemaLabel>
-      <IdTile x={kept.x} y={kept.y} id={selection.id} active />
-      {returning && !selection.isEnd && (
-        <g data-cinema-next-input>
-          <CinemaArrow
-            path={`M${svgNumber(kept.x + 67)} ${svgNumber(kept.y)} H${svgNumber(finalX)} V${svgNumber(nextY - 40)}`}
-            marker={marker}
+      {nextIds.map((id, index) => (
+        <g
+          key={`${index}-${id}`}
+          opacity={index === nextIds.length - 1 && progress < 0.95 ? "0" : "1"}
+        >
+          <IdTile
+            x={firstX + index * gap}
+            y={nextY}
+            id={id}
+            active={index === nextIds.length - 1}
+            width={mobile ? 124 : 108}
           />
-          <CinemaLabel
-            x={mobile ? 300 : 1110}
-            y={mobile ? 729 : 480}
-            size={mobile ? 26 : 28}
-          >
-            次の予測に渡すID列
-          </CinemaLabel>
-          {nextIds.map((id, index) => (
-            <g
-              key={`${index}-${id}`}
-              opacity={
-                index === nextIds.length - 1 && progress < 0.95 ? "0" : "1"
-              }
-            >
-              <IdTile
-                x={firstX + index * gap}
-                y={nextY}
-                id={id}
-                active={index === nextIds.length - 1}
-                width={mobile ? 124 : 108}
-              />
-            </g>
-          ))}
-          {flight > 0 && flight < 1 && (
-            <g data-cinema-returning-id data-returning-integer={selection.id}>
-              <circle
-                cx={svgNumber(flightPoint.x)}
-                cy={svgNumber(flightPoint.y)}
-                r="10"
-                strokeWidth="3"
-                className="fill-primary stroke-background"
-              />
-            </g>
-          )}
-          <CinemaLabel x={mobile ? 300 : 1110} y={mobile ? 844 : 620} size={24}>
-            このID列での再計算は次の一巡
-          </CinemaLabel>
+        </g>
+      ))}
+      {flight > 0 && flight < 1 && (
+        <g data-cinema-returning-id data-returning-integer={selection.id}>
+          <circle
+            cx={svgNumber(flightPoint.x)}
+            cy={svgNumber(flightPoint.y)}
+            r="10"
+            strokeWidth="3"
+            className="fill-primary stroke-background"
+          />
         </g>
       )}
-      {selection.isEnd && ready && (
-        <CinemaLabel
-          x={mobile ? 300 : 1110}
-          y={mobile ? 790 : 540}
-          size={30}
-          active
-        >
-          生成終了
-        </CinemaLabel>
-      )}
-      {!returning && (
-        <LookupFlight
-          selection={selection}
-          mobile={mobile}
-          progress={progress}
-        />
-      )}
+      <CinemaLabel x={mobile ? 300 : 1110} y={mobile ? 844 : 620} size={24}>
+        このID列での再計算は次の一巡
+      </CinemaLabel>
     </g>
   );
 }

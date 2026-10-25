@@ -159,25 +159,7 @@ export const demo: DemoModule = {
         );
         const showGrid = params["grid"] === true;
         cells.visible = showGrid;
-        if (showGrid) {
-          for (let i = 0; i < fluid.numX; i++) {
-            for (let j = 0; j < fluid.numY; j++) {
-              const type = fluid.typeAt(i, j);
-              const k = (j * fluid.numX + i) * 4;
-              const rgb =
-                type === 0
-                  ? [40, 110, 200]
-                  : type === 2
-                    ? [90, 96, 110]
-                    : [14, 18, 26];
-              data[k] = rgb[0] ?? 0;
-              data[k + 1] = rgb[1] ?? 0;
-              data[k + 2] = rgb[2] ?? 0;
-              data[k + 3] = ((i + j) % 2) * 40 + 200;
-            }
-          }
-          texture.needsUpdate = true;
-        }
+        renderFluidGrid(showGrid);
         context.readout("粒子", `${fluid.count}`);
         context.readout("格子", `${fluid.numX}×${fluid.numY}`);
         context.caption(
@@ -185,5 +167,27 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderFluidGrid(showGrid: boolean) {
+      if (showGrid) {
+        for (let i = 0; i < fluid.numX; i++) {
+          for (let j = 0; j < fluid.numY; j++) {
+            const type = fluid.typeAt(i, j);
+            const k = (j * fluid.numX + i) * 4;
+            const rgb =
+              type === 0
+                ? [40, 110, 200]
+                : type === 2
+                  ? [90, 96, 110]
+                  : [14, 18, 26];
+            data[k] = rgb[0] ?? 0;
+            data[k + 1] = rgb[1] ?? 0;
+            data[k + 2] = rgb[2] ?? 0;
+            data[k + 3] = ((i + j) % 2) * 40 + 200;
+          }
+        }
+        texture.needsUpdate = true;
+      }
+    }
   },
 };

@@ -57,45 +57,7 @@ function createJelly(offset: Vector3, color: string): Jelly {
     springs.push({ a, b, rest, kind });
   };
   for (let k = 0; k < N; k++) {
-    for (let j = 0; j < N; j++) {
-      for (let i = 0; i < N; i++) {
-        const a = id(i, j, k);
-        for (let dk = -1; dk <= 1; dk++) {
-          for (let dj = -1; dj <= 1; dj++) {
-            for (let di = -1; di <= 1; di++) {
-              const ni = i + di;
-              const nj = j + dj;
-              const nk = k + dk;
-              const b = id(ni, nj, nk);
-              if (
-                ni < 0 ||
-                nj < 0 ||
-                nk < 0 ||
-                ni >= N ||
-                nj >= N ||
-                nk >= N ||
-                b <= a
-              ) {
-                continue;
-              }
-              const manhattan = Math.abs(di) + Math.abs(dj) + Math.abs(dk);
-              // 隣（構造）と、斜め（せん断）のばね
-              connect(a, b, manhattan === 1 ? STRUCTURAL : SHEAR);
-            }
-          }
-        }
-        // 1 つ飛ばしの点（曲げ）のばね
-        for (const [di, dj, dk] of [
-          [2, 0, 0],
-          [0, 2, 0],
-          [0, 0, 2],
-        ] as const) {
-          if (i + di < N && j + dj < N && k + dk < N) {
-            connect(a, id(i + di, j + dj, k + dk), BEND);
-          }
-        }
-      }
-    }
+    connectJellyLayer(id, k, connect);
   }
   // 表示用の箱：頂点を、同じ位置にある点に対応づける
   const geometry = new BoxGeometry(SIZE, SIZE, SIZE, N - 1, N - 1, N - 1);
@@ -259,39 +221,7 @@ export const demo: DemoModule = {
         forces[b * 3 + 1] = (forces[b * 3 + 1] ?? 0) - f * ny;
         forces[b * 3 + 2] = (forces[b * 3 + 2] ?? 0) - f * nz;
       }
-      for (let index = 0; index < N * N * N; index++) {
-        const i3 = index * 3;
-        // 半陰的オイラー法：速度を先に更新して、新しい速度で位置を進める
-        for (let axis = 0; axis < 3; axis++) {
-          v[i3 + axis] =
-            ((v[i3 + axis] ?? 0) + ((forces[i3 + axis] ?? 0) / MASS) * dt) *
-            0.9995;
-          p[i3 + axis] = (p[i3 + axis] ?? 0) + (v[i3 + axis] ?? 0) * dt;
-        }
-        // 床：めり込んだら押し戻し、摩擦で横の動きを弱める
-        if ((p[i3 + 1] ?? 0) < 0) {
-          p[i3 + 1] = 0;
-          v[i3 + 1] = Math.max(0, v[i3 + 1] ?? 0);
-          v[i3] = (v[i3] ?? 0) * 0.9;
-          v[i3 + 2] = (v[i3 + 2] ?? 0) * 0.9;
-        }
-        // 円柱の出っ張り
-        const rx = (p[i3] ?? 0) - BUMP.x;
-        const rz = (p[i3 + 2] ?? 0) - BUMP.z;
-        const radial = Math.hypot(rx, rz);
-        const y = p[i3 + 1] ?? 0;
-        if (radial < BUMP.radius && y < BUMP.height) {
-          const pushSide = BUMP.radius - radial;
-          const pushTop = BUMP.height - y;
-          if (pushTop < pushSide) {
-            p[i3 + 1] = BUMP.height;
-            v[i3 + 1] = Math.max(0, v[i3 + 1] ?? 0);
-          } else if (radial > 1e-6) {
-            p[i3] = BUMP.x + (rx / radial) * BUMP.radius;
-            p[i3 + 2] = BUMP.z + (rz / radial) * BUMP.radius;
-          }
-        }
-      }
+      integrateJellyParticles(v, dt, p);
     };
 
     return {
@@ -328,29 +258,7 @@ export const demo: DemoModule = {
           jelly.mesh.geometry.computeVertexNormals();
         }
         const showSprings = params["springs"] === true;
-        for (const [kind, line] of lines.entries()) {
-          const visible =
-            showSprings &&
-            (kind === STRUCTURAL ||
-              (kind === SHEAR && useShear) ||
-              (kind === BEND && useBend));
-          line.visible = visible;
-          if (!visible) {
-            continue;
-          }
-          const points: Vector3[] = [];
-          for (const jelly of jellies) {
-            for (const spring of jelly.springs) {
-              if (spring.kind === kind) {
-                points.push(
-                  new Vector3().fromArray(jelly.positions, spring.a * 3),
-                  new Vector3().fromArray(jelly.positions, spring.b * 3)
-                );
-              }
-            }
-          }
-          line.setPoints(points);
-        }
+        renderSpringLines(showSprings, useShear, useBend);
         for (const jelly of jellies) {
           jelly.mesh.material.opacity = showSprings ? 0.35 : 1;
           jelly.mesh.material.transparent = showSprings;
@@ -365,5 +273,132 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderSpringLines(
+      showSprings: boolean,
+      useShear: boolean,
+      useBend: boolean
+    ) {
+      for (const [kind, line] of lines.entries()) {
+        const visible =
+          showSprings &&
+          (kind === STRUCTURAL ||
+            (kind === SHEAR && useShear) ||
+            (kind === BEND && useBend));
+        line.visible = visible;
+        if (!visible) {
+          continue;
+        }
+        const points: Vector3[] = [];
+        for (const jelly of jellies) {
+          for (const spring of jelly.springs) {
+            if (spring.kind === kind) {
+              points.push(
+                new Vector3().fromArray(jelly.positions, spring.a * 3),
+                new Vector3().fromArray(jelly.positions, spring.b * 3)
+              );
+            }
+          }
+        }
+        line.setPoints(points);
+      }
+    }
+
+    function integrateJellyParticles(
+      v: Float32Array,
+      dt: number,
+      p: Float32Array
+    ) {
+      for (let index = 0; index < N * N * N; index++) {
+        const i3 = index * 3;
+        // 半陰的オイラー法：速度を先に更新して、新しい速度で位置を進める
+        for (let axis = 0; axis < 3; axis++) {
+          v[i3 + axis] =
+            ((v[i3 + axis] ?? 0) + ((forces[i3 + axis] ?? 0) / MASS) * dt) *
+            0.9995;
+          p[i3 + axis] = (p[i3 + axis] ?? 0) + (v[i3 + axis] ?? 0) * dt;
+        }
+        // 床：めり込んだら押し戻し、摩擦で横の動きを弱める
+        if ((p[i3 + 1] ?? 0) < 0) {
+          p[i3 + 1] = 0;
+          v[i3 + 1] = Math.max(0, v[i3 + 1] ?? 0);
+          v[i3] = (v[i3] ?? 0) * 0.9;
+          v[i3 + 2] = (v[i3 + 2] ?? 0) * 0.9;
+        }
+        // 円柱の出っ張り
+        const rx = (p[i3] ?? 0) - BUMP.x;
+        const rz = (p[i3 + 2] ?? 0) - BUMP.z;
+        const radial = Math.hypot(rx, rz);
+        const y = p[i3 + 1] ?? 0;
+        if (radial < BUMP.radius && y < BUMP.height) {
+          const pushSide = BUMP.radius - radial;
+          const pushTop = BUMP.height - y;
+          if (pushTop < pushSide) {
+            p[i3 + 1] = BUMP.height;
+            v[i3 + 1] = Math.max(0, v[i3 + 1] ?? 0);
+          } else if (radial > 1e-6) {
+            p[i3] = BUMP.x + (rx / radial) * BUMP.radius;
+            p[i3 + 2] = BUMP.z + (rz / radial) * BUMP.radius;
+          }
+        }
+      }
+    }
   },
 };
+
+function connectJellyLayer(
+  id: (i: number, j: number, k: number) => number,
+  k: number,
+  connect: (a: number, b: number, kind: number) => void
+) {
+  for (let j = 0; j < N; j++) {
+    for (let i = 0; i < N; i++) {
+      const a = id(i, j, k);
+      connectLatticeNeighbors(i, j, k, id, a, connect);
+      // 1 つ飛ばしの点（曲げ）のばね
+      for (const [di, dj, dk] of [
+        [2, 0, 0],
+        [0, 2, 0],
+        [0, 0, 2],
+      ] as const) {
+        if (i + di < N && j + dj < N && k + dk < N) {
+          connect(a, id(i + di, j + dj, k + dk), BEND);
+        }
+      }
+    }
+  }
+}
+
+function connectLatticeNeighbors(
+  i: number,
+  j: number,
+  k: number,
+  id: (i: number, j: number, k: number) => number,
+  a: number,
+  connect: (a: number, b: number, kind: number) => void
+) {
+  for (let dk = -1; dk <= 1; dk++) {
+    for (let dj = -1; dj <= 1; dj++) {
+      for (let di = -1; di <= 1; di++) {
+        const ni = i + di;
+        const nj = j + dj;
+        const nk = k + dk;
+        const b = id(ni, nj, nk);
+        if (
+          ni < 0 ||
+          nj < 0 ||
+          nk < 0 ||
+          ni >= N ||
+          nj >= N ||
+          nk >= N ||
+          b <= a
+        ) {
+          continue;
+        }
+        const manhattan = Math.abs(di) + Math.abs(dj) + Math.abs(dk);
+        // 隣（構造）と、斜め（せん断）のばね
+        connect(a, b, manhattan === 1 ? STRUCTURAL : SHEAR);
+      }
+    }
+  }
+}

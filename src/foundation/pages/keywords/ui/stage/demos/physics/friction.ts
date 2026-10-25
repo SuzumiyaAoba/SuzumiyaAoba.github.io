@@ -197,70 +197,7 @@ export const demo: DemoModule = {
         const substeps = 8;
         const h = dt / substeps;
         const steps = dt > 0 ? substeps : 0;
-        for (const box of boxes) {
-          const mu = combine(mode, box.friction, FLOOR_FRICTION);
-          const staticMu = mu;
-          const kineticMu = mu * 0.8;
-          for (let s = 0; s < steps; s++) {
-            const onRamp = box.s < RAMP_LENGTH;
-            const slope = onRamp ? angle : 0;
-            const drive = GRAVITY * Math.sin(slope);
-            const maxFriction = GRAVITY * Math.cos(slope);
-            if (Math.abs(box.v) < 1e-3) {
-              // 静止摩擦：坂を下る力が「静止摩擦係数 × 垂直抗力」以下なら動かない
-              if (drive > staticMu * maxFriction) {
-                box.v += (drive - kineticMu * maxFriction) * h;
-              } else {
-                box.v = 0;
-              }
-            } else {
-              // 動摩擦：動いている向きと逆に、一定の大きさで働く
-              box.v += (drive - kineticMu * maxFriction) * h;
-              if (box.v < 0) {
-                box.v = 0;
-              }
-            }
-            box.s += box.v * h;
-            // 右端の車止めでぶつかって止まる
-            const limit = RAMP_LENGTH + (STOPPER_X - BOX / 2 - rampBottom.x);
-            if (box.s > limit) {
-              box.s = limit;
-              box.v = 0;
-            }
-          }
-          if (box.s < RAMP_LENGTH) {
-            point
-              .copy(RAMP_TOP)
-              .setY(rampHeight)
-              .addScaledVector(along, box.s)
-              .addScaledVector(normal, BOX / 2);
-            box.mesh.rotation.z = -angle;
-          } else {
-            point
-              .copy(rampBottom)
-              .setY(BOX / 2)
-              .add(new Vector3(box.s - RAMP_LENGTH, 0, 0));
-            box.mesh.rotation.z = 0;
-          }
-          point.z = box.z;
-          box.mesh.position.copy(point);
-          box.label.position.copy(point).add(new Vector3(0, 0.45, 0));
-          const onRamp = box.s < RAMP_LENGTH;
-          const direction = onRamp ? along : new Vector3(1, 0, 0);
-          const gravityPart = onRamp ? Math.sin(angle) : 0;
-          const moving = box.v > 1e-3;
-          const frictionSize = moving
-            ? kineticMu * (onRamp ? Math.cos(angle) : 1)
-            : Math.min(gravityPart, staticMu * Math.cos(angle));
-          box.gravityArrow.set(
-            point.clone().add(new Vector3(0, 0, 0.26)),
-            direction.clone().multiplyScalar(gravityPart * 0.8)
-          );
-          box.frictionArrow.set(
-            point.clone().add(new Vector3(0, 0, 0.26)),
-            direction.clone().multiplyScalar(-frictionSize * 0.8)
-          );
-        }
+        advanceFrictionBoxes(mode, steps, angle, h, rampBottom, rampHeight);
 
         const floorRestitution = Number(params["floor"]);
         // 全部のボールが止まってしばらくしたら、もう一度落とす
@@ -278,23 +215,7 @@ export const demo: DemoModule = {
         }
         for (const ball of balls) {
           const e = combine(mode, ball.restitution, floorRestitution);
-          for (let s = 0; s < steps; s++) {
-            ball.vy -= GRAVITY * h;
-            ball.y += ball.vy * h;
-            if (ball.y < BALL_RADIUS) {
-              ball.y = BALL_RADIUS;
-              // 反発係数：ぶつかる前の速さに対する、跳ね返った後の速さの比
-              ball.vy = Math.abs(ball.vy) < 0.3 ? 0 : -ball.vy * e;
-              ball.rising = true;
-              ball.apex = BALL_RADIUS;
-            }
-            if (ball.rising && ball.vy <= 0) {
-              ball.rising = false;
-            }
-            if (ball.rising) {
-              ball.apex = Math.max(ball.apex, ball.y);
-            }
-          }
+          integrateBouncingBall(steps, ball, h, e);
           ball.mesh.position.set(ball.x, ball.y, 0);
           ball.label.position.set(ball.x, ball.y + 0.5, 0);
           ball.marker.position.set(ball.x, ball.apex, -0.3);
@@ -315,5 +236,116 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function integrateBouncingBall(
+      steps: number,
+      ball: (typeof balls)[number],
+      h: number,
+      e: number
+    ) {
+      for (let s = 0; s < steps; s++) {
+        ball.vy -= GRAVITY * h;
+        ball.y += ball.vy * h;
+        if (ball.y < BALL_RADIUS) {
+          ball.y = BALL_RADIUS;
+          // 反発係数：ぶつかる前の速さに対する、跳ね返った後の速さの比
+          ball.vy = Math.abs(ball.vy) < 0.3 ? 0 : -ball.vy * e;
+          ball.rising = true;
+          ball.apex = BALL_RADIUS;
+        }
+        if (ball.rising && ball.vy <= 0) {
+          ball.rising = false;
+        }
+        if (ball.rising) {
+          ball.apex = Math.max(ball.apex, ball.y);
+        }
+      }
+    }
+
+    function advanceFrictionBoxes(
+      mode: Combine,
+      steps: number,
+      angle: number,
+      h: number,
+      rampBottom: Vector3,
+      rampHeight: number
+    ) {
+      for (const box of boxes) {
+        const mu = combine(mode, box.friction, FLOOR_FRICTION);
+        const staticMu = mu;
+        const kineticMu = mu * 0.8;
+        integrateRampBox(steps, box, angle, staticMu, kineticMu, h, rampBottom);
+        if (box.s < RAMP_LENGTH) {
+          point
+            .copy(RAMP_TOP)
+            .setY(rampHeight)
+            .addScaledVector(along, box.s)
+            .addScaledVector(normal, BOX / 2);
+          box.mesh.rotation.z = -angle;
+        } else {
+          point
+            .copy(rampBottom)
+            .setY(BOX / 2)
+            .add(new Vector3(box.s - RAMP_LENGTH, 0, 0));
+          box.mesh.rotation.z = 0;
+        }
+        point.z = box.z;
+        box.mesh.position.copy(point);
+        box.label.position.copy(point).add(new Vector3(0, 0.45, 0));
+        const onRamp = box.s < RAMP_LENGTH;
+        const direction = onRamp ? along : new Vector3(1, 0, 0);
+        const gravityPart = onRamp ? Math.sin(angle) : 0;
+        const moving = box.v > 1e-3;
+        const frictionSize = moving
+          ? kineticMu * (onRamp ? Math.cos(angle) : 1)
+          : Math.min(gravityPart, staticMu * Math.cos(angle));
+        box.gravityArrow.set(
+          point.clone().add(new Vector3(0, 0, 0.26)),
+          direction.clone().multiplyScalar(gravityPart * 0.8)
+        );
+        box.frictionArrow.set(
+          point.clone().add(new Vector3(0, 0, 0.26)),
+          direction.clone().multiplyScalar(-frictionSize * 0.8)
+        );
+      }
+    }
+
+    function integrateRampBox(
+      steps: number,
+      box: (typeof boxes)[number],
+      angle: number,
+      staticMu: number,
+      kineticMu: number,
+      h: number,
+      rampBottom: Vector3
+    ) {
+      for (let s = 0; s < steps; s++) {
+        const onRamp = box.s < RAMP_LENGTH;
+        const slope = onRamp ? angle : 0;
+        const drive = GRAVITY * Math.sin(slope);
+        const maxFriction = GRAVITY * Math.cos(slope);
+        if (Math.abs(box.v) < 1e-3) {
+          // 静止摩擦：坂を下る力が「静止摩擦係数 × 垂直抗力」以下なら動かない
+          if (drive > staticMu * maxFriction) {
+            box.v += (drive - kineticMu * maxFriction) * h;
+          } else {
+            box.v = 0;
+          }
+        } else {
+          // 動摩擦：動いている向きと逆に、一定の大きさで働く
+          box.v += (drive - kineticMu * maxFriction) * h;
+          if (box.v < 0) {
+            box.v = 0;
+          }
+        }
+        box.s += box.v * h;
+        // 右端の車止めでぶつかって止まる
+        const limit = RAMP_LENGTH + (STOPPER_X - BOX / 2 - rampBottom.x);
+        if (box.s > limit) {
+          box.s = limit;
+          box.v = 0;
+        }
+      }
+    }
   },
 };

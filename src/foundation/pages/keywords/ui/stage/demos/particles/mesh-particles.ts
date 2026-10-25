@@ -168,44 +168,7 @@ export const demo: DemoModule = {
         boulder.visible = !broken;
         const count = Number(params["count"]);
         const meshMode = params["mode"] === "mesh";
-        for (let index = 0; index < count; index++) {
-          const position = positions[index];
-          const velocity = velocities[index];
-          const spin = spins[index];
-          const rotation = rotations[index];
-          if (!(position && velocity && spin && rotation)) {
-            continue;
-          }
-          const size = (scales[index] ?? 1) * 0.1;
-          if (broken && dt > 0) {
-            velocity.y -= GRAVITY * dt;
-            position.addScaledVector(velocity, dt);
-            if (position.y < size && velocity.y < 0) {
-              position.y = size;
-              velocity.y *= -0.35;
-              velocity.x *= 0.7;
-              velocity.z *= 0.7;
-              spin.multiplyScalar(0.6);
-            }
-            const angle = spin.length() * dt;
-            if (angle > 1e-5) {
-              spinStep.setFromAxisAngle(spin.clone().normalize(), angle);
-              rotation.premultiply(spinStep);
-            }
-          }
-          matrix.compose(
-            broken ? position : new Vector3(0, -50, 0),
-            rotation,
-            scale.setScalar(scales[index] ?? 1)
-          );
-          chunks.setMatrixAt(index, matrix);
-          sprites.positions.set(
-            broken ? [position.x, position.y, position.z] : [0, -50, 0],
-            index * 3
-          );
-          sprites.sizes[index] = size * 2.1;
-          sprites.colors.set([1, 1, 1, 1], index * 4);
-        }
+        renderFragments(count, dt);
         chunks.count = count;
         chunks.instanceMatrix.needsUpdate = true;
         chunks.visible = meshMode;
@@ -221,5 +184,57 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderFragments(count: number, dt: number) {
+      for (let index = 0; index < count; index++) {
+        const position = positions[index];
+        const velocity = velocities[index];
+        const spin = spins[index];
+        const rotation = rotations[index];
+        if (!(position && velocity && spin && rotation)) {
+          continue;
+        }
+        const size = (scales[index] ?? 1) * 0.1;
+        advanceFragment(dt, velocity, position, size, spin, rotation);
+        matrix.compose(
+          broken ? position : new Vector3(0, -50, 0),
+          rotation,
+          scale.setScalar(scales[index] ?? 1)
+        );
+        chunks.setMatrixAt(index, matrix);
+        sprites.positions.set(
+          broken ? [position.x, position.y, position.z] : [0, -50, 0],
+          index * 3
+        );
+        sprites.sizes[index] = size * 2.1;
+        sprites.colors.set([1, 1, 1, 1], index * 4);
+      }
+    }
+
+    function advanceFragment(
+      dt: number,
+      velocity: Vector3,
+      position: Vector3,
+      size: number,
+      spin: Vector3,
+      rotation: Quaternion
+    ) {
+      if (broken && dt > 0) {
+        velocity.y -= GRAVITY * dt;
+        position.addScaledVector(velocity, dt);
+        if (position.y < size && velocity.y < 0) {
+          position.y = size;
+          velocity.y *= -0.35;
+          velocity.x *= 0.7;
+          velocity.z *= 0.7;
+          spin.multiplyScalar(0.6);
+        }
+        const angle = spin.length() * dt;
+        if (angle > 1e-5) {
+          spinStep.setFromAxisAngle(spin.clone().normalize(), angle);
+          rotation.premultiply(spinStep);
+        }
+      }
+    }
   },
 };

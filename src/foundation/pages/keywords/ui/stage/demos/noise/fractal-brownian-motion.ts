@@ -135,32 +135,7 @@ export const demo: DemoModule = {
         }
         section.setPoints(profile);
 
-        for (let index = 0; index <= MAX_OCTAVES; index++) {
-          const line = waves[index];
-          const label = labels[index];
-          if (!(line && label)) {
-            continue;
-          }
-          const isSum = index === MAX_OCTAVES;
-          const visible = showChart && (isSum || index < octaves);
-          line.visible = visible;
-          label.visible = visible;
-          if (!visible) {
-            continue;
-          }
-          const row = isSum ? octaves : index;
-          const baseline = CHART_TOP - row * CHART_STEP;
-          const points: Vector3[] = [];
-          for (let sample = 0; sample <= SAMPLES; sample++) {
-            const x = (sample / SAMPLES - 0.5) * SIZE;
-            const value = isSum
-              ? (height(x, 0) / HEIGHT - 0.35) * 0.45
-              : octave(index, x, 0) * 0.55;
-            points.push(new Vector3(x, baseline + value, CHART_Z));
-          }
-          line.setPoints(points);
-          label.position.set(-SIZE / 2 - 0.35, baseline, CHART_Z);
-        }
+        renderOctaveWaves(showChart, octaves, height, octave);
 
         const finest = BASE_CELL / lacunarity ** (octaves - 1);
         context.readout("最も細かい格子", `${finest.toFixed(3)} m`);
@@ -175,5 +150,39 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderOctaveWaves(
+      showChart: boolean,
+      octaves: number,
+      height: (x: number, z: number) => number,
+      octave: (index: number, x: number, z: number) => number
+    ) {
+      for (let index = 0; index <= MAX_OCTAVES; index++) {
+        const line = waves[index];
+        const label = labels[index];
+        if (!(line && label)) {
+          continue;
+        }
+        const isSum = index === MAX_OCTAVES;
+        const visible = showChart && (isSum || index < octaves);
+        line.visible = visible;
+        label.visible = visible;
+        if (!visible) {
+          continue;
+        }
+        const row = isSum ? octaves : index;
+        const baseline = CHART_TOP - row * CHART_STEP;
+        const points: Vector3[] = [];
+        for (let sample = 0; sample <= SAMPLES; sample++) {
+          const x = (sample / SAMPLES - 0.5) * SIZE;
+          const value = isSum
+            ? (height(x, 0) / HEIGHT - 0.35) * 0.45
+            : octave(index, x, 0) * 0.55;
+          points.push(new Vector3(x, baseline + value, CHART_Z));
+        }
+        line.setPoints(points);
+        label.position.set(-SIZE / 2 - 0.35, baseline, CHART_Z);
+      }
+    }
   },
 };

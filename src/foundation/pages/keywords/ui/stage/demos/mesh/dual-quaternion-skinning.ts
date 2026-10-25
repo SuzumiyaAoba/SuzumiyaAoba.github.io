@@ -169,71 +169,15 @@ export const demo: DemoModule = {
           const positions = row.geometry.getAttribute("position");
           const { array } = positions;
           let smallest = Number.POSITIVE_INFINITY;
-          for (const [index, p] of rest.entries()) {
-            const x = along[index] ?? 0;
-            // 下の骨の重み：関節の前後 width の範囲でなめらかに 0 → 1
-            const t = Math.min(1, Math.max(0, (x + width / 2) / width));
-            const w = t * t * (3 - 2 * t);
-            if (row.key === "lbs") {
-              // 2 つの変換をそれぞれ当てた位置を、重みで平均する（行列の線形ブレンドと同じ）
-              point
-                .copy(p)
-                .applyQuaternion(rotation)
-                .add(translation)
-                .multiplyScalar(w)
-                .addScaledVector(p, 1 - w);
-            } else {
-              // デュアルクォータニオンを重みで足して正規化し、1 つの剛体変換として当てる
-              const sign = identity.real.dot(moved.real) < 0 ? -1 : 1;
-              const real = new Quaternion(
-                identity.real.x * (1 - w) + moved.real.x * w * sign,
-                identity.real.y * (1 - w) + moved.real.y * w * sign,
-                identity.real.z * (1 - w) + moved.real.z * w * sign,
-                identity.real.w * (1 - w) + moved.real.w * w * sign
-              );
-              const dual = new Quaternion(
-                identity.dual.x * (1 - w) + moved.dual.x * w * sign,
-                identity.dual.y * (1 - w) + moved.dual.y * w * sign,
-                identity.dual.z * (1 - w) + moved.dual.z * w * sign,
-                identity.dual.w * (1 - w) + moved.dual.w * w * sign
-              );
-              const norm = real.length();
-              real.set(
-                real.x / norm,
-                real.y / norm,
-                real.z / norm,
-                real.w / norm
-              );
-              dual.set(
-                dual.x / norm,
-                dual.y / norm,
-                dual.z / norm,
-                dual.w / norm
-              );
-              // 平行移動 t = 2 · dual · conj(real)
-              const t2 = dual.clone().multiply(real.clone().conjugate());
-              point
-                .copy(p)
-                .applyQuaternion(real)
-                .add(new Vector3(t2.x * 2, t2.y * 2, t2.z * 2));
-            }
-            array[index * 3] = point.x;
-            array[index * 3 + 1] = point.y;
-            array[index * 3 + 2] = point.z;
-            if (Math.abs(x) < 0.05) {
-              // 関節の断面の太さ：断面の中心からの距離
-              const center =
-                x < 0
-                  ? new Vector3(x, 0, 0)
-                  : new Vector3(x, 0, 0)
-                      .applyQuaternion(rotation)
-                      .add(translation);
-              smallest = Math.min(
-                smallest,
-                point.distanceTo(center.lerp(new Vector3(x, 0, 0), 0.5))
-              );
-            }
-          }
+          smallest = skinMeshVertices(
+            width,
+            row,
+            translation,
+            identity,
+            moved,
+            array,
+            smallest
+          );
           positions.needsUpdate = true;
           row.geometry.computeVertexNormals();
           minimum[row.key] = smallest;
@@ -265,5 +209,72 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function skinMeshVertices(
+      width: number,
+      row: (typeof rows)[number],
+      translation: Vector3,
+      identity: Dual,
+      moved: Dual,
+      array: ReturnType<BufferGeometry["getAttribute"]>["array"],
+      initialSmallest: number
+    ) {
+      let smallest = initialSmallest;
+
+      for (const [index, p] of rest.entries()) {
+        const x = along[index] ?? 0;
+        // 下の骨の重み：関節の前後 width の範囲でなめらかに 0 → 1
+        const t = Math.min(1, Math.max(0, (x + width / 2) / width));
+        const w = t * t * (3 - 2 * t);
+        if (row.key === "lbs") {
+          // 2 つの変換をそれぞれ当てた位置を、重みで平均する（行列の線形ブレンドと同じ）
+          point
+            .copy(p)
+            .applyQuaternion(rotation)
+            .add(translation)
+            .multiplyScalar(w)
+            .addScaledVector(p, 1 - w);
+        } else {
+          // デュアルクォータニオンを重みで足して正規化し、1 つの剛体変換として当てる
+          const sign = identity.real.dot(moved.real) < 0 ? -1 : 1;
+          const real = new Quaternion(
+            identity.real.x * (1 - w) + moved.real.x * w * sign,
+            identity.real.y * (1 - w) + moved.real.y * w * sign,
+            identity.real.z * (1 - w) + moved.real.z * w * sign,
+            identity.real.w * (1 - w) + moved.real.w * w * sign
+          );
+          const dual = new Quaternion(
+            identity.dual.x * (1 - w) + moved.dual.x * w * sign,
+            identity.dual.y * (1 - w) + moved.dual.y * w * sign,
+            identity.dual.z * (1 - w) + moved.dual.z * w * sign,
+            identity.dual.w * (1 - w) + moved.dual.w * w * sign
+          );
+          const norm = real.length();
+          real.set(real.x / norm, real.y / norm, real.z / norm, real.w / norm);
+          dual.set(dual.x / norm, dual.y / norm, dual.z / norm, dual.w / norm);
+          // 平行移動 t = 2 · dual · conj(real)
+          const t2 = dual.clone().multiply(real.clone().conjugate());
+          point
+            .copy(p)
+            .applyQuaternion(real)
+            .add(new Vector3(t2.x * 2, t2.y * 2, t2.z * 2));
+        }
+        array[index * 3] = point.x;
+        array[index * 3 + 1] = point.y;
+        array[index * 3 + 2] = point.z;
+        if (Math.abs(x) < 0.05) {
+          // 関節の断面の太さ：断面の中心からの距離
+          const center =
+            x < 0
+              ? new Vector3(x, 0, 0)
+              : new Vector3(x, 0, 0).applyQuaternion(rotation).add(translation);
+          smallest = Math.min(
+            smallest,
+            point.distanceTo(center.lerp(new Vector3(x, 0, 0), 0.5))
+          );
+        }
+      }
+      return smallest;
+    }
   },
 };

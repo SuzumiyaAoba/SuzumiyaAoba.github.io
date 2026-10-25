@@ -32,25 +32,13 @@ const normalize = (a: V2) => {
   return length > 0 ? scale(a, 1 / length) : { x: 0, y: 0 };
 };
 
-/** 1 本の直線の上で、ほかの半平面と速さの円を満たす範囲の中から最適な点を選ぶ（RVO2 の linearProgram1）。 */
-function linearProgram1(
+function clipLineRange(
   lines: readonly Line[],
   lineNo: number,
-  radius: number,
-  optimal: V2,
-  directionOpt: boolean
-): V2 | null {
-  const line = lines[lineNo];
-  if (!line) {
-    return null;
-  }
-  const dotProduct = dot(line.point, line.direction);
-  const discriminant =
-    dotProduct * dotProduct + radius * radius - dot(line.point, line.point);
-  if (discriminant < 0) {
-    return null;
-  }
-  const root = Math.sqrt(discriminant);
+  line: Line,
+  dotProduct: number,
+  root: number
+) {
   let tLeft = -dotProduct - root;
   let tRight = -dotProduct + root;
   for (let i = 0; i < lineNo; i++) {
@@ -76,6 +64,33 @@ function linearProgram1(
       return null;
     }
   }
+  return { tLeft, tRight };
+}
+
+/** 1 本の直線の上で、ほかの半平面と速さの円を満たす範囲の中から最適な点を選ぶ（RVO2 の linearProgram1）。 */
+function linearProgram1(
+  lines: readonly Line[],
+  lineNo: number,
+  radius: number,
+  optimal: V2,
+  directionOpt: boolean
+): V2 | null {
+  const line = lines[lineNo];
+  if (!line) {
+    return null;
+  }
+  const dotProduct = dot(line.point, line.direction);
+  const discriminant =
+    dotProduct * dotProduct + radius * radius - dot(line.point, line.point);
+  if (discriminant < 0) {
+    return null;
+  }
+  const root = Math.sqrt(discriminant);
+  const range = clipLineRange(lines, lineNo, line, dotProduct, root);
+  if (!range) {
+    return null;
+  }
+  const { tLeft, tRight } = range;
   if (directionOpt) {
     return add(
       line.point,
@@ -131,32 +146,7 @@ function linearProgram3(
       continue;
     }
     const projected: Line[] = [];
-    for (let j = 0; j < i; j++) {
-      const other = lines[j];
-      if (!other) {
-        continue;
-      }
-      const determinant = det(line.direction, other.direction);
-      let point: V2;
-      if (Math.abs(determinant) <= EPSILON) {
-        if (dot(line.direction, other.direction) > 0) {
-          continue;
-        }
-        point = scale(add(line.point, other.point), 0.5);
-      } else {
-        point = add(
-          line.point,
-          scale(
-            line.direction,
-            det(other.direction, sub(line.point, other.point)) / determinant
-          )
-        );
-      }
-      projected.push({
-        point,
-        direction: normalize(sub(other.direction, line.direction)),
-      });
-    }
+    projectConstraints(i, lines, line, projected);
     const { result: candidate, fail } = linearProgram2(
       projected,
       radius,
@@ -180,6 +170,40 @@ type Agent = {
   lines: Line[];
   preferred: V2;
 };
+
+function projectConstraints(
+  i: number,
+  lines: readonly Line[],
+  line: Line,
+  projected: Line[]
+) {
+  for (let j = 0; j < i; j++) {
+    const other = lines[j];
+    if (!other) {
+      continue;
+    }
+    const determinant = det(line.direction, other.direction);
+    let point: V2;
+    if (Math.abs(determinant) <= EPSILON) {
+      if (dot(line.direction, other.direction) > 0) {
+        continue;
+      }
+      point = scale(add(line.point, other.point), 0.5);
+    } else {
+      point = add(
+        line.point,
+        scale(
+          line.direction,
+          det(other.direction, sub(line.point, other.point)) / determinant
+        )
+      );
+    }
+    projected.push({
+      point,
+      direction: normalize(sub(other.direction, line.direction)),
+    });
+  }
+}
 
 /** 相手 1 体について、ORCA の半平面（ぶつからない速度の側）を作る。 */
 function orcaLine(self: Agent, other: Agent, horizon: number): Line {
@@ -431,55 +455,11 @@ export const demo: DemoModule = {
         const arrived = agents.filter(
           (agent) => lengthOf(sub(agent.goal, agent.position)) < 0.15
         ).length;
-        if (arrived === agents.length) {
-          hold += dt;
-          if (hold > 1) {
-            hold = 0;
-            for (const agent of agents) {
-              if (scenario === "cross") {
-                agent.position = { ...agent.home };
-                agent.velocity = { x: 0, y: 0 };
-              } else {
-                const { goal } = agent;
-                agent.goal = agent.home;
-                agent.home = goal;
-              }
-            }
-          }
-        }
+        restartArrivedAgents(arrived, dt);
         contacts = 0;
         const touching = agents.map(() => false);
-        for (let i = 0; i < agents.length; i++) {
-          for (let j = i + 1; j < agents.length; j++) {
-            const a = agents[i];
-            const b = agents[j];
-            if (
-              a &&
-              b &&
-              lengthOf(sub(a.position, b.position)) < RADIUS * 2 * 0.98
-            ) {
-              contacts++;
-              touching[i] = true;
-              touching[j] = true;
-            }
-          }
-        }
-        for (const [i, agent] of agents.entries()) {
-          position.set(agent.position.x, 0.09, agent.position.y);
-          matrix.makeTranslation(position.x, position.y, position.z);
-          discs.setMatrixAt(i, matrix);
-          const selected = i === 0 && params["lines"] === true;
-          discs.setColorAt(
-            i,
-            touching[i] === true
-              ? coral
-              : selected
-                ? white
-                : (colors[agent.group] ?? white)
-          );
-          velocity.set(agent.velocity.x, 0, agent.velocity.y);
-          heads.set(i, position.clone().setY(0.25), velocity, 0.7);
-        }
+        countOverlappingAgents(touching);
+        renderAgents(touching);
         discs.count = agents.length;
         heads.count = agents.length;
         discs.instanceMatrix.needsUpdate = true;
@@ -539,5 +519,61 @@ export const demo: DemoModule = {
         discs.dispose();
       },
     };
+
+    function countOverlappingAgents(touching: boolean[]) {
+      for (let i = 0; i < agents.length; i++) {
+        for (let j = i + 1; j < agents.length; j++) {
+          const a = agents[i];
+          const b = agents[j];
+          if (
+            a &&
+            b &&
+            lengthOf(sub(a.position, b.position)) < RADIUS * 2 * 0.98
+          ) {
+            contacts++;
+            touching[i] = true;
+            touching[j] = true;
+          }
+        }
+      }
+    }
+
+    function renderAgents(touching: boolean[]) {
+      for (const [i, agent] of agents.entries()) {
+        position.set(agent.position.x, 0.09, agent.position.y);
+        matrix.makeTranslation(position.x, position.y, position.z);
+        discs.setMatrixAt(i, matrix);
+        const selected = i === 0 && params["lines"] === true;
+        discs.setColorAt(
+          i,
+          touching[i] === true
+            ? coral
+            : selected
+              ? white
+              : (colors[agent.group] ?? white)
+        );
+        velocity.set(agent.velocity.x, 0, agent.velocity.y);
+        heads.set(i, position.clone().setY(0.25), velocity, 0.7);
+      }
+    }
+
+    function restartArrivedAgents(arrived: number, dt: number) {
+      if (arrived === agents.length) {
+        hold += dt;
+        if (hold > 1) {
+          hold = 0;
+          for (const agent of agents) {
+            if (scenario === "cross") {
+              agent.position = { ...agent.home };
+              agent.velocity = { x: 0, y: 0 };
+            } else {
+              const { goal } = agent;
+              agent.goal = agent.home;
+              agent.home = goal;
+            }
+          }
+        }
+      }
+    }
   },
 };

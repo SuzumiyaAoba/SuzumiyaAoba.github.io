@@ -292,50 +292,16 @@ export const demo: DemoModule = {
       for (const a of normals) {
         a.visible = false;
       }
-      for (let bounce = 0; bounce <= bounces; bounce++) {
-        let best: (Hit & { shape: Shape }) | null = null;
-        for (const shape of shapes) {
-          tested++;
-          const hit =
-            shape.kind === "sphere"
-              ? raySphere(origin, dir, shape.center, shape.radius)
-              : rayBox(origin, dir, shape.min, shape.max);
-          if (hit) {
-            if (!colors.has(shape.mesh)) {
-              colors.set(shape.mesh, fartherColor);
-            }
-            if (!best || hit.t < best.t) {
-              best = { ...hit, shape };
-            }
-          }
-        }
-        if (!best) {
-          points.push(origin.clone().addScaledVector(dir, 20));
-          break;
-        }
-        colors.set(best.shape.mesh, nearColor);
-        const hitPoint = origin.clone().addScaledVector(dir, best.t);
-        points.push(hitPoint.clone());
-        if (bounce === 0) {
-          first = best.shape.kind === "sphere" ? "球" : "箱";
-          firstDistance = best.t;
-        }
-        const markerMesh = hitMarkers[bounce];
-        const normalArrow = normals[bounce];
-        if (markerMesh && normalArrow) {
-          markerMesh.visible = true;
-          markerMesh.position.copy(hitPoint);
-          normalArrow.visible = true;
-          normalArrow.set(hitPoint, best.normal.clone().multiplyScalar(0.7));
-        }
-        // 反射：d' = d - 2 (d・n) n
-        dir = dir
-          .clone()
-          .addScaledVector(best.normal, -2 * dir.dot(best.normal))
-          .setY(0)
-          .normalize();
-        origin = hitPoint.addScaledVector(best.normal, 1e-3);
-      }
+      ({ origin, dir, first, firstDistance, tested } = traceReflections(
+        bounces,
+        tested,
+        origin,
+        dir,
+        colors,
+        points,
+        first,
+        firstDistance
+      ));
       beam.setPoints(points);
       beamGlow.setPoints(points);
       for (const shape of shapes) {
@@ -366,24 +332,7 @@ export const demo: DemoModule = {
       const hits: Vector3[] = [];
       const misses: Vector3[] = [];
       let groundY: number | null = null;
-      for (const dx of [-0.25, 0, 0.25]) {
-        const px = x + dx;
-        const top = y + hip;
-        const surface = ground(px);
-        const distance = top - surface;
-        const length = hip + reach;
-        if (distance >= 0 && distance <= length) {
-          hits.push(new Vector3(px, top, 0), new Vector3(px, surface, 0));
-          if (dx === 0) {
-            groundY = surface;
-          }
-        } else {
-          misses.push(
-            new Vector3(px, top, 0),
-            new Vector3(px, top - length, 0)
-          );
-        }
-      }
+      groundY = collectPillarHits(hip, reach, hits, groundY, misses);
       const grounded = groundY !== null && vy <= 0.01;
       if (grounded && groundY !== null) {
         y = groundY;
@@ -465,5 +414,112 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function collectPillarHits(
+      hip: number,
+      reach: number,
+      hits: Vector3[],
+      initialGroundY: number | null,
+      misses: Vector3[]
+    ) {
+      let groundY = initialGroundY;
+
+      for (const dx of [-0.25, 0, 0.25]) {
+        const px = x + dx;
+        const top = y + hip;
+        const surface = ground(px);
+        const distance = top - surface;
+        const length = hip + reach;
+        if (distance >= 0 && distance <= length) {
+          hits.push(new Vector3(px, top, 0), new Vector3(px, surface, 0));
+          if (dx === 0) {
+            groundY = surface;
+          }
+        } else {
+          misses.push(
+            new Vector3(px, top, 0),
+            new Vector3(px, top - length, 0)
+          );
+        }
+      }
+      return groundY;
+    }
+
+    function traceReflections(
+      bounces: number,
+      initialTested: number,
+      initialOrigin: Vector3,
+      initialDir: Vector3,
+      colors: Map<Mesh, Color>,
+      points: Vector3[],
+      initialFirst: string,
+      initialFirstDistance: number
+    ) {
+      let tested = initialTested;
+      let origin = initialOrigin;
+      let dir = initialDir;
+      let first = initialFirst;
+      let firstDistance = initialFirstDistance;
+
+      for (let bounce = 0; bounce <= bounces; bounce++) {
+        let best: (Hit & { shape: Shape }) | null = null;
+        ({ tested, best } = findNearestHit(tested, origin, dir, colors, best));
+        if (!best) {
+          points.push(origin.clone().addScaledVector(dir, 20));
+          break;
+        }
+        colors.set(best.shape.mesh, nearColor);
+        const hitPoint = origin.clone().addScaledVector(dir, best.t);
+        points.push(hitPoint.clone());
+        if (bounce === 0) {
+          first = best.shape.kind === "sphere" ? "球" : "箱";
+          firstDistance = best.t;
+        }
+        const markerMesh = hitMarkers[bounce];
+        const normalArrow = normals[bounce];
+        if (markerMesh && normalArrow) {
+          markerMesh.visible = true;
+          markerMesh.position.copy(hitPoint);
+          normalArrow.visible = true;
+          normalArrow.set(hitPoint, best.normal.clone().multiplyScalar(0.7));
+        }
+        // 反射：d' = d - 2 (d・n) n
+        dir = dir
+          .clone()
+          .addScaledVector(best.normal, -2 * dir.dot(best.normal))
+          .setY(0)
+          .normalize();
+        origin = hitPoint.addScaledVector(best.normal, 1e-3);
+      }
+      return { origin, dir, first, firstDistance, tested };
+    }
+
+    function findNearestHit(
+      initialTested: number,
+      origin: Vector3,
+      dir: Vector3,
+      colors: Map<Mesh, Color>,
+      initialBest: (Hit & { shape: Shape }) | null
+    ) {
+      let tested = initialTested;
+      let best = initialBest;
+
+      for (const shape of shapes) {
+        tested++;
+        const hit =
+          shape.kind === "sphere"
+            ? raySphere(origin, dir, shape.center, shape.radius)
+            : rayBox(origin, dir, shape.min, shape.max);
+        if (hit) {
+          if (!colors.has(shape.mesh)) {
+            colors.set(shape.mesh, fartherColor);
+          }
+          if (!best || hit.t < best.t) {
+            best = { ...hit, shape };
+          }
+        }
+      }
+      return { tested, best };
+    }
   },
 };

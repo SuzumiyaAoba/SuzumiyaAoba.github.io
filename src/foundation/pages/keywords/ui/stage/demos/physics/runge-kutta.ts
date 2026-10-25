@@ -206,23 +206,7 @@ export const demo: DemoModule = {
         const h = Number(params["h"]);
         // どの刻みでも同じ速さで進んで見えるよう、1 秒あたり 1.2 単位時間ずつ進める
         accumulator += dt * 1.2;
-        while (accumulator >= h) {
-          accumulator -= h;
-          for (const tracer of tracers) {
-            if (Math.hypot(tracer.position.x, tracer.position.z) > 12) {
-              continue;
-            }
-            const result = advance(kind, tracer.key, tracer.position, h);
-            tracer.position = result.next;
-            tracer.history.push(toVector(result.next));
-            if (tracer.history.length > HISTORY) {
-              tracer.history.shift();
-            }
-            if (tracer.key === "rk4") {
-              lastSamples = result.samples;
-            }
-          }
-        }
+        advanceTracers(h, kind);
         for (const tracer of tracers) {
           tracer.ball.position.copy(toVector(tracer.position));
           tracer.path.setPoints(tracer.history);
@@ -255,5 +239,25 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceTracers(h: number, kind: string) {
+      while (accumulator >= h) {
+        accumulator -= h;
+        for (const tracer of tracers) {
+          if (Math.hypot(tracer.position.x, tracer.position.z) > 12) {
+            continue;
+          }
+          const result = advance(kind, tracer.key, tracer.position, h);
+          tracer.position = result.next;
+          tracer.history.push(toVector(result.next));
+          if (tracer.history.length > HISTORY) {
+            tracer.history.shift();
+          }
+          if (tracer.key === "rk4") {
+            lastSamples = result.samples;
+          }
+        }
+      }
+    }
   },
 };

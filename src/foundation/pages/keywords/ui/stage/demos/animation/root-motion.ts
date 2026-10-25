@@ -143,73 +143,7 @@ export const demo: DemoModule = {
         const distance = clipDistance(time);
         const phase = (distance / CYCLE_LENGTH) % 1;
         const stride = Math.min(1, clipSpeed(time) / 1.1 + 0.001);
-        for (const actor of actors) {
-          const { man } = actor;
-          man.rest();
-          walkPose(man, phase, stride);
-          // 本体の移動：ルートモーションは、アニメーションの中で着地している足が後ろへ動いた分だけ本体を前へ進める
-          man.root.position.set(0, 0, 0);
-          man.root.updateMatrixWorld(true);
-          const local = {
-            L: man.foot.L.getWorldPosition(new Vector3()),
-            R: man.foot.R.getWorldPosition(new Vector3()),
-          };
-          if (actor.rootMotion) {
-            const support: Side = local.L.y < local.R.y ? "L" : "R";
-            // 支えている足が、直前と同じ足のときだけ、その足の動きを打ち消すように本体を動かす
-            if (support === actor.support && step > 0) {
-              const dz = actor.previousLocal[support].z - local[support].z;
-              const dx = actor.previousLocal[support].x - local[support].x;
-              if (Math.abs(dz) < 0.2) {
-                actor.z += dz;
-                actor.offsetX += dx;
-              }
-            }
-            actor.support = support;
-          } else {
-            actor.z = START_Z + AVERAGE_SPEED * time;
-          }
-          actor.previousLocal = { L: local.L.clone(), R: local.R.clone() };
-          man.root.position.set(actor.x + actor.offsetX, 0, actor.z);
-          man.root.updateMatrixWorld(true);
-          for (const side of SIDES) {
-            man.foot[side].getWorldPosition(foot);
-            // 体重を支えている（低い方の）足だけを「着地中」とみなす
-            const other = side === "L" ? local.R : local.L;
-            const planted = foot.y < 0.085 && foot.y <= other.y + 1e-4;
-            const previous = actor.planted[side];
-            if (planted && !previous) {
-              actor.planted[side] = foot.clone();
-              const print =
-                actor.prints[actor.printIndex % actor.prints.length];
-              actor.printIndex++;
-              if (print) {
-                print.visible = true;
-                print.position.set(foot.x, 0.006, foot.z + 0.05);
-              }
-            } else if (planted && previous) {
-              const moved = Math.hypot(
-                foot.x - previous.x,
-                foot.z - previous.z
-              );
-              if (moved > 0.002) {
-                actor.slide += moved;
-                actor.trailPoints.push(
-                  previous.clone().setY(0.02),
-                  foot.clone().setY(0.02)
-                );
-              }
-              previous.copy(foot);
-            } else if (!planted) {
-              actor.planted[side] = null;
-            }
-          }
-          actor.trail.visible =
-            params["trail"] === true && actor.trailPoints.length > 1;
-          if (actor.trail.visible) {
-            actor.trail.setPoints(actor.trailPoints);
-          }
-        }
+        animateActors(phase, stride, step);
         if (step > 0) {
           graph.push([clipSpeed(time), AVERAGE_SPEED]);
         }
@@ -231,5 +165,88 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function animateActors(phase: number, stride: number, step: number) {
+      for (const actor of actors) {
+        const { man } = actor;
+        man.rest();
+        walkPose(man, phase, stride);
+        // 本体の移動：ルートモーションは、アニメーションの中で着地している足が後ろへ動いた分だけ本体を前へ進める
+        man.root.position.set(0, 0, 0);
+        man.root.updateMatrixWorld(true);
+        const local = {
+          L: man.foot.L.getWorldPosition(new Vector3()),
+          R: man.foot.R.getWorldPosition(new Vector3()),
+        };
+        advanceRootPosition(actor, local, step);
+        actor.previousLocal = { L: local.L.clone(), R: local.R.clone() };
+        man.root.position.set(actor.x + actor.offsetX, 0, actor.z);
+        man.root.updateMatrixWorld(true);
+        for (const side of SIDES) {
+          man.foot[side].getWorldPosition(foot);
+          // 体重を支えている（低い方の）足だけを「着地中」とみなす
+          const other = side === "L" ? local.R : local.L;
+          const planted = foot.y < 0.085 && foot.y <= other.y + 1e-4;
+          const previous = actor.planted[side];
+          updateFootContact(planted, previous, actor, side);
+        }
+        actor.trail.visible =
+          params["trail"] === true && actor.trailPoints.length > 1;
+        if (actor.trail.visible) {
+          actor.trail.setPoints(actor.trailPoints);
+        }
+      }
+    }
+
+    function advanceRootPosition(
+      actor: Actor,
+      local: { L: Vector3; R: Vector3 },
+      step: number
+    ) {
+      if (actor.rootMotion) {
+        const support: Side = local.L.y < local.R.y ? "L" : "R";
+        // 支えている足が、直前と同じ足のときだけ、その足の動きを打ち消すように本体を動かす
+        if (support === actor.support && step > 0) {
+          const dz = actor.previousLocal[support].z - local[support].z;
+          const dx = actor.previousLocal[support].x - local[support].x;
+          if (Math.abs(dz) < 0.2) {
+            actor.z += dz;
+            actor.offsetX += dx;
+          }
+        }
+        actor.support = support;
+      } else {
+        actor.z = START_Z + AVERAGE_SPEED * time;
+      }
+    }
+
+    function updateFootContact(
+      planted: boolean,
+      previous: Vector3 | null,
+      actor: Actor,
+      side: Side
+    ) {
+      if (planted && !previous) {
+        actor.planted[side] = foot.clone();
+        const print = actor.prints[actor.printIndex % actor.prints.length];
+        actor.printIndex++;
+        if (print) {
+          print.visible = true;
+          print.position.set(foot.x, 0.006, foot.z + 0.05);
+        }
+      } else if (planted && previous) {
+        const moved = Math.hypot(foot.x - previous.x, foot.z - previous.z);
+        if (moved > 0.002) {
+          actor.slide += moved;
+          actor.trailPoints.push(
+            previous.clone().setY(0.02),
+            foot.clone().setY(0.02)
+          );
+        }
+        previous.copy(foot);
+      } else if (!planted) {
+        actor.planted[side] = null;
+      }
+    }
   },
 };

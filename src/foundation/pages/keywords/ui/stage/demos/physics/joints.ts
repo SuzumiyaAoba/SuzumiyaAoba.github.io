@@ -433,38 +433,7 @@ export const demo: DemoModule = {
         let error = 0;
         if (dt > 0) {
           const h = dt / substeps;
-          for (let s = 0; s < substeps; s++) {
-            // 1. 拘束を無視して、速度で位置と向きを進める
-            for (const body of bodies) {
-              body.previousPosition.copy(body.position);
-              body.previousRotation.copy(body.rotation);
-              body.velocity.y -= GRAVITY * h;
-              body.velocity.multiplyScalar(0.9995);
-              body.position.addScaledVector(body.velocity, h);
-              rotateBy(body.rotation, body.angular, h);
-            }
-            // 2. 各関節の拘束を満たすよう、位置と向きを直す
-            error = 0;
-            for (const joint of joints) {
-              solveHinge(joint, useLimit);
-              error = Math.max(error, solvePositional(joint));
-            }
-            // 3. 直した結果から速度と角速度を求め直す
-            for (const body of bodies) {
-              body.velocity
-                .subVectors(body.position, body.previousPosition)
-                .divideScalar(h);
-              deltaRotation
-                .copy(body.previousRotation)
-                .invert()
-                .premultiply(body.rotation);
-              const sign_ = deltaRotation.w >= 0 ? 1 : -1;
-              body.angular
-                .set(deltaRotation.x, deltaRotation.y, deltaRotation.z)
-                .multiplyScalar((2 * sign_) / h);
-              body.angular.multiplyScalar(0.998);
-            }
-          }
+          error = simulateJointSubsteps(substeps, h, error, useLimit);
         }
         for (const body of bodies) {
           body.mesh?.position.copy(body.position);
@@ -506,5 +475,48 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function simulateJointSubsteps(
+      substeps: number,
+      h: number,
+      initialError: number,
+      useLimit: boolean
+    ) {
+      let error = initialError;
+
+      for (let s = 0; s < substeps; s++) {
+        // 1. 拘束を無視して、速度で位置と向きを進める
+        for (const body of bodies) {
+          body.previousPosition.copy(body.position);
+          body.previousRotation.copy(body.rotation);
+          body.velocity.y -= GRAVITY * h;
+          body.velocity.multiplyScalar(0.9995);
+          body.position.addScaledVector(body.velocity, h);
+          rotateBy(body.rotation, body.angular, h);
+        }
+        // 2. 各関節の拘束を満たすよう、位置と向きを直す
+        error = 0;
+        for (const joint of joints) {
+          solveHinge(joint, useLimit);
+          error = Math.max(error, solvePositional(joint));
+        }
+        // 3. 直した結果から速度と角速度を求め直す
+        for (const body of bodies) {
+          body.velocity
+            .subVectors(body.position, body.previousPosition)
+            .divideScalar(h);
+          deltaRotation
+            .copy(body.previousRotation)
+            .invert()
+            .premultiply(body.rotation);
+          const sign_ = deltaRotation.w >= 0 ? 1 : -1;
+          body.angular
+            .set(deltaRotation.x, deltaRotation.y, deltaRotation.z)
+            .multiplyScalar((2 * sign_) / h);
+          body.angular.multiplyScalar(0.998);
+        }
+      }
+      return error;
+    }
   },
 };

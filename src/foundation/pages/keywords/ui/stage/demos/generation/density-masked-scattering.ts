@@ -312,33 +312,7 @@ export const demo: DemoModule = {
           { normal: [0, 1, 0], origin: [0, 0.2, 0] },
           hover
         );
-        if (
-          hit &&
-          pointer.down &&
-          Math.abs(hit.x) < SIZE / 2 &&
-          Math.abs(hit.z) < SIZE / 2
-        ) {
-          const sign = params["brush"] === "erase" ? -1 : 1;
-          const radius = 0.7;
-          for (let j = 0; j < N; j++) {
-            for (let i = 0; i < N; i++) {
-              const x = (i / (N - 1) - 0.5) * SIZE;
-              const z = (j / (N - 1) - 0.5) * SIZE;
-              const d = Math.hypot(x - hit.x, z - hit.z);
-              if (d < radius) {
-                const index = j * N + i;
-                paint[index] = Math.max(
-                  -1,
-                  Math.min(
-                    1,
-                    (paint[index] ?? 0) + sign * (1 - d / radius) * dt * 4
-                  )
-                );
-              }
-            }
-          }
-          dirty = true;
-        }
+        paintDensityMask(hit, dt);
         if (dirty) {
           dirty = false;
           const grassCount = place(grass, grassPoints, grassMask, 0.1, 1);
@@ -357,5 +331,35 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function paintDensityMask(hit: Vector3 | null, dt: number) {
+      if (
+        hit &&
+        pointer.down &&
+        Math.abs(hit.x) < SIZE / 2 &&
+        Math.abs(hit.z) < SIZE / 2
+      ) {
+        const sign = params["brush"] === "erase" ? -1 : 1;
+        const radius = 0.7;
+        for (let j = 0; j < N; j++) {
+          for (let i = 0; i < N; i++) {
+            const x = (i / (N - 1) - 0.5) * SIZE;
+            const z = (j / (N - 1) - 0.5) * SIZE;
+            const d = Math.hypot(x - hit.x, z - hit.z);
+            if (d < radius) {
+              const index = j * N + i;
+              paint[index] = Math.max(
+                -1,
+                Math.min(
+                  1,
+                  (paint[index] ?? 0) + sign * (1 - d / radius) * dt * 4
+                )
+              );
+            }
+          }
+        }
+        dirty = true;
+      }
+    }
   },
 };

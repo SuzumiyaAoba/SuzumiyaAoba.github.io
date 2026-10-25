@@ -90,33 +90,7 @@ export const demo: DemoModule = {
         const dy = (Math.sqrt(3) / 2) * dx;
         let count = 0;
         for (let j = 0; j * dy < SIZE; j++) {
-          for (let i = 0; i * dx < SIZE; i++) {
-            const x = fluid.h + RADIUS + i * dx + (j % 2 === 0 ? 0 : RADIUS);
-            const y = fluid.h + RADIUS + j * dy;
-            const inside =
-              kind === "spin"
-                ? x < SIZE - fluid.h - RADIUS && y < SIZE - fluid.h - RADIUS
-                : x < 0.6 && y < 1.1;
-            if (!inside || count >= MAX) {
-              continue;
-            }
-            fluid.pos[2 * count] = x;
-            fluid.pos[2 * count + 1] = y;
-            // 水槽いっぱいの水を、中心の周りに回しておく（中心から離れるほど弱める）
-            const r = Math.hypot(x - SIZE / 2, y - SIZE / 2);
-            const swirl =
-              kind === "spin" ? SPIN * Math.max(0, 1 - r / 0.75) : 0;
-            fluid.vel[2 * count] = -(y - SIZE / 2) * swirl;
-            fluid.vel[2 * count + 1] = (x - SIZE / 2) * swirl;
-            // 最初の位置で縞模様の色を決めておく（混ざり方が見える）
-            tank.stripe[count] =
-              kind === "spin"
-                ? Math.floor(
-                    (Math.atan2(y - SIZE / 2, x - SIZE / 2) / Math.PI + 1) * 4
-                  ) % 2
-                : Math.floor(y / 0.15) % 2;
-            count++;
-          }
+          count = seedTankRow(dx, fluid, j, dy, kind, count, tank);
         }
         fluid.count = count;
         fluid.affine.fill(0);
@@ -179,5 +153,45 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function seedTankRow(
+      dx: number,
+      fluid: PicFluid,
+      j: number,
+      dy: number,
+      kind: string,
+      initialCount: number,
+      tank: (typeof tanks)[number]
+    ) {
+      let count = initialCount;
+
+      for (let i = 0; i * dx < SIZE; i++) {
+        const x = fluid.h + RADIUS + i * dx + (j % 2 === 0 ? 0 : RADIUS);
+        const y = fluid.h + RADIUS + j * dy;
+        const inside =
+          kind === "spin"
+            ? x < SIZE - fluid.h - RADIUS && y < SIZE - fluid.h - RADIUS
+            : x < 0.6 && y < 1.1;
+        if (!inside || count >= MAX) {
+          continue;
+        }
+        fluid.pos[2 * count] = x;
+        fluid.pos[2 * count + 1] = y;
+        // 水槽いっぱいの水を、中心の周りに回しておく（中心から離れるほど弱める）
+        const r = Math.hypot(x - SIZE / 2, y - SIZE / 2);
+        const swirl = kind === "spin" ? SPIN * Math.max(0, 1 - r / 0.75) : 0;
+        fluid.vel[2 * count] = -(y - SIZE / 2) * swirl;
+        fluid.vel[2 * count + 1] = (x - SIZE / 2) * swirl;
+        // 最初の位置で縞模様の色を決めておく（混ざり方が見える）
+        tank.stripe[count] =
+          kind === "spin"
+            ? Math.floor(
+                (Math.atan2(y - SIZE / 2, x - SIZE / 2) / Math.PI + 1) * 4
+              ) % 2
+            : Math.floor(y / 0.15) % 2;
+        count++;
+      }
+      return count;
+    }
   },
 };

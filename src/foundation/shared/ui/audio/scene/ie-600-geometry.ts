@@ -88,82 +88,22 @@ export function ie600ShellGeometry() {
       const row: number[] = [];
       const ratio = ring / rings;
       const count = ring === 0 ? 1 : segments;
-      for (let segment = 0; segment < count; segment += 1) {
-        const point = outline[segment];
-        if (!point) {
-          continue;
-        }
-        const x = MathUtils.lerp(center.x, point.x, ratio);
-        const y = MathUtils.lerp(center.y, point.y, ratio);
-        const neck = MathUtils.smoothstep(y, 5, 11);
-        const dome = Math.sqrt(Math.max(0, 1 - ratio ** 2.4));
-        let z = (side === 1 ? 3.8 : 4.15) * (1 - neck * 0.3) * dome;
-        const axis =
-          socketDirection.x * (x - socketCenter.x) +
-          socketDirection.y * (y - socketCenter.y);
-        const across =
-          socketAcross.x * (x - socketCenter.x) +
-          socketAcross.y * (y - socketCenter.y);
-        const roundNeck = Math.sqrt(Math.max(0, neckRadius ** 2 - across ** 2));
-        z = MathUtils.lerp(z, roundNeck, MathUtils.smoothstep(axis, -5, -2));
-        z =
-          side === 1
-            ? MathUtils.lerp(z, 3.65, badgeWeight(x, y))
-            : MathUtils.lerp(
-                z,
-                3.7 - x * 0.035,
-                rearFacetWeight(x, y) *
-                  0.9 *
-                  MathUtils.smoothstep(1 - ratio, 0, 0.22)
-              );
-        // 口元の円周だけ表裏を分け、端子の穴を塞ぐ面を作らない。
-        const seamIndex =
-          side === -1 && ring === rings && z < 0.00001
-            ? front[ring]?.[segment]
-            : undefined;
-        if (seamIndex !== undefined) {
-          row.push(seamIndex);
-          continue;
-        }
-        row.push(positions.length / 3);
-        positions.push(x, y, z * side);
-        uvs.push((x + 14) / 28, (y + 12) / 28);
-      }
+      appendShellRingVertices(
+        count,
+        outline,
+        center,
+        ratio,
+        side,
+        ring,
+        rings,
+        front,
+        row,
+        positions,
+        uvs
+      );
       rows.push(row);
     }
-    for (let ring = 1; ring <= rings; ring += 1) {
-      const inner = rows[ring - 1];
-      const outer = rows[ring];
-      if (!inner || !outer) {
-        continue;
-      }
-      for (let segment = 0; segment < segments; segment += 1) {
-        const next = (segment + 1) % segments;
-        const a = inner[ring === 1 ? 0 : segment];
-        const b = outer[segment];
-        const c = outer[next];
-        const d = inner[ring === 1 ? 0 : next];
-        if (
-          a === undefined ||
-          b === undefined ||
-          c === undefined ||
-          d === undefined
-        ) {
-          continue;
-        }
-        if (side === 1) {
-          indices.push(a, b, c);
-          if (ring > 1) {
-            indices.push(a, c, d);
-          }
-        } else {
-          indices.push(a, c, b);
-          if (ring > 1) {
-            indices.push(a, d, c);
-          }
-        }
-      }
-    }
+    connectShellRings(rings, rows, segments, side, indices);
   }
   const geometry = new BufferGeometry();
   const solidIndices: number[] = [];
@@ -205,6 +145,116 @@ export function ie600ShellGeometry() {
   geometry.setIndex(solidIndices);
   geometry.computeVertexNormals();
   return openIe600Vent(geometry);
+}
+
+function connectShellRings(
+  rings: number,
+  rows: number[][],
+  segments: number,
+  side: number,
+  indices: number[]
+) {
+  for (let ring = 1; ring <= rings; ring += 1) {
+    const inner = rows[ring - 1];
+    const outer = rows[ring];
+    if (!inner || !outer) {
+      continue;
+    }
+    for (let segment = 0; segment < segments; segment += 1) {
+      const next = (segment + 1) % segments;
+      const a = inner[ring === 1 ? 0 : segment];
+      const b = outer[segment];
+      const c = outer[next];
+      const d = inner[ring === 1 ? 0 : next];
+      if (
+        a === undefined ||
+        b === undefined ||
+        c === undefined ||
+        d === undefined
+      ) {
+        continue;
+      }
+      appendShellFace(side, indices, a, b, c, ring, d);
+    }
+  }
+}
+
+function appendShellFace(
+  side: number,
+  indices: number[],
+  a: number,
+  b: number,
+  c: number,
+  ring: number,
+  d: number
+) {
+  if (side === 1) {
+    indices.push(a, b, c);
+    if (ring > 1) {
+      indices.push(a, c, d);
+    }
+  } else {
+    indices.push(a, c, b);
+    if (ring > 1) {
+      indices.push(a, d, c);
+    }
+  }
+}
+
+function appendShellRingVertices(
+  count: number,
+  outline: Vector2[],
+  center: Vector2,
+  ratio: number,
+  side: number,
+  ring: number,
+  rings: number,
+  front: number[][],
+  row: number[],
+  positions: number[],
+  uvs: number[]
+) {
+  for (let segment = 0; segment < count; segment += 1) {
+    const point = outline[segment];
+    if (!point) {
+      continue;
+    }
+    const x = MathUtils.lerp(center.x, point.x, ratio);
+    const y = MathUtils.lerp(center.y, point.y, ratio);
+    const neck = MathUtils.smoothstep(y, 5, 11);
+    const dome = Math.sqrt(Math.max(0, 1 - ratio ** 2.4));
+    let z = (side === 1 ? 3.8 : 4.15) * (1 - neck * 0.3) * dome;
+    const axis =
+      socketDirection.x * (x - socketCenter.x) +
+      socketDirection.y * (y - socketCenter.y);
+    const across =
+      socketAcross.x * (x - socketCenter.x) +
+      socketAcross.y * (y - socketCenter.y);
+    const roundNeck = Math.sqrt(Math.max(0, neckRadius ** 2 - across ** 2));
+    z = MathUtils.lerp(z, roundNeck, MathUtils.smoothstep(axis, -5, -2));
+    z =
+      side === 1
+        ? MathUtils.lerp(z, 3.65, badgeWeight(x, y))
+        : MathUtils.lerp(
+            z,
+            3.7 - x * 0.035,
+            rearFacetWeight(x, y) *
+              0.9 *
+              MathUtils.smoothstep(1 - ratio, 0, 0.22)
+          );
+    // 口元の円周だけ表裏を分け、端子の穴を塞ぐ面を作らない。
+    const seamIndex =
+      side === -1 && ring === rings && z < 0.00001
+        ? front[ring]?.[segment]
+        : undefined;
+    if (seamIndex !== undefined) {
+      row.push(seamIndex);
+      continue;
+    }
+    row.push(positions.length / 3);
+    positions.push(x, y, z * side);
+    uvs.push((x + 14) / 28, (y + 12) / 28);
+  }
 }
 
 export function ie600BoreGeometry(outer: number, inner: number, depth: number) {

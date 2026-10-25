@@ -180,87 +180,17 @@ export const demo: DemoModule = {
     return {
       update({ dt }) {
         const speed = Number(params["speed"]);
-        for (const body of bodies) {
-          body.mesh.position.addScaledVector(body.velocity, dt * speed);
-          for (const axis of ["x", "z"] as const) {
-            if (Math.abs(body.mesh.position[axis]) > BOUNDS[axis]) {
-              body.velocity[axis] *= -1;
-              body.mesh.position[axis] =
-                Math.sign(body.mesh.position[axis]) * BOUNDS[axis];
-            }
-          }
-          if (
-            body.mesh.position.y < 0.4 ||
-            body.mesh.position.y > 0.4 + BOUNDS.y * 1.6
-          ) {
-            body.velocity.y *= -1;
-            body.mesh.position.y = Math.min(
-              0.4 + BOUNDS.y * 1.6,
-              Math.max(0.4, body.mesh.position.y)
-            );
-          }
-          delta.setFromEuler(
-            new Euler(
-              body.spin.x * dt * speed,
-              body.spin.y * dt * speed,
-              body.spin.z * dt * speed
-            )
-          );
-          body.mesh.quaternion.multiply(delta);
-          body.mesh.updateMatrixWorld();
-          if (params["fit"] === "loose") {
-            // 回転しても中身がはみ出さない立方体：半径 = 対角線の半分
-            const radius = body.half.length();
-            body.min.copy(body.mesh.position).subScalar(radius);
-            body.max.copy(body.mesh.position).addScalar(radius);
-          } else {
-            body.min.set(Infinity, Infinity, Infinity);
-            body.max.set(-Infinity, -Infinity, -Infinity);
-            for (let i = 0; i < 8; i++) {
-              corner
-                .set(
-                  i & 1 ? body.half.x : -body.half.x,
-                  i & 2 ? body.half.y : -body.half.y,
-                  i & 4 ? body.half.z : -body.half.z
-                )
-                .applyMatrix4(body.mesh.matrixWorld);
-              body.min.min(corner);
-              body.max.max(corner);
-            }
-          }
-        }
+        advanceBoundedBodies(dt, speed);
         const overlapping = new Set<Body>();
         const touching = new Set<Body>();
         let candidates = 0;
         let contacts = 0;
-        for (let i = 0; i < bodies.length; i++) {
-          for (let j = i + 1; j < bodies.length; j++) {
-            const a = bodies[i];
-            const b = bodies[j];
-            if (!a || !b) {
-              continue;
-            }
-            // AABB の重なり：3 本の軸すべてで区間が重なるか
-            const aabb =
-              a.min.x <= b.max.x &&
-              a.max.x >= b.min.x &&
-              a.min.y <= b.max.y &&
-              a.max.y >= b.min.y &&
-              a.min.z <= b.max.z &&
-              a.max.z >= b.min.z;
-            if (!aabb) {
-              continue;
-            }
-            candidates++;
-            overlapping.add(a);
-            overlapping.add(b);
-            if (obbOverlap(a, b)) {
-              contacts++;
-              touching.add(a);
-              touching.add(b);
-            }
-          }
-        }
+        ({ candidates, contacts } = collectOverlappingBodies(
+          candidates,
+          overlapping,
+          contacts,
+          touching
+        ));
         const idle: Vector3[] = [];
         const hot: Vector3[] = [];
         for (const body of bodies) {
@@ -294,5 +224,101 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceBoundedBodies(dt: number, speed: number) {
+      for (const body of bodies) {
+        body.mesh.position.addScaledVector(body.velocity, dt * speed);
+        for (const axis of ["x", "z"] as const) {
+          if (Math.abs(body.mesh.position[axis]) > BOUNDS[axis]) {
+            body.velocity[axis] *= -1;
+            body.mesh.position[axis] =
+              Math.sign(body.mesh.position[axis]) * BOUNDS[axis];
+          }
+        }
+        if (
+          body.mesh.position.y < 0.4 ||
+          body.mesh.position.y > 0.4 + BOUNDS.y * 1.6
+        ) {
+          body.velocity.y *= -1;
+          body.mesh.position.y = Math.min(
+            0.4 + BOUNDS.y * 1.6,
+            Math.max(0.4, body.mesh.position.y)
+          );
+        }
+        delta.setFromEuler(
+          new Euler(
+            body.spin.x * dt * speed,
+            body.spin.y * dt * speed,
+            body.spin.z * dt * speed
+          )
+        );
+        body.mesh.quaternion.multiply(delta);
+        body.mesh.updateMatrixWorld();
+        fitBodyBounds(body);
+      }
+    }
+
+    function collectOverlappingBodies(
+      initialCandidates: number,
+      overlapping: Set<Body>,
+      initialContacts: number,
+      touching: Set<Body>
+    ) {
+      let candidates = initialCandidates;
+      let contacts = initialContacts;
+
+      for (let i = 0; i < bodies.length; i++) {
+        for (let j = i + 1; j < bodies.length; j++) {
+          const a = bodies[i];
+          const b = bodies[j];
+          if (!a || !b) {
+            continue;
+          }
+          // AABB の重なり：3 本の軸すべてで区間が重なるか
+          const aabb =
+            a.min.x <= b.max.x &&
+            a.max.x >= b.min.x &&
+            a.min.y <= b.max.y &&
+            a.max.y >= b.min.y &&
+            a.min.z <= b.max.z &&
+            a.max.z >= b.min.z;
+          if (!aabb) {
+            continue;
+          }
+          candidates++;
+          overlapping.add(a);
+          overlapping.add(b);
+          if (obbOverlap(a, b)) {
+            contacts++;
+            touching.add(a);
+            touching.add(b);
+          }
+        }
+      }
+      return { candidates, contacts };
+    }
+
+    function fitBodyBounds(body: Body) {
+      if (params["fit"] === "loose") {
+        // 回転しても中身がはみ出さない立方体：半径 = 対角線の半分
+        const radius = body.half.length();
+        body.min.copy(body.mesh.position).subScalar(radius);
+        body.max.copy(body.mesh.position).addScalar(radius);
+      } else {
+        body.min.set(Infinity, Infinity, Infinity);
+        body.max.set(-Infinity, -Infinity, -Infinity);
+        for (let i = 0; i < 8; i++) {
+          corner
+            .set(
+              i & 1 ? body.half.x : -body.half.x,
+              i & 2 ? body.half.y : -body.half.y,
+              i & 4 ? body.half.z : -body.half.z
+            )
+            .applyMatrix4(body.mesh.matrixWorld);
+          body.min.min(corner);
+          body.max.max(corner);
+        }
+      }
+    }
   },
 };

@@ -271,24 +271,7 @@ export const demo: DemoModule = {
         const inside = new Color(palette.amber);
         const outside = new Color(palette.faint);
         let count = 0;
-        for (let j = 0; j < ny; j++) {
-          for (let i = 0; i < nx; i++) {
-            if (count >= MAX_POINTS) {
-              break;
-            }
-            const color = (values[i + nx * j] ?? 0) > 0 ? inside : outside;
-            samples.positions.set(
-              [ORIGIN[0] + i * spacing, ORIGIN[1] + j * spacing, 0],
-              count * 3
-            );
-            samples.colors.set([color.r, color.g, color.b], count * 3);
-            samples.sizes[count] = Math.min(
-              1,
-              12 / Number(params["cells"]) + 0.25
-            );
-            count++;
-          }
-        }
+        count = updateGridHeight(count, inside, outside);
         samples.geometry.setDrawRange(0, count);
         samples.commit();
       }
@@ -307,45 +290,7 @@ export const demo: DemoModule = {
       const frame: Vector3[] = [];
       const fills: number[] = [];
       const cornerDots: { position: Vector3; inside: boolean }[] = [];
-      for (let index = 0; index < 16; index++) {
-        const column = index % 8;
-        const row = Math.floor(index / 8);
-        const x0 = (column - 4) * (tile + gap) + gap / 2;
-        const y0 = (0.5 - row) * (tile + gap + 1.1) - tile / 2 + 0.3;
-        const cell = new Float32Array(4);
-        for (const [c, [dx, dy]] of SQUARE_CORNERS.entries()) {
-          cell[dx + 2 * dy] = (index & (1 << c)) === 0 ? -1 : 1;
-          cornerDots.push({
-            position: new Vector3(x0 + dx * tile, y0 + dy * tile, 0.03),
-            inside: (index & (1 << c)) !== 0,
-          });
-        }
-        const result = marchSquares(cell, 2, 2, [x0, y0], tile, 0, true);
-        fills.push(...result.fill);
-        for (let n = 0; n < result.lines.length; n += 4) {
-          lines.push(
-            new Vector3(result.lines[n], result.lines[n + 1], 0.02),
-            new Vector3(result.lines[n + 2], result.lines[n + 3], 0.02)
-          );
-        }
-        const corners = [
-          [x0, y0],
-          [x0 + tile, y0],
-          [x0 + tile, y0 + tile],
-          [x0, y0 + tile],
-        ] as const;
-        for (let c = 0; c < 4; c++) {
-          const [ax, ay] = corners[c] ?? corners[0];
-          const [bx, by] = corners[(c + 1) % 4] ?? corners[0];
-          frame.push(new Vector3(ax, ay, 0.01), new Vector3(bx, by, 0.01));
-        }
-        const label = context.label(
-          `${index}${(SQUARE_SEGMENTS[index]?.length ?? 0) > 1 ? "（あいまい）" : ""}`,
-          { size: "sm" }
-        );
-        label.position.set(x0 + tile / 2, y0 - 0.45, 0);
-        casesGroup.add(label);
-      }
+      renderSquareCases(tile, gap, cornerDots, fills, lines, frame);
       const positions = new Float32Array((fills.length / 2) * 3);
       for (let n = 0; n < fills.length / 2; n++) {
         positions[n * 3] = fills[n * 2] ?? 0;
@@ -434,46 +379,7 @@ export const demo: DemoModule = {
         const steps = 3;
         for (let step = 0; step < steps; step++) {
           const sub = h / steps;
-          for (const [index, position] of ballPositions.entries()) {
-            const velocity = ballVelocities[index];
-            if (!velocity) {
-              continue;
-            }
-            velocity.y -= 14 * sub;
-            position.addScaledVector(velocity, sub);
-            const eps = spacing * 0.5;
-            const value = sample(position.x, position.y);
-            const gx =
-              (sample(position.x + eps, position.y) -
-                sample(position.x - eps, position.y)) /
-              (2 * eps);
-            const gy =
-              (sample(position.x, position.y + eps) -
-                sample(position.x, position.y - eps)) /
-              (2 * eps);
-            const gradient = Math.hypot(gx, gy);
-            const depth =
-              (value + BALL_RADIUS * gradient) / Math.max(gradient, 1e-3);
-            if (depth > 0 && gradient > 1e-3) {
-              const normal = new Vector2(-gx / gradient, -gy / gradient);
-              position.addScaledVector(normal, depth);
-              const into = velocity.dot(normal);
-              if (into < 0) {
-                velocity.addScaledVector(normal, -into * 1.25);
-                velocity.multiplyScalar(0.995);
-              }
-            }
-            if (
-              position.y < ORIGIN[1] - 1 ||
-              Math.abs(position.x) > WIDTH / 2 + 1
-            ) {
-              position.set(
-                ORIGIN[0] + 1 + Math.random() * (WIDTH - 2),
-                HEIGHT / 2 + 0.5
-              );
-              velocity.set(0, 0);
-            }
-          }
+          advanceMetaballs(sub);
         }
         for (const [index, position] of ballPositions.entries()) {
           matrix.makeTranslation(position.x, position.y, 0);
@@ -485,5 +391,125 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceMetaballs(sub: number) {
+      for (const [index, position] of ballPositions.entries()) {
+        const velocity = ballVelocities[index];
+        if (!velocity) {
+          continue;
+        }
+        velocity.y -= 14 * sub;
+        position.addScaledVector(velocity, sub);
+        const eps = spacing * 0.5;
+        const value = sample(position.x, position.y);
+        const gx =
+          (sample(position.x + eps, position.y) -
+            sample(position.x - eps, position.y)) /
+          (2 * eps);
+        const gy =
+          (sample(position.x, position.y + eps) -
+            sample(position.x, position.y - eps)) /
+          (2 * eps);
+        const gradient = Math.hypot(gx, gy);
+        const depth =
+          (value + BALL_RADIUS * gradient) / Math.max(gradient, 1e-3);
+        if (depth > 0 && gradient > 1e-3) {
+          const normal = new Vector2(-gx / gradient, -gy / gradient);
+          position.addScaledVector(normal, depth);
+          const into = velocity.dot(normal);
+          if (into < 0) {
+            velocity.addScaledVector(normal, -into * 1.25);
+            velocity.multiplyScalar(0.995);
+          }
+        }
+        if (
+          position.y < ORIGIN[1] - 1 ||
+          Math.abs(position.x) > WIDTH / 2 + 1
+        ) {
+          position.set(
+            ORIGIN[0] + 1 + Math.random() * (WIDTH - 2),
+            HEIGHT / 2 + 0.5
+          );
+          velocity.set(0, 0);
+        }
+      }
+    }
+
+    function renderSquareCases(
+      tile: number,
+      gap: number,
+      cornerDots: { position: Vector3; inside: boolean }[],
+      fills: number[],
+      lines: Vector3[],
+      frame: Vector3[]
+    ) {
+      for (let index = 0; index < 16; index++) {
+        const column = index % 8;
+        const row = Math.floor(index / 8);
+        const x0 = (column - 4) * (tile + gap) + gap / 2;
+        const y0 = (0.5 - row) * (tile + gap + 1.1) - tile / 2 + 0.3;
+        const cell = new Float32Array(4);
+        for (const [c, [dx, dy]] of SQUARE_CORNERS.entries()) {
+          cell[dx + 2 * dy] = (index & (1 << c)) === 0 ? -1 : 1;
+          cornerDots.push({
+            position: new Vector3(x0 + dx * tile, y0 + dy * tile, 0.03),
+            inside: (index & (1 << c)) !== 0,
+          });
+        }
+        const result = marchSquares(cell, 2, 2, [x0, y0], tile, 0, true);
+        fills.push(...result.fill);
+        for (let n = 0; n < result.lines.length; n += 4) {
+          lines.push(
+            new Vector3(result.lines[n], result.lines[n + 1], 0.02),
+            new Vector3(result.lines[n + 2], result.lines[n + 3], 0.02)
+          );
+        }
+        const corners = [
+          [x0, y0],
+          [x0 + tile, y0],
+          [x0 + tile, y0 + tile],
+          [x0, y0 + tile],
+        ] as const;
+        for (let c = 0; c < 4; c++) {
+          const [ax, ay] = corners[c] ?? corners[0];
+          const [bx, by] = corners[(c + 1) % 4] ?? corners[0];
+          frame.push(new Vector3(ax, ay, 0.01), new Vector3(bx, by, 0.01));
+        }
+        const label = context.label(
+          `${index}${(SQUARE_SEGMENTS[index]?.length ?? 0) > 1 ? "（あいまい）" : ""}`,
+          { size: "sm" }
+        );
+        label.position.set(x0 + tile / 2, y0 - 0.45, 0);
+        casesGroup.add(label);
+      }
+    }
+
+    function updateGridHeight(
+      initialCount: number,
+      inside: Color,
+      outside: Color
+    ) {
+      let count = initialCount;
+
+      for (let j = 0; j < ny; j++) {
+        for (let i = 0; i < nx; i++) {
+          if (count >= MAX_POINTS) {
+            break;
+          }
+          const color = (values[i + nx * j] ?? 0) > 0 ? inside : outside;
+          samples.positions.set(
+            [ORIGIN[0] + i * spacing, ORIGIN[1] + j * spacing, 0],
+            count * 3
+          );
+          samples.colors.set([color.r, color.g, color.b], count * 3);
+          samples.sizes[count] = Math.min(
+            1,
+            12 / Number(params["cells"]) + 0.25
+          );
+          count++;
+        }
+      }
+      return count;
+    }
   },
 };

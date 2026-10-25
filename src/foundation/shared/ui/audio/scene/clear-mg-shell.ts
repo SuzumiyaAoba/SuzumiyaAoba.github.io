@@ -51,38 +51,7 @@ export function clearMgShellGeometry() {
     }
   }
   // 開口の左右を除く丸いリムは、前後の面取りごと底までつなぐ。
-  for (let column = 0; column < 24; column += 1) {
-    const first = -cut + (column / 24) * cut * 2;
-    const second = -cut + ((column + 1) / 24) * cut * 2;
-    for (let row = 0; row < sections; row += 1) {
-      if (row === 0 || row === 6) {
-        continue;
-      }
-      const next = (row + 1) % sections;
-      const offset = positions.length / 3;
-      for (const [angle, section] of [
-        [first, row],
-        [second, row],
-        [first, next],
-        [second, next],
-      ] as const) {
-        const [inset, z] = profile[section] ?? profile[0];
-        positions.push(
-          (outerX - inset) * Math.sin(angle),
-          -(outerY - inset) * Math.cos(angle),
-          z
-        );
-      }
-      indices.push(
-        offset,
-        offset + 1,
-        offset + 2,
-        offset + 1,
-        offset + 3,
-        offset + 2
-      );
-    }
-  }
+  appendShellRim(cut, sections, positions, profile, indices);
   const frame = new BufferGeometry();
   frame.setAttribute("position", new Float32BufferAttribute(positions, 3));
   frame.setIndex(indices);
@@ -131,4 +100,58 @@ export function clearMgShellGeometry() {
     part.dispose();
   }
   return geometry;
+}
+
+function appendShellRim(
+  cut: number,
+  sections: number,
+  positions: number[],
+  profile: readonly [
+    readonly [0, -5],
+    readonly [0, 4.4],
+    readonly [0.35, 5.25],
+    readonly [1.2, 5.6],
+    readonly [3.3, 5.6],
+    readonly [4.15, 5.25],
+    readonly [4.5, 4.4],
+    readonly [4.5, -5],
+    readonly [4.15, -5.85],
+    readonly [3.3, -6.2],
+    readonly [1.2, -6.2],
+    readonly [0.35, -5.85],
+  ],
+  indices: number[]
+) {
+  for (let column = 0; column < 24; column += 1) {
+    const first = -cut + (column / 24) * cut * 2;
+    const second = -cut + ((column + 1) / 24) * cut * 2;
+    for (let row = 0; row < sections; row += 1) {
+      if (row === 0 || row === 6) {
+        continue;
+      }
+      const next = (row + 1) % sections;
+      const offset = positions.length / 3;
+      for (const [angle, section] of [
+        [first, row],
+        [second, row],
+        [first, next],
+        [second, next],
+      ] as const) {
+        const [inset, z] = profile[section] ?? profile[0];
+        positions.push(
+          (outerX - inset) * Math.sin(angle),
+          -(outerY - inset) * Math.cos(angle),
+          z
+        );
+      }
+      indices.push(
+        offset,
+        offset + 1,
+        offset + 2,
+        offset + 1,
+        offset + 3,
+        offset + 2
+      );
+    }
+  }
 }

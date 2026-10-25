@@ -361,15 +361,7 @@ export function ModelFilters({
     >
       {seriesOptions.length > 0 && (
         <ModelFilterSelect
-          labels={{
-            label: en ? "Series" : "系列",
-            trigger: en ? "Filter by model series" : "モデル系列で絞り込み",
-            content: en ? "Model series options" : "モデル系列の選択肢",
-            options: en ? "Model series" : "モデル系列",
-            search: en ? "Filter model series" : "系列を検索",
-            placeholder: en ? "Filter series…" : "系列を検索…",
-            empty: en ? "No matching series." : "一致する系列がありません。",
-          }}
+          labels={seriesFilterLabels(en)}
           options={seriesOptions}
           selected={selectedSeries}
           onToggle={onToggleSeries}
@@ -412,4 +404,16 @@ export function ModelFilters({
       ))}
     </fieldset>
   );
+}
+
+function seriesFilterLabels(en: boolean): ModelFilterLabels {
+  return {
+    label: en ? "Series" : "系列",
+    trigger: en ? "Filter by model series" : "モデル系列で絞り込み",
+    content: en ? "Model series options" : "モデル系列の選択肢",
+    options: en ? "Model series" : "モデル系列",
+    search: en ? "Filter model series" : "系列を検索",
+    placeholder: en ? "Filter series…" : "系列を検索…",
+    empty: en ? "No matching series." : "一致する系列がありません。",
+  };
 }

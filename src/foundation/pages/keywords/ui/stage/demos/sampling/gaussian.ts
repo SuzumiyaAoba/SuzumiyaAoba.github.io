@@ -193,28 +193,7 @@ export const demo: DemoModule = {
           clear();
         }
         const nextSigma = Number(params["sigma"]);
-        if (nextSigma !== sigma) {
-          sigma = nextSigma;
-          clear();
-          const points: Vector3[] = [];
-          for (const k of [1, 2, 3]) {
-            const r = k * sigma;
-            for (let s = 0; s < 96; s++) {
-              const a0 = (s / 96) * TAU;
-              const a1 = ((s + 1) / 96) * TAU;
-              points.push(
-                new Vector3(Math.cos(a0) * r, Math.sin(a0) * r, 0.006),
-                new Vector3(Math.cos(a1) * r, Math.sin(a1) * r, 0.006)
-              );
-            }
-          }
-          ringLines.setPoints(points);
-          for (const [index, label] of ringLabels.entries()) {
-            const r = (index + 1) * sigma;
-            label.position.set(r * 0.72, r * 0.72, 0.05);
-            label.visible = r < BOARD;
-          }
-        }
+        updateSigmaContours(nextSigma);
         budget += dt * Number(params["rate"]);
         while (budget >= 1) {
           budget -= 1;
@@ -237,18 +216,7 @@ export const demo: DemoModule = {
 
         const inside = [0, 0, 0];
         const histogram = new Float64Array(BINS);
-        for (const [x, y] of shots) {
-          const r = Math.hypot(x, y);
-          for (let k = 0; k < 3; k++) {
-            if (r <= k + 1) {
-              inside[k] = (inside[k] ?? 0) + 1;
-            }
-          }
-          const bin = Math.floor(((x + RANGE) / (2 * RANGE)) * BINS);
-          if (bin >= 0 && bin < BINS) {
-            histogram[bin] = (histogram[bin] ?? 0) + 1;
-          }
-        }
+        accumulateShotDistribution(inside, histogram);
         const count = Math.max(1, shots.length);
         const binWidth = (2 * RANGE) / BINS;
         graph.setSeries([
@@ -292,5 +260,48 @@ export const demo: DemoModule = {
         holes.dispose();
       },
     };
+
+    function updateSigmaContours(nextSigma: number) {
+      if (nextSigma !== sigma) {
+        sigma = nextSigma;
+        clear();
+        const points: Vector3[] = [];
+        for (const k of [1, 2, 3]) {
+          const r = k * sigma;
+          for (let s = 0; s < 96; s++) {
+            const a0 = (s / 96) * TAU;
+            const a1 = ((s + 1) / 96) * TAU;
+            points.push(
+              new Vector3(Math.cos(a0) * r, Math.sin(a0) * r, 0.006),
+              new Vector3(Math.cos(a1) * r, Math.sin(a1) * r, 0.006)
+            );
+          }
+        }
+        ringLines.setPoints(points);
+        for (const [index, label] of ringLabels.entries()) {
+          const r = (index + 1) * sigma;
+          label.position.set(r * 0.72, r * 0.72, 0.05);
+          label.visible = r < BOARD;
+        }
+      }
+    }
+
+    function accumulateShotDistribution(
+      inside: number[],
+      histogram: Float64Array<ArrayBuffer>
+    ) {
+      for (const [x, y] of shots) {
+        const r = Math.hypot(x, y);
+        for (let k = 0; k < 3; k++) {
+          if (r <= k + 1) {
+            inside[k] = (inside[k] ?? 0) + 1;
+          }
+        }
+        const bin = Math.floor(((x + RANGE) / (2 * RANGE)) * BINS);
+        if (bin >= 0 && bin < BINS) {
+          histogram[bin] = (histogram[bin] ?? 0) + 1;
+        }
+      }
+    }
   },
 };

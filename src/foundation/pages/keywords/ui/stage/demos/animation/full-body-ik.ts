@@ -101,72 +101,7 @@ export const demo: DemoModule = {
         man.rest();
         // 全身モード：腰の位置と背骨の傾きを、手が届くように少しずつ動かす
         if (full) {
-          for (let iteration = 0; iteration < iterations; iteration++) {
-            man.hips.position.set(0, BODY.hipHeight, 0).add(offset);
-            man.spine.quaternion.copy(lean);
-            man.root.updateMatrixWorld(true);
-            pull.set(0, 0, 0);
-            toHands.set(0, 0, 0);
-            for (const side of SIDES) {
-              man.upperArm[side].getWorldPosition(shoulder);
-              const toTarget = handTargets[side].position.clone().sub(shoulder);
-              const excess = toTarget.length() - ARM * 0.92;
-              if (excess > 0) {
-                pull.addScaledVector(toTarget.normalize(), excess * 0.35);
-              }
-              toHands.add(handTargets[side].position);
-            }
-            // 背骨：両手の目標の中点へ向かって、体を前に倒す（最大 80°）
-            man.hips.getWorldPosition(hip);
-            toHands.multiplyScalar(0.5).sub(hip).normalize();
-            const bend = Math.min(
-              up.angleTo(toHands) * 0.85,
-              (80 * Math.PI) / 180
-            );
-            const axis = new Vector3().crossVectors(up, toHands);
-            if (axis.lengthSq() > 1e-6) {
-              lean.setFromAxisAngle(axis.normalize(), bend);
-            }
-            offset.add(pull);
-            // 足は床から離さない：腰と足の距離が脚の長さを超えないよう、腰を足の方へ引き戻す
-            for (const side of SIDES) {
-              const hipPosition = new Vector3(
-                (side === "L" ? 1 : -1) * BODY.hipWidth,
-                BODY.hipHeight - 0.02,
-                0
-              ).add(offset);
-              const toFoot = footTargets[side].position
-                .clone()
-                .add(new Vector3(0, 0.06, 0))
-                .sub(hipPosition);
-              const over = toFoot.length() - LEG * 0.98;
-              if (over > 0) {
-                offset.addScaledVector(toFoot.normalize(), over);
-              }
-            }
-            // しゃがめる深さには限度がある（腰は 0.62 m より下げない）
-            offset.y = Math.min(
-              0.02,
-              Math.max(offset.y, 0.62 - BODY.hipHeight)
-            );
-            // 倒れないよう、腰は両足の間の真上から大きく外れない（重心を支える範囲）
-            const supportX =
-              (footTargets.L.position.x + footTargets.R.position.x) / 2;
-            const supportZ =
-              (footTargets.L.position.z + footTargets.R.position.z) / 2;
-            offset.x = Math.max(
-              supportX - 0.12,
-              Math.min(supportX + 0.12, offset.x)
-            );
-            // 前に体を倒すほど、釣り合いをとるため腰は足より後ろへ引く
-            const back =
-              Math.sin(lean.w < 1 ? 2 * Math.acos(Math.min(1, lean.w)) : 0) *
-              0.22;
-            offset.z = Math.max(
-              supportZ - 0.25,
-              Math.min(supportZ + 0.1 - back, offset.z)
-            );
-          }
+          solveBodyOffset(iterations);
         }
         man.hips.position.set(0, BODY.hipHeight, 0).add(offset);
         man.spine.quaternion.copy(lean);
@@ -222,5 +157,71 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function solveBodyOffset(iterations: number) {
+      for (let iteration = 0; iteration < iterations; iteration++) {
+        man.hips.position.set(0, BODY.hipHeight, 0).add(offset);
+        man.spine.quaternion.copy(lean);
+        man.root.updateMatrixWorld(true);
+        pull.set(0, 0, 0);
+        toHands.set(0, 0, 0);
+        for (const side of SIDES) {
+          man.upperArm[side].getWorldPosition(shoulder);
+          const toTarget = handTargets[side].position.clone().sub(shoulder);
+          const excess = toTarget.length() - ARM * 0.92;
+          if (excess > 0) {
+            pull.addScaledVector(toTarget.normalize(), excess * 0.35);
+          }
+          toHands.add(handTargets[side].position);
+        }
+        // 背骨：両手の目標の中点へ向かって、体を前に倒す（最大 80°）
+        man.hips.getWorldPosition(hip);
+        toHands.multiplyScalar(0.5).sub(hip).normalize();
+        const bend = Math.min(up.angleTo(toHands) * 0.85, (80 * Math.PI) / 180);
+        const axis = new Vector3().crossVectors(up, toHands);
+        if (axis.lengthSq() > 1e-6) {
+          lean.setFromAxisAngle(axis.normalize(), bend);
+        }
+        offset.add(pull);
+        // 足は床から離さない：腰と足の距離が脚の長さを超えないよう、腰を足の方へ引き戻す
+        solveBodyLimbs();
+        // しゃがめる深さには限度がある（腰は 0.62 m より下げない）
+        offset.y = Math.min(0.02, Math.max(offset.y, 0.62 - BODY.hipHeight));
+        // 倒れないよう、腰は両足の間の真上から大きく外れない（重心を支える範囲）
+        const supportX =
+          (footTargets.L.position.x + footTargets.R.position.x) / 2;
+        const supportZ =
+          (footTargets.L.position.z + footTargets.R.position.z) / 2;
+        offset.x = Math.max(
+          supportX - 0.12,
+          Math.min(supportX + 0.12, offset.x)
+        );
+        // 前に体を倒すほど、釣り合いをとるため腰は足より後ろへ引く
+        const back =
+          Math.sin(lean.w < 1 ? 2 * Math.acos(Math.min(1, lean.w)) : 0) * 0.22;
+        offset.z = Math.max(
+          supportZ - 0.25,
+          Math.min(supportZ + 0.1 - back, offset.z)
+        );
+      }
+    }
+
+    function solveBodyLimbs() {
+      for (const side of SIDES) {
+        const hipPosition = new Vector3(
+          (side === "L" ? 1 : -1) * BODY.hipWidth,
+          BODY.hipHeight - 0.02,
+          0
+        ).add(offset);
+        const toFoot = footTargets[side].position
+          .clone()
+          .add(new Vector3(0, 0.06, 0))
+          .sub(hipPosition);
+        const over = toFoot.length() - LEG * 0.98;
+        if (over > 0) {
+          offset.addScaledVector(toFoot.normalize(), over);
+        }
+      }
+    }
   },
 };

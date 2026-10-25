@@ -239,6 +239,17 @@ export function explosionAtlas() {
   canvas.width = cell * grid;
   canvas.height = cell * grid;
   const context = canvas.getContext("2d");
+  drawParticleAtlas(context, cell, grid);
+  explosionTexture = new CanvasTexture(canvas);
+  explosionTexture.colorSpace = SRGBColorSpace;
+  return explosionTexture;
+}
+
+function drawParticleAtlas(
+  context: CanvasRenderingContext2D | null,
+  cell: number,
+  grid: number
+) {
   if (context) {
     const image = context.createImageData(cell * grid, cell * grid);
     for (let frame = 0; frame < grid * grid; frame++) {
@@ -271,7 +282,4 @@ export function explosionAtlas() {
     }
     context.putImageData(image, 0, 0);
   }
-  explosionTexture = new CanvasTexture(canvas);
-  explosionTexture.colorSpace = SRGBColorSpace;
-  return explosionTexture;
 }

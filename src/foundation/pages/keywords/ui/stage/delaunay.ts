@@ -69,31 +69,11 @@ export function delaunaySteps(points: readonly Point2[]) {
     }
     const bad: typeof triangles = [];
     const keep: typeof triangles = [];
-    for (const triangle of triangles) {
-      const { circle } = triangle;
-      if (
-        (p.x - circle.x) ** 2 + (p.y - circle.y) ** 2 <
-        circle.r * circle.r * (1 - 1e-9)
-      ) {
-        bad.push(triangle);
-      } else {
-        keep.push(triangle);
-      }
-    }
+    findCavityTriangles(triangles, p, bad, keep);
     // 取り除いた三角形の辺のうち、ほかの取り除いた三角形と共有していない辺が穴のふち
     const edgeCount = new Map<string, [number, number]>();
     const counts = new Map<string, number>();
-    for (const { t } of bad) {
-      for (const [a, b] of [
-        [t[0], t[1]],
-        [t[1], t[2]],
-        [t[2], t[0]],
-      ] as const) {
-        const key = a < b ? `${a},${b}` : `${b},${a}`;
-        counts.set(key, (counts.get(key) ?? 0) + 1);
-        edgeCount.set(key, [a, b]);
-      }
-    }
+    countCavityEdges(bad, counts, edgeCount);
     const boundary: [number, number][] = [];
     for (const [key, edge] of edgeCount) {
       if (counts.get(key) === 1) {
@@ -115,6 +95,43 @@ export function delaunaySteps(points: readonly Point2[]) {
     .map(({ t }) => t)
     .filter((t) => t[0] < n && t[1] < n && t[2] < n);
   return { steps, triangles: final, all };
+}
+
+function findCavityTriangles(
+  triangles: { t: Triangle; circle: Circle }[],
+  p: Point2,
+  bad: { t: Triangle; circle: Circle }[],
+  keep: { t: Triangle; circle: Circle }[]
+) {
+  for (const triangle of triangles) {
+    const { circle } = triangle;
+    if (
+      (p.x - circle.x) ** 2 + (p.y - circle.y) ** 2 <
+      circle.r * circle.r * (1 - 1e-9)
+    ) {
+      bad.push(triangle);
+    } else {
+      keep.push(triangle);
+    }
+  }
+}
+
+function countCavityEdges(
+  bad: { t: Triangle; circle: Circle }[],
+  counts: Map<string, number>,
+  edgeCount: Map<string, [number, number]>
+) {
+  for (const { t } of bad) {
+    for (const [a, b] of [
+      [t[0], t[1]],
+      [t[1], t[2]],
+      [t[2], t[0]],
+    ] as const) {
+      const key = a < b ? `${a},${b}` : `${b},${a}`;
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+      edgeCount.set(key, [a, b]);
+    }
+  }
 }
 
 /** 三角形の辺（重複なし）。 */

@@ -179,34 +179,7 @@ export const demo: DemoModule = {
 
         const levels = deCasteljau(curvePoints, t);
         const showConstruction = params["construction"] === true;
-        for (const [levelIndex, line] of levelLines.entries()) {
-          const level = levels[levelIndex] ?? [];
-          const pairs: Vector3[] = [];
-          for (let index = 0; index < level.length - 1; index++) {
-            const a = level[index];
-            const b = level[index + 1];
-            if (a && b) {
-              pairs.push(a, b);
-            }
-          }
-          line.visible =
-            pairs.length > 0 && (levelIndex === 0 || showConstruction);
-          if (line.visible) {
-            line.setPoints(pairs);
-          }
-          for (const [dotIndex, dot] of (
-            levelDots[levelIndex] ?? []
-          ).entries()) {
-            const point = level[dotIndex];
-            dot.visible =
-              levelIndex > 0 &&
-              point !== undefined &&
-              (showConstruction || levelIndex === levels.length - 1);
-            if (point) {
-              dot.position.copy(point);
-            }
-          }
-        }
+        renderInterpolationLevels(levels, showConstruction);
         const onCurve = levels.at(-1)?.[0];
         if (onCurve) {
           coin.position.copy(onCurve);
@@ -227,5 +200,46 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderInterpolationLevels(
+      levels: Vector3[][],
+      showConstruction: boolean
+    ) {
+      for (const [levelIndex, line] of levelLines.entries()) {
+        const level = levels[levelIndex] ?? [];
+        const pairs: Vector3[] = [];
+        for (let index = 0; index < level.length - 1; index++) {
+          const a = level[index];
+          const b = level[index + 1];
+          if (a && b) {
+            pairs.push(a, b);
+          }
+        }
+        line.visible =
+          pairs.length > 0 && (levelIndex === 0 || showConstruction);
+        if (line.visible) {
+          line.setPoints(pairs);
+        }
+        renderInterpolationDots(levelIndex, level, showConstruction, levels);
+      }
+    }
+
+    function renderInterpolationDots(
+      levelIndex: number,
+      level: Vector3[],
+      showConstruction: boolean,
+      levels: Vector3[][]
+    ) {
+      for (const [dotIndex, dot] of (levelDots[levelIndex] ?? []).entries()) {
+        const point = level[dotIndex];
+        dot.visible =
+          levelIndex > 0 &&
+          point !== undefined &&
+          (showConstruction || levelIndex === levels.length - 1);
+        if (point) {
+          dot.position.copy(point);
+        }
+      }
+    }
   },
 };

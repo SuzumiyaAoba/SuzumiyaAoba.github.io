@@ -161,55 +161,17 @@ export function BlogPostPageContent({
       />
       <main className="article-page">
         <article>
-          <header className="article-header reading-column">
-            <p className="article-kicker">
-              <a href={toLocalePath("/blog", locale)}>
-                <I18nText locale={locale} ja="記事" en="Articles" />
-              </a>
-              {category ? <span>{category}</span> : null}
-            </p>
-            <h1 className="article-title">{postTitle}</h1>
-            {description ? <p className="article-lead">{description}</p> : null}
-            <div className="article-meta">
-              <time dateTime={postDate}>
-                {formatDate(postDate, toIntlLocaleTag(locale))}
-              </time>
-              {readingMinutes !== undefined && readingMinutes > 0 ? (
-                <span>
-                  <I18nText
-                    locale={locale}
-                    ja={`約 ${readingMinutes} 分で読めます`}
-                    en={`${readingMinutes} min read`}
-                  />
-                </span>
-              ) : null}
-              {series && seriesHref ? (
-                <a href={seriesHref}>
-                  <Icon icon="lucide:layers" className="size-3.5" aria-hidden />
-                  {series.name}
-                </a>
-              ) : null}
-            </div>
-            {headerTags.length > 0 ? (
-              <ul
-                className="tag-list"
-                aria-label={locale === "en" ? "Tags" : "タグ"}
-              >
-                {headerTags.map((tag) => (
-                  <li key={tag}>
-                    <a
-                      href={toLocalePath(
-                        `/tags/${encodeURIComponent(tag)}`,
-                        locale
-                      )}
-                    >
-                      #{tag}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </header>
+          <BlogPostHeader
+            locale={locale}
+            category={category}
+            postTitle={postTitle}
+            description={description}
+            postDate={postDate}
+            readingMinutes={readingMinutes}
+            series={series}
+            seriesHref={seriesHref}
+            headerTags={headerTags}
+          />
 
           <div className="article-layout">
             <div className="article-body">
@@ -318,5 +280,73 @@ export function BlogPostPageContent({
         </section>
       </main>
     </SiteLayout>
+  );
+}
+
+function BlogPostHeader({
+  locale,
+  category,
+  postTitle,
+  description,
+  postDate,
+  readingMinutes,
+  series,
+  seriesHref,
+  headerTags,
+}: {
+  locale: Locale;
+  category: string | undefined;
+  postTitle: string;
+  description: string | undefined;
+  postDate: string;
+  readingMinutes: number | undefined;
+  series: { slug: string; name: string } | null;
+  seriesHref: string | null;
+  headerTags: string[];
+}) {
+  return (
+    <header className="article-header reading-column">
+      <p className="article-kicker">
+        <a href={toLocalePath("/blog", locale)}>
+          <I18nText locale={locale} ja="記事" en="Articles" />
+        </a>
+        {category ? <span>{category}</span> : null}
+      </p>
+      <h1 className="article-title">{postTitle}</h1>
+      {description ? <p className="article-lead">{description}</p> : null}
+      <div className="article-meta">
+        <time dateTime={postDate}>
+          {formatDate(postDate, toIntlLocaleTag(locale))}
+        </time>
+        {readingMinutes !== undefined && readingMinutes > 0 ? (
+          <span>
+            <I18nText
+              locale={locale}
+              ja={`約 ${readingMinutes} 分で読めます`}
+              en={`${readingMinutes} min read`}
+            />
+          </span>
+        ) : null}
+        {series && seriesHref ? (
+          <a href={seriesHref}>
+            <Icon icon="lucide:layers" className="size-3.5" aria-hidden />
+            {series.name}
+          </a>
+        ) : null}
+      </div>
+      {headerTags.length > 0 ? (
+        <ul className="tag-list" aria-label={locale === "en" ? "Tags" : "タグ"}>
+          {headerTags.map((tag) => (
+            <li key={tag}>
+              <a
+                href={toLocalePath(`/tags/${encodeURIComponent(tag)}`, locale)}
+              >
+                #{tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </header>
   );
 }

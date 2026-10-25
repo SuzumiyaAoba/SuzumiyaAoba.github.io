@@ -162,19 +162,7 @@ export const demo: DemoModule = {
       const useNear = params["near"] === true;
       const useRange = params["range"] === true;
       const weights = (useNear ? 1 : 0) + (useRange ? 1 : 0);
-      best = null;
-      for (const item of items) {
-        item.passed =
-          item.reachable && (params["hidden"] !== true || item.hidden);
-        item.score =
-          weights === 0
-            ? 0.5
-            : ((useNear ? item.near : 0) + (useRange ? item.range : 0)) /
-              weights;
-        if (item.passed && (!best || item.score > best.score)) {
-          best = item;
-        }
-      }
+      best = scoreQueryItems(weights, useNear, useRange);
       if (best && best.position.distanceTo(soldier.position) > 0.3) {
         soldier.goTo(best.position);
       }
@@ -204,22 +192,7 @@ export const demo: DemoModule = {
         }
 
         const viewKey = String(params["view"]);
-        for (const [i, item] of items.entries()) {
-          matrix.makeTranslation(item.position.x, 0.03, item.position.z);
-          dots.setMatrixAt(i, matrix);
-          const value =
-            viewKey === "near"
-              ? item.near
-              : viewKey === "range"
-                ? item.range
-                : item.score;
-          dots.setColorAt(
-            i,
-            item.passed
-              ? ramp(value, [palette.coral, palette.amber, palette.lime])
-              : gray
-          );
-        }
+        renderQueryItems(viewKey);
         dots.count = items.length;
         dots.instanceMatrix.needsUpdate = true;
         if (dots.instanceColor) {
@@ -247,5 +220,45 @@ export const demo: DemoModule = {
         dots.dispose();
       },
     };
+
+    function renderQueryItems(viewKey: string) {
+      for (const [i, item] of items.entries()) {
+        matrix.makeTranslation(item.position.x, 0.03, item.position.z);
+        dots.setMatrixAt(i, matrix);
+        const value =
+          viewKey === "near"
+            ? item.near
+            : viewKey === "range"
+              ? item.range
+              : item.score;
+        dots.setColorAt(
+          i,
+          item.passed
+            ? ramp(value, [palette.coral, palette.amber, palette.lime])
+            : gray
+        );
+      }
+    }
+
+    function scoreQueryItems(
+      weights: number,
+      useNear: boolean,
+      useRange: boolean
+    ): Item | null {
+      let selected: Item | null = null;
+      for (const item of items) {
+        item.passed =
+          item.reachable && (params["hidden"] !== true || item.hidden);
+        item.score =
+          weights === 0
+            ? 0.5
+            : ((useNear ? item.near : 0) + (useRange ? item.range : 0)) /
+              weights;
+        if (item.passed && (!selected || item.score > selected.score)) {
+          selected = item;
+        }
+      }
+      return selected;
+    }
   },
 };

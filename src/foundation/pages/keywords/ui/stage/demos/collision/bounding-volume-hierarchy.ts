@@ -220,17 +220,7 @@ export const demo: DemoModule = {
     return {
       update({ time }) {
         const depth = Number(params["depth"]);
-        if (depth !== shownDepth) {
-          shownDepth = depth;
-          const lines: Vector3[] = [];
-          for (const node of all) {
-            if (node.depth === depth) {
-              boxLines(node.min, node.max, lines);
-            }
-          }
-          levelLines.setPoints(lines);
-          levelLines.visible = lines.length > 0;
-        }
+        renderHierarchyDepth(depth);
         // 光線の向き
         const pointer =
           params["sweep"] === true
@@ -257,42 +247,17 @@ export const demo: DemoModule = {
         const visited: Node[] = [];
         const testedItems = new Set<number>();
         const stack: Node[] = [root];
-        while (stack.length > 0) {
-          const node = stack.pop();
-          if (!node) {
-            continue;
-          }
-          boxTests++;
-          const enter = rayBox(origin, inverse, node.min, node.max);
-          if (enter >= best) {
-            continue;
-          }
-          visited.push(node);
-          if (node.left && node.right) {
-            const tl = rayBox(origin, inverse, node.left.min, node.left.max);
-            const tr = rayBox(origin, inverse, node.right.min, node.right.max);
-            // 遠い方を先に積み、近い方を先に取り出す
-            if (tl < tr) {
-              stack.push(node.right, node.left);
-            } else {
-              stack.push(node.left, node.right);
-            }
-            continue;
-          }
-          for (const index of node.items) {
-            const item = items[index];
-            if (!item) {
-              continue;
-            }
-            sphereTests++;
-            testedItems.add(index);
-            const t = raySphere(origin, dir, item);
-            if (t < best) {
-              best = t;
-              bestItem = index;
-            }
-          }
-        }
+        ({ boxTests, sphereTests, best, bestItem } = traverseHierarchy(
+          stack,
+          boxTests,
+          inverse,
+          best,
+          visited,
+          sphereTests,
+          bestItem,
+          testedItems,
+          dir
+        ));
         const end = Number.isFinite(best)
           ? origin.clone().addScaledVector(dir, best)
           : origin.clone().addScaledVector(dir, 16);
@@ -329,5 +294,97 @@ export const demo: DemoModule = {
         spheres.dispose();
       },
     };
+
+    function renderHierarchyDepth(depth: number) {
+      if (depth !== shownDepth) {
+        shownDepth = depth;
+        const lines: Vector3[] = [];
+        for (const node of all) {
+          if (node.depth === depth) {
+            boxLines(node.min, node.max, lines);
+          }
+        }
+        levelLines.setPoints(lines);
+        levelLines.visible = lines.length > 0;
+      }
+    }
+
+    function traverseHierarchy(
+      stack: Node[],
+      initialBoxTests: number,
+      inverse: Vector3,
+      initialBest: number,
+      visited: Node[],
+      initialSphereTests: number,
+      initialBestItem: number,
+      testedItems: Set<number>,
+      dir: Vector3
+    ) {
+      let boxTests = initialBoxTests;
+      let best = initialBest;
+      let sphereTests = initialSphereTests;
+      let bestItem = initialBestItem;
+
+      while (stack.length > 0) {
+        const node = stack.pop();
+        if (!node) {
+          continue;
+        }
+        boxTests++;
+        const enter = rayBox(origin, inverse, node.min, node.max);
+        if (enter >= best) {
+          continue;
+        }
+        visited.push(node);
+        if (node.left && node.right) {
+          const tl = rayBox(origin, inverse, node.left.min, node.left.max);
+          const tr = rayBox(origin, inverse, node.right.min, node.right.max);
+          // 遠い方を先に積み、近い方を先に取り出す
+          if (tl < tr) {
+            stack.push(node.right, node.left);
+          } else {
+            stack.push(node.left, node.right);
+          }
+          continue;
+        }
+        ({ sphereTests, best, bestItem } = testLeafSpheres(
+          node,
+          sphereTests,
+          testedItems,
+          dir,
+          best,
+          bestItem
+        ));
+      }
+      return { boxTests, sphereTests, best, bestItem };
+    }
+
+    function testLeafSpheres(
+      node: Node,
+      initialSphereTests: number,
+      testedItems: Set<number>,
+      dir: Vector3,
+      initialBest: number,
+      initialBestItem: number
+    ) {
+      let sphereTests = initialSphereTests;
+      let best = initialBest;
+      let bestItem = initialBestItem;
+
+      for (const index of node.items) {
+        const item = items[index];
+        if (!item) {
+          continue;
+        }
+        sphereTests++;
+        testedItems.add(index);
+        const t = raySphere(origin, dir, item);
+        if (t < best) {
+          best = t;
+          bestItem = index;
+        }
+      }
+      return { sphereTests, best, bestItem };
+    }
   },
 };

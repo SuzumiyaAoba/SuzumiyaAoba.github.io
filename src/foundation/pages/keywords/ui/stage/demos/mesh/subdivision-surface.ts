@@ -165,23 +165,15 @@ function catmullClark(
     return newVertices.length - 1;
   });
   const edgeIndex = new Map<string, number>();
-  for (const [key, adjacent] of edgeFaces) {
-    const [a, b] = key.split(",").map(Number);
-    const pa = vertices[a ?? 0] ?? new Vector3();
-    const pb = vertices[b ?? 0] ?? new Vector3();
-    const mid = pa.clone().add(pb).multiplyScalar(0.5);
-    let point = mid;
-    if (smooth && !isSharp(key)) {
-      point = pa
-        .clone()
-        .add(pb)
-        .add(facePoints[adjacent[0] ?? 0] ?? mid)
-        .add(facePoints[adjacent[1] ?? 0] ?? mid)
-        .multiplyScalar(0.25);
-    }
-    newVertices.push(point);
-    edgeIndex.set(key, newVertices.length - 1);
-  }
+  appendSubdivisionEdgeVertices(
+    edgeFaces,
+    vertices,
+    smooth,
+    isSharp,
+    facePoints,
+    newVertices,
+    edgeIndex
+  );
   // 元の頂点の新しい位置
   const vertexFaces = vertices.map(() => [] as number[]);
   const vertexEdges = vertices.map(() => [] as string[]);
@@ -254,6 +246,34 @@ function catmullClark(
     }
   }
   return { vertices: newVertices, faces: newFaces, sharp };
+}
+
+function appendSubdivisionEdgeVertices(
+  edgeFaces: Map<string, number[]>,
+  vertices: Vector3[],
+  smooth: boolean,
+  isSharp: (key: string) => boolean,
+  facePoints: Vector3[],
+  newVertices: Vector3[],
+  edgeIndex: Map<string, number>
+) {
+  for (const [key, adjacent] of edgeFaces) {
+    const [a, b] = key.split(",").map(Number);
+    const pa = vertices[a ?? 0] ?? new Vector3();
+    const pb = vertices[b ?? 0] ?? new Vector3();
+    const mid = pa.clone().add(pb).multiplyScalar(0.5);
+    let point = mid;
+    if (smooth && !isSharp(key)) {
+      point = pa
+        .clone()
+        .add(pb)
+        .add(facePoints[adjacent[0] ?? 0] ?? mid)
+        .add(facePoints[adjacent[1] ?? 0] ?? mid)
+        .multiplyScalar(0.25);
+    }
+    newVertices.push(point);
+    edgeIndex.set(key, newVertices.length - 1);
+  }
 }
 
 function toGeometry(mesh: PolyMesh) {

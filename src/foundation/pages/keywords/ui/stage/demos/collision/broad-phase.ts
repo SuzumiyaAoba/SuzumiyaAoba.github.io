@@ -184,109 +184,11 @@ export const demo: DemoModule = {
         const count = Number(params["count"]);
         const { method: raw } = params;
         const method: Method = raw === "none" || raw === "sap" ? raw : "grid";
-        for (let i = 0; i < count; i++) {
-          const body = bodies[i];
-          if (!body) {
-            continue;
-          }
-          body.x += body.vx * dt;
-          body.y += body.vy * dt;
-          body.angle += body.spin * dt;
-          if (Math.abs(body.x) > WIDTH / 2) {
-            body.vx *= -1;
-            body.x = Math.sign(body.x) * (WIDTH / 2);
-          }
-          if (Math.abs(body.y) > DEPTH / 2) {
-            body.vy *= -1;
-            body.y = Math.sign(body.y) * (DEPTH / 2);
-          }
-          if (body.circle) {
-            body.ex = body.a;
-            body.ey = body.a;
-          } else {
-            const c = Math.abs(Math.cos(body.angle));
-            const s = Math.abs(Math.sin(body.angle));
-            body.ex = body.a * c + body.b * s;
-            body.ey = body.a * s + body.b * c;
-          }
-        }
+        advanceBodies(count, dt);
         const start = performance.now();
         // 広域判定：候補の組を作る
         const candidates: [number, number][] = [];
-        if (method === "none") {
-          for (let i = 0; i < count; i++) {
-            for (let j = i + 1; j < count; j++) {
-              candidates.push([i, j]);
-            }
-          }
-        } else if (method === "grid") {
-          const cell = 0.4;
-          const cells = new Map<number, number[]>();
-          for (let i = 0; i < count; i++) {
-            const body = bodies[i];
-            if (!body) {
-              continue;
-            }
-            // AABB がまたぐすべてのセルに登録する
-            for (
-              let gx = Math.floor((body.x - body.ex) / cell);
-              gx <= Math.floor((body.x + body.ex) / cell);
-              gx++
-            ) {
-              for (
-                let gy = Math.floor((body.y - body.ey) / cell);
-                gy <= Math.floor((body.y + body.ey) / cell);
-                gy++
-              ) {
-                const key = (gx + 1000) * 4096 + (gy + 1000);
-                const list = cells.get(key);
-                if (list) {
-                  list.push(i);
-                } else {
-                  cells.set(key, [i]);
-                }
-              }
-            }
-          }
-          const seen = new Set<number>();
-          for (const list of cells.values()) {
-            for (let a = 0; a < list.length; a++) {
-              for (let b = a + 1; b < list.length; b++) {
-                const i = Math.min(list[a] ?? 0, list[b] ?? 0);
-                const j = Math.max(list[a] ?? 0, list[b] ?? 0);
-                const key = i * MAX + j;
-                const p = bodies[i];
-                const q = bodies[j];
-                if (!seen.has(key) && p && q && overlapAabb(p, q)) {
-                  seen.add(key);
-                  candidates.push([i, j]);
-                }
-              }
-            }
-          }
-        } else {
-          const order = Array.from({ length: count }, (_, i) => i).toSorted(
-            (i, j) =>
-              (bodies[i]?.x ?? 0) -
-              (bodies[i]?.ex ?? 0) -
-              ((bodies[j]?.x ?? 0) - (bodies[j]?.ex ?? 0))
-          );
-          for (let a = 0; a < order.length; a++) {
-            const p = bodies[order[a] ?? 0];
-            if (!p) {
-              continue;
-            }
-            for (let b = a + 1; b < order.length; b++) {
-              const q = bodies[order[b] ?? 0];
-              if (!q || q.x - q.ex > p.x + p.ex) {
-                break;
-              }
-              if (Math.abs(p.y - q.y) < p.ey + q.ey) {
-                candidates.push([order[a] ?? 0, order[b] ?? 0]);
-              }
-            }
-          }
-        }
+        collectCandidates(method, count, candidates);
         // 詳細判定：候補だけを正確に調べる
         const touching = new Set<number>();
         let contacts = 0;
@@ -305,29 +207,12 @@ export const demo: DemoModule = {
 
         let circleCount = 0;
         let boxCount = 0;
-        for (let i = 0; i < count; i++) {
-          const body = bodies[i];
-          if (!body) {
-            continue;
-          }
-          const color = touching.has(i) ? hit : base;
-          if (body.circle) {
-            matrix
-              .makeScale(body.a, 1, body.a)
-              .setPosition(body.x, 0.02, body.y);
-            circles.setMatrixAt(circleCount, matrix);
-            circles.setColorAt(circleCount++, color);
-          } else {
-            rotation.setFromAxisAngle(up, -body.angle);
-            matrix.compose(
-              new Vector3(body.x, 0.02, body.y),
-              rotation,
-              new Vector3(body.a, 1, body.b)
-            );
-            boxes.setMatrixAt(boxCount, matrix);
-            boxes.setColorAt(boxCount++, color);
-          }
-        }
+        ({ circleCount, boxCount } = renderBodies(
+          count,
+          touching,
+          circleCount,
+          boxCount
+        ));
         circles.count = circleCount;
         boxes.count = boxCount;
         for (const mesh of [circles, boxes]) {
@@ -338,20 +223,7 @@ export const demo: DemoModule = {
         }
         const showLines = params["lines"] === true && candidates.length < 1500;
         candidateLines.visible = showLines && candidates.length > 0;
-        if (showLines) {
-          const points: Vector3[] = [];
-          for (const [i, j] of candidates) {
-            const p = bodies[i];
-            const q = bodies[j];
-            if (p && q) {
-              points.push(
-                new Vector3(p.x, 0.04, p.y),
-                new Vector3(q.x, 0.04, q.y)
-              );
-            }
-          }
-          candidateLines.setPoints(points);
-        }
+        renderCandidateLines(showLines, candidates);
         context.readout("全部の組", `${(count * (count - 1)) / 2}`);
         context.readout("詳細判定にかけた組", `${candidates.length}`);
         context.readout("接触していた組", `${contacts}`);
@@ -367,5 +239,191 @@ export const demo: DemoModule = {
         boxes.dispose();
       },
     };
+
+    function renderCandidateLines(
+      showLines: boolean,
+      candidates: [number, number][]
+    ) {
+      if (showLines) {
+        const points: Vector3[] = [];
+        for (const [i, j] of candidates) {
+          const p = bodies[i];
+          const q = bodies[j];
+          if (p && q) {
+            points.push(
+              new Vector3(p.x, 0.04, p.y),
+              new Vector3(q.x, 0.04, q.y)
+            );
+          }
+        }
+        candidateLines.setPoints(points);
+      }
+    }
+
+    function collectCandidates(
+      method: Method,
+      count: number,
+      candidates: [number, number][]
+    ) {
+      if (method === "none") {
+        for (let i = 0; i < count; i++) {
+          for (let j = i + 1; j < count; j++) {
+            candidates.push([i, j]);
+          }
+        }
+      } else if (method === "grid") {
+        const cell = 0.4;
+        const cells = new Map<number, number[]>();
+        indexBodiesByCell(count, cell, cells);
+        const seen = new Set<number>();
+        collectGridCandidates(cells, seen, candidates);
+      } else {
+        const order = Array.from({ length: count }, (_, i) => i).toSorted(
+          (i, j) =>
+            (bodies[i]?.x ?? 0) -
+            (bodies[i]?.ex ?? 0) -
+            ((bodies[j]?.x ?? 0) - (bodies[j]?.ex ?? 0))
+        );
+        collectSweepCandidates(order, candidates);
+      }
+    }
+
+    function renderBodies(
+      count: number,
+      touching: Set<number>,
+      initialCircleCount: number,
+      initialBoxCount: number
+    ) {
+      let circleCount = initialCircleCount;
+      let boxCount = initialBoxCount;
+
+      for (let i = 0; i < count; i++) {
+        const body = bodies[i];
+        if (!body) {
+          continue;
+        }
+        const color = touching.has(i) ? hit : base;
+        if (body.circle) {
+          matrix.makeScale(body.a, 1, body.a).setPosition(body.x, 0.02, body.y);
+          circles.setMatrixAt(circleCount, matrix);
+          circles.setColorAt(circleCount++, color);
+        } else {
+          rotation.setFromAxisAngle(up, -body.angle);
+          matrix.compose(
+            new Vector3(body.x, 0.02, body.y),
+            rotation,
+            new Vector3(body.a, 1, body.b)
+          );
+          boxes.setMatrixAt(boxCount, matrix);
+          boxes.setColorAt(boxCount++, color);
+        }
+      }
+      return { circleCount, boxCount };
+    }
+
+    function advanceBodies(count: number, dt: number) {
+      for (let i = 0; i < count; i++) {
+        const body = bodies[i];
+        if (!body) {
+          continue;
+        }
+        body.x += body.vx * dt;
+        body.y += body.vy * dt;
+        body.angle += body.spin * dt;
+        if (Math.abs(body.x) > WIDTH / 2) {
+          body.vx *= -1;
+          body.x = Math.sign(body.x) * (WIDTH / 2);
+        }
+        if (Math.abs(body.y) > DEPTH / 2) {
+          body.vy *= -1;
+          body.y = Math.sign(body.y) * (DEPTH / 2);
+        }
+        if (body.circle) {
+          body.ex = body.a;
+          body.ey = body.a;
+        } else {
+          const c = Math.abs(Math.cos(body.angle));
+          const s = Math.abs(Math.sin(body.angle));
+          body.ex = body.a * c + body.b * s;
+          body.ey = body.a * s + body.b * c;
+        }
+      }
+    }
+
+    function collectSweepCandidates(
+      order: number[],
+      candidates: [number, number][]
+    ) {
+      for (let a = 0; a < order.length; a++) {
+        const p = bodies[order[a] ?? 0];
+        if (!p) {
+          continue;
+        }
+        for (let b = a + 1; b < order.length; b++) {
+          const q = bodies[order[b] ?? 0];
+          if (!q || q.x - q.ex > p.x + p.ex) {
+            break;
+          }
+          if (Math.abs(p.y - q.y) < p.ey + q.ey) {
+            candidates.push([order[a] ?? 0, order[b] ?? 0]);
+          }
+        }
+      }
+    }
+
+    function collectGridCandidates(
+      cells: Map<number, number[]>,
+      seen: Set<number>,
+      candidates: [number, number][]
+    ) {
+      for (const list of cells.values()) {
+        for (let a = 0; a < list.length; a++) {
+          for (let b = a + 1; b < list.length; b++) {
+            const i = Math.min(list[a] ?? 0, list[b] ?? 0);
+            const j = Math.max(list[a] ?? 0, list[b] ?? 0);
+            const key = i * MAX + j;
+            const p = bodies[i];
+            const q = bodies[j];
+            if (!seen.has(key) && p && q && overlapAabb(p, q)) {
+              seen.add(key);
+              candidates.push([i, j]);
+            }
+          }
+        }
+      }
+    }
+
+    function indexBodiesByCell(
+      count: number,
+      cell: number,
+      cells: Map<number, number[]>
+    ) {
+      for (let i = 0; i < count; i++) {
+        const body = bodies[i];
+        if (!body) {
+          continue;
+        }
+        // AABB がまたぐすべてのセルに登録する
+        for (
+          let gx = Math.floor((body.x - body.ex) / cell);
+          gx <= Math.floor((body.x + body.ex) / cell);
+          gx++
+        ) {
+          for (
+            let gy = Math.floor((body.y - body.ey) / cell);
+            gy <= Math.floor((body.y + body.ey) / cell);
+            gy++
+          ) {
+            const key = (gx + 1000) * 4096 + (gy + 1000);
+            const list = cells.get(key);
+            if (list) {
+              list.push(i);
+            } else {
+              cells.set(key, [i]);
+            }
+          }
+        }
+      }
+    }
   },
 };

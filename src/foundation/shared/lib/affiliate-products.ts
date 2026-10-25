@@ -76,6 +76,25 @@ type AffiliateProductIndex = {
  */
 let cachedIndex: AffiliateProductIndex | null = null;
 
+function indexProductsByTag(products: AffiliateProduct[]) {
+  const byTag = new Map<string, AffiliateProduct[]>();
+  for (const product of products) {
+    for (const tag of product.tags ?? []) {
+      const key = tag.trim();
+      if (!key) {
+        continue;
+      }
+      const existing = byTag.get(key);
+      if (existing) {
+        existing.push(product);
+      } else {
+        byTag.set(key, [product]);
+      }
+    }
+  }
+  return byTag;
+}
+
 /**
  * アフィリエイト商品データをファイルから読み込み、インデックスを作成する
  * 開発環境では変更を検知してリロードする
@@ -100,29 +119,12 @@ async function loadAffiliateProducts(): Promise<AffiliateProductIndex> {
   const { products, links } = AffiliateProductSourceSchema.parse(
     JSON.parse(raw)
   );
-  const byId = new Map<string, AffiliateProduct>();
-  const byTag = new Map<string, AffiliateProduct[]>();
+  const byId = new Map(products.map((product) => [product.id, product]));
+  const byTag = indexProductsByTag(products);
   const urlById = new Map<string, string>();
   for (const link of [...products, ...links]) {
     urlById.set(link.id, link.productUrl);
   }
-  for (const product of products) {
-    byId.set(product.id, product);
-    const tags = product.tags ?? [];
-    for (const tag of tags) {
-      const key = tag.trim();
-      if (!key) {
-        continue;
-      }
-      const existing = byTag.get(key);
-      if (existing) {
-        existing.push(product);
-      } else {
-        byTag.set(key, [product]);
-      }
-    }
-  }
-
   const index: AffiliateProductIndex = { products, byId, byTag, urlById };
   if (typeof mtimeMs === "number") {
     index.mtimeMs = mtimeMs;

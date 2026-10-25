@@ -168,44 +168,13 @@ export const demo: DemoModule = {
         reads.length = 0;
         let anyone = 0;
 
-        for (const guard of guards) {
-          const { agent } = guard;
-          const sees = agent.sees(target);
-          if (sees) {
-            anyone++;
-            guard.memory = target.clone();
-            guard.memoryTime = time;
-            if (mode === "shared") {
-              write(
-                "敵の位置",
-                `(${target.x.toFixed(1)}, ${target.z.toFixed(1)})`,
-                guard.name,
-                time,
-                agent.position
-              );
-              write(
-                "見つけた人",
-                `見張り ${guard.name}`,
-                guard.name,
-                time,
-                agent.position
-              );
-            }
-          }
-        }
+        anyone = updateGuardPerception(anyone, time, mode);
         const alarm = blackboard.get("敵の位置");
         const alarmAge = alarm ? time - alarm.time : 99;
         const lastKnown = guards
           .filter((g) => g.memory !== null)
           .toSorted((a, b) => b.memoryTime - a.memoryTime)[0]?.memory;
-        if (mode === "shared") {
-          blackboard.set("警戒レベル", {
-            value: anyone > 0 ? "戦闘" : alarmAge < FRESH ? "警戒" : "平常",
-            writer: anyone > 0 ? "見張り" : "—",
-            time:
-              anyone > 0 ? time : (blackboard.get("警戒レベル")?.time ?? time),
-          });
-        }
+        updateSharedAlert(mode, anyone, alarmAge, time);
 
         // 駆けつける見張りが、担当の方向を黒板で取り合う
         const responders = guards.filter(
@@ -231,67 +200,21 @@ export const demo: DemoModule = {
             agent.goTo(target);
             agent.update(dt, 1.9);
             agent.setIcon("!");
-          } else if (slot !== -1 && lastKnown) {
-            const name = slots[slot % slots.length] ?? "北";
-            if (
-              !blackboard.has(`担当 ${name}`) ||
-              blackboard.get(`担当 ${name}`)?.writer !== guard.name
-            ) {
-              write(
-                `担当 ${name}`,
-                `見張り ${guard.name}`,
-                guard.name,
-                time,
-                agent.position
-              );
-            }
-            reads.push(boardPosition.clone(), agent.position.clone().setY(1));
-            const angle =
-              (slot / Math.max(1, responders.length)) * TAU + Math.PI / 2;
-            const spot = lastKnown
-              .clone()
-              .add(
-                new Vector3(
-                  Math.cos(angle),
-                  0,
-                  -Math.sin(angle)
-                ).multiplyScalar(1.3)
-              );
-            const goal = walkable(map, cellAt(map, spot.x, spot.z))
-              ? spot
-              : lastKnown;
-            agent.goTo(goal);
-            agent.update(dt, 1.7);
-            agent.setIcon("?");
-          } else if (
-            mode === "private" &&
-            guard.memory &&
-            time - guard.memoryTime < 4
-          ) {
-            agent.goTo(guard.memory);
-            agent.update(dt, 1.5);
-            agent.setIcon("?");
           } else {
-            const current = guard.route[guard.waypoint];
-            if (current && agent.position.distanceTo(current) < 0.2) {
-              guard.waypoint = (guard.waypoint + 1) % guard.route.length;
-            }
-            const goal = guard.route[guard.waypoint];
-            if (goal) {
-              agent.goTo(goal);
-            }
-            agent.update(dt, 1);
-            agent.setIcon("");
+            assignResponseSlot(
+              slot,
+              lastKnown,
+              guard,
+              time,
+              agent,
+              responders,
+              dt,
+              mode
+            );
           }
           guard.tag.position.copy(agent.position).setY(1.6);
         }
-        if (mode === "shared" && alarmAge >= FRESH) {
-          for (const key of blackboard.keys()) {
-            if (key.startsWith("担当")) {
-              blackboard.delete(key);
-            }
-          }
-        }
+        clearExpiredAssignments(mode, alarmAge);
         if (mode === "private") {
           blackboard.clear();
         }
@@ -304,20 +227,7 @@ export const demo: DemoModule = {
         boardLabel.visible = mode === "shared";
 
         const entries = [...blackboard.entries()].slice(0, cells.length);
-        for (const [row, line] of cells.entries()) {
-          const entry = entries[row];
-          const values = entry
-            ? [
-                entry[0],
-                entry[1].value,
-                entry[1].writer,
-                `${(time - entry[1].time).toFixed(1)} 秒`,
-              ]
-            : ["", "", "", ""];
-          for (const [col, text] of line.entries()) {
-            text.textContent = values[col] ?? "";
-          }
-        }
+        renderBlackboardEntries(entries, time);
         const reacting = guards.filter(
           (g) => g.agent.sees(target) || responders.includes(g)
         ).length;
@@ -336,5 +246,145 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function renderBlackboardEntries(entries: [string, Entry][], time: number) {
+      for (const [row, line] of cells.entries()) {
+        const entry = entries[row];
+        const values = entry
+          ? [
+              entry[0],
+              entry[1].value,
+              entry[1].writer,
+              `${(time - entry[1].time).toFixed(1)} 秒`,
+            ]
+          : ["", "", "", ""];
+        for (const [col, text] of line.entries()) {
+          text.textContent = values[col] ?? "";
+        }
+      }
+    }
+
+    function updateGuardPerception(
+      initialAnyone: number,
+      time: number,
+      mode: Mode
+    ) {
+      let anyone = initialAnyone;
+
+      for (const guard of guards) {
+        const { agent } = guard;
+        const sees = agent.sees(target);
+        if (sees) {
+          anyone++;
+          guard.memory = target.clone();
+          guard.memoryTime = time;
+          if (mode === "shared") {
+            write(
+              "敵の位置",
+              `(${target.x.toFixed(1)}, ${target.z.toFixed(1)})`,
+              guard.name,
+              time,
+              agent.position
+            );
+            write(
+              "見つけた人",
+              `見張り ${guard.name}`,
+              guard.name,
+              time,
+              agent.position
+            );
+          }
+        }
+      }
+      return anyone;
+    }
+
+    function clearExpiredAssignments(mode: Mode, alarmAge: number) {
+      if (mode === "shared" && alarmAge >= FRESH) {
+        for (const key of blackboard.keys()) {
+          if (key.startsWith("担当")) {
+            blackboard.delete(key);
+          }
+        }
+      }
+    }
+
+    function updateSharedAlert(
+      mode: Mode,
+      anyone: number,
+      alarmAge: number,
+      time: number
+    ) {
+      if (mode === "shared") {
+        blackboard.set("警戒レベル", {
+          value: anyone > 0 ? "戦闘" : alarmAge < FRESH ? "警戒" : "平常",
+          writer: anyone > 0 ? "見張り" : "—",
+          time:
+            anyone > 0 ? time : (blackboard.get("警戒レベル")?.time ?? time),
+        });
+      }
+    }
+
+    function assignResponseSlot(
+      slot: number,
+      lastKnown: Vector3 | null | undefined,
+      guard: (typeof guards)[number],
+      time: number,
+      agent: (typeof guards)[number]["agent"],
+      responders: typeof guards,
+      dt: number,
+      mode: Mode
+    ) {
+      if (slot !== -1 && lastKnown) {
+        const name = slots[slot % slots.length] ?? "北";
+        if (
+          !blackboard.has(`担当 ${name}`) ||
+          blackboard.get(`担当 ${name}`)?.writer !== guard.name
+        ) {
+          write(
+            `担当 ${name}`,
+            `見張り ${guard.name}`,
+            guard.name,
+            time,
+            agent.position
+          );
+        }
+        reads.push(boardPosition.clone(), agent.position.clone().setY(1));
+        const angle =
+          (slot / Math.max(1, responders.length)) * TAU + Math.PI / 2;
+        const spot = lastKnown
+          .clone()
+          .add(
+            new Vector3(Math.cos(angle), 0, -Math.sin(angle)).multiplyScalar(
+              1.3
+            )
+          );
+        const goal = walkable(map, cellAt(map, spot.x, spot.z))
+          ? spot
+          : lastKnown;
+        agent.goTo(goal);
+        agent.update(dt, 1.7);
+        agent.setIcon("?");
+      } else if (
+        mode === "private" &&
+        guard.memory &&
+        time - guard.memoryTime < 4
+      ) {
+        agent.goTo(guard.memory);
+        agent.update(dt, 1.5);
+        agent.setIcon("?");
+      } else {
+        const current = guard.route[guard.waypoint];
+        if (current && agent.position.distanceTo(current) < 0.2) {
+          guard.waypoint = (guard.waypoint + 1) % guard.route.length;
+        }
+        const goal = guard.route[guard.waypoint];
+        if (goal) {
+          agent.goTo(goal);
+        }
+        agent.update(dt, 1);
+        agent.setIcon("");
+      }
+    }
   },
 };

@@ -19,7 +19,7 @@ import {
   getKeywordCategory,
   getKeywordSubcategory,
 } from "../model/catalog";
-import type { Keyword } from "../model/catalog";
+import type { Keyword, KeywordSubcategory } from "../model/catalog";
 import { keywordSources, keywordSpecificSources } from "../model/sources";
 import { KeywordStage } from "./stage/keyword-stage";
 import { hasDemo } from "./stage/registry";
@@ -412,29 +412,7 @@ export async function KeywordDetailPage({
   const previous = index > 0 ? subcategory.keywords[index - 1] : undefined;
   const next = subcategory.keywords[index + 1];
   const source = keywordSpecificSources[slug] ?? keywordSources[subcategoryId];
-  let mdxContent: Awaited<ReturnType<typeof renderMdx>> | undefined;
-  let related: Keyword[] = [];
-  if (keyword.contentPath) {
-    const directory = path.join(
-      process.cwd(),
-      "content/keywords",
-      keyword.contentPath
-    );
-    const localized = path.join(directory, "index.en.mdx");
-    const useEnglish = locale === "en" && (await fileExists(localized));
-    const { content, data } = matter(
-      await readFile(
-        useEnglish ? localized : path.join(directory, "index.mdx"),
-        "utf-8"
-      )
-    );
-    const scope = await loadMdxScope(content, directory);
-    mdxContent = await renderMdx(content, {
-      basePath: `/contents/keywords/${keyword.contentPath}`,
-      scope,
-    });
-    related = await resolveRelated(data["related"]);
-  }
+  const { mdxContent, related } = await loadKeywordArticle(keyword, locale);
   const showDemo = keyword.demoKey !== undefined && hasDemo(keyword.demoKey);
   const displayName = locale === "ja" ? keyword.name : keyword.english;
   return (
@@ -442,28 +420,13 @@ export async function KeywordDetailPage({
       <JsonLd data={buildBreadcrumbList(breadcrumbs)} />
       <main className="site-main page-stack">
         <Breadcrumbs items={breadcrumbs} />
-        <header className="page-heading">
-          <div>
-            <p className="page-eyebrow">
-              {locale === "ja" ? subcategory.name : subcategory.english}
-            </p>
-            <div className="keyword-title">
-              <h1 className="page-title">{displayName}</h1>
-              <p
-                className="keyword-title-gloss"
-                lang={locale === "ja" ? "en" : "ja"}
-              >
-                {locale === "ja" ? keyword.english : keyword.name}
-              </p>
-            </div>
-            <p className="keyword-effect" lang="ja">
-              {asSentence(keyword.effect)}
-            </p>
-          </div>
-          <p className="page-count">
-            {index + 1} / {subcategory.keywords.length}
-          </p>
-        </header>
+        <KeywordDetailHeader
+          locale={locale}
+          subcategory={subcategory}
+          displayName={displayName}
+          keyword={keyword}
+          index={index}
+        />
         {showDemo && keyword.demoKey && (
           <section aria-labelledby="demo-heading" className="space-y-4">
             <h2 id="demo-heading" className="sr-only">
@@ -490,65 +453,10 @@ export async function KeywordDetailPage({
           </article>
         )}
         {related.length > 0 && (
-          <section aria-labelledby="related-heading">
-            <div className="section-heading">
-              <h2 id="related-heading" className="section-title">
-                {locale === "ja" ? "関連キーワード" : "Related keywords"}
-              </h2>
-            </div>
-            <ul className="glossary-list">
-              {related.map((item) => (
-                <li key={`${item.subcategoryId}/${item.slug}`}>
-                  <a
-                    href={toLocalePath(
-                      keywordPath(
-                        item.categoryId,
-                        item.subcategoryId,
-                        item.slug
-                      ),
-                      locale
-                    )}
-                    className="glossary-entry"
-                  >
-                    <span className="glossary-term">
-                      {locale === "ja" ? item.name : item.english}
-                    </span>
-                    <span
-                      className="glossary-gloss"
-                      lang={locale === "ja" ? "en" : "ja"}
-                    >
-                      {locale === "ja" ? item.english : item.name}
-                    </span>
-                    <span className="glossary-definition">{item.effect}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <RelatedKeywords locale={locale} related={related} />
         )}
         {source && (
-          <section aria-labelledby="source-heading" className="space-y-2">
-            <div className="section-heading">
-              <h2 id="source-heading" className="section-title">
-                {locale === "ja" ? "参考資料" : "References"}
-              </h2>
-            </div>
-            <a
-              href={source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="arrow-link"
-            >
-              {source.title} ↗
-            </a>
-            {keywordSpecificSources[slug] ? null : (
-              <p className="text-xs text-muted-foreground">
-                {locale === "ja"
-                  ? "分野全体の資料で、この項目を直接扱っているとは限りません。"
-                  : "A general reference for this subcategory."}
-              </p>
-            )}
-          </section>
+          <KeywordReference locale={locale} source={source} slug={slug} />
         )}
         <nav
           aria-label={
@@ -588,4 +496,148 @@ export async function KeywordDetailPage({
       </main>
     </SiteLayout>
   );
+}
+
+function KeywordReference({
+  locale,
+  source,
+  slug,
+}: {
+  locale: Locale;
+  source: { title: string; url: string };
+  slug: string;
+}) {
+  return (
+    <section aria-labelledby="source-heading" className="space-y-2">
+      <div className="section-heading">
+        <h2 id="source-heading" className="section-title">
+          {locale === "ja" ? "参考資料" : "References"}
+        </h2>
+      </div>
+      <a
+        href={source.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="arrow-link"
+      >
+        {source.title} ↗
+      </a>
+      {keywordSpecificSources[slug] ? null : (
+        <p className="text-xs text-muted-foreground">
+          {locale === "ja"
+            ? "分野全体の資料で、この項目を直接扱っているとは限りません。"
+            : "A general reference for this subcategory."}
+        </p>
+      )}
+    </section>
+  );
+}
+
+function RelatedKeywords({
+  locale,
+  related,
+}: {
+  locale: Locale;
+  related: Keyword[];
+}) {
+  return (
+    <section aria-labelledby="related-heading">
+      <div className="section-heading">
+        <h2 id="related-heading" className="section-title">
+          {locale === "ja" ? "関連キーワード" : "Related keywords"}
+        </h2>
+      </div>
+      <ul className="glossary-list">
+        {related.map((item) => (
+          <li key={`${item.subcategoryId}/${item.slug}`}>
+            <a
+              href={toLocalePath(
+                keywordPath(item.categoryId, item.subcategoryId, item.slug),
+                locale
+              )}
+              className="glossary-entry"
+            >
+              <span className="glossary-term">
+                {locale === "ja" ? item.name : item.english}
+              </span>
+              <span
+                className="glossary-gloss"
+                lang={locale === "ja" ? "en" : "ja"}
+              >
+                {locale === "ja" ? item.english : item.name}
+              </span>
+              <span className="glossary-definition">{item.effect}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function KeywordDetailHeader({
+  locale,
+  subcategory,
+  displayName,
+  keyword,
+  index,
+}: {
+  locale: Locale;
+  subcategory: KeywordSubcategory;
+  displayName: string;
+  keyword: Keyword;
+  index: number;
+}) {
+  return (
+    <header className="page-heading">
+      <div>
+        <p className="page-eyebrow">
+          {locale === "ja" ? subcategory.name : subcategory.english}
+        </p>
+        <div className="keyword-title">
+          <h1 className="page-title">{displayName}</h1>
+          <p
+            className="keyword-title-gloss"
+            lang={locale === "ja" ? "en" : "ja"}
+          >
+            {locale === "ja" ? keyword.english : keyword.name}
+          </p>
+        </div>
+        <p className="keyword-effect" lang="ja">
+          {asSentence(keyword.effect)}
+        </p>
+      </div>
+      <p className="page-count">
+        {index + 1} / {subcategory.keywords.length}
+      </p>
+    </header>
+  );
+}
+
+async function loadKeywordArticle(keyword: Keyword, locale: Locale) {
+  if (!keyword.contentPath) {
+    return { mdxContent: undefined, related: [] };
+  }
+
+  const directory = path.join(
+    process.cwd(),
+    "content/keywords",
+    keyword.contentPath
+  );
+  const localized = path.join(directory, "index.en.mdx");
+  const useEnglish = locale === "en" && (await fileExists(localized));
+  const { content, data } = matter(
+    await readFile(
+      useEnglish ? localized : path.join(directory, "index.mdx"),
+      "utf-8"
+    )
+  );
+  const scope = await loadMdxScope(content, directory);
+  const mdxContent = await renderMdx(content, {
+    basePath: `/contents/keywords/${keyword.contentPath}`,
+    scope,
+  });
+  const related = await resolveRelated(data["related"]);
+
+  return { mdxContent, related };
 }

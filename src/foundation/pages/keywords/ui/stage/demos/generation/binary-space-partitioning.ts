@@ -157,8 +157,7 @@ export const demo: DemoModule = {
         }
         const { rect } = node;
         // 長い方の辺を分ける。短すぎて 2 つに分けられないなら葉にする
-        const vertical =
-          rect.w > rect.h ? true : rect.w < rect.h ? false : random() < 0.5;
+        const vertical = chooseSplitAxis(rect, random);
         const length = vertical ? rect.w : rect.h;
         if (length < minSize * 2) {
           continue;
@@ -199,33 +198,7 @@ export const demo: DemoModule = {
       }
       // 葉の区画に部屋を置く（区画の中に、少し余白を取って）
       const fill = Number(params["roomFill"]);
-      for (const node of nodes) {
-        if (node.children) {
-          continue;
-        }
-        const w = Math.max(
-          2,
-          Math.round((node.rect.w - 2) * (fill + random() * (1 - fill)))
-        );
-        const h = Math.max(
-          2,
-          Math.round((node.rect.h - 2) * (fill + random() * (1 - fill)))
-        );
-        const x =
-          node.rect.x +
-          1 +
-          Math.floor(random() * Math.max(1, node.rect.w - 1 - w));
-        const y =
-          node.rect.y +
-          1 +
-          Math.floor(random() * Math.max(1, node.rect.h - 1 - h));
-        node.room = {
-          x,
-          y,
-          w: Math.min(w, node.rect.w - 2),
-          h: Math.min(h, node.rect.h - 2),
-        };
-      }
+      carveRooms(fill, random);
       // 通路：分けた節ごとに、左の子孫の部屋と右の子孫の部屋を L 字でつなぐ（深い節から順に）
       const roomCenter = (index: number): [number, number] => {
         const node = nodes[index];
@@ -287,18 +260,7 @@ export const demo: DemoModule = {
         Math.min(corridors.length, Math.floor(progress - order.length - 1))
       );
       const kind = new Uint8Array(count);
-      if (roomsShown) {
-        for (const node of nodes) {
-          const { room } = node;
-          if (room) {
-            for (let { y } = room; y < room.y + room.h; y++) {
-              for (let { x } = room; x < room.x + room.w; x++) {
-                kind[y * COLS + x] = 1;
-              }
-            }
-          }
-        }
-      }
+      paintRoomCells(roomsShown, kind);
       for (let n = 0; n < corridorsShown; n++) {
         for (const [x, y] of corridors[n] ?? []) {
           const index = y * COLS + x;
@@ -307,20 +269,7 @@ export const demo: DemoModule = {
           }
         }
       }
-      for (let index = 0; index < count; index++) {
-        const x = index % COLS;
-        const y = Math.floor(index / COLS);
-        const k = kind[index] ?? 0;
-        const height = k === 0 ? 0.42 : 0.06;
-        color.copy(k === 1 ? roomColor : k === 2 ? corridorColor : rock);
-        matrix.compose(
-          toWorld(x + 0.5, y + 0.5).setY(height / 2),
-          quaternion,
-          new Vector3(1, height, 1)
-        );
-        tiles.setMatrixAt(index, matrix);
-        tiles.setColorAt(index, color);
-      }
+      renderPartitionTiles(kind);
       tiles.instanceMatrix.needsUpdate = true;
       if (tiles.instanceColor) {
         tiles.instanceColor.needsUpdate = true;
@@ -351,6 +300,72 @@ export const demo: DemoModule = {
       }
       // 分割の木
       const context2d = canvas.getContext("2d");
+      renderPartitionOverlay(context2d, splits, roomsShown);
+      return { splits, corridorsShown };
+    };
+
+    return {
+      action(key) {
+        if (key === "reseed") {
+          seed++;
+          signature = "";
+        }
+      },
+      update({ dt }) {
+        const key = [
+          params["minSize"],
+          params["depth"],
+          params["ratio"],
+          params["roomFill"],
+          seed,
+        ].join("|");
+        if (key !== signature) {
+          signature = key;
+          build();
+        }
+        progress += dt * Number(params["speed"]);
+        const total = order.length + 1 + corridors.length;
+        if (progress > total + 4 * Number(params["speed"])) {
+          seed++;
+          signature = "";
+        }
+        const { splits, corridorsShown } = draw();
+        const leaves = nodes.filter((node) => !node.children).length;
+        context.readout("分けた回数", `${splits} / ${order.length}`);
+        context.readout("部屋（木の葉）", `${leaves}`);
+        context.readout("通路", `${corridorsShown} / ${corridors.length}`);
+        context.caption(
+          progress <= order.length
+            ? "範囲の長い方の辺を、真ん中あたりで 2 つに分ける。分けた 2 つをまた分ける…をくり返し、区画が最小の大きさを下回ったら止める。分け方は木として覚えておく。"
+            : progress <= order.length + 1
+              ? "木の葉（それ以上分けなかった区画）に、部屋を 1 つずつ置く。区画どうしが重ならないので、部屋も決して重ならない。"
+              : "分けたときの兄弟の区画どうしを通路でつなぐ（深い所から順に）。木の根までたどれば、すべての部屋が 1 つにつながることが保証される。"
+        );
+      },
+    };
+
+    function renderPartitionTiles(kind: Uint8Array<ArrayBuffer>) {
+      for (let index = 0; index < count; index++) {
+        const x = index % COLS;
+        const y = Math.floor(index / COLS);
+        const k = kind[index] ?? 0;
+        const height = k === 0 ? 0.42 : 0.06;
+        color.copy(k === 1 ? roomColor : k === 2 ? corridorColor : rock);
+        matrix.compose(
+          toWorld(x + 0.5, y + 0.5).setY(height / 2),
+          quaternion,
+          new Vector3(1, height, 1)
+        );
+        tiles.setMatrixAt(index, matrix);
+        tiles.setColorAt(index, color);
+      }
+    }
+
+    function renderPartitionOverlay(
+      context2d: CanvasRenderingContext2D | null,
+      splits: number,
+      roomsShown: boolean
+    ) {
       if (context2d) {
         context2d.clearRect(0, 0, canvas.width, canvas.height);
         const maxDepth = Math.max(...nodes.map((node) => node.depth), 1);
@@ -400,47 +415,61 @@ export const demo: DemoModule = {
           context2d.fill();
         }
       }
-      return { splits, corridorsShown };
-    };
+    }
 
-    return {
-      action(key) {
-        if (key === "reseed") {
-          seed++;
-          signature = "";
+    function paintRoomCells(
+      roomsShown: boolean,
+      kind: Uint8Array<ArrayBuffer>
+    ) {
+      if (roomsShown) {
+        for (const node of nodes) {
+          const { room } = node;
+          if (room) {
+            for (let { y } = room; y < room.y + room.h; y++) {
+              for (let { x } = room; x < room.x + room.w; x++) {
+                kind[y * COLS + x] = 1;
+              }
+            }
+          }
         }
-      },
-      update({ dt }) {
-        const key = [
-          params["minSize"],
-          params["depth"],
-          params["ratio"],
-          params["roomFill"],
-          seed,
-        ].join("|");
-        if (key !== signature) {
-          signature = key;
-          build();
+      }
+    }
+
+    function carveRooms(fill: number, random: () => number) {
+      for (const node of nodes) {
+        if (node.children) {
+          continue;
         }
-        progress += dt * Number(params["speed"]);
-        const total = order.length + 1 + corridors.length;
-        if (progress > total + 4 * Number(params["speed"])) {
-          seed++;
-          signature = "";
-        }
-        const { splits, corridorsShown } = draw();
-        const leaves = nodes.filter((node) => !node.children).length;
-        context.readout("分けた回数", `${splits} / ${order.length}`);
-        context.readout("部屋（木の葉）", `${leaves}`);
-        context.readout("通路", `${corridorsShown} / ${corridors.length}`);
-        context.caption(
-          progress <= order.length
-            ? "範囲の長い方の辺を、真ん中あたりで 2 つに分ける。分けた 2 つをまた分ける…をくり返し、区画が最小の大きさを下回ったら止める。分け方は木として覚えておく。"
-            : progress <= order.length + 1
-              ? "木の葉（それ以上分けなかった区画）に、部屋を 1 つずつ置く。区画どうしが重ならないので、部屋も決して重ならない。"
-              : "分けたときの兄弟の区画どうしを通路でつなぐ（深い所から順に）。木の根までたどれば、すべての部屋が 1 つにつながることが保証される。"
+        const w = Math.max(
+          2,
+          Math.round((node.rect.w - 2) * (fill + random() * (1 - fill)))
         );
-      },
-    };
+        const h = Math.max(
+          2,
+          Math.round((node.rect.h - 2) * (fill + random() * (1 - fill)))
+        );
+        const x =
+          node.rect.x +
+          1 +
+          Math.floor(random() * Math.max(1, node.rect.w - 1 - w));
+        const y =
+          node.rect.y +
+          1 +
+          Math.floor(random() * Math.max(1, node.rect.h - 1 - h));
+        node.room = {
+          x,
+          y,
+          w: Math.min(w, node.rect.w - 2),
+          h: Math.min(h, node.rect.h - 2),
+        };
+      }
+    }
   },
 };
+
+function chooseSplitAxis(rect: Rect, random: () => number) {
+  if (rect.w === rect.h) {
+    return random() < 0.5;
+  }
+  return rect.w > rect.h;
+}

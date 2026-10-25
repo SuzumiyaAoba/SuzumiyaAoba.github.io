@@ -188,6 +188,50 @@ export const demo: DemoModule = {
       geometry.getAttribute("color").needsUpdate = true;
       // 断面の図
       const context2d = canvas.getContext("2d");
+      drawFalloffPreview(context2d);
+      let land = 0;
+      let edgeLand = 0;
+      ({ land, edgeLand } = countCoastlineEdges(land, edgeLand));
+      context.readout("陸地の割合", `${Math.round((land / (N * N)) * 100)}%`);
+      context.readout("マップの端にかかった陸地", `${edgeLand} マス`);
+    };
+
+    return {
+      update() {
+        const key = ["strength", "shape", "inner", "power", "seed", "overlay"]
+          .map((name) => String(params[name]))
+          .join("|");
+        if (key !== signature) {
+          signature = key;
+          build();
+        }
+        context.caption(
+          Number(params["strength"]) === 0
+            ? "マスクなし：ノイズの高さをそのまま使うと、陸地がマップの端で切れてしまい、島ではなく大陸の一部を切り取ったように見える。"
+            : "中心からの距離で「下がり始める距離」より外側の高さを引き下げる。ノイズの凸凹は残るので、海岸線は円や四角のままにはならず、入り江や岬のある自然な形になる。"
+        );
+      },
+    };
+
+    function countCoastlineEdges(initialLand: number, initialEdgeLand: number) {
+      let land = initialLand;
+      let edgeLand = initialEdgeLand;
+
+      for (let j = 0; j < N; j++) {
+        for (let i = 0; i < N; i++) {
+          const above = (result[j * N + i] ?? 0) > SEA;
+          if (above) {
+            land++;
+            if (i === 0 || j === 0 || i === N - 1 || j === N - 1) {
+              edgeLand++;
+            }
+          }
+        }
+      }
+      return { land, edgeLand };
+    }
+
+    function drawFalloffPreview(context2d: CanvasRenderingContext2D | null) {
       if (context2d) {
         context2d.clearRect(0, 0, canvas.width, canvas.height);
         const row = Math.floor(N / 2) * N;
@@ -223,38 +267,6 @@ export const demo: DemoModule = {
           context2d.stroke();
         }
       }
-      let land = 0;
-      let edgeLand = 0;
-      for (let j = 0; j < N; j++) {
-        for (let i = 0; i < N; i++) {
-          const above = (result[j * N + i] ?? 0) > SEA;
-          if (above) {
-            land++;
-            if (i === 0 || j === 0 || i === N - 1 || j === N - 1) {
-              edgeLand++;
-            }
-          }
-        }
-      }
-      context.readout("陸地の割合", `${Math.round((land / (N * N)) * 100)}%`);
-      context.readout("マップの端にかかった陸地", `${edgeLand} マス`);
-    };
-
-    return {
-      update() {
-        const key = ["strength", "shape", "inner", "power", "seed", "overlay"]
-          .map((name) => String(params[name]))
-          .join("|");
-        if (key !== signature) {
-          signature = key;
-          build();
-        }
-        context.caption(
-          Number(params["strength"]) === 0
-            ? "マスクなし：ノイズの高さをそのまま使うと、陸地がマップの端で切れてしまい、島ではなく大陸の一部を切り取ったように見える。"
-            : "中心からの距離で「下がり始める距離」より外側の高さを引き下げる。ノイズの凸凹は残るので、海岸線は円や四角のままにはならず、入り江や岬のある自然な形になる。"
-        );
-      },
-    };
+    }
   },
 };

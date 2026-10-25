@@ -263,21 +263,7 @@ export const demo: DemoModule = {
             frame: frameIndex,
             cost: Number.POSITIVE_INFINITY,
           };
-          for (const [c, candidateClip] of clips.entries()) {
-            for (const [f, frame] of candidateClip.frames.entries()) {
-              if (f > CLIP_FRAMES - FUTURE[2] - 2) {
-                break;
-              }
-              let cost = 0;
-              for (let k = 0; k < wanted.length; k++) {
-                const d = (wanted[k] ?? 0) - (frame.features[k] ?? 0);
-                cost += d * d;
-              }
-              if (cost < best.cost) {
-                best = { clip: c, frame: f, cost };
-              }
-            }
-          }
+          best = findBestMotionFrame(wanted, best);
           if (
             best.clip !== clipIndex ||
             Math.abs(best.frame - frameIndex) > 3
@@ -324,38 +310,7 @@ export const demo: DemoModule = {
         ]) {
           item.visible = show;
         }
-        if (show && frame) {
-          const desiredPoints = [position.clone().setY(0.05)];
-          for (const [i, p] of query.points.entries()) {
-            matrix.makeTranslation(p.x, 0.07, p.z);
-            desiredDots.setMatrixAt(i, matrix);
-            desiredPoints.push(new Vector3(p.x, 0.05, p.z));
-          }
-          desiredDots.instanceMatrix.needsUpdate = true;
-          desiredLine.setPoints(desiredPoints);
-          const playing = clips[clipIndex];
-          const matchedPoints = [position.clone().setY(0.09)];
-          for (const [i, offset] of FUTURE.entries()) {
-            const future =
-              playing?.frames[Math.min(frameIndex + offset, CLIP_FRAMES - 1)];
-            if (future) {
-              const c = Math.cos(yaw - frame.yaw);
-              const s = Math.sin(yaw - frame.yaw);
-              const dx = future.x - frame.x;
-              const dz = future.z - frame.z;
-              const p = new Vector3(
-                position.x + dx * c + dz * s,
-                0.09,
-                position.z - dx * s + dz * c
-              );
-              matrix.makeTranslation(p.x, 0.11, p.z);
-              matchedDots.setMatrixAt(i, matrix);
-              matchedPoints.push(p);
-            }
-          }
-          matchedDots.instanceMatrix.needsUpdate = true;
-          matchedLine.setPoints(matchedPoints);
-        }
+        renderMotionTrajectories(show, frame, query);
         context.readout("再生中のクリップ", clips[clipIndex]?.name ?? "");
         context.readout(
           "データベース",
@@ -368,5 +323,68 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderMotionTrajectories(
+      show: boolean,
+      frame: Frame | undefined,
+      query: { points: { x: number; z: number; yaw: number }[]; speed: number }
+    ) {
+      if (show && frame) {
+        const desiredPoints = [position.clone().setY(0.05)];
+        for (const [i, p] of query.points.entries()) {
+          matrix.makeTranslation(p.x, 0.07, p.z);
+          desiredDots.setMatrixAt(i, matrix);
+          desiredPoints.push(new Vector3(p.x, 0.05, p.z));
+        }
+        desiredDots.instanceMatrix.needsUpdate = true;
+        desiredLine.setPoints(desiredPoints);
+        const playing = clips[clipIndex];
+        const matchedPoints = [position.clone().setY(0.09)];
+        for (const [i, offset] of FUTURE.entries()) {
+          const future =
+            playing?.frames[Math.min(frameIndex + offset, CLIP_FRAMES - 1)];
+          if (future) {
+            const c = Math.cos(yaw - frame.yaw);
+            const s = Math.sin(yaw - frame.yaw);
+            const dx = future.x - frame.x;
+            const dz = future.z - frame.z;
+            const p = new Vector3(
+              position.x + dx * c + dz * s,
+              0.09,
+              position.z - dx * s + dz * c
+            );
+            matrix.makeTranslation(p.x, 0.11, p.z);
+            matchedDots.setMatrixAt(i, matrix);
+            matchedPoints.push(p);
+          }
+        }
+        matchedDots.instanceMatrix.needsUpdate = true;
+        matchedLine.setPoints(matchedPoints);
+      }
+    }
+
+    function findBestMotionFrame(
+      wanted: number[],
+      initialBest: { clip: number; frame: number; cost: number }
+    ) {
+      let best = initialBest;
+
+      for (const [c, candidateClip] of clips.entries()) {
+        for (const [f, frame] of candidateClip.frames.entries()) {
+          if (f > CLIP_FRAMES - FUTURE[2] - 2) {
+            break;
+          }
+          let cost = 0;
+          for (let k = 0; k < wanted.length; k++) {
+            const d = (wanted[k] ?? 0) - (frame.features[k] ?? 0);
+            cost += d * d;
+          }
+          if (cost < best.cost) {
+            best = { clip: c, frame: f, cost };
+          }
+        }
+      }
+      return best;
+    }
   },
 };

@@ -193,29 +193,7 @@ export const demo: DemoModule = {
       }
       // 2. 距離の拘束と球との衝突を、くり返し少しずつ満たす
       for (let iteration = 0; iteration < iterations; iteration++) {
-        for (const constraint of constraints) {
-          if (!constraint.active) {
-            continue;
-          }
-          const a = particles[constraint.a];
-          const b = particles[constraint.b];
-          if (!a || !b) {
-            continue;
-          }
-          temp.subVectors(b.position, a.position);
-          const distance = temp.length();
-          if (distance < 1e-6) {
-            continue;
-          }
-          const error = (distance - constraint.length) / distance;
-          const wa = a.pinned ? 0 : 1;
-          const wb = b.pinned ? 0 : 1;
-          if (wa + wb === 0) {
-            continue;
-          }
-          a.position.addScaledVector(temp, (error * wa) / (wa + wb));
-          b.position.addScaledVector(temp, (-error * wb) / (wa + wb));
-        }
+        solveRopeConstraints();
         for (const particle of particles) {
           // 崖の壁：橋が崖の中へめり込まないよう押し戻す
           const wall = SPAN / 2 - 0.06;
@@ -264,18 +242,7 @@ export const demo: DemoModule = {
           }
         }
 
-        for (const [sideIndex, rope] of ropes.entries()) {
-          const points: Vector3[] = [];
-          for (let i = 0; i <= SEGMENTS; i++) {
-            const particle = particles[index(sideIndex, i)];
-            if (particle) {
-              points.push(
-                particle.position.clone().setY(particle.position.y + 0.06)
-              );
-            }
-          }
-          rope.setPoints(points);
-        }
+        renderRopes();
         for (let i = 0; i <= SEGMENTS; i++) {
           const a = particles[index(0, i)]?.position;
           const b = particles[index(1, i)]?.position;
@@ -349,5 +316,46 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderRopes() {
+      for (const [sideIndex, rope] of ropes.entries()) {
+        const points: Vector3[] = [];
+        for (let i = 0; i <= SEGMENTS; i++) {
+          const particle = particles[index(sideIndex, i)];
+          if (particle) {
+            points.push(
+              particle.position.clone().setY(particle.position.y + 0.06)
+            );
+          }
+        }
+        rope.setPoints(points);
+      }
+    }
+
+    function solveRopeConstraints() {
+      for (const constraint of constraints) {
+        if (!constraint.active) {
+          continue;
+        }
+        const a = particles[constraint.a];
+        const b = particles[constraint.b];
+        if (!a || !b) {
+          continue;
+        }
+        temp.subVectors(b.position, a.position);
+        const distance = temp.length();
+        if (distance < 1e-6) {
+          continue;
+        }
+        const error = (distance - constraint.length) / distance;
+        const wa = a.pinned ? 0 : 1;
+        const wb = b.pinned ? 0 : 1;
+        if (wa + wb === 0) {
+          continue;
+        }
+        a.position.addScaledVector(temp, (error * wa) / (wa + wb));
+        b.position.addScaledVector(temp, (-error * wb) / (wa + wb));
+      }
+    }
   },
 };

@@ -75,15 +75,13 @@ export const demo: DemoModule = {
         HEIGHT,
         (z + 0.5) * CELL - DEPTH / 2
       );
-    for (let z = 0; z < ROWS; z++) {
-      for (let x = 0; x < COLS; x++) {
-        if (blocked[z * COLS + x] === 1) {
-          const center = cellCenter(x, z);
-          matrix.makeTranslation(center.x, 0.25, center.z);
-          blocks.setMatrixAt(blockIndex++, matrix);
-        }
-      }
-    }
+    blockIndex = buildObstacleMesh(
+      blocked,
+      cellCenter,
+      matrix,
+      blocks,
+      blockIndex
+    );
     scene.add(blocks);
 
     const goalRing = new Mesh(
@@ -139,29 +137,7 @@ export const demo: DemoModule = {
           }
           direction.set(0, 0, 0);
           let best = distances[index] ?? 0;
-          for (let dz = -1; dz <= 1; dz++) {
-            for (let dx = -1; dx <= 1; dx++) {
-              const nx = x + dx;
-              const nz = z + dz;
-              if (nx < 0 || nz < 0 || nx >= COLS || nz >= ROWS) {
-                continue;
-              }
-              // 斜め移動は角をかすめないよう、両隣が通れるときだけ
-              if (
-                dx !== 0 &&
-                dz !== 0 &&
-                (blocked[z * COLS + nx] === 1 || blocked[nz * COLS + x] === 1)
-              ) {
-                continue;
-              }
-              const value =
-                distances[nz * COLS + nx] ?? Number.POSITIVE_INFINITY;
-              if (value < best) {
-                best = value;
-                direction.set(dx, 0, dz).normalize();
-              }
-            }
-          }
+          best = chooseFlowDirection(x, z, best, direction);
         }
       }
     };
@@ -245,55 +221,7 @@ export const demo: DemoModule = {
         goalRing.visible = !wind;
         goalRing.position.copy(cellCenter(goal.x, goal.z)).setY(0.02);
 
-        for (let index = 0; index < AGENTS; index++) {
-          const position = positions[index];
-          const velocity = velocities[index];
-          if (!(position && velocity)) {
-            continue;
-          }
-          const cell = cellOf(position);
-          const direction = cell.inside
-            ? directions[cell.z * COLS + cell.x]
-            : undefined;
-          if (direction) {
-            velocity.lerp(
-              direction
-                .clone()
-                .multiplyScalar(SPEED * (0.85 + (index % 5) * 0.06)),
-              Math.min(1, dt * 4)
-            );
-          }
-          next.copy(position).addScaledVector(velocity, dt);
-          const nextCell = cellOf(next);
-          if (
-            nextCell.inside &&
-            blocked[nextCell.z * COLS + nextCell.x] !== 1
-          ) {
-            position.copy(next);
-          } else if (wind) {
-            // 風のモードでは端から反対側へ流れ出る
-            position.x =
-              next.x > WIDTH / 2
-                ? -WIDTH / 2
-                : next.x < -WIDTH / 2
-                  ? WIDTH / 2
-                  : position.x;
-            position.z =
-              next.z > DEPTH / 2
-                ? -DEPTH / 2
-                : next.z < -DEPTH / 2
-                  ? DEPTH / 2
-                  : position.z;
-            velocity.multiplyScalar(0.5);
-          } else {
-            velocity.multiplyScalar(-0.3);
-          }
-          if (!wind && cell.x === goal.x && cell.z === goal.z) {
-            arrived++;
-            scatter(index);
-          }
-          agents.set(index, position, velocity);
-        }
+        advanceFlowAgents(dt, wind);
         agents.commit();
 
         arrows.visible = params["arrows"] === true;
@@ -331,5 +259,117 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceFlowAgents(dt: number, wind: boolean) {
+      for (let index = 0; index < AGENTS; index++) {
+        const position = positions[index];
+        const velocity = velocities[index];
+        if (!(position && velocity)) {
+          continue;
+        }
+        const cell = cellOf(position);
+        const direction = cell.inside
+          ? directions[cell.z * COLS + cell.x]
+          : undefined;
+        if (direction) {
+          velocity.lerp(
+            direction
+              .clone()
+              .multiplyScalar(SPEED * (0.85 + (index % 5) * 0.06)),
+            Math.min(1, dt * 4)
+          );
+        }
+        next.copy(position).addScaledVector(velocity, dt);
+        const nextCell = cellOf(next);
+        advanceAgentPosition(nextCell, position, wind, velocity);
+        if (!wind && cell.x === goal.x && cell.z === goal.z) {
+          arrived++;
+          scatter(index);
+        }
+        agents.set(index, position, velocity);
+      }
+    }
+
+    function advanceAgentPosition(
+      nextCell: { x: number; z: number; inside: boolean },
+      position: Vector3,
+      wind: boolean,
+      velocity: Vector3
+    ) {
+      if (nextCell.inside && blocked[nextCell.z * COLS + nextCell.x] !== 1) {
+        position.copy(next);
+      } else if (wind) {
+        // 風のモードでは端から反対側へ流れ出る
+        position.x =
+          next.x > WIDTH / 2
+            ? -WIDTH / 2
+            : next.x < -WIDTH / 2
+              ? WIDTH / 2
+              : position.x;
+        position.z =
+          next.z > DEPTH / 2
+            ? -DEPTH / 2
+            : next.z < -DEPTH / 2
+              ? DEPTH / 2
+              : position.z;
+        velocity.multiplyScalar(0.5);
+      } else {
+        velocity.multiplyScalar(-0.3);
+      }
+    }
+
+    function chooseFlowDirection(
+      x: number,
+      z: number,
+      initialBest: number,
+      direction: Vector3
+    ) {
+      let best = initialBest;
+
+      for (let dz = -1; dz <= 1; dz++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          const nz = z + dz;
+          if (nx < 0 || nz < 0 || nx >= COLS || nz >= ROWS) {
+            continue;
+          }
+          // 斜め移動は角をかすめないよう、両隣が通れるときだけ
+          if (
+            dx !== 0 &&
+            dz !== 0 &&
+            (blocked[z * COLS + nx] === 1 || blocked[nz * COLS + x] === 1)
+          ) {
+            continue;
+          }
+          const value = distances[nz * COLS + nx] ?? Number.POSITIVE_INFINITY;
+          if (value < best) {
+            best = value;
+            direction.set(dx, 0, dz).normalize();
+          }
+        }
+      }
+      return best;
+    }
   },
 };
+
+function buildObstacleMesh(
+  blocked: Uint8Array<ArrayBuffer>,
+  cellCenter: (x: number, z: number, out?: Vector3) => Vector3,
+  matrix: Matrix4,
+  blocks: InstancedMesh,
+  initialBlockIndex: number
+) {
+  let blockIndex = initialBlockIndex;
+
+  for (let z = 0; z < ROWS; z++) {
+    for (let x = 0; x < COLS; x++) {
+      if (blocked[z * COLS + x] === 1) {
+        const center = cellCenter(x, z);
+        matrix.makeTranslation(center.x, 0.25, center.z);
+        blocks.setMatrixAt(blockIndex++, matrix);
+      }
+    }
+  }
+  return blockIndex;
+}

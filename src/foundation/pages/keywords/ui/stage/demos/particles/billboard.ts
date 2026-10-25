@@ -135,30 +135,7 @@ export const demo: DemoModule = {
             index * 4
           );
         }
-        for (let index = 0; index < FIRE; index++) {
-          const seed = fireSeed[index] ?? 0;
-          const life = 0.6 + seed * 0.8;
-          const age = ((fireAge[index] ?? 0) + dt) % life;
-          fireAge[index] = age;
-          const t = age / life;
-          const ember = seed > 0.8;
-          const angle = seed * 97;
-          fire.positions[index * 3] =
-            Math.cos(angle) * 0.2 * (1 - t) +
-            (ember ? Math.sin(t * 9 + seed) * 0.3 : 0);
-          fire.positions[index * 3 + 1] = 0.25 + t * (ember ? 2.8 : 1.1);
-          fire.positions[index * 3 + 2] = Math.sin(angle) * 0.2 * (1 - t);
-          fire.sizes[index] = ember
-            ? 0.06
-            : (0.55 - t * 0.4) * (0.7 + seed * 0.5);
-          const heat = 1 - t;
-          fire.colors.set(
-            ember
-              ? [1.4, 0.7, 0.25, heat]
-              : [1.2 * heat + 0.3, 0.45 * heat + 0.1, 0.1 * heat, heat * 0.8],
-            index * 4
-          );
-        }
+        animateFireBillboards(dt);
         fire.setCount(FIRE);
         fire.commit();
 
@@ -204,5 +181,32 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function animateFireBillboards(dt: number) {
+      for (let index = 0; index < FIRE; index++) {
+        const seed = fireSeed[index] ?? 0;
+        const life = 0.6 + seed * 0.8;
+        const age = ((fireAge[index] ?? 0) + dt) % life;
+        fireAge[index] = age;
+        const t = age / life;
+        const ember = seed > 0.8;
+        const angle = seed * 97;
+        fire.positions[index * 3] =
+          Math.cos(angle) * 0.2 * (1 - t) +
+          (ember ? Math.sin(t * 9 + seed) * 0.3 : 0);
+        fire.positions[index * 3 + 1] = 0.25 + t * (ember ? 2.8 : 1.1);
+        fire.positions[index * 3 + 2] = Math.sin(angle) * 0.2 * (1 - t);
+        fire.sizes[index] = ember
+          ? 0.06
+          : (0.55 - t * 0.4) * (0.7 + seed * 0.5);
+        const heat = 1 - t;
+        fire.colors.set(
+          ember
+            ? [1.4, 0.7, 0.25, heat]
+            : [1.2 * heat + 0.3, 0.45 * heat + 0.1, 0.1 * heat, heat * 0.8],
+          index * 4
+        );
+      }
+    }
   },
 };

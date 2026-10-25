@@ -352,27 +352,7 @@ export const demo: DemoModule = {
       }
       upload(grid, iso);
       const inside: number[] = [];
-      for (const [corner, [dx, dy, dz]] of CUBE_CORNERS.entries()) {
-        const position = new Vector3(dx - 0.5, dy - 0.5, dz - 0.5)
-          .multiplyScalar(SIZE)
-          .add(CENTER);
-        const isInside = (caseIndex & (1 << corner)) !== 0;
-        const ball = cornerMarkers[corner];
-        if (ball) {
-          ball.position.copy(position);
-          ball.visible = true;
-          ball.material.color.set(isInside ? palette.amber : "#56627a");
-          ball.material.emissive.set(isInside ? palette.amber : "#000000");
-        }
-        const label = cornerLabels[corner];
-        if (label) {
-          label.position.copy(position).add(new Vector3(0, 0.32, 0));
-          label.visible = true;
-        }
-        if (isInside) {
-          inside.push(corner);
-        }
-      }
+      renderCubeCorners(inside);
       for (const [edge, [a, b]] of CUBE_EDGES.entries()) {
         const ball = edgeMarkers[edge];
         if (!ball) {
@@ -505,5 +485,29 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderCubeCorners(inside: number[]) {
+      for (const [corner, [dx, dy, dz]] of CUBE_CORNERS.entries()) {
+        const position = new Vector3(dx - 0.5, dy - 0.5, dz - 0.5)
+          .multiplyScalar(SIZE)
+          .add(CENTER);
+        const isInside = (caseIndex & (1 << corner)) !== 0;
+        const ball = cornerMarkers[corner];
+        if (ball) {
+          ball.position.copy(position);
+          ball.visible = true;
+          ball.material.color.set(isInside ? palette.amber : "#56627a");
+          ball.material.emissive.set(isInside ? palette.amber : "#000000");
+        }
+        const label = cornerLabels[corner];
+        if (label) {
+          label.position.copy(position).add(new Vector3(0, 0.32, 0));
+          label.visible = true;
+        }
+        if (isInside) {
+          inside.push(corner);
+        }
+      }
+    }
   },
 };

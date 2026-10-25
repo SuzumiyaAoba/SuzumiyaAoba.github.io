@@ -232,39 +232,17 @@ export const demo: DemoModule = {
         // 状態ごとの行動と、遷移の条件
         switch (state) {
           case "patrol": {
-            const current = patrol[waypoint];
-            if (current && guard.position.distanceTo(current) < 0.2) {
-              waypoint = (waypoint + 1) % patrol.length;
-            }
-            const goal = patrol[waypoint];
-            if (goal) {
-              guard.goTo(goal);
-            }
-            guard.update(dt, 1.1);
-            if (sees) {
-              enter("alert");
-            }
+            patrolStep(dt, sees);
             break;
           }
           case "alert": {
-            guard.stop();
-            guard.face(target);
-            guard.update(dt);
-            if (seenTime > 0.8) {
-              enter("chase");
-            } else if (unseenTime > 2) {
-              enter("patrol");
-            }
+            alertStep(dt, target);
             break;
           }
           case "chase": {
             guard.goTo(lastSeen);
             guard.update(dt, 2.1);
-            if (distance < 0.9) {
-              enter("attack");
-            } else if (!sees && unseenTime > 0.3) {
-              enter("search");
-            }
+            updateChaseState(distance, sees);
             break;
           }
           case "attack": {
@@ -285,16 +263,7 @@ export const demo: DemoModule = {
             break;
           }
           case "search": {
-            if (guard.position.distanceTo(lastSeen) > 0.3 && lookAround === 0) {
-              guard.goTo(lastSeen);
-              guard.update(dt, 1.4);
-            } else {
-              lookAround += dt;
-              guard.stop();
-              guard.root.rotation.y +=
-                dt * 1.6 * Math.sign(Math.sin(lookAround * 1.2) + 0.01);
-              guard.update(dt);
-            }
+            searchLastKnownPosition(dt);
             if (sees) {
               lookAround = 0;
               enter("chase");
@@ -315,23 +284,8 @@ export const demo: DemoModule = {
         lastSeenMarker.position.copy(lastSeen).setY(0.3);
 
         flashTime = Math.max(0, flashTime - dt);
-        for (const node of stateNodes) {
-          const active = node.key === state;
-          node.circle.setAttribute(
-            "fill",
-            active ? STATES[node.key].color : "#101826"
-          );
-          node.text.setAttribute("fill", active ? "#0a0f17" : "#e8eef6");
-        }
-        for (const node of edgeNodes) {
-          const lit = flash === node.edge && flashTime > 0;
-          node.path.setAttribute(
-            "stroke",
-            lit ? STATES[node.edge.to].color : "#51607a"
-          );
-          node.path.setAttribute("stroke-width", lit ? "3" : "1.5");
-          node.label.setAttribute("fill", lit ? "#e8eef6" : "#8f9eb3");
-        }
+        renderStateNodes();
+        renderStateTransitions();
         context.readout(
           "今の状態",
           `${STATES[state].name}（${timeInState.toFixed(1)} 秒）`
@@ -343,5 +297,74 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function updateChaseState(distance: number, sees: boolean) {
+      if (distance < 0.9) {
+        enter("attack");
+      } else if (!sees && unseenTime > 0.3) {
+        enter("search");
+      }
+    }
+
+    function renderStateNodes() {
+      for (const node of stateNodes) {
+        const active = node.key === state;
+        node.circle.setAttribute(
+          "fill",
+          active ? STATES[node.key].color : "#101826"
+        );
+        node.text.setAttribute("fill", active ? "#0a0f17" : "#e8eef6");
+      }
+    }
+
+    function searchLastKnownPosition(dt: number) {
+      if (guard.position.distanceTo(lastSeen) > 0.3 && lookAround === 0) {
+        guard.goTo(lastSeen);
+        guard.update(dt, 1.4);
+      } else {
+        lookAround += dt;
+        guard.stop();
+        guard.root.rotation.y +=
+          dt * 1.6 * Math.sign(Math.sin(lookAround * 1.2) + 0.01);
+        guard.update(dt);
+      }
+    }
+
+    function renderStateTransitions() {
+      for (const node of edgeNodes) {
+        const lit = flash === node.edge && flashTime > 0;
+        node.path.setAttribute(
+          "stroke",
+          lit ? STATES[node.edge.to].color : "#51607a"
+        );
+        node.path.setAttribute("stroke-width", lit ? "3" : "1.5");
+        node.label.setAttribute("fill", lit ? "#e8eef6" : "#8f9eb3");
+      }
+    }
+    function patrolStep(dt: number, sees: boolean) {
+      const current = patrol[waypoint];
+      if (current && guard.position.distanceTo(current) < 0.2) {
+        waypoint = (waypoint + 1) % patrol.length;
+      }
+      const goal = patrol[waypoint];
+      if (goal) {
+        guard.goTo(goal);
+      }
+      guard.update(dt, 1.1);
+      if (sees) {
+        enter("alert");
+      }
+    }
+
+    function alertStep(dt: number, target: typeof player.position) {
+      guard.stop();
+      guard.face(target);
+      guard.update(dt);
+      if (seenTime > 0.8) {
+        enter("chase");
+      } else if (unseenTime > 2) {
+        enter("patrol");
+      }
+    }
   },
 };

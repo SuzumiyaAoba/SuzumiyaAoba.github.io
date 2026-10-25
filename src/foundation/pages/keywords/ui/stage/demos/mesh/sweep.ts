@@ -317,14 +317,7 @@ export const demo: DemoModule = {
             );
           });
         }
-        if (kind !== lastPath) {
-          lastPath = kind;
-          context.setParam(
-            "shape",
-            kind === "road" ? "road" : kind === "pipe" ? "circle" : "star"
-          );
-          context.setParam("taper", kind === "tentacle" ? 0.6 : 0);
-        }
+        updateSweepShape(kind);
         const curve = new CatmullRomCurve3(points, false, "centripetal");
         const count = Number(params["segments"]);
         const frames =
@@ -392,5 +385,16 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateSweepShape(kind: string) {
+      if (kind !== lastPath) {
+        lastPath = kind;
+        context.setParam(
+          "shape",
+          kind === "road" ? "road" : kind === "pipe" ? "circle" : "star"
+        );
+        context.setParam("taper", kind === "tentacle" ? 0.6 : 0);
+      }
+    }
   },
 };

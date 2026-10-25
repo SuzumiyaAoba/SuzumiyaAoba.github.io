@@ -172,98 +172,21 @@ export const demo: DemoModule = {
         let zoomPixel: [number, number] | null = null;
         let zoomScore = 0.3;
         const showError = params["error"] === true;
-        for (let y = 0; y < ROWS; y++) {
-          for (let x = 0; x < COLS; x++) {
-            // 境目にかかる画素だけ、正しい値との差を調べる
-            const corners = [
-              inside(x, y, angle),
-              inside(x + 1, y, angle),
-              inside(x, y + 1, angle),
-              inside(x + 1, y + 1, angle),
-            ];
-            const edge =
-              corners.some(Boolean) && corners.some((value) => !value);
-            let shown = corners[0] === true ? 1 : 0;
-            if (edge) {
-              edges++;
-              const correct = truth(x, y);
-              for (const m of ["random", "stratified", "grid"] as const) {
-                const result = estimate(m, x, y, count);
-                errors[m] += Math.abs(result.value - correct);
-                if (m === method) {
-                  shown = showError
-                    ? Math.min(1, Math.abs(result.value - correct) * 4)
-                    : result.value;
-                }
-              }
-              // 拡大して見せる画素：半分くらい覆われた画素のうち、いちばん半分に近いもの
-              if (Math.abs(correct - 0.5) < zoomScore) {
-                zoomScore = Math.abs(correct - 0.5);
-                zoomPixel = [x, y];
-              }
-            }
-            const v = Math.round(shown * 255);
-            context2d.fillStyle =
-              showError && edge
-                ? `rgb(${v}, ${Math.round(v * 0.35)}, ${Math.round(v * 0.3)})`
-                : showError
-                  ? "#0f1520"
-                  : `rgb(${Math.round(30 + v * 0.8)}, ${Math.round(40 + v * 0.75)}, ${Math.round(60 + v * 0.55)})`;
-            context2d.fillRect(x * CELL, y * CELL, CELL, CELL);
-          }
-        }
+        ({ edges, zoomScore, zoomPixel } = measureSamplingError(
+          edges,
+          zoomScore,
+          zoomPixel,
+          count,
+          errors,
+          method,
+          showError,
+          context2d
+        ));
         // 1 画素の拡大図：標本点と、内側に入った点
         const ox = COLS * CELL + 24;
         context2d.fillStyle = "#1a2433";
         context2d.fillRect(COLS * CELL, 0, 24 + ZOOM, canvas.height);
-        if (zoomPixel) {
-          const [px, py] = zoomPixel;
-          const top = (canvas.height - ZOOM) / 2;
-          const image = context2d.createImageData(ZOOM, ZOOM);
-          for (let j = 0; j < ZOOM; j++) {
-            for (let i = 0; i < ZOOM; i++) {
-              const on = inside(px + i / ZOOM, py + j / ZOOM, angle);
-              const o = (j * ZOOM + i) * 4;
-              image.data[o] = on ? 120 : 40;
-              image.data[o + 1] = on ? 132 : 50;
-              image.data[o + 2] = on ? 150 : 68;
-              image.data[o + 3] = 255;
-            }
-          }
-          context2d.putImageData(image, ox, top);
-          const side = Math.round(Math.sqrt(count));
-          if (method === "stratified") {
-            context2d.strokeStyle = "rgba(232,238,246,0.35)";
-            context2d.lineWidth = 1;
-            for (let k = 1; k < side; k++) {
-              context2d.beginPath();
-              context2d.moveTo(ox + (k / side) * ZOOM, top);
-              context2d.lineTo(ox + (k / side) * ZOOM, top + ZOOM);
-              context2d.moveTo(ox, top + (k / side) * ZOOM);
-              context2d.lineTo(ox + ZOOM, top + (k / side) * ZOOM);
-              context2d.stroke();
-            }
-          }
-          const result = estimate(method, px, py, count);
-          for (const [u, v] of result.points) {
-            const on = inside(px + u, py + v, angle);
-            context2d.fillStyle = on ? palette.amber : "#8494aa";
-            context2d.beginPath();
-            context2d.arc(ox + u * ZOOM, top + v * ZOOM, 6, 0, Math.PI * 2);
-            context2d.fill();
-          }
-          context2d.strokeStyle = palette.coral;
-          context2d.lineWidth = 3;
-          context2d.strokeRect(px * CELL, py * CELL, CELL, CELL);
-          context2d.strokeRect(ox, top, ZOOM, ZOOM);
-          context2d.fillStyle = "#e8eef6";
-          context2d.font = "18px sans-serif";
-          context2d.fillText(
-            `見積もり ${(result.value * 100).toFixed(0)}% ／ 正解 ${(truth(px, py) * 100).toFixed(0)}%`,
-            ox,
-            top - 12
-          );
-        }
+        renderPixelZoom(zoomPixel, context2d, ox, count, method);
         texture.needsUpdate = true;
         const divisor = Math.max(1, edges);
         graph.push([
@@ -287,5 +210,156 @@ export const demo: DemoModule = {
         texture.dispose();
       },
     };
+
+    function renderPixelZoom(
+      zoomPixel: [number, number] | null,
+      context2d: CanvasRenderingContext2D,
+      ox: number,
+      count: number,
+      method: "grid" | "random" | "stratified"
+    ) {
+      if (zoomPixel) {
+        const [px, py] = zoomPixel;
+        const top = (canvas.height - ZOOM) / 2;
+        const image = context2d.createImageData(ZOOM, ZOOM);
+        paintZoomedPixel(px, py, image);
+        context2d.putImageData(image, ox, top);
+        const side = Math.round(Math.sqrt(count));
+        if (method === "stratified") {
+          context2d.strokeStyle = "rgba(232,238,246,0.35)";
+          context2d.lineWidth = 1;
+          for (let k = 1; k < side; k++) {
+            context2d.beginPath();
+            context2d.moveTo(ox + (k / side) * ZOOM, top);
+            context2d.lineTo(ox + (k / side) * ZOOM, top + ZOOM);
+            context2d.moveTo(ox, top + (k / side) * ZOOM);
+            context2d.lineTo(ox + ZOOM, top + (k / side) * ZOOM);
+            context2d.stroke();
+          }
+        }
+        const result = estimate(method, px, py, count);
+        for (const [u, v] of result.points) {
+          const on = inside(px + u, py + v, angle);
+          context2d.fillStyle = on ? palette.amber : "#8494aa";
+          context2d.beginPath();
+          context2d.arc(ox + u * ZOOM, top + v * ZOOM, 6, 0, Math.PI * 2);
+          context2d.fill();
+        }
+        context2d.strokeStyle = palette.coral;
+        context2d.lineWidth = 3;
+        context2d.strokeRect(px * CELL, py * CELL, CELL, CELL);
+        context2d.strokeRect(ox, top, ZOOM, ZOOM);
+        context2d.fillStyle = "#e8eef6";
+        context2d.font = "18px sans-serif";
+        context2d.fillText(
+          `見積もり ${(result.value * 100).toFixed(0)}% ／ 正解 ${(truth(px, py) * 100).toFixed(0)}%`,
+          ox,
+          top - 12
+        );
+      }
+    }
+
+    function paintZoomedPixel(px: number, py: number, image: ImageData) {
+      for (let j = 0; j < ZOOM; j++) {
+        for (let i = 0; i < ZOOM; i++) {
+          const on = inside(px + i / ZOOM, py + j / ZOOM, angle);
+          const o = (j * ZOOM + i) * 4;
+          image.data[o] = on ? 120 : 40;
+          image.data[o + 1] = on ? 132 : 50;
+          image.data[o + 2] = on ? 150 : 68;
+          image.data[o + 3] = 255;
+        }
+      }
+    }
+
+    function measureSamplingError(
+      initialEdges: number,
+      initialZoomScore: number,
+      initialZoomPixel: [number, number] | null,
+      count: number,
+      errors: Record<Method, number>,
+      method: "grid" | "random" | "stratified",
+      showError: boolean,
+      context2d: CanvasRenderingContext2D
+    ) {
+      let edges = initialEdges;
+      let zoomScore = initialZoomScore;
+      let zoomPixel = initialZoomPixel;
+
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          // 境目にかかる画素だけ、正しい値との差を調べる
+          const corners = [
+            inside(x, y, angle),
+            inside(x + 1, y, angle),
+            inside(x, y + 1, angle),
+            inside(x + 1, y + 1, angle),
+          ];
+          const edge = corners.some(Boolean) && corners.some((value) => !value);
+          let shown = corners[0] === true ? 1 : 0;
+          ({ edges, shown, zoomScore, zoomPixel } = accumulateEdgeError(
+            edge,
+            edges,
+            x,
+            y,
+            count,
+            errors,
+            method,
+            shown,
+            showError,
+            zoomScore,
+            zoomPixel
+          ));
+          const v = Math.round(shown * 255);
+          context2d.fillStyle =
+            showError && edge
+              ? `rgb(${v}, ${Math.round(v * 0.35)}, ${Math.round(v * 0.3)})`
+              : showError
+                ? "#0f1520"
+                : `rgb(${Math.round(30 + v * 0.8)}, ${Math.round(40 + v * 0.75)}, ${Math.round(60 + v * 0.55)})`;
+          context2d.fillRect(x * CELL, y * CELL, CELL, CELL);
+        }
+      }
+      return { edges, zoomScore, zoomPixel };
+    }
+
+    function accumulateEdgeError(
+      edge: boolean,
+      initialEdges: number,
+      x: number,
+      y: number,
+      count: number,
+      errors: Record<Method, number>,
+      method: string,
+      initialShown: number,
+      showError: boolean,
+      initialZoomScore: number,
+      initialZoomPixel: [number, number] | null
+    ) {
+      let edges = initialEdges;
+      let shown = initialShown;
+      let zoomScore = initialZoomScore;
+      let zoomPixel = initialZoomPixel;
+
+      if (edge) {
+        edges++;
+        const correct = truth(x, y);
+        for (const m of ["random", "stratified", "grid"] as const) {
+          const result = estimate(m, x, y, count);
+          errors[m] += Math.abs(result.value - correct);
+          if (m === method) {
+            shown = showError
+              ? Math.min(1, Math.abs(result.value - correct) * 4)
+              : result.value;
+          }
+        }
+        // 拡大して見せる画素：半分くらい覆われた画素のうち、いちばん半分に近いもの
+        if (Math.abs(correct - 0.5) < zoomScore) {
+          zoomScore = Math.abs(correct - 0.5);
+          zoomPixel = [x, y];
+        }
+      }
+      return { edges, shown, zoomScore, zoomPixel };
+    }
   },
 };

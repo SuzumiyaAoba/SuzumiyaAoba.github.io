@@ -290,20 +290,7 @@ export const demo: DemoModule = {
         }
       },
       update({ dt }) {
-        if (params["move"] === true) {
-          clock += dt;
-          for (const [index, seed] of seeds.entries()) {
-            const origin = origins[index];
-            const motion = drift[index];
-            if (origin && motion) {
-              seed.set(
-                origin.x + Math.cos(clock * motion.speed + motion.phase) * 26,
-                origin.y +
-                  Math.sin(clock * motion.speed * 1.3 + motion.phase) * 18
-              );
-            }
-          }
-        }
+        animateSeeds(dt);
         for (const [index, tower] of towers.entries()) {
           const seed = seeds[index];
           if (seed) {
@@ -337,5 +324,22 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function animateSeeds(dt: number) {
+      if (params["move"] === true) {
+        clock += dt;
+        for (const [index, seed] of seeds.entries()) {
+          const origin = origins[index];
+          const motion = drift[index];
+          if (origin && motion) {
+            seed.set(
+              origin.x + Math.cos(clock * motion.speed + motion.phase) * 26,
+              origin.y +
+                Math.sin(clock * motion.speed * 1.3 + motion.phase) * 18
+            );
+          }
+        }
+      }
+    }
   },
 };

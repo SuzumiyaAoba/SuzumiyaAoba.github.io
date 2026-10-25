@@ -210,58 +210,7 @@ export const demo: DemoModule = {
         const total = source.triangles.length / 3;
         const target = Math.max(8, Math.round(total * ratio));
         const key = `${preset}|${params["method"]}|${target}`;
-        if (key !== signature) {
-          signature = key;
-          let positions: Float32Array;
-          if (params["method"] === "cluster") {
-            // 目標の面数にいちばん近くなる格子の細かさを探す
-            let best = clusterVertices(source.positions, source.triangles, 2);
-            for (let cells = 3; cells < 200; cells++) {
-              const candidate = clusterVertices(
-                source.positions,
-                source.triangles,
-                cells
-              );
-              if (candidate.length / 9 > target) {
-                best =
-                  Math.abs(candidate.length / 9 - target) <
-                  Math.abs(best.length / 9 - target)
-                    ? candidate
-                    : best;
-                break;
-              }
-              best = candidate;
-            }
-            positions = best;
-          } else {
-            // 面の数が目標を下回るまで、記録した縮約を先頭から適用する
-            let low = 0;
-            let high = sequence.length;
-            while (low < high) {
-              const middle = (low + high) >> 1;
-              if ((sequence[middle]?.triangles ?? 0) <= target) {
-                high = middle;
-              } else {
-                low = middle + 1;
-              }
-            }
-            positions = applyCollapses(
-              source.positions,
-              source.triangles,
-              sequence,
-              low + 1
-            );
-          }
-          setGeometry(right, positions);
-          context.readout(
-            "面の数",
-            `${total.toLocaleString()} → ${(positions.length / 9).toLocaleString()}`
-          );
-          context.readout(
-            "縮約の列を作る時間",
-            `${buildMs.toFixed(0)} ms（最初に 1 回だけ）`
-          );
-        }
+        rebuildDecimatedMesh(key, target, total);
         const showWire = params["wire"] === true;
         left.wire.visible = showWire;
         right.wire.visible = showWire;
@@ -272,5 +221,70 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function rebuildDecimatedMesh(key: string, target: number, total: number) {
+      if (key !== signature) {
+        signature = key;
+        let positions: Float32Array;
+        if (params["method"] === "cluster") {
+          // 目標の面数にいちばん近くなる格子の細かさを探す
+          let best = clusterVertices(source.positions, source.triangles, 2);
+          best = findClusterResolution(target, best);
+          positions = best;
+        } else {
+          // 面の数が目標を下回るまで、記録した縮約を先頭から適用する
+          let low = 0;
+          let high = sequence.length;
+          while (low < high) {
+            const middle = (low + high) >> 1;
+            if ((sequence[middle]?.triangles ?? 0) <= target) {
+              high = middle;
+            } else {
+              low = middle + 1;
+            }
+          }
+          positions = applyCollapses(
+            source.positions,
+            source.triangles,
+            sequence,
+            low + 1
+          );
+        }
+        setGeometry(right, positions);
+        context.readout(
+          "面の数",
+          `${total.toLocaleString()} → ${(positions.length / 9).toLocaleString()}`
+        );
+        context.readout(
+          "縮約の列を作る時間",
+          `${buildMs.toFixed(0)} ms（最初に 1 回だけ）`
+        );
+      }
+    }
+
+    function findClusterResolution(
+      target: number,
+      initialBest: Float32Array<ArrayBuffer>
+    ) {
+      let best = initialBest;
+
+      for (let cells = 3; cells < 200; cells++) {
+        const candidate = clusterVertices(
+          source.positions,
+          source.triangles,
+          cells
+        );
+        if (candidate.length / 9 > target) {
+          best =
+            Math.abs(candidate.length / 9 - target) <
+            Math.abs(best.length / 9 - target)
+              ? candidate
+              : best;
+          break;
+        }
+        best = candidate;
+      }
+      return best;
+    }
   },
 };

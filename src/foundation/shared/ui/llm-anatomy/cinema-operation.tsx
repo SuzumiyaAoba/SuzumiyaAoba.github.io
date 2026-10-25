@@ -22,8 +22,10 @@ import {
 } from "./cinema-operation-special";
 import { computationFrame } from "./generation-computation-model";
 import type { ComputationFrame } from "./generation-computation-model";
+import type { GenerationTrace } from "./generation-math";
 import { decodeFlow, FLOW_VOCABULARY, FLOW_WEIGHTS } from "./generation-math";
 import { svgNumber } from "./svg-number";
+import type { CinemaFrame } from "./cinema-timeline";
 
 type CinemaOperationContentProps = Omit<CinemaSceneProps, "computation"> & {
   computation?: ComputationFrame;
@@ -291,35 +293,19 @@ function NumericScene(props: CinemaSceneProps) {
   const isResidual = frame.id === "residual1" || frame.id === "residual2";
   const normOffset = mobile ? 180 : 170;
   const state = cinemaTermState(computation.terms, frame.termProgress);
-  const sumX = mobile ? 300 : 900;
-  const sumY = mobile
-    ? isResidual
-      ? 600
-      : computation.terms.length > 4
-        ? 550
-        : 500
-    : 320;
-  const outputProgress = cinemaClamp((frame.operationProgress - 0.8) / 0.1);
-  const output = cinemaOutputCell(
-    computation.output.values.length,
-    computation.activeComponent,
-    mobile,
-    mobile && isResidual ? 770 : undefined
-  );
-  const outputPath: readonly Point[] = mobile
-    ? [
-        [300, sumY + 65],
-        [300, sumY + 78],
-        [output.x, sumY + 78],
-        [output.x, output.y],
-      ]
-    : [
-        [988, 320],
-        [1005, 320],
-        [1005, output.y - output.height / 2 - 14],
-        [output.x, output.y - output.height / 2 - 14],
-        [output.x, output.y],
-      ];
+  const {
+    outputPath,
+    outputProgress,
+    output,
+    sumX,
+    sumY,
+  }: {
+    outputPath: readonly Point[];
+    outputProgress: number;
+    output: { x: number; y: number; width: number; height: number };
+    sumX: number;
+    sumY: number;
+  } = numericOutputLayout(mobile, isResidual, computation, frame);
   const sourcePath = (index: number) =>
     isResidual
       ? residualPath(index, computation.activeComponent, mobile)
@@ -340,23 +326,15 @@ function NumericScene(props: CinemaSceneProps) {
       data-received-count={state.receivedCount}
       data-partial-sum={svgNumber(state.partialSum)}
     >
-      {isNorm
-        ? normalizationStatistics(props)
-        : !isResidual && (
-            <CinemaLabel
-              x={mobile ? 260 : 385}
-              y={mobile ? 32 : 65}
-              size={mobile ? 26 : 30}
-            >
-              {isAdd
-                ? "対応する同じ成分を加える"
-                : isWeighted
-                  ? "各位置の α × V"
-                  : frame.operationId === "score-mask-score"
-                    ? "Qの成分 × Kの同じ成分"
-                    : "対応する重み × 入力"}
-            </CinemaLabel>
-          )}
+      <NumericSourceLabel
+        isNorm={isNorm}
+        props={props}
+        isResidual={isResidual}
+        mobile={mobile}
+        isAdd={isAdd}
+        isWeighted={isWeighted}
+        frame={frame}
+      />
       {isResidual && <ResidualSources {...props} />}
       {computation.terms.map((term, index) => {
         const source = pairPosition(index, computation.terms.length, mobile);
@@ -426,58 +404,16 @@ function NumericScene(props: CinemaSceneProps) {
           </g>
         );
       })}
-      <circle
-        cx={sumX}
-        cy={sumY}
-        r={mobile ? 65 : 88}
-        strokeWidth="3"
-        className="fill-primary/5 stroke-primary"
+      <NumericAccumulator
+        sumX={sumX}
+        sumY={sumY}
+        mobile={mobile}
+        state={state}
+        computation={computation}
+        arrowOutputPath={arrowOutputPath}
+        marker={marker}
+        isNorm={isNorm}
       />
-      <CinemaLabel
-        x={mobile ? 100 : sumX}
-        y={mobile ? sumY - 10 : sumY - 92}
-        size={mobile ? 26 : 30}
-      >
-        {mobile ? "到着分" : "到着した項の和"}
-      </CinemaLabel>
-      <CinemaLabel x={sumX} y={sumY - 30} size={mobile ? 38 : 44} active>
-        Σ
-      </CinemaLabel>
-      <CinemaLabel x={sumX} y={sumY + 30} size={mobile ? 32 : 42} active>
-        {cinemaNumber(state.partialSum)}
-      </CinemaLabel>
-      <CinemaLabel
-        x={mobile ? 100 : sumX}
-        y={mobile ? sumY + 30 : sumY + 100}
-        size={24}
-      >
-        {state.receivedCount} / {computation.terms.length} 項
-      </CinemaLabel>
-      <CinemaArrow path={path(arrowOutputPath)} marker={marker} />
-      {state.complete && (
-        <>
-          <CinemaLabel
-            x={mobile ? 480 : 1150}
-            y={mobile ? sumY - 15 : 610}
-            size={24}
-            active
-          >
-            {computation.divisor === undefined
-              ? computation.bias === 0 && !isNorm
-                ? "Σ → 出力"
-                : `＋ ${isNorm ? "β" : "b"} ${cinemaNumber(computation.bias)}`
-              : `÷ ${cinemaNumber(computation.divisor)}`}
-          </CinemaLabel>
-          <CinemaLabel
-            x={mobile ? 480 : 1150}
-            y={mobile ? sumY + 25 : 640}
-            size={24}
-            active
-          >
-            → {cinemaNumber(computation.result)}
-          </CinemaLabel>
-        </>
-      )}
       <CinemaOutput
         values={computation.output.values}
         activeComponent={computation.activeComponent}
@@ -514,6 +450,175 @@ function NumericScene(props: CinemaSceneProps) {
   );
 }
 
+function NumericSourceLabel({
+  isNorm,
+  props,
+  isResidual,
+  mobile,
+  isAdd,
+  isWeighted,
+  frame,
+}: {
+  isNorm: boolean;
+  props: CinemaSceneProps;
+  isResidual: boolean;
+  mobile: boolean;
+  isAdd: boolean;
+  isWeighted: boolean;
+  frame: CinemaFrame;
+}) {
+  if (isNorm) {
+    return normalizationStatistics(props);
+  }
+  if (isResidual) {
+    return null;
+  }
+  return (
+    <CinemaLabel
+      x={mobile ? 260 : 385}
+      y={mobile ? 32 : 65}
+      size={mobile ? 26 : 30}
+    >
+      {isAdd
+        ? "対応する同じ成分を加える"
+        : isWeighted
+          ? "各位置の α × V"
+          : frame.operationId === "score-mask-score"
+            ? "Qの成分 × Kの同じ成分"
+            : "対応する重み × 入力"}
+    </CinemaLabel>
+  );
+}
+
+function numericOutputLayout(
+  mobile: boolean,
+  isResidual: boolean,
+  computation: ComputationFrame,
+  frame: CinemaFrame
+) {
+  const sumX = mobile ? 300 : 900;
+  const sumY = mobile
+    ? isResidual
+      ? 600
+      : computation.terms.length > 4
+        ? 550
+        : 500
+    : 320;
+  const outputProgress = cinemaClamp((frame.operationProgress - 0.8) / 0.1);
+  const output = cinemaOutputCell(
+    computation.output.values.length,
+    computation.activeComponent,
+    mobile,
+    mobile && isResidual ? 770 : undefined
+  );
+  const outputPath: readonly Point[] = mobile
+    ? [
+        [300, sumY + 65],
+        [300, sumY + 78],
+        [output.x, sumY + 78],
+        [output.x, output.y],
+      ]
+    : [
+        [988, 320],
+        [1005, 320],
+        [1005, output.y - output.height / 2 - 14],
+        [output.x, output.y - output.height / 2 - 14],
+        [output.x, output.y],
+      ];
+  return { outputPath, outputProgress, output, sumX, sumY };
+}
+
+function NumericAccumulator({
+  sumX,
+  sumY,
+  mobile,
+  state,
+  computation,
+  arrowOutputPath,
+  marker,
+  isNorm,
+}: {
+  sumX: number;
+  sumY: number;
+  mobile: boolean;
+  state: {
+    items: {
+      product: number;
+      progress: number;
+      received: boolean;
+      moving: boolean;
+    }[];
+    receivedCount: number;
+    partialSum: number;
+    complete: boolean;
+  };
+  computation: ComputationFrame;
+  arrowOutputPath: readonly Point[];
+  marker: string;
+  isNorm: boolean;
+}) {
+  return (
+    <g data-cinema-accumulator>
+      <circle
+        cx={sumX}
+        cy={sumY}
+        r={mobile ? 65 : 88}
+        strokeWidth="3"
+        className="fill-primary/5 stroke-primary"
+      />
+      <CinemaLabel
+        x={mobile ? 100 : sumX}
+        y={mobile ? sumY - 10 : sumY - 92}
+        size={mobile ? 26 : 30}
+      >
+        {mobile ? "到着分" : "到着した項の和"}
+      </CinemaLabel>
+      <CinemaLabel x={sumX} y={sumY - 30} size={mobile ? 38 : 44} active>
+        Σ
+      </CinemaLabel>
+      <CinemaLabel x={sumX} y={sumY + 30} size={mobile ? 32 : 42} active>
+        {cinemaNumber(state.partialSum)}
+      </CinemaLabel>
+      <CinemaLabel
+        x={mobile ? 100 : sumX}
+        y={mobile ? sumY + 30 : sumY + 100}
+        size={24}
+      >
+        {state.receivedCount} / {computation.terms.length} 項
+      </CinemaLabel>
+      <CinemaArrow path={path(arrowOutputPath)} marker={marker} />
+      {state.complete && (
+        <>
+          <CinemaLabel
+            x={mobile ? 480 : 1150}
+            y={mobile ? sumY - 15 : 610}
+            size={24}
+            active
+          >
+            {outputAdjustmentLabel(computation, isNorm)}
+          </CinemaLabel>
+          <CinemaLabel
+            x={mobile ? 480 : 1150}
+            y={mobile ? sumY + 25 : 640}
+            size={24}
+            active
+          >
+            → {cinemaNumber(computation.result)}
+          </CinemaLabel>
+        </>
+      )}
+    </g>
+  );
+}
+
+function outputAdjustmentLabel(computation: ComputationFrame, isNorm: boolean) {
+  return computation.divisor === undefined
+    ? computation.bias === 0 && !isNorm
+      ? "Σ → 出力"
+      : `＋ ${isNorm ? "β" : "b"} ${cinemaNumber(computation.bias)}`
+    : `÷ ${cinemaNumber(computation.divisor)}`;
+}
+
 function LookupScene({ trace, frame, mobile, marker }: CinemaSceneProps) {
   const id = trace.ids.at(-1);
   if (id === undefined) {
@@ -522,44 +627,12 @@ function LookupScene({ trace, frame, mobile, marker }: CinemaSceneProps) {
   const embedding = frame.operationId === "embedding-lookup";
   if (!embedding) {
     return (
-      <g data-cinema-lookup="tokenize">
-        <CinemaLabel
-          x={mobile ? 300 : 720}
-          y={mobile ? 85 : 90}
-          size={mobile ? 38 : 48}
-        >
-          「{decodeFlow(trace.ids)}」
-        </CinemaLabel>
-        <CinemaLabel x={mobile ? 300 : 720} y={mobile ? 145 : 145} size={28}>
-          語彙の文字片に対応する整数IDを得る
-        </CinemaLabel>
-        {trace.ids.map((tokenId, position) => {
-          const x = mobile ? 100 + position * 200 : 350 + position * 340;
-          return (
-            <g key={`token-${position}`}>
-              <CinemaLabel x={x} y={mobile ? 255 : 260} size={32}>
-                「{FLOW_VOCABULARY[tokenId]?.piece}」
-              </CinemaLabel>
-              <CinemaArrow
-                path={`M${x} ${mobile ? 285 : 290} V${mobile ? 470 : 425}`}
-                marker={marker}
-              />
-              <CinemaValue
-                x={x}
-                y={mobile ? 520 : 475}
-                width={mobile ? 140 : 190}
-                height={72}
-                value={tokenId}
-                active={frame.operationProgress >= position / trace.ids.length}
-                label="ID"
-              />
-            </g>
-          );
-        })}
-        <CinemaLabel x={mobile ? 300 : 720} y={mobile ? 700 : 610} size={30}>
-          入力ID列 [{trace.ids.join(", ")}]
-        </CinemaLabel>
-      </g>
+      <TokenizeScene
+        mobile={mobile}
+        trace={trace}
+        marker={marker}
+        frame={frame}
+      />
     );
   }
   const selected = FLOW_WEIGHTS.embedding[id];
@@ -589,6 +662,56 @@ function LookupScene({ trace, frame, mobile, marker }: CinemaSceneProps) {
     route,
     cinemaClamp((frame.operationProgress - 0.2) / 0.65)
   );
+  return (
+    <EmbeddingLookup
+      mobile={mobile}
+      id={id}
+      left={left}
+      top={top}
+      rowHeight={rowHeight}
+      firstValueX={firstValueX}
+      columnGap={columnGap}
+      route={route}
+      marker={marker}
+      selected={selected}
+      packet={packet}
+    />
+  );
+}
+
+function EmbeddingLookup({
+  mobile,
+  id,
+  left,
+  top,
+  rowHeight,
+  firstValueX,
+  columnGap,
+  route,
+  marker,
+  selected,
+  packet,
+}: {
+  mobile: boolean;
+  id: number;
+  left: number;
+  top: number;
+  rowHeight: number;
+  firstValueX: number;
+  columnGap: number;
+  route: readonly Point[];
+  marker: string;
+  selected:
+    | readonly [0.7, -0.4, 0.2, 0.5]
+    | readonly [-0.2, 0.6, 0.4, -0.3]
+    | readonly [0.5, 0.1, -0.6, 0.8]
+    | readonly [-0.4, 0.3, 0.7, 0.2]
+    | readonly [0.2, -0.5, 0.6, -0.1]
+    | readonly [0.8, 0.4, -0.2, -0.6]
+    | readonly [-0.5, -0.2, 0.1, 0.7]
+    | readonly [0.1, 0.8, -0.4, -0.5];
+  packet: { x: number; y: number };
+}) {
   return (
     <g data-cinema-lookup="embedding">
       <CinemaLabel
@@ -662,6 +785,59 @@ function LookupScene({ trace, frame, mobile, marker }: CinemaSceneProps) {
           E[{id}]
         </text>
       </g>
+    </g>
+  );
+}
+
+function TokenizeScene({
+  mobile,
+  trace,
+  marker,
+  frame,
+}: {
+  mobile: boolean;
+  trace: GenerationTrace;
+  marker: string;
+  frame: CinemaFrame;
+}) {
+  return (
+    <g data-cinema-lookup="tokenize">
+      <CinemaLabel
+        x={mobile ? 300 : 720}
+        y={mobile ? 85 : 90}
+        size={mobile ? 38 : 48}
+      >
+        「{decodeFlow(trace.ids)}」
+      </CinemaLabel>
+      <CinemaLabel x={mobile ? 300 : 720} y={mobile ? 145 : 145} size={28}>
+        語彙の文字片に対応する整数IDを得る
+      </CinemaLabel>
+      {trace.ids.map((tokenId, position) => {
+        const x = mobile ? 100 + position * 200 : 350 + position * 340;
+        return (
+          <g key={`token-${position}`}>
+            <CinemaLabel x={x} y={mobile ? 255 : 260} size={32}>
+              「{FLOW_VOCABULARY[tokenId]?.piece}」
+            </CinemaLabel>
+            <CinemaArrow
+              path={`M${x} ${mobile ? 285 : 290} V${mobile ? 470 : 425}`}
+              marker={marker}
+            />
+            <CinemaValue
+              x={x}
+              y={mobile ? 520 : 475}
+              width={mobile ? 140 : 190}
+              height={72}
+              value={tokenId}
+              active={frame.operationProgress >= position / trace.ids.length}
+              label="ID"
+            />
+          </g>
+        );
+      })}
+      <CinemaLabel x={mobile ? 300 : 720} y={mobile ? 700 : 610} size={30}>
+        入力ID列 [{trace.ids.join(", ")}]
+      </CinemaLabel>
     </g>
   );
 }

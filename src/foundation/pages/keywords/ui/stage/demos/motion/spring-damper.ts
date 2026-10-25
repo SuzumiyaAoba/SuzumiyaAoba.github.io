@@ -108,20 +108,7 @@ export const demo: DemoModule = {
         const c = Number(params["damping"]);
         const m = 1;
         const previousAnchor = anchor.clone();
-        if (params["move"] === true) {
-          clock += dt;
-          // 素早く横に動いて止まる、を繰り返す台座
-          const phase = clock % 3;
-          const x =
-            phase < 0.25
-              ? -1.4 + (phase / 0.25) * 2.8
-              : phase < 1.5
-                ? 1.4
-                : phase < 1.75
-                  ? 1.4 - ((phase - 1.5) / 0.25) * 2.8
-                  : -1.4;
-          anchor.set(x, 0, 0);
-        }
+        moveSpringAnchor(dt);
         base.position.copy(anchor);
         // 台座の移動は、標的から見ると逆向きのずれとして加わる
         if (dt > 0) {
@@ -180,5 +167,22 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function moveSpringAnchor(dt: number) {
+      if (params["move"] === true) {
+        clock += dt;
+        // 素早く横に動いて止まる、を繰り返す台座
+        const phase = clock % 3;
+        const x =
+          phase < 0.25
+            ? -1.4 + (phase / 0.25) * 2.8
+            : phase < 1.5
+              ? 1.4
+              : phase < 1.75
+                ? 1.4 - ((phase - 1.5) / 0.25) * 2.8
+                : -1.4;
+        anchor.set(x, 0, 0);
+      }
+    }
   },
 };

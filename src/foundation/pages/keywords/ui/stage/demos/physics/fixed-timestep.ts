@@ -187,55 +187,7 @@ export const demo: DemoModule = {
         const fps = Number(params["fps"]);
         const fixedDt = 1 / Number(params["hz"]);
         // 描画のフレームが来たときだけ、ゲームの 1 フレーム分を処理する（それ以外は前の絵のまま）
-        while (simTime >= nextFrame) {
-          let frameDt = 1 / fps;
-          if (params["jitter"] === true) {
-            frameDt *= 0.6 + random() * 0.8;
-            if (random() < 0.04) {
-              frameDt *= 4; // ときどき大きな引っかかり
-            }
-          }
-          frameClock = nextFrame;
-          nextFrame += frameDt;
-          renderTicks.push(frameClock);
-
-          const [variable] = lanes;
-          if (variable) {
-            // 1. 可変：フレームの経過時間でそのまま進める
-            step(variable.current, frameDt);
-          }
-          // 2・3. 固定：たまった時間を決まった刻みで消化する
-          accumulator += frameDt;
-          let steps = 0;
-          while (accumulator >= fixedDt && steps < 10) {
-            accumulator -= fixedDt;
-            steps++;
-            physicsTicks.push(frameClock - accumulator);
-            for (const lane of lanes.slice(1)) {
-              Object.assign(lane.previous, lane.current);
-              step(lane.current, fixedDt);
-            }
-          }
-          const alpha = accumulator / fixedDt;
-          for (const lane of lanes) {
-            let { x, y } = lane.current;
-            if (lane.key === "interpolated") {
-              // 前回と今回の物理の結果を、余った時間の割合で補間して描く
-              const wrapped = lane.current.x < lane.previous.x;
-              const previousX = wrapped
-                ? lane.previous.x - TRACK
-                : lane.previous.x;
-              x = previousX + (lane.current.x - previousX) * alpha;
-              y = lane.previous.y + (lane.current.y - lane.previous.y) * alpha;
-            }
-            lane.mesh.position.set(x, y + 0.53, lane.z);
-            const apexY = lane.current.lastApex + 0.53;
-            lane.apexLine.setPoints([
-              new Vector3(-TRACK / 2 - 0.5, apexY, lane.z + 0.35),
-              new Vector3(-TRACK / 2 + 0.6, apexY, lane.z + 0.35),
-            ]);
-          }
-        }
+        advanceRenderFrames(fps, fixedDt);
         while (
           renderTicks.length > 0 &&
           (renderTicks[0] ?? 0) < simTime - TIMELINE_SECONDS
@@ -260,5 +212,59 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceRenderFrames(fps: number, fixedDt: number) {
+      while (simTime >= nextFrame) {
+        let frameDt = 1 / fps;
+        if (params["jitter"] === true) {
+          frameDt *= 0.6 + random() * 0.8;
+          if (random() < 0.04) {
+            frameDt *= 4; // ときどき大きな引っかかり
+          }
+        }
+        frameClock = nextFrame;
+        nextFrame += frameDt;
+        renderTicks.push(frameClock);
+
+        const [variable] = lanes;
+        if (variable) {
+          // 1. 可変：フレームの経過時間でそのまま進める
+          step(variable.current, frameDt);
+        }
+        // 2・3. 固定：たまった時間を決まった刻みで消化する
+        accumulator += frameDt;
+        let steps = 0;
+        while (accumulator >= fixedDt && steps < 10) {
+          accumulator -= fixedDt;
+          steps++;
+          physicsTicks.push(frameClock - accumulator);
+          for (const lane of lanes.slice(1)) {
+            Object.assign(lane.previous, lane.current);
+            step(lane.current, fixedDt);
+          }
+        }
+        const alpha = accumulator / fixedDt;
+        advanceSimulationLanes(alpha);
+      }
+    }
+
+    function advanceSimulationLanes(alpha: number) {
+      for (const lane of lanes) {
+        let { x, y } = lane.current;
+        if (lane.key === "interpolated") {
+          // 前回と今回の物理の結果を、余った時間の割合で補間して描く
+          const wrapped = lane.current.x < lane.previous.x;
+          const previousX = wrapped ? lane.previous.x - TRACK : lane.previous.x;
+          x = previousX + (lane.current.x - previousX) * alpha;
+          y = lane.previous.y + (lane.current.y - lane.previous.y) * alpha;
+        }
+        lane.mesh.position.set(x, y + 0.53, lane.z);
+        const apexY = lane.current.lastApex + 0.53;
+        lane.apexLine.setPoints([
+          new Vector3(-TRACK / 2 - 0.5, apexY, lane.z + 0.35),
+          new Vector3(-TRACK / 2 + 0.6, apexY, lane.z + 0.35),
+        ]);
+      }
+    }
   },
 };

@@ -131,29 +131,7 @@ export function createSigmaBoardParts(parts: SigmaParts) {
     const alongX = width > depth;
     const lead = Math.min(width, depth) * 0.32;
     outline(x, y, width + 6, depth + 5);
-    for (const side of [-1, 1]) {
-      const px = x + (alongX ? (side * (width - lead)) / 2 : 0);
-      const py = y + (alongX ? 0 : (side * (depth - lead)) / 2);
-      box(
-        px,
-        py,
-        alongX ? lead + 3 : width + 2,
-        alongX ? depth + 2 : lead + 3,
-        0.1,
-        parts.solder,
-        "Reflow solder fillets"
-      );
-      box(
-        px,
-        py,
-        alongX ? lead : width,
-        alongX ? depth : lead,
-        0.35,
-        parts.solder,
-        "Tinned passive end caps",
-        0.1
-      );
-    }
+    appendComponentLeads(x, alongX, width, lead, y, depth);
     box(
       x,
       y,
@@ -329,6 +307,39 @@ export function createSigmaBoardParts(parts: SigmaParts) {
       }
     },
   };
+
+  function appendComponentLeads(
+    x: number,
+    alongX: boolean,
+    width: number,
+    leadWidth: number,
+    y: number,
+    depth: number
+  ) {
+    for (const side of [-1, 1]) {
+      const px = x + (alongX ? (side * (width - leadWidth)) / 2 : 0);
+      const py = y + (alongX ? 0 : (side * (depth - leadWidth)) / 2);
+      box(
+        px,
+        py,
+        alongX ? leadWidth + 3 : width + 2,
+        alongX ? depth + 2 : leadWidth + 3,
+        0.1,
+        parts.solder,
+        "Reflow solder fillets"
+      );
+      box(
+        px,
+        py,
+        alongX ? leadWidth : width,
+        alongX ? depth : leadWidth,
+        0.35,
+        parts.solder,
+        "Tinned passive end caps",
+        0.1
+      );
+    }
+  }
 }
 
 export type SigmaBoardParts = ReturnType<typeof createSigmaBoardParts>;

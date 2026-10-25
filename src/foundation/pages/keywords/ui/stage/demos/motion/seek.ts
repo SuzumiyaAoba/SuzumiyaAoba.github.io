@@ -121,40 +121,7 @@ export const demo: DemoModule = {
         ring.position.set(target.x, 0.01, target.z + LANE);
         ring.scale.setScalar(radius);
         const showVectors = params["vectors"] === true;
-        for (const agent of agents) {
-          const goal = target
-            .clone()
-            .setZ(target.z + (agent.arrival ? LANE : -LANE));
-          desired.copy(goal).sub(agent.position).setY(0);
-          const distance = desired.length();
-          const speed =
-            agent.arrival && distance < radius
-              ? maxSpeed * (distance / radius)
-              : maxSpeed;
-          desired.setLength(distance > 1e-4 ? speed : 0);
-          steer.copy(desired).sub(agent.velocity);
-          limit(steer, maxForce);
-          agent.velocity.addScaledVector(steer, dt);
-          limit(agent.velocity, maxSpeed);
-          agent.position.addScaledVector(agent.velocity, dt);
-          agent.mesh.position.copy(agent.position);
-          if (agent.velocity.lengthSq() > 1e-4) {
-            agent.mesh.lookAt(agent.position.clone().add(agent.velocity));
-          }
-          agent.line.push(agent.position);
-          agent.desired.visible = showVectors;
-          agent.steering.visible = showVectors;
-          if (showVectors) {
-            agent.desired.set(
-              agent.position.clone().setY(0.45),
-              desired.clone().multiplyScalar(0.35)
-            );
-            agent.steering.set(
-              agent.position.clone().setY(0.45),
-              steer.clone().multiplyScalar(0.12)
-            );
-          }
-        }
+        advanceSeekingAgents(radius, maxSpeed, maxForce, dt, showVectors);
         const [seeker, arriver] = agents;
         if (seeker && arriver) {
           context.readout(
@@ -175,5 +142,48 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceSeekingAgents(
+      radius: number,
+      maxSpeed: number,
+      maxForce: number,
+      dt: number,
+      showVectors: boolean
+    ) {
+      for (const agent of agents) {
+        const goal = target
+          .clone()
+          .setZ(target.z + (agent.arrival ? LANE : -LANE));
+        desired.copy(goal).sub(agent.position).setY(0);
+        const distance = desired.length();
+        const speed =
+          agent.arrival && distance < radius
+            ? maxSpeed * (distance / radius)
+            : maxSpeed;
+        desired.setLength(distance > 1e-4 ? speed : 0);
+        steer.copy(desired).sub(agent.velocity);
+        limit(steer, maxForce);
+        agent.velocity.addScaledVector(steer, dt);
+        limit(agent.velocity, maxSpeed);
+        agent.position.addScaledVector(agent.velocity, dt);
+        agent.mesh.position.copy(agent.position);
+        if (agent.velocity.lengthSq() > 1e-4) {
+          agent.mesh.lookAt(agent.position.clone().add(agent.velocity));
+        }
+        agent.line.push(agent.position);
+        agent.desired.visible = showVectors;
+        agent.steering.visible = showVectors;
+        if (showVectors) {
+          agent.desired.set(
+            agent.position.clone().setY(0.45),
+            desired.clone().multiplyScalar(0.35)
+          );
+          agent.steering.set(
+            agent.position.clone().setY(0.45),
+            steer.clone().multiplyScalar(0.12)
+          );
+        }
+      }
+    }
   },
 };

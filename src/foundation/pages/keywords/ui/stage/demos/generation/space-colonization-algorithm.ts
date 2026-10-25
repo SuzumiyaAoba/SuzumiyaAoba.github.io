@@ -181,43 +181,7 @@ export const demo: DemoModule = {
       }
       const pull = new Map<number, Vector3>();
       const survivors: Vector3[] = [];
-      for (const attractor of attractors) {
-        let best = -1;
-        let bestDistance = influence;
-        let killed = false;
-        for (let dx = -1; dx <= 1 && !killed; dx++) {
-          for (let dy = -1; dy <= 1 && !killed; dy++) {
-            for (let dz = -1; dz <= 1; dz++) {
-              for (const index of grid.get(keyOf(attractor, dx, dy, dz)) ??
-                []) {
-                const distance =
-                  nodes[index]?.position.distanceTo(attractor) ??
-                  Number.POSITIVE_INFINITY;
-                if (distance < kill) {
-                  killed = true;
-                  break;
-                }
-                if (distance < bestDistance) {
-                  bestDistance = distance;
-                  best = index;
-                }
-              }
-              if (killed) {
-                break;
-              }
-            }
-          }
-        }
-        if (killed) {
-          continue; // 枝が十分近くまで来たので、この誘引点は役目を終える
-        }
-        survivors.push(attractor);
-        const node = nodes[best];
-        if (node) {
-          const direction = attractor.clone().sub(node.position).normalize();
-          pull.set(best, (pull.get(best) ?? new Vector3()).add(direction));
-        }
-      }
+      assignAttractors(influence, grid, keyOf, kill, survivors, pull);
       attractors = survivors;
       let grown = 0;
       if (pull.size === 0 && nodes.length < 400) {
@@ -371,5 +335,80 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function assignAttractors(
+      influence: number,
+      grid: Map<string, number[]>,
+      keyOf: (p: Vector3, dx?: number, dy?: number, dz?: number) => string,
+      kill: number,
+      survivors: Vector3[],
+      pull: Map<number, Vector3>
+    ) {
+      for (const attractor of attractors) {
+        let best = -1;
+        let bestDistance = influence;
+        let killed = false;
+        for (let dx = -1; dx <= 1 && !killed; dx++) {
+          for (let dy = -1; dy <= 1 && !killed; dy++) {
+            ({ killed, bestDistance, best } = findAttractorNeighbor(
+              grid,
+              keyOf,
+              attractor,
+              dx,
+              dy,
+              kill,
+              killed,
+              bestDistance,
+              best
+            ));
+          }
+        }
+        if (killed) {
+          continue; // 枝が十分近くまで来たので、この誘引点は役目を終える
+        }
+        survivors.push(attractor);
+        const node = nodes[best];
+        if (node) {
+          const direction = attractor.clone().sub(node.position).normalize();
+          pull.set(best, (pull.get(best) ?? new Vector3()).add(direction));
+        }
+      }
+    }
+
+    function findAttractorNeighbor(
+      grid: Map<string, number[]>,
+      keyOf: (p: Vector3, dx?: number, dy?: number, dz?: number) => string,
+      attractor: Vector3,
+      dx: number,
+      dy: number,
+      kill: number,
+      initialKilled: boolean,
+      initialBestDistance: number,
+      initialBest: number
+    ) {
+      let killed = initialKilled;
+      let bestDistance = initialBestDistance;
+      let best = initialBest;
+
+      for (let dz = -1; dz <= 1; dz++) {
+        for (const index of grid.get(keyOf(attractor, dx, dy, dz)) ?? []) {
+          const distance =
+            nodes[index]?.position.distanceTo(attractor) ??
+            Number.POSITIVE_INFINITY;
+          if (distance < kill) {
+            killed = true;
+            break;
+          }
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = index;
+          }
+        }
+        if (killed) {
+          break;
+        }
+      }
+      return { killed, bestDistance, best };
+    }
   },
 };

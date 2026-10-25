@@ -125,71 +125,7 @@ export const demo: DemoModule = {
       }
       tank.findNeighbors();
       // 2. 密度の拘束 C = ρ/ρ₀ − 1 = 0 を、位置の補正で満たす
-      for (let iteration = 0; iteration < iterations; iteration++) {
-        for (let i = 0; i < tank.count; i++) {
-          let rho = POLY6 * H ** 6;
-          let gradSum = 0;
-          let gx = 0;
-          let gy = 0;
-          for (
-            let t = tank.neighborStart[i] ?? 0;
-            t < (tank.neighborStart[i + 1] ?? 0);
-            t++
-          ) {
-            const j = tank.neighbors[t] ?? 0;
-            const rx = (x[i] ?? 0) - (x[j] ?? 0);
-            const ry = (y[i] ?? 0) - (y[j] ?? 0);
-            const r2 = rx * rx + ry * ry;
-            rho += poly6(r2);
-            const r = Math.sqrt(r2);
-            if (r > 1e-9 && r < H) {
-              const g = (SPIKY * (H - r) ** 2) / r / restDensity;
-              gradSum += g * g * r2;
-              gx += g * rx;
-              gy += g * ry;
-            }
-          }
-          density[i] = rho;
-          // 水面では周りが少なく密度が下がるが、引き寄せると粒が固まるので、混みすぎのときだけ直す
-          const constraint = Math.max(0, rho / restDensity - 1);
-          gradSum += gx * gx + gy * gy;
-          lambda[i] = -constraint / (gradSum + RELAXATION);
-        }
-        for (let i = 0; i < tank.count; i++) {
-          let sx = 0;
-          let sy = 0;
-          for (
-            let t = tank.neighborStart[i] ?? 0;
-            t < (tank.neighborStart[i + 1] ?? 0);
-            t++
-          ) {
-            const j = tank.neighbors[t] ?? 0;
-            const rx = (x[i] ?? 0) - (x[j] ?? 0);
-            const ry = (y[i] ?? 0) - (y[j] ?? 0);
-            const r2 = rx * rx + ry * ry;
-            const r = Math.sqrt(r2);
-            if (r < 1e-9 || r >= H) {
-              continue;
-            }
-            // 人工圧力：近づきすぎた粒子同士を少し押し離し、粒が固まるのを防ぐ
-            const correction = tension
-              ? -2e-5 * (poly6(r2) / correctionBase) ** 4
-              : 0;
-            const g = (SPIKY * (H - r) ** 2) / r;
-            const scale =
-              ((lambda[i] ?? 0) + (lambda[j] ?? 0) + correction) * g;
-            sx += scale * rx;
-            sy += scale * ry;
-          }
-          dx[i] = sx / restDensity;
-          dy[i] = sy / restDensity;
-        }
-        for (let i = 0; i < tank.count; i++) {
-          x[i] = (x[i] ?? 0) + (dx[i] ?? 0);
-          y[i] = (y[i] ?? 0) + (dy[i] ?? 0);
-        }
-        tank.collide(obstacle);
-      }
+      solveDensityConstraints(iterations, x, y, tension);
       // 3. 速度を求め直し、XSPH 粘性で近くの粒子と速度をならす
       for (let i = 0; i < tank.count; i++) {
         vx[i] = ((x[i] ?? 0) - (px[i] ?? 0)) / h;
@@ -285,5 +221,85 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function solveDensityConstraints(
+      iterations: number,
+      x: Float64Array,
+      y: Float64Array,
+      tension: boolean
+    ) {
+      for (let iteration = 0; iteration < iterations; iteration++) {
+        for (let i = 0; i < tank.count; i++) {
+          let rho = POLY6 * H ** 6;
+          let gradSum = 0;
+          let gx = 0;
+          let gy = 0;
+          for (
+            let t = tank.neighborStart[i] ?? 0;
+            t < (tank.neighborStart[i + 1] ?? 0);
+            t++
+          ) {
+            const j = tank.neighbors[t] ?? 0;
+            const rx = (x[i] ?? 0) - (x[j] ?? 0);
+            const ry = (y[i] ?? 0) - (y[j] ?? 0);
+            const r2 = rx * rx + ry * ry;
+            rho += poly6(r2);
+            const r = Math.sqrt(r2);
+            if (r > 1e-9 && r < H) {
+              const g = (SPIKY * (H - r) ** 2) / r / restDensity;
+              gradSum += g * g * r2;
+              gx += g * rx;
+              gy += g * ry;
+            }
+          }
+          density[i] = rho;
+          // 水面では周りが少なく密度が下がるが、引き寄せると粒が固まるので、混みすぎのときだけ直す
+          const constraint = Math.max(0, rho / restDensity - 1);
+          gradSum += gx * gx + gy * gy;
+          lambda[i] = -constraint / (gradSum + RELAXATION);
+        }
+        applyDensityCorrections(x, y, tension);
+        for (let i = 0; i < tank.count; i++) {
+          x[i] = (x[i] ?? 0) + (dx[i] ?? 0);
+          y[i] = (y[i] ?? 0) + (dy[i] ?? 0);
+        }
+        tank.collide(obstacle);
+      }
+    }
+
+    function applyDensityCorrections(
+      x: Float64Array,
+      y: Float64Array,
+      tension: boolean
+    ) {
+      for (let i = 0; i < tank.count; i++) {
+        let sx = 0;
+        let sy = 0;
+        for (
+          let t = tank.neighborStart[i] ?? 0;
+          t < (tank.neighborStart[i + 1] ?? 0);
+          t++
+        ) {
+          const j = tank.neighbors[t] ?? 0;
+          const rx = (x[i] ?? 0) - (x[j] ?? 0);
+          const ry = (y[i] ?? 0) - (y[j] ?? 0);
+          const r2 = rx * rx + ry * ry;
+          const r = Math.sqrt(r2);
+          if (r < 1e-9 || r >= H) {
+            continue;
+          }
+          // 人工圧力：近づきすぎた粒子同士を少し押し離し、粒が固まるのを防ぐ
+          const correction = tension
+            ? -2e-5 * (poly6(r2) / correctionBase) ** 4
+            : 0;
+          const g = (SPIKY * (H - r) ** 2) / r;
+          const scale = ((lambda[i] ?? 0) + (lambda[j] ?? 0) + correction) * g;
+          sx += scale * rx;
+          sy += scale * ry;
+        }
+        dx[i] = sx / restDensity;
+        dy[i] = sy / restDensity;
+      }
+    }
   },
 };

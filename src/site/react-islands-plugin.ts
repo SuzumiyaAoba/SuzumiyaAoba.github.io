@@ -95,11 +95,7 @@ export function reactIslands(): Plugin {
           continue;
         }
         edits.push([exported.getStart(file), exported.end]);
-        for (const declaration of components) {
-          if (declaration.name && ts.isIdentifier(declaration.name)) {
-            names.push(declaration.name.text);
-          }
-        }
+        collectComponentNames(components, names);
       }
       if (!names.length) {
         return null;
@@ -120,4 +116,19 @@ export function reactIslands(): Plugin {
       return { code, map: null };
     },
   };
+}
+
+function collectComponentNames(
+  components: (
+    | ts.FunctionDeclaration
+    | ts.ClassDeclaration
+    | ts.VariableDeclaration
+  )[],
+  names: string[]
+) {
+  for (const declaration of components) {
+    if (declaration.name && ts.isIdentifier(declaration.name)) {
+      names.push(declaration.name.text);
+    }
+  }
 }

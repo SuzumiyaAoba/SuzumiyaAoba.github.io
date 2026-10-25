@@ -95,48 +95,7 @@ export const demo: DemoModule = {
       steep.fill(0);
       let moved = 0;
       for (let j = 0; j < N; j++) {
-        for (let i = 0; i < N; i++) {
-          const index = j * N + i;
-          const h = heights[index] ?? 0;
-          let totalExcess = 0;
-          let maxExcess = 0;
-          // 安息角を超えた高さの差（超過分）を、低い隣ごとに合計する
-          for (const [di, dj, distance] of NEIGHBORS) {
-            const ni = i + di;
-            const nj = j + dj;
-            if (ni < 0 || ni >= N || nj < 0 || nj >= N) {
-              continue;
-            }
-            const excess = h - (heights[nj * N + ni] ?? 0) - talus * distance;
-            if (excess > 0) {
-              totalExcess += excess;
-              maxExcess = Math.max(maxExcess, excess);
-            }
-          }
-          if (totalExcess <= 0) {
-            continue;
-          }
-          // ほぼ安息角ちょうどの斜面は崩れ終わったものとして色を付けない
-          if (maxExcess > talus * 0.08) {
-            steep[index] = 1;
-          }
-          // 一度に全部動かすと行ったり来たりするので、一番大きな超過の一部だけ動かす
-          const amount = maxExcess * rate * 0.5;
-          moved += amount;
-          delta[index] = (delta[index] ?? 0) - amount;
-          for (const [di, dj, distance] of NEIGHBORS) {
-            const ni = i + di;
-            const nj = j + dj;
-            if (ni < 0 || ni >= N || nj < 0 || nj >= N) {
-              continue;
-            }
-            const excess = h - (heights[nj * N + ni] ?? 0) - talus * distance;
-            if (excess > 0) {
-              delta[nj * N + ni] =
-                (delta[nj * N + ni] ?? 0) + (amount * excess) / totalExcess;
-            }
-          }
-        }
+        moved = erodeHeightRow(j, talus, rate, moved);
       }
       for (let index = 0; index < N * N; index++) {
         heights[index] = (heights[index] ?? 0) + (delta[index] ?? 0);
@@ -188,5 +147,69 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function erodeHeightRow(
+      j: number,
+      talus: number,
+      rate: number,
+      initialMoved: number
+    ) {
+      let moved = initialMoved;
+
+      for (let i = 0; i < N; i++) {
+        const index = j * N + i;
+        const h = heights[index] ?? 0;
+        let totalExcess = 0;
+        let maxExcess = 0;
+        // 安息角を超えた高さの差（超過分）を、低い隣ごとに合計する
+        for (const [di, dj, distance] of NEIGHBORS) {
+          const ni = i + di;
+          const nj = j + dj;
+          if (ni < 0 || ni >= N || nj < 0 || nj >= N) {
+            continue;
+          }
+          const excess = h - (heights[nj * N + ni] ?? 0) - talus * distance;
+          if (excess > 0) {
+            totalExcess += excess;
+            maxExcess = Math.max(maxExcess, excess);
+          }
+        }
+        if (totalExcess <= 0) {
+          continue;
+        }
+        // ほぼ安息角ちょうどの斜面は崩れ終わったものとして色を付けない
+        if (maxExcess > talus * 0.08) {
+          steep[index] = 1;
+        }
+        // 一度に全部動かすと行ったり来たりするので、一番大きな超過の一部だけ動かす
+        const amount = maxExcess * rate * 0.5;
+        moved += amount;
+        delta[index] = (delta[index] ?? 0) - amount;
+        calculateNeighborExcess(i, j, h, talus, amount, totalExcess);
+      }
+      return moved;
+    }
+
+    function calculateNeighborExcess(
+      i: number,
+      j: number,
+      h: number,
+      talus: number,
+      amount: number,
+      totalExcess: number
+    ) {
+      for (const [di, dj, distance] of NEIGHBORS) {
+        const ni = i + di;
+        const nj = j + dj;
+        if (ni < 0 || ni >= N || nj < 0 || nj >= N) {
+          continue;
+        }
+        const excess = h - (heights[nj * N + ni] ?? 0) - talus * distance;
+        if (excess > 0) {
+          delta[nj * N + ni] =
+            (delta[nj * N + ni] ?? 0) + (amount * excess) / totalExcess;
+        }
+      }
+    }
   },
 };

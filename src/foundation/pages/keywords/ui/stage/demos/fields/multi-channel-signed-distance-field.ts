@@ -131,69 +131,17 @@ function buildTextures(resolution: number) {
     Math.round(Math.max(0, Math.min(1, value / range + 0.5)) * 255);
   for (const [glyphIndex, contours] of GLYPHS.entries()) {
     const edges = colorEdges(contours);
-    for (let py = 0; py < height; py++) {
-      for (let px = 0; px < resolution; px++) {
-        const x = (px + 0.5) / resolution;
-        const y = (py + 0.5) / resolution;
-        const index = (py * width + glyphIndex * resolution + px) * 4;
-        // 1 チャンネル SDF：全ての辺への最短距離 + 内外判定の符号
-        const solid = inside(contours, x, y);
-        let nearest = Infinity;
-        for (const edge of edges) {
-          nearest = Math.min(nearest, measure(edge, x, y).distance);
-        }
-        atlas[index + 3] = encode(solid ? nearest : -nearest);
-        // MSDF：チャンネルごとに、そのチャンネルを含む辺だけから最寄りを選び、擬距離を書く
-        for (let channel = 0; channel < 3; channel++) {
-          let best = Infinity;
-          let pseudo = 0;
-          for (const edge of edges) {
-            if (!edge.channels[channel]) {
-              continue;
-            }
-            const { distance, pseudo: candidate } = measure(edge, x, y);
-            if (distance < best - 1e-9) {
-              best = distance;
-              pseudo = candidate;
-            }
-          }
-          atlas[index + channel] = encode(pseudo);
-        }
-        // 誤り補正：中央値の内外が真の内外と食い違うテクセルと、輪郭から離れていて
-        // 角の再現に関係しないテクセルは、3 チャンネルとも真の距離にそろえる（補間時の食い違いを防ぐ）
-        const r = atlas[index] ?? 0;
-        const g = atlas[index + 1] ?? 0;
-        const b = atlas[index + 2] ?? 0;
-        const median = Math.max(Math.min(r, g), Math.min(Math.max(r, g), b));
-        const far = nearest > 1.5 / resolution;
-        if (median >= 128 !== solid || far) {
-          const value = atlas[index + 3] ?? 0;
-          atlas[index] = value;
-          atlas[index + 1] = value;
-          atlas[index + 2] = value;
-        }
-        // ビットマップ：4×4 のスーパーサンプリングで被覆率を求める
-        let covered = 0;
-        for (let sy = 0; sy < 4; sy++) {
-          for (let sx = 0; sx < 4; sx++) {
-            if (
-              inside(
-                contours,
-                (px + (sx + 0.5) / 4) / resolution,
-                (py + (sy + 0.5) / 4) / resolution
-              )
-            ) {
-              covered++;
-            }
-          }
-        }
-        const coverage = Math.round((covered / 16) * 255);
-        bitmap[index] = coverage;
-        bitmap[index + 1] = coverage;
-        bitmap[index + 2] = coverage;
-        bitmap[index + 3] = 255;
-      }
-    }
+    rasterizeGlyph(
+      height,
+      resolution,
+      width,
+      glyphIndex,
+      contours,
+      edges,
+      atlas,
+      encode,
+      bitmap
+    );
   }
   const make = (data: Uint8Array) => {
     const texture = new DataTexture(data, width, height, RGBAFormat);
@@ -369,3 +317,103 @@ export const demo: DemoModule = {
     };
   },
 };
+
+function rasterizeGlyph(
+  height: number,
+  resolution: number,
+  width: number,
+  glyphIndex: number,
+  contours: readonly Contour[],
+  edges: Edge[],
+  atlas: Uint8Array<ArrayBuffer>,
+  encode: (value: number) => number,
+  bitmap: Uint8Array<ArrayBuffer>
+) {
+  for (let py = 0; py < height; py++) {
+    for (let px = 0; px < resolution; px++) {
+      const x = (px + 0.5) / resolution;
+      const y = (py + 0.5) / resolution;
+      const index = (py * width + glyphIndex * resolution + px) * 4;
+      // 1 チャンネル SDF：全ての辺への最短距離 + 内外判定の符号
+      const solid = inside(contours, x, y);
+      let nearest = Infinity;
+      for (const edge of edges) {
+        nearest = Math.min(nearest, measure(edge, x, y).distance);
+      }
+      atlas[index + 3] = encode(solid ? nearest : -nearest);
+      // MSDF：チャンネルごとに、そのチャンネルを含む辺だけから最寄りを選び、擬距離を書く
+      encodeDistanceChannels(edges, x, y, atlas, index, encode);
+      // 誤り補正：中央値の内外が真の内外と食い違うテクセルと、輪郭から離れていて
+      // 角の再現に関係しないテクセルは、3 チャンネルとも真の距離にそろえる（補間時の食い違いを防ぐ）
+      const r = atlas[index] ?? 0;
+      const g = atlas[index + 1] ?? 0;
+      const b = atlas[index + 2] ?? 0;
+      const median = Math.max(Math.min(r, g), Math.min(Math.max(r, g), b));
+      const far = nearest > 1.5 / resolution;
+      if (median >= 128 !== solid || far) {
+        const value = atlas[index + 3] ?? 0;
+        atlas[index] = value;
+        atlas[index + 1] = value;
+        atlas[index + 2] = value;
+      }
+      // ビットマップ：4×4 のスーパーサンプリングで被覆率を求める
+      let covered = 0;
+      covered = countCoveredSamples(contours, px, resolution, py, covered);
+      const coverage = Math.round((covered / 16) * 255);
+      bitmap[index] = coverage;
+      bitmap[index + 1] = coverage;
+      bitmap[index + 2] = coverage;
+      bitmap[index + 3] = 255;
+    }
+  }
+}
+
+function countCoveredSamples(
+  contours: readonly Contour[],
+  px: number,
+  resolution: number,
+  py: number,
+  initialCovered: number
+) {
+  let covered = initialCovered;
+
+  for (let sy = 0; sy < 4; sy++) {
+    for (let sx = 0; sx < 4; sx++) {
+      if (
+        inside(
+          contours,
+          (px + (sx + 0.5) / 4) / resolution,
+          (py + (sy + 0.5) / 4) / resolution
+        )
+      ) {
+        covered++;
+      }
+    }
+  }
+  return covered;
+}
+
+function encodeDistanceChannels(
+  edges: Edge[],
+  x: number,
+  y: number,
+  atlas: Uint8Array<ArrayBuffer>,
+  index: number,
+  encode: (value: number) => number
+) {
+  for (let channel = 0; channel < 3; channel++) {
+    let best = Infinity;
+    let pseudo = 0;
+    for (const edge of edges) {
+      if (!edge.channels[channel]) {
+        continue;
+      }
+      const { distance, pseudo: candidate } = measure(edge, x, y);
+      if (distance < best - 1e-9) {
+        best = distance;
+        pseudo = candidate;
+      }
+    }
+    atlas[index + channel] = encode(pseudo);
+  }
+}

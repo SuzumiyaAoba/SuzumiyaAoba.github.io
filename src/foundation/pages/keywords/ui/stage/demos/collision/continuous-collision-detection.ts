@@ -162,46 +162,7 @@ export const demo: DemoModule = {
         }
         const from = state.x;
         const to = from + speed * dtSim;
-        if (lane.key === "discrete") {
-          state.checks++;
-          state.x = to;
-          if (overlapsWall(to)) {
-            state.hit = true;
-            state.done = true;
-          }
-        } else if (lane.key === "substep") {
-          // 1 回に進む距離が弾の半径を超えないように刻む
-          const count = Math.max(1, Math.ceil((to - from) / RADIUS));
-          for (let k = 1; k <= count; k++) {
-            const x = from + ((to - from) * k) / count;
-            state.checks++;
-            state.x = x;
-            if (overlapsWall(x)) {
-              state.hit = true;
-              state.done = true;
-              break;
-            }
-          }
-        } else {
-          // 掃引：線分と、壁を弾の半径だけ太らせた箱との交差（最初に触れる時刻）
-          state.checks++;
-          const face = WALL_X - WALL_HALF - RADIUS;
-          state.sweeps.push(
-            new Vector3(from, 0.12, lane.z),
-            new Vector3(
-              Math.min(to, from < face && to >= face ? face : to),
-              0.12,
-              lane.z
-            )
-          );
-          if (from <= face && to >= face) {
-            state.x = face;
-            state.hit = true;
-            state.done = true;
-          } else {
-            state.x = to;
-          }
-        }
+        advanceCollisionLane(lane, state, to, from);
         if (state.ghosts < MAX_GHOSTS) {
           matrix.makeTranslation(state.x, RADIUS, lane.z);
           lane.ghosts.setMatrixAt(state.ghosts++, matrix);
@@ -270,5 +231,64 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceCollisionLane(
+      lane: (typeof lanes)[number],
+      state: Lane,
+      to: number,
+      from: number
+    ) {
+      if (lane.key === "discrete") {
+        state.checks++;
+        state.x = to;
+        if (overlapsWall(to)) {
+          state.hit = true;
+          state.done = true;
+        }
+      } else {
+        advanceSubstepLane(lane, to, from, state);
+      }
+    }
+
+    function advanceSubstepLane(
+      lane: (typeof lanes)[number],
+      to: number,
+      from: number,
+      state: Lane
+    ) {
+      if (lane.key === "substep") {
+        // 1 回に進む距離が弾の半径を超えないように刻む
+        const count = Math.max(1, Math.ceil((to - from) / RADIUS));
+        for (let k = 1; k <= count; k++) {
+          const x = from + ((to - from) * k) / count;
+          state.checks++;
+          state.x = x;
+          if (overlapsWall(x)) {
+            state.hit = true;
+            state.done = true;
+            break;
+          }
+        }
+      } else {
+        // 掃引：線分と、壁を弾の半径だけ太らせた箱との交差（最初に触れる時刻）
+        state.checks++;
+        const face = WALL_X - WALL_HALF - RADIUS;
+        state.sweeps.push(
+          new Vector3(from, 0.12, lane.z),
+          new Vector3(
+            Math.min(to, from < face && to >= face ? face : to),
+            0.12,
+            lane.z
+          )
+        );
+        if (from <= face && to >= face) {
+          state.x = face;
+          state.hit = true;
+          state.done = true;
+        } else {
+          state.x = to;
+        }
+      }
+    }
   },
 };

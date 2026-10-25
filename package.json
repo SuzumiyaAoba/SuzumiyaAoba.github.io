@@ -125,6 +125,7 @@
     "@vitest/browser-playwright": "4.1.10",
     "@vitest/coverage-v8": "4.1.10",
     "astro": "^5.18.2",
+    "eslint-plugin-sonarjs": "^4.2.2",
     "fallow": "^3.35.0",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",

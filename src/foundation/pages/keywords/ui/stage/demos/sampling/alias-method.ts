@@ -269,40 +269,7 @@ export const demo: DemoModule = {
         pick.visible = false;
         frame.visible = false;
         flash = Math.max(0, flash - dt);
-        if (!building) {
-          drawBudget += dt * Number(params["rate"]);
-          while (drawBudget >= 1) {
-            drawBudget -= 1;
-            // 列を 1 つ一様に選び、0〜1 の乱数で下（自分）か上（エイリアス）かを決める
-            const column = Math.floor(random() * N);
-            const height = random();
-            const item =
-              height < (table.prob[column] ?? 1)
-                ? column
-                : (table.alias[column] ?? column);
-            tally[item] = (tally[item] ?? 0) + 1;
-            draws++;
-            pick.position.set(columnX(column), height * UNIT, 0.45);
-            const x0 = columnX(column) - WIDTH / 2 - 0.06;
-            const x1 = columnX(column) + WIDTH / 2 + 0.06;
-            const top = UNIT + 0.06;
-            frame.setPoints([
-              new Vector3(x0, -0.06, 0.4),
-              new Vector3(x1, -0.06, 0.4),
-              new Vector3(x1, -0.06, 0.4),
-              new Vector3(x1, top, 0.4),
-              new Vector3(x1, top, 0.4),
-              new Vector3(x0, top, 0.4),
-              new Vector3(x0, top, 0.4),
-              new Vector3(x0, -0.06, 0.4),
-            ]);
-            result.setText(`${ITEMS[item]?.name ?? ""}！`);
-            result.position.set(columnX(column), UNIT + 0.55, 0.4);
-            flash = 0.6;
-          }
-          pick.visible = flash > 0;
-          frame.visible = flash > 0;
-        }
+        drawAliasSamples(building, dt);
         result.visible = !building && flash > 0;
         drawGraph();
         context.readout(
@@ -330,5 +297,42 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function drawAliasSamples(building: boolean, dt: number) {
+      if (!building) {
+        drawBudget += dt * Number(params["rate"]);
+        while (drawBudget >= 1) {
+          drawBudget -= 1;
+          // 列を 1 つ一様に選び、0〜1 の乱数で下（自分）か上（エイリアス）かを決める
+          const column = Math.floor(random() * N);
+          const height = random();
+          const item =
+            height < (table.prob[column] ?? 1)
+              ? column
+              : (table.alias[column] ?? column);
+          tally[item] = (tally[item] ?? 0) + 1;
+          draws++;
+          pick.position.set(columnX(column), height * UNIT, 0.45);
+          const x0 = columnX(column) - WIDTH / 2 - 0.06;
+          const x1 = columnX(column) + WIDTH / 2 + 0.06;
+          const top = UNIT + 0.06;
+          frame.setPoints([
+            new Vector3(x0, -0.06, 0.4),
+            new Vector3(x1, -0.06, 0.4),
+            new Vector3(x1, -0.06, 0.4),
+            new Vector3(x1, top, 0.4),
+            new Vector3(x1, top, 0.4),
+            new Vector3(x0, top, 0.4),
+            new Vector3(x0, top, 0.4),
+            new Vector3(x0, -0.06, 0.4),
+          ]);
+          result.setText(`${ITEMS[item]?.name ?? ""}！`);
+          result.position.set(columnX(column), UNIT + 0.55, 0.4);
+          flash = 0.6;
+        }
+        pick.visible = flash > 0;
+        frame.visible = flash > 0;
+      }
+    }
   },
 };

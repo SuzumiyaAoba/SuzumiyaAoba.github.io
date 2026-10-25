@@ -221,28 +221,7 @@ export const demo: DemoModule = {
             }
             actor.man.hips.position.copy(old.hips).lerp(target.hips, w);
           }
-          if (actor.key === "inertial" && since < blend) {
-            // 慣性化：新しい動きの姿勢に、切り替え時の差を減衰させながら重ねる
-            apply(actor.man, target);
-            for (const [i, bone] of actor.man.bones.entries()) {
-              const offset = offsets[i];
-              if (offset) {
-                const angle = inertialize(
-                  offset.angle,
-                  offset.speed,
-                  blend,
-                  since
-                );
-                bone.quaternion.premultiply(
-                  new Quaternion().setFromAxisAngle(offset.axis, angle)
-                );
-              }
-            }
-            actor.man.hips.position.addScaledVector(
-              hipsOffset.direction,
-              inertialize(hipsOffset.length, hipsOffset.speed, blend, since)
-            );
-          }
+          applyInertialOffset(actor, since, blend, target);
           actor.shown = capture(actor.man, actor.shown);
         }
         graph.push(
@@ -265,5 +244,40 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function applyInertialOffset(
+      actor: {
+        man: Mannequin;
+        shown: Pose;
+        previousShown: Pose;
+        offset: Quaternion;
+        hipsOffset: Vector3;
+        key: Method;
+        label: string;
+        color: string;
+        x: number;
+      },
+      since: number,
+      blend: number,
+      target: Pose
+    ) {
+      if (actor.key === "inertial" && since < blend) {
+        // 慣性化：新しい動きの姿勢に、切り替え時の差を減衰させながら重ねる
+        apply(actor.man, target);
+        for (const [i, bone] of actor.man.bones.entries()) {
+          const offset = offsets[i];
+          if (offset) {
+            const angle = inertialize(offset.angle, offset.speed, blend, since);
+            bone.quaternion.premultiply(
+              new Quaternion().setFromAxisAngle(offset.axis, angle)
+            );
+          }
+        }
+        actor.man.hips.position.addScaledVector(
+          hipsOffset.direction,
+          inertialize(hipsOffset.length, hipsOffset.speed, blend, since)
+        );
+      }
+    }
   },
 };

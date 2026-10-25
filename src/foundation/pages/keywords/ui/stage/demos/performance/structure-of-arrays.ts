@@ -192,46 +192,7 @@ export const demo: DemoModule = {
         }
         const step = Math.min(dt, 1 / 30);
         const start = performance.now();
-        if (layout === "soa") {
-          for (let i = 0; i < count; i++) {
-            let x = (px[i] ?? 0) + (vx[i] ?? 0) * step;
-            let y = (py[i] ?? 0) + (vy[i] ?? 0) * step;
-            let z = (pz[i] ?? 0) + (vz[i] ?? 0) * step;
-            if (x > HALF || x < -HALF) {
-              vx[i] = -(vx[i] ?? 0);
-              x = Math.max(-HALF, Math.min(HALF, x));
-            }
-            if (y > HALF || y < -HALF) {
-              vy[i] = -(vy[i] ?? 0);
-              y = Math.max(-HALF, Math.min(HALF, y));
-            }
-            if (z > HALF || z < -HALF) {
-              vz[i] = -(vz[i] ?? 0);
-              z = Math.max(-HALF, Math.min(HALF, z));
-            }
-            px[i] = x;
-            py[i] = y;
-            pz[i] = z;
-          }
-        } else {
-          for (const p of objects) {
-            p.x += p.vx * step;
-            p.y += p.vy * step;
-            p.z += p.vz * step;
-            if (p.x > HALF || p.x < -HALF) {
-              p.vx = -p.vx;
-              p.x = Math.max(-HALF, Math.min(HALF, p.x));
-            }
-            if (p.y > HALF || p.y < -HALF) {
-              p.vy = -p.vy;
-              p.y = Math.max(-HALF, Math.min(HALF, p.y));
-            }
-            if (p.z > HALF || p.z < -HALF) {
-              p.vz = -p.vz;
-              p.z = Math.max(-HALF, Math.min(HALF, p.z));
-            }
-          }
-        }
+        advanceParticleLayout(step);
         const elapsed = performance.now() - start;
         smoothed += (elapsed - smoothed) * 0.1;
         graph.push([smoothed]);
@@ -263,5 +224,52 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceParticleLayout(step: number) {
+      if (layout === "soa") {
+        advanceSoaParticles(step);
+      } else {
+        for (const p of objects) {
+          p.x += p.vx * step;
+          p.y += p.vy * step;
+          p.z += p.vz * step;
+          if (p.x > HALF || p.x < -HALF) {
+            p.vx = -p.vx;
+            p.x = Math.max(-HALF, Math.min(HALF, p.x));
+          }
+          if (p.y > HALF || p.y < -HALF) {
+            p.vy = -p.vy;
+            p.y = Math.max(-HALF, Math.min(HALF, p.y));
+          }
+          if (p.z > HALF || p.z < -HALF) {
+            p.vz = -p.vz;
+            p.z = Math.max(-HALF, Math.min(HALF, p.z));
+          }
+        }
+      }
+    }
+
+    function advanceSoaParticles(step: number) {
+      for (let i = 0; i < count; i++) {
+        let x = (px[i] ?? 0) + (vx[i] ?? 0) * step;
+        let y = (py[i] ?? 0) + (vy[i] ?? 0) * step;
+        let z = (pz[i] ?? 0) + (vz[i] ?? 0) * step;
+        if (x > HALF || x < -HALF) {
+          vx[i] = -(vx[i] ?? 0);
+          x = Math.max(-HALF, Math.min(HALF, x));
+        }
+        if (y > HALF || y < -HALF) {
+          vy[i] = -(vy[i] ?? 0);
+          y = Math.max(-HALF, Math.min(HALF, y));
+        }
+        if (z > HALF || z < -HALF) {
+          vz[i] = -(vz[i] ?? 0);
+          z = Math.max(-HALF, Math.min(HALF, z));
+        }
+        px[i] = x;
+        py[i] = y;
+        pz[i] = z;
+      }
+    }
   },
 };

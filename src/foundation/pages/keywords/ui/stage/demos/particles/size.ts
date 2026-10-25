@@ -152,52 +152,7 @@ export const demo: DemoModule = {
         const system = preset.additive ? additive : alphaBlend;
         additive.visible = preset.additive;
         alphaBlend.visible = !preset.additive;
-        for (let index = 0; index < COUNT; index++) {
-          if (index >= preset.count) {
-            system.sizes[index] = 0;
-            continue;
-          }
-          const seed = seeds[index] ?? 0;
-          const life = preset.life * (0.7 + seed * 0.6);
-          let age = (ages[index] ?? 0) + dt / life;
-          if (age >= 1) {
-            age -= 1;
-            const angle = random() * TAU;
-            const radius = Math.sqrt(random()) * preset.spread;
-            origins[index * 2] = Math.cos(angle) * radius;
-            origins[index * 2 + 1] = Math.sin(angle) * radius;
-          }
-          ages[index] = age;
-          const t = age;
-          const height = 0.35 + t * life * preset.speed;
-          const sway = Math.sin(time * 1.3 + seed * 20) * 0.25 * t;
-          system.positions.set(
-            [
-              (origins[index * 2] ?? 0) * (1 - t * 0.6) + sway,
-              height,
-              (origins[index * 2 + 1] ?? 0) * (1 - t * 0.6),
-            ],
-            index * 3
-          );
-          system.rotations[index] = seed * TAU + t * 2;
-          if (useCurves) {
-            system.sizes[index] = preset.size(t) * (0.8 + seed * 0.4);
-            gradient(preset.colors, t, color).multiplyScalar(
-              preset.additive ? preset.intensity : 1
-            );
-            system.colors.set(
-              [color.r, color.g, color.b, preset.alpha(t)],
-              index * 4
-            );
-          } else {
-            system.sizes[index] = preset.size(0.35);
-            gradient(preset.colors, 0.3, color);
-            system.colors.set(
-              [color.r, color.g, color.b, preset.additive ? 0.5 : 0.35],
-              index * 4
-            );
-          }
-        }
+        animateParticleSizes(preset, system, dt, time, useCurves);
         system.setCount(COUNT);
         system.commit();
         light.intensity =
@@ -216,5 +171,60 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function animateParticleSizes(
+      preset: Preset,
+      system: typeof additive,
+      dt: number,
+      time: number,
+      useCurves: boolean
+    ) {
+      for (let index = 0; index < COUNT; index++) {
+        if (index >= preset.count) {
+          system.sizes[index] = 0;
+          continue;
+        }
+        const seed = seeds[index] ?? 0;
+        const life = preset.life * (0.7 + seed * 0.6);
+        let age = (ages[index] ?? 0) + dt / life;
+        if (age >= 1) {
+          age -= 1;
+          const angle = random() * TAU;
+          const radius = Math.sqrt(random()) * preset.spread;
+          origins[index * 2] = Math.cos(angle) * radius;
+          origins[index * 2 + 1] = Math.sin(angle) * radius;
+        }
+        ages[index] = age;
+        const t = age;
+        const height = 0.35 + t * life * preset.speed;
+        const sway = Math.sin(time * 1.3 + seed * 20) * 0.25 * t;
+        system.positions.set(
+          [
+            (origins[index * 2] ?? 0) * (1 - t * 0.6) + sway,
+            height,
+            (origins[index * 2 + 1] ?? 0) * (1 - t * 0.6),
+          ],
+          index * 3
+        );
+        system.rotations[index] = seed * TAU + t * 2;
+        if (useCurves) {
+          system.sizes[index] = preset.size(t) * (0.8 + seed * 0.4);
+          gradient(preset.colors, t, color).multiplyScalar(
+            preset.additive ? preset.intensity : 1
+          );
+          system.colors.set(
+            [color.r, color.g, color.b, preset.alpha(t)],
+            index * 4
+          );
+        } else {
+          system.sizes[index] = preset.size(0.35);
+          gradient(preset.colors, 0.3, color);
+          system.colors.set(
+            [color.r, color.g, color.b, preset.additive ? 0.5 : 0.35],
+            index * 4
+          );
+        }
+      }
+    }
   },
 };

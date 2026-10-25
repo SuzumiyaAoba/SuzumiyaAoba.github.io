@@ -223,79 +223,11 @@ export const demo: DemoModule = {
         emitterLabel.visible = !boxMode;
         box.visible = boxMode;
         cells.fill(0);
-        for (let index = 0; index < COUNT; index++) {
-          const ix = index * 3;
-          const age = (ages[index] ?? 0) + dt;
-          ages[index] = age;
-          if (!boxMode && age > LIFE) {
-            ages[index] = 0;
-            spawn(index);
-          }
-          const x = particles.positions[ix] ?? 0;
-          const y = particles.positions[ix + 1] ?? 0;
-          const z = particles.positions[ix + 2] ?? 0;
-          field(x / scale, y / scale, z / scale, flowTime, velocity);
-          const rise = boxMode ? 0 : (velocities[index] ?? 1);
-          let nx = x + velocity.x * strength * dt;
-          let ny = y + (velocity.y * strength + rise) * dt;
-          let nz = z + velocity.z * strength * dt;
-          if (boxMode) {
-            nx = wrap(nx, -BOX, BOX * 2);
-            ny = wrap(ny, BOX_BOTTOM, BOX_HEIGHT);
-            nz = wrap(nz, -BOX, BOX * 2);
-            const cx = Math.min(
-              CELLS - 1,
-              Math.floor(((nx + BOX) / (BOX * 2)) * CELLS)
-            );
-            const cy = Math.min(
-              CELLS - 1,
-              Math.floor(((ny - BOX_BOTTOM) / BOX_HEIGHT) * CELLS)
-            );
-            const cz = Math.min(
-              CELLS - 1,
-              Math.floor(((nz + BOX) / (BOX * 2)) * CELLS)
-            );
-            const cell = (cy * CELLS + cz) * CELLS + cx;
-            cells[cell] = (cells[cell] ?? 0) + 1;
-          }
-          particles.positions[ix] = nx;
-          particles.positions[ix + 1] = ny;
-          particles.positions[ix + 2] = nz;
-          if (boxMode) {
-            mixed
-              .copy(young)
-              .lerp(old, layers[index] ?? 0)
-              .multiplyScalar(0.55);
-          } else {
-            const t = clamp((ages[index] ?? 0) / LIFE);
-            const fade = Math.min(1, (ages[index] ?? 0) * 3) * (1 - t) ** 1.5;
-            mixed.copy(young).lerp(old, t).multiplyScalar(fade);
-          }
-          particles.colors[ix] = mixed.r;
-          particles.colors[ix + 1] = mixed.g;
-          particles.colors[ix + 2] = mixed.b;
-        }
+        advanceCurlParticles(dt, boxMode, field, scale, flowTime, strength);
         particles.commit();
 
         context.readout("粒子数", COUNT.toLocaleString("ja-JP"));
-        if (boxMode) {
-          let maxCell = 0;
-          let empty = 0;
-          for (const value of cells) {
-            maxCell = Math.max(maxCell, value);
-            if (value < (COUNT / cells.length) * 0.25) {
-              empty++;
-            }
-          }
-          context.readout(
-            "最も混んだ区画 / 平均",
-            `${(maxCell / (COUNT / cells.length)).toFixed(2)} 倍`
-          );
-          context.readout("ほぼ空の区画", `${empty} / ${cells.length}`);
-        } else {
-          context.readout("最も混んだ区画 / 平均", "—");
-          context.readout("ほぼ空の区画", "—");
-        }
+        updateOccupancyReadout(boxMode);
 
         arrows.visible = params["arrows"] === true;
         sliceLabel.visible = arrows.visible;
@@ -330,5 +262,94 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateOccupancyReadout(boxMode: boolean) {
+      if (boxMode) {
+        let maxCell = 0;
+        let empty = 0;
+        for (const value of cells) {
+          maxCell = Math.max(maxCell, value);
+          if (value < (COUNT / cells.length) * 0.25) {
+            empty++;
+          }
+        }
+        context.readout(
+          "最も混んだ区画 / 平均",
+          `${(maxCell / (COUNT / cells.length)).toFixed(2)} 倍`
+        );
+        context.readout("ほぼ空の区画", `${empty} / ${cells.length}`);
+      } else {
+        context.readout("最も混んだ区画 / 平均", "—");
+        context.readout("ほぼ空の区画", "—");
+      }
+    }
+
+    function advanceCurlParticles(
+      dt: number,
+      boxMode: boolean,
+      field: (
+        x: number,
+        y: number,
+        z: number,
+        t: number,
+        out: Vector3
+      ) => Vector3,
+      scale: number,
+      flowTime: number,
+      strength: number
+    ) {
+      for (let index = 0; index < COUNT; index++) {
+        const ix = index * 3;
+        const age = (ages[index] ?? 0) + dt;
+        ages[index] = age;
+        if (!boxMode && age > LIFE) {
+          ages[index] = 0;
+          spawn(index);
+        }
+        const x = particles.positions[ix] ?? 0;
+        const y = particles.positions[ix + 1] ?? 0;
+        const z = particles.positions[ix + 2] ?? 0;
+        field(x / scale, y / scale, z / scale, flowTime, velocity);
+        const rise = boxMode ? 0 : (velocities[index] ?? 1);
+        let nx = x + velocity.x * strength * dt;
+        let ny = y + (velocity.y * strength + rise) * dt;
+        let nz = z + velocity.z * strength * dt;
+        if (boxMode) {
+          nx = wrap(nx, -BOX, BOX * 2);
+          ny = wrap(ny, BOX_BOTTOM, BOX_HEIGHT);
+          nz = wrap(nz, -BOX, BOX * 2);
+          const cx = Math.min(
+            CELLS - 1,
+            Math.floor(((nx + BOX) / (BOX * 2)) * CELLS)
+          );
+          const cy = Math.min(
+            CELLS - 1,
+            Math.floor(((ny - BOX_BOTTOM) / BOX_HEIGHT) * CELLS)
+          );
+          const cz = Math.min(
+            CELLS - 1,
+            Math.floor(((nz + BOX) / (BOX * 2)) * CELLS)
+          );
+          const cell = (cy * CELLS + cz) * CELLS + cx;
+          cells[cell] = (cells[cell] ?? 0) + 1;
+        }
+        particles.positions[ix] = nx;
+        particles.positions[ix + 1] = ny;
+        particles.positions[ix + 2] = nz;
+        if (boxMode) {
+          mixed
+            .copy(young)
+            .lerp(old, layers[index] ?? 0)
+            .multiplyScalar(0.55);
+        } else {
+          const t = clamp((ages[index] ?? 0) / LIFE);
+          const fade = Math.min(1, (ages[index] ?? 0) * 3) * (1 - t) ** 1.5;
+          mixed.copy(young).lerp(old, t).multiplyScalar(fade);
+        }
+        particles.colors[ix] = mixed.r;
+        particles.colors[ix + 1] = mixed.g;
+        particles.colors[ix + 2] = mixed.b;
+      }
+    }
   },
 };

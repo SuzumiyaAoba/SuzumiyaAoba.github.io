@@ -304,23 +304,7 @@ export const demo: DemoModule = {
         }
       }
       // 4. 目標の形 g = R q + c へ向けて速度を加える
-      for (let i = 0; i < count; i++) {
-        q.fromArray(rest, i * 3);
-        goal.copy(q).applyQuaternion(blob.rotation);
-        if (linear) {
-          const stretched = q.clone().applyMatrix3(deformation);
-          goal.lerp(stretched, 0.5);
-        }
-        goal.add(center);
-        goal.toArray(goals, i * 3);
-        for (let axis = 0; axis < 3; axis++) {
-          const i3 = i * 3 + axis;
-          const pull = ((goals[i3] ?? 0) - (pos[i3] ?? 0)) * (alpha / h);
-          vel[i3] =
-            (vel[i3] ?? 0) + pull * 0.5 + (axis === 1 ? -GRAVITY * h : 0);
-          vel[i3] = (vel[i3] ?? 0) * 0.995;
-        }
-      }
+      applyShapeGoals(count, rest, blob, linear, goals, pos, alpha, h, vel);
       for (let i = 0; i < count; i++) {
         const i3 = i * 3;
         pos[i3] = (pos[i3] ?? 0) + (vel[i3] ?? 0) * h;
@@ -349,24 +333,7 @@ export const demo: DemoModule = {
         }
         const showGoals = params["goals"] === true;
         const goalPoints: Vector3[] = [];
-        for (const blob of blobs) {
-          const attribute = blob.mesh.geometry.getAttribute("position");
-          if (attribute instanceof BufferAttribute) {
-            attribute.copyArray(blob.positions);
-            attribute.needsUpdate = true;
-          }
-          blob.mesh.geometry.computeVertexNormals();
-          blob.mesh.material.opacity = showGoals ? 0.5 : 1;
-          blob.mesh.material.transparent = showGoals;
-          if (showGoals) {
-            for (let i = 0; i < blob.count; i += 3) {
-              goalPoints.push(
-                new Vector3().fromArray(blob.positions, i * 3),
-                new Vector3().fromArray(blob.goals, i * 3)
-              );
-            }
-          }
-        }
+        renderShapeMatchingBlobs(showGoals, goalPoints);
         goalLines.visible = showGoals;
         if (showGoals) {
           goalLines.setPoints(goalPoints);
@@ -377,5 +344,59 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderShapeMatchingBlobs(
+      showGoals: boolean,
+      goalPoints: Vector3[]
+    ) {
+      for (const blob of blobs) {
+        const attribute = blob.mesh.geometry.getAttribute("position");
+        if (attribute instanceof BufferAttribute) {
+          attribute.copyArray(blob.positions);
+          attribute.needsUpdate = true;
+        }
+        blob.mesh.geometry.computeVertexNormals();
+        blob.mesh.material.opacity = showGoals ? 0.5 : 1;
+        blob.mesh.material.transparent = showGoals;
+        if (showGoals) {
+          for (let i = 0; i < blob.count; i += 3) {
+            goalPoints.push(
+              new Vector3().fromArray(blob.positions, i * 3),
+              new Vector3().fromArray(blob.goals, i * 3)
+            );
+          }
+        }
+      }
+    }
+
+    function applyShapeGoals(
+      count: number,
+      rest: Float32Array,
+      blob: Blob,
+      linear: boolean,
+      goals: Float32Array,
+      pos: Float32Array,
+      alpha: number,
+      h: number,
+      vel: Float32Array
+    ) {
+      for (let i = 0; i < count; i++) {
+        q.fromArray(rest, i * 3);
+        goal.copy(q).applyQuaternion(blob.rotation);
+        if (linear) {
+          const stretched = q.clone().applyMatrix3(deformation);
+          goal.lerp(stretched, 0.5);
+        }
+        goal.add(center);
+        goal.toArray(goals, i * 3);
+        for (let axis = 0; axis < 3; axis++) {
+          const i3 = i * 3 + axis;
+          const pull = ((goals[i3] ?? 0) - (pos[i3] ?? 0)) * (alpha / h);
+          vel[i3] =
+            (vel[i3] ?? 0) + pull * 0.5 + (axis === 1 ? -GRAVITY * h : 0);
+          vel[i3] = (vel[i3] ?? 0) * 0.995;
+        }
+      }
+    }
   },
 };

@@ -79,20 +79,33 @@ function outputAnchor(
   operation: ContinuousOperation,
   layout: FlowLayout
 ): FlowPoint {
-  if (operation.id === "tokenize") {
-    return layout.mobile ? [570, 520] : [1125, 475];
-  }
-  if (operation.id === "select") {
-    return layout.mobile ? [410, 748] : [1340, 573];
-  }
-  if (operation.id === "softmax") {
-    return layout.mobile ? [560, 630] : [1020, 582];
-  }
-  if (operation.id === "decode") {
-    return layout.mobile ? [570, 265] : [1365, 175];
-  }
-  if (operation.id === "return") {
-    return layout.mobile ? [570, 675] : [1365, 535];
+  const fixedAnchors: Partial<
+    Record<ContinuousOperation["id"], readonly [FlowPoint, FlowPoint]>
+  > = {
+    tokenize: [
+      [570, 520],
+      [1125, 475],
+    ],
+    select: [
+      [410, 748],
+      [1340, 573],
+    ],
+    softmax: [
+      [560, 630],
+      [1020, 582],
+    ],
+    decode: [
+      [570, 265],
+      [1365, 175],
+    ],
+    return: [
+      [570, 675],
+      [1365, 535],
+    ],
+  };
+  const fixed = fixedAnchors[operation.id];
+  if (fixed) {
+    return fixed[layout.mobile ? 0 : 1];
   }
   const cell = cinemaOutputCell(
     operation.computation.output.values.length,
@@ -359,119 +372,203 @@ function FlowEdgeView({
         />
       )}
       {!packets && !isFeedback && (
-        <g data-flow-input={connection.id}>
-          <rect
-            x={boxX}
-            y={boxTop}
-            width={width}
-            height={boxHeight}
-            rx="14"
-            strokeWidth="2"
-            className={
-              secondary
-                ? "fill-background stroke-chart-2"
-                : "fill-background stroke-border"
-            }
-          />
-          <CinemaLabel
-            x={boxX + width / 2}
-            y={boxTop + 28}
-            size={layout.mobile ? 20 : 22}
-          >
-            {connection.payload.label.length > (layout.mobile ? 10 : 18)
-              ? connection.payload.label.slice(0, layout.mobile ? 10 : 18)
-              : connection.payload.label}
-          </CinemaLabel>
-          <CinemaLabel
-            x={boxX + width / 2}
-            y={boxTop + 56}
-            size={layout.mobile ? 18 : 20}
-          >
-            {connection.payload.representative.position === undefined
-              ? `形状 ${connection.payload.shape.join("×")}`
-              : `位置${connection.payload.representative.position + 1} ／ 全${connection.payload.shape[0]}位置`}
-          </CinemaLabel>
-          <PayloadValues
-            values={values}
-            x={boxX + width / (columns * 2)}
-            y={boxTop + 88}
-            columns={columns}
-            size={layout.mobile ? 22 : 24}
-            gapX={width / columns}
-            gapY={32}
-            pending={progress < 1}
-          />
-          <path
-            d={`M${boxX + width} ${boxY} H${target.x}`}
-            fill="none"
-            strokeWidth="2"
-            className="stroke-primary/40"
-          />
-        </g>
+        <FlowInputBox
+          connection={connection}
+          boxX={boxX}
+          boxTop={boxTop}
+          width={width}
+          boxHeight={boxHeight}
+          secondary={secondary}
+          layout={layout}
+          values={values}
+          columns={columns}
+          progress={progress}
+          boxY={boxY}
+          target={target}
+        />
       )}
       {packets && progress > 0 && progress < 1 && (
-        <g
-          transform={`translate(${svgNumber(packet.x)} ${svgNumber(packet.y)})`}
-          opacity={svgNumber(alpha)}
-          data-flow-packet={connection.id}
-        >
-          {detailed ? (
-            <>
-              <rect
-                x={-packetWidth / 2}
-                y={-packetHeight / 2}
-                width={packetWidth}
-                height={packetHeight}
-                rx="20"
-                strokeWidth="4"
-                className={
-                  secondary
-                    ? "fill-background stroke-chart-2"
-                    : "fill-background stroke-primary"
-                }
-              />
-              <CinemaLabel
-                x={0}
-                y={-packetHeight / 2 + 38}
-                size={layout.mobile ? 24 : 28}
-                active
-              >
-                {isFeedback ? "次回のID列" : connection.payload.label}
-              </CinemaLabel>
-              <CinemaLabel x={0} y={-packetHeight / 2 + 72} size={24}>
-                {connection.payload.representative.label} ／{" "}
-                {connection.payload.shape.join("×")}
-              </CinemaLabel>
-              <PayloadValues
-                values={values}
-                x={
-                  (-(packetColumns - 1) * (packetWidth / (packetColumns + 1))) /
-                  2
-                }
-                y={-packetHeight / 2 + 115}
-                columns={packetColumns}
-                size={layout.mobile ? 28 : 30}
-                gapX={packetWidth / (packetColumns + 1)}
-                gapY={43}
-              />
-            </>
-          ) : (
-            <circle
-              r={layout.mobile ? 12 : 10}
-              strokeWidth="3"
-              className={
-                secondary
-                  ? "fill-chart-2 stroke-background"
-                  : "fill-primary stroke-background"
-              }
-            />
-          )}
-        </g>
+        <FlowPacket
+          packet={packet}
+          alpha={alpha}
+          connection={connection}
+          detailed={detailed}
+          packetWidth={packetWidth}
+          packetHeight={packetHeight}
+          secondary={secondary}
+          layout={layout}
+          isFeedback={isFeedback}
+          values={values}
+          packetColumns={packetColumns}
+        />
       )}
     </g>
   );
 }
 const FlowEdge = memo(FlowEdgeView);
+
+function FlowPacket({
+  packet,
+  alpha,
+  connection,
+  detailed,
+  packetWidth,
+  packetHeight,
+  secondary,
+  layout,
+  isFeedback,
+  values,
+  packetColumns,
+}: {
+  packet: { x: number; y: number };
+  alpha: number;
+  connection: ContinuousConnection;
+  detailed: boolean;
+  packetWidth: number;
+  packetHeight: number;
+  secondary: boolean;
+  layout: FlowLayout;
+  isFeedback: boolean;
+  values: readonly number[];
+  packetColumns: number;
+}) {
+  return (
+    <g
+      transform={`translate(${svgNumber(packet.x)} ${svgNumber(packet.y)})`}
+      opacity={svgNumber(alpha)}
+      data-flow-packet={connection.id}
+    >
+      {detailed ? (
+        <>
+          <rect
+            x={-packetWidth / 2}
+            y={-packetHeight / 2}
+            width={packetWidth}
+            height={packetHeight}
+            rx="20"
+            strokeWidth="4"
+            className={
+              secondary
+                ? "fill-background stroke-chart-2"
+                : "fill-background stroke-primary"
+            }
+          />
+          <CinemaLabel
+            x={0}
+            y={-packetHeight / 2 + 38}
+            size={layout.mobile ? 24 : 28}
+            active
+          >
+            {isFeedback ? "次回のID列" : connection.payload.label}
+          </CinemaLabel>
+          <CinemaLabel x={0} y={-packetHeight / 2 + 72} size={24}>
+            {connection.payload.representative.label} ／{" "}
+            {connection.payload.shape.join("×")}
+          </CinemaLabel>
+          <PayloadValues
+            values={values}
+            x={(-(packetColumns - 1) * (packetWidth / (packetColumns + 1))) / 2}
+            y={-packetHeight / 2 + 115}
+            columns={packetColumns}
+            size={layout.mobile ? 28 : 30}
+            gapX={packetWidth / (packetColumns + 1)}
+            gapY={43}
+          />
+        </>
+      ) : (
+        <circle
+          r={layout.mobile ? 12 : 10}
+          strokeWidth="3"
+          className={
+            secondary
+              ? "fill-chart-2 stroke-background"
+              : "fill-primary stroke-background"
+          }
+        />
+      )}
+    </g>
+  );
+}
+
+function FlowInputBox({
+  connection,
+  boxX,
+  boxTop,
+  width,
+  boxHeight,
+  secondary,
+  layout,
+  values,
+  columns,
+  progress,
+  boxY,
+  target,
+}: {
+  connection: ContinuousConnection;
+  boxX: number;
+  boxTop: number;
+  width: number;
+  boxHeight: number;
+  secondary: boolean;
+  layout: FlowLayout;
+  values: readonly number[];
+  columns: number;
+  progress: number;
+  boxY: number;
+  target: { x: number; y: number };
+}) {
+  return (
+    <g data-flow-input={connection.id}>
+      <rect
+        x={boxX}
+        y={boxTop}
+        width={width}
+        height={boxHeight}
+        rx="14"
+        strokeWidth="2"
+        className={
+          secondary
+            ? "fill-background stroke-chart-2"
+            : "fill-background stroke-border"
+        }
+      />
+      <CinemaLabel
+        x={boxX + width / 2}
+        y={boxTop + 28}
+        size={layout.mobile ? 20 : 22}
+      >
+        {connection.payload.label.length > (layout.mobile ? 10 : 18)
+          ? connection.payload.label.slice(0, layout.mobile ? 10 : 18)
+          : connection.payload.label}
+      </CinemaLabel>
+      <CinemaLabel
+        x={boxX + width / 2}
+        y={boxTop + 56}
+        size={layout.mobile ? 18 : 20}
+      >
+        {connection.payload.representative.position === undefined
+          ? `形状 ${connection.payload.shape.join("×")}`
+          : `位置${connection.payload.representative.position + 1} ／ 全${connection.payload.shape[0]}位置`}
+      </CinemaLabel>
+      <PayloadValues
+        values={values}
+        x={boxX + width / (columns * 2)}
+        y={boxTop + 88}
+        columns={columns}
+        size={layout.mobile ? 22 : 24}
+        gapX={width / columns}
+        gapY={32}
+        pending={progress < 1}
+      />
+      <path
+        d={`M${boxX + width} ${boxY} H${target.x}`}
+        fill="none"
+        strokeWidth="2"
+        className="stroke-primary/40"
+      />
+    </g>
+  );
+}
 
 /** 計算器を消さずに配置し続け、同一の回路上をカメラと実データが移動する。 */
 export function ContinuousFlow({ trace, selection, elapsed }: FlowProps) {

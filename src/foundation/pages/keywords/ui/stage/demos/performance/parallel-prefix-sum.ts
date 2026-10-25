@@ -190,27 +190,7 @@ export const demo: DemoModule = {
             sum += flag;
           }
           const phase = Math.min(1, Math.max(0, (timer - interval) / interval));
-          for (const [i, { bar, label }] of bars.entries()) {
-            bar.visible = false;
-            label.setText(`${destination[i] ?? 0}`);
-            label.position.set(x(i), 2.75, 0);
-            const ball = balls[i];
-            if (ball) {
-              ball.material.color.set(
-                alive[i] === true ? palette.lime : "#3a4352"
-              );
-              const target =
-                alive[i] === true
-                  ? new Vector3(x(destination[i] ?? 0), 0.4, 0)
-                  : new Vector3(x(i), 2.2, 0);
-              const eased = phase * phase * (3 - 2 * phase);
-              ball.position.lerpVectors(
-                new Vector3(x(i), 2.2, 0),
-                target,
-                alive[i] === true ? eased : 0
-              );
-            }
-          }
+          renderCompactedValues(destination, phase);
           arcs.visible = false;
           if (timer > interval * 3.2) {
             timer = 0;
@@ -235,16 +215,7 @@ export const demo: DemoModule = {
         const total = input.reduce((sum, value) => sum + value, 0);
         const unit = 2.6 / Math.max(1, total);
         const target = new Set(step.edges.map(([, to]) => to));
-        for (const [i, { bar, label }] of bars.entries()) {
-          bar.visible = true;
-          const value = step.values[i] ?? 0;
-          const height = Math.max(0.02, value * unit);
-          bar.scale.y = height;
-          bar.position.y = height / 2;
-          bar.material = target.has(i) ? hotMaterial : barMaterial;
-          label.setText(`${value}`);
-          label.position.set(x(i), height + 0.25, 0);
-        }
+        renderPrefixBars(step, unit, target);
         const points: Vector3[] = [];
         for (const [from, to] of step.edges) {
           const a = new Vector3(
@@ -298,5 +269,40 @@ export const demo: DemoModule = {
         }
       },
     };
+
+    function renderPrefixBars(step: Step, unit: number, target: Set<number>) {
+      for (const [i, { bar, label }] of bars.entries()) {
+        bar.visible = true;
+        const value = step.values[i] ?? 0;
+        const height = Math.max(0.02, value * unit);
+        bar.scale.y = height;
+        bar.position.y = height / 2;
+        bar.material = target.has(i) ? hotMaterial : barMaterial;
+        label.setText(`${value}`);
+        label.position.set(x(i), height + 0.25, 0);
+      }
+    }
+
+    function renderCompactedValues(destination: number[], phase: number) {
+      for (const [i, { bar, label }] of bars.entries()) {
+        bar.visible = false;
+        label.setText(`${destination[i] ?? 0}`);
+        label.position.set(x(i), 2.75, 0);
+        const ball = balls[i];
+        if (ball) {
+          ball.material.color.set(alive[i] === true ? palette.lime : "#3a4352");
+          const target =
+            alive[i] === true
+              ? new Vector3(x(destination[i] ?? 0), 0.4, 0)
+              : new Vector3(x(i), 2.2, 0);
+          const eased = phase * phase * (3 - 2 * phase);
+          ball.position.lerpVectors(
+            new Vector3(x(i), 2.2, 0),
+            target,
+            alive[i] === true ? eased : 0
+          );
+        }
+      }
+    }
   },
 };

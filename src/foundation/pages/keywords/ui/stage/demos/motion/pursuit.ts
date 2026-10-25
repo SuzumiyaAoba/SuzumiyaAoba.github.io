@@ -172,48 +172,7 @@ export const demo: DemoModule = {
 
         const lead = Number(params["lead"]);
         const turn = Number(params["turn"]);
-        for (const missile of missiles) {
-          missile.flight += dt;
-          aim.copy(targetPosition);
-          if (missile.predict) {
-            const time =
-              (missile.position.distanceTo(targetPosition) / missileSpeed) *
-              lead;
-            aim.addScaledVector(targetVelocity, time);
-            aimPoint.position.copy(aim);
-            aimLine.setPoints([targetPosition, aim]);
-          }
-          desired
-            .copy(aim)
-            .sub(missile.position)
-            .setY(0)
-            .setLength(missileSpeed);
-          steer.copy(desired).sub(missile.velocity);
-          limit(steer, turn);
-          missile.velocity.addScaledVector(steer, dt);
-          limit(missile.velocity, missileSpeed);
-          missile.position.addScaledVector(missile.velocity, dt);
-          missile.mesh.position.copy(missile.position);
-          missile.mesh.lookAt(missile.position.clone().add(missile.velocity));
-          missile.line.push(missile.position);
-          if (
-            missile.position.distanceTo(targetPosition) < HIT_RADIUS ||
-            missile.flight > 8
-          ) {
-            if (missile.flight <= 8) {
-              missile.hits++;
-              missile.totalTime += missile.flight;
-              explode(
-                missile.position,
-                missile.predict ? palette.cyan : palette.coral
-              );
-            }
-            missile.position.copy(LAUNCHER);
-            missile.velocity.set(0, 0, -3);
-            missile.flight = 0;
-            missile.line.reset();
-          }
-        }
+        advanceMissiles(dt, lead, turn);
         const showAim = params["predicted"] === true && lead > 0;
         aimPoint.visible = showAim;
         aimLine.visible = showAim;
@@ -246,5 +205,45 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceMissiles(dt: number, lead: number, turn: number) {
+      for (const missile of missiles) {
+        missile.flight += dt;
+        aim.copy(targetPosition);
+        if (missile.predict) {
+          const time =
+            (missile.position.distanceTo(targetPosition) / missileSpeed) * lead;
+          aim.addScaledVector(targetVelocity, time);
+          aimPoint.position.copy(aim);
+          aimLine.setPoints([targetPosition, aim]);
+        }
+        desired.copy(aim).sub(missile.position).setY(0).setLength(missileSpeed);
+        steer.copy(desired).sub(missile.velocity);
+        limit(steer, turn);
+        missile.velocity.addScaledVector(steer, dt);
+        limit(missile.velocity, missileSpeed);
+        missile.position.addScaledVector(missile.velocity, dt);
+        missile.mesh.position.copy(missile.position);
+        missile.mesh.lookAt(missile.position.clone().add(missile.velocity));
+        missile.line.push(missile.position);
+        if (
+          missile.position.distanceTo(targetPosition) < HIT_RADIUS ||
+          missile.flight > 8
+        ) {
+          if (missile.flight <= 8) {
+            missile.hits++;
+            missile.totalTime += missile.flight;
+            explode(
+              missile.position,
+              missile.predict ? palette.cyan : palette.coral
+            );
+          }
+          missile.position.copy(LAUNCHER);
+          missile.velocity.set(0, 0, -3);
+          missile.flight = 0;
+          missile.line.reset();
+        }
+      }
+    }
   },
 };

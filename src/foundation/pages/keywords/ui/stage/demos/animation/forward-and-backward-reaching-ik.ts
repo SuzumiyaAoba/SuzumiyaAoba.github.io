@@ -59,13 +59,7 @@ function fabrik(
     }
     // 前向き：根元を元の位置に戻し、先端に向かって同じことをする
     points[0]?.copy(base);
-    for (let i = 1; i <= n; i++) {
-      const previous = points[i - 1];
-      const current = points[i];
-      if (previous && current) {
-        current.sub(previous).normalize().multiplyScalar(length).add(previous);
-      }
-    }
+    extendUnreachableChain(n, points, length);
     if ((points[n]?.distanceTo(target) ?? 0) < 1e-3) {
       break;
     }
@@ -179,46 +173,7 @@ export const demo: DemoModule = {
         const iterations = Number(params["iterations"]);
         const length = TOTAL_LENGTH / count;
         let used = 0;
-        for (const chain of chains) {
-          const active = chain.points.slice(0, count + 1);
-          if (count !== lastSegments) {
-            for (const [i, p] of active.entries()) {
-              p.set(chain.base.x, i * length, chain.base.z);
-            }
-          }
-          const record: Vector3[] = [];
-          used = fabrik(
-            active,
-            chain.base,
-            target.position,
-            length,
-            iterations,
-            record
-          );
-          for (const [i, mesh] of chain.segments.entries()) {
-            const a = active[i];
-            const b = active[i + 1];
-            mesh.visible = i < count && a !== undefined && b !== undefined;
-            if (a && b && mesh.visible) {
-              direction.subVectors(b, a);
-              mesh.position.copy(a).addScaledVector(direction, 0.5);
-              quaternion.setFromUnitVectors(up, direction.clone().normalize());
-              mesh.quaternion.copy(quaternion);
-              mesh.scale.set(1, direction.length(), 1);
-            }
-          }
-          for (const [i, mesh] of chain.joints.entries()) {
-            const p = active[i];
-            mesh.visible = i <= count && p !== undefined;
-            if (p) {
-              mesh.position.copy(p);
-            }
-          }
-          chain.backward.visible = params["pass"] === true && record.length > 1;
-          if (record.length > 1) {
-            chain.backward.setPoints(record);
-          }
-        }
+        used = solveAndRenderChains(count, length, used, iterations);
         lastSegments = count;
         context.readout("実際の往復回数", used === 0 ? "届かない" : `${used}`);
         context.caption(
@@ -226,5 +181,74 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function solveAndRenderChains(
+      count: number,
+      length: number,
+      initialUsed: number,
+      iterations: number
+    ) {
+      let used = initialUsed;
+
+      for (const chain of chains) {
+        const active = chain.points.slice(0, count + 1);
+        if (count !== lastSegments) {
+          for (const [i, p] of active.entries()) {
+            p.set(chain.base.x, i * length, chain.base.z);
+          }
+        }
+        const record: Vector3[] = [];
+        used = fabrik(
+          active,
+          chain.base,
+          target.position,
+          length,
+          iterations,
+          record
+        );
+        renderChainSegments(chain, active, count);
+        for (const [i, mesh] of chain.joints.entries()) {
+          const p = active[i];
+          mesh.visible = i <= count && p !== undefined;
+          if (p) {
+            mesh.position.copy(p);
+          }
+        }
+        chain.backward.visible = params["pass"] === true && record.length > 1;
+        if (record.length > 1) {
+          chain.backward.setPoints(record);
+        }
+      }
+      return used;
+    }
+
+    function renderChainSegments(
+      chain: Chain,
+      active: Vector3[],
+      count: number
+    ) {
+      for (const [i, mesh] of chain.segments.entries()) {
+        const a = active[i];
+        const b = active[i + 1];
+        mesh.visible = i < count && a !== undefined && b !== undefined;
+        if (a && b && mesh.visible) {
+          direction.subVectors(b, a);
+          mesh.position.copy(a).addScaledVector(direction, 0.5);
+          quaternion.setFromUnitVectors(up, direction.clone().normalize());
+          mesh.quaternion.copy(quaternion);
+          mesh.scale.set(1, direction.length(), 1);
+        }
+      }
+    }
   },
 };
+
+function extendUnreachableChain(n: number, points: Vector3[], length: number) {
+  for (let i = 1; i <= n; i++) {
+    const previous = points[i - 1];
+    const current = points[i];
+    if (previous && current) {
+      current.sub(previous).normalize().multiplyScalar(length).add(previous);
+    }
+  }
+}

@@ -51,23 +51,7 @@ function clip(faces: Face[], normal: Vector3, d: number): Face[] {
   for (const face of faces) {
     const output: Vector3[] = [];
     const { points } = face;
-    for (let index = 0; index < points.length; index++) {
-      const current = points[index];
-      const next = points[(index + 1) % points.length];
-      if (!current || !next) {
-        continue;
-      }
-      const dc = normal.dot(current) - d;
-      const dn = normal.dot(next) - d;
-      if (dc <= 0) {
-        output.push(current);
-      }
-      if ((dc < 0 && dn > 0) || (dc > 0 && dn < 0)) {
-        const point = current.clone().lerp(next, dc / (dc - dn));
-        output.push(point);
-        cut.push(point);
-      }
-    }
+    clipPolygonFace(points, normal, d, output, cut);
     if (output.length >= 3) {
       result.push({ points: output, inner: face.inner });
     }
@@ -99,6 +83,32 @@ function clip(faces: Face[], normal: Vector3, d: number): Face[] {
     }
   }
   return result;
+}
+
+function clipPolygonFace(
+  points: Vector3[],
+  normal: Vector3,
+  d: number,
+  output: Vector3[],
+  cut: Vector3[]
+) {
+  for (let index = 0; index < points.length; index++) {
+    const current = points[index];
+    const next = points[(index + 1) % points.length];
+    if (!current || !next) {
+      continue;
+    }
+    const dc = normal.dot(current) - d;
+    const dn = normal.dot(next) - d;
+    if (dc <= 0) {
+      output.push(current);
+    }
+    if ((dc < 0 && dn > 0) || (dc > 0 && dn < 0)) {
+      const point = current.clone().lerp(next, dc / (dc - dn));
+      output.push(point);
+      cut.push(point);
+    }
+  }
 }
 
 /** 種点 i のボロノイ領域：箱を、ほかのすべての種点との垂直二等分面で切り取る。 */
@@ -327,44 +337,7 @@ export const demo: DemoModule = {
       const start = performance.now();
       const seeds = makeSeeds(Number(params["pieces"]));
       const glass = params["material"] === "glass";
-      for (const [index] of seeds.entries()) {
-        const faces = voronoiCell(seeds, index, min, max);
-        const center = new Vector3();
-        let count = 0;
-        for (const face of faces) {
-          for (const point of face.points) {
-            center.add(point);
-            count++;
-          }
-        }
-        if (count === 0) {
-          continue;
-        }
-        center.divideScalar(count);
-        const geometry = pieceGeometry(faces, center);
-        const mesh = new Mesh(
-          geometry,
-          glass ? [glassOuter, glassInner] : [stoneOuter, stoneInner]
-        );
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        mesh.position.copy(center);
-        root.add(mesh);
-        const local: Vector3[] = [];
-        for (const face of faces) {
-          for (const point of face.points) {
-            local.push(point.clone().sub(center));
-          }
-        }
-        pieces.push({
-          mesh,
-          center: center.clone(),
-          local,
-          velocity: new Vector3(),
-          spin: new Vector3(),
-          resting: true,
-        });
-      }
+      buildFracturePieces(seeds, glass);
       buildMs = performance.now() - start;
       for (const [index, seed] of seeds.entries()) {
         seedsView.positions.set([seed.x, seed.y, seed.z], index * 3);
@@ -444,59 +417,7 @@ export const demo: DemoModule = {
         flash.visible = flashTime < 0.25;
         flash.scale.setScalar(1 + flashTime * 12);
 
-        if (broken) {
-          const h = Math.min(dt, 1 / 30);
-          for (const piece of pieces) {
-            if (piece.resting) {
-              continue;
-            }
-            piece.velocity.y -= 9.8 * h;
-            piece.mesh.position.addScaledVector(piece.velocity, h);
-            const angle = piece.spin.length() * h;
-            if (angle > 1e-6) {
-              rotation.setFromAxisAngle(piece.spin.clone().normalize(), angle);
-              piece.mesh.quaternion.premultiply(rotation);
-            }
-            // 床との当たり：一番低い頂点が床より下なら押し上げて跳ね返す
-            let lowest = Number.POSITIVE_INFINITY;
-            for (const point of piece.local) {
-              world
-                .copy(point)
-                .applyQuaternion(piece.mesh.quaternion)
-                .add(piece.mesh.position);
-              lowest = Math.min(lowest, world.y);
-            }
-            if (lowest < 0) {
-              piece.mesh.position.y -= lowest;
-              if (piece.velocity.y < 0) {
-                piece.velocity.y *= -0.25;
-              }
-              piece.velocity.x *= 0.8;
-              piece.velocity.z *= 0.8;
-              piece.spin.multiplyScalar(0.8);
-              if (
-                piece.velocity.lengthSq() < 0.02 &&
-                piece.spin.lengthSq() < 0.05
-              ) {
-                piece.resting = true;
-              }
-            }
-          }
-        } else {
-          // 分解表示：破片をそれぞれの中心から外へ少し離す
-          const explode = Number(params["explode"]);
-          const wallCenter = new Vector3(0, WALL.height / 2, 0);
-          for (const piece of pieces) {
-            const offset = piece.center
-              .clone()
-              .sub(wallCenter)
-              .multiplyScalar(explode * 0.6);
-            offset.z += explode * 0.4 * Math.sign(piece.center.z || 1);
-            piece.mesh.position.copy(piece.center).add(offset);
-            piece.mesh.scale.setScalar(1 - explode * 0.15);
-            piece.mesh.quaternion.identity();
-          }
-        }
+        advanceFracturePieces(dt);
         context.readout("破片", `${pieces.length}`);
         context.readout("切り分けにかかった時間", `${buildMs.toFixed(1)} ms`);
         context.caption(
@@ -506,5 +427,103 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceFracturePieces(dt: number) {
+      if (broken) {
+        const h = Math.min(dt, 1 / 30);
+        for (const piece of pieces) {
+          if (piece.resting) {
+            continue;
+          }
+          piece.velocity.y -= 9.8 * h;
+          piece.mesh.position.addScaledVector(piece.velocity, h);
+          const angle = piece.spin.length() * h;
+          if (angle > 1e-6) {
+            rotation.setFromAxisAngle(piece.spin.clone().normalize(), angle);
+            piece.mesh.quaternion.premultiply(rotation);
+          }
+          // 床との当たり：一番低い頂点が床より下なら押し上げて跳ね返す
+          let lowest = Number.POSITIVE_INFINITY;
+          for (const point of piece.local) {
+            world
+              .copy(point)
+              .applyQuaternion(piece.mesh.quaternion)
+              .add(piece.mesh.position);
+            lowest = Math.min(lowest, world.y);
+          }
+          resolveGroundContact(lowest, piece);
+        }
+      } else {
+        // 分解表示：破片をそれぞれの中心から外へ少し離す
+        const explode = Number(params["explode"]);
+        const wallCenter = new Vector3(0, WALL.height / 2, 0);
+        for (const piece of pieces) {
+          const offset = piece.center
+            .clone()
+            .sub(wallCenter)
+            .multiplyScalar(explode * 0.6);
+          offset.z += explode * 0.4 * Math.sign(piece.center.z || 1);
+          piece.mesh.position.copy(piece.center).add(offset);
+          piece.mesh.scale.setScalar(1 - explode * 0.15);
+          piece.mesh.quaternion.identity();
+        }
+      }
+    }
+
+    function buildFracturePieces(seeds: Vector3[], glass: boolean) {
+      for (const [index] of seeds.entries()) {
+        const faces = voronoiCell(seeds, index, min, max);
+        const center = new Vector3();
+        let count = 0;
+        for (const face of faces) {
+          for (const point of face.points) {
+            center.add(point);
+            count++;
+          }
+        }
+        if (count === 0) {
+          continue;
+        }
+        center.divideScalar(count);
+        const geometry = pieceGeometry(faces, center);
+        const mesh = new Mesh(
+          geometry,
+          glass ? [glassOuter, glassInner] : [stoneOuter, stoneInner]
+        );
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        mesh.position.copy(center);
+        root.add(mesh);
+        const local: Vector3[] = [];
+        for (const face of faces) {
+          for (const point of face.points) {
+            local.push(point.clone().sub(center));
+          }
+        }
+        pieces.push({
+          mesh,
+          center: center.clone(),
+          local,
+          velocity: new Vector3(),
+          spin: new Vector3(),
+          resting: true,
+        });
+      }
+    }
   },
 };
+
+function resolveGroundContact(lowest: number, piece: Piece) {
+  if (lowest < 0) {
+    piece.mesh.position.y -= lowest;
+    if (piece.velocity.y < 0) {
+      piece.velocity.y *= -0.25;
+    }
+    piece.velocity.x *= 0.8;
+    piece.velocity.z *= 0.8;
+    piece.spin.multiplyScalar(0.8);
+    if (piece.velocity.lengthSq() < 0.02 && piece.spin.lengthSq() < 0.05) {
+      piece.resting = true;
+    }
+  }
+}

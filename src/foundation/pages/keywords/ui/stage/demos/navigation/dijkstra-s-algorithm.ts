@@ -186,28 +186,7 @@ export const demo: DemoModule = {
         front += dt * Number(params["speed"]);
         const limit = mode === "range" ? Number(params["budget"]) : fieldMax;
         const shown = Math.min(front, limit + 0.01);
-        for (let index = 0; index < map.blocked.length; index++) {
-          if (!walkable(map, index)) {
-            continue;
-          }
-          const g = search.g[index] ?? Number.POSITIVE_INFINITY;
-          if (g > shown) {
-            view.tint(index, null);
-          } else if (mode === "range") {
-            view.tint(index, palette.sky, 0.75 - (g / limit) * 0.45);
-          } else {
-            view.tint(
-              index,
-              ramp(1 - g / fieldMax, [
-                "#1b2a3d",
-                palette.violet,
-                palette.sky,
-                palette.cyan,
-              ]),
-              0.8
-            );
-          }
-        }
+        renderDistanceField(shown, mode, limit);
         view.commit();
 
         man.root.visible = mode === "range";
@@ -216,32 +195,7 @@ export const demo: DemoModule = {
         pathLine.visible = false;
         costLabel.visible = false;
         if (mode === "range") {
-          if (moving) {
-            const { done } = unit.update(dt);
-            if (done) {
-              moving = false;
-              recompute("range");
-            }
-          } else {
-            unit.update(0);
-            const point = context.pointerOnPlane();
-            const cell = point ? cellAt(map, point.x, point.z) : -1;
-            const cost =
-              cell >= 0
-                ? (search.g[cell] ?? Number.POSITIVE_INFINITY)
-                : Number.POSITIVE_INFINITY;
-            if (Number.isFinite(cost) && cost <= shown && cell !== home) {
-              const route: Vector3[] = [];
-              for (let at = cell; at >= 0; at = search.parent[at] ?? -1) {
-                route.push(cellCenter(map, at).setY(0.1));
-              }
-              pathLine.setPoints(route);
-              pathLine.visible = true;
-              costLabel.setText(`コスト ${cost.toFixed(1)}`);
-              costLabel.position.copy(cellCenter(map, cell)).setY(0.6);
-              costLabel.visible = true;
-            }
-          }
+          advanceUnitRoute(dt, shown);
           let reachable = 0;
           for (const value of search.g) {
             if (Number.isFinite(value)) {
@@ -258,41 +212,7 @@ export const demo: DemoModule = {
 
         flag.position.copy(cellCenter(map, goal)).setY(0.3);
         const center = new Vector3();
-        for (let i = 0; i < AGENTS; i++) {
-          const position = positions[i];
-          const velocity = velocities[i];
-          if (!position || !velocity) {
-            continue;
-          }
-          const cell = cellAt(map, position.x, position.z);
-          if (cell === goal || !walkable(map, cell)) {
-            spawn(i);
-            continue;
-          }
-          // 距離の場を下る：隣のセルのうち、ゴールまでの距離がいちばん小さいものへ向かう
-          let best = cell;
-          let bestValue = search.g[cell] ?? Number.POSITIVE_INFINITY;
-          for (const [neighbor] of neighbors(map, cell, true)) {
-            const value = search.g[neighbor] ?? Number.POSITIVE_INFINITY;
-            if (value < bestValue) {
-              bestValue = value;
-              best = neighbor;
-            }
-          }
-          cellCenter(map, best, center);
-          const desired = center.sub(position).setY(0);
-          const length = desired.length();
-          if (length > 1e-4) {
-            desired.multiplyScalar(1.4 / length);
-          }
-          velocity.lerp(desired, Math.min(1, dt * 6));
-          position.addScaledVector(velocity, dt);
-          const after = cellAt(map, position.x, position.z);
-          if (!walkable(map, after)) {
-            position.addScaledVector(velocity, -dt);
-          }
-          units.set(i, position.clone().setY(0.12), velocity);
-        }
+        advanceCrowdAgents(center, dt);
         units.commit();
         context.readout("移動できるセル", "");
         context.readout("調べたセル", `${search.order.length}（1 回だけ）`);
@@ -304,5 +224,97 @@ export const demo: DemoModule = {
         view.dispose();
       },
     };
+
+    function renderDistanceField(shown: number, mode: Mode, limit: number) {
+      for (let index = 0; index < map.blocked.length; index++) {
+        if (!walkable(map, index)) {
+          continue;
+        }
+        const g = search.g[index] ?? Number.POSITIVE_INFINITY;
+        if (g > shown) {
+          view.tint(index, null);
+        } else if (mode === "range") {
+          view.tint(index, palette.sky, 0.75 - (g / limit) * 0.45);
+        } else {
+          view.tint(
+            index,
+            ramp(1 - g / fieldMax, [
+              "#1b2a3d",
+              palette.violet,
+              palette.sky,
+              palette.cyan,
+            ]),
+            0.8
+          );
+        }
+      }
+    }
+
+    function advanceCrowdAgents(center: Vector3, dt: number) {
+      for (let i = 0; i < AGENTS; i++) {
+        const position = positions[i];
+        const velocity = velocities[i];
+        if (!position || !velocity) {
+          continue;
+        }
+        const cell = cellAt(map, position.x, position.z);
+        if (cell === goal || !walkable(map, cell)) {
+          spawn(i);
+          continue;
+        }
+        // 距離の場を下る：隣のセルのうち、ゴールまでの距離がいちばん小さいものへ向かう
+        let best = cell;
+        let bestValue = search.g[cell] ?? Number.POSITIVE_INFINITY;
+        for (const [neighbor] of neighbors(map, cell, true)) {
+          const value = search.g[neighbor] ?? Number.POSITIVE_INFINITY;
+          if (value < bestValue) {
+            bestValue = value;
+            best = neighbor;
+          }
+        }
+        cellCenter(map, best, center);
+        const desired = center.sub(position).setY(0);
+        const length = desired.length();
+        if (length > 1e-4) {
+          desired.multiplyScalar(1.4 / length);
+        }
+        velocity.lerp(desired, Math.min(1, dt * 6));
+        position.addScaledVector(velocity, dt);
+        const after = cellAt(map, position.x, position.z);
+        if (!walkable(map, after)) {
+          position.addScaledVector(velocity, -dt);
+        }
+        units.set(i, position.clone().setY(0.12), velocity);
+      }
+    }
+
+    function advanceUnitRoute(dt: number, shown: number) {
+      if (moving) {
+        const { done } = unit.update(dt);
+        if (done) {
+          moving = false;
+          recompute("range");
+        }
+      } else {
+        unit.update(0);
+        const point = context.pointerOnPlane();
+        const cell = point ? cellAt(map, point.x, point.z) : -1;
+        const cost =
+          cell >= 0
+            ? (search.g[cell] ?? Number.POSITIVE_INFINITY)
+            : Number.POSITIVE_INFINITY;
+        if (Number.isFinite(cost) && cost <= shown && cell !== home) {
+          const route: Vector3[] = [];
+          for (let at = cell; at >= 0; at = search.parent[at] ?? -1) {
+            route.push(cellCenter(map, at).setY(0.1));
+          }
+          pathLine.setPoints(route);
+          pathLine.visible = true;
+          costLabel.setText(`コスト ${cost.toFixed(1)}`);
+          costLabel.position.copy(cellCenter(map, cell)).setY(0.6);
+          costLabel.visible = true;
+        }
+      }
+    }
   },
 };

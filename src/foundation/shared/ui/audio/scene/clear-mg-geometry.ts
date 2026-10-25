@@ -55,6 +55,70 @@ export function clearMgGrilleGeometry(options: GrilleOptions) {
   }
   const columns = Math.ceil(radiusX / (cellRadius * 1.5)) + 3;
   const rows = Math.ceil(radiusY / (cellRadius * Math.sqrt(3))) + 2;
+  appendGrilleCells(
+    columns,
+    rows,
+    cellRadius,
+    options,
+    radiusX,
+    radiusY,
+    opening,
+    outline
+  );
+  const geometry = new ExtrudeGeometry(outline, {
+    depth,
+    bevelEnabled: true,
+    bevelSize: 0.055,
+    bevelThickness: 0.055,
+    bevelSegments: 2,
+    curveSegments: 64,
+  });
+  const positions = geometry.getAttribute("position");
+  const uvs = geometry.getAttribute("uv");
+  const faceNormals = geometry.getAttribute("normal").clone();
+  toCreasedNormals(geometry, Math.PI / 4);
+  const normals = geometry.getAttribute("normal");
+  const heightAt = (x: number, y: number) =>
+    options.mProfile
+      ? clearMgDriverHeight(Math.hypot(x, y))
+      : dome * Math.max(0, 1 - (x / radiusX) ** 2 - (y / radiusY) ** 2);
+  for (let index = 0; index < positions.count; index += 1) {
+    const x = positions.getX(index);
+    const y = positions.getY(index);
+    const bulge = heightAt(x, y);
+    positions.setZ(index, positions.getZ(index) - depth + bulge + z);
+    uvs.setXY(index, x / (radiusX * 2) + 0.5, y / (radiusY * 2) + 0.5);
+    const normal = new Vector3().fromBufferAttribute(normals, index);
+    if (Math.abs(faceNormals.getZ(index)) === 1) {
+      normal.set(0, 0, faceNormals.getZ(index));
+    }
+    const dx = (heightAt(x + 0.005, y) - heightAt(x - 0.005, y)) / 0.01;
+    const dy = (heightAt(x, y + 0.005) - heightAt(x, y - 0.005)) / 0.01;
+    normal
+      .set(normal.x - dx * normal.z, normal.y - dy * normal.z, normal.z)
+      .normalize();
+    normals.setXYZ(index, normal.x, normal.y, normal.z);
+  }
+  // 変形後の解析法線を汎用の押し出し処理で上書きしない。
+  const curved = new BufferGeometry().copy(geometry);
+  geometry.dispose();
+  return curved;
+}
+
+const clearMgBandStart = 0.085 * Math.PI;
+const clearMgBandEnd = 0.915 * Math.PI;
+export const clearMgBandSeam = 2.35;
+
+function appendGrilleCells(
+  columns: number,
+  rows: number,
+  cellRadius: number,
+  options: GrilleOptions,
+  radiusX: number,
+  radiusY: number,
+  opening: number,
+  outline: Shape
+) {
   for (let column = -columns; column <= columns; column += 1) {
     for (let row = -rows; row <= rows; row += 1) {
       const centerX = column * cellRadius * 1.5;
@@ -101,49 +165,7 @@ export function clearMgGrilleGeometry(options: GrilleOptions) {
       outline.holes.push(aperture);
     }
   }
-  const geometry = new ExtrudeGeometry(outline, {
-    depth,
-    bevelEnabled: true,
-    bevelSize: 0.055,
-    bevelThickness: 0.055,
-    bevelSegments: 2,
-    curveSegments: 64,
-  });
-  const positions = geometry.getAttribute("position");
-  const uvs = geometry.getAttribute("uv");
-  const faceNormals = geometry.getAttribute("normal").clone();
-  toCreasedNormals(geometry, Math.PI / 4);
-  const normals = geometry.getAttribute("normal");
-  const heightAt = (x: number, y: number) =>
-    options.mProfile
-      ? clearMgDriverHeight(Math.hypot(x, y))
-      : dome * Math.max(0, 1 - (x / radiusX) ** 2 - (y / radiusY) ** 2);
-  for (let index = 0; index < positions.count; index += 1) {
-    const x = positions.getX(index);
-    const y = positions.getY(index);
-    const bulge = heightAt(x, y);
-    positions.setZ(index, positions.getZ(index) - depth + bulge + z);
-    uvs.setXY(index, x / (radiusX * 2) + 0.5, y / (radiusY * 2) + 0.5);
-    const normal = new Vector3().fromBufferAttribute(normals, index);
-    if (Math.abs(faceNormals.getZ(index)) === 1) {
-      normal.set(0, 0, faceNormals.getZ(index));
-    }
-    const dx = (heightAt(x + 0.005, y) - heightAt(x - 0.005, y)) / 0.01;
-    const dy = (heightAt(x, y + 0.005) - heightAt(x, y - 0.005)) / 0.01;
-    normal
-      .set(normal.x - dx * normal.z, normal.y - dy * normal.z, normal.z)
-      .normalize();
-    normals.setXYZ(index, normal.x, normal.y, normal.z);
-  }
-  // 変形後の解析法線を汎用の押し出し処理で上書きしない。
-  const curved = new BufferGeometry().copy(geometry);
-  geometry.dispose();
-  return curved;
 }
-
-const clearMgBandStart = 0.085 * Math.PI;
-const clearMgBandEnd = 0.915 * Math.PI;
-export const clearMgBandSeam = 2.35;
 
 export function clearMgBandPoint(u: number, v: number) {
   const angle = clearMgBandStart + u * (clearMgBandEnd - clearMgBandStart);

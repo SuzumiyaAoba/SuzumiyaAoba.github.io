@@ -122,91 +122,23 @@ export function ReleaseCalendarMonth({
                     )}
                   >
                     {date ? (
-                      <button
-                        {...triggerProps}
-                        type="button"
-                        data-calendar-date={date}
-                        aria-current={isToday ? "date" : undefined}
-                        aria-pressed={selected}
-                        aria-label={`${formatReleaseDate(date, locale)}: ${items.length}${en ? " releases" : " 件"}${isToday ? (en ? " · Today" : " · 今日") : ""}${items.length > 0 ? ` · ${items.map((item) => item.title).join(" / ")}` : ""}`}
-                        tabIndex={
-                          selected ||
-                          (date.endsWith("-01") &&
-                            selectedDate.slice(0, 7) !== month)
-                            ? 0
-                            : -1
-                        }
-                        onClick={(event) => {
-                          onSelectDate(date);
-                          triggerProps.onClick?.(event);
-                        }}
-                        onKeyDown={(event) => {
-                          triggerProps.onKeyDown?.(event);
-                          onDayKeyDown(event, date);
-                        }}
-                        className={cn(
-                          "flex w-full cursor-pointer flex-col gap-1 p-1 text-left transition-colors hover:bg-muted/50 focus-visible:relative focus-visible:z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
-                          showTitles ? "h-24" : "h-16",
-                          selected &&
-                            "bg-ai-accent-soft ring-2 ring-ai-accent ring-inset"
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "flex size-6 shrink-0 items-center justify-center rounded-full text-label font-medium tabular-nums",
-                            isToday
-                              ? "bg-ai-accent-ink font-semibold text-ai-accent-on-solid"
-                              : weekday === 0
-                                ? "text-sunday"
-                                : weekday === 6
-                                  ? "text-info"
-                                  : "text-foreground"
-                          )}
-                        >
-                          {Number(date.slice(-2))}
-                        </span>
-                        {showTitles ? (
-                          <span className="w-full space-y-0.5">
-                            {items.slice(0, 2).map((item) => (
-                              <span
-                                key={item.id}
-                                className={cn(
-                                  "flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-mini",
-                                  providerStyles[item.provider].badge
-                                )}
-                              >
-                                <ProviderIcon
-                                  provider={item.provider}
-                                  className="size-4"
-                                  plain
-                                />
-                                <span className="truncate">{item.title}</span>
-                              </span>
-                            ))}
-                            {items.length > 2 && (
-                              <span className="block px-1 text-micro text-muted-foreground">
-                                +{items.length - 2}
-                              </span>
-                            )}
-                          </span>
-                        ) : (
-                          <span className="flex w-full items-center gap-0.5">
-                            {providers.slice(0, iconLimit).map((provider) => (
-                              <ProviderIcon
-                                key={provider}
-                                provider={provider}
-                                className="size-4 rounded [&_svg]:size-3"
-                              />
-                            ))}
-                            {items.length >
-                              Math.min(providers.length, iconLimit) && (
-                              <span className="text-micro text-muted-foreground tabular-nums">
-                                {items.length}
-                              </span>
-                            )}
-                          </span>
-                        )}
-                      </button>
+                      <CalendarDateButton
+                        triggerProps={triggerProps}
+                        date={date}
+                        isToday={isToday}
+                        selected={selected}
+                        locale={locale}
+                        items={items}
+                        en={en}
+                        selectedDate={selectedDate}
+                        month={month}
+                        onSelectDate={onSelectDate}
+                        onDayKeyDown={onDayKeyDown}
+                        showTitles={showTitles}
+                        weekday={weekday}
+                        providers={providers}
+                        iconLimit={iconLimit}
+                      />
                     ) : (
                       <span
                         className={cn("block", showTitles ? "h-24" : "h-16")}
@@ -222,4 +154,128 @@ export function ReleaseCalendarMonth({
       </table>
     </section>
   );
+}
+
+function CalendarDateButton({
+  triggerProps,
+  date,
+  isToday,
+  selected,
+  locale,
+  items,
+  en,
+  selectedDate,
+  month,
+  onSelectDate,
+  onDayKeyDown,
+  showTitles,
+  weekday,
+  providers,
+  iconLimit,
+}: {
+  triggerProps: ReturnType<ReleasePopoverControls["getTriggerProps"]>;
+  date: string;
+  isToday: boolean;
+  selected: boolean;
+  locale: Locale;
+  items: Release[];
+  en: boolean;
+  selectedDate: string;
+  month: string;
+  onSelectDate: (date: string) => void;
+  onDayKeyDown: (event: KeyboardEvent<HTMLButtonElement>, date: string) => void;
+  showTitles: boolean;
+  weekday: number;
+  providers: Release["provider"][];
+  iconLimit: number;
+}) {
+  return (
+    <button
+      {...triggerProps}
+      type="button"
+      data-calendar-date={date}
+      aria-current={isToday ? "date" : undefined}
+      aria-pressed={selected}
+      aria-label={calendarDayLabel(date, locale, items, en, isToday)}
+      tabIndex={
+        selected || (date.endsWith("-01") && selectedDate.slice(0, 7) !== month)
+          ? 0
+          : -1
+      }
+      onClick={(event) => {
+        onSelectDate(date);
+        triggerProps.onClick?.(event);
+      }}
+      onKeyDown={(event) => {
+        triggerProps.onKeyDown?.(event);
+        onDayKeyDown(event, date);
+      }}
+      className={cn(
+        "flex w-full cursor-pointer flex-col gap-1 p-1 text-left transition-colors hover:bg-muted/50 focus-visible:relative focus-visible:z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
+        showTitles ? "h-24" : "h-16",
+        selected && "bg-ai-accent-soft ring-2 ring-ai-accent ring-inset"
+      )}
+    >
+      <span
+        className={cn(
+          "flex size-6 shrink-0 items-center justify-center rounded-full text-label font-medium tabular-nums",
+          isToday
+            ? "bg-ai-accent-ink font-semibold text-ai-accent-on-solid"
+            : weekday === 0
+              ? "text-sunday"
+              : weekday === 6
+                ? "text-info"
+                : "text-foreground"
+        )}
+      >
+        {Number(date.slice(-2))}
+      </span>
+      {showTitles ? (
+        <span className="w-full space-y-0.5">
+          {items.slice(0, 2).map((item) => (
+            <span
+              key={item.id}
+              className={cn(
+                "flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-mini",
+                providerStyles[item.provider].badge
+              )}
+            >
+              <ProviderIcon provider={item.provider} className="size-4" plain />
+              <span className="truncate">{item.title}</span>
+            </span>
+          ))}
+          {items.length > 2 && (
+            <span className="block px-1 text-micro text-muted-foreground">
+              +{items.length - 2}
+            </span>
+          )}
+        </span>
+      ) : (
+        <span className="flex w-full items-center gap-0.5">
+          {providers.slice(0, iconLimit).map((provider) => (
+            <ProviderIcon
+              key={provider}
+              provider={provider}
+              className="size-4 rounded [&_svg]:size-3"
+            />
+          ))}
+          {items.length > Math.min(providers.length, iconLimit) && (
+            <span className="text-micro text-muted-foreground tabular-nums">
+              {items.length}
+            </span>
+          )}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function calendarDayLabel(
+  date: string,
+  locale: Locale,
+  items: Release[],
+  en: boolean,
+  isToday: boolean
+): string | undefined {
+  return `${formatReleaseDate(date, locale)}: ${items.length}${en ? " releases" : " 件"}${isToday ? (en ? " · Today" : " · 今日") : ""}${items.length > 0 ? ` · ${items.map((item) => item.title).join(" / ")}` : ""}`;
 }

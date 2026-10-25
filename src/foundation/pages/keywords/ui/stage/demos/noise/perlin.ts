@@ -148,31 +148,7 @@ export const demo: DemoModule = {
 
         const showLattice = params["lattice"] === true && source === "perlin";
         let used = 0;
-        if (showLattice) {
-          const first = Math.ceil((-SIZE / 2 + offset) / cell);
-          const last = Math.floor((SIZE / 2 + offset) / cell);
-          const firstZ = Math.ceil(-SIZE / 2 / cell);
-          const lastZ = Math.floor(SIZE / 2 / cell);
-          for (let ix = first; ix <= last; ix++) {
-            for (let iz = firstZ; iz <= lastZ; iz++) {
-              const item = arrows[used];
-              if (!item || used >= MAX_LATTICE * MAX_LATTICE) {
-                continue;
-              }
-              const x = ix * cell - offset;
-              const z = iz * cell;
-              const [gx, gz] = gradientAt(ix, iz);
-              origin.set(x, Math.max(0, -0.12 * amplitude) + 0.02, z);
-              direction
-                .set(gx, 0, gz)
-                .multiplyScalar(Math.min(0.9, cell * 0.38));
-              item.set(origin, direction);
-              dotMatrix.makeTranslation(origin.x, origin.y, origin.z);
-              dots.setMatrixAt(used, dotMatrix);
-              used++;
-            }
-          }
-        }
+        used = renderGradientLattice(showLattice, cell, used, amplitude);
         for (let index = used; index < arrows.length; index++) {
           const item = arrows[index];
           if (item) {
@@ -195,5 +171,39 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function renderGradientLattice(
+      showLattice: boolean,
+      cell: number,
+      initialUsed: number,
+      amplitude: number
+    ) {
+      let used = initialUsed;
+
+      if (showLattice) {
+        const first = Math.ceil((-SIZE / 2 + offset) / cell);
+        const last = Math.floor((SIZE / 2 + offset) / cell);
+        const firstZ = Math.ceil(-SIZE / 2 / cell);
+        const lastZ = Math.floor(SIZE / 2 / cell);
+        for (let ix = first; ix <= last; ix++) {
+          for (let iz = firstZ; iz <= lastZ; iz++) {
+            const item = arrows[used];
+            if (!item || used >= MAX_LATTICE * MAX_LATTICE) {
+              continue;
+            }
+            const x = ix * cell - offset;
+            const z = iz * cell;
+            const [gx, gz] = gradientAt(ix, iz);
+            origin.set(x, Math.max(0, -0.12 * amplitude) + 0.02, z);
+            direction.set(gx, 0, gz).multiplyScalar(Math.min(0.9, cell * 0.38));
+            item.set(origin, direction);
+            dotMatrix.makeTranslation(origin.x, origin.y, origin.z);
+            dots.setMatrixAt(used, dotMatrix);
+            used++;
+          }
+        }
+      }
+      return used;
+    }
   },
 };

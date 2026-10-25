@@ -47,27 +47,21 @@ type PageProps = {
  * 指定されたスラッグに対応する Markdown/MDX ファイルを読み込み、レンダリングします。
  */
 export default async function Page({ params, locale }: PageProps) {
-  const shouldLogPerf = process.env["NEXT_DEBUG_PERF"] === "1";
-  if (shouldLogPerf) {
-    console.time(
-      `[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`
-    );
-  }
+  logPerformance(
+    "start",
+    `[blog] ${locale ?? "ja"}:${await params.then((p) => p.slug)}`
+  );
   const resolvedLocale = resolveLocale(locale);
   const isEn = resolvedLocale === "en";
   const { slug } = await params;
-  if (shouldLogPerf) {
-    console.time(`[blog] load posts:${slug}`);
-  }
+  logPerformance("start", `[blog] load posts:${slug}`);
   const [postJa, postEn, { prev, next }, series] = await Promise.all([
     getBlogPost(slug, { locale: "ja", fallback: false }),
     getBlogPost(slug, { locale: "en", fallback: false }),
     getAdjacentPostSummariesVariants(slug),
     getSeriesForPostSlug(slug, resolvedLocale),
   ]);
-  if (shouldLogPerf) {
-    console.timeEnd(`[blog] load posts:${slug}`);
-  }
+  logPerformance("end", `[blog] load posts:${slug}`);
 
   const post = resolveLocalizedValue(
     { ja: postJa, en: postEn },
@@ -94,26 +88,20 @@ export default async function Page({ params, locale }: PageProps) {
   const productIdsInContent = extractAmazonProductIdsFromMdx(contentSource);
   const translationModel = postEn?.frontmatter.model;
   const originalPath = toLocalePath(`/blog/post/${slug}`, "ja");
-  if (shouldLogPerf) {
-    console.time(`[blog] mdx scope:${slug}`);
-  }
+  logPerformance("start", `[blog] mdx scope:${slug}`);
   const blogPostDir = path.join(await resolveContentRoot(), "blog", slug);
   const scope = primaryContent
     ? await loadMdxScope(primaryContent, blogPostDir)
     : fallbackContent
       ? await loadMdxScope(fallbackContent, blogPostDir)
       : {};
-  if (shouldLogPerf) {
-    console.timeEnd(`[blog] mdx scope:${slug}`);
-  }
+  logPerformance("end", `[blog] mdx scope:${slug}`);
   const explicitProductIds = post.frontmatter.amazonProductIds ?? [];
   const excludedIdsInContent = new Set(productIdsInContent);
   const explicitProductIdsForFooter = explicitProductIds.filter(
     (id) => !excludedIdsInContent.has(id)
   );
-  if (shouldLogPerf) {
-    console.time(`[blog] mdx render:${slug}`);
-  }
+  logPerformance("start", `[blog] mdx render:${slug}`);
   // 使う記事だけが実行時に読み込む。静的 import にすると、チャートを
   // 使わない記事のバンドルにも約 115KB(gzip) が載る。
   const financialDataComponents = FINANCIAL_DATA_USAGE_RE.test(contentSource)
@@ -126,9 +114,7 @@ export default async function Page({ params, locale }: PageProps) {
       ? { extraComponents: financialDataComponents }
       : {}),
   });
-  if (shouldLogPerf) {
-    console.time(`[blog] amazon explicit:${slug}`);
-  }
+  logPerformance("start", `[blog] amazon explicit:${slug}`);
   const explicitPromise: Promise<AffiliateProduct[]> =
     explicitProductIdsForFooter.length > 0
       ? getAffiliateProductsByIds(explicitProductIdsForFooter)
@@ -137,32 +123,16 @@ export default async function Page({ params, locale }: PageProps) {
     Awaited<ReturnType<typeof renderMdxWithToc>>,
     AffiliateProduct[],
   ] = await Promise.all([mdxPromise, explicitPromise]);
-  if (shouldLogPerf) {
-    console.timeEnd(`[blog] mdx render:${slug}`);
-    console.timeEnd(`[blog] amazon explicit:${slug}`);
-  }
-  const prioritizedProducts = explicitProducts.slice(0, 3);
-  const remainingSlots = 3 - prioritizedProducts.length;
-  const productMatchTags = category ? [category, ...tags] : tags;
-  if (shouldLogPerf) {
-    console.time(`[blog] tag products:${slug}`);
-  }
-  const tagProducts =
-    remainingSlots > 0 && productMatchTags.length > 0
-      ? await getAffiliateProductsByTags(productMatchTags, {
-          ...(category ? { category } : {}),
-          excludeIds: [
-            ...prioritizedProducts.map((product) => product.id),
-            ...productIdsInContent,
-          ],
-          limit: remainingSlots,
-        })
-      : [];
-  if (shouldLogPerf) {
-    console.timeEnd(`[blog] tag products:${slug}`);
-    console.timeEnd(`[blog] ${resolvedLocale}:${slug}`);
-  }
-  const amazonProducts = [...prioritizedProducts, ...tagProducts];
+  logPerformance("end", `[blog] mdx render:${slug}`);
+  logPerformance("end", `[blog] amazon explicit:${slug}`);
+  const amazonProducts = await loadFooterProducts(
+    explicitProducts,
+    category,
+    tags,
+    slug,
+    productIdsInContent,
+    resolvedLocale
+  );
   const shouldShowAmazonAssociate =
     amazonProducts.length > 0 ||
     productIdsInContent.length > 0 ||
@@ -200,4 +170,44 @@ export default async function Page({ params, locale }: PageProps) {
       series={series ? { slug: series.slug, name: series.name } : null}
     />
   );
+}
+
+async function loadFooterProducts(
+  explicitProducts: AffiliateProduct[],
+  category: string | undefined,
+  tags: string[],
+  slug: string,
+  productIdsInContent: string[],
+  resolvedLocale: string
+) {
+  const prioritizedProducts = explicitProducts.slice(0, 3);
+  const remainingSlots = 3 - prioritizedProducts.length;
+  const productMatchTags = category ? [category, ...tags] : tags;
+  logPerformance("start", `[blog] tag products:${slug}`);
+  const tagProducts =
+    remainingSlots > 0 && productMatchTags.length > 0
+      ? await getAffiliateProductsByTags(productMatchTags, {
+          ...(category ? { category } : {}),
+          excludeIds: [
+            ...prioritizedProducts.map((product) => product.id),
+            ...productIdsInContent,
+          ],
+          limit: remainingSlots,
+        })
+      : [];
+  logPerformance("end", `[blog] tag products:${slug}`);
+  logPerformance("end", `[blog] ${resolvedLocale}:${slug}`);
+  const amazonProducts = [...prioritizedProducts, ...tagProducts];
+  return amazonProducts;
+}
+
+function logPerformance(phase: "start" | "end", label: string) {
+  if (process.env["NEXT_DEBUG_PERF"] !== "1") {
+    return;
+  }
+  if (phase === "start") {
+    console.time(label);
+  } else {
+    console.timeEnd(label);
+  }
 }

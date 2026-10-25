@@ -121,22 +121,7 @@ export const demo: DemoModule = {
       }
     }
     // 輪郭の点（距離場の 0 を角度方向に探す代わりに、輪郭の近くの点を押し戻して置く）
-    for (let y = -3.8; y <= 3.4; y += spacing / 2) {
-      for (let x = -3.4; x <= 3.4; x += spacing / 2) {
-        const d = figure(x, y);
-        if (Math.abs(d) < spacing * 0.3) {
-          const e = 1e-3;
-          const gx = (figure(x + e, y) - figure(x - e, y)) / (2 * e);
-          const gy = (figure(x, y + e) - figure(x, y - e)) / (2 * e);
-          const p = { x: x - gx * d, y: y - gy * d };
-          if (
-            rest.every((q) => Math.hypot(q.x - p.x, q.y - p.y) > spacing * 0.6)
-          ) {
-            rest.push(p);
-          }
-        }
-      }
-    }
+    collectBoundaryVertices(spacing, rest);
     const { triangles: all } = delaunaySteps(rest);
     const triangles = all.filter(([a, b, c]) => {
       const pa = rest[a];
@@ -268,18 +253,7 @@ export const demo: DemoModule = {
       };
       // 固定された隣の頂点の値は右辺へ移す
       const b = new Float64Array(count);
-      for (let i = 0; i < count; i++) {
-        if ((constrained[i] ?? -1) >= 0) {
-          continue;
-        }
-        let value = rhs[i] ?? 0;
-        for (const j of neighbors[i] ?? []) {
-          if ((constrained[j] ?? -1) >= 0) {
-            value += weight(i, j) * (current[j]?.[axis] ?? 0);
-          }
-        }
-        b[i] = value;
-      }
+      applyUnconstrainedSystem(rhs, axis, b);
       const r = new Float64Array(count);
       const Ap = new Float64Array(count);
       apply(x, Ap);
@@ -288,25 +262,7 @@ export const demo: DemoModule = {
       }
       const p = Float64Array.from(r);
       let rr = r.reduce((sum, value) => sum + value * value, 0);
-      for (let iteration = 0; iteration < 60 && rr > 1e-10; iteration++) {
-        apply(p, Ap);
-        let pAp = 0;
-        for (let i = 0; i < count; i++) {
-          pAp += (p[i] ?? 0) * (Ap[i] ?? 0);
-        }
-        const alpha = rr / (pAp || 1e-12);
-        let next = 0;
-        for (let i = 0; i < count; i++) {
-          x[i] = (x[i] ?? 0) + alpha * (p[i] ?? 0);
-          r[i] = (r[i] ?? 0) - alpha * (Ap[i] ?? 0);
-          next += (r[i] ?? 0) * (r[i] ?? 0);
-        }
-        const beta = next / rr;
-        rr = next;
-        for (let i = 0; i < count; i++) {
-          p[i] = (r[i] ?? 0) + beta * (p[i] ?? 0);
-        }
-      }
+      rr = solveConjugateGradient(rr, apply, p, Ap, x, r);
       for (let i = 0; i < count; i++) {
         const point = current[i];
         if (point && (constrained[i] ?? -1) < 0) {
@@ -317,36 +273,7 @@ export const demo: DemoModule = {
 
     const iterate = (useRotation: boolean) => {
       // 局所の一歩：各頂点で、元の辺を今の辺へ最もよく重ねる回転を求める
-      for (let i = 0; i < count; i++) {
-        let s00 = 0;
-        let s01 = 0;
-        let s10 = 0;
-        let s11 = 0;
-        const p = rest[i];
-        const q = current[i];
-        if (!p || !q) {
-          continue;
-        }
-        for (const j of neighbors[i] ?? []) {
-          const pj = rest[j];
-          const qj = current[j];
-          if (!pj || !qj) {
-            continue;
-          }
-          const ex = p.x - pj.x;
-          const ey = p.y - pj.y;
-          const fx = q.x - qj.x;
-          const fy = q.y - qj.y;
-          const w = weight(i, j);
-          s00 += w * ex * fx;
-          s01 += w * ex * fy;
-          s10 += w * ey * fx;
-          s11 += w * ey * fy;
-        }
-        const angle = useRotation ? Math.atan2(s01 - s10, s00 + s11) : 0;
-        rotation[i * 2] = Math.cos(angle);
-        rotation[i * 2 + 1] = Math.sin(angle);
-      }
+      estimateVertexRotations(useRotation);
       // 全体の一歩：両端の回転の平均で回した元の辺に、今の辺ができるだけ合うよう位置を解く
       const bx = new Float64Array(count);
       const by = new Float64Array(count);
@@ -430,21 +357,7 @@ export const demo: DemoModule = {
           swing(2, 0, 1.3, Math.sin(wave * 0.6) * 0.45);
         }
         // つかんだ点の周りの頂点を、つかんだ点と同じだけ平行移動させる
-        for (const [h, list] of handleVertices.entries()) {
-          const handle = HANDLES[h];
-          const position = handleMarkers[h]?.position;
-          if (!handle || !position) {
-            continue;
-          }
-          for (const index of list) {
-            const p = rest[index];
-            const q = current[index];
-            if (p && q) {
-              q.x = p.x + position.x - handle.x;
-              q.y = p.y + position.y - handle.y;
-            }
-          }
-        }
+        updateHandleConstraints();
         const useRotation = params["method"] === "arap";
         for (let n = 0; n < Number(params["iterations"]); n++) {
           iterate(useRotation);
@@ -453,53 +366,7 @@ export const demo: DemoModule = {
         const showStrain = params["strain"] === true;
         let worst = 0;
         const lines: Vector3[] = [];
-        for (const [t, [a, b, c]] of triangles.entries()) {
-          const pa = rest[a];
-          const pb = rest[b];
-          const pc = rest[c];
-          const qa = current[a];
-          const qb = current[b];
-          const qc = current[c];
-          if (!pa || !pb || !pc || !qa || !qb || !qc) {
-            continue;
-          }
-          // 変形の行列 F = Q P⁻¹（辺ベクトルどうしの対応）
-          const p00 = pb.x - pa.x;
-          const p01 = pc.x - pa.x;
-          const p10 = pb.y - pa.y;
-          const p11 = pc.y - pa.y;
-          const q00 = qb.x - qa.x;
-          const q01 = qc.x - qa.x;
-          const q10 = qb.y - qa.y;
-          const q11 = qc.y - qa.y;
-          const det = p00 * p11 - p01 * p10 || 1e-9;
-          const f00 = (q00 * p11 - q01 * p10) / det;
-          const f01 = (-q00 * p01 + q01 * p00) / det;
-          const f10 = (q10 * p11 - q11 * p10) / det;
-          const f11 = (-q10 * p01 + q11 * p00) / det;
-          // 2×2 行列の特異値
-          const e = (f00 + f11) / 2;
-          const f = (f00 - f11) / 2;
-          const g = (f10 + f01) / 2;
-          const h = (f10 - f01) / 2;
-          const qv = Math.hypot(e, h);
-          const rv = Math.hypot(f, g);
-          const s1 = qv + rv;
-          const s2 = Math.abs(qv - rv);
-          const strain = Math.max(s1 - 1, 1 - s2);
-          worst = Math.max(worst, strain);
-          color.copy(dough);
-          if (showStrain) {
-            color.lerp(
-              s1 - 1 > 1 - s2 ? stretched : squashed,
-              Math.min(1, Math.max(0, strain - 0.12) * 2)
-            );
-          }
-          for (const [k, q] of [qa, qb, qc].entries()) {
-            positions.set([q.x, q.y, 0], t * 9 + k * 3);
-            colors.set([color.r, color.g, color.b], t * 9 + k * 3);
-          }
-        }
+        worst = renderDeformedTriangles(worst, showStrain);
         if (params["wire"] === true) {
           for (const [a, b] of edges) {
             const qa = current[a];
@@ -529,5 +396,182 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function updateHandleConstraints() {
+      for (const [h, list] of handleVertices.entries()) {
+        const handle = HANDLES[h];
+        const position = handleMarkers[h]?.position;
+        if (!handle || !position) {
+          continue;
+        }
+        for (const index of list) {
+          const p = rest[index];
+          const q = current[index];
+          if (p && q) {
+            q.x = p.x + position.x - handle.x;
+            q.y = p.y + position.y - handle.y;
+          }
+        }
+      }
+    }
+
+    function renderDeformedTriangles(
+      initialWorst: number,
+      showStrain: boolean
+    ) {
+      let worst = initialWorst;
+
+      for (const [t, [a, b, c]] of triangles.entries()) {
+        const pa = rest[a];
+        const pb = rest[b];
+        const pc = rest[c];
+        const qa = current[a];
+        const qb = current[b];
+        const qc = current[c];
+        if (!pa || !pb || !pc || !qa || !qb || !qc) {
+          continue;
+        }
+        // 変形の行列 F = Q P⁻¹（辺ベクトルどうしの対応）
+        const p00 = pb.x - pa.x;
+        const p01 = pc.x - pa.x;
+        const p10 = pb.y - pa.y;
+        const p11 = pc.y - pa.y;
+        const q00 = qb.x - qa.x;
+        const q01 = qc.x - qa.x;
+        const q10 = qb.y - qa.y;
+        const q11 = qc.y - qa.y;
+        const det = p00 * p11 - p01 * p10 || 1e-9;
+        const f00 = (q00 * p11 - q01 * p10) / det;
+        const f01 = (-q00 * p01 + q01 * p00) / det;
+        const f10 = (q10 * p11 - q11 * p10) / det;
+        const f11 = (-q10 * p01 + q11 * p00) / det;
+        // 2×2 行列の特異値
+        const e = (f00 + f11) / 2;
+        const f = (f00 - f11) / 2;
+        const g = (f10 + f01) / 2;
+        const h = (f10 - f01) / 2;
+        const qv = Math.hypot(e, h);
+        const rv = Math.hypot(f, g);
+        const s1 = qv + rv;
+        const s2 = Math.abs(qv - rv);
+        const strain = Math.max(s1 - 1, 1 - s2);
+        worst = Math.max(worst, strain);
+        color.copy(dough);
+        if (showStrain) {
+          color.lerp(
+            s1 - 1 > 1 - s2 ? stretched : squashed,
+            Math.min(1, Math.max(0, strain - 0.12) * 2)
+          );
+        }
+        for (const [k, q] of [qa, qb, qc].entries()) {
+          positions.set([q.x, q.y, 0], t * 9 + k * 3);
+          colors.set([color.r, color.g, color.b], t * 9 + k * 3);
+        }
+      }
+      return worst;
+    }
+
+    function estimateVertexRotations(useRotation: boolean) {
+      for (let i = 0; i < count; i++) {
+        let s00 = 0;
+        let s01 = 0;
+        let s10 = 0;
+        let s11 = 0;
+        const p = rest[i];
+        const q = current[i];
+        if (!p || !q) {
+          continue;
+        }
+        for (const j of neighbors[i] ?? []) {
+          const pj = rest[j];
+          const qj = current[j];
+          if (!pj || !qj) {
+            continue;
+          }
+          const ex = p.x - pj.x;
+          const ey = p.y - pj.y;
+          const fx = q.x - qj.x;
+          const fy = q.y - qj.y;
+          const w = weight(i, j);
+          s00 += w * ex * fx;
+          s01 += w * ex * fy;
+          s10 += w * ey * fx;
+          s11 += w * ey * fy;
+        }
+        const angle = useRotation ? Math.atan2(s01 - s10, s00 + s11) : 0;
+        rotation[i * 2] = Math.cos(angle);
+        rotation[i * 2 + 1] = Math.sin(angle);
+      }
+    }
+
+    function applyUnconstrainedSystem(
+      rhs: Float64Array,
+      axis: "x" | "y",
+      b: Float64Array<ArrayBuffer>
+    ) {
+      for (let i = 0; i < count; i++) {
+        if ((constrained[i] ?? -1) >= 0) {
+          continue;
+        }
+        let value = rhs[i] ?? 0;
+        for (const j of neighbors[i] ?? []) {
+          if ((constrained[j] ?? -1) >= 0) {
+            value += weight(i, j) * (current[j]?.[axis] ?? 0);
+          }
+        }
+        b[i] = value;
+      }
+    }
+
+    function solveConjugateGradient(
+      initialRr: number,
+      apply: (v: Float64Array, out: Float64Array) => void,
+      p: Float64Array<ArrayBuffer>,
+      Ap: Float64Array<ArrayBuffer>,
+      x: Float64Array<ArrayBuffer>,
+      r: Float64Array<ArrayBuffer>
+    ) {
+      let rr = initialRr;
+
+      for (let iteration = 0; iteration < 60 && rr > 1e-10; iteration++) {
+        apply(p, Ap);
+        let pAp = 0;
+        for (let i = 0; i < count; i++) {
+          pAp += (p[i] ?? 0) * (Ap[i] ?? 0);
+        }
+        const alpha = rr / (pAp || 1e-12);
+        let next = 0;
+        for (let i = 0; i < count; i++) {
+          x[i] = (x[i] ?? 0) + alpha * (p[i] ?? 0);
+          r[i] = (r[i] ?? 0) - alpha * (Ap[i] ?? 0);
+          next += (r[i] ?? 0) * (r[i] ?? 0);
+        }
+        const beta = next / rr;
+        rr = next;
+        for (let i = 0; i < count; i++) {
+          p[i] = (r[i] ?? 0) + beta * (p[i] ?? 0);
+        }
+      }
+      return rr;
+    }
   },
 };
+
+function collectBoundaryVertices(spacing: number, rest: Point2[]) {
+  for (let y = -3.8; y <= 3.4; y += spacing / 2) {
+    for (let x = -3.4; x <= 3.4; x += spacing / 2) {
+      const d = figure(x, y);
+      if (Math.abs(d) < spacing * 0.3) {
+        const e = 1e-3;
+        const gx = (figure(x + e, y) - figure(x - e, y)) / (2 * e);
+        const gy = (figure(x, y + e) - figure(x, y - e)) / (2 * e);
+        const p = { x: x - gx * d, y: y - gy * d };
+        if (
+          rest.every((q) => Math.hypot(q.x - p.x, q.y - p.y) > spacing * 0.6)
+        ) {
+          rest.push(p);
+        }
+      }
+    }
+  }
+}

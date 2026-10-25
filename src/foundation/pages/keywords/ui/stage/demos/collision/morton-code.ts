@@ -181,25 +181,7 @@ export const demo: DemoModule = {
         rows[1]?.replaceChildren(
           document.createTextNode(`y = ${hy}（${bin(hy, BITS)}）`)
         );
-        if (order === "morton") {
-          // y と x のビットを上の桁から交互に並べて表示
-          const text = rows.at(2);
-          if (text) {
-            text.replaceChildren();
-            text.append(document.createTextNode(`符号 = ${code}（`));
-            for (let bit = BITS - 1; bit >= 0; bit--) {
-              text.append(
-                svg("tspan", { fill: palette.amber }, `${(hy >> bit) & 1}`),
-                svg("tspan", { fill: palette.sky }, `${(hx >> bit) & 1}`)
-              );
-            }
-            text.append(document.createTextNode("）"));
-          }
-        } else {
-          rows[2]?.replaceChildren(
-            document.createTextNode(`番号 = y × 16 + x = ${code}`)
-          );
-        }
+        renderInterleavedBits(order, code, hy, hx);
 
         if (key === signature) {
           return;
@@ -234,18 +216,11 @@ export const demo: DemoModule = {
         }
         let runs = 0;
         let lastSelected = -1;
-        for (let i = 0; i < N * N; i++) {
-          if (selected[i] === true && (i === 0 || selected[i - 1] !== true)) {
-            runs++;
-          }
-          if (selected[i] === true) {
-            lastSelected = i;
-          }
-          strip.setColorAt(
-            i,
-            selected[i] === true ? new Color(palette.ink) : new Color("#1f2a3a")
-          );
-        }
+        ({ runs, lastSelected } = renderSelectedRanges(
+          selected,
+          runs,
+          lastSelected
+        ));
         if (strip.instanceColor) {
           strip.instanceColor.needsUpdate = true;
         }
@@ -285,5 +260,55 @@ export const demo: DemoModule = {
         strip.dispose();
       },
     };
+
+    function renderInterleavedBits(
+      order: Order,
+      code: number,
+      hy: number,
+      hx: number
+    ) {
+      if (order === "morton") {
+        // y と x のビットを上の桁から交互に並べて表示
+        const text = rows.at(2);
+        if (text) {
+          text.replaceChildren();
+          text.append(document.createTextNode(`符号 = ${code}（`));
+          for (let bit = BITS - 1; bit >= 0; bit--) {
+            text.append(
+              svg("tspan", { fill: palette.amber }, `${(hy >> bit) & 1}`),
+              svg("tspan", { fill: palette.sky }, `${(hx >> bit) & 1}`)
+            );
+          }
+          text.append(document.createTextNode("）"));
+        }
+      } else {
+        rows[2]?.replaceChildren(
+          document.createTextNode(`番号 = y × 16 + x = ${code}`)
+        );
+      }
+    }
+
+    function renderSelectedRanges(
+      selected: boolean[],
+      initialRuns: number,
+      initialLastSelected: number
+    ) {
+      let runs = initialRuns;
+      let lastSelected = initialLastSelected;
+
+      for (let i = 0; i < N * N; i++) {
+        if (selected[i] === true && (i === 0 || selected[i - 1] !== true)) {
+          runs++;
+        }
+        if (selected[i] === true) {
+          lastSelected = i;
+        }
+        strip.setColorAt(
+          i,
+          selected[i] === true ? new Color(palette.ink) : new Color("#1f2a3a")
+        );
+      }
+      return { runs, lastSelected };
+    }
   },
 };

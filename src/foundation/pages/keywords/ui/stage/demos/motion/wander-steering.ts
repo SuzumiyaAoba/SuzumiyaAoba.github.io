@@ -126,46 +126,16 @@ export const demo: DemoModule = {
             continue;
           }
           heading.copy(velocity).normalize();
-          if (mode === "wander") {
-            // 円周上の目標点の角度を少しずつ乱数でずらす
-            const angle =
-              (wanderAngles[index] ?? 0) + (random() - 0.5) * 2 * jitter * dt;
-            wanderAngles[index] = angle;
-            ahead.copy(position).addScaledVector(heading, distance);
-            target.set(
-              ahead.x + Math.cos(angle) * radius,
-              HEIGHT,
-              ahead.z + Math.sin(angle) * radius
-            );
-            steer
-              .copy(target)
-              .sub(position)
-              .setLength(SPEED)
-              .sub(velocity)
-              .multiplyScalar(3);
-            if (index === 0) {
-              const points: Vector3[] = [];
-              for (let sample = 0; sample <= 48; sample++) {
-                const a = (sample / 48) * TAU;
-                points.push(
-                  new Vector3(
-                    ahead.x + Math.cos(a) * radius,
-                    HEIGHT,
-                    ahead.z + Math.sin(a) * radius
-                  )
-                );
-              }
-              circle.setPoints(points);
-              toCircle.setPoints([position, ahead]);
-              wanderPoint.position.copy(target);
-            }
-          } else {
-            // 比較用：毎フレームまったく新しい方向へ引っ張る
-            const angle = random() * TAU;
-            steer
-              .set(Math.cos(angle), 0, Math.sin(angle))
-              .multiplyScalar(SPEED * jitter * 2);
-          }
+          calculateWanderTarget(
+            mode,
+            index,
+            jitter,
+            dt,
+            position,
+            distance,
+            radius,
+            velocity
+          );
           // 囲いの外へ出そうなら中心へ戻す
           const fromCenter = Math.hypot(position.x, position.z);
           if (fromCenter > ARENA - 0.6) {
@@ -196,5 +166,57 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function calculateWanderTarget(
+      mode: string,
+      index: number,
+      jitter: number,
+      dt: number,
+      position: Vector3,
+      distance: number,
+      radius: number,
+      velocity: Vector3
+    ) {
+      if (mode === "wander") {
+        // 円周上の目標点の角度を少しずつ乱数でずらす
+        const angle =
+          (wanderAngles[index] ?? 0) + (random() - 0.5) * 2 * jitter * dt;
+        wanderAngles[index] = angle;
+        ahead.copy(position).addScaledVector(heading, distance);
+        target.set(
+          ahead.x + Math.cos(angle) * radius,
+          HEIGHT,
+          ahead.z + Math.sin(angle) * radius
+        );
+        steer
+          .copy(target)
+          .sub(position)
+          .setLength(SPEED)
+          .sub(velocity)
+          .multiplyScalar(3);
+        if (index === 0) {
+          const points: Vector3[] = [];
+          for (let sample = 0; sample <= 48; sample++) {
+            const a = (sample / 48) * TAU;
+            points.push(
+              new Vector3(
+                ahead.x + Math.cos(a) * radius,
+                HEIGHT,
+                ahead.z + Math.sin(a) * radius
+              )
+            );
+          }
+          circle.setPoints(points);
+          toCircle.setPoints([position, ahead]);
+          wanderPoint.position.copy(target);
+        }
+      } else {
+        // 比較用：毎フレームまったく新しい方向へ引っ張る
+        const angle = random() * TAU;
+        steer
+          .set(Math.cos(angle), 0, Math.sin(angle))
+          .multiplyScalar(SPEED * jitter * 2);
+      }
+    }
   },
 };

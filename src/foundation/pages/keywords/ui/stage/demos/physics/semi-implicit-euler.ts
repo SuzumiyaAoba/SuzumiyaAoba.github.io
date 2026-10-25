@@ -260,19 +260,7 @@ export const demo: DemoModule = {
             }
           }
         }
-        for (const body of bodies) {
-          const { state } = body;
-          if (kind === "orbit") {
-            body.planet.position.set(state.x, 0.6, -state.y);
-            if (steps > 0) {
-              body.path.push(body.planet.position);
-            }
-          } else {
-            const x = Math.max(-3.1, Math.min(6, state.x));
-            body.box.position.set(x, 0.35, body.lane);
-            body.coil.setPoints(coilPoints(-3.45, x - 0.3, body.lane));
-          }
-        }
+        advanceIntegrationBodies(kind, steps);
         if (steps > 0) {
           graph.push(
             bodies.map(
@@ -300,5 +288,21 @@ export const demo: DemoModule = {
         );
       },
     };
+
+    function advanceIntegrationBodies(kind: string, steps: number) {
+      for (const body of bodies) {
+        const { state } = body;
+        if (kind === "orbit") {
+          body.planet.position.set(state.x, 0.6, -state.y);
+          if (steps > 0) {
+            body.path.push(body.planet.position);
+          }
+        } else {
+          const x = Math.max(-3.1, Math.min(6, state.x));
+          body.box.position.set(x, 0.35, body.lane);
+          body.coil.setPoints(coilPoints(-3.45, x - 0.3, body.lane));
+        }
+      }
+    }
   },
 };

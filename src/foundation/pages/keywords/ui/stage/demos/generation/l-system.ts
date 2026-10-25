@@ -387,13 +387,7 @@ export const demo: DemoModule = {
           grow = 1;
         }
         // 稲妻は、描き終えたら数秒ごとに打ち直す
-        if (preset?.down === true && grow >= 1) {
-          flicker += dt;
-          if (flicker > 1.6) {
-            flicker = 0;
-            seed++;
-          }
-        }
+        animateLightningSeed(preset, dt);
         const visible = Math.floor(
           built.segments.length *
             (preset?.down === true ? Math.min(1, grow * 4) : grow)
@@ -425,14 +419,28 @@ export const demo: DemoModule = {
         if (presetKey !== "tree") {
           group.rotation.y = 0;
         }
-        context.caption(
-          presetKey === "lightning"
-            ? "同じ F を、確率で違う規則に書き換える（確率つき L システム）。枝分かれの位置と向きが毎回変わるので、打つたびに違う形の稲妻になる。"
-            : presetKey === "koch"
-              ? "三角形の各辺を「F+F--F+F」（途中に山を 1 つ作る）に置き換えるだけで、回数を重ねるほど細かいぎざぎざの雪の結晶になる。規則が単純でも、くり返すと複雑な形になる例。"
-              : "文字列を規則で書き換え、できた文字列を亀の動きとして読む。[ で今の位置と向きを覚え、] でそこへ戻るので、枝の途中から別の枝を伸ばせる。1 回の書き換えで、枝のどこにも同じ形が小さく入れ子になる（自己相似）。"
-        );
+        updateGrammarCaption(presetKey);
       },
     };
+
+    function updateGrammarCaption(presetKey: string) {
+      context.caption(
+        presetKey === "lightning"
+          ? "同じ F を、確率で違う規則に書き換える（確率つき L システム）。枝分かれの位置と向きが毎回変わるので、打つたびに違う形の稲妻になる。"
+          : presetKey === "koch"
+            ? "三角形の各辺を「F+F--F+F」（途中に山を 1 つ作る）に置き換えるだけで、回数を重ねるほど細かいぎざぎざの雪の結晶になる。規則が単純でも、くり返すと複雑な形になる例。"
+            : "文字列を規則で書き換え、できた文字列を亀の動きとして読む。[ で今の位置と向きを覚え、] でそこへ戻るので、枝の途中から別の枝を伸ばせる。1 回の書き換えで、枝のどこにも同じ形が小さく入れ子になる（自己相似）。"
+      );
+    }
+
+    function animateLightningSeed(preset: Preset | undefined, dt: number) {
+      if (preset?.down === true && grow >= 1) {
+        flicker += dt;
+        if (flicker > 1.6) {
+          flicker = 0;
+          seed++;
+        }
+      }
+    }
   },
 };
