@@ -41,9 +41,7 @@
   "exclude": [
     "node_modules",
     "apm_modules",
-    ".next",
     "out",
-    "out-astro",
-    "next-env.d.ts"
+    ".astro"
   ]
 }

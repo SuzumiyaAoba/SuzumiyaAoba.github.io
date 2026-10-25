@@ -11,5 +11,5 @@
     "src/types/**/*.d.ts",
     ".astro/types.d.ts"
   ],
-  "exclude": ["node_modules", "out-astro", ".next"]
+  "exclude": ["node_modules", "out"]
 }
