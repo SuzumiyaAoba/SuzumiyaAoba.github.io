@@ -15,7 +15,7 @@
     "start": "astro preview",
     "lint": "run-s lint:code lint:fsd lint:unused",
     "lint:code": "vp lint --tsconfig ./tsconfig.json .",
-    "lint:fsd": "steiger ./src/foundation",
+    "lint:fsd": "CHOKIDAR_USEPOLLING=true steiger ./src/foundation",
     "test": "vp test run",
     "test:watch": "vp test watch",
     "format": "vp fmt .",
