@@ -68,8 +68,8 @@ export function createIe600SystemCable(model: Object3D, dac: Object3D) {
       new CatmullRomCurve3([
         branch,
         branch.clone().add(new Vector3(0, 0, -18)),
-        new Vector3(endpoint.position.x, 6, 145),
-        new Vector3(endpoint.position.x + 12, 7, 70),
+        new Vector3(endpoint.position.x, 6, 190),
+        new Vector3(endpoint.position.x + 12, 7, 165),
         endpoint.position.clone().addScaledVector(endpoint.direction, 18),
         endpoint.position,
       ]),

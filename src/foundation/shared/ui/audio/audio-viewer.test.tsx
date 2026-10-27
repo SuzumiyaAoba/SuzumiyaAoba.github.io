@@ -212,6 +212,9 @@ it.each([
     const label = container.querySelector("canvas")?.getAttribute("aria-label");
     expect(label).toContain("IE 600");
     expect(label).toContain("4.4 mm");
+    expect(label).toContain(
+      locale === "ja" ? "スタンドの前" : "in front of the headphone stand"
+    );
     await click(headphone);
     expect(container.querySelector("output")?.textContent).toContain(
       "HA-1A MK2"
@@ -220,6 +223,9 @@ it.each([
     expect(
       container.querySelector("canvas")?.getAttribute("aria-label")
     ).not.toContain("4.4 mm");
+    expect(
+      container.querySelector("canvas")?.getAttribute("aria-label")
+    ).toContain(locale === "ja" ? "スタンドに掛け" : "hang on the stand");
   }
 );
 

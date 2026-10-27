@@ -1,10 +1,14 @@
-import { Group, Vector3 } from "three";
+import { Group, Raycaster, Vector3 } from "three";
 import type { Camera, Object3D } from "three";
 import type {
   AudioScene,
   HeadphoneModel,
 } from "@/shared/ui/audio/definitions/viewer";
 import { createHd800s } from "./hd-800s";
+import {
+  kantofCradleName,
+  kantofStandPosition,
+} from "./kantof-headphone-stand";
 import {
   cableEndpoint,
   createSystemCables,
@@ -100,8 +104,46 @@ function connectHeadphones(
   return cables;
 }
 
+function placeOnStand(
+  model: Object3D,
+  stand: Object3D,
+  headphone: Exclude<HeadphoneModel, "ie-600">
+) {
+  const cradle = getConnectionPoint(stand, kantofCradleName);
+  const cushionName =
+    headphone === "hd-800s"
+      ? "Rounded microfiber cushion beneath the headband"
+      : "Perforated red microfiber headband lining";
+  const cushion = getConnectionPoint(model, cushionName);
+  stand.updateWorldMatrix(true, true);
+  model.updateWorldMatrix(true, true);
+  const center = stand.getWorldPosition(new Vector3());
+  const downward = new Raycaster(new Vector3(), new Vector3(0, -1, 0));
+  const upward = new Raycaster(new Vector3(), new Vector3(0, 1, 0));
+  let lift = Number.NEGATIVE_INFINITY;
+  // 接触位置を複数点で測り、中央が窪んだ HD 800 S も木部に埋めない。
+  for (let offset = -35; offset <= 35; offset += 5) {
+    downward.ray.origin.set(center.x + offset, center.y + 400, center.z);
+    upward.ray.origin.set(center.x + offset, center.y - 200, center.z);
+    const [top] = downward.intersectObject(cradle);
+    const [underside] = upward.intersectObject(cushion);
+    if (top && underside) {
+      lift = Math.max(lift, top.point.y - underside.point.y);
+    }
+  }
+  if (!Number.isFinite(lift)) {
+    throw new TypeError(`Cannot place ${headphone} on the headphone stand.`);
+  }
+  model.position.y += lift + 0.1;
+  model.updateWorldMatrix(true, true);
+}
+
 /** 未選択の形状・テクスチャ・配線は初回選択まで生成しない。 */
-export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
+export function createSystemHeadphones(
+  amp: Object3D,
+  dac: Object3D,
+  stand: Object3D
+) {
   const group = new Group();
   group.name = "Selectable headphones and their signal cables";
   const cache = new Map<HeadphoneModel, HeadphoneScene>();
@@ -116,15 +158,17 @@ export function createSystemHeadphones(amp: Object3D, dac: Object3D) {
   ): HeadphoneScene => {
     const model = build();
     const assembly = new Group();
+    const [standX, , standZ] = kantofStandPosition;
     assembly.name = `${selected} with connected cables`;
-    model.group.position.x = 390;
-    // HD 800 S の短いケーブルが床に埋まらない高さを維持する。
-    model.group.position.y += selected === "hd-800s" ? 24 : 12;
-    model.group.position.z = 25;
+    model.group.position.x = standX;
+    model.group.position.z = selected === "ie-600" ? 150 : standZ;
     assembly.add(model.group);
     group.add(assembly);
     group.updateWorldMatrix(true, true);
     try {
+      if (selected !== "ie-600") {
+        placeOnStand(model.group, stand, selected);
+      }
       const cables =
         selected === "ie-600"
           ? model.connect?.(dac)

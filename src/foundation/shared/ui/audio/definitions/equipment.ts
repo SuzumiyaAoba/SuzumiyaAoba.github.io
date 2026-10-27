@@ -650,6 +650,57 @@ export const audioEquipment: readonly AudioEquipment[] = [
     ],
   },
   {
+    id: "kantof-headphone-stand",
+    model: "kantof-headphone-stand",
+    manufacturer: "kantof",
+    name: "Headphone Stand",
+    finish: { ja: "ブラック / ウォールナット", en: "Black / Walnut" },
+    category: { ja: "ヘッドホンスタンド", en: "Headphone stand" },
+    description: {
+      ja: "天然木のブラックウォールナット製ヘッドと、黒いアルミニウム合金製の支柱・円形台座を組み合わせたヘッドホンスタンド。滑らかなアーチでヘッドバンドを支えます。",
+      en: "A headphone stand combining a natural black walnut cradle with a black aluminum-alloy post and circular base. Its curved wooden head supports the headphone band.",
+    },
+    details: {
+      ja: "幅100 mmの木製アーチ、細い支柱、直径120 mmの円形台座を再現。一式の表示ではヘッドホンをアーチに掛け、IE 600 はスタンドの前に置いています。木目と、公表されていない細部の寸法は写真を参考にした表現です。",
+      en: "The model includes the 100 mm wooden arch, slender post and 120 mm circular base. In the system view, over-ear headphones hang from the arch, while the IE 600 rests in front of the stand. The grain and unpublished component dimensions are approximated from photographs.",
+    },
+    specifications: [
+      {
+        label: { ja: "高さ", en: "Height" },
+        value: { ja: "290 mm", en: "290 mm" },
+      },
+      {
+        label: { ja: "台座", en: "Base" },
+        value: { ja: "幅120 mm · 厚さ8 mm", en: "120 mm wide · 8 mm thick" },
+      },
+      {
+        label: { ja: "ヘッド部", en: "Cradle" },
+        value: { ja: "幅100 mm · 奥行65 mm", en: "100 mm wide · 65 mm deep" },
+      },
+      {
+        label: { ja: "素材", en: "Materials" },
+        value: {
+          ja: "ブラックウォールナット / アルミニウム合金",
+          en: "Black walnut / aluminum alloy",
+        },
+      },
+      {
+        label: { ja: "質量", en: "Weight" },
+        value: { ja: "255 g", en: "255 g" },
+      },
+    ],
+    sources: [
+      {
+        title: { ja: "商品情報（Amazon）", en: "Product page (Amazon)" },
+        href: "https://www.amazon.co.jp/dp/B08NJ3NZR9",
+      },
+      {
+        title: { ja: "製品情報・写真", en: "Product information and photos" },
+        href: "https://www.e-earphone.jp/products/592479",
+      },
+    ],
+  },
+  {
     id: "audioquest-cinnamon",
     model: "audioquest-cinnamon",
     manufacturer: "AudioQuest",

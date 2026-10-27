@@ -34,6 +34,7 @@ export const audioModels = [
   "hd-800s",
   "clear-mg-pro",
   "ie-600",
+  "kantof-headphone-stand",
   "audioquest-cinnamon",
   "cybershaft-bnc",
 ] as const;
@@ -127,6 +128,7 @@ export const modelViews: Record<AudioModel, readonly AudioView[]> = {
     "connections",
     "cable",
   ],
+  "kantof-headphone-stand": ["overview", "front", "side", "top", "bottom"],
   "audioquest-cinnamon": ["overview", "top", "connections", "cable"],
   "cybershaft-bnc": ["overview", "top", "connections", "cable"],
 };

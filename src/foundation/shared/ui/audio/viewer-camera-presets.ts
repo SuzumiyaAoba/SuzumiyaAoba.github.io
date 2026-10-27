@@ -313,6 +313,43 @@ const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
 const modelPoses: Partial<
   Record<AudioModel, Partial<Record<AudioView, CameraPose>>>
 > = {
+  "kantof-headphone-stand": {
+    overview: {
+      direction: [0.8, 0.3, 1.4],
+      target: [0, 145, 0],
+      width: 170,
+      height: 330,
+      depth: 90,
+    },
+    front: {
+      direction: [0, 0, 1],
+      target: [0, 145, 0],
+      width: 140,
+      height: 320,
+      depth: 65,
+    },
+    side: {
+      direction: [1, 0.03, 0],
+      target: [0, 145, 0],
+      width: 140,
+      height: 320,
+      depth: 65,
+    },
+    top: {
+      direction: [0, 1, 0.001],
+      target: [0, 145, 0],
+      width: 145,
+      height: 145,
+      depth: 150,
+    },
+    bottom: {
+      direction: [0, -1, 0.001],
+      target: [0, 145, 0],
+      width: 145,
+      height: 145,
+      depth: 150,
+    },
+  },
   "cybershaft-bnc": {
     overview: {
       direction: [0.35, 1.25, 1],
@@ -376,21 +413,21 @@ const modelPoses: Partial<
   system: {
     overview: {
       direction: [0.5, 0.8, 1.4],
-      target: [110, 105, -20],
+      target: [110, 140, -20],
       width: 800,
       height: 480,
       depth: 220,
     },
     front: {
       direction: [0, 0.1, 1],
-      target: [110, 115, 0],
+      target: [110, 150, 0],
       width: 800,
       height: 360,
       depth: 200,
     },
     rear: {
       direction: [0, 0.42, -1],
-      target: [110, 105, -40],
+      target: [110, 140, -40],
       width: 800,
       height: 420,
       depth: 230,
@@ -404,7 +441,7 @@ const modelPoses: Partial<
     },
     headphones: {
       direction: [0.1, 0.55, 1],
-      target: [265, 95, 95],
+      target: [265, 150, 95],
       width: 510,
       height: 380,
       depth: 160,

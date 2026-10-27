@@ -100,6 +100,7 @@ it("初回はシステム全体と最初の製品だけを描画する", async (
 });
 
 it.each([
+  ["Headphone Stand", "kantof-headphone-stand"],
   ["Cinnamon USB 2.0 A–B", "audioquest-cinnamon"],
   ["50Ω BNC Semi-Rigid", "cybershaft-bnc"],
 ] as const)(

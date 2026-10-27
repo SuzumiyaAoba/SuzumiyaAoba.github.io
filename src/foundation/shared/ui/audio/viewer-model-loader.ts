@@ -20,6 +20,8 @@ const loaders: Record<AudioModel, () => Promise<AudioModelBuilder>> = {
   },
   "sigma-pro": async () => (await import("./scene/sigma-pro")).createSigmaPro,
   btr17: async () => (await import("./scene/btr17")).createBtr17,
+  "kantof-headphone-stand": async () =>
+    (await import("./scene/kantof-headphone-stand")).createKantofHeadphoneStand,
   "audioquest-cinnamon": async () =>
     (await import("./scene/audioquest-cinnamon")).createStandaloneCinnamon,
   "cybershaft-bnc": async () =>

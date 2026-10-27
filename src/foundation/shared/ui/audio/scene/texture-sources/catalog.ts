@@ -1,6 +1,7 @@
 import { createHd800sTextures } from "./hd-800s";
 import { createHa1aTextures } from "./ha-1a";
 import { createCinnamonBraidTextures } from "./cinnamon";
+import { createKantofWoodTexture } from "./kantof";
 import { DataTexture } from "three";
 
 /** ビルド専用。ブラウザーへ配るモデルからはインポートしない。 */
@@ -22,6 +23,7 @@ function createAudioTextureSources() {
     "ha-wood": ha.wood,
     "ha-wood-height": ha.woodHeight,
     "ha-wood-roughness": ha.woodRoughness,
+    "kantof-wood": createKantofWoodTexture(ha.wood),
     "ha-dial-anisotropy": ha.anisotropy,
     "ha-dial-bump": ha.bump,
     "cinnamon-braid-color": cinnamon.color,

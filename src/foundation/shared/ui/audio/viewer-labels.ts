@@ -18,6 +18,20 @@ export function getHeadphoneConnectionLabel(
     : "HA-1A MK2 front left PHONES A · 6.35 mm";
 }
 
+export function getHeadphonePlacementLabel(
+  headphone: HeadphoneModel,
+  locale: Locale
+): string {
+  if (headphone === "ie-600") {
+    return locale === "ja"
+      ? "IE 600 はヘッドホンスタンドの前に置いています。"
+      : "IE 600 rests in front of the headphone stand.";
+  }
+  return locale === "ja"
+    ? "ヘッドホンはスタンドに掛けています。"
+    : "The headphones hang on the stand.";
+}
+
 export const viewLabels: Record<AudioView, Record<Locale, string>> = {
   overview: { ja: "全体", en: "Overview" },
   front: { ja: "正面", en: "Front" },

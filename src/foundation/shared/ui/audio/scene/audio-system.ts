@@ -4,6 +4,10 @@ import { createAudioquestCinnamon } from "./audioquest-cinnamon";
 import { createCg10m } from "./cg-10m";
 import { createCybershaftBnc } from "./cybershaft-bnc";
 import { createHa1aMk2 } from "./ha-1a-mk2";
+import {
+  createKantofHeadphoneStand,
+  kantofStandPosition,
+} from "./kantof-headphone-stand";
 import { createNodeN130 } from "./node-n130";
 import {
   cableEndpoint,
@@ -76,6 +80,7 @@ export function createAudioSystem() {
   const dac = createUd505();
   const clock = createCg10m();
   const amp = createHa1aMk2();
+  const stand = createKantofHeadphoneStand();
   node.group.position.x = -100;
   node.group.position.y += 169;
   dac.group.position.x = -100;
@@ -83,7 +88,8 @@ export function createAudioSystem() {
   clock.group.position.y += 84.5;
   amp.group.position.setX(160);
   amp.group.position.z = -10;
-  group.add(node.group, dac.group, clock.group, amp.group);
+  stand.group.position.set(...kantofStandPosition);
+  group.add(node.group, dac.group, clock.group, amp.group, stand.group);
   group.updateMatrixWorld(true);
   const equipmentCables = connectEquipment(
     node.group,
@@ -93,7 +99,7 @@ export function createAudioSystem() {
   );
   group.add(equipmentCables.group);
 
-  const headphones = createSystemHeadphones(amp.group, dac.group);
+  const headphones = createSystemHeadphones(amp.group, dac.group, stand.group);
   group.add(headphones.group);
   return {
     group,
@@ -104,7 +110,7 @@ export function createAudioSystem() {
       return nodeChanged || headphonesChanged;
     },
     dispose() {
-      for (const model of [node, dac, clock, amp, headphones]) {
+      for (const model of [node, dac, clock, amp, headphones, stand]) {
         model.dispose();
       }
       equipmentCables.dispose();
