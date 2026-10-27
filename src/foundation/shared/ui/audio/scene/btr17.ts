@@ -241,9 +241,9 @@ export function createBtr17() {
   parts.root.name = "FiiO BTR17 Black — millimetres";
   const metal = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x2e_32_38,
+      color: 0x25_28_2d,
       metalness: 0.72,
-      roughness: 0.4,
+      roughness: 0.46,
       clearcoat: 0.12,
       clearcoatRoughness: 0.55,
     }),

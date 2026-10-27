@@ -75,8 +75,8 @@ export function createUd505Display(parts: ModelParts) {
     (context) => {
       context.fillStyle = "#020405";
       context.fillRect(0, 0, 65.3, 18.3);
-      context.fillStyle = "#8ec5c8";
-      context.font = "300 7.4px Arial, sans-serif";
+      context.fillStyle = "#7caeb1";
+      context.font = "200 7.4px 'Helvetica Neue', Arial, sans-serif";
       context.fillText("USB", 9, 12);
       // 細い文字の上へサブピクセルの間隙を載せる。低解像度の記号にはしない。
       context.fillStyle = "#020405";

@@ -70,10 +70,10 @@ export function createNodeParts() {
   });
   const ventMetal = applySurfaceFinish(
     new MeshStandardMaterial({
-      color: 0x34_38_3d,
-      metalness: 0.55,
-      roughness: 0.55,
-      envMapIntensity: 0.65,
+      color: 0x20_22_25,
+      metalness: 0.35,
+      roughness: 0.68,
+      envMapIntensity: 0.4,
     }),
     { relief: 0.003, roughness: 0.04 }
   );

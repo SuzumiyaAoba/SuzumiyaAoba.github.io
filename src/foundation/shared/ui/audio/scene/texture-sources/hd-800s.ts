@@ -109,17 +109,31 @@ function powderFinish() {
 
 function acousticCloth() {
   const surface = textureSurface();
-  surface.context.fillStyle = "#000000";
+  // 防塵布は黒い細線だけでなく、背後の支持枠を透かしつつ暗くする。
+  // マスクの基底値を残し、耳側の六角形の編み目を描く。
+  surface.context.fillStyle = "#b4b4b4";
   surface.context.fillRect(0, 0, textureSize, textureSize);
-  surface.context.strokeStyle = "#e4e4e4";
-  surface.context.lineWidth = 2.1;
-  for (let offset = 4; offset <= textureSize; offset += 8) {
-    surface.context.beginPath();
-    surface.context.moveTo(offset, 0);
-    surface.context.lineTo(offset, textureSize);
-    surface.context.moveTo(0, offset);
-    surface.context.lineTo(textureSize, offset);
-    surface.context.stroke();
+  surface.context.strokeStyle = "#f2f2f2";
+  surface.context.lineWidth = 2.5;
+  const columns = 16;
+  const rows = 24;
+  const halfWidth = textureSize / columns / 2;
+  const rowStep = textureSize / rows;
+  const radius = (rowStep * 2) / 3;
+  for (let row = -1; row <= rows; row += 1) {
+    for (let column = -1; column <= columns; column += 1) {
+      const x = column * halfWidth * 2 + Math.abs(row % 2) * halfWidth;
+      const y = row * rowStep;
+      surface.context.beginPath();
+      surface.context.moveTo(x, y - radius);
+      surface.context.lineTo(x + halfWidth, y - radius / 2);
+      surface.context.lineTo(x + halfWidth, y + radius / 2);
+      surface.context.lineTo(x, y + radius);
+      surface.context.lineTo(x - halfWidth, y + radius / 2);
+      surface.context.lineTo(x - halfWidth, y - radius / 2);
+      surface.context.closePath();
+      surface.context.stroke();
+    }
   }
   return finishTexture(surface.canvas);
 }

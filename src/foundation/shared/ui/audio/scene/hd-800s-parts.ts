@@ -92,7 +92,7 @@ export function createHd800sParts() {
     alphaMap: textures.cloth,
     alphaTest: 0.03,
     transparent: true,
-    opacity: 0.65,
+    opacity: 0.95,
     depthWrite: false,
     roughness: 0.93,
     side: DoubleSide,

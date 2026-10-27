@@ -5,10 +5,10 @@ import { applySurfaceFinish } from "./surface-finish";
 export function sigmaAluminiumMaterial() {
   return applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x23_26_2a,
+      color: 0x1b_1d_20,
       metalness: 0.65,
-      roughness: 0.48,
-      envMapIntensity: 0.75,
+      roughness: 0.54,
+      envMapIntensity: 0.6,
     }),
     { scale: [18, 18, 18], relief: 0.0035, roughness: 0.055 }
   );

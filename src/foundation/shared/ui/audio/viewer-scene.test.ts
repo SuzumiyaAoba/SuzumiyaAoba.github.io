@@ -1,9 +1,11 @@
 import {
   BoxGeometry,
+  Box3,
   DirectionalLight,
   Group,
   Mesh,
   MeshStandardMaterial,
+  ShadowMaterial,
   Texture,
   WebGLRenderer,
 } from "three";
@@ -91,6 +93,19 @@ it("初回の影と行列を準備し、自動での再計算を止める", () =
   expect(light.shadow.needsUpdate).toBe(true);
   expect(mesh.castShadow).toBe(true);
   expect(mesh.receiveShadow).toBe(true);
+});
+
+it("床を模型の最下点の直下に置き、小さな機器でも接地した影を作る", () => {
+  const { scene } = createScene();
+  const floor = scene.children.find(
+    (part) => part instanceof Mesh && part.material instanceof ShadowMaterial
+  );
+  if (!(floor instanceof Mesh)) {
+    throw new Error("Shadow floor is missing.");
+  }
+  const bottom = new Box3().setFromObject(group).min.y;
+  expect(floor.position.y).toBeLessThan(bottom);
+  expect(bottom - floor.position.y).toBeLessThan(0.1);
 });
 
 it("モデルの変更通知で行列と影を更新し、再描画を要求する", () => {

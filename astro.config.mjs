@@ -15,6 +15,8 @@ export default defineConfig({
   build: { concurrency: 2 },
   integrations: [react(), staticAssets()],
   vite: {
+    // React Refresh の仮想 preamble を、空の配布用ファイルとして事前バンドルしない。
+    optimizeDeps: { exclude: ["@vitejs/plugin-react/preamble"] },
     build: {
       // 遅延ロードする Code Hike のハイライターは Oniguruma WASM を内包し、約 735 kB になる。
       // 単一モジュールを分割できないため、このサイズを許容し、それ以上の増加は警告する。

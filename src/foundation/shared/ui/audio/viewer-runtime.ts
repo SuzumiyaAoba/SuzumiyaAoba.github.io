@@ -20,6 +20,9 @@ import { prepareViewerShaders } from "./viewer-shader-preparation";
 import { upgradeAudioTextures } from "./scene/texture-images";
 
 const sceneCacheLimit = 2;
+// 透過素材の裏側を描くバッファは、細い印字が読める解像度を保ちつつ
+// 大きな Retina 画面での GPU メモリー使用量を制限する。
+const transmissionPixelBudget = 2_000_000;
 type SceneResources = ReturnType<typeof createViewerScene>;
 type ViewerOptions = {
   model: AudioModel;
@@ -44,9 +47,8 @@ export function createAudioViewer({
     alpha: true,
     powerPreference: "low-power",
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  // 屈折用の背景は半分の解像度で描き、ガラスのための追加描画を軽くする。
-  renderer.transmissionResolutionScale = 0.5;
+  const pixelRatio = Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(pixelRatio);
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -234,6 +236,11 @@ export function createAudioViewer({
       resize(nextWidth, nextHeight) {
         width = nextWidth;
         height = nextHeight;
+        const pixels = width * height * pixelRatio ** 2;
+        renderer.transmissionResolutionScale = Math.min(
+          1,
+          Math.sqrt(transmissionPixelBudget / pixels)
+        );
         renderer.setSize(width, height, false);
         cameraController?.resize(width / height);
       },

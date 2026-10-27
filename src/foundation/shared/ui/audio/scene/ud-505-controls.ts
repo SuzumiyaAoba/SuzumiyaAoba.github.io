@@ -229,7 +229,7 @@ export function createUd505Controls(parts: ModelParts) {
     "Flush infrared-receiver rim"
   );
   const receiver = parts.glass.clone();
-  receiver.color.setHex(0x21_20_2b);
+  receiver.color.setHex(0x4b_49_54);
   receiver.roughness = 0.17;
   parts.disc(
     3.72,

@@ -1,3 +1,6 @@
+// 独自 island でも Astro が登録した hydration 前の初期化を先に実行する。
+// oxlint-disable-next-line import/no-unassigned-import -- Refresh のグローバル初期化が目的。
+import "astro:scripts/before-hydration.js";
 import { createElement } from "react";
 import type { ComponentType } from "react";
 import type { Root } from "react-dom/client";

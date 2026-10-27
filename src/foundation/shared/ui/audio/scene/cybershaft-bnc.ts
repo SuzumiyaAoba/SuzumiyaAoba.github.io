@@ -192,7 +192,7 @@ export function createCybershaftBnc(
   const parts = createModelParts({ brushed: false });
   parts.root.name = "Cybershaft 50Ω BNC semi-rigid cable — RG402";
   parts.turned.color.setHex(0xd5_d6_d5);
-  parts.turned.roughness = 0.2;
+  parts.turned.roughness = 0.3;
   parts.turned.metalness = 0.96;
   parts.rubber.color.setHex(0x30_31_38);
   parts.rubber.roughness = 0.7;
@@ -211,7 +211,7 @@ export function createCybershaftBnc(
   // 青い樹脂被覆の弱い光沢と細かな成形肌。
   const jacket = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x00_42_b5,
+      color: 0x00_4c_bf,
       roughness: 0.48,
       specularIntensity: 0.35,
       envMapIntensity: 0.65,

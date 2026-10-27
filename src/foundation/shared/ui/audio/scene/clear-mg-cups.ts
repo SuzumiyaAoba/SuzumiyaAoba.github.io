@@ -1,4 +1,4 @@
-import { DoubleSide, Group, Path, Shape, Vector3 } from "three";
+import { Group, Path, Shape, Vector3 } from "three";
 import { clearOval, createClearPad } from "./clear-mg-parts";
 import type { ClearMgParts } from "./clear-mg-parts";
 import {
@@ -246,12 +246,10 @@ function innerDriver(parts: ClearMgParts, cup: Group) {
       z: -9.8,
       mProfile: true,
     }),
-    parts.grille,
+    parts.innerGrille,
     [0, 0, 0],
     "M-profile internal protective honeycomb"
   );
-  // Both sides remain visible through the open ear cup.
-  innerMesh.material.side = DoubleSide;
   cup.add(diaphragm, innerMesh);
   const { cushion, holes, seam, core } = createClearPad(parts);
   cup.add(

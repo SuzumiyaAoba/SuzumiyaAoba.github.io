@@ -122,7 +122,6 @@ function create() {
 it("視点変更は再描画だけを要求し、静的な模型と影を更新し直さない", async () => {
   expect.hasAssertions();
   viewer = create();
-  expect(renderer.transmissionResolutionScale).toBe(0.5);
   await vi.waitFor(() => expect(loop.setActive).toHaveBeenLastCalledWith(true));
   scene.refresh.mockClear();
   vi.mocked(createViewerCamera).mock.calls[0]?.[0].onChange();
@@ -131,6 +130,23 @@ it("視点変更は再描画だけを要求し、静的な模型と影を更新�
   vi.mocked(createViewerRenderLoop).mock.calls[0]?.[0].render();
   expect(renderer.render).toHaveBeenCalledWith(scene.scene, camera.camera);
   expect(onStatus).toHaveBeenLastCalledWith("ready");
+});
+
+it("ガラス越しの表示は画面が小さいとき原寸で描き、大きな画面では画素数を制限する", () => {
+  viewer = create();
+  const resize = vi.mocked(createViewerRenderLoop).mock.calls[0]?.[0].resize;
+  if (!resize) {
+    throw new Error("Missing viewer resize handler.");
+  }
+  resize(400, 300);
+  expect(renderer.transmissionResolutionScale).toBe(1);
+  resize(2400, 1600);
+  const pixelRatio = Math.min(window.devicePixelRatio, 2);
+  expect(renderer.transmissionResolutionScale).toBeCloseTo(
+    Math.sqrt(2_000_000 / (2400 * 1600 * pixelRatio ** 2))
+  );
+  resize(400, 300);
+  expect(renderer.transmissionResolutionScale).toBe(1);
 });
 
 it("コンテキストの復元で影とシェーダーを再生成し、破棄後はイベントを無視する", async () => {

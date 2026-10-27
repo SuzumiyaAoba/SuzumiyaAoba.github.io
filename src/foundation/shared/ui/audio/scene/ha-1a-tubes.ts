@@ -247,4 +247,10 @@ export function createHa1aTubes(parts: Ha1aParts) {
     light.position.set(x, BASE + 5, 112);
     parts.root.add(light);
   }
+  // 窓越しに見える左右の EL84 も、足元を暖色のヒーター光で照らす。
+  for (const x of [-21, 21]) {
+    const light = new PointLight(0xff_6c_21, 300, 65, 2);
+    light.position.set(x, BASE + 8, 62);
+    parts.root.add(light);
+  }
 }

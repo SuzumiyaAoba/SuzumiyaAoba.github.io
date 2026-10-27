@@ -235,10 +235,10 @@ export function createAudioquestCinnamon(
   const cover = applySurfaceFinish(
     new MeshPhysicalMaterial({
       color: 0x78_12_18,
-      metalness: 0.65,
-      roughness: 0.3,
-      clearcoat: 0.55,
-      clearcoatRoughness: 0.2,
+      metalness: 0.55,
+      roughness: 0.38,
+      clearcoat: 0.35,
+      clearcoatRoughness: 0.3,
     }),
     { scale: [18, 18, 18], relief: 0.002, roughness: 0.1 }
   );
@@ -257,12 +257,13 @@ export function createAudioquestCinnamon(
   const curve = cinnamonCableCurve(start, end);
   const braid = cinnamonBraidTextures(curve.getLength(), cableRadius);
   const jacket = new MeshPhysicalMaterial({
+    color: 0xd0_d0_d0,
     map: braid.color,
     bumpMap: braid.height,
     roughnessMap: braid.roughness,
     bumpScale: 0.09,
     roughness: 0.92,
-    sheen: 0.3,
+    sheen: 0.16,
     sheenColor: 0x60_45_42,
     sheenRoughness: 0.8,
   });

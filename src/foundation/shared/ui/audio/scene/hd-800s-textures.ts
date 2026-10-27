@@ -14,7 +14,6 @@ export function createHd800sTextures() {
     roughness: createPreparedTexture("hd-powder-roughness", false, true),
   };
   const cloth = createPreparedTexture("hd-cloth", false, true);
-  cloth.repeat.set(4, 4);
   const mesh = {
     mask: createPreparedTexture("hd-mesh-mask", false, true),
     height: createPreparedTexture("hd-mesh-height", false, true),

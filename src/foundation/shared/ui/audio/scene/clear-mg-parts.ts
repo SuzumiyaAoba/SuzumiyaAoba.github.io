@@ -170,6 +170,14 @@ export function createClearMgParts() {
     metalness: 0.85,
     roughness: 0.38,
     envMapIntensity: 0.85,
+    side: DoubleSide,
+  });
+  // 耳側の保護グリルは外側の金属グリルより暗い仕上げ。
+  const innerGrille = new MeshStandardMaterial({
+    color: 0x47_49_4b,
+    metalness: 0.35,
+    roughness: 0.65,
+    side: DoubleSide,
   });
   const polished = new MeshStandardMaterial({
     color: 0xc2_c4_c5,
@@ -186,10 +194,10 @@ export function createClearMgParts() {
     side: DoubleSide,
   });
   const magnesium = new MeshStandardMaterial({
-    color: 0x52_57_5e,
-    metalness: 0.85,
-    roughness: 0.62,
-    envMapIntensity: 0.5,
+    color: 0x28_2b_2e,
+    metalness: 0.5,
+    roughness: 0.72,
+    envMapIntensity: 0.4,
     side: DoubleSide,
   });
 
@@ -259,6 +267,7 @@ export function createClearMgParts() {
     perforation,
     perforationWall,
     grille,
+    innerGrille,
     polished,
     woven,
     magnesium,

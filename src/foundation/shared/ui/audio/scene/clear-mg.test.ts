@@ -6,6 +6,7 @@ import {
   Material,
   Mesh,
   MeshPhysicalMaterial,
+  MeshStandardMaterial,
   Raycaster,
   Vector3,
 } from "three";
@@ -224,6 +225,29 @@ it("メダリオンの三つのねじに実際の工具穴を作り、Focalの�
   emblem.geometry.computeBoundingBox();
   expect(emblem.geometry.boundingBox?.getSize(new Vector3()).z).toBeGreaterThan(
     0.4
+  );
+  model.dispose();
+});
+
+it("耳側の保護グリルを外側の金属グリルとは別の暗い仕上げにする", () => {
+  stubCanvas();
+  const model = createClearMgPro();
+  const cup = model.group.getObjectByName("Clear Mg Professional left ear cup");
+  const inner = cup?.getObjectByName("M-profile internal protective honeycomb");
+  const outer = cup?.getObjectByName(
+    "Convex graduated external honeycomb grille"
+  );
+  if (
+    !(inner instanceof Mesh) ||
+    !(outer instanceof Mesh) ||
+    !(inner.material instanceof MeshStandardMaterial) ||
+    !(outer.material instanceof MeshStandardMaterial)
+  ) {
+    throw new Error("Missing Clear Mg grille materials.");
+  }
+  expect(inner.material).not.toBe(outer.material);
+  expect(inner.material.color.getHex()).toBeLessThan(
+    outer.material.color.getHex()
   );
   model.dispose();
 });

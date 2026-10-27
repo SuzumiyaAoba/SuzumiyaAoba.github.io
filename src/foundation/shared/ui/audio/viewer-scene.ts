@@ -96,11 +96,17 @@ export function createViewerScene(
 
   const floorGeometry = new PlaneGeometry(span * 5, span * 5);
   const floorMaterial = new ShadowMaterial({
-    opacity: modelId === "system" ? 0.1 : 0.12,
+    opacity: modelId === "system" ? 0.14 : 0.18,
   });
   const floor = new Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.set(center.x, -0.5, center.z);
+  // 実寸の小さなイヤホンやケーブルでも床から浮いて見えないよう、
+  // 模型の最下点に近づけつつ、面が重ならない隙間を残す。
+  floor.position.set(
+    center.x,
+    bounds.min.y - Math.max(0.02, span * 0.0001),
+    center.z
+  );
   floor.receiveShadow = true;
   scene.add(floor);
 

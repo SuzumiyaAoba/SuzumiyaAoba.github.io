@@ -44,6 +44,10 @@ export function createCg10mFront(parts: ModelParts) {
     [0, 0, 111.5],
     "CG-10M machined front plate"
   );
+  // メーターの面取りはノブの鏡面よりも落ち着いた金属光沢。
+  const meterBezel = parts.turned.clone();
+  meterBezel.roughness = 0.36;
+  meterBezel.envMapIntensity = 0.75;
   parts.lathe(
     [
       [20.4, -3.4],
@@ -57,7 +61,7 @@ export function createCg10mFront(parts: ModelParts) {
       [16.8, -5],
     ],
     [0, METER_Y, FRONT],
-    parts.turned,
+    meterBezel,
     "Flush machined meter bezel with a deep conical countersink"
   );
   parts.ring(

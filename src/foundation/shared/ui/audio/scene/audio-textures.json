@@ -1,5 +1,5 @@
 {
-  "sourceHash": "c9efa464e79823cd1dcfd8dbf552757129a9d41f7c77018dc4c884cba83b5317",
+  "sourceHash": "4bf1ba03165b403ccac1981c4c0377316670be48ab0ce6609e74bbc1a3fdd411",
   "textures": {
     "hd-fabric-color": {
       "url": "/assets/audio/textures/hd-fabric-color.c45d88b4b2b9.webp",
@@ -50,12 +50,12 @@
       "previewDigest": "487bc9d4408ceb078b8502c050a6df36ceb1d791fb8e8d0edc1452ab3b1f541d"
     },
     "hd-cloth": {
-      "url": "/assets/audio/textures/hd-cloth.8e2bdc4ee783.webp",
-      "previewUrl": "/assets/audio/textures/hd-cloth.04a905d2357b.webp",
+      "url": "/assets/audio/textures/hd-cloth.f798607a58cf.webp",
+      "previewUrl": "/assets/audio/textures/hd-cloth.2e50ef89b511.webp",
       "width": 512,
       "height": 512,
-      "digest": "8e2bdc4ee78304325c9eb5a046e786a7d91da928d98961cce7eaeec6d220b9d6",
-      "previewDigest": "04a905d2357bf3b64f03eb9f51e8ac517c3a892b44d51ac076265f4a4798de56"
+      "digest": "f798607a58cfba387dd5385ba0618f1bf5a2f16dbb1cbb0b180804e3f03c1368",
+      "previewDigest": "2e50ef89b5111183ba0de64df26eb35bf3786f4f88a6cd3d4bf878f149e4a53f"
     },
     "hd-mesh-mask": {
       "url": "/assets/audio/textures/hd-mesh-mask.92f514ed9e2a.webp",

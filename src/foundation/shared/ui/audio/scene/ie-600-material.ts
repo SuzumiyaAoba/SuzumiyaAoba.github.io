@@ -51,13 +51,13 @@ export function ie600ZirconiumMaterial(
   marks: boolean
 ) {
   const material = new MeshPhysicalMaterial({
-    color: 0xa4_a6_a5,
+    color: 0x92_94_93,
     metalness: 0.9,
-    roughness: 0.66,
+    roughness: 0.72,
     bumpMap: grain,
     bumpScale: 1,
     roughnessMap: grain,
-    envMapIntensity: 1,
+    envMapIntensity: 0.8,
   });
   material.customProgramCacheKey = () => "ie600-zirconium-grain-engraving-v2";
   material.onBeforeCompile = (shader) => {
