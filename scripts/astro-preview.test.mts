@@ -131,6 +131,30 @@ void test("theme toggles and ASCII character selection survive hydration", async
   await page.close();
 });
 
+// 開発サーバーでも実行すると React Refresh の初期化順を検証できる。
+void test("audio viewer hydrates and reports failed texture loading", async () => {
+  const page = await newPage();
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  // 初期テクスチャが取得できない場合でも、読み込み中の表示から復帰する。
+  await page.route("**/assets/audio/textures/**", async (route) => {
+    await route.abort();
+  });
+  await page.goto(`${baseUrl}/audio/`);
+  const stage = page.locator('.audio-stage[data-model="system"]');
+  await stage
+    .locator('p[role="status"]')
+    .getByText(/3D表示を利用できません/u)
+    .waitFor();
+  assert.equal(await stage.getAttribute("data-status"), "unavailable");
+  assert.equal(
+    await stage.getByRole("button", { name: "再読み込み" }).count(),
+    1
+  );
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 void test("Pagefind searches generated articles and synchronizes the query URL", async () => {
   const page = await newPage();
   const errors: string[] = [];
