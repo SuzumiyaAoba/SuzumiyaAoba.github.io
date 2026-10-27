@@ -1,6 +1,141 @@
 version: 1
-updated: "2026-10-22"
+updated: "2026-10-27"
 events:
+  - year: 2026
+    date: 2026-10-27
+    title_ja: "Ling-3.1-flash-1019 (重み公開)"
+    summary_ja: |
+      10月22日に発表した Ling-3.1-flash の更新版の重みを Hugging Face で公開。総パラメータ約560B・活性化約25Bの MoE で、最大100万トークンのコンテキストに対応。推論と複数段階のエージェント作業を強化し、重みは MIT License で提供。
+
+      [Ling-3.1-flash-1019 のモデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019) / [重みの追加履歴 | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019/commits/main)
+    tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
+    series: ["Ling Flash"]
+  - year: 2026
+    date: 2026-10-26
+    title_ja: "GPT-6.1 Terra"
+    summary_ja: |
+      画像の理解、コンピューター操作、文章作成に向けた高速モデルを公開。ChatGPT Work・Codex と OpenAI API で利用でき、標準 API 料金は100万トークン当たり入力1ドル・出力5ドル・キャッシュ入力0.05ドル。
+
+      [GPT-6.1 Terra の公開 | OpenAI](https://openai.com/index/introducing-gpt-6-1-terra/) / [公開日 | OpenAI Research](https://openai.com/research/index/release/?page=2)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-10-23
+    title_ja: "Kimi K3.1 Pro / K3.1 Pro Highspeed"
+    summary_ja: |
+      コーディング、3D制作、金融調査などの長時間のエージェント作業向けモデルを Kimi・Kimi Code・API で提供開始。100万トークンのコンテキストに対応し、Highspeed は同じモデルを約2〜3倍の速度で提供。重みは11月4日までに公開予定。
+
+      [Kimi K3.1 Pro の発表 | Moonshot AI](https://www.kimi.ai/blog/kimi-k3-1-pro) / [Kimi Code の提供開始日 | Kimi](https://www.kimi.com/code/docs/en/kimi-code/whats-new.html)
+    tags: ["Moonshot AI", "Kimi", "LLM Model"]
+    series: ["Kimi"]
+  - year: 2026
+    date: 2026-10-23
+    title_ja: "Nemotron 3.5 Bolt E4B 4GB (重み公開)"
+    summary_ja: |
+      10月15日に発表したローカル対話エージェント向けモデルの重みを公開。Gemma 4 E4B を基盤に、複数ターンのツール利用や指示への追従を強化。量子化した4GB版と BF16 版を提供し、音声・デバイスアシスタントなどへの利用を想定。
+
+      [Nemotron 3.5 Bolt E4B の公開 | NVIDIA Research](https://research.nvidia.com/labs/nemotron/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/) / [4GB版のモデルカード | NVIDIA](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
+    series: ["Nemotron Bolt"]
+  - year: 2026
+    date: 2026-10-23
+    title_ja: "MiniMax M3.1 Flash (重み公開)"
+    summary_ja: |
+      10月19日に API で提供を始めたモデルの重みを公開。総パラメータ約428B・活性化23Bのマルチモーダル MoE で、テキスト・画像・動画の入力と最大100万トークンのコンテキストに対応。Hugging Face と ModelScope で MiniMax Community License の下で提供。
+
+      [MiniMax M3.1 Flash のモデルカード | MiniMax](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) / [重みの公開 | MiniMax](https://x.com/MiniMax_AI/status/2113436864904610008)
+    tags: ["MiniMax", "Open Weight Model", "LLM Model"]
+    series: ["MiniMax Flash"]
+  - year: 2026
+    date: 2026-10-23
+    title_ja: "Hy-Nomas (重み公開)"
+    summary_ja: |
+      Tencent がテキストやカメラの移動指示に応じて、動画を区間ごとに生成する対話型の世界モデルの重みを公開。生成済み区間の文脈を保持し、次の場面に反映する。コードとデモは10月21日に公開され、重みは Apache 2.0 で提供。
+
+      [Hy-Nomas のモデルカード | Tencent](https://huggingface.co/tencent/Hy-Nomas) / [コードと公開履歴 | Tencent](https://github.com/Tencent-Hunyuan/Hy-Nomas) / [重みの公開 | Tencent](https://x.com/TencentHunyuan/status/2113676827114053892)
+    tags: ["Tencent", "Hy-Nomas", "Open Weight Model", "World Model"]
+    series: ["Hy-Nomas"]
+  - year: 2026
+    date: 2026-10-23
+    title_ja: "Atria Dawn (重み公開)"
+    summary_ja: |
+      上海人工知能研究所が研究・開発向けエージェントモデルの正式版と FP8 版の重みを公開。GLM-5.2 を基盤とし、ツール利用や複数段階の作業に対応。正式版のコンテキストは512Kで、重みは MIT License で提供。
+
+      [Atria Dawn のモデルカード | Shanghai AI Laboratory](https://huggingface.co/internlm/Atria-Dawn) / [モデル公開先の追加履歴 | Atria](https://github.com/atria-asi/Atria-Dawn/commit/436c1f3e150a5d16f0a825b5d93799500d1c9542)
+    tags: ["Shanghai AI Laboratory", "Atria", "Open Weight Model", "LLM Model"]
+    series: ["Atria Dawn"]
+  - year: 2026
+    date: 2026-10-22
+    title_ja: "Canva Craft"
+    summary_ja: |
+      Canva Research がデザイン向けに学習した画像生成モデルを公開。文章から構図を計画して画像を生成する2段階の方式を採用し、最大2Kの画像や文字入りのレイアウトに対応。Canva と開発者向け API で利用できる。
+
+      [Canva Craft の公開 | Canva](https://www.canva.com/newsroom/news/canva-craft/) / [公開日の発表 | Canva](https://x.com/canva/status/2113348707223753165)
+    tags: ["Canva", "Craft", "Image Model"]
+    series: ["Canva Craft"]
+  - year: 2026
+    date: 2026-10-22
+    title_ja: "Ideogram Vector"
+    summary_ja: |
+      テキストから編集可能な SVG を生成し、既存画像をベクター形式に変換できるモデルを公開。グラデーションや文字を含むデザインに対応し、Ideogram と API で利用できる。
+
+      [Ideogram Vector | Ideogram](https://ideogram.ai/models/vector/) / [公開日の発表 | Ideogram](https://x.com/ideogram_ai/status/2113300317584720259)
+    tags: ["Ideogram", "Image Model"]
+    series: ["Ideogram Vector"]
+  - year: 2026
+    date: 2026-10-22
+    title_ja: "Ling-3.0-flash-Sante (重み公開)"
+    summary_ja: |
+      inclusionAI が医療研究・専門的な推論向けに追加学習したモデルの重みを公開。総パラメータ124B・活性化5.1Bの MoE で、調査やツール利用を支援。重みは MIT License で提供し、10月22日の公開発表を記録。
+
+      [Ling-3.0-flash-Sante のモデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.0-flash-Sante) / [重みの公開 | Ant Ling](https://x.com/AntLingAGI/status/2113293431435149349)
+    tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
+    series: ["Ling Sante"]
+  - year: 2026
+    date: 2026-10-22
+    title_ja: "Ling-3.1-flash-1019 (発表)"
+    summary_ja: |
+      Ant Ling が Ling-3.1-flash の更新版を発表。従来版と比べ、エージェント作業の評価結果が改善したと報告。発表時点では API と重みの提供は今後の予定で、10月27日に重みを公開。
+
+      [Ling-3.1-flash-1019 の発表 | Ant Ling](https://x.com/AntLingAGI/status/2113226531522891851) / [重みの公開 | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019)
+    tags: ["Ant Group", "inclusionAI", "Ling", "LLM Model"]
+    series: ["Ling Flash"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Flint"
+    summary_ja: |
+      Recursive がローカル環境でのコーディングエージェント向けに、総パラメータ約40B・活性化約2.5Bの MoE モデルを公開。専用の推論エンジンを提供し、モデル重みは Apache 2.0 で公開。
+
+      [Flint の公開 | Recursive](https://recursive.com/updates/introducing-recursive-flint) / [モデルカードと公開履歴 | Recursive](https://huggingface.co/RecursiveSI/flint/commits/main)
+    tags: ["Recursive", "Flint", "Open Weight Model", "LLM Model"]
+    series: ["Flint"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Nemotron 3.5 Embed / Rerank (発表)"
+    summary_ja: |
+      NVIDIA が文書検索向けの Embed 1B・8B と Rerank 8B を発表。テキストに加え、表やグラフを含む文書画像を検索し、候補を関連度順に並べ替える。モデル重み、データ、学習レシピを公開し、NVIDIA NIM などでも提供。
+
+      [Nemotron 3.5 の検索モデル | NVIDIA](https://huggingface.co/blog/nvidia/nemotron-retriever-world-class-agentic-retrieval)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "Retrieval Model"]
+    series: ["Nemotron Embed", "Nemotron Rerank"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "mammoth-1 / elephant-1"
+    summary_ja: |
+      Baseten の Base Labs が27Bと9Bの判断モデルを公開。Qwen3.5 を基盤に、分類・振り分け・採点などの選択肢や確率を返すよう追加学習。モデル重みを公開し、Baseten の System One API でも提供。
+
+      [mammoth-1 / elephant-1 の公開 | Baseten](https://www.baseten.co/blog/the-best-decision-models-in-the-world-mammoth-1-and-elephant-1/) / [API の提供開始 | Baseten](https://www.baseten.co/resources/changelog/elephant-1-and-mammoth-1-available-on-baseten/)
+    tags: ["Baseten", "Base Labs", "Open Weight Model", "Decision Model"]
+    series: ["mammoth", "elephant"]
+  - year: 2026
+    date: 2026-10-21
+    title_ja: "Spark-X2.6-4B (API)"
+    summary_ja: |
+      iFlytek が端末上のエージェント向け4Bモデルを API で提供開始。コーディング、ツール利用、長文処理を強化し、推論強度を3段階から選べる。モデル重みも Apache 2.0 で公開。
+
+      [Spark-X2.6-4B のモデルカード | SparkLLM](https://huggingface.co/XHToken/Spark-X2.6-4B) / [API の提供開始日 | iFlytek](https://maas.xfyun.cn/doc/guide/2%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/2.1.1%20Spark-X2.6.html)
+    tags: ["iFlytek", "Spark", "Open Weight Model", "LLM Model"]
+    series: ["Spark X 4B"]
   - year: 2026
     date: 2026-10-21
     title_ja: "Phonon"
@@ -40,6 +175,15 @@ events:
     series: ["Alpamayo"]
   - year: 2026
     date: 2026-10-20
+    title_ja: "Spark-X2.6 (API)"
+    summary_ja: |
+      iFlytek が総パラメータ293B・活性化30Bの MoE モデルを API で提供開始。100万トークンのコンテキストに対応し、コーディングやエージェント作業向けに設計。提供元のモデル一覧に記載された API の提供開始日を記録。
+
+      [Spark-X2.6 のモデル情報と提供開始日 | iFlytek](https://maas.xfyun.cn/doc/guide/2%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/2.1.1%20Spark-X2.6.html)
+    tags: ["iFlytek", "Spark", "LLM Model"]
+    series: ["Spark X"]
+  - year: 2026
+    date: 2026-10-20
     title_ja: "Voxtral 3 (Public Preview)"
     summary_ja: |
       音声認識の Small Transcribe / Mini Transcribe / Mini Transcribe Realtime と、音声合成の Mini TTS を API の公開プレビューで提供。多言語の文字起こし、話者識別、専門用語への対応、発話終了の検出を強化。LiveKit ベースの音声エージェント SDK も提供し、認識・推論・ツール利用・音声応答を連携。
@@ -69,9 +213,9 @@ events:
     date: 2026-10-19
     title_ja: "MiniMax M3.1 Flash"
     summary_ja: |
-      エージェント作業、コーディング、PC操作、サイバーセキュリティを強化したモデルを、MiniMax API・M Plan・MiniMax Code で提供開始。API 料金は100万トークン当たり入力0.15ドル・出力0.60ドル・キャッシュ入力0.015ドル。重みは後日公開予定で、発表時点では未公開。
+      エージェント作業、コーディング、PC操作、サイバーセキュリティを強化したモデルを、MiniMax API・M Plan・MiniMax Code で提供開始。API 料金は100万トークン当たり入力0.15ドル・出力0.60ドル・キャッシュ入力0.015ドル。重みは発表時点では未公開で、10月23日に公開。
 
-      [MiniMax M3.1 Flash の公開 | MiniMax](https://www.minimax.io/blog/minimax-m31f)
+      [MiniMax M3.1 Flash の公開 | MiniMax](https://www.minimax.io/blog/minimax-m31f) / [重みの公開 | MiniMax](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash)
     tags: ["MiniMax", "LLM Model"]
     series: ["MiniMax Flash"]
   - year: 2026
@@ -101,6 +245,25 @@ events:
       [Maxwell の発表 | doubleAI](https://heymaxwell.ai/manifesto) / [10月19日の発表・報道履歴 | doubleAI](https://www.doubleai.com/news)
     tags: ["doubleAI", "Maxwell", "Code Execution Model"]
     series: ["Maxwell"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "Ming-3.0 音声モデル群"
+    summary_ja: |
+      inclusionAI が音声合成の TTS 2種、音声理解・対話の Audio 2種、音声認識の ASR 1種を発表。TTS は日本語を含む7言語や声の指定に対応し、Audio と ASR は中国語・英語の音声を扱う。5モデルの重みを MIT License で提供。
+
+      [Ming-3.0 のモデル群の発表 | Ant Ling](https://x.com/AntLingAGI/status/2112210811997540475) / [モデル一覧 | inclusionAI](https://huggingface.co/collections/inclusionAI/ming-30) / [Ming-3.0 TTS | inclusionAI](https://github.com/inclusionAI/Ming-3.0-tts)
+    tags:
+      ["Ant Group", "inclusionAI", "Ming", "Open Weight Model", "Audio Model"]
+    series: ["Ming TTS", "Ming Audio", "Ming ASR"]
+  - year: 2026
+    date: 2026-10-17
+    title_ja: "Nemotron 3.5 Parse"
+    summary_ja: |
+      NVIDIA が文書画像から文章・表・グラフなどを構造化して抽出する631Mパラメータのモデルを公開。読み順や各要素の位置も出力し、文書検索やデータ抽出に利用できる。モデルカードに記載された Hugging Face の公開日を記録。
+
+      [Nemotron 3.5 Parse のモデルカードと公開日 | NVIDIA](https://huggingface.co/nvidia/Nemotron-3.5-Parse)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "Document Model"]
+    series: ["Nemotron Parse"]
   - year: 2026
     date: 2026-10-17
     title_ja: "DeepSeek-V4.1-Flash-1017"
@@ -186,9 +349,9 @@ events:
     date: 2026-10-15
     title_ja: "Nemotron 3.5 Bolt E4B (発表)"
     summary_ja: |
-      4GBのメモリで動作する、物理・対話エージェント向けモデルを発表。GeForce RTX、Jetson、RTX / DGX Spark 上での音声アシスタントや対話型キャラクターを想定。提供開始は10月23日の予定で、発表時点では未公開。
+      4GBのメモリで動作する、物理・対話エージェント向けモデルを発表。GeForce RTX、Jetson、RTX / DGX Spark 上での音声アシスタントや対話型キャラクターを想定。発表時点では未公開で、10月23日に重みを公開。
 
-      [Nemotron 3.5 Bolt E4B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
+      [Nemotron 3.5 Bolt E4B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/) / [重みの公開 | NVIDIA Research](https://research.nvidia.com/labs/nemotron/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/)
     tags: ["NVIDIA", "Nemotron", "LLM Model"]
     series: ["Nemotron Bolt"]
   - year: 2026
@@ -209,6 +372,15 @@ events:
       [Introducing Span-02: Anytime Reasoning for Decisions | Respan](https://www.respan.ai/blog/introducing-span-2)
     tags: ["Respan", "Span", "Open Weight Model", "Decision Model"]
     series: ["Span"]
+  - year: 2026
+    date: 2026-10-14
+    title_ja: "Ling-3.1-flash (重み公開)"
+    summary_ja: |
+      inclusionAI が9月に発表したモデルの重みを公開。総パラメータ約560B・活性化約25Bの MoE で、コーディングやエージェント作業に対応。重みは MIT License で提供し、最大100万トークンのコンテキストに対応。
+
+      [Ling-3.1-flash の重み公開 | Ant Ling](https://x.com/AntLingAGI/status/2110390124743970952) / [モデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash)
+    tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
+    series: ["Ling Flash"]
   - year: 2026
     date: 2026-10-14
     title_ja: "Jev 1.14.0 (Preview)"
@@ -294,9 +466,9 @@ events:
     date: 2026-10-06
     title_ja: "Mistral Large 4 (Public Preview)"
     summary_ja: |
-      総パラメータ1兆のマルチモーダル MoE モデルを、Mistral Studio の API で公開プレビュー提供。コーディング、エージェント作業、視覚理解を強化。モデルの重みは10月末までに公開予定で、発表時点では未公開。
+      総パラメータ1兆のマルチモーダル MoE モデルを、Mistral Studio の API で公開プレビュー提供。コーディング、エージェント作業、視覚理解を強化。重みは発表時点では未公開で、10月27日時点の予定日は10月31日。
 
-      [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/)
+      [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/) / [重みの公開予定 | Mistral](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B)
     tags: ["Mistral AI", "LLM Model"]
     series: ["Mistral Large"]
   - year: 2026
