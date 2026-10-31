@@ -26,7 +26,7 @@ export function ResultsTable({
       >
         <table className="w-full text-left text-sm">
           <caption className="sr-only">
-            {benchmark.name}。スコアは高いほど良く、費用は低いほど安価です。出典
+            {benchmark.name}。出典
             {benchmark.source}、更新日 {benchmark.sourceUpdatedAt ?? "未公表"}。
           </caption>
           <thead className="sticky top-0 z-20 border-b bg-surface text-xs text-muted-foreground">
@@ -136,21 +136,6 @@ export function ResultsTable({
           </tbody>
         </table>
       </section>
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        モデル名のリンクは {benchmark.source}
-        のモデル詳細・評価設定です。スコアと費用の取得ソースは{" "}
-        <a href={benchmark.sourceUrl} className="underline underline-offset-4">
-          {benchmark.name} の公開結果 ↗
-        </a>
-        。Effort は同じ評価結果の推論強度
-        を転記し、値がない場合は「未公表」としています。
-        <a
-          href={benchmark.dataSourceUrl}
-          className="underline underline-offset-4"
-        >
-          評価設定の元データ ↗
-        </a>
-      </p>
     </section>
   );
 }

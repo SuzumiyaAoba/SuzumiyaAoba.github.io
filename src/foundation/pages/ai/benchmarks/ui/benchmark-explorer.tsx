@@ -6,7 +6,7 @@ import type { BenchmarkDataset } from "../model/schema";
 import type { ComparisonOptions, ResultFilters } from "../model/comparison";
 import { compareResults, defaultCostMetric } from "../model/comparison";
 import { BenchmarkFilters, ComparisonControls } from "./benchmark-controls";
-import { BenchmarkCostNotes, BenchmarkHeader } from "./benchmark-details";
+import { BenchmarkHeader } from "./benchmark-details";
 import { CostChart } from "./cost-chart";
 import { ResultsTable } from "./results-table";
 import { ScoresOverview } from "./scores-overview";
@@ -71,7 +71,6 @@ export function BenchmarkExplorer({ dataset }: { dataset: BenchmarkDataset }) {
           options={options}
           onOptionsChange={setOptions}
         />
-        <BenchmarkCostNotes benchmark={benchmark} metric={options.metric} />
         {results.length === 0 ? (
           <div className="space-y-4 border-y py-10 text-center">
             <p className="text-sm text-muted-foreground">

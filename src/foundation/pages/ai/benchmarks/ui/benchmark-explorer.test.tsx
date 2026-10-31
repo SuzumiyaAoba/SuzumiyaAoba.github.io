@@ -126,9 +126,7 @@ describe("ベンチマークの操作", () => {
     await search("Gamma");
     expect(resultModels()).toStrictEqual(["Gamma ↗"]);
     expect(container.querySelector("figure")).toBeNull();
-    expect(container.textContent).toContain(
-      "この条件で比較できる費用データはありません。"
-    );
+    expect(container.textContent).toContain("費用データがありません。");
     expect(element("details tbody td").textContent).toContain("3位");
   });
 
@@ -147,13 +145,9 @@ describe("ベンチマークの操作", () => {
         new MouseEvent("click", { bubbles: true })
       )
     );
-    expect(container.textContent).toContain(
-      "費用に0が含まれるため線形目盛で表示しています。"
-    );
+    expect(container.textContent).toContain("線形目盛（0 USD を含む）");
     await select("benchmark-cost-metric", "output");
-    expect(container.textContent).not.toContain(
-      "費用に0が含まれるため線形目盛で表示しています。"
-    );
+    expect(container.textContent).not.toContain("線形目盛（0 USD を含む）");
     expect(element("figcaption").textContent).toContain("Beta");
     await search("Alpha");
     expect(element("figcaption").textContent).toContain("Alpha");

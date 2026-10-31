@@ -36,7 +36,7 @@ export function CostChart({
   if (points.length === 0) {
     return (
       <p className="border-y py-8 text-sm text-muted-foreground">
-        この条件で比較できる費用データはありません。スコアは下の表で確認できます。
+        費用データがありません。
       </p>
     );
   }
@@ -61,16 +61,9 @@ export function CostChart({
         id={descriptionId}
         className="text-xs leading-relaxed text-muted-foreground"
       >
-        左上ほど低費用で高スコア。モデル名と Effort
-        を常時表示し、引き出し線で点に結んでいます。点やモデル名に触れると対応する点が強調され、数値も確認できます。狭い画面ではグラフを横スクロールできます。
-        {points.length} 件を表示
-        {unknownCount > 0
-          ? `、費用未公表の ${unknownCount} 件はグラフから除外`
-          : ""}
-        。
-        {logarithmic && !scale.logarithmic
-          ? "費用に0が含まれるため線形目盛で表示しています。"
-          : ""}
+        {points.length} 件
+        {unknownCount > 0 ? ` · 費用未公表 ${unknownCount} 件` : ""}
+        {logarithmic && !scale.logarithmic ? " · 線形目盛（0 USD を含む）" : ""}
       </p>
       <section
         aria-label="費用とスコアのグラフ（横スクロール可能）"

@@ -31,13 +31,7 @@ export function ScoresOverview({
       <summary className="cursor-pointer py-4 text-sm font-medium">
         ベンチマーク横断のスコア一覧（{rows.length} モデル）
       </summary>
-      <p className="pb-4 text-xs leading-relaxed text-muted-foreground">
-        検索と開発元の絞り込みを反映しています。スコアの単位は各列に記載しています。「未掲載」はこのスナップショットに結果が含まれないことを示します。各列の指標・評価条件は異なるため、列をまたいだ点数の大小や平均で優劣を判断しないでください。
-      </p>
       <div className="flex flex-wrap items-center gap-3 pb-4 text-xs">
-        <p className="text-muted-foreground">
-          各列の全掲載モデルを基準にした上位3位を強調（同点は同順位）。絞り込み後も順位は変わりません。
-        </p>
         <ul className="flex gap-2" aria-label="スコアの背景色の凡例">
           {rankHighlights.map((highlight) => (
             <li
@@ -60,8 +54,7 @@ export function ScoresOverview({
       >
         <table className="w-full text-left text-xs">
           <caption className="sr-only">
-            モデルごとのベンチマークスコアと
-            Effort。各列のリンクから出典と評価方法を確認できます。
+            モデルごとのベンチマークスコアと Effort
           </caption>
           <thead className="sticky top-0 z-20 border-y bg-surface text-muted-foreground">
             <tr>
