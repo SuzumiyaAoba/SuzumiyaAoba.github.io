@@ -239,6 +239,104 @@ void test("AI benchmarks compare scores and costs without treating missing costs
   await page.close();
 });
 
+void test("additional benchmarks preserve score units, settings, and sources", async () => {
+  const page = await newPage();
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(`${baseUrl}/ai/benchmarks/`);
+  await page.waitForSelector("react-island:not([ssr]) #benchmark-select");
+  const select = page.getByLabel("ベンチマーク", { exact: true });
+  assert.equal(await select.locator("option").count(), 14);
+  const table = page.locator(
+    'section[aria-labelledby="benchmark-results"] table'
+  );
+  /* oxlint-disable no-await-in-loop -- 同じページで評価を切り替え、表示の更新を順に検証する。 */
+  for (const id of [
+    "frontiercode-2-0",
+    "aa-briefcase",
+    "automationbench-aa",
+    "hle-diamond",
+    "aa-omniscience",
+    "gdp-pdf",
+    "critpt-v2-hard",
+    "vcb-1-100",
+    "hlab",
+  ]) {
+    await select.selectOption(id);
+    assert.ok((await table.locator("tbody tr").count()) > 0);
+    const graph = page.getByRole("group", {
+      name: "費用とスコアの比較",
+      exact: true,
+    });
+    assert.equal(
+      await graph.locator("[data-model-label]").count(),
+      await graph.getByRole("button").count()
+    );
+  }
+  /* oxlint-enable no-await-in-loop */
+
+  await select.selectOption("aa-briefcase");
+  assert.equal(
+    await table
+      .getByRole("columnheader", { name: "AA-Briefcase Elo", exact: true })
+      .count(),
+    1
+  );
+  assert.match(
+    (await table.locator("tbody tr").first().textContent()) ?? "",
+    /Default Fallback.*1813.57 Elo/u
+  );
+  assert.match(
+    (await table.locator("caption").textContent()) ?? "",
+    /Artificial Analysis、更新日 未公表/u
+  );
+  assert.equal(
+    await table.getByRole("columnheader", { name: /スコア（%）/u }).count(),
+    0
+  );
+  assert.match(
+    (await page.locator("figcaption").textContent()) ?? "",
+    /1813.57 Elo/u
+  );
+
+  await select.selectOption("aa-omniscience");
+  await page
+    .getByRole("searchbox", { name: "モデルを検索" })
+    .fill("GPT-6 Luna");
+  assert.match((await table.locator("tbody tr").textContent()) ?? "", /-8.27/u);
+  assert.equal(
+    await table
+      .getByRole("columnheader", {
+        name: "Net Score（−100〜100）",
+        exact: true,
+      })
+      .count(),
+    1
+  );
+  assert.match(
+    (await page.locator("figcaption").textContent()) ?? "",
+    /-8.27/u
+  );
+  assert.ok(
+    !((await page.locator("figcaption").textContent()) ?? "").includes("%")
+  );
+  await page.getByRole("searchbox", { name: "モデルを検索" }).fill("");
+  await select.selectOption("hlab");
+  assert.match(
+    (await table.locator("caption").textContent()) ?? "",
+    /Vals AI、更新日 2026-10-30/u
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth
+    ),
+    true
+  );
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 void test("all page families, localized metadata, and static assets are exported", async () => {
   const files = await readdir("out", { recursive: true });
   assert.ok(

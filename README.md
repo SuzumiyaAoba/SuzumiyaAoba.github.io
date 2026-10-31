@@ -119,15 +119,17 @@ items:
 
 ## AI モデルのベンチマーク比較
 
-`/ai/benchmarks/` は、Vals AI の公開結果を評価版ごとに比較するページです。Terminal-Bench 4.0、ProofBench v1.1、Terminal-Bench-Science、Finance Agent v2.1、GPQA Diamond を収録し、ベンチマーク・開発元・モデル名で絞り込めます。モデル別のスコア表と費用対スコアのグラフは同じ絞り込みを共有し、スコア順・費用順の切り替えに対応します。グラフはすべての点のモデル名と Effort を常時表示し、重ならないよう左右に配置したラベルから引き出し線で対応づけます。点はマウス・タッチ・キーボードで選択でき、費用の目盛は対数・線形を切り替えられます。
+`/ai/benchmarks/` は、Vals AI と Artificial Analysis の公開結果を評価版・評価元ごとに比較するページです。既存の Terminal-Bench 4.0、ProofBench v1.1、Terminal-Bench-Science、Finance Agent v2.1、GPQA Diamond に、FrontierCode 2.0、AA-Briefcase v1.1、AutomationBench-AA、HLE-Diamond、AA-Omniscience v1.1、GDP.pdf、CritPt v2 Hard Subset、Vibe Code Bench 1-100、HLAB-Vals-1.1 を加えた14評価を収録しています。ベンチマーク・開発元・モデル名で絞り込めます。モデル別のスコア表と費用対スコアのグラフは同じ絞り込みを共有し、スコア順・費用順の切り替えに対応します。グラフはすべての点のモデル名と Effort を常時表示し、重ならないよう左右に配置したラベルから引き出し線で対応づけます。点はマウス・タッチ・キーボードで選択でき、費用の目盛は対数・線形を切り替えられます。
 
-データは `content/tools/ai-benchmarks.json` に保存したスナップショットで、実行時の外部 API・認証情報は不要です。`retrievedAt` が取得日、各評価の `sourceUrl` が公開結果のページ、`dataSourceUrl` がページで読み込まれる評価設定・費用の公開データ、`sourceUpdatedAt` が出典の更新日、`version` と `methodology` が評価条件です。掲載範囲は `selection` に明記しています。モデル詳細の `modelUrl` から、評価元の推論設定なども確認できます。
+データは `content/tools/ai-benchmarks.json` に保存したスナップショットで、実行時の外部 API・認証情報は不要です。`retrievedAt` が取得日、各評価の `source` が評価元、`sourceUrl` が公開結果のページ、`dataSourceUrl` がスコア・評価設定・費用の公開データです。Vals AI はページが参照する JSON、Artificial Analysis は元データを埋め込んだ公開ページを参照します。`sourceUpdatedAt` が出典の更新日で、未公表の場合は `null` とし、取得日で補完しません。`version` と `methodology` が評価条件です。掲載範囲は全体と各評価の `selection` に明記しています。Artificial Analysis は取得時の既定表示モデルを各1設定ずつ掲載し、各モデルで最高スコアの設定を選ぶ方式にはしていません。モデル詳細の `modelUrl` から、評価元の推論設定なども確認できます。
 
-Effort（`effort`）は各ベンチマークの同じスコアの結果と照合し、公開データの `reasoning_effort` または `compute_effort` を転記します。モデル全体の既定値を評価ごとの結果に流用しません。出典に値がない場合は `null` とし、表・横断一覧・グラフには「未公表」と表示します。
+スコアは `scoreType`（`percentage`・`elo`・`net-score`）と `scoreLabel` で単位を区別します。AA-Briefcase は Elo、AA-Omniscience は −100〜100 の Net Score で、百分率に換算しません。表・横断一覧・グラフ・読み上げのすべてに元の単位を反映し、Elo のグラフは掲載結果に合わせて縦軸を設定します。CritPt は難問40問の `critptAgenticHard` を使い、全70問の結果と混在させません。
 
-費用は、出典の `Cost / Test` または公開評価データの `cost_per_test` を `costPerTaskUsd`（USD / 問）に転記します。API の入力・出力単価は `inputPerMillionUsd`・`outputPerMillionUsd`（USD / 100万トークン）に別々に保存します。GPQA は公開評価データにある実行費用と、入力・出力単価を切り替えて比較できます。未公表は `null` とし、0ドルへの置換や単価からの実行費用の推測はしません。グラフからは選択した費用が未公表の結果だけを除外し、スコア表には残します。
+Effort（`effort`）は各ベンチマークの同じスコアの結果と照合し、公開データの `reasoning_effort`・`compute_effort` または同じモデル設定の付記を転記します。モデル全体の既定値を評価ごとの結果に流用しません。Fallback などの追加設定は `configuration` に保存して表と横断一覧に併記します。出典に値がない場合は `null` とし、表・横断一覧・グラフには「未公表」と表示します。
 
-更新時は各 `sourceUrl` の公開表・評価方法と `dataSourceUrl` の元データを確認し、スコア・費用・Effort・出典更新日・取得日を一緒に更新してください。データの URL はページから参照されている最新のものを確認します。評価版やハーネスが異なる結果は混在させず、変更点を `methodology` に記載します。GPQA のように評価元が更新を終了した評価は `archived: true` にします。読み込み時にスコアの範囲、非負の費用、HTTPS の出典、ID の重複、日付形式を Zod で検証し、不正なデータではビルドを失敗させます。
+Vals AI の費用は、出典の `Cost / Test` または公開評価データの `cost_per_test` を `costPerTaskUsd`（USD / 問）に転記します。Artificial Analysis は評価元が公開する計算式を再現し、同じ結果の `canonicalEvalTokenCounts`、入力・出力・キャッシュの単価、`cacheHitRate`、評価別の Fallback 比率から評価全体の費用を求め、評価元と同じ問題数で割った値を保存します。キャッシュ可能な入力がある場合、読み取り分は `cacheableInput * cacheHitRate`、残りの入力は書き込み分として計算し、Fallback は入力・推論・回答それぞれの比率で費用を加重します。`costMethodology` と `costCalculationUrl` に計算条件と公開コードを記録し、ページにも表示します。判定モデルなどの費用は含みません。API の入力・出力単価は主モデルの `inputPerMillionUsd`・`outputPerMillionUsd`（USD / 100万トークン）に別々に保存します。必要なトークン数・単価・キャッシュ率がない場合は `null` とし、0ドルへの置換や不明な条件の推測はしません。グラフからは選択した費用が未公表の結果だけを除外し、スコア表には残します。
+
+更新時は各 `sourceUrl` の公開表・評価方法と `dataSourceUrl` の元データを確認し、スコア・費用・Effort・追加設定・出典更新日・取得日を一緒に更新してください。データと費用計算コードの URL はページから参照されている最新のものを確認します。評価版やハーネスが異なる結果は混在させず、変更点を `methodology` に記載します。GPQA のように評価元が更新を終了した評価は `archived: true` にします。読み込み時に指標ごとのスコアの範囲、非負の費用、HTTPS の出典、ID の重複、日付形式を Zod で検証し、不正なデータではビルドを失敗させます。
 
 ## AI モデルのリリース比較
 

@@ -1,4 +1,5 @@
-import type { BenchmarkResult } from "./schema";
+import type { BenchmarkResult, ScoreType } from "./schema";
+import { createScoreScale } from "./score";
 
 export function createCostScale(costs: number[], logarithmic: boolean) {
   const useLog =
@@ -64,7 +65,8 @@ function placeLabels(
 /** 点を費用順で左右に分け、ラベル間に2行分の空間を確保する。 */
 export function createCostChartLayout(
   points: { result: BenchmarkResult; cost: number }[],
-  logarithmic: boolean
+  logarithmic: boolean,
+  scoreType: ScoreType = "percentage"
 ) {
   const sideCount = Math.ceil(points.length / 2);
   const plot = {
@@ -77,11 +79,15 @@ export function createCostChartLayout(
     points.map(({ cost }) => cost),
     logarithmic
   );
+  const scoreScale = createScoreScale(
+    points.map(({ result }) => result.score),
+    scoreType
+  );
   const positions = points
     .map((point) => ({
       ...point,
       x: plot.left + plot.width * scale.position(point.cost),
-      y: plot.top + plot.height * (1 - point.result.score / 100),
+      y: plot.top + plot.height * (1 - scoreScale.position(point.result.score)),
     }))
     .toSorted(
       (a, b) => a.x - b.x || a.y - b.y || a.result.id.localeCompare(b.result.id)
@@ -91,6 +97,7 @@ export function createCostChartLayout(
     height: plot.top + plot.height + 72,
     plot,
     scale,
+    scoreScale,
     points: [
       ...placeLabels(
         positions.slice(0, sideCount),

@@ -1,5 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 import type { BenchmarkDataset, BenchmarkResult } from "../model/schema";
+import { formatScore } from "../model/score";
 
 const rankHighlights = [
   { label: "1位", className: "bg-success/30" },
@@ -71,7 +72,7 @@ export function ScoresOverview({
         ベンチマーク横断のスコア一覧（{rows.length} モデル）
       </summary>
       <p className="pb-4 text-xs leading-relaxed text-muted-foreground">
-        検索と開発元の絞り込みを反映しています。数値は各評価のスコア（%）です。「未掲載」はこのスナップショットに結果が含まれないことを示します。各列の評価条件は異なるため、列をまたいだ点数の大小や平均で優劣を判断しないでください。
+        検索と開発元の絞り込みを反映しています。スコアの単位は各列に記載しています。「未掲載」はこのスナップショットに結果が含まれないことを示します。各列の指標・評価条件は異なるため、列をまたいだ点数の大小や平均で優劣を判断しないでください。
       </p>
       <div className="flex flex-wrap items-center gap-3 pb-4 text-xs">
         <p className="text-muted-foreground">
@@ -119,6 +120,9 @@ export function ScoresOverview({
                   >
                     {benchmark.name} ↗
                   </a>
+                  <span className="mt-1 block font-normal">
+                    {benchmark.scoreLabel}
+                  </span>
                 </th>
               ))}
             </tr>
@@ -163,12 +167,17 @@ export function ScoresOverview({
                                 highlight ? "font-semibold" : undefined
                               }
                             >
-                              {result.score.toFixed(2)}
+                              {formatScore(result.score, benchmark.scoreType)}
                             </span>
                           </span>
                           <span className="mt-1 block text-mini text-foreground/80">
                             Effort: {result.effort ?? "未公表"}
                           </span>
+                          {result.configuration && (
+                            <span className="mt-1 block text-mini text-foreground/80">
+                              {result.configuration}
+                            </span>
+                          )}
                         </>
                       )}
                     </td>

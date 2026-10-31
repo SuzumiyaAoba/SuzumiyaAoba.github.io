@@ -2,12 +2,12 @@
 /* oxlint-disable jsx-a11y/no-noninteractive-tabindex -- 横スクロール領域をキーボードでも操作できるよう、section にフォーカスを当てる。 */
 import { useId, useState } from "react";
 import { cn } from "@/shared/lib/utils";
-import type { BenchmarkResult } from "../model/schema";
+import type { Benchmark, BenchmarkResult } from "../model/schema";
 import type { CostMetric } from "../model/comparison";
 import { costLabels, formatCost, getCostPoints } from "../model/comparison";
 import { createCostChartLayout } from "../model/chart";
+import { formatScore } from "../model/score";
 
-const scoreTicks = [0, 25, 50, 75, 100];
 const providerColors: Record<string, string> = {
   OpenAI: "fill-provider-openai",
   Anthropic: "fill-provider-anthropic",
@@ -16,9 +16,11 @@ const providerColors: Record<string, string> = {
 };
 
 export function CostChart({
+  benchmark,
   results,
   metric,
 }: {
+  benchmark: Benchmark;
   results: BenchmarkResult[];
   metric: CostMetric;
 }) {
@@ -29,8 +31,12 @@ export function CostChart({
   const points = getCostPoints(results, metric);
   const selected =
     points.find(({ result }) => result.id === highlightedId) ?? points[0];
-  const layout = createCostChartLayout(points, logarithmic);
-  const { plot, scale } = layout;
+  const layout = createCostChartLayout(
+    points,
+    logarithmic,
+    benchmark.scoreType
+  );
+  const { plot, scale, scoreScale } = layout;
   const unknownCount = results.length - points.length;
 
   if (points.length === 0) {
@@ -84,8 +90,8 @@ export function CostChart({
           aria-labelledby={titleId}
           aria-describedby={descriptionId}
         >
-          {scoreTicks.map((score) => {
-            const y = plot.top + plot.height * (1 - score / 100);
+          {scoreScale.ticks.map((score) => {
+            const y = plot.top + plot.height * (1 - scoreScale.position(score));
             return (
               <g key={score}>
                 <line
@@ -129,7 +135,7 @@ export function CostChart({
             );
           })}
           <text x={plot.left} y={16} className="fill-muted-foreground">
-            スコア（%）↑
+            {benchmark.scoreLabel} ↑
           </text>
           <text
             x={plot.left + plot.width / 2}
@@ -152,7 +158,7 @@ export function CostChart({
                 key={result.id}
                 role="button"
                 tabIndex={0}
-                aria-label={`${result.model}、Effort ${result.effort ?? "未公表"}、スコア ${result.score.toFixed(2)}%、${costLabels[metric]} ${formatCost(cost)}`}
+                aria-label={`${result.model}、Effort ${result.effort ?? "未公表"}、スコア ${formatScore(result.score, benchmark.scoreType)}、${costLabels[metric]} ${formatCost(cost)}`}
                 aria-pressed={selected?.result.id === result.id}
                 onPointerEnter={() => setHighlightedId(result.id)}
                 onFocus={() => setHighlightedId(result.id)}
@@ -165,7 +171,7 @@ export function CostChart({
                 }}
                 className="group cursor-pointer outline-none"
               >
-                <title>{`${result.model} · Effort ${result.effort ?? "未公表"} · ${result.score.toFixed(2)}% · ${formatCost(cost)}`}</title>
+                <title>{`${result.model} · Effort ${result.effort ?? "未公表"} · ${formatScore(result.score, benchmark.scoreType)} · ${formatCost(cost)}`}</title>
                 <path
                   d={`M ${x} ${y} C ${x + controlOffset} ${y}, ${lineX - controlOffset} ${labelY}, ${lineX} ${labelY}`}
                   fill="none"
@@ -234,7 +240,7 @@ export function CostChart({
               </span>
             </div>
             <p className="font-mono tabular-nums">
-              {selected.result.score.toFixed(2)}%{" "}
+              {formatScore(selected.result.score, benchmark.scoreType)}{" "}
               <span className="px-2 text-muted-foreground">/</span>{" "}
               {formatCost(selected.cost)}
             </p>

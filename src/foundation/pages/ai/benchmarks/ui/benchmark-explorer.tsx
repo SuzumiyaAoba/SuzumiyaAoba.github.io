@@ -14,6 +14,7 @@ import {
 import { CostChart } from "./cost-chart";
 import { ResultsTable } from "./results-table";
 import { ScoresOverview } from "./scores-overview";
+import { SourceUpdatedAt } from "./source-updated-at";
 
 const controlClass =
   "h-11 w-full min-w-0 rounded-sm border border-input bg-background px-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring sm:text-sm";
@@ -125,16 +126,19 @@ export function BenchmarkExplorer({ dataset }: { dataset: BenchmarkDataset }) {
               href={benchmark.sourceUrl}
               className="underline underline-offset-4"
             >
-              {dataset.source} ↗
+              {benchmark.source} ↗
             </a>{" "}
             · 評価版 {benchmark.version} · 出典更新{" "}
-            <time dateTime={benchmark.sourceUpdatedAt}>
-              {benchmark.sourceUpdatedAt}
-            </time>
+            <SourceUpdatedAt value={benchmark.sourceUpdatedAt} />
           </p>
           <p className="text-sm leading-relaxed text-muted-foreground">
             {benchmark.methodology}
           </p>
+          {benchmark.selection && (
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              掲載範囲: {benchmark.selection}
+            </p>
+          )}
           {benchmark.archived && (
             <p className="border-l-2 border-brand pl-3 text-sm text-muted-foreground">
               このベンチマークは評価元で更新が終了しています。新しいモデルの未掲載は低スコアを意味しません。
@@ -199,9 +203,22 @@ export function BenchmarkExplorer({ dataset }: { dataset: BenchmarkDataset }) {
         </div>
         <p className="text-xs leading-relaxed text-muted-foreground">
           {metric === "task"
-            ? "評価時に公表された1問当たりの費用です。現在の API 料金や実際の入出力量により、請求額は変わります。"
+            ? "出典の評価データに基づく1問当たりの費用です。現在の API 料金や実際の入出力量により、請求額は変わります。"
             : "API 単価は100万トークン当たりの料金です。タスク当たりの実行費用とは単位が異なります。入力と出力を分けて比較できます。"}
         </p>
+        {benchmark.costMethodology && (
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            {benchmark.costMethodology}{" "}
+            {benchmark.costCalculationUrl && (
+              <a
+                href={benchmark.costCalculationUrl}
+                className="underline underline-offset-4"
+              >
+                評価元の費用計算 ↗
+              </a>
+            )}
+          </p>
+        )}
         {results.length === 0 ? (
           <div className="space-y-4 border-y py-10 text-center">
             <p className="text-sm text-muted-foreground">
@@ -220,7 +237,11 @@ export function BenchmarkExplorer({ dataset }: { dataset: BenchmarkDataset }) {
           </div>
         ) : (
           <>
-            <CostChart results={results} metric={metric} />
+            <CostChart
+              benchmark={benchmark}
+              results={results}
+              metric={metric}
+            />
             <ResultsTable benchmark={benchmark} results={results} />
           </>
         )}

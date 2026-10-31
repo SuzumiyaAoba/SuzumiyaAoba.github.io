@@ -4,7 +4,7 @@ export type CostMetric = "task" | "input" | "output";
 export type ResultSort = "score" | "cost";
 
 export const costLabels: Record<CostMetric, string> = {
-  task: "評価時の実行費用（USD / 問）",
+  task: "評価の実行費用（USD / 問）",
   input: "API 入力単価（USD / 100万トークン）",
   output: "API 出力単価（USD / 100万トークン）",
 };
