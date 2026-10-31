@@ -103,9 +103,12 @@ export function ScoresOverview({
             モデルごとのベンチマークスコアと
             Effort。各列のリンクから出典と評価方法を確認できます。
           </caption>
-          <thead className="sticky top-0 z-10 border-y bg-surface text-muted-foreground">
+          <thead className="sticky top-0 z-20 border-y bg-surface text-muted-foreground">
             <tr>
-              <th scope="col" className="min-w-52 px-3 py-3 font-medium">
+              <th
+                scope="col"
+                className="sticky left-0 z-30 min-w-52 border-r bg-surface px-3 py-3 font-medium"
+              >
                 モデル
               </th>
               {dataset.benchmarks.map((benchmark) => (
@@ -130,7 +133,10 @@ export function ScoresOverview({
           <tbody className="divide-y">
             {rows.map(({ model, results }) => (
               <tr key={model.id}>
-                <th scope="row" className="px-3 py-3 font-normal">
+                <th
+                  scope="row"
+                  className="sticky left-0 z-10 border-r bg-background px-3 py-3 font-normal"
+                >
                   <span className="font-medium">{model.model}</span>
                   <span className="mt-1 block text-muted-foreground">
                     {model.provider}

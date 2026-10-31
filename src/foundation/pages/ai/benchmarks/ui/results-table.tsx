@@ -29,9 +29,12 @@ export function ResultsTable({
             {benchmark.name}。スコアは高いほど良く、費用は低いほど安価です。出典
             {benchmark.source}、更新日 {benchmark.sourceUpdatedAt ?? "未公表"}。
           </caption>
-          <thead className="sticky top-0 z-10 border-b bg-surface text-xs text-muted-foreground">
+          <thead className="sticky top-0 z-20 border-b bg-surface text-xs text-muted-foreground">
             <tr>
-              <th scope="col" className="px-3 py-3 font-medium">
+              <th
+                scope="col"
+                className="sticky left-0 z-30 border-r bg-surface px-3 py-3 font-medium"
+              >
                 モデル / 評価設定
               </th>
               <th
@@ -87,7 +90,10 @@ export function ResultsTable({
           <tbody className="divide-y">
             {results.map((result) => (
               <tr key={result.id} className="hover:bg-surface/60">
-                <th scope="row" className="min-w-52 px-3 py-3 font-normal">
+                <th
+                  scope="row"
+                  className="sticky left-0 z-10 min-w-52 border-r bg-background px-3 py-3 font-normal"
+                >
                   <a
                     href={result.modelUrl}
                     className="font-medium underline decoration-border underline-offset-4 hover:decoration-foreground"
