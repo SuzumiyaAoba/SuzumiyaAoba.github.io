@@ -1,6 +1,141 @@
 version: 1
-updated: "2026-10-27"
+updated: "2026-10-31"
 events:
+  - year: 2026
+    date: 2026-10-30
+    title_ja: "GPT-6 Rosalind Research (承認制)"
+    summary_ja: |
+      ライフサイエンスの複数段階の研究向けに、GPT-6 系列の推論モデルを限定提供。Rosalind Research の承認を受けた組織・利用者が ChatGPT Work・Codex・API で利用でき、Chat タブでは提供しない。Discovery の承認だけでは Research にアクセスできない。
+
+      [GPT-6 Rosalind Research の提供開始 | OpenAI Model Release Notes](https://help.openai.com/en/articles/9624314-model-release-notes) / [GPT-Rosalind-6 のシステムカード | OpenAI](https://deploymentsafety.openai.com/gpt-rosalind-6)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT-Rosalind"]
+  - year: 2026
+    date: 2026-10-29
+    title_ja: "GPT-6 Luna (ChatGPT 更新)"
+    summary_ja: |
+      ChatGPT の GPT-6 Luna を更新し、回答を簡潔にするとともに、過度に相手へ同調する表現を抑制。Free・Go・未ログインでの利用が対象で、Plus・Pro では GPT-6 の利用上限に達した際の切り替え先に適用する。Plus・Pro の主モデルは今回の更新対象外。
+
+      [ChatGPT の GPT-6 更新 | OpenAI Model Release Notes](https://help.openai.com/en/articles/9624314-model-release-notes) / [GPT-6 Luna の更新内容 | OpenAI](https://deploymentsafety.openai.com/gpt-6-luna-october-28-2026-addendum)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-10-29
+    title_ja: "Mistral Large 4 (重み公開)"
+    summary_ja: |
+      10月6日に公開プレビューを始めた、総パラメータ約1兆のマルチモーダル MoE モデルの重みを公開。追加学習でコーディング、防御目的のサイバーセキュリティ、推論効率を改善し、推論強度を3段階から選べる。重みは Mistral Ecosystem Open-Weight License で提供し、モデル提供サービスの商用利用には別途ライセンスが必要。
+
+      [Mistral Large 4 の重み公開 | Mistral](https://mistral.ai/news/mistral-large-4-oss/) / [モデルカードと重み | Mistral](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B)
+    tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
+    series: ["Mistral Large"]
+  - year: 2026
+    date: 2026-10-29
+    title_ja: "Pika H3 Flex (アダプター重み公開)"
+    summary_ja: |
+      MiniMax H3 を追加学習した音声付き動画モデルのアダプター重みを公開。6ステップの生成、最大12件の参照入力、先頭・末尾フレームの指定に対応する。ローカル実行では480p・768pをサポートし、重みは MiniMax H3 Community License Agreement で提供。
+
+      [Pika H3 Flex の発表 | Pika](https://pika.art/blog/pika-h3-flex-research) / [アダプターのモデルカード | Pika](https://huggingface.co/Pika-Labs/Pika-H3-Flex)
+    tags: ["Pika", "Open Weight Model", "Video Model"]
+    series: ["Pika H3 Flex"]
+  - year: 2026
+    date: 2026-10-29
+    title_ja: "Granite Switch 4.1.1 (更新発表)"
+    summary_ja: |
+      10月27日に公開した Granite Switch の更新版を発表。多言語音声認識と判断用アダプターを更新し、基本モデルを変更せずに文字起こしや分類の性能を改善。4.1との互換性を保ち、重みは Apache 2.0 で提供。日付は更新内容を説明した公式記事の公開日を記録。
+
+      [Granite Switch 4.1.1 の発表 | IBM Granite](https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1) / [モデルカードと各版の公開日 | IBM Granite](https://huggingface.co/ibm-granite/granite-switch-4.1-30b)
+    tags: ["IBM", "Granite", "Open Weight Model", "LLM Model"]
+    series: ["Granite Switch"]
+  - year: 2026
+    date: 2026-10-29
+    title_ja: "XLaw-JP-27B (研究発表)"
+    summary_ja: |
+      日本法に特化した27Bモデルの研究を発表。Qwen3.8-27B を基盤に、法令・判例の検索、追加学習、契約書向けアダプターを組み合わせる。論文では48GBの単一 GPU で動作し、重みを Apache 2.0、Webサービスを無料で公開したと報告。日付は論文の初回投稿日を記録。
+
+      [XLaw-JP-27B の論文と公開情報 | Andrew Shin](https://arxiv.org/abs/2610.39227)
+    tags: ["X-LawJapan", "XLaw", "Japanese", "Open Weight Model", "LLM Model"]
+    series: ["XLaw-JP"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Gemini 4 Carbon (限定提供)"
+    summary_ja: |
+      Gemini 4 Argon を基盤に、長時間のエージェント作業、コーディング、脆弱性の発見・検証・修正を強化したモデルを発表。サイバー防御の一部利用者から提供を始め、Fairwind Program の信頼できるパートナーへ段階的に拡大する。一般の開発者・企業・消費者向けの提供は今後の予定。
+
+      [Gemini 4 Carbon の発表と提供方針 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Carbon"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Nemotron 3.5 Transcribe"
+    summary_ja: |
+      文字起こし、話者識別、翻訳、音声に関する質問応答を一つのモデルで行う音声認識モデルの重みを公開。40言語の文字起こし、31言語と英語の間の翻訳、13言語の話者識別に対応し、最大1時間・8話者の録音を扱える。Granary v2 のデータと処理パイプライン、追加学習用のレシピも公開。
+
+      [Nemotron 3.5 Transcribe と Granary v2 の公開 | NVIDIA](https://huggingface.co/blog/nvidia/nemotron-transcribe-granary)
+    tags: ["NVIDIA", "Nemotron", "Open Weight Model", "Audio Model"]
+    series: ["Nemotron Transcribe"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Clover-35B-A3B-Preview"
+    summary_ja: |
+      DiffuSpace が総パラメータ35B・活性化約3Bの拡散言語モデルを公開。Qwen3.6-35B-A3B を基盤に、ブロック単位で並列に生成する方式を採用し、128Kのコンテキストと思考モードに対応。重みとコードを Apache 2.0 で公開し、SGLang・llama.cpp 向けの推論方式も提供。
+
+      [Clover の公開 | DiffuSpace](https://diffuspace.ai/blog/clover-35b/) / [重みの公開履歴 | DiffuSpace](https://huggingface.co/Diffuspace/Clover-35B-A3B-Preview/commits/main) / [モデルの仕様 | DiffuSpace](https://github.com/DiffuSpace/Clover-35B-A3B-Preview)
+    tags: ["DiffuSpace", "Clover", "Open Weight Model", "LLM Model"]
+    series: ["Clover"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Particle-1"
+    summary_ja: |
+      Particle がソフトウェア開発向けのモデルを公開。DeepSeek V4.1 Flash を基盤に、推論とツール利用のトークン数を抑えるよう追加学習した。同社の評価では正答率を維持しながら平均約45%少ないトークンで処理し、作業の完了時間も短縮したと報告。
+
+      [Particle-1 の公開 | Particle](https://particle.ai/blog/introducing-particle-1)
+    tags: ["Particle", "LLM Model"]
+    series: ["Particle"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Prism"
+    summary_ja: |
+      Rime が企業の音声対話向けモデルを公開。相手の音声を聞きながら応答し、発話前の文章を確認・修正できる仕組みと、会話と並行するツール利用を備える。顧客とのベータ提供では、強化学習と教師あり学習による調整用 API も開発。
+
+      [Prism の公開 | Rime](https://www.rime.ai/resources/prism-first-speech-to-speech-for-enterprise)
+    tags: ["Rime", "Prism", "Audio Model"]
+    series: ["Rime Prism"]
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Realtime TTS-2 (Reasoning・モデル更新)"
+    summary_ja: |
+      Inworld AI が文章と文脈から話し方を決める Reasoning 機能を追加し、音声合成モデルも更新。生成速度、参照音声との一致、長文や長時間利用時の声の一貫性を改善する。既存のモデル名を保って提供地域ごとに順次反映し、Reasoning は利用者が明示的に有効化する。
+
+      [Realtime TTS-2 の更新 | Inworld AI](https://inworld.ai/blog/realtime-tts-2-reasoning-speed-consistency)
+    tags: ["Inworld AI", "Realtime TTS", "Audio Model"]
+    series: ["Inworld Realtime TTS"]
+  - year: 2026
+    date: 2026-10-27
+    title_ja: "Genie 4 (Research Preview)"
+    summary_ja: |
+      映像とともに音楽・環境音・対話を生成する世界モデルを、信頼できるテスター向けの研究プレビューで提供開始。自然言語で天候やカメラ、登場人物などをリアルタイムに変更できる。Google AI Ultra の Project Genie や、一部の Gemini API・Google AI Studio 利用者への提供は今後の予定。
+
+      [Genie 4 の発表と提供形態 | Google DeepMind](https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/)
+    tags: ["Google", "Genie", "World Model"]
+    series: ["Genie"]
+  - year: 2026
+    date: 2026-10-27
+    title_ja: "LFM3 (テキスト・画像理解・音声・判断モデル)"
+    summary_ja: |
+      Liquid AI が共通の小型モデルを基盤とする、テキスト・画像理解・音声・複合入力・判断向けのモデル群を公開。最初の提供は2B級で、テキストモデルの LFM3-1.7B は256Kのコンテキストに対応する。ベースモデルと追加学習済みモデルの重みを公開し、Playground と Liquid AI API でも提供。
+
+      [LFM3 の公開 | Liquid AI](https://www.liquid.ai/blog/lfm3)
+    tags: ["Liquid AI", "LFM", "Open Weight Model", "LLM Model"]
+    series: ["LFM"]
+  - year: 2026
+    date: 2026-10-27
+    title_ja: "MAI-Image-2.7 (Preview)"
+    summary_ja: |
+      Microsoft AI が画像編集モデルをプレビュー提供。場面全体のスタイルや照明の変更、文字・記号の編集、既存画像の修復・高画質化を改善した。MAI Playground・Arena・Artificial Analysis で画像編集を試せ、テキストからの画像生成は今後の予定。
+
+      [MAI Image 2.7 の公開 | Microsoft AI](https://microsoft.ai/news/mai-image-2-7-debut/)
+    tags: ["Microsoft", "MAI", "Image Model"]
+    series: ["MAI Image"]
   - year: 2026
     date: 2026-10-27
     title_ja: "Ling-3.1-flash-1019 (重み公開)"
@@ -466,9 +601,9 @@ events:
     date: 2026-10-06
     title_ja: "Mistral Large 4 (Public Preview)"
     summary_ja: |
-      総パラメータ1兆のマルチモーダル MoE モデルを、Mistral Studio の API で公開プレビュー提供。コーディング、エージェント作業、視覚理解を強化。重みは発表時点では未公開で、10月27日時点の予定日は10月31日。
+      総パラメータ1兆のマルチモーダル MoE モデルを、Mistral Studio の API で公開プレビュー提供。コーディング、エージェント作業、視覚理解を強化。重みは発表時点では未公開で、追加学習したモデルの重みを10月29日に公開。
 
-      [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/) / [重みの公開予定 | Mistral](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B)
+      [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/) / [重みの公開 | Mistral](https://mistral.ai/news/mistral-large-4-oss/)
     tags: ["Mistral AI", "LLM Model"]
     series: ["Mistral Large"]
   - year: 2026
