@@ -3,6 +3,7 @@ import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import type { Locale } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { AiNavigation } from "@/shared/ui/ai-navigation";
 import type { RenderedRelease } from "../model/release-calendar";
 import { ReleaseExplorer } from "./release-explorer";
 
@@ -20,7 +21,7 @@ export function AiNewsPageContent({
   today,
 }: AiNewsPageContentProps) {
   const en = locale === "en";
-  const pagePath = toLocalePath("/archive/ai-news", locale);
+  const pagePath = toLocalePath("/ai/models", locale);
   const breadcrumbs = [
     { name: "Home", path: toLocalePath("/", locale) },
     {
@@ -38,7 +39,7 @@ export function AiNewsPageContent({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Breadcrumbs items={breadcrumbs} />
             <a
-              href={toLocalePath("/archive/ai-news/timeline", locale)}
+              href={toLocalePath("/ai/models/timeline", locale)}
               className="inline-flex min-h-10 items-center text-xs text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
             >
               {en ? "Original timeline ↗" : "従来のタイムライン ↗"}
@@ -55,6 +56,7 @@ export function AiNewsPageContent({
               </p>
             )}
           </section>
+          <AiNavigation active="models" locale={locale} />
           <ReleaseExplorer
             entries={entries}
             locale={locale}

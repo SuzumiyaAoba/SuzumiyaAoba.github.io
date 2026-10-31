@@ -25,7 +25,8 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
   const archives = [
     {
       slug: "ai-news",
-      path: "/archive/ai-news/",
+      path: "/ai/models/",
+      japaneseOnly: true,
       title: {
         ja: "AIニュース",
         en: "AI News",
@@ -33,6 +34,16 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
       description: {
         ja: "AI モデルのリリース日の記録",
         en: "A record of AI model release dates",
+      },
+    },
+    {
+      slug: "ai-benchmarks",
+      path: "/ai/benchmarks/",
+      japaneseOnly: true,
+      title: { ja: "AIベンチマーク", en: "AI Benchmarks" },
+      description: {
+        ja: "モデルの評価スコア・実行費用と取得ソースの比較",
+        en: "Compare model scores, execution costs, and sources",
       },
     },
     {
@@ -66,7 +77,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
     title: locale === "en" ? archive.title.en : archive.title.ja,
     description:
       locale === "en" ? archive.description.en : archive.description.ja,
-    href: toLocalePath(archive.path, locale),
+    href: toLocalePath(archive.path, archive.japaneseOnly ? "ja" : locale),
     cta: <I18nText locale={locale} ja="開く" en="Open" />,
   }));
 

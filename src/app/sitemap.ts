@@ -27,9 +27,10 @@ export default async function sitemap(): Promise<Sitemap> {
     siteUrl,
     buildTime
   );
-  const aiNewsPages: Sitemap = [
-    "/archive/ai-news/",
-    "/archive/ai-news/timeline/",
+  const aiPages: Sitemap = [
+    "/ai/models/",
+    "/ai/models/timeline/",
+    "/ai/benchmarks/",
   ].map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: buildTime,
@@ -195,7 +196,7 @@ export default async function sitemap(): Promise<Sitemap> {
   return [
     ...staticPages,
     ...awesomePages,
-    ...aiNewsPages,
+    ...aiPages,
     ...blogPages,
     ...notePages,
     ...keywordPages,

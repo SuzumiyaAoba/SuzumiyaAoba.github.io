@@ -12,6 +12,7 @@ type ExploreLink = {
   href: string;
   ja: string;
   en: string;
+  japaneseOnly?: boolean;
 };
 
 const KEYWORD_PICKS: ExploreLink[] = [
@@ -38,7 +39,13 @@ const KEYWORD_PICKS: ExploreLink[] = [
 ];
 
 const RESOURCES: ExploreLink[] = [
-  { href: "/archive/ai-news", ja: "AIニュース", en: "AI News" },
+  { href: "/ai/models", ja: "AIニュース", en: "AI News", japaneseOnly: true },
+  {
+    href: "/ai/benchmarks",
+    ja: "AIベンチマーク",
+    en: "AI Benchmarks",
+    japaneseOnly: true,
+  },
   {
     href: "/tools/ascii-standard-code",
     ja: "ASCII コード表",
@@ -107,7 +114,13 @@ export function HomeExplore({
         <ul className="link-list">
           {RESOURCES.map((resource) => (
             <li key={resource.href}>
-              <a href={toLocalePath(resource.href, locale)}>
+              <a
+                href={toLocalePath(
+                  resource.href,
+                  resource.japaneseOnly ? "ja" : locale
+                )}
+                hrefLang={resource.japaneseOnly && en ? "ja" : undefined}
+              >
                 {en ? resource.en : resource.ja}
               </a>
             </li>

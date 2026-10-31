@@ -17,8 +17,8 @@ type DirectoryEntry = {
   japaneseOnly?: boolean;
 };
 
-/** 資料の入口に並ぶもの（AIニュース・ツール・Awesome Something）の数 */
-const RESOURCE_COUNT = 3;
+/** 資料の入口に並ぶもの（AIニュース・ベンチマーク・ツール・Awesome Something）の数 */
+const RESOURCE_COUNT = 4;
 
 /**
  * ホームの冒頭。サイト名を推論図として大きく組み、右端に和訳を縦に添える。

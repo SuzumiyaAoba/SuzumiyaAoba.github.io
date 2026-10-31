@@ -2,6 +2,7 @@ import { SiteLayout } from "@/widgets/site-layout";
 import { buildBreadcrumbList, toLocalePath } from "@/shared/lib/routing";
 import { JsonLd } from "@/shared/ui/seo";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { AiNavigation } from "@/shared/ui/ai-navigation";
 import { I18nText } from "@/shared/ui/i18n-text";
 import type { AiNewsPageContentProps } from "./page-content";
 import { Tag } from "@/shared/ui/tag";
@@ -47,7 +48,7 @@ export function AiNewsTimelinePageContent({
   updated,
   entries,
 }: AiNewsPageContentProps) {
-  const pagePath = toLocalePath("/archive/ai-news/timeline", locale);
+  const pagePath = toLocalePath("/ai/models/timeline", locale);
   const pageName = locale === "en" ? "AI News" : "AIニュース";
   const archiveName = locale === "en" ? "Resources" : "資料";
 
@@ -82,7 +83,7 @@ export function AiNewsTimelinePageContent({
           ) : null}
           <p className="text-sm">
             <a
-              href={toLocalePath("/archive/ai-news", locale)}
+              href={toLocalePath("/ai/models", locale)}
               className="inline-block py-2 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
             >
               <I18nText
@@ -93,6 +94,7 @@ export function AiNewsTimelinePageContent({
             </a>
           </p>
         </section>
+        <AiNavigation active="models" locale={locale} />
 
         <section>
           {entries.length === 0 ? (

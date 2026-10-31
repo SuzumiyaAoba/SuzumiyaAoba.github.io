@@ -134,6 +134,11 @@
   }
 }
 
+@utility benchmark-table-scroll {
+  max-height: 70svh;
+  overflow: auto;
+}
+
 /* 記事中の操作図では、本文用の段落・表の余白より図自身の配置を優先する。 */
 @utility llm-demo {
   & p,

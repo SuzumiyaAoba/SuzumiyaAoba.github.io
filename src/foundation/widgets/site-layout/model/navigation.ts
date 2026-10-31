@@ -60,7 +60,18 @@ export const navigationGroups: NavigationGroup[] = [
     ja: "資料",
     en: "Resources",
     items: [
-      { href: "/archive/ai-news", ja: "AIニュース", en: "AI News" },
+      {
+        href: "/ai/models",
+        ja: "AIニュース",
+        en: "AI News",
+        japaneseOnly: true,
+      },
+      {
+        href: "/ai/benchmarks",
+        ja: "AIベンチマーク",
+        en: "AI Benchmarks",
+        japaneseOnly: true,
+      },
       { href: "/tools", ja: "ツール", en: "Tools" },
       { href: "/awesome-something", ja: "Awesome", en: "Awesome" },
     ],
@@ -81,7 +92,7 @@ export const navigationGroups: NavigationGroup[] = [
 /** 主要な行き先の配下として扱うパス。タグは記事の、ツール類は資料の一部とみなす。 */
 const SECTION_ALIASES: Record<string, string[]> = {
   "/blog": ["/tags"],
-  "/archive": ["/tools", "/awesome-something"],
+  "/archive": ["/ai", "/tools", "/awesome-something"],
   "/about": ["/audio"],
 };
 
