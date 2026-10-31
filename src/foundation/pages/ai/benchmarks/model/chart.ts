@@ -114,3 +114,5 @@ export function createCostChartLayout(
     ],
   };
 }
+
+export type CostChartLayout = ReturnType<typeof createCostChartLayout>;

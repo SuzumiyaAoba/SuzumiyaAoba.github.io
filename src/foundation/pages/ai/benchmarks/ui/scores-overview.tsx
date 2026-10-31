@@ -1,5 +1,9 @@
+import { useMemo } from "react";
 import { cn } from "@/shared/lib/utils";
-import type { BenchmarkDataset, BenchmarkResult } from "../model/schema";
+import type { BenchmarkDataset } from "../model/schema";
+import type { ResultFilters } from "../model/comparison";
+import { createResultFilter } from "../model/comparison";
+import { createScoresOverview } from "../model/overview";
 import { formatScore } from "../model/score";
 
 const rankHighlights = [
@@ -8,63 +12,19 @@ const rankHighlights = [
   { label: "3位", className: "bg-success/10" },
 ] as const;
 
-function getScoreHighlights(results: BenchmarkResult[]) {
-  const highlights = new Map<number, (typeof rankHighlights)[number]>();
-  for (const [index, result] of results
-    .toSorted((a, b) => b.score - a.score)
-    .entries()) {
-    const highlight = rankHighlights[index];
-    if (highlight === undefined) {
-      break;
-    }
-    if (!highlights.has(result.score)) {
-      highlights.set(result.score, highlight);
-    }
-  }
-  return highlights;
-}
-
 export function ScoresOverview({
   dataset,
-  query,
-  provider,
+  filters,
 }: {
   dataset: BenchmarkDataset;
-  query: string;
-  provider: string;
+  filters: ResultFilters;
 }) {
-  const highlightsByBenchmark = new Map(
-    dataset.benchmarks.map(({ id, results }) => [
-      id,
-      getScoreHighlights(results),
-    ])
+  const overview = useMemo(
+    () => createScoresOverview(dataset.benchmarks),
+    [dataset.benchmarks]
   );
-  const models = new Map<
-    string,
-    { model: BenchmarkResult; results: Map<string, BenchmarkResult> }
-  >();
-  for (const benchmark of dataset.benchmarks) {
-    for (const result of benchmark.results) {
-      const row = models.get(result.id) ?? {
-        model: result,
-        results: new Map<string, BenchmarkResult>(),
-      };
-      row.results.set(benchmark.id, result);
-      models.set(result.id, row);
-    }
-  }
-  const search = query.trim().toLocaleLowerCase();
-  const rows = [...models.values()]
-    .filter(
-      ({ model }) =>
-        (!provider || model.provider === provider) &&
-        `${model.model} ${model.provider}`.toLocaleLowerCase().includes(search)
-    )
-    .toSorted(
-      (a, b) =>
-        a.model.provider.localeCompare(b.model.provider) ||
-        a.model.model.localeCompare(b.model.model)
-    );
+  const matches = createResultFilter(filters);
+  const rows = overview.rows.filter(({ model }) => matches(model));
 
   return (
     <details className="border-y">
@@ -144,12 +104,14 @@ export function ScoresOverview({
                 </th>
                 {dataset.benchmarks.map((benchmark) => {
                   const result = results.get(benchmark.id);
-                  const highlight =
+                  const rank =
                     result === undefined
                       ? undefined
-                      : highlightsByBenchmark
+                      : overview.ranksByBenchmark
                           .get(benchmark.id)
                           ?.get(result.score);
+                  const highlight =
+                    rank === undefined ? undefined : rankHighlights[rank - 1];
                   return (
                     <td
                       key={benchmark.id}
