@@ -15,6 +15,7 @@ import {
 import { GitHubCodeLink } from "@/shared/ui/mdx/github-code-link";
 import { MdxH1, MdxH2, MdxH3, MdxH4, MdxH5 } from "@/shared/ui/mdx/heading";
 import { Img } from "@/shared/ui/mdx/img";
+import { LinkCard } from "@/shared/ui/mdx/link-card";
 import { MdxTable } from "@/shared/ui/mdx/table";
 import { Column } from "@/shared/ui/mdx/column";
 import { Message } from "@/shared/ui/mdx/message";
@@ -68,6 +69,7 @@ export const mdxComponents: MDXComponents = {
   AmazonProductSection,
   // Mermaid は重量のため、図を含む記事だけに render-mdx.tsx が実行時注入する
   GitHubCodeLink,
+  LinkCard,
   a: MdxLink,
   Img,
   img: Img,

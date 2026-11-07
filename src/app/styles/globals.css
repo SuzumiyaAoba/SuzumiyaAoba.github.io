@@ -1395,6 +1395,50 @@
   .callout > .callout-body:first-child {
     padding-top: 1rem;
   }
+  /* リンクカード。罫線だけの平らな枠に、題・要約・ホスト名を縦に並べる。 */
+  .link-card {
+    display: block;
+    margin-block: 1.75rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--rule-strong);
+    color: inherit;
+    text-decoration-line: none;
+    transition: border-color var(--duration-fast) ease;
+  }
+  /* 本文リンクの朱の下線と配色を、カードでは打ち消す。 */
+  .prose a.link-card,
+  .prose a.link-card:is(:hover, :focus-visible) {
+    color: inherit;
+    text-decoration-line: none;
+  }
+  .link-card:is(:hover, :focus-visible) {
+    border-color: var(--foreground);
+  }
+  .link-card-title {
+    display: block;
+    font-weight: 700;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .link-card-description {
+    display: -webkit-box;
+    margin-top: 0.25rem;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  .link-card-host {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-code);
+    font-size: var(--text-label);
+    overflow-wrap: anywhere;
+  }
   /* コラム。淡い地に「Column」の札と題を置く。 */
   .column-box {
     margin-block: 2rem;

@@ -5,9 +5,11 @@
   "packageManager": "npm@10.9.8",
   "scripts": {
     "dev": "run-s check:audio-textures build:icons dev:astro",
-    "build": "run-s check:audio-textures build:icons build:astro build:pagefind",
+    "build": "run-s check:audio-textures check:link-cards build:icons build:astro build:pagefind",
     "build:audio-textures": "node scripts/generate-audio-textures.mjs",
     "check:audio-textures": "node scripts/generate-audio-textures.mjs --check",
+    "build:link-cards": "node scripts/fetch-link-cards.mjs",
+    "check:link-cards": "node scripts/fetch-link-cards.mjs --check",
     "build:icons": "node scripts/generate-icon-data.mjs",
     "build:pagefind": "node scripts/patch-pagefind-lang.mjs && pagefind --site out --output-path out/pagefind --glob \"**/*.html\"",
     "pagefind:dev": "node scripts/pagefind-dev.mjs",
