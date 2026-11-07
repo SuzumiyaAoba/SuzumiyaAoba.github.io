@@ -3,14 +3,15 @@ import { SourceUpdatedAt } from "./source-updated-at";
 
 export function BenchmarkHeader({ benchmark }: { benchmark: Benchmark }) {
   return (
-    <header className="space-y-2 border-t pt-5">
-      <p className="section-label">{benchmark.category}</p>
-      <h2
-        id="selected-benchmark"
-        className="text-xl font-semibold tracking-tight"
-      >
-        {benchmark.name}
-      </h2>
+    <header className="space-y-4">
+      <div className="section-heading">
+        <div>
+          <p className="page-eyebrow">{benchmark.category}</p>
+          <h2 id="selected-benchmark" className="section-title">
+            {benchmark.name}
+          </h2>
+        </div>
+      </div>
       <p className="text-sm text-muted-foreground">{benchmark.description}</p>
       <p className="text-xs text-muted-foreground">
         出典:{" "}

@@ -1,13 +1,34 @@
 import type { Benchmark, BenchmarkResult } from "../model/schema";
-import { formatCost } from "../model/comparison";
-import { formatScore } from "../model/score";
+import type { CostMetric } from "../model/comparison";
+import {
+  costMetricShortLabels,
+  formatCost,
+  formatCostPerScore,
+  getCostPerScore,
+  getResultCost,
+} from "../model/comparison";
+import { formatScore, scoreUnitLabel } from "../model/score";
+
+function formatResultCostPerScore(
+  result: BenchmarkResult,
+  metric: CostMetric
+): string {
+  const cost = getResultCost(result, metric);
+  if (cost === null) {
+    return "未公表";
+  }
+  const costPerScore = getCostPerScore(result, metric);
+  return costPerScore === null ? "対象外" : formatCostPerScore(costPerScore);
+}
 
 export function ResultsTable({
   benchmark,
   results,
+  metric,
 }: {
   benchmark: Benchmark;
   results: BenchmarkResult[];
+  metric: CostMetric;
 }) {
   const hasPrices = benchmark.results.some(
     (result) =>
@@ -58,6 +79,16 @@ export function ResultsTable({
                 実行費用
                 <br />
                 USD / 問
+              </th>
+              <th
+                scope="col"
+                className="px-3 py-3 text-right font-medium whitespace-nowrap"
+              >
+                費用 ÷ スコア
+                <br />
+                {costMetricShortLabels[metric]}
+                <br />
+                USD / {scoreUnitLabel(benchmark.scoreType)}
               </th>
               {hasPrices && (
                 <>
@@ -117,6 +148,9 @@ export function ResultsTable({
                 </td>
                 <td className="px-3 py-3 text-right font-mono tabular-nums">
                   {formatCost(result.costPerTaskUsd)}
+                </td>
+                <td className="px-3 py-3 text-right font-mono tabular-nums">
+                  {formatResultCostPerScore(result, metric)}
                 </td>
                 {hasPrices && (
                   <>

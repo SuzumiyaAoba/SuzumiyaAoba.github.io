@@ -5,6 +5,14 @@ export function formatScore(value: number, type: ScoreType): string {
   return `${value.toFixed(2)}${suffix}`;
 }
 
+export function scoreUnitLabel(type: ScoreType): string {
+  return {
+    percentage: "1ポイント（1%）",
+    elo: "1 Elo",
+    "net-score": "1スコア単位",
+  }[type];
+}
+
 export function createScoreScale(scores: number[], type: ScoreType) {
   let minimum = type === "net-score" ? -100 : 0;
   let maximum = 100;

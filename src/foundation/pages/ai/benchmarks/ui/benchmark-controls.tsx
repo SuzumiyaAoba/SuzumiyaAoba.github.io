@@ -135,12 +135,18 @@ export function ComparisonControls({
           onChange={(event) =>
             onOptionsChange({
               ...options,
-              sort: event.target.value === "cost" ? "cost" : "score",
+              sort:
+                event.target.value === "cost-per-score"
+                  ? "cost-per-score"
+                  : event.target.value === "cost"
+                    ? "cost"
+                    : "score",
             })
           }
         >
           <option value="score">スコアが高い順</option>
           <option value="cost">選択した費用が安い順</option>
+          <option value="cost-per-score">スコアあたりの費用が安い順</option>
         </select>
       </div>
       <output className="py-3 text-xs text-muted-foreground">

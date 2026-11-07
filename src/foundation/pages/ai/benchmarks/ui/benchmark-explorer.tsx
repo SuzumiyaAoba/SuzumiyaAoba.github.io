@@ -8,6 +8,7 @@ import { compareResults, defaultCostMetric } from "../model/comparison";
 import { BenchmarkFilters, ComparisonControls } from "./benchmark-controls";
 import { BenchmarkHeader } from "./benchmark-details";
 import { CostChart } from "./cost-chart";
+import { CostPerScoreChart } from "./cost-per-score-chart";
 import { ResultsTable } from "./results-table";
 import { ScoresOverview } from "./scores-overview";
 
@@ -91,7 +92,16 @@ export function BenchmarkExplorer({ dataset }: { dataset: BenchmarkDataset }) {
               results={results}
               metric={options.metric}
             />
-            <ResultsTable benchmark={benchmark} results={results} />
+            <CostPerScoreChart
+              benchmark={benchmark}
+              results={results}
+              metric={options.metric}
+            />
+            <ResultsTable
+              benchmark={benchmark}
+              results={results}
+              metric={options.metric}
+            />
           </>
         )}
       </section>
