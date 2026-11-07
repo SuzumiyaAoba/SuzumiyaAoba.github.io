@@ -340,7 +340,7 @@ describe("release intervals", () => {
   it("validates the real catalog's date and series metadata", () => {
     const source = z
       .object({ events: z.array(z.unknown()) })
-      .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf-8")));
+      .parse(parse(readFileSync("content/tools/ai-models.yaml", "utf-8")));
     expect(source.events.length).toBeGreaterThan(0);
     const keys = new Set<string>();
     const dates: string[] = [];
@@ -367,7 +367,7 @@ describe("release intervals", () => {
     (query, provider, first, date) => {
       const source = z
         .object({ events: z.array(z.unknown()) })
-        .parse(parse(readFileSync("content/tools/ai-news.yaml", "utf-8")));
+        .parse(parse(readFileSync("content/tools/ai-models.yaml", "utf-8")));
       const releases = buildReleases(
         source.events.map((raw) => {
           const event = AiNewsEntrySchema.parse(raw);

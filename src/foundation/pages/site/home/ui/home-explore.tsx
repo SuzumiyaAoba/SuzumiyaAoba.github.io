@@ -39,7 +39,7 @@ const KEYWORD_PICKS: ExploreLink[] = [
 ];
 
 const RESOURCES: ExploreLink[] = [
-  { href: "/ai/models", ja: "AIニュース", en: "AI News", japaneseOnly: true },
+  { href: "/ai/models", ja: "AI モデル", en: "AI News", japaneseOnly: true },
   {
     href: "/ai/benchmarks",
     ja: "AIベンチマーク",

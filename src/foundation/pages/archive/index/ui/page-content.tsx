@@ -28,7 +28,7 @@ export function ArchivePageContent({ locale }: ArchivePageContentProps) {
       path: "/ai/models/",
       japaneseOnly: true,
       title: {
-        ja: "AIニュース",
+        ja: "AI モデル",
         en: "AI News",
       },
       description: {

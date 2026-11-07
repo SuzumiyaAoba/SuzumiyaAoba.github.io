@@ -1,6 +1,33 @@
 version: 1
-updated: "2026-10-31"
+updated: "2026-11-07"
 events:
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "Gemini Omni 1.2 Flash"
+    summary_ja: |
+      Google DeepMind が動画生成モデルを一般提供。最大15秒の動画生成、複数ターンの対話型編集、参照内容への追従を強化し、Gemini API と Gemini for business で利用できる。720pの生成料金は1秒当たり0.07ドルで、前版から30%引き下げた。
+
+      [Gemini Omni 1.2 Flash の発表 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/)
+    tags: ["Google", "Gemini Omni", "Video Model"]
+    series: ["Gemini Omni"]
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "GPT-6 Cyber (限定提供)"
+    summary_ja: |
+      脆弱性の発見・検証やWebペネトレーションテストを支援する、GPT-6 Astra のサイバーセキュリティ特化版を発表。Daybreak Red を通じ、本人確認や組織要件を満たしたセキュリティ担当者に限定して提供する。OpenAI は評価で脆弱性の発見能力と許可範囲を守る性能が向上したと報告。
+
+      [GPT-6 Cyber の発表 | OpenAI](https://openai.com/index/introducing-gpt-6-cyber/) / [システムカード | OpenAI](https://deploymentsafety.openai.com/gpt-6-cyber)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT Cyber"]
+  - year: 2026
+    date: 2026-11-04
+    title_ja: "GPT-Image-2.6 Flare / Sunburst"
+    summary_ja: |
+      OpenAI が画像生成・編集モデルを更新し、従来より約50%高速化。Flare は速度とレイアウト品質を重視し、Sunburst は中・高品質設定で細部と編集間の一貫性を高める。ChatGPT と Codex で GIF 生成に対応し、API では SVG 出力や画像上の指定箇所に沿った編集も利用できる。
+
+      [Images 2.6 の発表 | OpenAI](https://openai.com/index/introducing-images-2-6/) / [API 更新履歴 | OpenAI](https://developers.openai.com/api/docs/changelog)
+    tags: ["OpenAI", "GPT Image", "Image Model"]
+    series: ["GPT Image"]
   - year: 2026
     date: 2026-10-30
     title_ja: "GPT-6 Rosalind Research (承認制)"
@@ -109,6 +136,15 @@ events:
       [Realtime TTS-2 の更新 | Inworld AI](https://inworld.ai/blog/realtime-tts-2-reasoning-speed-consistency)
     tags: ["Inworld AI", "Realtime TTS", "Audio Model"]
     series: ["Inworld Realtime TTS"]
+  - year: 2026
+    date: 2026-10-27
+    title_ja: "PLaMo 3.1 Prime"
+    summary_ja: |
+      Preferred Networks が国産LLM「PLaMo」の新しいフラッグシップを提供開始。Web検索と Deep Research を搭載し、調査計画の立案から出典付きレポート作成までを行う。PLaMo Chat と API で利用でき、オンプレミス環境にも対応する。
+
+      [PLaMo 3.1 Prime の発表 | Preferred Networks](https://www.preferred.jp/ja/blog/tech/plamo-3-1-prime-release) / [提供開始のお知らせ | PLaMo](https://plamo.preferredai.jp/news)
+    tags: ["Preferred Networks", "PLaMo", "Japanese", "LLM Model"]
+    series: ["PLaMo"]
   - year: 2026
     date: 2026-10-27
     title_ja: "Genie 4 (Research Preview)"
@@ -588,6 +624,15 @@ events:
       [Introducing Claude Haiku 5.5 | Anthropic](https://www.anthropic.com/claude-haiku-5-5)
     tags: ["Anthropic", "Claude", "Claude Haiku", "LLM Model"]
     series: ["Claude Haiku"]
+  - year: 2026
+    date: 2026-10-07
+    title_ja: "PLaMo 翻訳 (第3世代モデルへ更新)"
+    summary_ja: |
+      Preferred Networks が AI 翻訳サービスを更新し、PLaMo 第3世代をベースにした翻訳特化モデルへ移行。53言語に対応し、オンライン会議の翻訳機能を正式提供した。精度に関する比較は PFN による自社評価。
+
+      [PLaMo 翻訳の大型アップデート | Preferred Networks](https://www.preferred.jp/ja/news/pr20261007)
+    tags: ["Preferred Networks", "PLaMo", "Japanese", "Translation Model"]
+    series: ["PLaMo Translation"]
   - year: 2026
     date: 2026-10-06
     title_ja: "Nano Banana 2.1 (GA)"

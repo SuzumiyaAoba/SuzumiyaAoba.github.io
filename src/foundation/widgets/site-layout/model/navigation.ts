@@ -62,7 +62,7 @@ export const navigationGroups: NavigationGroup[] = [
     items: [
       {
         href: "/ai/models",
-        ja: "AIニュース",
+        ja: "AI モデル",
         en: "AI News",
         japaneseOnly: true,
       },
