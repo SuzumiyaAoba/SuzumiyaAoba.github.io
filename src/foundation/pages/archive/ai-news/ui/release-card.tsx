@@ -49,6 +49,7 @@ export function ReleaseCard({
       {release.summary}
     </div>
   );
+  const modelSpecs = <ModelSpecs specs={release.entry.model_specs} en={en} />;
   const intervals = (
     <ReleaseIntervals release={release} providerStyle={providerStyle} en={en} />
   );
@@ -73,6 +74,7 @@ export function ReleaseCard({
         primaryInterval={primaryInterval}
         en={en}
         description={description}
+        modelSpecs={modelSpecs}
         intervals={intervals}
         tags={tags}
       />
@@ -125,6 +127,7 @@ export function ReleaseCard({
           </div>
         )}
         {description}
+        {modelSpecs}
         {tags}
       </div>
     </article>
@@ -193,6 +196,7 @@ function CompactReleaseCard({
   primaryInterval,
   en,
   description,
+  modelSpecs,
   intervals,
   tags,
 }: {
@@ -205,6 +209,7 @@ function CompactReleaseCard({
   primaryInterval: ReleaseInterval | undefined;
   en: boolean;
   description: ReactNode;
+  modelSpecs: ReactNode;
   intervals: ReactNode;
   tags: ReactNode;
 }) {
@@ -268,11 +273,100 @@ function CompactReleaseCard({
         </summary>
         <div className="mt-3 max-w-3xl space-y-4 border-l-2 border-border pl-4">
           {description}
+          {modelSpecs}
           {release.intervals.length > 0 && intervals}
           {tags}
         </div>
       </details>
     </article>
+  );
+}
+
+const MODEL_METRIC_LABELS = [
+  { key: "total_parameters", ja: "総パラメータ", en: "Total parameters" },
+  { key: "active_parameters", ja: "活性化パラメータ", en: "Active parameters" },
+  {
+    key: "effective_parameters",
+    ja: "実効パラメータ",
+    en: "Effective parameters",
+  },
+  {
+    key: "effective_capacity",
+    ja: "実効知識容量（公開モデル換算）",
+    en: "Effective capacity (open-model equivalent)",
+  },
+  { key: "layers", ja: "レイヤー数", en: "Layers" },
+  { key: "moe_layers", ja: "MoE レイヤー数", en: "MoE layers" },
+  { key: "experts", ja: "エキスパート数", en: "Experts" },
+  { key: "active_experts", ja: "選択エキスパート数", en: "Selected experts" },
+] as const;
+
+function ModelSpecs({
+  specs,
+  en,
+}: {
+  specs: Release["entry"]["model_specs"];
+  en: boolean;
+}) {
+  if (!specs || specs.length === 0) {
+    return null;
+  }
+
+  return (
+    <section
+      aria-label={en ? "Model size" : "モデル規模"}
+      className="space-y-3"
+    >
+      <h4 className="text-sm font-semibold">
+        {en ? "Model size" : "モデル規模"}
+      </h4>
+      {specs.map((spec) => (
+        <div key={spec.name} className="rounded-lg border bg-muted/20 p-4">
+          <h5 className="text-sm font-semibold">{spec.name}</h5>
+          {spec.architecture && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {en ? "Architecture: " : "方式: "}
+              {spec.architecture}
+            </p>
+          )}
+          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+            {MODEL_METRIC_LABELS.map(({ key, ja, en: englishLabel }) => {
+              const metric = spec[key];
+              if (!metric) {
+                return null;
+              }
+
+              return (
+                <div key={key}>
+                  <dt className="text-label text-muted-foreground">
+                    {en ? englishLabel : ja}
+                    <span className="ml-1.5">
+                      {metric.basis === "published"
+                        ? en
+                          ? "Published"
+                          : "公表値"
+                        : en
+                          ? "Estimated"
+                          : "推定値"}
+                    </span>
+                  </dt>
+                  <dd className="mt-1 text-sm font-semibold tabular-nums">
+                    {metric.value}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+          <a
+            className="mt-3 inline-block text-xs font-medium text-foreground underline underline-offset-4"
+            href={spec.source_url}
+          >
+            {spec.source_title ??
+              (en ? "Model specification source" : "仕様出典")}
+          </a>
+        </div>
+      ))}
+    </section>
   );
 }
 

@@ -2,6 +2,28 @@ import { parse } from "yaml";
 import { z } from "zod";
 import { resolveContentDeps } from "@/shared/lib/content-file";
 
+const AiNewsModelMetricSchema = z.object({
+  value: z.string().trim().min(1),
+  basis: z.enum(["published", "estimated"]),
+});
+
+const AiNewsModelSpecSchema = z.object({
+  name: z.string().trim().min(1),
+  architecture: z.string().trim().min(1).optional(),
+  total_parameters: AiNewsModelMetricSchema.optional(),
+  active_parameters: AiNewsModelMetricSchema.optional(),
+  effective_parameters: AiNewsModelMetricSchema.optional(),
+  effective_capacity: AiNewsModelMetricSchema.optional(),
+  layers: AiNewsModelMetricSchema.optional(),
+  moe_layers: AiNewsModelMetricSchema.optional(),
+  experts: AiNewsModelMetricSchema.optional(),
+  active_experts: AiNewsModelMetricSchema.optional(),
+  source_url: z.url(),
+  source_title: z.string().trim().min(1).optional(),
+});
+
+export type AiNewsModelSpec = z.infer<typeof AiNewsModelSpecSchema>;
+
 /**
  * AIニュースのエントリ（出来事）の Zod スキーマ
  */
@@ -20,6 +42,8 @@ export const AiNewsEntrySchema = z.object({
   tags: z.array(z.string()).optional(),
   /** リリース間隔を比較するモデル系列。同時発表は複数指定できる。 */
   series: z.array(z.string().trim().min(1)).optional(),
+  /** 公開値または推定値として確認できたモデル規模の情報 */
+  model_specs: z.array(AiNewsModelSpecSchema).optional(),
 });
 
 /**
@@ -38,6 +62,7 @@ export type AiNewsEntry = {
   };
   tags?: string[];
   series?: string[];
+  model_specs?: AiNewsModelSpec[];
 };
 
 /**
@@ -89,6 +114,9 @@ function normalizeEntry(raw: unknown): AiNewsEntry | null {
     ...(data.tags && data.tags.length > 0 ? { tags: data.tags } : {}),
     ...(data.series && data.series.length > 0
       ? { series: [...new Set(data.series)] }
+      : {}),
+    ...(data.model_specs && data.model_specs.length > 0
+      ? { model_specs: data.model_specs }
       : {}),
   };
 }

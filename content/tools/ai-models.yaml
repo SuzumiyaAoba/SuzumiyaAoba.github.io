@@ -1,5 +1,5 @@
 version: 1
-updated: "2026-11-07"
+updated: "2026-11-08"
 events:
   - year: 2026
     date: 2026-11-05
@@ -55,6 +55,16 @@ events:
       [Mistral Large 4 の重み公開 | Mistral](https://mistral.ai/news/mistral-large-4-oss/) / [モデルカードと重み | Mistral](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mistral Large"]
+    model_specs:
+      - name: "Mistral Large 4"
+        architecture: "MoE"
+        total_parameters: { value: "1.05T", basis: "published" }
+        active_parameters: { value: "52B", basis: "published" }
+        experts: { value: "128 routed + 1 shared", basis: "published" }
+        active_experts: { value: "4 routed + 1 shared", basis: "published" }
+        source_url: "https://docs.mistral.ai/models/mistral-large"
+        source_title: "Mistral model documentation"
+
   - year: 2026
     date: 2026-10-29
     title_ja: "Pika H3 Flex (アダプター重み公開)"
@@ -82,6 +92,13 @@ events:
       [XLaw-JP-27B の論文と公開情報 | Andrew Shin](https://arxiv.org/abs/2610.39227)
     tags: ["X-LawJapan", "XLaw", "Japanese", "Open Weight Model", "LLM Model"]
     series: ["XLaw-JP"]
+    model_specs:
+      - name: "XLaw-JP-27B"
+        architecture: "Dense"
+        total_parameters: { value: "27B", basis: "published" }
+        source_url: "https://arxiv.org/abs/2610.39227"
+        source_title: "XLaw-JP-27B paper"
+
   - year: 2026
     date: 2026-10-28
     title_ja: "Gemini 4 Carbon (限定提供)"
@@ -109,6 +126,14 @@ events:
       [Clover の公開 | DiffuSpace](https://diffuspace.ai/blog/clover-35b/) / [重みの公開履歴 | DiffuSpace](https://huggingface.co/Diffuspace/Clover-35B-A3B-Preview/commits/main) / [モデルの仕様 | DiffuSpace](https://github.com/DiffuSpace/Clover-35B-A3B-Preview)
     tags: ["DiffuSpace", "Clover", "Open Weight Model", "LLM Model"]
     series: ["Clover"]
+    model_specs:
+      - name: "Clover-35B-A3B"
+        architecture: "MoE"
+        total_parameters: { value: "35B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/DiffuSpace/Clover-35B-A3B-Preview"
+        source_title: "Clover model specifications"
+
   - year: 2026
     date: 2026-10-28
     title_ja: "Particle-1"
@@ -163,6 +188,13 @@ events:
       [LFM3 の公開 | Liquid AI](https://www.liquid.ai/blog/lfm3)
     tags: ["Liquid AI", "LFM", "Open Weight Model", "LLM Model"]
     series: ["LFM"]
+    model_specs:
+      - name: "LFM3-1.7B"
+        architecture: "Dense"
+        total_parameters: { value: "1.7B", basis: "published" }
+        source_url: "https://www.liquid.ai/blog/lfm3"
+        source_title: "LFM3 announcement"
+
   - year: 2026
     date: 2026-10-27
     title_ja: "MAI-Image-2.7 (Preview)"
@@ -181,6 +213,14 @@ events:
       [Ling-3.1-flash-1019 のモデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019) / [重みの追加履歴 | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash-1019/commits/main)
     tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
     series: ["Ling Flash"]
+    model_specs:
+      - name: "Ling-3.1-flash"
+        architecture: "Hybrid MoE"
+        total_parameters: { value: "560B", basis: "published" }
+        active_parameters: { value: "25B", basis: "published" }
+        source_url: "https://huggingface.co/inclusionAI/Ling-3.1-flash-1019"
+        source_title: "Ling-3.1-flash model card"
+
   - year: 2026
     date: 2026-10-26
     title_ja: "GPT-6.1 Terra"
@@ -217,6 +257,17 @@ events:
       [MiniMax M3.1 Flash のモデルカード | MiniMax](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash) / [重みの公開 | MiniMax](https://x.com/MiniMax_AI/status/2113436864904610008)
     tags: ["MiniMax", "Open Weight Model", "LLM Model"]
     series: ["MiniMax Flash"]
+    model_specs:
+      - name: "MiniMax-M3.1-Flash"
+        architecture: "Multimodal MoE"
+        total_parameters: { value: "428B", basis: "published" }
+        active_parameters: { value: "23B", basis: "published" }
+        layers: { value: "60", basis: "published" }
+        experts: { value: "128 routed + 1 shared", basis: "published" }
+        active_experts: { value: "4 routed", basis: "published" }
+        source_url: "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash/blob/main/config.json"
+        source_title: "MiniMax-M3.1-Flash model configuration"
+
   - year: 2026
     date: 2026-10-23
     title_ja: "Hy-Nomas (重み公開)"
@@ -262,6 +313,14 @@ events:
       [Ling-3.0-flash-Sante のモデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.0-flash-Sante) / [重みの公開 | Ant Ling](https://x.com/AntLingAGI/status/2113293431435149349)
     tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
     series: ["Ling Sante"]
+    model_specs:
+      - name: "Ling-3.0-flash-Sante"
+        architecture: "MoE"
+        total_parameters: { value: "124B", basis: "published" }
+        active_parameters: { value: "5.1B", basis: "published" }
+        source_url: "https://huggingface.co/inclusionAI/Ling-3.0-flash-Sante"
+        source_title: "Ling-3.0-flash-Sante model card"
+
   - year: 2026
     date: 2026-10-22
     title_ja: "Ling-3.1-flash-1019 (発表)"
@@ -280,6 +339,14 @@ events:
       [Flint の公開 | Recursive](https://recursive.com/updates/introducing-recursive-flint) / [モデルカードと公開履歴 | Recursive](https://huggingface.co/RecursiveSI/flint/commits/main)
     tags: ["Recursive", "Flint", "Open Weight Model", "LLM Model"]
     series: ["Flint"]
+    model_specs:
+      - name: "Flint"
+        architecture: "MoE"
+        total_parameters: { value: "40B", basis: "published" }
+        active_parameters: { value: "2.5B", basis: "published" }
+        source_url: "https://huggingface.co/RecursiveSI/flint"
+        source_title: "Flint model card"
+
   - year: 2026
     date: 2026-10-21
     title_ja: "Nemotron 3.5 Embed / Rerank (発表)"
@@ -307,6 +374,13 @@ events:
       [Spark-X2.6-4B のモデルカード | SparkLLM](https://huggingface.co/XHToken/Spark-X2.6-4B) / [API の提供開始日 | iFlytek](https://maas.xfyun.cn/doc/guide/2%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/2.1.1%20Spark-X2.6.html)
     tags: ["iFlytek", "Spark", "Open Weight Model", "LLM Model"]
     series: ["Spark X 4B"]
+    model_specs:
+      - name: "Spark-X2.6-4B"
+        architecture: "Dense"
+        total_parameters: { value: "4B", basis: "published" }
+        source_url: "https://huggingface.co/XHToken/Spark-X2.6-4B"
+        source_title: "Spark-X2.6-4B model card"
+
   - year: 2026
     date: 2026-10-21
     title_ja: "Phonon"
@@ -353,6 +427,14 @@ events:
       [Spark-X2.6 のモデル情報と提供開始日 | iFlytek](https://maas.xfyun.cn/doc/guide/2%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/2.1.1%20Spark-X2.6.html)
     tags: ["iFlytek", "Spark", "LLM Model"]
     series: ["Spark X"]
+    model_specs:
+      - name: "Spark-X2.6"
+        architecture: "MoE"
+        total_parameters: { value: "293B", basis: "published" }
+        active_parameters: { value: "30B", basis: "published" }
+        source_url: "https://maas.xfyun.cn/doc/guide/2%E3%80%81%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/2.1.1%20Spark-X2.6.html"
+        source_title: "Spark-X2.6 model details"
+
   - year: 2026
     date: 2026-10-20
     title_ja: "Voxtral 3 (Public Preview)"
@@ -407,6 +489,13 @@ events:
       [GoTo の27Bモデル公開 | GoTo](https://www.gotocompany.com/en/news/press/goto-releases-new-llm-2026) / [GoTo-AI-Gemma-3-27B-IT のモデルカード | GoTo](https://huggingface.co/GoToCompany/gemma3-27b-cpt-gotoai-v3-instruct)
     tags: ["GoTo", "Open Weight Model", "LLM Model"]
     series: ["GoTo AI"]
+    model_specs:
+      - name: "GoTo-AI-Gemma-3-27B-IT"
+        architecture: "Dense"
+        total_parameters: { value: "27B", basis: "published" }
+        source_url: "https://huggingface.co/GoToCompany/gemma3-27b-cpt-gotoai-v3-instruct"
+        source_title: "GoTo model card"
+
   - year: 2026
     date: 2026-10-19
     title_ja: "Maxwell (発表・早期アクセス受付)"
@@ -453,6 +542,17 @@ events:
       [Beam の重み公開 | Reflection](https://reflection.ai/blog/beam-is-available) / [Beam の発表 | Reflection](https://reflection.ai/blog/introducing-beam)
     tags: ["Reflection", "Beam", "Open Weight Model", "LLM Model"]
     series: ["Beam"]
+    model_specs:
+      - name: "Beam-501B-A23B"
+        architecture: "MoE"
+        total_parameters: { value: "501B", basis: "published" }
+        active_parameters: { value: "23B", basis: "published" }
+        layers: { value: "52", basis: "published" }
+        experts: { value: "256 routed", basis: "published" }
+        active_experts: { value: "8 routed", basis: "published" }
+        source_url: "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+        source_title: "Beam model card"
+
   - year: 2026
     date: 2026-10-16
     title_ja: "Glimpse (Research Preview)"
@@ -471,6 +571,14 @@ events:
       [MAI-Base-2 の事前学習完了 | Microsoft AI](https://microsoft.ai/news/frontier-pre-training-at-microsoft-ai/)
     tags: ["Microsoft", "MAI", "LLM Model"]
     series: ["MAI Base"]
+    model_specs:
+      - name: "MAI-Base-2"
+        architecture: "MoE"
+        total_parameters: { value: "2.8T", basis: "published" }
+        active_parameters: { value: "80B", basis: "published" }
+        source_url: "https://microsoft.ai/news/frontier-pre-training-at-microsoft-ai/"
+        source_title: "Microsoft AI announcement"
+
   - year: 2026
     date: 2026-10-15
     title_ja: "FLUX 3 Image Klein"
@@ -498,6 +606,14 @@ events:
       [Muse Spark Open の公開 | Meta AI Research](https://research.meta.ai/blog/muse-spark-open) / [Build with Muse Spark Open | Meta for Developers](https://dev.meta.ai/resources/blog/build-with-muse-spark-open)
     tags: ["Meta", "Muse", "Open Weight Model", "LLM Model"]
     series: ["Muse Spark"]
+    model_specs:
+      - name: "Muse Spark Open"
+        architecture: "Multimodal MoE"
+        total_parameters: { value: "816B", basis: "published" }
+        active_parameters: { value: "42B", basis: "published" }
+        source_url: "https://research.meta.ai/blog/muse-spark-open"
+        source_title: "Muse Spark Open announcement"
+
   - year: 2026
     date: 2026-10-15
     title_ja: "Nemotron 3.5 Super VL"
@@ -507,6 +623,12 @@ events:
       [Nemotron 3.5 Super VL / Bolt の公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
     tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
     series: ["Nemotron"]
+    model_specs:
+      - name: "Nemotron 3.5 Super VL"
+        total_parameters: { value: "120B", basis: "published" }
+        source_url: "https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/"
+        source_title: "Nemotron 3.5 Super VL / Bolt の公開 | NVIDIA Blog"
+
   - year: 2026
     date: 2026-10-15
     title_ja: "Nemotron 3.5 Bolt 74B-A9B (重み公開)"
@@ -516,6 +638,14 @@ events:
       [Nemotron 3.5 Bolt 74B-A9B の重み公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
     tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
     series: ["Nemotron Bolt"]
+    model_specs:
+      - name: "Nemotron 3.5 Bolt 74B-A9B"
+        architecture: "Hybrid LatentMoE"
+        total_parameters: { value: "74B", basis: "published" }
+        active_parameters: { value: "9B", basis: "published" }
+        source_url: "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB"
+        source_title: "Nemotron 3.5 Bolt model card"
+
   - year: 2026
     date: 2026-10-15
     title_ja: "Nemotron 3.5 Bolt E4B (発表)"
@@ -552,6 +682,14 @@ events:
       [Ling-3.1-flash の重み公開 | Ant Ling](https://x.com/AntLingAGI/status/2110390124743970952) / [モデルカード | inclusionAI](https://huggingface.co/inclusionAI/Ling-3.1-flash)
     tags: ["Ant Group", "inclusionAI", "Ling", "Open Weight Model", "LLM Model"]
     series: ["Ling Flash"]
+    model_specs:
+      - name: "Ling-3.1-flash (重み公開)"
+        architecture: "MoE"
+        total_parameters: { value: "560B", basis: "published" }
+        active_parameters: { value: "25B", basis: "published" }
+        source_url: "https://x.com/AntLingAGI/status/2110390124743970952"
+        source_title: "Ling-3.1-flash の重み公開 | Ant Ling"
+
   - year: 2026
     date: 2026-10-14
     title_ja: "Jev 1.14.0 (Preview)"
@@ -570,6 +708,14 @@ events:
       [LFM2.5-24B-A2B の公開 | Liquid AI](https://www.liquid.ai/blog/lfm2-5-24b-a2b)
     tags: ["Liquid AI", "LFM", "Open Weight Model", "LLM Model"]
     series: ["LFM"]
+    model_specs:
+      - name: "LFM2.5-24B-A2B"
+        architecture: "MoE"
+        total_parameters: { value: "24B", basis: "published" }
+        active_parameters: { value: "2B", basis: "published" }
+        source_url: "https://www.liquid.ai/blog/lfm2-5-24b-a2b"
+        source_title: "LFM2.5-24B-A2B の公開 | Liquid AI"
+
   - year: 2026
     date: 2026-10-13
     title_ja: "Gemini 4 Argon (GA)"
@@ -597,6 +743,14 @@ events:
       [Nemotron 3.5 Bolt 74B の発表 | NVIDIA Blog](https://blogs.nvidia.com/blog/local-ai-rtx-spark-laptops-software-updates/) / [10月15日の重み公開 | NVIDIA Blog](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)
     tags: ["NVIDIA", "Nemotron", "LLM Model"]
     series: ["Nemotron Bolt"]
+    model_specs:
+      - name: "Nemotron 3.5 Bolt 74B-A9B (発表)"
+        architecture: "MoE"
+        total_parameters: { value: "74B", basis: "published" }
+        active_parameters: { value: "9B", basis: "published" }
+        source_url: "https://blogs.nvidia.com/blog/local-ai-rtx-spark-laptops-software-updates/"
+        source_title: "Nemotron 3.5 Bolt 74B の発表 | NVIDIA Blog"
+
   - year: 2026
     date: 2026-10-12
     title_ja: "Muse Wonder / Muse Wonder Full"
@@ -651,6 +805,16 @@ events:
       [Introducing Mistral Large 4 | Mistral](https://mistral.ai/news/mistral-large-4/) / [重みの公開 | Mistral](https://mistral.ai/news/mistral-large-4-oss/)
     tags: ["Mistral AI", "LLM Model"]
     series: ["Mistral Large"]
+    model_specs:
+      - name: "Mistral Large 4"
+        architecture: "MoE"
+        total_parameters: { value: "1.05T", basis: "published" }
+        active_parameters: { value: "52B", basis: "published" }
+        experts: { value: "128 routed + 1 shared", basis: "published" }
+        active_experts: { value: "4 routed + 1 shared", basis: "published" }
+        source_url: "https://docs.mistral.ai/models/mistral-large"
+        source_title: "Mistral model documentation"
+
   - year: 2026
     date: 2026-10-06
     title_ja: "Decisions API (Public Beta)"
@@ -696,6 +860,24 @@ events:
       [LLM-jp-4.1 の公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/llm-jp-4-1/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "llm-jp-4.1-8b-thinking"
+        architecture: "Dense"
+        total_parameters: { value: "8B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/llm-jp-4-1/"
+        source_title: "LLM-jp-4.1 release"
+      - name: "llm-jp-4.1-32b-a3b-thinking"
+        architecture: "MoE"
+        total_parameters: { value: "32B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/llm-jp-4-1/"
+        source_title: "LLM-jp-4.1 release"
+      - name: "llm-jp-4.1-33b-thinking"
+        architecture: "Dense"
+        total_parameters: { value: "33B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/llm-jp-4-1/"
+        source_title: "LLM-jp-4.1 release"
+
   - year: 2026
     date: 2026-09-28
     title_ja: "Claude Sonnet 5.5"
@@ -1003,6 +1185,12 @@ events:
       [LLM-jp-4-VL 9Bリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/llm-jp-4-vl-9b/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp VL"]
+    model_specs:
+      - name: "LLM-jp-4-VL 9B"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/blog/llm-jp-4-vl-9b/"
+        source_title: "LLM-jp-4-VL 9Bリリース | LLM-jp"
+
   - year: 2026
     date: 2026-08-31
     title_ja: "Mistral OCR 4.1 (GA)"
@@ -1058,6 +1246,11 @@ events:
       [Granite 4.2 の発表 | IBM Research](https://research.ibm.com/blog/introducing-granite-4-2)
     tags: ["IBM", "Granite", "Open Weight Model", "LLM Model"]
     series: ["Granite"]
+    model_specs:
+      - name: "Granite 4.2 (3B, 8B, 30B)"
+        total_parameters: { value: "3B / 8B / 30B", basis: "published" }
+        source_url: "https://research.ibm.com/blog/introducing-granite-4-2"
+        source_title: "Granite 4.2 の発表 | IBM Research"
 
   - year: 2026
     date: 2026-08-21
@@ -1085,6 +1278,11 @@ events:
       [約332億パラメータのDense型LLM「LLM-jp-4 33B」モデルを公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/20260818/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-4 33B"
+        total_parameters: { value: "33B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/20260818/"
+        source_title: "約332億パラメータのDense型LLM「LLM-jp-4 33B」モデルを公開 | LLM-jp"
 
   - year: 2026
     date: 2026-08-14
@@ -1095,6 +1293,12 @@ events:
       [Qwen3.8-27B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.8-27B"
+        architecture: "Dense"
+        total_parameters: { value: "27B", basis: "published" }
+        source_url: "https://huggingface.co/Qwen/Qwen3.8-27B"
+        source_title: "Qwen3.8-27B model card"
 
   - year: 2026
     date: 2026-08-13
@@ -1128,6 +1332,16 @@ events:
       [Qwen3.8-2.4T-A95B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.8-2.4T-A95B"
+        architecture: "Hybrid MoE"
+        total_parameters: { value: "2.4T", basis: "published" }
+        active_parameters: { value: "95B", basis: "published" }
+        layers: { value: "92", basis: "published" }
+        experts: { value: "512 routed", basis: "published" }
+        active_experts: { value: "10 routed + 1 shared", basis: "published" }
+        source_url: "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B"
+        source_title: "Qwen3.8-2.4T-A95B model card"
 
   - year: 2026
     date: 2026-08-12
@@ -1350,6 +1564,12 @@ events:
       [Introducing Claude Sonnet 5 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-5)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
     series: ["Claude Sonnet"]
+    model_specs:
+      - name: "Claude Sonnet 5"
+        effective_capacity: { value: "~584B (90% interval: 183B–1.9T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-06-30
     title_ja: "Nano Banana 2 Lite (Gemini 3.1 Flash-Lite Image)"
@@ -1384,6 +1604,11 @@ events:
       [GLM-5.2 の公式発表・公開情報 | Z.ai](https://docs.z.ai/release-notes/new-released)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM"]
+    model_specs:
+      - name: "GLM-5.2"
+        effective_capacity: { value: "~1.0T (90% interval: 326B–3.3T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2026
     date: 2026-06-09
@@ -1392,6 +1617,12 @@ events:
       [Redeploying Fable 5 \ Anthropic](https://www.anthropic.com/news/redeploying-fable-5)
     tags: ["Anthropic", "Claude", "LLM Model"]
     series: ["Claude Fable", "Claude Mythos"]
+    model_specs:
+      - name: "Claude Fable 5"
+        effective_capacity: { value: "~3.5T (90% interval: 1.1T–11.2T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-06-09
     title_ja: "North Mini Code"
@@ -1410,6 +1641,14 @@ events:
       [NVIDIA Nemotron 3 Ultra | NVIDIA Research](https://research.nvidia.com/labs/nemotron/Nemotron-3-Ultra/)
     tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
     series: ["Nemotron"]
+    model_specs:
+      - name: "Nemotron 3 Ultra"
+        architecture: "MoE"
+        total_parameters: { value: "550B", basis: "published" }
+        active_parameters: { value: "55B", basis: "published" }
+        source_url: "https://research.nvidia.com/labs/nemotron/Nemotron-3-Ultra/"
+        source_title: "NVIDIA Nemotron 3 Ultra | NVIDIA Research"
+
   - year: 2026
     date: 2026-06-03
     title_ja: "Gemma 4 12B"
@@ -1419,6 +1658,13 @@ events:
       [Gemma 4 12B の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12b/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma 4 12B"
+        architecture: "Dense"
+        total_parameters: { value: "11.95B", basis: "published" }
+        layers: { value: "48", basis: "published" }
+        source_url: "https://gemma.ai/models/gemma-4/model-card/"
+        source_title: "Gemma 4 model card"
 
   - year: 2026
     date: 2026-06-01
@@ -1429,6 +1675,11 @@ events:
       [MiniMax-M3 の公式発表・公開情報 | MiniMax](https://www.minimax.io/blog/minimax-m3)
     tags: ["MiniMax", "LLM Model"]
     series: ["MiniMax"]
+    model_specs:
+      - name: "MiniMax M3"
+        effective_capacity: { value: "~313B (90% interval: 98B–1.0T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2026
     date: 2026-05-28
@@ -1446,6 +1697,12 @@ events:
       [Introducing Claude Opus 4.8 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-8)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
+    model_specs:
+      - name: "Claude Opus 4.8"
+        effective_capacity: { value: "~236B (90% interval: 74B–753B)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-05-22
     title_ja: "Mistral Medium 3.5 (Vibe / Le Chat Preview)"
@@ -1465,6 +1722,11 @@ events:
       [Qwen3.7-Max の公式発表・公開情報 | Alibaba](https://modelstudio.alibabacloud.com/)
     tags: ["Alibaba", "Qwen", "LLM Model"]
     series: ["Qwen Max"]
+    model_specs:
+      - name: "Qwen3.7 Max"
+        effective_capacity: { value: "~887B (90% interval: 277B–2.8T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2026
     date: 2026-05-20
@@ -1528,6 +1790,16 @@ events:
       [Introducing GPT-5.5 | OpenAI](https://openai.com/index/introducing-gpt-5-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5.5"
+        effective_capacity: { value: "~4.7T (90% interval: 1.5T–15.1T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+      - name: "GPT-5.5 Pro"
+        effective_capacity: { value: "~5.3T (90% interval: 1.7T–17.1T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-04-22
     title_ja: "Qwen3.6-27B"
@@ -1537,6 +1809,12 @@ events:
       [Qwen3.6-27B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.6-27B"
+        architecture: "Dense"
+        total_parameters: { value: "27B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3.6 release details"
 
   - year: 2026
     date: 2026-04-20
@@ -1567,6 +1845,13 @@ events:
       [Qwen3.6-35B-A3B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.6-35B-A3B"
+        architecture: "MoE"
+        total_parameters: { value: "35B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3.6-35B-A3B の公式発表・公開情報 | Alibaba"
 
   - year: 2026
     date: 2026-04-16
@@ -1575,6 +1860,12 @@ events:
       [Introducing Claude Opus 4.7 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-7)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
+    model_specs:
+      - name: "Claude Opus 4.7 (thinking)"
+        effective_capacity: { value: "~738B (90% interval: 231B–2.4T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-04-14
     title_ja: "LLM-jp-4-VL 9B beta"
@@ -1584,6 +1875,12 @@ events:
       [LLM-jp-4-VL 9B betaリリース | LLM-jp](https://llm-jp.nii.ac.jp/blog/20260414_llm-jp-4-vl-9b-beta/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp VL"]
+    model_specs:
+      - name: "LLM-jp-4-VL 9B beta"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/blog/20260414_llm-jp-4-vl-9b-beta/"
+        source_title: "LLM-jp-4-VL 9B betaリリース | LLM-jp"
+
   - year: 2026
     date: 2026-04-08
     title_ja: "Muse Spark"
@@ -1612,6 +1909,11 @@ events:
       [PLaMo 2.1 8B VLM / 2B VLM の公式発表・公開情報 | Preferred Networks](https://www.preferred.jp/ja/news/802)
     tags: ["Preferred Networks", "PLaMo", "Open Weight Model", "LLM Model"]
     series: ["PLaMo"]
+    model_specs:
+      - name: "PLaMo 2.1 8B VLM / 2B VLM"
+        total_parameters: { value: "8B / 2B", basis: "published" }
+        source_url: "https://www.preferred.jp/ja/news/802"
+        source_title: "PLaMo 2.1 8B VLM / 2B VLM の公式発表・公開情報 | Preferred Networks"
 
   - year: 2026
     date: 2026-04-03
@@ -1622,6 +1924,13 @@ events:
       [LLM-jp-4 8Bモデル / 32B-A3Bモデルの公開 | 国立情報学研究所](https://www.nii.ac.jp/news/release/2026/0403.html)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-4 8B / LLM-jp-4 32B-A3B"
+        architecture: "Dense / MoE"
+        total_parameters: { value: "8B / 32B", basis: "published" }
+        active_parameters: { value: "~3.8B", basis: "published" }
+        source_url: "https://www.nii.ac.jp/news/release/2026/0403.html"
+        source_title: "LLM-jp-4 8Bモデル / 32B-A3Bモデルの公開 | 国立情報学研究所"
 
   - year: 2026
     date: 2026-04-02
@@ -1632,6 +1941,36 @@ events:
       [Gemma 4 (E2B, E4B, 26B MoE, 31B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma 4 26B A4B"
+        architecture: "MoE"
+        total_parameters: { value: "25.2B", basis: "published" }
+        active_parameters: { value: "3.8B", basis: "published" }
+        layers: { value: "30", basis: "published" }
+        experts: { value: "128 routed + 1 shared", basis: "published" }
+        active_experts: { value: "8 routed + 1 shared", basis: "published" }
+        source_url: "https://gemma.ai/models/gemma-4/model-card/"
+        source_title: "Gemma 4 model card"
+      - name: "Gemma 4 E2B"
+        architecture: "Dense"
+        total_parameters: { value: "5.1B including embeddings", basis: "published" }
+        effective_parameters: { value: "2.3B", basis: "published" }
+        layers: { value: "35", basis: "published" }
+        source_url: "https://gemma.ai/models/gemma-4/model-card/"
+        source_title: "Gemma 4 model card"
+      - name: "Gemma 4 E4B"
+        architecture: "Dense"
+        total_parameters: { value: "8B including embeddings", basis: "published" }
+        effective_parameters: { value: "4.5B", basis: "published" }
+        layers: { value: "42", basis: "published" }
+        source_url: "https://gemma.ai/models/gemma-4/model-card/"
+        source_title: "Gemma 4 model card"
+      - name: "Gemma 4 31B"
+        architecture: "Dense"
+        total_parameters: { value: "30.7B", basis: "published" }
+        layers: { value: "60", basis: "published" }
+        source_url: "https://gemma.ai/models/gemma-4/model-card/"
+        source_title: "Gemma 4 model card"
 
   - year: 2026
     date: 2026-03-25
@@ -1642,6 +1981,13 @@ events:
       [LLM-jp-3.1 シリーズ 32K長文脈対応モデル 公開 | LLMC](https://llmc.nii.ac.jp/topics/post-2650/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3.1-8x13B-32K"
+        architecture: "MoE"
+        total_parameters: { value: "73B", basis: "published" }
+        active_parameters: { value: "22B", basis: "published" }
+        source_url: "https://llmc.nii.ac.jp/topics/post-2650/"
+        source_title: "LLM-jp-3.1 シリーズ 32K長文脈対応モデル 公開 | LLMC"
 
   - year: 2026
     date: 2026-03-18
@@ -1697,6 +2043,16 @@ events:
       [GPT-5.4 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-4/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5.4"
+        effective_capacity: { value: "~1.1T (90% interval: 334B–3.4T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+      - name: "GPT-5.4 Pro"
+        effective_capacity: { value: "~2.4T (90% interval: 744B–7.6T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-03-03
     title_ja: "GPT-5.3 Instant"
@@ -1704,6 +2060,12 @@ events:
       [GPT-5.3 Instant の API 提供開始 | OpenAI API Changelog](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5.3"
+        effective_capacity: { value: "~1.1T (90% interval: 330B–3.4T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-03-03
     title_ja: "Gemini 3.1 Flash-Lite (Preview)"
@@ -1720,6 +2082,11 @@ events:
       [Qwen3.5 (0.8B, 2B, 4B, 9B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.5 (0.8B, 2B, 4B, 9B)"
+        total_parameters: { value: "0.8B / 2B / 4B / 9B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3.5 (0.8B, 2B, 4B, 9B) の公式発表・公開情報 | Alibaba"
 
   - year: 2026
     date: 2026-02-26
@@ -1746,6 +2113,13 @@ events:
       [Qwen3.5 (27B, 35B-A3B, 122B-A10B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.5 (27B, 35B-A3B, 122B-A10B)"
+        architecture: "Dense / MoE"
+        total_parameters: { value: "27B / 35B / 122B", basis: "published" }
+        active_parameters: { value: "3B / 10B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3.5 (27B, 35B-A3B, 122B-A10B) の公式発表・公開情報 | Alibaba"
 
   - year: 2026
     date: 2026-02-19
@@ -1761,6 +2135,12 @@ events:
       [Introducing Claude Sonnet 4.6 \ Anthropic](https://www.anthropic.com/news/claude-sonnet-4-6)
     tags: ["Anthropic", "Claude", "Claude Sonnet", "LLM Model"]
     series: ["Claude Sonnet"]
+    model_specs:
+      - name: "Claude Sonnet 4.6 (thinking)"
+        effective_capacity: { value: "~766B (90% interval: 240B–2.5T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-02-16
     title_ja: "Qwen3.5-397B-A17B"
@@ -1770,6 +2150,13 @@ events:
       [Qwen3.5-397B-A17B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3.5-397B-A17B"
+        architecture: "MoE"
+        total_parameters: { value: "397B", basis: "published" }
+        active_parameters: { value: "17B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3.5-397B-A17B の公式発表・公開情報 | Alibaba"
 
   - year: 2026
     date: 2026-02-12
@@ -1805,6 +2192,12 @@ events:
       [Claude Opus 4.6 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-6)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
+    model_specs:
+      - name: "Claude Opus 4.6 (thinking)"
+        effective_capacity: { value: "~1.6T (90% interval: 503B–5.1T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2026
     date: 2026-02-02
     title_ja: "Qwen3-Coder-Next"
@@ -1854,6 +2247,11 @@ events:
       [ELYZA-LLM-Diffusion の公開 | ELYZA](https://prtimes.jp/main/html/rd/p/000000066.000047565.html)
     tags: ["ELYZA", "Open Weight Model", "LLM Model"]
     series: ["ELYZA"]
+    model_specs:
+      - name: "ELYZA-LLM-Diffusion（ELYZA-Diffusion-Base/Instruct-1.0-Dream-7B）"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://prtimes.jp/main/html/rd/p/000000066.000047565.html"
+        source_title: "ELYZA-LLM-Diffusion の公開 | ELYZA"
 
   - year: 2025
     date: 2025-12-23
@@ -1906,6 +2304,12 @@ events:
       [GPT-5.2 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5-2/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5.2 Pro"
+        effective_capacity: { value: "~639B (90% interval: 200B–2.0T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-12-09
     title_ja: "Devstral 2 / Devstral Small 2"
@@ -1935,6 +2339,22 @@ events:
       [Mistral Large 3 / Ministral 3 (3B, 8B, 14B) の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-3/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mistral Large", "Ministral"]
+    model_specs:
+      - name: "Ministral 3 3B"
+        architecture: "Dense"
+        total_parameters: { value: "3B", basis: "published" }
+        source_url: "https://mistral.ai/news/mistral-3/"
+        source_title: "Mistral Large 3 / Ministral 3 (3B, 8B, 14B) の公式発表・公開情報 | Mistral AI"
+      - name: "Ministral 3 8B"
+        architecture: "Dense"
+        total_parameters: { value: "8B", basis: "published" }
+        source_url: "https://mistral.ai/news/mistral-3/"
+        source_title: "Mistral Large 3 / Ministral 3 (3B, 8B, 14B) の公式発表・公開情報 | Mistral AI"
+      - name: "Ministral 3 14B"
+        architecture: "Dense"
+        total_parameters: { value: "14B", basis: "published" }
+        source_url: "https://mistral.ai/news/mistral-3/"
+        source_title: "Mistral Large 3 / Ministral 3 (3B, 8B, 14B) の公式発表・公開情報 | Mistral AI"
 
   - year: 2025
     date: 2025-12-02
@@ -1963,6 +2383,12 @@ events:
       [Introducing Claude Opus 4.5 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-5)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
+    model_specs:
+      - name: "Claude Opus 4.5"
+        effective_capacity: { value: "~892B (90% interval: 279B–2.9T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-11-25
     title_ja: "Sarashina2.2-Vision-3B"
@@ -1972,6 +2398,11 @@ events:
       [Sarashina2.2-Vision-3B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/sarashinalab/)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina Vision"]
+    model_specs:
+      - name: "Sarashina2.2-Vision-3B"
+        total_parameters: { value: "3B", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/sarashinalab/"
+        source_title: "Sarashina2.2-Vision-3B の公式発表・公開情報 | SB Intuitions"
 
   - year: 2025
     date: 2025-11-20
@@ -2031,6 +2462,12 @@ events:
       [GPT-5.1：さらに賢く、より会話的になった ChatGPT | OpenAI](https://openai.com/ja-JP/index/gpt-5-1/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5.1"
+        effective_capacity: { value: "~634B (90% interval: 198B–2.0T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-11-06
     title_ja: "Kimi K2 Thinking"
@@ -2048,6 +2485,12 @@ events:
       [gpt-oss-safeguard が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss-safeguard/)
     tags: ["OpenAI", "gpt", "Open Weight Model", "LLM Model"]
     series: ["gpt-oss safeguard"]
+    model_specs:
+      - name: "gpt-oss-safeguard (20b, 120b)"
+        total_parameters: { value: "20B / 120B", basis: "published" }
+        source_url: "https://openai.com/ja-JP/index/introducing-gpt-oss-safeguard/"
+        source_title: "gpt-oss-safeguard が登場 | OpenAI"
+
   - year: 2025
     date: 2025-10-27
     title_ja: "MiniMax-M2"
@@ -2067,6 +2510,11 @@ events:
       [PLaMo 2.1 8B | Hugging Face](https://huggingface.co/pfnet/plamo-2.1-8b-cpt)
     tags: ["Preferred Networks", "PLaMo", "Open Weight Model", "LLM Model"]
     series: ["PLaMo"]
+    model_specs:
+      - name: "PLaMo 2.1 8B"
+        total_parameters: { value: "8B", basis: "published" }
+        source_url: "https://huggingface.co/pfnet/plamo-2.1-8b-cpt"
+        source_title: "PLaMo 2.1 8B | Hugging Face"
 
   - year: 2025
     date: 2025-10-21
@@ -2077,6 +2525,11 @@ events:
       [Qwen3-VL (2B, 32B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen3-VL (2B, 32B)"
+        total_parameters: { value: "2B / 32B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen3-VL (2B, 32B) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-10-16
@@ -2094,6 +2547,11 @@ events:
       [Qwen3-VL (4B, 8B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen3-VL (4B, 8B)"
+        total_parameters: { value: "4B / 8B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen3-VL (4B, 8B) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-10-07
@@ -2114,6 +2572,13 @@ events:
       [Qwen3-VL-30B-A3B (Instruct, Thinking) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen3-VL-30B-A3B (Instruct, Thinking)"
+        architecture: "MoE"
+        total_parameters: { value: "30B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen3-VL-30B-A3B (Instruct, Thinking) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-10-02
@@ -2161,6 +2626,13 @@ events:
       [Qwen3-VL-235B-A22B (Instruct, Thinking) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen3-VL-235B-A22B (Instruct, Thinking)"
+        architecture: "MoE"
+        total_parameters: { value: "235B", basis: "published" }
+        active_parameters: { value: "22B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen3-VL-235B-A22B (Instruct, Thinking) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-09-23
@@ -2171,6 +2643,11 @@ events:
       [Qwen3-Max の公式発表・公開情報 | Alibaba](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
     tags: ["Alibaba", "Qwen", "LLM Model"]
     series: ["Qwen Max"]
+    model_specs:
+      - name: "Qwen3 Max"
+        effective_capacity: { value: "~606B (90% interval: 189B–1.9T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2025
     date: 2025-09-22
@@ -2211,6 +2688,13 @@ events:
       [Qwen3-Next-80B-A3B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3.5#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen Next"]
+    model_specs:
+      - name: "Qwen3-Next-80B-A3B"
+        architecture: "MoE"
+        total_parameters: { value: "80B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3.5#news"
+        source_title: "Qwen3-Next-80B-A3B の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-09-05
@@ -2268,6 +2752,11 @@ events:
       [Sarashina-Embedding-v2-1B | SB Intuitions](https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina Embedding"]
+    model_specs:
+      - name: "Sarashina-Embedding-v2-1B"
+        total_parameters: { value: "1B", basis: "published" }
+        source_url: "https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b"
+        source_title: "Sarashina-Embedding-v2-1B | SB Intuitions"
 
   - year: 2025
     date: 2025-08-14
@@ -2278,6 +2767,11 @@ events:
       [Gemma 3 270M の公式発表・公開情報 | Google](https://developers.googleblog.com/en/introducing-gemma-3-270m/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma 3 270M"
+        total_parameters: { value: "270M", basis: "published" }
+        source_url: "https://developers.googleblog.com/en/introducing-gemma-3-270m/"
+        source_title: "Gemma 3 270M の公式発表・公開情報 | Google"
 
   - year: 2025
     date: 2025-08-11
@@ -2296,6 +2790,16 @@ events:
       [GPT-5 が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-5/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-5 (thinking)"
+        effective_capacity: { value: "~2.0T (90% interval: 614B–6.3T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+      - name: "GPT-5 Pro"
+        effective_capacity: { value: "~2.1T (90% interval: 657B–6.7T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-08-06
     title_ja: "Qwen3-4B-Instruct-2507 / Thinking-2507"
@@ -2305,6 +2809,11 @@ events:
       [Qwen3-4B-Instruct-2507 / Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3-4B-Instruct-2507 / Thinking-2507"
+        total_parameters: { value: "4B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen3-4B-Instruct-2507 / Thinking-2507 の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-08-06
@@ -2313,6 +2822,12 @@ events:
       [Claude Opus 4.1 \ Anthropic](https://www.anthropic.com/news/claude-opus-4-1)
     tags: ["Anthropic", "Claude", "Claude Opus", "LLM Model"]
     series: ["Claude Opus"]
+    model_specs:
+      - name: "Claude Opus 4.1 (thinking)"
+        effective_capacity: { value: "~847B (90% interval: 265B–2.7T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-08-05
     title_ja: "gpt-oss (20b, 120b)"
@@ -2320,6 +2835,12 @@ events:
       [gpt-oss が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-gpt-oss/)
     tags: ["OpenAI", "gpt", "Open Weight Model", "LLM Model"]
     series: ["gpt-oss"]
+    model_specs:
+      - name: "gpt-oss (20b, 120b)"
+        total_parameters: { value: "20B / 120B", basis: "published" }
+        source_url: "https://openai.com/ja-JP/index/introducing-gpt-oss/"
+        source_title: "gpt-oss が登場 | OpenAI"
+
   - year: 2025
     date: 2025-08-01
     title_ja: "Kimi K2 Turbo (Preview)"
@@ -2339,6 +2860,13 @@ events:
       [Qwen3-30B-A3B-Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3-30B-A3B-Thinking-2507"
+        architecture: "MoE"
+        total_parameters: { value: "30B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen3-30B-A3B-Thinking-2507 の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-07-30
@@ -2349,6 +2877,13 @@ events:
       [Qwen3-30B-A3B-Instruct-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3-30B-A3B-Instruct-2507"
+        architecture: "MoE"
+        total_parameters: { value: "30B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen3-30B-A3B-Instruct-2507 の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-07-30
@@ -2379,6 +2914,13 @@ events:
       [Qwen3-235B-A22B-Thinking-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3-235B-A22B-Thinking-2507"
+        architecture: "MoE"
+        total_parameters: { value: "235B", basis: "published" }
+        active_parameters: { value: "22B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen3-235B-A22B-Thinking-2507 の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-07-22
@@ -2389,6 +2931,13 @@ events:
       [Qwen3-Coder-480B-A35B-Instruct の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen3-coder/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen Coder"]
+    model_specs:
+      - name: "Qwen3-Coder-480B-A35B-Instruct"
+        architecture: "MoE"
+        total_parameters: { value: "480B", basis: "published" }
+        active_parameters: { value: "35B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwen3-coder/"
+        source_title: "Qwen3-Coder-480B-A35B-Instruct の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-07-21
@@ -2399,6 +2948,15 @@ events:
       [Qwen3-235B-A22B-Instruct-2507 の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3-235B-A22B"
+        architecture: "MoE"
+        total_parameters: { value: "235B", basis: "published" }
+        active_parameters: { value: "22B", basis: "published" }
+        layers: { value: "94", basis: "published" }
+        experts: { value: "128", basis: "published" }
+        source_url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507"
+        source_title: "Qwen3-235B-A22B model card"
 
   - year: 2025
     date: 2025-07-11
@@ -2409,6 +2967,16 @@ events:
       [Kimi K2 の公式発表・公開情報 | Moonshot AI](https://www.kimi.ai/blog/kimi-k2)
     tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
     series: ["Kimi"]
+    model_specs:
+      - name: "Kimi K2"
+        architecture: "MoE"
+        total_parameters: { value: "1T", basis: "published" }
+        active_parameters: { value: "32B", basis: "published" }
+        layers: { value: "61", basis: "published" }
+        experts: { value: "384 routed + 1 shared", basis: "published" }
+        active_experts: { value: "8 routed + 1 shared", basis: "published" }
+        source_url: "https://github.com/MoonshotAI/Kimi-K2"
+        source_title: "Kimi K2 model card"
 
   - year: 2025
     date: 2025-07-10
@@ -2429,6 +2997,11 @@ events:
       [Grok 4 / Grok 4 Heavy の公式発表・公開情報 | xAI](https://x.ai/news/grok-4)
     tags: ["xAI", "Grok", "LLM Model"]
     series: ["Grok"]
+    model_specs:
+      - name: "Grok 4"
+        effective_capacity: { value: "~2.0T (90% interval: 619B–6.3T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2025
     date: 2025-07-08
@@ -2439,6 +3012,11 @@ events:
       [SmolLM3 の公式発表・公開情報 | Hugging Face](https://huggingface.co/blog/smollm3)
     tags: ["Hugging Face", "SmolLM", "Open Weight Model", "LLM Model"]
     series: ["SmolLM"]
+    model_specs:
+      - name: "SmolLM3"
+        total_parameters: { value: "3B", basis: "published" }
+        source_url: "https://huggingface.co/blog/smollm3"
+        source_title: "SmolLM3 の公式発表・公開情報 | Hugging Face"
 
   - year: 2025
     date: 2025-07-02
@@ -2449,6 +3027,11 @@ events:
       [GLM-4.1V-9B-Thinking の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM Vision"]
+    model_specs:
+      - name: "GLM-4.1V-9B-Thinking"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://github.com/THUDM/GLM-4#project-updates"
+        source_title: "GLM-4.1V-9B-Thinking の公式発表・公開情報 | Z.ai"
 
   - year: 2025
     date: 2025-06-30
@@ -2469,6 +3052,13 @@ events:
       [Hunyuan-A13B の公式発表・公開情報 | Tencent](https://github.com/Tencent-Hunyuan/Hunyuan-A13B)
     tags: ["Tencent", "Hunyuan", "Open Weight Model", "LLM Model"]
     series: ["Hunyuan"]
+    model_specs:
+      - name: "Hunyuan-A13B"
+        architecture: "MoE"
+        total_parameters: { value: "80B", basis: "published" }
+        active_parameters: { value: "13B", basis: "published" }
+        source_url: "https://github.com/Tencent-Hunyuan/Hunyuan-A13B"
+        source_title: "Hunyuan-A13B の公式発表・公開情報 | Tencent"
 
   - year: 2025
     date: 2025-06-26
@@ -2479,6 +3069,12 @@ events:
       [Gemma 3n (E2B, E4B) の公式発表・公開情報 | Google](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma 3n"]
+    model_specs:
+      - name: "Gemma 3n E2B / E4B"
+        architecture: "Dense"
+        effective_parameters: { value: "2B / 4B", basis: "published" }
+        source_url: "https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/"
+        source_title: "Gemma 3n announcement"
 
   - year: 2025
     date: 2025-06-25
@@ -2496,6 +3092,13 @@ events:
       [Kimi-VL-A3B-Thinking-2506 の公式発表・公開情報 | Moonshot AI](https://github.com/MoonshotAI/Kimi-VL)
     tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
     series: ["Kimi VL"]
+    model_specs:
+      - name: "Kimi-VL-A3B-Thinking-2506"
+        architecture: "MoE"
+        total_parameters: { value: "16B", basis: "published" }
+        active_parameters: { value: "3B", basis: "published" }
+        source_url: "https://huggingface.co/moonshotai/Kimi-VL-A3B-Thinking-2506"
+        source_title: "Kimi-VL-A3B-Thinking-2506 model card"
 
   - year: 2025
     date: 2025-06-17
@@ -2507,6 +3110,11 @@ events:
       [Kimi-Dev 公式プロジェクト](https://moonshotai.github.io/Kimi-Dev/)
     tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
     series: ["Kimi Dev"]
+    model_specs:
+      - name: "Kimi-Dev-72B"
+        total_parameters: { value: "72B", basis: "published" }
+        source_url: "https://www.kimi.ai/blog/"
+        source_title: "Kimi-Dev-72B の公式発表・公開情報 | Moonshot AI"
 
   - year: 2025
     date: 2025-06-16
@@ -2586,6 +3194,12 @@ events:
       [Google I/O 2025: Google DeepMind から Gemini 2.5 のアップデート](https://blog.google/intl/ja-jp/company-news/technology/google-gemini-updates-io-2025/)
     tags: ["Google", "Gemini", "LLM Model"]
     series: ["Gemini Pro"]
+    model_specs:
+      - name: "Gemini 2.5 Pro"
+        effective_capacity: { value: "~3.0T (90% interval: 943B–9.6T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-05-21
     title_ja: "Devstral Small"
@@ -2632,6 +3246,11 @@ events:
       [ELYZA-Thinking-1.0 / ELYZA-Shortcut-1.0 の公開 | ELYZA](https://prtimes.jp/main/html/rd/p/000000057.000047565.html)
     tags: ["ELYZA", "Open Weight Model", "LLM Model"]
     series: ["ELYZA"]
+    model_specs:
+      - name: "ELYZA-Thinking-1.0-Qwen-32B / ELYZA-Shortcut-1.0"
+        total_parameters: { value: "32B", basis: "published" }
+        source_url: "https://prtimes.jp/main/html/rd/p/000000057.000047565.html"
+        source_title: "ELYZA-Thinking-1.0 / ELYZA-Shortcut-1.0 の公開 | ELYZA"
 
   - year: 2025
     date: 2025-04-30
@@ -2662,6 +3281,12 @@ events:
       [Qwen3 (0.6B–235B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen3 (0.6B–235B)"
+        architecture: "Dense / MoE"
+        total_parameters: { value: "0.6B–235B (family range)", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen3 (0.6B–235B) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-04-17
@@ -2677,6 +3302,12 @@ events:
       [OpenAI o3 と o4-mini が登場 | OpenAI](https://openai.com/ja-JP/index/introducing-o3-and-o4-mini/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["OpenAI o-series"]
+    model_specs:
+      - name: "OpenAI o3"
+        effective_capacity: { value: "~2.1T (90% interval: 650B–6.7T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
+
   - year: 2025
     date: 2025-04-14
     title_ja: "GLM-4-32B-0414 / GLM-Z1"
@@ -2686,6 +3317,11 @@ events:
       [GLM-4-32B-0414 / GLM-Z1 の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM", "GLM Z1"]
+    model_specs:
+      - name: "GLM-4-32B-0414 / GLM-Z1"
+        total_parameters: { value: "32B", basis: "published" }
+        source_url: "https://github.com/THUDM/GLM-4#project-updates"
+        source_title: "GLM-4-32B-0414 / GLM-Z1 の公式発表・公開情報 | Z.ai"
 
   - year: 2025
     date: 2025-04-14
@@ -2696,6 +3332,11 @@ events:
       [GPT-4.1 / mini / nano の公式発表・公開情報 | OpenAI](https://openai.com/index/gpt-4-1/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT", "GPT mini", "GPT nano"]
+    model_specs:
+      - name: "GPT-4.1"
+        effective_capacity: { value: "~2.2T (90% interval: 677B–6.9T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2025
     date: 2025-04-10
@@ -2717,6 +3358,21 @@ events:
       [Llama 4 Scout / Maverick の公式発表・公開情報 | Meta](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 4 Scout"
+        architecture: "MoE"
+        total_parameters: { value: "109B", basis: "published" }
+        active_parameters: { value: "17B", basis: "published" }
+        experts: { value: "16", basis: "published" }
+        source_url: "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md"
+        source_title: "Llama 4 model card"
+      - name: "Llama 4 Maverick"
+        architecture: "MoE"
+        total_parameters: { value: "400B", basis: "published" }
+        active_parameters: { value: "17B", basis: "published" }
+        experts: { value: "128", basis: "published" }
+        source_url: "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md"
+        source_title: "Llama 4 model card"
 
   - year: 2025
     date: 2025-03-27
@@ -2727,6 +3383,11 @@ events:
       [Qwen2.5-Omni-7B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5-omni/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen Omni"]
+    model_specs:
+      - name: "Qwen2.5-Omni-7B"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwen2.5-omni/"
+        source_title: "Qwen2.5-Omni-7B の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-03-26
@@ -2737,6 +3398,19 @@ events:
       [LLM-jp-3 MoE シリーズの公開 | LLM-jp](https://llm-jp.nii.ac.jp/blog/blog-603/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "llm-jp-3-8x1.8b"
+        architecture: "MoE"
+        total_parameters: { value: "9.2B", basis: "published" }
+        active_parameters: { value: "2.9B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/blog/blog-603/"
+        source_title: "LLM-jp-3 MoE シリーズの公開 | LLM-jp"
+      - name: "llm-jp-3-8x13b"
+        architecture: "MoE"
+        total_parameters: { value: "73B", basis: "published" }
+        active_parameters: { value: "22B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/blog/blog-603/"
+        source_title: "LLM-jp-3 MoE シリーズの公開 | LLM-jp"
 
   - year: 2025
     date: 2025-03-25
@@ -2747,6 +3421,11 @@ events:
       [Qwen2.5-VL-32B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen2.5-VL-32B"
+        total_parameters: { value: "32B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen2.5-VL-32B の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-03-25
@@ -2757,6 +3436,16 @@ events:
       [DeepSeek-V3-0324 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news250325/)
     tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
     series: ["DeepSeek"]
+    model_specs:
+      - name: "DeepSeek-V3-0324"
+        architecture: "MoE; same architecture as DeepSeek-V3"
+        total_parameters: { value: "671B", basis: "published" }
+        active_parameters: { value: "37B", basis: "published" }
+        layers: { value: "61", basis: "published" }
+        experts: { value: "256 routed + 1 shared", basis: "published" }
+        active_experts: { value: "8 routed + 1 shared", basis: "published" }
+        source_url: "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+        source_title: "DeepSeek-V3 model card"
 
   - year: 2025
     date: 2025-03-17
@@ -2787,6 +3476,11 @@ events:
       [Gemma 3 (1B, 4B, 12B, 27B) の公式発表・公開情報 | Google](https://developers.googleblog.com/introducing-gemma3/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma 3 (1B, 4B, 12B, 27B)"
+        total_parameters: { value: "1B / 4B / 12B / 27B", basis: "published" }
+        source_url: "https://developers.googleblog.com/introducing-gemma3/"
+        source_title: "Gemma 3 (1B, 4B, 12B, 27B) の公式発表・公開情報 | Google"
 
   - year: 2025
     date: 2025-03-07
@@ -2797,6 +3491,11 @@ events:
       [Sarashina2.2-Instruct の公開 | SB Intuitions](https://www.sbintuitions.co.jp/blog/entry/2025/03/07/093143)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina"]
+    model_specs:
+      - name: "Sarashina2.2-Instruct（0.5B / 1B / 3B）"
+        total_parameters: { value: "0.5B / 1B / 3B", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/blog/entry/2025/03/07/093143"
+        source_title: "Sarashina2.2-Instruct の公開 | SB Intuitions"
 
   - year: 2025
     date: 2025-03-06
@@ -2807,6 +3506,11 @@ events:
       [QwQ-32B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwq-32b/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["QwQ"]
+    model_specs:
+      - name: "QwQ-32B"
+        total_parameters: { value: "32B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwq-32b/"
+        source_title: "QwQ-32B の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-03-06
@@ -2827,6 +3531,11 @@ events:
       [Sarashina2.2 の公開 | SB Intuitions](https://www.sbintuitions.co.jp/blog/entry/2025/03/06/112144)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina"]
+    model_specs:
+      - name: "Sarashina2.2（0.5B / 1B / 3B）"
+        total_parameters: { value: "0.5B / 1B / 3B", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/blog/entry/2025/03/06/112144"
+        source_title: "Sarashina2.2 の公開 | SB Intuitions"
 
   - year: 2025
     date: 2025-02-27
@@ -2868,6 +3577,11 @@ events:
       [Grok 3 / Grok 3 mini (Beta) の公式発表・公開情報 | xAI](https://x.ai/news/grok-3)
     tags: ["xAI", "Grok", "LLM Model"]
     series: ["Grok", "Grok mini"]
+    model_specs:
+      - name: "Grok 3"
+        effective_capacity: { value: "~2.1T (90% interval: 642B–6.6T)", basis: "estimated" }
+        source_url: "https://arxiv.org/abs/2604.24827"
+        source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
   - year: 2025
     date: 2025-02-17
@@ -2931,6 +3645,11 @@ events:
       [Qwen2.5-VL (3B, 7B, 72B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen2.5-VL (3B, 7B, 72B)"
+        total_parameters: { value: "3B / 7B / 72B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen2.5-VL (3B, 7B, 72B) の公式発表・公開情報 | Alibaba"
 
   - year: 2025
     date: 2025-01-20
@@ -2968,6 +3687,16 @@ events:
       [DeepSeek-V3 の公式発表・公開情報 | DeepSeek](https://api-docs.deepseek.com/news/news1226/)
     tags: ["DeepSeek", "Open Weight Model", "LLM Model"]
     series: ["DeepSeek"]
+    model_specs:
+      - name: "DeepSeek-V3"
+        architecture: "MoE"
+        total_parameters: { value: "671B", basis: "published" }
+        active_parameters: { value: "37B", basis: "published" }
+        layers: { value: "61", basis: "published" }
+        experts: { value: "256 routed + 1 shared", basis: "published" }
+        active_experts: { value: "8 routed + 1 shared", basis: "published" }
+        source_url: "https://huggingface.co/deepseek-ai/DeepSeek-V3"
+        source_title: "DeepSeek-V3 model card"
 
   - year: 2024
     date: 2024-12-25
@@ -2978,6 +3707,11 @@ events:
       [QVQ-72B-Preview の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["QVQ"]
+    model_specs:
+      - name: "QVQ-72B-Preview"
+        total_parameters: { value: "72B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "QVQ-72B-Preview の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-12-24
@@ -2988,6 +3722,11 @@ events:
       [「LLM-jp-3 172B」公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-342/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3 172B"
+        total_parameters: { value: "172B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/post-342/"
+        source_title: "「LLM-jp-3 172B」公開 | LLM-jp"
 
   - year: 2024
     date: 2024-12-18
@@ -3018,6 +3757,11 @@ events:
       [Phi-4 発表 の公式発表・公開情報 | Microsoft](https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-phi-4-microsoft%E2%80%99s-newest-small-language-model-specializing-in-comple/4357090)
     tags: ["Microsoft", "Phi", "LLM Model"]
     series: ["Phi"]
+    model_specs:
+      - name: "Phi-4 発表"
+        total_parameters: { value: "14B", basis: "published" }
+        source_url: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-phi-4-microsoft%E2%80%99s-newest-small-language-model-specializing-in-comple/4357090"
+        source_title: "Phi-4 発表 の公式発表・公開情報 | Microsoft"
 
   - year: 2024
     date: 2024-12-10
@@ -3028,6 +3772,11 @@ events:
       [Sarashina2.1-1B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/sarashinalab/)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina"]
+    model_specs:
+      - name: "Sarashina2.1-1B"
+        total_parameters: { value: "1B", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/sarashinalab/"
+        source_title: "Sarashina2.1-1B の公式発表・公開情報 | SB Intuitions"
 
   - year: 2024
     date: 2024-12-10
@@ -3048,6 +3797,11 @@ events:
       [Llama 3.3 70B の公式発表・公開情報 | Meta](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 3.3 70B"
+        total_parameters: { value: "70B", basis: "published" }
+        source_url: "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+        source_title: "Llama 3.3 70B の公式発表・公開情報 | Meta"
 
   - year: 2024
     date: 2024-12-03
@@ -3068,6 +3822,11 @@ events:
       [QwQ-32B-Preview の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwq-32b-preview/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["QwQ"]
+    model_specs:
+      - name: "QwQ-32B-Preview"
+        total_parameters: { value: "32B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwq-32b-preview/"
+        source_title: "QwQ-32B-Preview の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-11-26
@@ -3098,6 +3857,11 @@ events:
       [LLM-jp-3 VILA 14B の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-vila-14b/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp VL"]
+    model_specs:
+      - name: "LLM-jp-3 VILA 14B"
+        total_parameters: { value: "14B", basis: "published" }
+        source_url: "https://llmc.nii.ac.jp/topics/llm-jp-3-vila-14b/"
+        source_title: "LLM-jp-3 VILA 14B の公開 | LLMC"
 
   - year: 2024
     date: 2024-11-18
@@ -3118,6 +3882,11 @@ events:
       [LLM-jp-3 172B beta2 の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-172b-beta2/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3 172B beta2"
+        total_parameters: { value: "172B", basis: "published" }
+        source_url: "https://llmc.nii.ac.jp/topics/llm-jp-3-172b-beta2/"
+        source_title: "LLM-jp-3 172B beta2 の公開 | LLMC"
 
   - year: 2024
     date: 2024-11-12
@@ -3128,6 +3897,11 @@ events:
       [Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B) の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen2.5-coder-family/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen Coder"]
+    model_specs:
+      - name: "Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B)"
+        total_parameters: { value: "0.5B / 1.5B / 3B / 7B / 14B / 32B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwen2.5-coder-family/"
+        source_title: "Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B) の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-11-08
@@ -3138,6 +3912,16 @@ events:
       [Sarashina2-8x70B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20241108_01/)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina"]
+    model_specs:
+      - name: "Sarashina2-8x70B"
+        architecture: "MoE"
+        total_parameters: { value: "460B", basis: "published" }
+        active_parameters: { value: "130B", basis: "published" }
+        layers: { value: "80", basis: "published" }
+        experts: { value: "8", basis: "published" }
+        active_experts: { value: "2", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/news/press/20241108_01/"
+        source_title: "Sarashina2-8x70B の公式発表・公開情報 | SB Intuitions"
 
   - year: 2024
     date: 2024-10-31
@@ -3178,6 +3962,11 @@ events:
       [LLM-jp-3 172B alpha1, alpha2 の公開 | LLMC](https://llmc.nii.ac.jp/topics/llm-jp-3-172b-alpha1-alpha2/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3 172B alpha1 / alpha2"
+        total_parameters: { value: "172B", basis: "published" }
+        source_url: "https://llmc.nii.ac.jp/topics/llm-jp-3-172b-alpha1-alpha2/"
+        source_title: "LLM-jp-3 172B alpha1, alpha2 の公開 | LLMC"
 
   - year: 2024
     date: 2024-09-25
@@ -3188,6 +3977,11 @@ events:
       [Llama 3.2 (1B, 3B, 11B Vision, 90B Vision) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 3.2 (1B, 3B, 11B Vision, 90B Vision)"
+        total_parameters: { value: "1B / 3B / 11B / 90B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/"
+        source_title: "Llama 3.2 (1B, 3B, 11B Vision, 90B Vision) の公式発表・公開情報 | Meta"
 
   - year: 2024
     date: 2024-09-25
@@ -3198,6 +3992,11 @@ events:
       [LLM-jp-3 1.8B・3.7B・13B の公開 | LLMC](https://llmc.nii.ac.jp/topics/post-707/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3 1.8B / 3.7B / 13B"
+        total_parameters: { value: "1.8B / 3.7B / 13B", basis: "published" }
+        source_url: "https://llmc.nii.ac.jp/topics/post-707/"
+        source_title: "LLM-jp-3 1.8B・3.7B・13B の公開 | LLMC"
 
   - year: 2024
     date: 2024-09-19
@@ -3218,6 +4017,11 @@ events:
       [Qwen2-VL-72B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen2-VL-72B"
+        total_parameters: { value: "72B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen2-VL-72B の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-09-17
@@ -3228,6 +4032,11 @@ events:
       [Pixtral 12B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/pixtral-12b/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Pixtral"]
+    model_specs:
+      - name: "Pixtral 12B"
+        total_parameters: { value: "12B", basis: "published" }
+        source_url: "https://mistral.ai/news/pixtral-12b/"
+        source_title: "Pixtral 12B の公式発表・公開情報 | Mistral AI"
 
   - year: 2024
     date: 2024-09-12
@@ -3245,6 +4054,12 @@ events:
       [「LLM-jp-3 172B beta1」公開 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-310/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "LLM-jp-3 172B beta1"
+        total_parameters: { value: "172B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/post-310/"
+        source_title: "「LLM-jp-3 172B beta1」公開 | LLM-jp"
+
   - year: 2024
     date: 2024-09-05
     title_ja: "DeepSeek-V2.5"
@@ -3264,6 +4079,11 @@ events:
       [Qwen2-VL (2B, 7B) の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3-VL#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen VL"]
+    model_specs:
+      - name: "Qwen2-VL (2B, 7B)"
+        total_parameters: { value: "2B / 7B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3-VL#news"
+        source_title: "Qwen2-VL (2B, 7B) の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-08-30
@@ -3314,6 +4134,11 @@ events:
       [Sarashina2-70B の公式発表・公開情報 | SB Intuitions](https://www.sbintuitions.co.jp/news/press/20240614_01/)
     tags: ["SB Intuitions", "Sarashina", "Open Weight Model", "LLM Model"]
     series: ["Sarashina"]
+    model_specs:
+      - name: "Sarashina2-70B"
+        total_parameters: { value: "70B", basis: "published" }
+        source_url: "https://www.sbintuitions.co.jp/news/press/20240614_01/"
+        source_title: "Sarashina2-70B の公式発表・公開情報 | SB Intuitions"
 
   - year: 2024
     date: 2024-07-24
@@ -3334,6 +4159,11 @@ events:
       [Llama 3.1 (8B, 70B, 405B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/meta-llama-3-1/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 3.1 (8B, 70B, 405B)"
+        total_parameters: { value: "8B / 70B / 405B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/meta-llama-3-1/"
+        source_title: "Llama 3.1 (8B, 70B, 405B) の公式発表・公開情報 | Meta"
 
   - year: 2024
     date: 2024-07-18
@@ -3351,6 +4181,11 @@ events:
       [Mistral NeMo 12B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mistral-nemo/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mistral NeMo"]
+    model_specs:
+      - name: "Mistral NeMo 12B"
+        total_parameters: { value: "12B", basis: "published" }
+        source_url: "https://mistral.ai/news/mistral-nemo/"
+        source_title: "Mistral NeMo 12B の公式発表・公開情報 | Mistral AI"
 
   - year: 2024
     date: 2024-07-16
@@ -3371,6 +4206,11 @@ events:
       [Gemma 2 (9B, 27B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/google-gemma-2/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma 2 (9B, 27B)"
+        total_parameters: { value: "9B / 27B", basis: "published" }
+        source_url: "https://blog.google/innovation-and-ai/technology/developers-tools/google-gemma-2/"
+        source_title: "Gemma 2 (9B, 27B) の公式発表・公開情報 | Google"
 
   - year: 2024
     date: 2024-06-26
@@ -3381,6 +4221,11 @@ events:
       [Llama-3-ELYZA-JP（8B・70B） の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000046.000047565.html)
     tags: ["ELYZA", "Open Weight Model", "LLM Model"]
     series: ["ELYZA"]
+    model_specs:
+      - name: "Llama-3-ELYZA-JP（8B・70B）"
+        total_parameters: { value: "8B / 70B", basis: "published" }
+        source_url: "https://prtimes.jp/main/html/rd/p/000000046.000047565.html"
+        source_title: "Llama-3-ELYZA-JP（8B・70B） の公式発表・公開情報 | ELYZA"
 
   - year: 2024
     date: 2024-06-21
@@ -3408,6 +4253,11 @@ events:
       [Nemotron-4 340B の公式発表・公開情報 | NVIDIA](https://research.nvidia.com/publication/2024-06_nemotron-4-340b)
     tags: ["NVIDIA", "Nemotron", "Open Weight Model", "LLM Model"]
     series: ["Nemotron"]
+    model_specs:
+      - name: "Nemotron-4 340B"
+        total_parameters: { value: "340B", basis: "published" }
+        source_url: "https://research.nvidia.com/publication/2024-06_nemotron-4-340b"
+        source_title: "Nemotron-4 340B の公式発表・公開情報 | NVIDIA"
 
   - year: 2024
     date: 2024-06-06
@@ -3428,6 +4278,11 @@ events:
       [GLM-4-9B の公式発表・公開情報 | Z.ai](https://github.com/THUDM/GLM-4#project-updates)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["GLM"]
+    model_specs:
+      - name: "GLM-4-9B"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://github.com/THUDM/GLM-4#project-updates"
+        source_title: "GLM-4-9B の公式発表・公開情報 | Z.ai"
 
   - year: 2024
     date: 2024-05-29
@@ -3438,6 +4293,11 @@ events:
       [Codestral 22B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/codestral/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Codestral"]
+    model_specs:
+      - name: "Codestral 22B"
+        total_parameters: { value: "22B", basis: "published" }
+        source_url: "https://mistral.ai/news/codestral/"
+        source_title: "Codestral 22B の公式発表・公開情報 | Mistral AI"
 
   - year: 2024
     date: 2024-05-13
@@ -3495,6 +4355,11 @@ events:
       [llm-jp-13b v2.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-519/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "llm-jp-13b v2.0"
+        total_parameters: { value: "13B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/post-519/"
+        source_title: "llm-jp-13b v2.0 の公式発表・公開情報 | LLM-jp"
 
   - year: 2024
     date: 2024-04-25
@@ -3505,6 +4370,11 @@ events:
       [Qwen1.5-110B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/qwen1.5-110b/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen1.5-110B"
+        total_parameters: { value: "110B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/qwen1.5-110b/"
+        source_title: "Qwen1.5-110B の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-04-23
@@ -3515,6 +4385,11 @@ events:
       [Phi-3 Mini の公式発表・公開情報 | Microsoft](https://news.microsoft.com/source/features/ai/the-phi-3-small-language-models-with-big-potential/)
     tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
     series: ["Phi"]
+    model_specs:
+      - name: "Phi-3 Mini"
+        total_parameters: { value: "3.8B", basis: "published" }
+        source_url: "https://news.microsoft.com/source/features/ai/the-phi-3-small-language-models-with-big-potential/"
+        source_title: "Phi-3 Mini の公式発表・公開情報 | Microsoft"
 
   - year: 2024
     date: 2024-04-18
@@ -3525,6 +4400,11 @@ events:
       [Llama 3 (8B, 70B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/meta-llama-3/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 3 (8B, 70B)"
+        total_parameters: { value: "8B / 70B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/meta-llama-3/"
+        source_title: "Llama 3 (8B, 70B) の公式発表・公開情報 | Meta"
 
   - year: 2024
     date: 2024-04-17
@@ -3535,6 +4415,15 @@ events:
       [Mixtral 8x22B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mixtral-8x22b/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mixtral"]
+    model_specs:
+      - name: "Mixtral 8x22B"
+        architecture: "MoE"
+        total_parameters: { value: "140.6B", basis: "published" }
+        active_parameters: { value: "39.1B", basis: "published" }
+        experts: { value: "8", basis: "published" }
+        active_experts: { value: "2", basis: "published" }
+        source_url: "https://mistral.ai/news/mixtral-8x22b/"
+        source_title: "Mixtral 8x22B の公式発表・公開情報 | Mistral AI"
 
   - year: 2024
     date: 2024-04-16
@@ -3545,6 +4434,11 @@ events:
       [CodeQwen1.5-7B の公式発表・公開情報 | Alibaba](https://qwenlm.github.io/blog/codeqwen1.5/)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen Coder"]
+    model_specs:
+      - name: "CodeQwen1.5-7B"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://qwenlm.github.io/blog/codeqwen1.5/"
+        source_title: "CodeQwen1.5-7B の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-04-12
@@ -3575,6 +4469,15 @@ events:
       [Qwen1.5-MoE-A2.7B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen3#news)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen1.5-MoE-A2.7B"
+        architecture: "MoE"
+        total_parameters: { value: "14.3B", basis: "published" }
+        active_parameters: { value: "2.7B", basis: "published" }
+        experts: { value: "60 total (4 routed + 4 shared)", basis: "published" }
+        active_experts: { value: "4 routed + 4 shared", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen3#news"
+        source_title: "Qwen1.5-MoE-A2.7B の公式発表・公開情報 | Alibaba"
 
   - year: 2024
     date: 2024-03-28
@@ -3605,6 +4508,15 @@ events:
       [DBRX の公式発表・公開情報 | Databricks](https://www.prnewswire.com/news-releases/databricks-launches-dbrx-a-new-standard-for-efficient-open-source-models-302100601.html)
     tags: ["Databricks", "Open Weight Model", "LLM Model"]
     series: ["DBRX"]
+    model_specs:
+      - name: "DBRX"
+        architecture: "MoE"
+        total_parameters: { value: "132B", basis: "published" }
+        active_parameters: { value: "36B", basis: "published" }
+        experts: { value: "16", basis: "published" }
+        active_experts: { value: "4", basis: "published" }
+        source_url: "https://www.prnewswire.com/news-releases/databricks-launches-dbrx-a-new-standard-for-efficient-open-source-models-302100601.html"
+        source_title: "DBRX の公式発表・公開情報 | Databricks"
 
   - year: 2024
     date: 2024-03-17
@@ -3625,6 +4537,11 @@ events:
       [Yi-9B 200K の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi"]
+    model_specs:
+      - name: "Yi-9B 200K"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-9B 200K の公式発表・公開情報 | 01.AI"
 
   - year: 2024
     date: 2024-03-14
@@ -3652,6 +4569,11 @@ events:
       [Yi-9B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi"]
+    model_specs:
+      - name: "Yi-9B"
+        total_parameters: { value: "9B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-9B の公式発表・公開情報 | 01.AI"
 
   - year: 2024
     date: 2024-03-04
@@ -3682,6 +4604,11 @@ events:
       [Gemma (2B, 7B) の公式発表・公開情報 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-open-models/)
     tags: ["Google", "Gemma", "Open Weight Model", "LLM Model"]
     series: ["Gemma"]
+    model_specs:
+      - name: "Gemma (2B, 7B)"
+        total_parameters: { value: "2B / 7B", basis: "published" }
+        source_url: "https://blog.google/innovation-and-ai/technology/developers-tools/gemma-open-models/"
+        source_title: "Gemma (2B, 7B) の公式発表・公開情報 | Google"
 
   - year: 2024
     date: 2024-02-09
@@ -3692,6 +4619,11 @@ events:
       [llm-jp-13b v1.1 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-521/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "llm-jp-13b v1.1"
+        total_parameters: { value: "13B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/post-521/"
+        source_title: "llm-jp-13b v1.1 の公式発表・公開情報 | LLM-jp"
 
   - year: 2024
     date: 2024-02-05
@@ -3732,6 +4664,11 @@ events:
       [Code Llama 70B の公式発表・公開情報 | Meta](https://ai.meta.com/blog/code-llama-large-language-model-coding/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Code Llama"]
+    model_specs:
+      - name: "Code Llama 70B"
+        total_parameters: { value: "70B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/code-llama-large-language-model-coding/"
+        source_title: "Code Llama 70B の公式発表・公開情報 | Meta"
 
   - year: 2024
     date: 2024-01-23
@@ -3742,6 +4679,11 @@ events:
       [Yi-VL-6B / 34B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi-VL"]
+    model_specs:
+      - name: "Yi-VL-6B / 34B"
+        total_parameters: { value: "6B / 34B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-VL-6B / 34B の公式発表・公開情報 | 01.AI"
 
   - year: 2023
     date: 2023-12-27
@@ -3752,6 +4694,11 @@ events:
       [ELYZA-japanese-Llama-2-13b の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000039.000047565.html)
     tags: ["ELYZA", "Open Weight Model", "LLM Model"]
     series: ["ELYZA"]
+    model_specs:
+      - name: "ELYZA-japanese-Llama-2-13b"
+        total_parameters: { value: "13B", basis: "published" }
+        source_url: "https://prtimes.jp/main/html/rd/p/000000039.000047565.html"
+        source_title: "ELYZA-japanese-Llama-2-13b の公式発表・公開情報 | ELYZA"
 
   - year: 2023
     date: 2023-12-12
@@ -3762,6 +4709,11 @@ events:
       [Phi-2 の公式発表・公開情報 | Microsoft](https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/)
     tags: ["Microsoft", "Phi", "Open Weight Model", "LLM Model"]
     series: ["Phi"]
+    model_specs:
+      - name: "Phi-2"
+        total_parameters: { value: "2.7B", basis: "published" }
+        source_url: "https://www.microsoft.com/en-us/research/blog/phi-2-the-surprising-power-of-small-language-models/"
+        source_title: "Phi-2 の公式発表・公開情報 | Microsoft"
 
   - year: 2023
     date: 2023-12-11
@@ -3772,6 +4724,15 @@ events:
       [Mixtral 8x7B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/mixtral-of-experts/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mixtral"]
+    model_specs:
+      - name: "Mixtral 8x7B"
+        architecture: "MoE"
+        total_parameters: { value: "46.7B", basis: "published" }
+        active_parameters: { value: "12.9B", basis: "published" }
+        experts: { value: "8", basis: "published" }
+        active_experts: { value: "2", basis: "published" }
+        source_url: "https://mistral.ai/news/mixtral-of-experts/"
+        source_title: "Mixtral 8x7B の公式発表・公開情報 | Mistral AI"
 
   - year: 2023
     date: 2023-12-06
@@ -3789,6 +4750,11 @@ events:
       [Qwen-72B / Qwen-1.8B の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen-72B / Qwen-1.8B"
+        total_parameters: { value: "72B / 1.8B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen#news-and-updates"
+        source_title: "Qwen-72B / Qwen-1.8B の公式発表・公開情報 | Alibaba"
 
   - year: 2023
     date: 2023-11-23
@@ -3799,6 +4765,11 @@ events:
       [Yi-6B / 34B Chat の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi"]
+    model_specs:
+      - name: "Yi-6B / 34B Chat"
+        total_parameters: { value: "6B / 34B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-6B / 34B Chat の公式発表・公開情報 | 01.AI"
 
   - year: 2023
     date: 2023-11-21
@@ -3826,6 +4797,11 @@ events:
       [Yi-6B / 34B 200K の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi"]
+    model_specs:
+      - name: "Yi-6B / 34B 200K"
+        total_parameters: { value: "6B / 34B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-6B / 34B 200K の公式発表・公開情報 | 01.AI"
 
   - year: 2023
     date: 2023-11-03
@@ -3846,6 +4822,11 @@ events:
       [Yi-6B / 34B の公式発表・公開情報 | 01.AI](https://github.com/01-ai/Yi)
     tags: ["01.AI", "Yi", "Open Weight Model", "LLM Model"]
     series: ["Yi"]
+    model_specs:
+      - name: "Yi-6B / 34B"
+        total_parameters: { value: "6B / 34B", basis: "published" }
+        source_url: "https://github.com/01-ai/Yi"
+        source_title: "Yi-6B / 34B の公式発表・公開情報 | 01.AI"
 
   - year: 2023
     date: 2023-10-20
@@ -3856,6 +4837,11 @@ events:
       [llm-jp-13b v1.0 の公式発表・公開情報 | LLM-jp](https://llm-jp.nii.ac.jp/news/post-50/)
     tags: ["LLM-jp", "Open Weight Model", "LLM Model"]
     series: ["LLM-jp"]
+    model_specs:
+      - name: "llm-jp-13b v1.0"
+        total_parameters: { value: "13B", basis: "published" }
+        source_url: "https://llm-jp.nii.ac.jp/news/post-50/"
+        source_title: "llm-jp-13b v1.0 の公式発表・公開情報 | LLM-jp"
 
   - year: 2023
     date: 2023-09-27
@@ -3866,6 +4852,11 @@ events:
       [Mistral 7B の公式発表・公開情報 | Mistral AI](https://mistral.ai/news/announcing-mistral-7b/)
     tags: ["Mistral AI", "Open Weight Model", "LLM Model"]
     series: ["Mistral"]
+    model_specs:
+      - name: "Mistral 7B"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://mistral.ai/news/announcing-mistral-7b/"
+        source_title: "Mistral 7B の公式発表・公開情報 | Mistral AI"
 
   - year: 2023
     date: 2023-09-25
@@ -3876,6 +4867,11 @@ events:
       [Qwen-14B / Qwen-14B-Chat の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen-14B / Qwen-14B-Chat"
+        total_parameters: { value: "14B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen#news-and-updates"
+        source_title: "Qwen-14B / Qwen-14B-Chat の公式発表・公開情報 | Alibaba"
 
   - year: 2023
     date: 2023-09-06
@@ -3886,6 +4882,11 @@ events:
       [Falcon 180B の公式発表・公開情報 | TII](https://www.tii.ae/news/technology-innovation-institute-introduces-worlds-most-powerful-open-llm-falcon-180b)
     tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
     series: ["Falcon"]
+    model_specs:
+      - name: "Falcon 180B"
+        total_parameters: { value: "180B", basis: "published" }
+        source_url: "https://www.tii.ae/news/technology-innovation-institute-introduces-worlds-most-powerful-open-llm-falcon-180b"
+        source_title: "Falcon 180B の公式発表・公開情報 | TII"
 
   - year: 2023
     date: 2023-08-29
@@ -3896,6 +4897,11 @@ events:
       [ELYZA-japanese-Llama-2-7b の公式発表・公開情報 | ELYZA](https://prtimes.jp/main/html/rd/p/000000034.000047565.html)
     tags: ["ELYZA", "Open Weight Model", "LLM Model"]
     series: ["ELYZA"]
+    model_specs:
+      - name: "ELYZA-japanese-Llama-2-7b"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://prtimes.jp/main/html/rd/p/000000034.000047565.html"
+        source_title: "ELYZA-japanese-Llama-2-7b の公式発表・公開情報 | ELYZA"
 
   - year: 2023
     date: 2023-08-24
@@ -3906,6 +4912,11 @@ events:
       [Code Llama (7B, 13B, 34B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/code-llama-large-language-model-coding/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Code Llama"]
+    model_specs:
+      - name: "Code Llama (7B, 13B, 34B)"
+        total_parameters: { value: "7B / 13B / 34B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/code-llama-large-language-model-coding/"
+        source_title: "Code Llama (7B, 13B, 34B) の公式発表・公開情報 | Meta"
 
   - year: 2023
     date: 2023-08-09
@@ -3923,6 +4934,11 @@ events:
       [Qwen-7B / Qwen-7B-Chat の公式発表・公開情報 | Alibaba](https://github.com/QwenLM/Qwen#news-and-updates)
     tags: ["Alibaba", "Qwen", "Open Weight Model", "LLM Model"]
     series: ["Qwen"]
+    model_specs:
+      - name: "Qwen-7B / Qwen-7B-Chat"
+        total_parameters: { value: "7B", basis: "published" }
+        source_url: "https://github.com/QwenLM/Qwen#news-and-updates"
+        source_title: "Qwen-7B / Qwen-7B-Chat の公式発表・公開情報 | Alibaba"
 
   - year: 2023
     date: 2023-07-18
@@ -3933,6 +4949,11 @@ events:
       [Llama 2 (7B, 13B, 70B) の公式発表・公開情報 | Meta](https://about.fb.com/news/2023/07/llama-2/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "Llama 2 (7B, 13B, 70B)"
+        total_parameters: { value: "7B / 13B / 70B", basis: "published" }
+        source_url: "https://about.fb.com/news/2023/07/llama-2/"
+        source_title: "Llama 2 (7B, 13B, 70B) の公式発表・公開情報 | Meta"
 
   - year: 2023
     date: 2023-07-11
@@ -3950,6 +4971,11 @@ events:
       [ChatGLM2-6B の公式発表・公開情報 | Z.ai](https://github.com/THUDM/ChatGLM-6B)
     tags: ["Z.ai", "GLM", "Open Weight Model", "LLM Model"]
     series: ["ChatGLM"]
+    model_specs:
+      - name: "ChatGLM2-6B"
+        total_parameters: { value: "6B", basis: "published" }
+        source_url: "https://github.com/THUDM/ChatGLM-6B"
+        source_title: "ChatGLM2-6B の公式発表・公開情報 | Z.ai"
 
   - year: 2023
     date: 2023-05-25
@@ -3960,6 +4986,11 @@ events:
       [Falcon 40B の公式発表・公開情報 | TII](https://www.tii.ae/news/uaes-technology-innovation-institute-launches-open-source-falcon-40b-large-language-model)
     tags: ["TII", "Falcon", "Open Weight Model", "LLM Model"]
     series: ["Falcon"]
+    model_specs:
+      - name: "Falcon 40B"
+        total_parameters: { value: "40B", basis: "published" }
+        source_url: "https://www.tii.ae/news/uaes-technology-innovation-institute-launches-open-source-falcon-40b-large-language-model"
+        source_title: "Falcon 40B の公式発表・公開情報 | TII"
 
   - year: 2023
     date: 2023-04-12
@@ -3987,6 +5018,14 @@ events:
       [GPT-4 の公式発表・公開情報 | OpenAI](https://openai.com/index/gpt-4-research/)
     tags: ["OpenAI", "GPT", "LLM Model"]
     series: ["GPT"]
+    model_specs:
+      - name: "GPT-4 (reported estimate)"
+        architecture: "MoE (reported estimate)"
+        total_parameters: { value: "~1.831T", basis: "estimated" }
+        layers: { value: "~120", basis: "estimated" }
+        experts: { value: "16", basis: "estimated" }
+        source_url: "https://newsletter.semianalysis.com/p/gpt-4-architecture-infrastructure"
+        source_title: "SemiAnalysis estimate; not confirmed by OpenAI"
 
   - year: 2023
     date: 2023-02-24
@@ -3997,6 +5036,11 @@ events:
       [LLaMA (7B, 13B, 33B, 65B) の公式発表・公開情報 | Meta](https://ai.meta.com/blog/large-language-model-llama-meta-ai/)
     tags: ["Meta", "Llama", "Open Weight Model", "LLM Model"]
     series: ["Llama"]
+    model_specs:
+      - name: "LLaMA (7B, 13B, 33B, 65B)"
+        total_parameters: { value: "7B / 13B / 33B / 65B", basis: "published" }
+        source_url: "https://ai.meta.com/blog/large-language-model-llama-meta-ai/"
+        source_title: "LLaMA (7B, 13B, 33B, 65B) の公式発表・公開情報 | Meta"
 
   - year: 2021
     date: 2021-03-25
