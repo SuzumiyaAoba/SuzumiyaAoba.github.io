@@ -1,6 +1,276 @@
 version: 1
-updated: "2026-11-08"
+updated: "2026-11-12"
 events:
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "Gemini Decision 1 (API)"
+    summary_ja: |
+      Google が文章を生成せず、候補選択・真偽判定・採点の結果を返す判断モデルと Gemini Decisions API を公開。テキスト、画像、音声、動画、PDFを入力でき、選択肢の分類や評価に利用できる。
+
+      [Gemini Decisions API の発表 | Google](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)
+    tags: ["Google", "Gemini", "Decision Model"]
+    series: ["Gemini Decision"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "AlphaGenome 2"
+    summary_ja: |
+      細胞タイプごとの遺伝子発現や調節作用を予測するゲノムモデルを発表。新しい細胞状態のデータで条件付けでき、AlphaGenome API から非商用研究向けに利用可能。商用研究はプライベートプレビューで提供する。
+
+      [AlphaGenome 2 の発表 | Google DeepMind](https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/)
+    tags: ["Google", "AlphaGenome", "Genomics Model"]
+    series: ["AlphaGenome"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "Qwen4-Max-Preview"
+    summary_ja: |
+      Alibaba Cloud Model Studio が Qwen4-Max-Preview をプレビュー提供。テキスト・画像・動画入力と最大100万トークンのコンテキストに対応し、API Token Plan から利用できる。プレビューの提供期限は11月25日。
+
+      [Qwen4-Max-Preview の提供情報 | Alibaba Cloud Model Studio](https://help.aliyun.com/en/model-studio/qwen4-max-preview)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "ERNIE 5.5 Flash Preview"
+    summary_ja: |
+      ERNIE 5.5 Flash Base を追加学習したプレビューモデルを公開し、Qianfan API で提供。最大100万トークンのコンテキストに対応する。モデル重みは Apache 2.0 で11月25日までに公開予定だが、発表時点では未公開。
+
+      [ERNIE 5.5 Flash Preview の発表 | Baidu ERNIE](https://ernie.baidu.com/release/ernie-5-5-flash-preview/)
+    tags: ["Baidu", "ERNIE", "LLM Model"]
+    series: ["ERNIE"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "QVAC BotPsy 0.8B"
+    summary_ja: |
+      スマートフォン上で動作する、ツール利用向けの8億パラメータの小型エージェントモデルを公開。オフライン実行に対応し、重みを Apache 2.0 で公開した。
+
+      [BotPsy の公開 | QVAC](https://qvac.tether.io/blog/on-device-ai-agent-botpsy) / [モデルの発表 | Tether](https://tether.io/news/tethers-800m-ai-agent-beats-models-2-5x-its-size-on-everyday-phone-tasks/)
+    tags: ["Tether", "QVAC", "Open Weight Model", "LLM Model"]
+    series: ["QVAC BotPsy"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "PAN 2"
+    summary_ja: |
+      物理世界の生成と行動シミュレーションに対応する汎用世界モデルを公開。モデル重みと学習コードを公開し、ロボットや自動運転などの物理 AI 研究に利用できる。
+
+      [PAN 2 の発表と公開 | MBZUAI Institute for Foundation Models](https://mbzuai.ac.ae/news-events/news/the-institute-foundation-models-unveils-pan-2-open-world-model-physical)
+    tags: ["MBZUAI", "PAN", "Open Weight Model", "World Model"]
+    series: ["PAN"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "Runway Praxis-1 (重み公開)"
+    summary_ja: |
+      9月に発表した27Bの動画・行動予測モデル Praxis-1 の重みとコードを公開。Apache 2.0 で提供し、動画生成と行動予測に対応する。
+
+      [Praxis-1 の公開 | Runway](https://runway.com/news/company-news/praxis-1-is-now-available)
+    tags: ["Runway", "Praxis", "Open Weight Model", "World Model"]
+    series: ["Praxis"]
+  - year: 2026
+    date: 2026-11-11
+    title_ja: "Bielik 11B v3.1 DFlash / DFlash2 (重み公開)"
+    summary_ja: |
+      Bielik 11B v3.1 向けの speculative decoding 用補助モデル DFlash と DFlash2 の重みを公開。どちらも Apache 2.0 で提供し、単体で文章を生成するモデルではなく、対象モデルと組み合わせて応答生成を高速化する。
+
+      [DFlash のモデルカードと重み | Hugging Face](https://huggingface.co/speakleash/Bielik-11B-v3.1-DFlash) / [DFlash2 のモデルカードと重み | Hugging Face](https://huggingface.co/speakleash/Bielik-11B-v3.1-DFlash2) / [公開日程 | Bielik.ai](https://www.bielik.ai/en/blog/launching-bielik-11b-v31-dflash-and-the-bielik-one-family)
+    tags: ["SpeakLeash", "Bielik", "Open Weight Model", "LLM Model"]
+    series: ["Bielik DFlash"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Gemini 4 Carbon (一般提供)"
+    summary_ja: |
+      10月28日にサイバーセキュリティ担当者向けに限定公開した Gemini 4 Carbon を一般提供。Google AI Studio API、Gemini for business、Gemini アプリなどで有料利用者へ展開する。
+
+      [Gemini 4 Carbon の一般提供 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Carbon"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Gemini Robotics 2.5"
+    summary_ja: |
+      ロボットの視覚情報と自然言語の指示から動作を生成する Gemini Robotics の新モデルを発表。器用さや複数段階の作業を改善し、ロボット開発パートナー向けに提供する。
+
+      [Gemini Robotics 2.5 の発表 | Google DeepMind](https://deepmind.google/blog/gemini-robotics-2-5-accelerates-real-world-physical-intelligence/)
+    tags: ["Google", "Gemini Robotics", "Robotics Model"]
+    series: ["Gemini Robotics"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Alpamayo 2 Edge (重み公開)"
+    summary_ja: |
+      NVIDIA が自動運転向けの2B推論 VLA モデルの重みを OpenMDW-1.1 で公開。車載映像、自己位置の履歴、ナビゲーション指示から運転軌跡と因果説明を生成し、DRIVE AGX Thor 向けの推論最適化にも対応する。
+
+      [Alpamayo 2 Edge のモデルカードと公開日 | NVIDIA](https://huggingface.co/nvidia/Alpamayo2-Edge) / [推論と提供情報 | NVIDIA Developer](https://developer.nvidia.com/blog/running-av-reasoning-models-within-onboard-compute-and-latency-limits/)
+    tags: ["NVIDIA", "Alpamayo", "Open Weight Model", "Autonomous Driving Model"]
+    series: ["Alpamayo"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "ElevenLabs Scribe v3 / Scribe v3 Live"
+    summary_ja: |
+      録音音声向けの Scribe v3 とリアルタイム向けの Scribe v3 Live を公開。102言語に対応し、話者分離や会話ターン検出を改善。両モデルを ElevenAPI、Live を ElevenAgents で提供する。
+
+      [Scribe v3 / v3 Live の発表 | ElevenLabs](https://elevenlabs.io/blog/scribe-v3)
+    tags: ["ElevenLabs", "Scribe", "Audio Model"]
+    series: ["Scribe"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Fish Audio Live 3"
+    summary_ja: |
+      発話中も相手の音声を聞き続け、割り込みや相づちに応じる全二重音声モデルを発表。Fish Audio のエージェント基盤と API で提供する。
+
+      [Live 3 の発表 | Fish Audio](https://fish.audio/blog/introducing-live-3/)
+    tags: ["Fish Audio", "Audio Model"]
+    series: ["Live"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "MiniMax-H3-Image / H3-Image-PE (重み公開)"
+    summary_ja: |
+      テキストからの画像生成と参照画像の編集を統合したモデルを公開。最大約16メガピクセルの画像を生成し、最大16枚の参照画像に対応する。約33Bの画像モデルと任意利用のプロンプト拡張モデルを公開。
+
+      [MiniMax-H3-Image のモデルカードと重み | MiniMax](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image) / [ライセンス](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE)
+    tags: ["MiniMax", "H3 Image", "Open Weight Model", "Image Model"]
+    series: ["MiniMax H3 Image"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Bielik 11B v3.1 (重み公開)"
+    summary_ja: |
+      SpeakLeash と ACK Cyfronet AGH が Bielik 11B の更新版を公開。追加学習で対応言語を56に広げ、ツール呼び出し、構造化出力、推論を強化した。Apache 2.0 の重みを公開。
+
+      [Bielik 11B v3.1 の発表 | Bielik.ai](https://www.bielik.ai/en/blog/launching-bielik-11b-v31-dflash-and-the-bielik-one-family) / [モデルカードと重み | Hugging Face](https://huggingface.co/speakleash/Bielik-11B-v3.1-Instruct)
+    tags: ["SpeakLeash", "Bielik", "Open Weight Model", "LLM Model"]
+    series: ["Bielik"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Bielik 11B v3.1 DFlash (発表)"
+    summary_ja: |
+      Bielik 11B v3.1 の応答を高速化する speculative decoding 用の補助モデルを発表。公式発表では、重みを11月11日に公開する予定と案内した。重みは予定日に公開された。
+
+      [Bielik 11B v3.1 DFlash の発表 | Bielik.ai](https://www.bielik.ai/en/blog/launching-bielik-11b-v31-dflash-and-the-bielik-one-family) / [DFlash のモデルカードと重み | Hugging Face](https://huggingface.co/speakleash/Bielik-11B-v3.1-DFlash)
+    tags: ["SpeakLeash", "Bielik", "LLM Model"]
+    series: ["Bielik DFlash"]
+  - year: 2026
+    date: 2026-11-10
+    title_ja: "Bielik-One (公開予定)"
+    summary_ja: |
+      文章を生成せず、分類・振り分け・採点などの判断を返す4モデルを発表。公式発表では、重みを11月12日に公開する予定と案内している。
+
+      [Bielik-One の公開予定 | Bielik.ai](https://www.bielik.ai/en/blog/launching-bielik-11b-v31-dflash-and-the-bielik-one-family)
+    tags: ["SpeakLeash", "Bielik", "Decision Model"]
+    series: ["Bielik-One"]
+  - year: 2026
+    date: 2026-11-09
+    title_ja: "Claude Fable 5.2 / Claude Mythos 5.2"
+    summary_ja: |
+      Claude Fable と Claude Mythos を更新し、コーディング、推論、視覚理解を改善。Fable は安全策を適用して一般提供し、Mythos はサイバーセキュリティや生物医学研究の審査済み組織に限定提供する。5.1より最大30%高速化した。
+
+      [Claude Fable 5.2 / Mythos 5.2 の発表 | Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-2)
+    tags: ["Anthropic", "Claude", "LLM Model"]
+    series: ["Claude Fable", "Claude Mythos"]
+  - year: 2026
+    date: 2026-11-09
+    title_ja: "Muse Ember"
+    summary_ja: |
+      ツール呼び出し、コーディング、情報抽出、長文書の処理など、エージェントが繰り返す作業向けの小型モデルを公開。100万トークンのコンテキストに対応し、Meta Model API から利用できる。
+
+      [Muse Ember の発表 | Meta AI Research](https://research.meta.ai/blog/muse-ember)
+    tags: ["Meta", "Muse", "LLM Model"]
+    series: ["Muse Ember"]
+  - year: 2026
+    date: 2026-11-09
+    title_ja: "Seedream 5.5"
+    summary_ja: |
+      画像生成モデルを更新し、未編集領域を保つ複数ターン編集を最大100回まで安定化。透過背景の RGBA 出力、写実性、小さな文字の描画も改善した。
+
+      [Seedream 5.5 の発表 | ByteDance Seed Team](https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5)
+    tags: ["ByteDance", "Seedream", "Image Model"]
+    series: ["Seedream"]
+  - year: 2026
+    date: 2026-11-09
+    title_ja: "K-EXAONE 2.5 (API公開)"
+    summary_ja: |
+      LG AI Research が K-EXAONE 2.5 の API を無料公開。モデルの重み公開ではなく、API の提供開始日を記録する。
+
+      [K-EXAONE 2.5 API の公開 | LG AI Research](https://www.lgresearch.ai/news/view?seq=755)
+    tags: ["LG AI Research", "EXAONE", "Korean", "LLM Model"]
+    series: ["K-EXAONE"]
+  - year: 2026
+    date: 2026-11-09
+    title_ja: "ZONOS3-Mini"
+    summary_ja: |
+      リアルタイム音声合成とゼロショット音声クローニング向けの小型モデルを公開。総パラメータ約800Mのモデル重みを Apache 2.0 で提供する。
+
+      [ZONOS3-Mini の発表 | Zyphra](https://www.zyphra.com/our-work/zonos3-mini?from=%2Fmodels%2Fzonos3-mini)
+    tags: ["Zyphra", "Zonos", "Open Weight Model", "Audio Model"]
+    series: ["Zonos"]
+  - year: 2026
+    date: 2026-11-08
+    title_ja: "Shizuku-Duplex"
+    summary_ja: |
+      音声を聞きながら発話を続ける日本語の全二重音声モデルを発表。短い間隔で音声を処理し、相手の割り込みにも応答できる。
+
+      [Shizuku-Duplex の発表 | Shizuku AI](https://shizuku.ai/en/blog/1/)
+    tags: ["Shizuku AI", "Japanese", "Audio Model"]
+    series: ["Shizuku-Duplex"]
+  - year: 2026
+    date: 2026-11-07
+    title_ja: "NVIDIA GR00T 2 (発表)"
+    summary_ja: |
+      少数の実演から新しいタスクやロボット本体へ適応する、オープンな世界行動モデルを発表。発表時点では重みの公開日や一般提供日を示していない。
+
+      [GR00T 2 の発表 | NVIDIA Developer Forum](https://forums.developer.nvidia.com/t/news-nvidia-at-corl-2026-advancing-robot-learning/388260)
+    tags: ["NVIDIA", "GR00T", "Robotics Model"]
+    series: ["GR00T"]
+  - year: 2026
+    date: 2026-11-06
+    title_ja: "openPangu-2.1-Pro (発表・公開予定)"
+    summary_ja: |
+      Huawei Cloud が openPangu-2.1-Pro を発表し、11月15日に MaaS で提供する予定と案内。ArkTS コード生成と Ascend 向け演算子の開発支援を強化するとしている。発表時点では未提供。
+
+      [openPangu-2.1-Pro の提供予定 | Huawei Cloud](https://www.huaweicloud.com/partners/support/news/latestnews/20261106.html)
+    tags: ["Huawei", "Pangu", "LLM Model"]
+    series: ["openPangu"]
+  - year: 2026
+    date: 2026-11-06
+    title_ja: "Arete-27B (重み公開)"
+    summary_ja: |
+      Nous Research が Qwen3.8-27B を追加学習した27Bモデルを公開。政治的に敏感な話題での回答傾向を調整し、モデル重み、評価データ、学習データを公開した。モデル重みは Apache 2.0 で提供する。
+
+      [Arete-27B の発表 | Nous Research](https://nousresearch.com/arete) / [モデルカードと重み | Hugging Face](https://huggingface.co/NousResearch/Arete-27B)
+    tags: ["Nous Research", "Arete", "Open Weight Model", "LLM Model"]
+    series: ["Arete"]
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "PLaMo 3 Translate (重み公開)"
+    summary_ja: |
+      Preferred Networks が翻訳特化モデルを0.8B・2B・8B・31Bの4サイズで公開。53言語に対応し、PLaMo Community License の下で端末や社内サーバー上のオフライン翻訳に利用できる。
+
+      [PLaMo 3 Translate の重み公開 | Preferred Networks](https://www.preferred.jp/en/news/pr20261105)
+    tags: ["Preferred Networks", "PLaMo", "Japanese", "Open Weight Model", "Translation Model"]
+    series: ["PLaMo Translation"]
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "ERNIE 5.5 Flash Base (重み公開)"
+    summary_ja: |
+      ERNIE 5.5 Flash の事前学習済みベースモデルを公開。総パラメータ280B、活性化14Bの MoE で、モデル重みを公開した。
+
+      [ERNIE 5.5 Flash Base の発表 | Baidu ERNIE](https://ernie.baidu.com/release/ernie-5-5-flash-base)
+    tags: ["Baidu", "ERNIE", "Open Weight Model", "LLM Model"]
+    series: ["ERNIE"]
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "Cosmos 3 Nano 派生モデル4種 (重み公開)"
+    summary_ja: |
+      NVIDIA が Cosmos 3 Nano を基にした4つの重みを公開。Cosmos3-Nano-Transfer-Auto、Sim-Auto、Sim-Transfer、Sim-Bimanual が、自動運転やロボットの操作から動画とセンサー情報を生成する。
+
+      [Cosmos 3 Nano 派生モデルの公開 | NVIDIA](https://huggingface.co/blog/nvidia/cosmos-interactive-world-simulation)
+    tags: ["NVIDIA", "Cosmos", "Open Weight Model", "World Model"]
+    series: ["Cosmos 3"]
+  - year: 2026
+    date: 2026-11-05
+    title_ja: "Inkling 2 Small"
+    summary_ja: |
+      594B総パラメータ・17B活性化の MoE モデルを Tinker で提供。画像入力に対応し、エージェント作業、コーディング、推論を強化した。発表時点では重みを公開しておらず、外部安全性評価後の公開を予定する。
+
+      [Inkling 2 Small の発表 | Thinking Machines Lab](https://thinkingmachines.ai/news/inkling-2-small/)
+    tags: ["Thinking Machines Lab", "Inkling", "LLM Model"]
+    series: ["Inkling"]
   - year: 2026
     date: 2026-11-05
     title_ja: "Gemini Omni 1.2 Flash"
@@ -28,6 +298,51 @@ events:
       [Images 2.6 の発表 | OpenAI](https://openai.com/index/introducing-images-2-6/) / [API 更新履歴 | OpenAI](https://developers.openai.com/api/docs/changelog)
     tags: ["OpenAI", "GPT Image", "Image Model"]
     series: ["GPT Image"]
+  - year: 2026
+    date: 2026-11-04
+    title_ja: "Kimi K3.1 Pro (重み公開)"
+    summary_ja: |
+      10月に API で提供を始めた Kimi K3.1 Pro の全重みを公開。Hugging Face でモデルカードと96分割の SafeTensors ファイルを提供する。マルチモーダル理解と100万トークンのコンテキストに対応する。
+
+      [重み公開の告知 | Kimi](https://x.com/Kimi_Moonshot/status/2118010528123773297) / [モデルカードと重み | Hugging Face](https://huggingface.co/moonshotai/Kimi-K3.1-Pro)
+    tags: ["Moonshot AI", "Kimi", "Open Weight Model", "LLM Model"]
+    series: ["Kimi"]
+  - year: 2026
+    date: 2026-11-04
+    title_ja: "Tencent Hy4 (API提供)"
+    summary_ja: |
+      視覚理解とコンピューター操作に初めて対応した正式版を提供開始。Hy4 Preview から長期タスクや深い調査を強化し、Tencent Cloud TokenHub の API（モデル ID: hy4）で利用できる。正式版の重みとシステムカードは近日公開予定と発表した。
+
+      [Tencent Hy4 の発表 | Tencent](https://www.tencent.com/tencent-launches-hy4-joining-the-ranks-of-the-worlds-leading-open-source-ai-models/) / [モデル ID と API 提供情報 | Tencent Cloud TokenHub](https://cloud.tencent.com/document/product/1823/140042)
+    tags: ["Tencent", "Hy", "LLM Model"]
+    series: ["Hy"]
+  - year: 2026
+    date: 2026-11-04
+    title_ja: "Ripple-65B Preview (重み公開)"
+    summary_ja: |
+      Ricursive Intelligence が12兆トークンで事前学習した65Bの密な言語モデルを公開。最大100万トークンのコンテキストに対応し、公開重みを Apache 2.0 で提供する。
+
+      [Ripple-65B Preview の発表 | Ricursive Intelligence](https://www.ricursive.com/ripple) / [モデルカードと重み | Hugging Face](https://huggingface.co/ricursiveAI/Ripple-65B-Preview)
+    tags: ["Ricursive Intelligence", "Ripple", "Open Weight Model", "LLM Model"]
+    series: ["Ripple"]
+  - year: 2026
+    date: 2026-11-04
+    title_ja: "Dharma Field Extractor"
+    summary_ja: |
+      2Bパラメータの文書処理モデルを公開。文書画像から指定項目を読み取り、スキーマに沿った JSON を返す。OCR 用の基盤モデルに追加学習した LoRA アダプターとして提供する。
+
+      [Dharma Field Extractor の発表 | Dharma-AI](https://huggingface.co/blog/Dharma-AI/dharma-field-extractor)
+    tags: ["Dharma-AI", "Document Model"]
+    series: ["Dharma Field Extractor"]
+  - year: 2026
+    date: 2026-11-01
+    title_ja: "Drex Max Finance (API)"
+    summary_ja: |
+      金融分野の判断に追加学習した Drex Max を API で提供。取引、請求書、サポート文面などについて、候補選択と確信度を返す。API モデル一覧に記載された提供開始日を記録。
+
+      [Drex Max Finance の発表 | Nace.AI](https://www.nace.ai/blog/introducing-drex-for-finance) / [API モデル一覧 | Nace Docs](https://console.nace.ai/docs/drex/reference/models)
+    tags: ["Nace.AI", "Drex", "Decision Model"]
+    series: ["Drex Max"]
   - year: 2026
     date: 2026-10-30
     title_ja: "GPT-6 Rosalind Research (承認制)"
@@ -99,6 +414,15 @@ events:
         source_url: "https://arxiv.org/abs/2610.39227"
         source_title: "XLaw-JP-27B paper"
 
+  - year: 2026
+    date: 2026-10-28
+    title_ja: "Drex Max v1.1 (API)"
+    summary_ja: |
+      Drex Max の新しい API バージョンを提供。API モデル一覧に記載されたリリース日を記録し、262,144トークンのリクエスト上限に対応する。
+
+      [API モデル一覧 | Nace Docs](https://console.nace.ai/docs/drex/reference/models)
+    tags: ["Nace.AI", "Drex", "Decision Model"]
+    series: ["Drex Max"]
   - year: 2026
     date: 2026-10-28
     title_ja: "Gemini 4 Carbon (限定提供)"
@@ -234,7 +558,7 @@ events:
     date: 2026-10-23
     title_ja: "Kimi K3.1 Pro / K3.1 Pro Highspeed"
     summary_ja: |
-      コーディング、3D制作、金融調査などの長時間のエージェント作業向けモデルを Kimi・Kimi Code・API で提供開始。100万トークンのコンテキストに対応し、Highspeed は同じモデルを約2〜3倍の速度で提供。重みは11月4日までに公開予定。
+      コーディング、3D制作、金融調査などの長時間のエージェント作業向けモデルを Kimi・Kimi Code・API で提供開始。100万トークンのコンテキストに対応し、Highspeed は同じモデルを約2〜3倍の速度で提供。発表時は重みを11月4日までに公開する予定と案内し、同日に公開した。
 
       [Kimi K3.1 Pro の発表 | Moonshot AI](https://www.kimi.ai/blog/kimi-k3-1-pro) / [Kimi Code の提供開始日 | Kimi](https://www.kimi.com/code/docs/en/kimi-code/whats-new.html)
     tags: ["Moonshot AI", "Kimi", "LLM Model"]
@@ -420,6 +744,15 @@ events:
     series: ["Alpamayo"]
   - year: 2026
     date: 2026-10-20
+    title_ja: "Ampersand v0.1"
+    summary_ja: |
+      人々が長期的な共同目標を達成するための協働モデルを、humans& の Agents API で待機リストなしに提供。約744Bの MoE モデルで、100万トークンのコンテキストに対応する。
+
+      [Ampersand の発表 | humans&](https://ampersand.humansand.ai/blog/) / [モデルカードとリリース日 | humans&](https://ampersand.humansand.ai/blog/model-card.html)
+    tags: ["humans&", "Ampersand", "LLM Model"]
+    series: ["Ampersand"]
+  - year: 2026
+    date: 2026-10-20
     title_ja: "Spark-X2.6 (API)"
     summary_ja: |
       iFlytek が総パラメータ293B・活性化30Bの MoE モデルを API で提供開始。100万トークンのコンテキストに対応し、コーディングやエージェント作業向けに設計。提供元のモデル一覧に記載された API の提供開始日を記録。
@@ -462,6 +795,15 @@ events:
       [RFD4-Proteina の NIM 提供日 | NVIDIA](https://build.nvidia.com/ipd/rfd4-proteina/modelcard) / [NIM 初期リリースの仕様 | NVIDIA Docs](https://docs.nvidia.com/nim/bionemo/rfd4-proteina/1.0.0/release-notes.html)
     tags: ["NVIDIA", "Baker Lab", "BioNeMo", "Protein Design Model"]
     series: ["RFD4-Proteina"]
+  - year: 2026
+    date: 2026-10-19
+    title_ja: "Drex Max (API)"
+    summary_ja: |
+      テキスト・画像・動画から選択肢ごとの確率を返すマルチモーダル判断モデルを一般提供。画面操作を行うエージェント向けに設計し、Nace API から利用できる。公式モデルカードでは公開重みも案内している。
+
+      [Drex Max の提供開始 | Nace.AI](https://www.nace.ai/blog/introducing-drex-max) / [モデルカードと重み | Hugging Face](https://huggingface.co/nace-ai/drex-max-v1)
+    tags: ["Nace.AI", "Drex", "Open Weight Model", "Decision Model"]
+    series: ["Drex Max"]
   - year: 2026
     date: 2026-10-19
     title_ja: "MiniMax M3.1 Flash"
@@ -770,6 +1112,15 @@ events:
     tags: ["Alibaba", "Qwen", "Image Model"]
     series: ["Qwen Image"]
   - year: 2026
+    date: 2026-10-08
+    title_ja: "Nace Document Intelligence (API)"
+    summary_ja: |
+      文書を構造化データに変換する文書理解 API を一般提供。PDF、画像、表計算、音声、動画など36種類のファイルを解析し、抽出した値と原文の位置情報を返す。
+
+      [Nace Document Intelligence の提供開始 | Nace.AI](https://www.nace.ai/blog/document-intelligence-launch)
+    tags: ["Nace.AI", "Document Model"]
+    series: ["Nace Document Intelligence"]
+  - year: 2026
     date: 2026-10-07
     title_ja: "Claude Haiku 5.5"
     summary_ja: |
@@ -796,6 +1147,15 @@ events:
       [Gemini Nano Banana 2.1 | Google AI for Developers](https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1) / [Nano Banana 2.1 の一般提供開始 | Gemini API Release notes](https://ai.google.dev/gemini-api/docs/changelog)
     tags: ["Google", "Gemini", "Nano Banana", "Image Model"]
     series: ["Nano Banana"]
+  - year: 2026
+    date: 2026-10-06
+    title_ja: "Drex 2.0 (重み公開・API)"
+    summary_ja: |
+      Nace.AI が文章を生成せず、指定した選択肢ごとの確率を返す判断モデルを API と公開重みで提供。Qwen3.6-35B-A3B を基盤とする MoE モデルで、約3Bのパラメータを活性化する。
+
+      [Drex 2.0 の提供日と API 情報 | Nace Docs](https://console.nace.ai/docs/drex/reference/models) / [モデルカードと重み | Hugging Face](https://huggingface.co/nace-ai/drex-v2.0)
+    tags: ["Nace.AI", "Drex", "Open Weight Model", "Decision Model"]
+    series: ["Drex"]
   - year: 2026
     date: 2026-10-06
     title_ja: "Mistral Large 4 (Public Preview)"
