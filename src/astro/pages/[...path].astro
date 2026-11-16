@@ -10,6 +10,7 @@ import { buildRootMetadata } from "@/app/_shared/root-layout";
 import { getSiteConfig } from "@/shared/lib/site/site-config";
 import { SITE_TITLE } from "@/shared/lib/site/site-title";
 import { buildWebsiteJsonLd } from "@/shared/lib/site/website-jsonld";
+import GoogleAnalytics from "../components/google-analytics.astro";
 
 export async function getStaticPaths() {
   return (await getSiteRoutes()).map(({ module: _module, ...route }) => ({ params: { path: route.path }, props: { route } }));
@@ -63,8 +64,7 @@ const websiteJson = JSON.stringify(buildWebsiteJsonLd(route.locale)).replaceAll(
     <meta name="google-site-verification" content={metadata.verification?.google} />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" />
     <script type="application/ld+json" set:html={websiteJson} />
-    {import.meta.env.PROD && config.googleAnalyticsId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`} />}
-    {import.meta.env.PROD && config.googleAnalyticsId && <script is:inline define:vars={{ gaId: config.googleAnalyticsId }}>window.dataLayer ||= []; window.gtag = (...args) => window.dataLayer.push(args); window.gtag('js', new Date()); window.gtag('config', gaId);</script>}
+    <GoogleAnalytics />
     {import.meta.env.PROD && config.googleAdsenseClientId && <script is:inline async crossorigin="anonymous" src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.googleAdsenseClientId}`} />}
   </head>
   <body class="font-sans antialiased">

@@ -1,0 +1,25 @@
+---
+import { getSiteConfig } from "@/shared/lib/site/site-config";
+
+const { googleAnalyticsId } = getSiteConfig();
+---
+
+{import.meta.env.PROD && googleAnalyticsId && (
+  <>
+    <script
+      is:inline
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+    />
+    <script is:inline define:vars={{ gaId: googleAnalyticsId }}>
+      window.dataLayer ||= [];
+      window.gtag = function gtag() {
+        // Google tag expects queued calls as the Arguments object.
+        // oxlint-disable-next-line eslint/prefer-rest-params -- This is the Google tag's documented queue format.
+        window.dataLayer.push(arguments);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", gaId);
+    </script>
+  </>
+)}
