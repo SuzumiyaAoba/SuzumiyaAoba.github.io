@@ -12,7 +12,7 @@ export type BlogPageMetadataProps = {
 export async function buildBlogPageMetadata({
   params,
 }: BlogPageMetadataProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const pageNumber = Number(resolvedParams.page);
   const title = Number.isFinite(pageNumber)
     ? `Blog Page ${pageNumber}`

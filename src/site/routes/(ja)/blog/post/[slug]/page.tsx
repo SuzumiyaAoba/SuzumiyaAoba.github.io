@@ -10,7 +10,7 @@ type MetadataProps = {
 export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   return await buildBlogPostMetadata(resolvedParams?.slug, "ja");
 }
 

@@ -4,7 +4,6 @@ import { renderContentOpengraphImage } from "@/app/_shared/content-opengraph-ima
 export { CONTENT_OPENGRAPH_IMAGE_SIZE as size } from "@/app/_shared/content-opengraph-image";
 
 export const contentType = "image/png";
-export const dynamic = "force-static";
 
 export async function generateStaticParams(): Promise<{ book: string }[]> {
   const slugs = await getBookSlugs();

@@ -48,7 +48,7 @@ export default defineConfig({
           find: "@/content",
           replacement: fileURLToPath(new URL("content", import.meta.url)),
         },
-        ...["pages", "entities", "features", "widgets"].map((layer) => ({
+        ...["pages", "entities", "widgets"].map((layer) => ({
           find: `@/${layer}`,
           replacement: fileURLToPath(
             new URL(`src/foundation/${layer}`, import.meta.url)

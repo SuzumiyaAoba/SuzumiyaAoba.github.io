@@ -6,7 +6,6 @@ export { CONTENT_OPENGRAPH_IMAGE_SIZE as size } from "@/app/_shared/content-open
 export { buildTagPageStaticParams as generateStaticParams } from "@/app/_shared/tag-page-metadata";
 
 export const contentType = "image/png";
-export const dynamic = "force-static";
 
 export default async function Image({
   params,

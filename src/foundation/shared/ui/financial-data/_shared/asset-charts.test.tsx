@@ -12,7 +12,13 @@ import { Sheet1BarLineChartWrapper } from "../Sheet1BarLineChartWrapper";
 import { Sheet2ChartWrapper } from "../Sheet2ChartWrapper";
 import { Sheet2BarChartWrapper } from "../Sheet2BarChartWrapper";
 import { Sheet3AmountChartWrapper } from "../Sheet3AmountChartWrapper";
+import { Sheet3BarChartWrapper } from "../Sheet3BarChartWrapper";
+import { Sheet3ChartWrapper } from "../Sheet3ChartWrapper";
 import { Sheet4AmountChartWrapper } from "../Sheet4AmountChartWrapper";
+import { Sheet4BarChartWrapper } from "../Sheet4BarChartWrapper";
+import { Sheet4ChartWrapper } from "../Sheet4ChartWrapper";
+import { SHEET3_SPEC } from "./sheet3-spec";
+import { SHEET4_SPEC } from "./sheet4-spec";
 import { AssetAmountChart } from "./asset-amount-chart";
 import { AssetDistributionPieCharts } from "./asset-distribution-pie-charts";
 
@@ -163,6 +169,49 @@ describe("金融資産グラフの表示用データ", () => {
     });
     expect(line.mock.calls[0]?.[0].data).not.toBe(line.mock.calls[1]?.[0].data);
   });
+
+  it.each([
+    {
+      name: "Sheet3",
+      Line: Sheet3ChartWrapper,
+      Bar: Sheet3BarChartWrapper,
+      spec: SHEET3_SPEC,
+    },
+    {
+      name: "Sheet4",
+      Line: Sheet4ChartWrapper,
+      Bar: Sheet4BarChartWrapper,
+      spec: SHEET4_SPEC,
+    },
+  ])(
+    "$name の割合グラフはシート設定を共有し、折れ線の軸は5刻みで値を収める",
+    ({ Line, Bar, spec }) => {
+      renderToStaticMarkup(<Line />);
+      renderToStaticMarkup(<Bar />);
+      const lineProps = line.mock.calls[0]?.[0];
+      const barProps = bar.mock.calls[0]?.[0];
+      expect(lineProps?.data).toBe(barProps?.data);
+      for (const props of [lineProps, barProps]) {
+        expect(props?.excludeHeaders).toStrictEqual(spec.excludeHeaders);
+        expect(props?.config).toMatchObject({
+          yAxisMin: 0,
+          yAxisLabel: "%",
+          startYear: spec.startYear,
+          labelMap: spec.labelMap,
+        });
+      }
+      expect(barProps?.config?.yAxisMax).toBe(100);
+      const lineMax = lineProps?.config?.yAxisMax ?? 0;
+      expect(lineMax % 5).toBe(0);
+      const excluded = new Set(spec.excludeHeaders);
+      const values = (lineProps?.data.series ?? []).flatMap((s) =>
+        Object.entries(s.values)
+          .filter(([header]) => !excluded.has(header))
+          .map(([, value]) => value ?? 0)
+      );
+      expect(lineMax).toBeGreaterThanOrEqual(Math.max(...values));
+    }
+  );
 
   it("年別の円グラフは欠損値を除外し、ゼロと年・項目の順序を保つ", () => {
     const html = renderToStaticMarkup(

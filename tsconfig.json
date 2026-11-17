@@ -22,8 +22,6 @@
       "@/shared/*": ["./src/foundation/shared/*"],
       "@/entities": ["./src/foundation/entities"],
       "@/entities/*": ["./src/foundation/entities/*"],
-      "@/features": ["./src/foundation/features"],
-      "@/features/*": ["./src/foundation/features/*"],
       "@/widgets": ["./src/foundation/widgets"],
       "@/widgets/*": ["./src/foundation/widgets/*"],
       "@/pages": ["./src/foundation/pages"],
