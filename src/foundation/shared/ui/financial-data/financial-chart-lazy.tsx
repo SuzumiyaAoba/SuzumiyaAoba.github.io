@@ -4,6 +4,14 @@ import dynamic from "@/shared/ui/lazy-component";
 import { useMemo } from "react";
 import type { ComponentType } from "react";
 import { isRecord } from "@/shared/lib/types/is-record";
+import { loadAutoSectionChart } from "./_shared/auto-section-chart";
+
+// webpackInclude が無いと financial-data 配下の
+// *.test.ts / *.stories.tsx まで context module に含まれ、
+// vitest や storybook がバンドルへ載る。
+// 動的パスは webpackInclude の context module として
+// チャートごとに分割される意図的な構成。
+const chartWrappers = import.meta.glob("./*ChartWrapper.tsx");
 
 function isChartComponent(value: unknown): value is ComponentType {
   return typeof value === "function";
@@ -28,16 +36,10 @@ export function FinancialChartLazy({ name }: FinancialChartLazyProps) {
     () =>
       dynamic(
         async () => {
-          // webpackInclude が無いと financial-data 配下の
-          // *.test.ts / *.stories.tsx まで context module に含まれ、
-          // vitest や storybook がバンドルへ載る。
-          // 動的パスは webpackInclude の context module として
-          // チャートごとに分割される意図的な構成。
           // react-doctor-disable-next-line no-dynamic-import-path
-          const charts = import.meta.glob("./*ChartWrapper.tsx");
-          const loader = charts[`./${name}.tsx`];
+          const loader = chartWrappers[`./${name}.tsx`];
           if (!loader) {
-            throw new Error(`Unknown chart component: ${name}`);
+            return await loadAutoSectionChart(name);
           }
           const chartModule: unknown = await loader();
           const chart = isRecord(chartModule) ? chartModule[name] : undefined;
