@@ -127,10 +127,10 @@ export function ie600EngravingTexture(side: number, rear: boolean) {
     context.lineWidth = 0.075;
     context.strokeText("IE 600", 0, 0);
   } else {
-    context.translate(11.8, 17.1);
+    context.translate(11.45, 17.1);
     context.scale(side, 1);
-    context.translate(-2.8, -2.1);
-    context.scale(5.6 / 24, 4.2 / 18);
+    context.translate(-2.5, -1.875);
+    context.scale(5 / 24, 3.75 / 18);
     context.translate(0, -3);
     context.fill(new Path2D(ie600SymbolPath));
   }

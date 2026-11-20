@@ -33,7 +33,7 @@ export function createNodeParts() {
   const detail = createDetailLevels();
   const matte = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x20_21_23,
+      color: 0x35_35_36,
       roughness: 0.68,
       specularIntensity: 0.35,
       envMapIntensity: 0.65,

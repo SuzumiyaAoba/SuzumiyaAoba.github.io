@@ -121,7 +121,11 @@ function cinnamonUsbAShield() {
 }
 
 export const cinnamonShoulder = 12;
-export const cinnamonTail = 40;
+export const cinnamonCableRadius = 3.1;
+export const cinnamonPlugProfile = {
+  "usb-a": { width: 8, height: 4.4, taperStart: 17, seam: 23.5, tail: 34 },
+  "usb-b": { width: 5.6, height: 6, taperStart: 25, seam: 25.5, tail: 40 },
+} as const;
 
 function appendShieldDepressions(
   depression: BufferGeometry,
@@ -147,12 +151,14 @@ function appendShieldDepressions(
 }
 
 function housingSection(type: CinnamonConnector, z: number) {
-  const taper = MathUtils.smoothstep(z, 20, cinnamonTail);
+  const profile = cinnamonPlugProfile[type];
+  const taper = MathUtils.smoothstep(z, profile.taperStart, profile.tail);
   const roll =
-    0.94 + 0.06 * Math.sin((Math.min(1, (z - 12) / 0.7) * Math.PI) / 2);
+    0.94 +
+    0.06 * Math.sin((Math.min(1, (z - cinnamonShoulder) / 0.7) * Math.PI) / 2);
   return {
-    width: MathUtils.lerp(type === "usb-a" ? 8 : 5.6, 3.1, taper) * roll,
-    height: MathUtils.lerp(type === "usb-a" ? 4.4 : 6, 3.1, taper) * roll,
+    width: MathUtils.lerp(profile.width, 3.9, taper) * roll,
+    height: MathUtils.lerp(profile.height, 3.9, taper) * roll,
     power: MathUtils.lerp(0.35, 1, taper),
   };
 }
@@ -179,23 +185,34 @@ export function cinnamonHousingGeometry(
   const normals: number[] = [];
   const indices: number[] = [];
   appendHousingRings(along, around, section, type, positions, normals, indices);
-  // Separate vertices keep the shoulder planar without smoothing triangle fans.
-  const z = section === "cover" ? cinnamonShoulder : cinnamonTail;
-  const firstCap = positions.length / 3;
-  positions.push(0, 0, z);
-  normals.push(0, 0, section === "cover" ? -1 : 1);
+  // A flat annular lip surrounds the jacket where it leaves each rubber boot.
+  const boot = section === "boot";
+  const z = boot ? cinnamonPlugProfile[type].tail : cinnamonShoulder;
+  const innerRadius = boot ? cinnamonCableRadius : 0;
+  const normalZ = boot ? 1 : -1;
   for (let column = 0; column <= around; column += 1) {
+    const angle = (column / around) * Math.PI * 2;
+    const outer = positions.length / 3;
+    positions.push(...housingPoint(type, angle, z).toArray());
     positions.push(
-      ...housingPoint(type, (column / around) * Math.PI * 2, z).toArray()
+      innerRadius * Math.cos(angle),
+      innerRadius * Math.sin(angle),
+      z
     );
-    normals.push(0, 0, section === "cover" ? -1 : 1);
+    normals.push(0, 0, normalZ, 0, 0, normalZ);
     if (column < around) {
-      const next = firstCap + column + 1;
-      indices.push(
-        ...(section === "cover"
-          ? [firstCap, next + 1, next]
-          : [firstCap, next, next + 1])
-      );
+      if (boot) {
+        indices.push(
+          outer,
+          outer + 2,
+          outer + 1,
+          outer + 2,
+          outer + 3,
+          outer + 1
+        );
+      } else {
+        indices.push(outer, outer + 1, outer + 2);
+      }
     }
   }
   const geometry = new BufferGeometry();
@@ -214,14 +231,15 @@ function appendHousingRings(
   normals: number[],
   indices: number[]
 ) {
+  const profile = cinnamonPlugProfile[type];
   for (let row = 0; row <= along; row += 1) {
     for (let column = 0; column <= around; column += 1) {
       const angle = (column / around) * Math.PI * 2;
-      const seam = 26 + 6 * Math.abs(Math.sin(angle)) ** 4;
+      const seam = profile.seam + 6 * Math.abs(Math.sin(angle)) ** 4;
       const z =
         section === "cover"
           ? MathUtils.lerp(cinnamonShoulder, seam, row / along)
-          : MathUtils.lerp(seam, cinnamonTail, row / along);
+          : MathUtils.lerp(seam, profile.tail, row / along);
       const point = housingPoint(type, angle, z);
       const tangent = housingPoint(type, angle + 0.0001, z).sub(
         housingPoint(type, angle - 0.0001, z)
@@ -229,7 +247,7 @@ function appendHousingRings(
       const axial = housingPoint(
         type,
         angle,
-        Math.min(cinnamonTail, z + 0.0001)
+        Math.min(profile.tail, z + 0.0001)
       ).sub(housingPoint(type, angle, Math.max(cinnamonShoulder, z - 0.0001)));
       const normal = tangent.cross(axial).normalize();
       positions.push(...point.toArray());
@@ -253,7 +271,7 @@ export function cinnamonMarkGeometry(type: CinnamonConnector) {
   for (let row = 0; row <= segments; row += 1) {
     for (let column = 0; column <= segments; column += 1) {
       const x = (column / segments - 0.5) * width;
-      const z = 14 + (row / segments) * 14;
+      const z = 14 + (row / segments) * (type === "usb-a" ? 11 : 14);
       const section = housingSection(type, z);
       const y =
         section.height *

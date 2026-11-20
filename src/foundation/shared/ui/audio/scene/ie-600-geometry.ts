@@ -48,9 +48,9 @@ function shellOutline() {
 }
 
 function badgeWeight(x: number, y: number) {
-  const radius = 1.3;
-  const dx = Math.abs(x + 2.2) - 5.3 + radius;
-  const dy = Math.abs(y + 1.1) - 3.4 + radius;
+  const radius = 1.6;
+  const dx = Math.abs(x + 1.7) - 5.8 + radius;
+  const dy = Math.abs(y + 1.1) - 3.65 + radius;
   const distance =
     Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) +
     Math.min(Math.max(dx, dy), 0) -
@@ -234,7 +234,7 @@ function appendShellRingVertices(
     z = MathUtils.lerp(z, roundNeck, MathUtils.smoothstep(axis, -5, -2));
     z =
       side === 1
-        ? MathUtils.lerp(z, 3.65, badgeWeight(x, y))
+        ? MathUtils.lerp(z, 4.2 - x * 0.025, badgeWeight(x, y))
         : MathUtils.lerp(
             z,
             3.7 - x * 0.035,

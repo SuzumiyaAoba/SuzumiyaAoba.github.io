@@ -263,7 +263,7 @@ export function createSigmaBoardParts(parts: SigmaParts) {
     transform.updateMatrix();
     batch(
       "Individual ceramic frit dots beneath glass",
-      parts.insulator,
+      parts.fritInk,
       () => new CircleGeometry(1, 16)
     ).matrices.push(transform.matrix.clone());
   };

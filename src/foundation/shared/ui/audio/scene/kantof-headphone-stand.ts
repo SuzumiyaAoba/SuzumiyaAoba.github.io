@@ -1,10 +1,10 @@
 import {
-  CylinderGeometry,
   ExtrudeGeometry,
   Group,
   Mesh,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
+  MathUtils,
   Shape,
 } from "three";
 import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
@@ -28,6 +28,7 @@ function cradleGeometry() {
   outline.quadraticCurveTo(-50, 266, -49, 269);
   const geometry = new ExtrudeGeometry(outline, {
     depth: 63,
+    steps: 10,
     bevelEnabled: true,
     bevelSize: 1,
     bevelThickness: 1,
@@ -40,6 +41,11 @@ function cradleGeometry() {
     const x = positions.getX(index);
     const y = positions.getY(index);
     const z = positions.getZ(index);
+    // 幅方向のアーチに、前後の縁が残る浅い鞍形を重ねる。
+    const distanceFromMiddle = Math.abs(z - 31.5) / 32.5;
+    const saddle = 3.5 * (1 - distanceFromMiddle ** 2);
+    const topWeight = MathUtils.smoothstep(y, 272, 286);
+    positions.setY(index, y - saddle * topWeight);
     // 表面と面取りで投影を連続させ、木目の継ぎ目を目立たせない。
     uvs.setXY(index, (x + 50) / 100, (z + (y - 265) * 1.5 + 1) / 103);
   }
@@ -59,7 +65,7 @@ export function createKantofHeadphoneStand() {
     bumpMap: pores,
     bumpScale: 0.12,
     roughnessMap: pores,
-    color: 0xb6_9c_87,
+    color: 0xdf_c9_b2,
     roughness: 0.97,
     clearcoat: 0.3,
     clearcoatRoughness: 0.5,
@@ -82,10 +88,17 @@ export function createKantofHeadphoneStand() {
   ]);
   const base = new Mesh(baseGeometry, metal);
   base.name = "Black aluminium circular base";
-  const postGeometry = new CylinderGeometry(4, 4, 266, 48);
+  const postGeometry = turnedProfileGeometry([
+    [6.7, 8],
+    [6, 8.25],
+    [4.85, 9.2],
+    [4.2, 10.8],
+    [4, 12.2],
+    [4, 275],
+    [0, 275],
+  ]);
   const post = new Mesh(postGeometry, metal);
   post.name = "Black aluminium support post";
-  post.position.y = 141;
   const woodGeometry = cradleGeometry();
   const cradle = new Mesh(woodGeometry, wood);
   cradle.name = kantofCradleName;

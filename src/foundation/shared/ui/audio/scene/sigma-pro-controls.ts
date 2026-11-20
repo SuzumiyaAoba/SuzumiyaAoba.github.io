@@ -109,6 +109,7 @@ export function createSigmaControls(parts: SigmaParts) {
     thickness: 0.18,
     ior: 1.5,
     roughness: 0.007,
+    specularIntensity: 0.18,
     envMapIntensity: 0.55,
   });
   const pane = parts.mesh(

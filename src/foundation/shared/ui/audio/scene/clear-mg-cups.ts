@@ -8,6 +8,9 @@ import {
 import { focalEmblemGeometry } from "./focal-emblem";
 import { clearMgShellGeometry } from "./clear-mg-shell";
 
+// 正面に近い写真でメダリオンの直径はグリル高の約46%。刻字とねじ穴も同じ縮尺にそろえる。
+const medallionScale = 50 / 38.8;
+
 function arcText(
   context: CanvasRenderingContext2D,
   text: string,
@@ -36,7 +39,10 @@ function arcText(
   }
 }
 
-function medallion(parts: ClearMgParts, cup: Group) {
+function medallion(parts: ClearMgParts) {
+  const group = new Group();
+  group.name = "Clear Mg Professional medallion";
+  group.scale.set(medallionScale, medallionScale, 1);
   const shape = clearOval(38.8, 38.8);
   const center = new Path();
   center.absarc(0, 0, 13.8, 0, Math.PI * 2, true);
@@ -60,7 +66,7 @@ function medallion(parts: ClearMgParts, cup: Group) {
     );
     screw.scale.setScalar(0.76);
     screw.rotation.z = angle;
-    cup.add(screw);
+    group.add(screw);
   }
   const mesh = parts.disc(
     13.7,
@@ -72,7 +78,7 @@ function medallion(parts: ClearMgParts, cup: Group) {
   for (let index = 0; index < uv.count; index += 1) {
     uv.setXY(index, uv.getX(index) / 3, uv.getY(index) / 3);
   }
-  cup.add(
+  group.add(
     parts.ovalRing(
       [40.5, 40.5],
       [27, 27],
@@ -86,9 +92,23 @@ function medallion(parts: ClearMgParts, cup: Group) {
       shape,
       0.55,
       [0, 0, 11.35],
-      parts.polished,
+      parts.engravedMetal,
       "Machined annular medallion with three countersunk screw openings",
       0.12
+    ),
+    parts.ring(
+      19.4,
+      0.27,
+      [0, 0, 11.92],
+      parts.polished,
+      "Polished outer medallion lip"
+    ),
+    parts.ring(
+      13.9,
+      0.2,
+      [0, 0, 11.95],
+      parts.polished,
+      "Polished inner medallion bevel"
     ),
     parts.disc(13.8, [0, 0, 10.8], parts.black, "Logo acoustic backing"),
     mesh,
@@ -116,6 +136,7 @@ function medallion(parts: ClearMgParts, cup: Group) {
       1024
     )
   );
+  return group;
 }
 
 function outerGrille(parts: ClearMgParts, cup: Group) {
@@ -157,7 +178,7 @@ function outerGrille(parts: ClearMgParts, cup: Group) {
         radiusX: 44,
         radiusY: 54,
         cellRadius: 3.05,
-        opening: 16.8,
+        opening: 16.8 * medallionScale,
         depth: 0.6,
         dome: 2.7,
         z: 8.2,
@@ -168,7 +189,7 @@ function outerGrille(parts: ClearMgParts, cup: Group) {
       "Convex graduated external honeycomb grille"
     )
   );
-  medallion(parts, cup);
+  cup.add(medallion(parts));
 }
 
 function innerDriver(parts: ClearMgParts, cup: Group) {

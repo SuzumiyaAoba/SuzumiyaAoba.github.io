@@ -1,4 +1,5 @@
 import { Box3, Group, Raycaster, Texture, Vector3 } from "three";
+import type { Object3D } from "three";
 import { afterEach, expect, it, vi } from "vite-plus/test";
 import {
   createKantofHeadphoneStand,
@@ -14,6 +15,25 @@ vi.mock(import("./prepared-textures"), () => ({
 afterEach(() => vi.unstubAllGlobals());
 
 function noop() {}
+
+function smallestContactGap(cradle: Object3D, cushion: Object3D) {
+  const [standX, , standZ] = kantofStandPosition;
+  const downward = new Raycaster(new Vector3(), new Vector3(0, -1, 0));
+  const upward = new Raycaster(new Vector3(), new Vector3(0, 1, 0));
+  let gap = Infinity;
+  for (const depth of [-10, 0, 10]) {
+    for (let offset = -35; offset <= 35; offset += 2.5) {
+      downward.ray.origin.set(standX + offset, 400, standZ + depth);
+      upward.ray.origin.set(standX + offset, -200, standZ + depth);
+      const [top] = downward.intersectObject(cradle);
+      const [underside] = upward.intersectObject(cushion);
+      if (top && underside) {
+        gap = Math.min(gap, underside.point.y - top.point.y);
+      }
+    }
+  }
+  return gap;
+}
 
 function stubCanvas() {
   const context = {
@@ -67,6 +87,14 @@ it("公表寸法の台座と木製アーチを備え、床から高さ290 mmに�
   const bounds = new Box3().setFromObject(stand.group);
   expect(bounds.min.y).toBeCloseTo(0);
   expect(bounds.max.y).toBeCloseTo(290, 0);
+  const top = (z: number) =>
+    new Raycaster(
+      new Vector3(0, 310, z),
+      new Vector3(0, -1, 0)
+    ).intersectObject(cradle)[0]?.point.y;
+  for (const z of [-29, 29]) {
+    expect(top(z)).toBeGreaterThan((top(0) ?? 0) + 2);
+  }
   stand.dispose();
 });
 
@@ -97,25 +125,9 @@ it("実際のヘッドバンドを木部に掛け、イヤホンは台座の手�
     }
     stand.group.updateWorldMatrix(true, true);
     headphones.group.updateWorldMatrix(true, true);
-    const gaps: number[] = [];
-    const [standX, , standZ] = kantofStandPosition;
-    for (let offset = -35; offset <= 35; offset += 2.5) {
-      const x = standX + offset;
-      const [top] = new Raycaster(
-        new Vector3(x, 400, standZ),
-        new Vector3(0, -1, 0)
-      ).intersectObject(cradle);
-      const [underside] = new Raycaster(
-        new Vector3(x, -200, standZ),
-        new Vector3(0, 1, 0)
-      ).intersectObject(cushion);
-      if (top && underside) {
-        gaps.push(underside.point.y - top.point.y);
-      }
-    }
-    expect(gaps.length).toBeGreaterThan(0);
-    expect(Math.min(...gaps)).toBeGreaterThan(-0.2);
-    expect(Math.min(...gaps)).toBeLessThan(0.2);
+    const gap = smallestContactGap(cradle, cushion);
+    expect(gap).toBeGreaterThan(-0.2);
+    expect(gap).toBeLessThan(0.2);
     expect(new Box3().setFromObject(model).min.y).toBeGreaterThan(0);
   }
   await headphones.setHeadphones("ie-600");

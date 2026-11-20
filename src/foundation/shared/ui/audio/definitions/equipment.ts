@@ -439,6 +439,10 @@ export const audioEquipment: readonly AudioEquipment[] = [
         href: "https://www.fiio.com/btr17",
       },
       {
+        title: { ja: "国内公式の外観写真", en: "FiiO Japan product photos" },
+        href: "https://fiio.jp/products/btr17",
+      },
+      {
         title: { ja: "メーカー仕様表", en: "Official specifications" },
         href: "https://www.fiio.com/btr17_parameters",
       },
@@ -747,6 +751,13 @@ export const audioEquipment: readonly AudioEquipment[] = [
           en: "Japanese distributor’s product information and photos",
         },
         href: "https://www.dm-importaudio.jp/audioquest/lineup/detail1/index1385.html",
+      },
+      {
+        title: {
+          ja: "メーカーの端子拡大写真",
+          en: "AudioQuest connector photos",
+        },
+        href: "https://www.audioquest.com/products/cinnamon-usb-a-b-digital-audio-cable",
       },
     ],
   },

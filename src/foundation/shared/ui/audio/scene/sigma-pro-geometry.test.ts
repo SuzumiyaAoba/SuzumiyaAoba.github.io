@@ -23,7 +23,10 @@ function intersections(geometry: BufferGeometry, x: number, y: number) {
 it("keeps the glass window open to the circuit board while retaining its frame and controls", () => {
   const geometry = sigmaTopGeometry();
   expect(intersections(geometry, 0, 11)).toHaveLength(0);
-  expect(intersections(geometry, 40.5, 11).length).toBeGreaterThan(0);
+  for (const side of [-1, 1]) {
+    expect(intersections(geometry, side * 40.3, 11)).toHaveLength(0);
+    expect(intersections(geometry, side * 41.4, 11).length).toBeGreaterThan(0);
+  }
   expect(intersections(geometry, 0, -60).length).toBeGreaterThan(0);
   geometry.dispose();
 });

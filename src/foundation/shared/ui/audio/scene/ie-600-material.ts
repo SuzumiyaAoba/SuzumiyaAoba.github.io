@@ -12,7 +12,7 @@ uniform float ie600HasMarks;
 vec3 ie600SurfaceGrain(vec3 point) {
   vec3 weights = pow(abs(normalize(vIe600Normal)), vec3(4.0));
   weights /= weights.x + weights.y + weights.z;
-  vec3 coordinate = point / 6.0;
+  vec3 coordinate = point / 8.0;
   return texture2D(ie600Grain, coordinate.yz).rgb * weights.x
     + texture2D(ie600Grain, coordinate.xz).rgb * weights.y
     + texture2D(ie600Grain, coordinate.xy).rgb * weights.z;
@@ -27,7 +27,7 @@ float ie600Engraving(vec3 point) {
 }
 
 float ie600SurfaceHeight(vec3 point) {
-  return ie600SurfaceGrain(point).r * 0.075 - ie600Engraving(point) * 0.035;
+  return ie600SurfaceGrain(point).r * 0.092 - ie600Engraving(point) * 0.035;
 }
 
 vec3 ie600PerturbNormal(vec3 surfaceNormal, float facing) {

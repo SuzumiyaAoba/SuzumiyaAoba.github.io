@@ -80,6 +80,25 @@ it("革を背面に埋め込み、各スイッチとマイクの周囲を側壁�
   );
   expect(leather?.object.name).toBe("Grained black leather rear cover");
   expect(leather?.point.z).toBeCloseTo(-8.06);
+  const upperStrip = surface(
+    model.group,
+    new Vector3(0, 81, -20),
+    new Vector3(0, 0, 1)
+  );
+  const shoulder = surface(
+    model.group,
+    new Vector3(0, 76, -20),
+    new Vector3(0, 0, 1)
+  );
+  expect(upperStrip?.object.name).toBe(
+    "Recessed leather strip above the rear shoulder"
+  );
+  expect(upperStrip?.point.z).toBeCloseTo(-6.86);
+  expect(shoulder?.object.name).toBe(
+    "Angled rear shoulder beneath the volume wheel"
+  );
+  expect(shoulder?.point.z).toBeGreaterThan(-8.06);
+  expect(shoulder?.point.z).toBeLessThan(-6.86);
   for (const [y, z, name] of [
     [60.1, 0, "Power button recess"],
     [30, 0, "PC BT PHONE selector slot"],

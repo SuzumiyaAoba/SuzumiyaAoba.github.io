@@ -20,8 +20,8 @@ function bandOutline(
   outerY: number,
   innerX: number,
   innerY: number,
-  start = 0,
-  end = Math.PI
+  start = Math.PI * 0.14,
+  end = Math.PI * 0.86
 ) {
   const shape = new Shape();
   shape.absellipse(0, 136, outerX, outerY, start, end, false, 0);
@@ -65,14 +65,17 @@ function createHeadband(parts: Hd800sParts) {
     clip.rotation.z = angle - Math.PI / 2;
   }
   for (const side of [-1, 1]) {
-    const slider = parts.box(
-      [8, 22, 24],
-      [side * 97, 142, 0],
+    // パッド端からヨークまでは、外側の幅広いバンドから細い伸縮レールが露出する。
+    const start = side > 0 ? 0.055 : 0.84;
+    const end = side > 0 ? 0.16 : 0.945;
+    parts.plate(
+      bandOutline(98, 80, 94, 76, Math.PI * start, Math.PI * end),
+      19,
+      [0, 0, -9.5],
       parts.trim,
       "Adjustable headband slider",
-      0.8
+      0.45
     );
-    slider.rotation.z = side * -0.09;
     parts.box(
       [9, 18, 26],
       [side * 96, 143, 0],
@@ -81,13 +84,15 @@ function createHeadband(parts: Hd800sParts) {
       1
     );
     for (let index = 0; index < 5; index += 1) {
-      parts.box(
-        [0.3, 0.55, 7],
-        [side * 101.1, 134 + index * 3, 0],
+      const angle = 0.2 + index * 0.045;
+      const notch = parts.box(
+        [0.25, 0.55, 5.5],
+        [side * 98.45 * Math.cos(angle), 136 + 80.45 * Math.sin(angle), 0],
         parts.black,
         "Headband adjustment index",
         0.1
       );
+      notch.rotation.z = side * angle;
     }
   }
   parts.surfacePrint(

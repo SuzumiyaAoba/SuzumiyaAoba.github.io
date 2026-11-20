@@ -39,9 +39,10 @@ export function createSigmaParts() {
     thickness: 0.45,
     ior: 1.5,
     roughness: 0.007,
+    specularIntensity: 0.18,
     envMapIntensity: 0.55,
-    attenuationColor: 0xde_e7_ed,
-    attenuationDistance: 35,
+    attenuationColor: 0xbc_bc_ba,
+    attenuationDistance: 1.5,
   });
   const boardSurface = applySurfaceFinish(
     new MeshPhysicalMaterial({
@@ -80,6 +81,7 @@ export function createSigmaParts() {
   const silkscreen = new MeshBasicMaterial({ color: 0x95_a1_9a });
   const ink = new MeshBasicMaterial({ color: 0x77_7b_7e });
   const packageInk = new MeshBasicMaterial({ color: 0x49_50_4c });
+  const fritInk = new MeshBasicMaterial({ color: 0x04_04_05 });
   const screenInk = new MeshBasicMaterial({
     color: 0xb8_c1_c8,
     toneMapped: false,
@@ -118,6 +120,7 @@ export function createSigmaParts() {
     silkscreen,
     ink,
     packageInk,
+    fritInk,
     screenInk,
     text,
   };

@@ -4,6 +4,37 @@ export const HA1A_FRONT = 141.5;
 export const HA1A_WINDOW_Y = 159;
 export const HA1A_WINDOW_RADIUS = 34.5;
 
+/** 漆塗りの各側板は断面がわずかに膨らみ、上下の縁で金属の下地へ戻る。 */
+export function ha1aWoodBoardGeometry(centerY: number) {
+  const profile = new Shape();
+  profile.moveTo(-3.1, -20.1);
+  profile.lineTo(1.45, -20.1);
+  profile.quadraticCurveTo(2.6, -19.9, 2.9, -18);
+  profile.bezierCurveTo(3.35, -10, 3.35, 10, 2.9, 18);
+  profile.quadraticCurveTo(2.6, 19.9, 1.45, 20.1);
+  profile.lineTo(-3.1, 20.1);
+  profile.closePath();
+  const geometry = new ExtrudeGeometry(profile, {
+    depth: 281.5,
+    bevelEnabled: true,
+    bevelSize: 0.25,
+    bevelThickness: 0.25,
+    bevelSegments: 3,
+    curveSegments: 10,
+  });
+  geometry.translate(0, 0, -140.75);
+  const positions = geometry.getAttribute("position");
+  const uvs = geometry.getAttribute("uv");
+  for (let i = 0; i < positions.count; i += 1) {
+    uvs.setXY(
+      i,
+      positions.getZ(i) / 282 + 0.5,
+      (positions.getY(i) + centerY - 7) / 208
+    );
+  }
+  return geometry;
+}
+
 function outline(width: number, height: number, radius: number, offsetY = 0) {
   const shape = new Shape();
   const x = -width / 2;

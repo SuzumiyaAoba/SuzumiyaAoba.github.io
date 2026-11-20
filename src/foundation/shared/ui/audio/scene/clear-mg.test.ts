@@ -241,7 +241,7 @@ it("メダリオンの三つのねじに実際の工具穴を作り、Focalの�
   for (const angle of [-Math.PI / 3, Math.PI / 3, Math.PI]) {
     const ray = new Raycaster(
       cup.localToWorld(
-        new Vector3(Math.sin(angle) * 16.8, Math.cos(angle) * 16.8, 20)
+        new Vector3(Math.sin(angle) * 21.65, Math.cos(angle) * 21.65, 20)
       ),
       new Vector3(0, 0, -1).transformDirection(cup.matrixWorld)
     );

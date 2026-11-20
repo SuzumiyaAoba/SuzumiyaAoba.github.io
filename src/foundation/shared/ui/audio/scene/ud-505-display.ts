@@ -75,9 +75,26 @@ export function createUd505Display(parts: ModelParts) {
     (context) => {
       context.fillStyle = "#020405";
       context.fillRect(0, 0, 65.3, 18.3);
-      context.fillStyle = "#7caeb1";
-      context.font = "200 7.4px 'Helvetica Neue', Arial, sans-serif";
-      context.fillText("USB", 9, 12);
+      // USB の発光部分はガラス幅の約 1/5。細い丸文字の筆画をドットの下に描く。
+      context.strokeStyle = "#96c7c9";
+      context.lineWidth = 0.36;
+      context.beginPath();
+      context.moveTo(9.7, 6.1);
+      context.lineTo(9.7, 9.8);
+      context.bezierCurveTo(9.7, 12.5, 13.4, 12.5, 13.4, 9.8);
+      context.lineTo(13.4, 6.1);
+      context.moveTo(18.1, 6.5);
+      context.bezierCurveTo(15.8, 5, 14.2, 7.7, 16.5, 8.8);
+      context.bezierCurveTo(19.5, 10.1, 17.9, 13.1, 15.1, 11.4);
+      context.moveTo(19.9, 11.8);
+      context.lineTo(19.9, 6.1);
+      context.lineTo(21.4, 6.1);
+      context.bezierCurveTo(23.5, 6.1, 23.5, 8.8, 21.4, 8.8);
+      context.lineTo(19.9, 8.8);
+      context.lineTo(21.5, 8.8);
+      context.bezierCurveTo(23.8, 8.8, 23.8, 11.8, 21.5, 11.8);
+      context.closePath();
+      context.stroke();
       // 細い文字の上へサブピクセルの間隙を載せる。低解像度の記号にはしない。
       context.fillStyle = "#020405";
       for (let x = 8.9; x < 25; x += 0.19) {

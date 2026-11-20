@@ -10,6 +10,7 @@ import {
   btr17FrontOutline,
   btr17JackGeometry,
   btr17Outputs,
+  btr17RearBevelGeometry,
   btr17RearLeatherGeometry,
   btr17UsbPositions,
   btr17UsbRimGeometry,
@@ -241,7 +242,7 @@ export function createBtr17() {
   parts.root.name = "FiiO BTR17 Black — millimetres";
   const metal = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0x25_28_2d,
+      color: 0x36_37_39,
       metalness: 0.72,
       roughness: 0.46,
       clearcoat: 0.12,
@@ -260,7 +261,7 @@ export function createBtr17() {
   });
   const leatherTexture = btr17LeatherTexture();
   const leather = new MeshPhysicalMaterial({
-    color: 0x45_49_4f,
+    color: 0x59_58_55,
     roughness: 0.86,
     metalness: 0,
     map: leatherTexture.color,
@@ -298,10 +299,22 @@ export function createBtr17() {
   display.material.transparent = false;
   display.material.depthWrite = true;
   parts.mesh(
-    btr17RearLeatherGeometry(),
+    btr17RearLeatherGeometry("lower"),
     leather,
     [0, 0, -7.98],
     "Grained black leather rear cover"
+  );
+  parts.mesh(
+    btr17RearBevelGeometry(),
+    metal,
+    [0, 0, 0],
+    "Angled rear shoulder beneath the volume wheel"
+  );
+  parts.mesh(
+    btr17RearLeatherGeometry("upper"),
+    leather,
+    [0, 0, -6.78],
+    "Recessed leather strip above the rear shoulder"
   );
   const logo = parts.print(
     18,

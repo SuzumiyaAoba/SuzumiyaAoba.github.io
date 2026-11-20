@@ -1,6 +1,6 @@
 import { Box3, Vector3 } from "three";
 import { createHa1aFront } from "./ha-1a-front";
-import { ha1aTopGeometry } from "./ha-1a-geometry";
+import { ha1aTopGeometry, ha1aWoodBoardGeometry } from "./ha-1a-geometry";
 import { createHa1aParts } from "./ha-1a-parts";
 import type { Ha1aParts } from "./ha-1a-parts";
 import { createHa1aRear } from "./ha-1a-rear";
@@ -8,29 +8,21 @@ import { createHa1aRear } from "./ha-1a-rear";
 function woodSides(parts: Ha1aParts) {
   for (const x of [-59.8, 59.8]) {
     parts.box(
-      [6.1, 207, 280],
-      [x, 111, -1],
+      [4, 207, 280],
+      [x - Math.sign(x) * 0.6, 111, -1],
       parts.turned,
       "Metal backing visible in the wood-panel seams",
       0.6
     );
     for (let board = 0; board < 5; board += 1) {
-      const panel = parts.box(
-        [6.7, 40.85, 282],
-        [x, 28.1 + board * 41.3, -1],
+      const centerY = 28.1 + board * 41.3;
+      const panel = parts.mesh(
+        ha1aWoodBoardGeometry(centerY),
         parts.wood,
-        "Lacquered wood side panel",
-        0.8
+        [x, centerY, -1],
+        "Lacquered wood side panel"
       );
-      const positions = panel.geometry.getAttribute("position");
-      const uvs = panel.geometry.getAttribute("uv");
-      for (let vertex = 0; vertex < positions.count; vertex += 1) {
-        uvs.setXY(
-          vertex,
-          positions.getZ(vertex) / 282 + 0.5,
-          (positions.getY(vertex) + panel.position.y - 7) / 208
-        );
-      }
+      panel.rotation.y = x < 0 ? Math.PI : 0;
     }
     for (const z of [-128, 127]) {
       parts.screw([Math.sign(x) * 55.8, 10, z], "bottom", true);

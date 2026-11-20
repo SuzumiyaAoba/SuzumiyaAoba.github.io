@@ -218,5 +218,14 @@ it("通気板をポケットの床で埋めず、穿孔の奥に暗い空間を�
     "Continuous perforated touch-panel ventilation surround"
   );
   expect((web?.point.y ?? 0) - (hole?.point.y ?? 0)).toBeGreaterThan(0.4);
+  ray.ray.origin.set(25, 60, 10);
+  const [glass] = ray.intersectObject(parts.root);
+  expect(glass?.object.name).toBe("Gloss black capacitive touch glass");
+  ray.ray.origin.x = 72.7;
+  const [rim] = ray.intersectObject(parts.root);
+  expect(rim?.object.name).toBe(
+    "Rolled rim descending into the touch-panel pocket"
+  );
+  expect((rim?.point.y ?? 0) - (glass?.point.y ?? 0)).toBeGreaterThan(2);
   parts.dispose();
 });

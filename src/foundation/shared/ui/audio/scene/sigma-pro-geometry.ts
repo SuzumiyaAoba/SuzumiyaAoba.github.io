@@ -13,7 +13,7 @@ const SIGMA_DEPTH = 155.7;
 export const SIGMA_HEIGHT = 20;
 export const SIGMA_FRONT = 67.85;
 export const SIGMA_REAR = -77.85;
-export const SIGMA_WINDOW = { width: 79.2, depth: 115.6, z: -16 } as const;
+export const SIGMA_WINDOW = { width: 81.4, depth: 115.6, z: -16 } as const;
 export const SIGMA_BUTTON_X = [4.5, 14.7, 24.9, 35.1] as const;
 export const SIGMA_KNOB_BORE = {
   angle: Math.PI / 6,

@@ -32,9 +32,9 @@ export function createHa1aParts() {
   });
   const aluminium = applySurfaceFinish(
     new MeshPhysicalMaterial({
-      color: 0xd0_d2_d4,
-      metalness: 0.86,
-      roughness: 0.34,
+      color: 0xdb_db_d8,
+      metalness: 0.65,
+      roughness: 0.41,
     }),
     { scale: [12, 0.12, 12], relief: 0.0035, roughness: 0.065 }
   );

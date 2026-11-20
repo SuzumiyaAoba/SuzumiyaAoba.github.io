@@ -163,7 +163,7 @@ function btr17PerforatedPanels(
   const panels = [front, rear, side].map((shape) => {
     shape.closePath();
     const panel = new ExtrudeGeometry(shape, {
-      depth: 0.65,
+      depth: shape === rear ? 1.65 : 0.65,
       bevelEnabled: false,
       curveSegments: 24,
     });
@@ -273,24 +273,54 @@ export function btr17FrontGlassGeometry() {
   });
 }
 
-function btr17RearOutline() {
-  const shape = new Shape([
-    new Vector2(-16.2, 3.2),
-    new Vector2(16.2, 3.2),
-    new Vector2(18.1, 5.1),
-    new Vector2(18.1, 73.8),
-    new Vector2(12.2, 78.1),
-    new Vector2(12.2, 83.3),
-    new Vector2(-17.1, 83.3),
-    new Vector2(-18.1, 81.5),
-    new Vector2(-18.1, 5.1),
-  ]);
+const rearFoot = [
+  [-18.1, 5.1],
+  [-16.2, 3.2],
+  [16.2, 3.2],
+  [18.1, 5.1],
+] as const;
+const rearShoulder = [
+  [18.1, 69.5],
+  [12.2, 73.4],
+  [-18.1, 73.4],
+] as const;
+const rearLedge = [
+  [18.1, 73.8],
+  [12.2, 78.1],
+  [-18.1, 78.1],
+] as const;
+const rearCrown = [
+  [12.2, 83.3],
+  [-17.1, 83.3],
+  [-18.1, 81.5],
+] as const;
+
+function btr17RearOutline(section: "frame" | "lower" | "upper" = "frame") {
+  const outlines = {
+    frame: [...rearFoot, rearLedge[0], rearLedge[1], ...rearCrown],
+    lower: [...rearFoot, ...rearShoulder],
+    upper: [rearLedge[2], rearLedge[1], ...rearCrown],
+  };
+  const shape = new Shape(outlines[section].map(([x, y]) => new Vector2(x, y)));
   shape.closePath();
   return shape;
 }
 
-export function btr17RearLeatherGeometry() {
-  const shape = btr17RearOutline();
+/** ホイール下を回り込む金属の斜面。背面の大きな革張りと上端の細い革張りをつなぐ。 */
+export function btr17RearBevelGeometry() {
+  const positions = [
+    ...rearShoulder.flatMap(([x, y]) => [x, y, -8.06]),
+    ...rearLedge.flatMap(([x, y]) => [x, y, -6.86]),
+  ];
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setIndex([0, 1, 3, 1, 4, 3, 1, 2, 4, 2, 5, 4]);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+export function btr17RearLeatherGeometry(section: "lower" | "upper") {
+  const shape = btr17RearOutline(section);
   const geometry = new ExtrudeGeometry(shape, {
     depth: 0.3,
     bevelEnabled: true,

@@ -5,9 +5,9 @@ export function cinnamonBraidTextures(length: number, radius: number) {
   const color = createPreparedTexture("cinnamon-braid-color", true, true);
   const surface = createPreparedTexture("cinnamon-braid-surface", false, true);
   for (const texture of [color, surface]) {
-    // 元の DataTexture と同じ向きで編み目を繰り返す。
+    // 正方形の織り目を外周に一枚巻き、軸方向も同じ縮尺にする。
     texture.flipY = false;
-    texture.repeat.set(length / (Math.PI * radius), 2);
+    texture.repeat.set(length / (2 * Math.PI * radius), 1);
   }
   return { color, surface };
 }

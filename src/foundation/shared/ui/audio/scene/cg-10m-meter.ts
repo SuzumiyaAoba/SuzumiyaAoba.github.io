@@ -15,41 +15,44 @@ export const cg10mMeter = {
   lensDepth: -2.6,
 } as const;
 
+// 正面写真の目盛り弧の両端と頂点から求めた、文字盤中心に対する支点と半径 (mm)。
+const pivotOffset = 13.4;
+const scaleRadius = 22.8;
+
 function drawScale(context: CanvasRenderingContext2D) {
   const { radius } = cg10mMeter;
   context.translate(radius, radius);
   const light = context.createRadialGradient(-3, -6, 1, 0, 0, 19);
-  light.addColorStop(0, "#b4e2ff");
-  light.addColorStop(0.65, "#86c7f4");
-  light.addColorStop(1, "#5c97c6");
+  light.addColorStop(0, "#d3e8fa");
+  light.addColorStop(0.65, "#badbf6");
+  light.addColorStop(1, "#8fb9dd");
   context.fillStyle = light;
   context.beginPath();
   context.arc(0, 0, radius, 0, Math.PI * 2);
   context.fill();
-  const scaleRadius = 13.5;
-  const start = -Math.PI * 0.77;
-  const sweep = Math.PI * 0.54;
+  const start = -Math.PI * 0.674;
+  const sweep = Math.PI * 0.348;
   for (let index = 0; index <= 20; index += 1) {
     const angle = start + (index / 20) * sweep;
     const major = index % 4 === 0;
     const length = major ? 1.8 : 1;
     context.strokeStyle = index > 12 ? "#9a3e50" : "#0f1d2d";
-    context.lineWidth = major ? 0.23 : 0.16;
+    context.lineWidth = major ? 0.31 : 0.23;
     context.beginPath();
     context.moveTo(
       Math.cos(angle) * scaleRadius,
-      4 + Math.sin(angle) * scaleRadius
+      pivotOffset + Math.sin(angle) * scaleRadius
     );
     context.lineTo(
       Math.cos(angle) * (scaleRadius - length),
-      4 + Math.sin(angle) * (scaleRadius - length)
+      pivotOffset + Math.sin(angle) * (scaleRadius - length)
     );
     context.stroke();
     if (major) {
       context.save();
       context.translate(
-        Math.cos(angle) * (scaleRadius + 1.6),
-        4 + Math.sin(angle) * (scaleRadius + 1.6)
+        Math.cos(angle) * (scaleRadius + 1.1),
+        pivotOffset + Math.sin(angle) * (scaleRadius + 1.1)
       );
       context.rotate(angle + Math.PI / 2);
       context.fillStyle = context.strokeStyle;
@@ -65,19 +68,25 @@ function drawScale(context: CanvasRenderingContext2D) {
   ] as const) {
     context.strokeStyle = color;
     for (const [arcRadius, thickness] of [
-      [scaleRadius, 0.25],
-      [scaleRadius - 1.9, 0.12],
+      [scaleRadius, 0.36],
+      [scaleRadius - 1.9, 0.17],
     ] as const) {
       context.lineWidth = thickness;
       context.beginPath();
-      context.arc(0, 4, arcRadius, start + sweep * from, start + sweep * to);
+      context.arc(
+        0,
+        pivotOffset,
+        arcRadius,
+        start + sweep * from,
+        start + sweep * to
+      );
       context.stroke();
     }
   }
   context.fillStyle = "#0f1d2d";
   context.textAlign = "center";
   context.font = "2.4px Arial";
-  context.fillText("STATUS", 0, -3.1);
+  context.fillText("STATUS", 0, -1.8);
   context.font = "1.95px Arial";
   context.fillText("−", -14, -4.1);
   context.fillStyle = "#9a3e50";
@@ -86,19 +95,20 @@ function drawScale(context: CanvasRenderingContext2D) {
 
 function cg10mMovementCoverGeometry() {
   const { radius } = cg10mMeter;
-  const edge = Math.sqrt(radius ** 2 - 1.1 ** 2);
+  const shoulder = -2.5;
+  const edge = Math.sqrt(radius ** 2 - shoulder ** 2);
   const cover = new Shape();
-  cover.moveTo(-edge, -1.1);
-  cover.lineTo(-7.4, -1.1);
-  cover.bezierCurveTo(-5.5, 1, -2.7, 2.5, 0, 2.5);
-  cover.bezierCurveTo(2.7, 2.5, 5.5, 1, 7.4, -1.1);
-  cover.lineTo(edge, -1.1);
+  cover.moveTo(-edge, shoulder);
+  cover.lineTo(-8.3, shoulder);
+  cover.bezierCurveTo(-6, 0.1, -3, 1, 0, 1);
+  cover.bezierCurveTo(3, 1, 6, 0.1, 8.3, shoulder);
+  cover.lineTo(edge, shoulder);
   cover.absarc(
     0,
     0,
     radius,
-    Math.asin(-1.1 / radius),
-    -Math.PI - Math.asin(-1.1 / radius),
+    Math.asin(shoulder / radius),
+    -Math.PI - Math.asin(shoulder / radius),
     true
   );
   cover.closePath();
@@ -140,8 +150,8 @@ export function createCg10mMeter(parts: ModelParts) {
   );
   const blade = new Shape();
   blade.moveTo(-0.2, -1.6);
-  blade.lineTo(-0.05, 15);
-  blade.lineTo(0.05, 15);
+  blade.lineTo(-0.1, scaleRadius + 0.5);
+  blade.lineTo(0.1, scaleRadius + 0.5);
   blade.lineTo(0.2, -1.6);
   blade.closePath();
   const needle = parts.mesh(
@@ -154,13 +164,13 @@ export function createCg10mMeter(parts: ModelParts) {
     }),
     new MeshStandardMaterial({
       color: 0x0b_13_1b,
-      metalness: 0.35,
-      roughness: 0.35,
+      metalness: 0.08,
+      roughness: 0.62,
     }),
-    [0, y - 4, front - 5.15],
+    [0, y - pivotOffset, front - 5.15],
     "Tapered moving-coil pointer separated from the printed scale"
   );
-  needle.rotation.z = 0.6;
+  needle.rotation.z = 0.42;
   parts.mesh(
     cg10mMovementCoverGeometry(),
     new MeshPhysicalMaterial({
@@ -208,6 +218,7 @@ export function createCg10mMeter(parts: ModelParts) {
       thickness: 0.55,
       ior: 1.5,
       roughness: 0.015,
+      specularIntensity: 0.55,
       attenuationColor: 0xe6_f2_ff,
       attenuationDistance: 100,
       envMapIntensity: 0.5,

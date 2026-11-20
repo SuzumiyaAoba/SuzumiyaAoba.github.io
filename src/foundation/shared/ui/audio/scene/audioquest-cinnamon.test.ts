@@ -89,9 +89,12 @@ it("巻いた USB ケーブルを床面に埋めない", () => {
   expect(lowest).toBeGreaterThanOrEqual(3.1);
 });
 
-it.each(["usb-a", "usb-b"] as const)(
-  "%s の印字を曲面に密着させ、ブーツを円形のケーブルへつなぐ",
-  (type) => {
+it.each([
+  ["usb-a", 34],
+  ["usb-b", 40],
+] as const)(
+  "%s の印字を曲面に密着させ、先端から %i mm のブーツ開口でケーブルを受ける",
+  (type, tail) => {
     const cover = new Mesh(
       cinnamonHousingGeometry(type, "cover"),
       new MeshBasicMaterial()
@@ -107,17 +110,13 @@ it.each(["usb-a", "usb-b"] as const)(
     const points = boot.getAttribute("position");
     const radii: number[] = [];
     for (let index = 0; index < points.count; index += 1) {
-      if (
-        points.getZ(index) === 40 &&
-        Math.hypot(points.getX(index), points.getY(index)) > 1
-      ) {
+      if (points.getZ(index) === tail) {
         radii.push(Math.hypot(points.getX(index), points.getY(index)));
       }
     }
     expect(radii.length).toBeGreaterThan(100);
-    for (const radius of radii) {
-      expect(radius).toBeCloseTo(3.1, 5);
-    }
+    expect(Math.min(...radii)).toBeCloseTo(3.1, 5);
+    expect(Math.max(...radii)).toBeCloseTo(3.9, 5);
     cover.geometry.dispose();
     cover.material.dispose();
     mark.dispose();
@@ -161,11 +160,11 @@ it("接点を金属シールドの内側へ収め、中空のB端子を奥まで
 
 it.each([
   [
-    [-35, 14, 131.5],
+    [-35, 14, 137.5],
     [25, 14, 131.5],
   ],
   [
-    [-127.5, 190.4, -143.5],
+    [-127.5, 190.4, -137.5],
     [-125.5, 54, -144.5],
   ],
 ])("床面に二巻きしたケーブル同士が交差部分で食い込まない: %j", (start, end) => {

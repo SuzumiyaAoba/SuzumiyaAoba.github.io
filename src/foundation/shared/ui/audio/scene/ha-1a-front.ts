@@ -1,5 +1,5 @@
 import { PointLight, RingGeometry } from "three";
-import { createHa1aTubes } from "./ha-1a-tubes";
+import { createHa1aTubes, ha1aSocketY } from "./ha-1a-tubes";
 import { createCayinWordmark } from "./cayin-wordmark";
 import {
   HA1A_FRONT,
@@ -61,7 +61,7 @@ function window(parts: Ha1aParts) {
   createHa1aTubes(parts);
   parts.box(
     [108, 2, 148],
-    [0, 123, 58],
+    [0, ha1aSocketY - 3, 58],
     parts.rubber,
     "Internal tube mounting deck",
     0.3
@@ -83,7 +83,7 @@ function window(parts: Ha1aParts) {
     );
   }
   const heaterLight = new PointLight(0xff_5b_14, 450, 85, 2);
-  heaterLight.position.set(0, 133, 105);
+  heaterLight.position.set(0, ha1aSocketY + 6, 105);
   parts.root.add(heaterLight);
 }
 

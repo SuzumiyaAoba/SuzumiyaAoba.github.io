@@ -18,7 +18,7 @@ import type { ModelParts } from "./parts";
 import type { CableEndpoint } from "./system-cables";
 
 const cableRadius = 2.1;
-const connectorLength = 33;
+const connectorLength = 40;
 const insertionDepth = 8.3;
 
 /** セミリジッドの形状を保ち、端子直後の直線から緩やかな弧につなぐ。 */
@@ -111,16 +111,16 @@ function bncPlug(
       [3.18, 18],
       [3.48, 18],
       [3.53, 18.25],
-      [3.48, 20],
-      [3.35, 22.2],
-      [3.2, 23],
-      [2.6, 24.2],
-      [2.48, 25.3],
-      [2.48, 30.7],
-      [2.5, 32.6],
-      [2.42, 33],
-      [2.1, 33],
-      [2.1, 25.3],
+      [3.48, 24.6],
+      [3.38, 27.1],
+      [3.12, 28.4],
+      [2.82, 29.6],
+      [2.72, 31],
+      [2.72, 38.8],
+      [2.68, 39.7],
+      [2.56, connectorLength],
+      [2.1, connectorLength],
+      [2.1, 30.8],
       [2.3, 24],
       [3.18, 22.2],
       [3.18, 18],
@@ -192,9 +192,9 @@ export function createCybershaftBnc(
   const parts = createModelParts({ brushed: false });
   parts.root.name = "Cybershaft 50Ω BNC semi-rigid cable — RG402";
   parts.turned.color.setHex(0xd5_d6_d5);
-  parts.turned.roughness = 0.3;
+  parts.turned.roughness = 0.21;
   parts.turned.metalness = 0.96;
-  parts.rubber.color.setHex(0x30_31_38);
+  parts.rubber.color.setHex(0x3b_36_43);
   parts.rubber.roughness = 0.7;
   const start = bncPlug(
     parts,

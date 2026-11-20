@@ -52,8 +52,8 @@ function acousticMeshTexture() {
   context.fillRect(0, 0, 256, 256);
   context.fillStyle = "#ffffff";
   for (let offset = 0; offset < 256; offset += 4) {
-    context.fillRect(offset, 0, 1.1, 256);
-    context.fillRect(0, offset, 256, 1.1);
+    context.fillRect(offset, 0, 2.15, 256);
+    context.fillRect(0, offset, 256, 2.15);
   }
   const texture = new CanvasTexture(canvas);
   texture.wrapS = RepeatWrapping;
@@ -182,9 +182,14 @@ export function createClearMgParts() {
     side: DoubleSide,
   });
   const polished = new MeshStandardMaterial({
-    color: 0xc2_c4_c5,
-    metalness: 0.8,
-    roughness: 0.29,
+    color: 0xe8_e8_e7,
+    metalness: 0.58,
+    roughness: 0.26,
+  });
+  const engravedMetal = new MeshStandardMaterial({
+    color: 0xaa_ab_aa,
+    metalness: 0.58,
+    roughness: 0.38,
   });
   const woven = new MeshStandardMaterial({
     color: 0x2c_2f_31,
@@ -282,6 +287,7 @@ export function createClearMgParts() {
     grille,
     innerGrille,
     polished,
+    engravedMetal,
     woven,
     magnesium,
     plate,

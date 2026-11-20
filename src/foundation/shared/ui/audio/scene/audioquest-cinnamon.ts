@@ -9,10 +9,11 @@ import {
   Vector3,
 } from "three";
 import {
+  cinnamonCableRadius as cableRadius,
   cinnamonHousingGeometry,
   cinnamonMarkGeometry,
+  cinnamonPlugProfile,
   cinnamonShoulder,
-  cinnamonTail,
   cinnamonShieldGeometry,
 } from "./cinnamon-geometry";
 import type { CinnamonConnector } from "./cinnamon-geometry";
@@ -23,7 +24,6 @@ import { applySurfaceFinish } from "./surface-finish";
 import type { CableEndpoint } from "./system-cables";
 
 const cableLength = 1500;
-const cableRadius = 3.1;
 
 /** The cable settles onto the floor with a smooth tangent at first contact. */
 class FloorCableCurve extends CatmullRomCurve3 {
@@ -219,7 +219,7 @@ function cinnamonPlug(
   return {
     position: connector.position
       .clone()
-      .addScaledVector(endpoint.direction, cinnamonTail),
+      .addScaledVector(endpoint.direction, cinnamonPlugProfile[type].tail),
     direction: endpoint.direction.clone(),
   };
 }

@@ -229,7 +229,7 @@ const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
     depth: 25,
   },
   overview: {
-    direction: [1, 0.32, 1.6],
+    direction: [1.6, 0.22, 1],
     target: [0, 157, 0],
     width: 265,
     height: 305,
@@ -260,7 +260,7 @@ const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
 
 const clearMgPoses: Partial<Record<AudioView, CameraPose>> = {
   overview: {
-    direction: [1.7, 0.28, 1.2],
+    direction: [2.55, 0.38, 1],
     target: [0, 117, 0],
     width: 245,
     height: 260,
@@ -373,8 +373,8 @@ const modelPoses: Partial<
       depth: 8,
     },
     connections: {
-      direction: [0, 0.35, 1],
-      target: [0, 7, 61],
+      direction: [0.54, 0.62, 1],
+      target: [0, 7, 49],
       width: 100,
       height: 40,
       depth: 15,

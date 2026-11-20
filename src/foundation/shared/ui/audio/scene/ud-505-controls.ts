@@ -102,9 +102,10 @@ function headphoneSocket(
 }
 
 function knob(parts: ModelParts, x: number, y: number, small: boolean) {
-  const radius = small ? 10 : 18.3;
-  const faceRadius = small ? 8.5 : 16.25;
+  const radius = small ? 10 : 18.8;
+  const faceRadius = small ? 7.2 : 13.9;
   const depth = small ? 11.5 : 15.7;
+  const gripRadius = faceRadius + 0.55;
   countersink(parts, x, y, small ? 13.1 : 22.1, radius + 0.75, 1.5);
   parts.cylinder(
     radius + 0.8,
@@ -120,8 +121,10 @@ function knob(parts: ModelParts, x: number, y: number, small: boolean) {
       [radius, -1.2],
       [radius, 1],
       [radius - 0.1, 2],
-      [faceRadius + 0.6, depth - 2.1],
-      [faceRadius + 0.3, depth - 0.6],
+      [gripRadius + 0.9, depth - 3.2],
+      [gripRadius, depth - 2.3],
+      [gripRadius, depth - 0.65],
+      [faceRadius + 0.25, depth - 0.22],
       [faceRadius, depth],
     ],
     [x, y, FRONT],
@@ -140,25 +143,23 @@ function knob(parts: ModelParts, x: number, y: number, small: boolean) {
     face,
     "Concentric turned aluminium dial face"
   );
-  if (!small) {
-    return;
-  }
-  const count = 144;
+  const count = small ? 144 : 240;
   const grips = parts.instanced(
-    new BoxGeometry(0.065, 0.1, 1.5),
+    new BoxGeometry(0.065, 0.1, 1.6),
     parts.turned,
     count,
-    "Fine axial input-selector knurling"
+    small
+      ? "Fine axial input-selector knurling"
+      : "Fine axial volume-control knurling"
   );
   const matrix = new Matrix4();
   for (let index = 0; index < count; index += 1) {
     const angle = (index / count) * Math.PI * 2;
-    const gripRadius = faceRadius + 0.7;
     matrix.makeRotationZ(angle);
     matrix.setPosition(
       x + Math.cos(angle) * gripRadius,
       y + Math.sin(angle) * gripRadius,
-      FRONT + depth - 2.5
+      FRONT + depth - 1.47
     );
     grips.setMatrixAt(index, matrix);
   }
@@ -203,16 +204,19 @@ export function createUd505Controls(parts: ModelParts) {
     parts.cavity,
     "Menu-button clearance"
   );
-  parts.cylinder(
-    3.2,
-    0.9,
-    [-24, 55, FRONT - 0.15],
+  parts.lathe(
+    [
+      [3.25, -0.6],
+      [3.25, 0.05],
+      [3.15, 0.25],
+    ],
+    [-24, 55, FRONT],
     parts.turned,
     "Menu button"
   );
   parts.disc(
     3.15,
-    [-24, 55, FRONT + 0.31],
+    [-24, 55, FRONT + 0.25],
     parts.turnedFace(),
     "Radially machined menu-button face"
   );

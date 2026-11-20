@@ -11,7 +11,7 @@ import {
 } from "three";
 import type { Ha1aParts } from "./ha-1a-parts";
 
-const BASE = 127;
+export const ha1aSocketY = 136;
 
 function micaGeometry(radius: number) {
   const mica = new Shape();
@@ -71,12 +71,12 @@ function tube(
   const socket = parts.cylinder(
     radius + 1,
     3.2,
-    [x, BASE - 0.4, z],
+    [x, ha1aSocketY - 0.4, z],
     ceramic,
     `${name} ceramic valve socket`
   );
   socket.rotation.x = 0;
-  const glassBase = BASE + 2;
+  const glassBase = ha1aSocketY + 2;
   const envelope = parts.lathe(
     [
       [0, 0],
@@ -182,7 +182,7 @@ function tube(
     const contact = parts.cylinder(
       0.36,
       4.6,
-      [x + dx, BASE + 2, z + dz],
+      [x + dx, ha1aSocketY + 2, z + dz],
       parts.steel,
       `${name} glass-sealed lead and socket pin`,
       16
@@ -244,13 +244,13 @@ export function createHa1aTubes(parts: Ha1aParts) {
   tube(parts, 0, 13, 70, 10.2, "12DT5 regulator");
   for (const x of [-19, 19]) {
     const light = new PointLight(0xff_6c_21, 420, 58, 2);
-    light.position.set(x, BASE + 5, 112);
+    light.position.set(x, ha1aSocketY + 5, 115);
     parts.root.add(light);
   }
   // 窓越しに見える左右の EL84 も、足元を暖色のヒーター光で照らす。
   for (const x of [-21, 21]) {
     const light = new PointLight(0xff_6c_21, 300, 65, 2);
-    light.position.set(x, BASE + 8, 62);
+    light.position.set(x, ha1aSocketY + 8, 65);
     parts.root.add(light);
   }
 }

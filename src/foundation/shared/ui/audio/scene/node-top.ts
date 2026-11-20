@@ -1,13 +1,50 @@
+import { BufferGeometry, Float32BufferAttribute } from "three";
 import { horizontalPlate, roundedOutline } from "./node-parts";
 import type { NodeParts } from "./node-parts";
 import { nodeVentGeometry } from "./node-geometry";
+
+// 天板からガラスまでの落ち込み。黒い縁は斜めから見たときに特に目立つ。
+const glassY = 43.65;
+
+function pocketWall() {
+  const positions: number[] = [];
+  const indices: number[] = [];
+  let previous = -1;
+  for (const [inset, y] of [
+    [0, 46],
+    [0.35, 45.85],
+    [1.05, 45.05],
+    [1.1, glassY - 0.6],
+  ] as const) {
+    const loop = roundedOutline(
+      145.8 - 2 * inset,
+      77.8 - 2 * inset,
+      8.7 - inset
+    ).getPoints(16);
+    const start = positions.length / 3;
+    for (const [index, point] of loop.entries()) {
+      positions.push(point.x, y, -point.y);
+      if (previous >= 0 && index > 0) {
+        const a = previous + index;
+        const b = start + index;
+        indices.push(a - 1, a, b - 1, a, b, b - 1);
+      }
+    }
+    previous = start;
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
 
 function perforatedSurround(parts: NodeParts) {
   const grille = parts.detail.add(
     parts.mesh(
       nodeVentGeometry({ detailed: false }),
       parts.ventMetal,
-      [0, 44.65, 0],
+      [0, glassY - 0.8, 0],
       "Continuous perforated touch-panel ventilation surround"
     ),
     {
@@ -23,7 +60,7 @@ function perforatedSurround(parts: NodeParts) {
     parts,
     gasket,
     0.35,
-    44.92,
+    glassY - 0.53,
     parts.trim,
     "Raised inner bead around the touch glass",
     0.12
@@ -34,7 +71,7 @@ function touchLights(parts: NodeParts) {
   const glow = parts.print(
     133,
     63,
-    [0, 45.58, 0],
+    [0, glassY + 0.04, 0],
     (context) => {
       const spot = (x: number, y: number, color: string) => {
         const gradient = context.createRadialGradient(x, y, 0, x, y, 3.5);
@@ -80,7 +117,7 @@ function touchLights(parts: NodeParts) {
   for (const x of [-50, -25, 0, 25, 50]) {
     const preset = parts.disc(
       0.9,
-      [x, 45.61, -20],
+      [x, glassY + 0.07, -20],
       parts.whiteLed,
       "Illuminated preset touch point"
     );
@@ -89,7 +126,7 @@ function touchLights(parts: NodeParts) {
   for (const x of [-50, 50]) {
     const volume = parts.disc(
       0.85,
-      [x, 45.61, -2],
+      [x, glassY + 0.07, -2],
       parts.whiteLed,
       "Volume touch point"
     );
@@ -99,7 +136,7 @@ function touchLights(parts: NodeParts) {
     parts,
     roundedOutline(82, 0.72, 0.36),
     0.05,
-    45.61,
+    glassY + 0.07,
     parts.whiteLed,
     "Illuminated volume touch slider",
     0.01
@@ -108,7 +145,7 @@ function touchLights(parts: NodeParts) {
   const play = parts.ring(
     2.25,
     0.33,
-    [0, 45.63, 19],
+    [0, glassY + 0.09, 19],
     parts.signal,
     "Blue play/pause touch ring"
   );
@@ -116,22 +153,17 @@ function touchLights(parts: NodeParts) {
 }
 
 export function createNodeTop(parts: NodeParts) {
-  const rim = roundedOutline(145.8, 77.8, 8.7);
-  rim.holes.push(roundedOutline(143.9, 75.9, 7.75));
-  horizontalPlate(
-    parts,
-    rim,
-    0.65,
-    45,
+  parts.mesh(
+    pocketWall(),
     parts.matte,
-    "Rolled rim descending into the touch-panel pocket",
-    0.35
+    [0, 0, 0],
+    "Rolled rim descending into the touch-panel pocket"
   );
   horizontalPlate(
     parts,
     roundedOutline(144.5, 76.5, 8),
     0.4,
-    43.9,
+    glassY - 1.7,
     parts.cavity,
     "Recessed touch-panel pocket",
     0.1
@@ -141,7 +173,7 @@ export function createNodeTop(parts: NodeParts) {
     parts,
     roundedOutline(131.8, 62.3, 4.8),
     0.55,
-    44.9,
+    glassY - 0.67,
     parts.screen,
     "Gloss black capacitive touch glass",
     0.12
