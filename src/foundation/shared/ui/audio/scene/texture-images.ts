@@ -4,15 +4,15 @@ import type { AudioModel } from "@/shared/ui/audio/definitions/viewer";
 import manifest from "./audio-textures.json";
 
 export type TextureName = keyof typeof manifest.textures;
-const decoded = new Map<string, HTMLImageElement>();
+const decoded = new Map<string, TextureSource<HTMLImageElement>>();
 const pending = new Map<string, Promise<void>>();
 const bindings = new Map<string, Set<Texture>>();
 const groups: Partial<Record<AudioModel, readonly string[]>> = {
-  system: ["hd-", "ha-", "cinnamon-", "kantof-"],
-  "kantof-headphone-stand": ["kantof-"],
+  system: ["hd-", "ha-", "cinnamon-", "kantof-", "wood-"],
+  "kantof-headphone-stand": ["kantof-", "wood-"],
   "audioquest-cinnamon": ["cinnamon-"],
   "hd-800s": ["hd-"],
-  "ha-1a-mk2": ["ha-"],
+  "ha-1a-mk2": ["ha-", "wood-"],
 };
 
 async function decodeImage(url: string, priority: "high" | "low") {
@@ -22,7 +22,7 @@ async function decodeImage(url: string, priority: "high" | "low") {
   image.src = url;
   try {
     await image.decode();
-    decoded.set(url, image);
+    decoded.set(url, new TextureSource(image));
   } catch (error) {
     pending.delete(url);
     throw new Error(`Cannot load audio texture: ${url}`, { cause: error });
@@ -65,15 +65,15 @@ export async function upgradeAudioTextures(model: AudioModel) {
   );
   let changed = false;
   for (const [name, source] of textures) {
-    const image = decoded.get(source.url);
+    const detail = decoded.get(source.url);
     // GPU 資源の破棄と再登録で Set が変わるため、更新対象を先に固定する。
     const activeTextures = [...(bindings.get(name) ?? [])];
     for (const texture of activeTextures) {
-      if (image && texture.image !== image) {
+      if (detail && texture.source !== detail) {
         // texStorage2D で確保された軽量画像の領域は needsUpdate だけでは拡張できない。
         // 材質からの参照と UV 設定を保ち、GPU 領域と画像ソースを再作成する。
         texture.dispose();
-        texture.source = new TextureSource(image);
+        texture.source = detail;
         texture.needsUpdate = true;
         bindTexture(name, texture);
         changed = true;
@@ -83,13 +83,13 @@ export async function upgradeAudioTextures(model: AudioModel) {
   return changed;
 }
 
-export function getTextureImage(name: TextureName) {
+export function getTextureSource(name: TextureName) {
   const source = manifest.textures[name];
-  const image = decoded.get(source.url) ?? decoded.get(source.previewUrl);
-  if (!image) {
+  const prepared = decoded.get(source.url) ?? decoded.get(source.previewUrl);
+  if (!prepared) {
     throw new Error(`Audio texture was not prepared: ${name}`);
   }
-  return image;
+  return prepared;
 }
 
 export function bindTexture(name: string, texture: Texture) {

@@ -1,7 +1,8 @@
-import { Material, Matrix4, Mesh } from "three";
-import type { BufferGeometry, Object3D } from "three";
+import { BufferGeometry, Material, Matrix4, Mesh } from "three";
+import type { Object3D } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { hasSurfaceFinish } from "./scene/surface-finish";
+import { indexAudioGeometry } from "./scene/index-geometry";
 
 type StaticMesh = Mesh<BufferGeometry, Material>;
 type MeshBatch = { mesh: StaticMesh; originals: StaticMesh[] };
@@ -91,7 +92,14 @@ function createBatch(
   const inverse = parent.matrixWorld.clone().invert();
   const transform = new Matrix4();
   const geometries = originals.map((mesh) => {
-    const geometry = mesh.geometry.clone();
+    // 結合時のコピーは変換する属性だけに限定し、元の部品座標・UV・索引を共有する。
+    const geometry = new BufferGeometry();
+    geometry.setIndex(mesh.geometry.index);
+    for (const [name, attribute] of Object.entries(mesh.geometry.attributes)) {
+      const transformed =
+        name === "position" || name === "normal" || name === "tangent";
+      geometry.setAttribute(name, transformed ? attribute.clone() : attribute);
+    }
     transform.multiplyMatrices(inverse, mesh.matrixWorld);
     return geometry.applyMatrix4(transform);
   });
@@ -122,6 +130,7 @@ function createBatch(
 export function createViewerMeshBatches(root: Object3D) {
   const batches: MeshBatch[] = [];
   const mergedMeshes = new WeakSet<Object3D>();
+  const preparedGeometries = new WeakSet<BufferGeometry>();
   let disposed = false;
 
   return {
@@ -132,6 +141,14 @@ export function createViewerMeshBatches(root: Object3D) {
       root.updateWorldMatrix(true, true);
       const parents: Object3D[] = [];
       root.traverse((part) => {
+        if (
+          isMesh(part) &&
+          !mergedMeshes.has(part) &&
+          !preparedGeometries.has(part.geometry)
+        ) {
+          indexAudioGeometry(part.geometry);
+          preparedGeometries.add(part.geometry);
+        }
         if (
           isMesh(part) &&
           !Array.isArray(part.material) &&

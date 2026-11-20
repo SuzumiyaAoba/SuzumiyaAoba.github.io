@@ -158,7 +158,8 @@ it("木目の色を凹凸へ流用せず、ダイヤル端面を一枚だけに�
     throw new Error("Missing lacquered wood finish.");
   }
   expect(wood.material.map).not.toBe(wood.material.bumpMap);
-  expect(wood.material.roughnessMap).not.toBe(wood.material.bumpMap);
+  expect(wood.material.bumpMap).toBeTruthy();
+  expect(wood.material.roughnessMap).toBe(wood.material.bumpMap);
   expect(wood.material.clearcoatRoughness).toBeLessThan(0.15);
   const ray = new Raycaster(
     model.group.localToWorld(new Vector3(5, 100, 180)),

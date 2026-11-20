@@ -18,6 +18,7 @@ import type { Position } from "./parts";
 import {
   earPadGeometry,
   cupOutline,
+  dustCoverGeometry,
   microfiberPileGeometry,
   distantGrilleGeometry,
 } from "./hd-800s-geometry";
@@ -38,6 +39,8 @@ export function createHd800sParts() {
     texture.rotation = Math.PI / 4;
   }
   const padGeometry = earPadGeometry();
+  const clothDepth = -7.5;
+  const clothGeometry = dustCoverGeometry(clothDepth);
   const grilleGeometry = distantGrilleGeometry();
   const detail = createDetailLevels();
   let detailedGrille: BufferGeometry | undefined;
@@ -63,8 +66,8 @@ export function createHd800sParts() {
     color: 0x29_29_2b,
     map: textures.fabric.color,
     roughness: 0.95,
-    roughnessMap: textures.fabric.roughness,
-    bumpMap: textures.fabric.height,
+    roughnessMap: textures.fabric.surface,
+    bumpMap: textures.fabric.surface,
     bumpScale: 0.18,
     sheen: 0.85,
     sheenColor: 0x4b_4b_4d,
@@ -90,10 +93,10 @@ export function createHd800sParts() {
   const acoustic = new MeshStandardMaterial({
     color: 0x16_18_1a,
     alphaMap: textures.cloth,
-    alphaTest: 0.03,
     transparent: true,
     opacity: 0.95,
     depthWrite: false,
+    forceSinglePass: true,
     roughness: 0.93,
     side: DoubleSide,
   });
@@ -105,25 +108,28 @@ export function createHd800sParts() {
   });
   const distantGrilleMetal = grilleMetal.clone();
   distantGrilleMetal.alphaMap = textures.grille;
-  distantGrilleMetal.alphaTest = 0.35;
-  distantGrilleMetal.alphaToCoverage = true;
+  // 遠景ではミップマップの濃度が金属の面積率。しきい値で穴を塞がない。
+  distantGrilleMetal.transparent = true;
+  distantGrilleMetal.depthWrite = false;
+  distantGrilleMetal.forceSinglePass = true;
   const driver = new MeshPhysicalMaterial({
-    color: 0x80_83_88,
-    metalness: 0.86,
-    roughness: 0.36,
+    color: 0xcd_cd_ca,
+    metalness: 0.46,
+    roughness: 0.52,
     roughnessMap: textures.metal.roughness,
-    anisotropy: 0.5,
+    anisotropy: 0.35,
     side: DoubleSide,
   });
   const silver = new MeshPhysicalMaterial({
-    color: 0x9f_a3_a8,
-    alphaMap: textures.mesh.mask,
-    alphaTest: 0.2,
-    alphaToCoverage: true,
+    color: 0xba_ba_b7,
+    alphaMap: textures.mesh,
+    transparent: true,
+    depthWrite: false,
+    forceSinglePass: true,
     metalness: 0.88,
-    roughness: 0.44,
+    roughness: 0.47,
     anisotropy: 0.2,
-    bumpMap: textures.mesh.height,
+    bumpMap: textures.mesh,
     bumpScale: 0.035,
     side: DoubleSide,
   });
@@ -244,7 +250,13 @@ export function createHd800sParts() {
     trim,
     microfiber,
     thread,
-    acoustic,
+    dustCover: () =>
+      parts.mesh(
+        clothGeometry,
+        acoustic,
+        [0, 0, clothDepth],
+        "Inner driver protective mesh"
+      ),
     grilleMetal,
     driver,
     silver,

@@ -6,8 +6,7 @@ import { createModelParts } from "./parts";
 export function createHa1aParts() {
   const parts = createModelParts({ brushed: false });
   const woodTexture = createPreparedTexture("ha-wood", true);
-  const woodHeight = createPreparedTexture("ha-wood-height");
-  const woodRoughness = createPreparedTexture("ha-wood-roughness");
+  const woodSurface = createPreparedTexture("wood-surface");
   const faceTextures = {
     anisotropy: createPreparedTexture("ha-dial-anisotropy"),
     bump: createPreparedTexture("ha-dial-bump"),
@@ -23,9 +22,9 @@ export function createHa1aParts() {
   });
   const wood = new MeshPhysicalMaterial({
     map: woodTexture,
-    bumpMap: woodHeight,
+    bumpMap: woodSurface,
     bumpScale: 0.01,
-    roughnessMap: woodRoughness,
+    roughnessMap: woodSurface,
     roughness: 0.7,
     clearcoat: 1,
     clearcoatRoughness: 0.105,
@@ -85,8 +84,7 @@ export function createHa1aParts() {
     dispose() {
       parts.dispose();
       woodTexture.dispose();
-      woodHeight.dispose();
-      woodRoughness.dispose();
+      woodSurface.dispose();
       faceTextures.anisotropy.dispose();
       faceTextures.bump.dispose();
     },

@@ -207,6 +207,13 @@ const nodePoses: Partial<Record<AudioView, CameraPose>> = {
 };
 
 const hd800sPoses: Partial<Record<AudioView, CameraPose>> = {
+  grille: {
+    direction: [1, 0.08, 0.33],
+    target: [77, 123, -9],
+    width: 120,
+    height: 108,
+    depth: 16,
+  },
   headband: {
     direction: [0.2, 0.12, 1],
     target: [0, 241, 0],
@@ -413,9 +420,9 @@ const modelPoses: Partial<
   system: {
     overview: {
       direction: [0.5, 0.8, 1.4],
-      target: [110, 140, -20],
+      target: [118, 72, 20],
       width: 800,
-      height: 480,
+      height: 445,
       depth: 220,
     },
     front: {

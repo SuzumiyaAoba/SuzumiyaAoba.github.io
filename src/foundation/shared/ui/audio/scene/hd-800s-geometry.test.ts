@@ -85,8 +85,9 @@ it("leaves the honeycomb holes open while giving the metal webs real depth", () 
       new Vector3(0, 0, -1)
     );
     expect(ray.intersectObject(grille)).toHaveLength(0);
+    const rimAngle = angle + Math.PI / 24;
     ray.set(
-      new Vector3(28.35 * Math.cos(angle), 28.35 * Math.sin(angle), 10),
+      new Vector3(28.46 * Math.cos(rimAngle), 28.46 * Math.sin(rimAngle), 10),
       new Vector3(0, 0, -1)
     );
     expect(ray.intersectObject(grille).length).toBeGreaterThan(0);

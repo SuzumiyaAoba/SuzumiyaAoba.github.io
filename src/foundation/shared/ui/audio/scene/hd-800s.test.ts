@@ -70,6 +70,29 @@ it("カップを内向きに傾けてもヨークの軸とバンドを分離さ�
   model.dispose();
 });
 
+it("リング振動板の中央を開き、内外の支持部の間に溝を設ける", () => {
+  stubCanvas();
+  const model = createHd800s();
+  model.group.updateMatrixWorld(true);
+  const driver = model.group.getObjectByName("Angled ring-radiator assembly");
+  const diaphragm = driver?.getObjectByName("56 mm ring-radiator transducer");
+  if (!driver || !diaphragm) {
+    throw new Error("Missing HD 800 S ring radiator.");
+  }
+  const depthAt = (radius: number) => {
+    const ray = new Raycaster(
+      driver.localToWorld(new Vector3(radius, 0, 20)),
+      new Vector3(0, 0, -1).transformDirection(driver.matrixWorld)
+    );
+    return ray.intersectObject(diaphragm)[0]?.distance;
+  };
+  expect(depthAt(5)).toBeUndefined();
+  expect(depthAt(17)).toBeCloseTo(11.65, 1);
+  expect(depthAt(20)).toBeCloseTo(12.8, 1);
+  expect(depthAt(24)).toBeCloseTo(11.6, 1);
+  model.dispose();
+});
+
 it("内側の支持枠を防塵布の後ろへ置き、黒い板で隠さない", () => {
   stubCanvas();
   const model = createHd800s();
@@ -87,6 +110,11 @@ it("内側の支持枠を防塵布の後ろへ置き、黒い板で隠さない"
   expect(cloth.material.transparent).toBe(true);
   expect(cloth.material.depthWrite).toBe(false);
   expect(cloth.position.z).toBeLessThan(-5.5);
+  const clothRay = new Raycaster(
+    driver.localToWorld(new Vector3(0, 45, -20)),
+    new Vector3(0, 0, 1).transformDirection(driver.matrixWorld)
+  );
+  expect(clothRay.intersectObject(cloth).length).toBeGreaterThan(0);
   const ray = new Raycaster(
     driver.localToWorld(new Vector3(6, 0, -20)),
     new Vector3(0, 0, 1).transformDirection(driver.matrixWorld)

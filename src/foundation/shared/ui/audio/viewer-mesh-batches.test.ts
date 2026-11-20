@@ -149,6 +149,7 @@ it("影・描画順・頂点属性の異なる部品を混ぜない", () => {
     mesh.renderOrder = 2;
   }
   const nonIndexed = geometry.toNonIndexed();
+  nonIndexed.deleteAttribute("uv");
   disposals.push(() => nonIndexed.dispose());
   for (let index = 0; index < 4; index += 1) {
     parent.add(new Mesh(nonIndexed, material));
@@ -156,7 +157,7 @@ it("影・描画順・頂点属性の異なる部品を混ぜない", () => {
   optimize(parent);
   const rendered = visibleMeshes(parent);
   expect(rendered).toHaveLength(3);
-  expect(rendered.some((mesh) => mesh.geometry.index === null)).toBe(true);
+  expect(rendered.some((mesh) => !mesh.geometry.hasAttribute("uv"))).toBe(true);
   expect(
     rendered.some((mesh) => !mesh.castShadow && mesh.renderOrder === 2)
   ).toBe(true);

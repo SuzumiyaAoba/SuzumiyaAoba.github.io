@@ -29,6 +29,7 @@ import {
   padPoint,
 } from "./clear-mg-geometry";
 import { createLeatherGrain } from "./leather-grain";
+import { createDetailLevels } from "./detail-levels";
 import { applySurfaceFinish } from "./surface-finish";
 import { createModelParts } from "./parts";
 import type { Position } from "./parts";
@@ -99,6 +100,7 @@ function createPerforationMask(
 
 export function createClearMgParts() {
   const parts = createModelParts();
+  const detail = createDetailLevels();
   const fabric = createClearMgFabricTextures();
   const perforationMask = createPerforationMask(clearMgPadPerforations());
   const bandMask = createPerforationMask(clearMgBandPerforations());
@@ -153,7 +155,7 @@ export function createClearMgParts() {
     specularIntensity: 0.08,
     side: DoubleSide,
   });
-  const pileGeometry = createClearMgPile(padPoint);
+  let pileGeometry: BufferGeometry | undefined;
   const lining = new MeshStandardMaterial({
     color: 0x35_0b_1d,
     roughness: 0.97,
@@ -189,8 +191,9 @@ export function createClearMgParts() {
     metalness: 0.55,
     roughness: 0.57,
     alphaMap: meshTexture,
-    alphaTest: 0.25,
-    alphaToCoverage: true,
+    transparent: true,
+    depthWrite: false,
+    forceSinglePass: true,
     side: DoubleSide,
   });
   const magnesium = new MeshStandardMaterial({
@@ -251,17 +254,27 @@ export function createClearMgParts() {
 
   return {
     ...parts,
+    detail,
     coated,
     leather,
     microfiber,
     perforatedFabric,
     bandFabric,
     pile: () =>
-      parts.mesh(
-        pileGeometry,
-        pile,
-        [0, 0, 0],
-        "Short individual red microfiber fibers"
+      detail.add(
+        parts.mesh(
+          new BufferGeometry(),
+          pile,
+          [0, 0, 0],
+          "Short individual red microfiber fibers"
+        ),
+        {
+          radius: 61,
+          center: new Vector3(0, 0, -18),
+          pixels: 320,
+          hideLow: true,
+          build: () => (pileGeometry ??= createClearMgPile(padPoint)),
+        }
       ),
     lining,
     perforation,
@@ -274,6 +287,7 @@ export function createClearMgParts() {
     plate,
     ovalRing,
     dispose() {
+      detail.dispose();
       parts.dispose();
       for (const texture of Object.values(fabric)) {
         texture.dispose();
@@ -339,6 +353,16 @@ export function createClearFabricBores(
     holes.setMatrixAt(index, placement.matrix);
   }
   holes.computeBoundingSphere();
+  if (holes.boundingSphere) {
+    const { center, radius } = holes.boundingSphere;
+    // 0.86 mm の穴が 2 画素に届くまで、表布の開口と奥の暗いフォームで表現する。
+    parts.detail.add(holes, {
+      center,
+      radius,
+      pixels: ((2 * radius) / 0.86) * 2,
+      hideLow: true,
+    });
+  }
   return holes;
 }
 

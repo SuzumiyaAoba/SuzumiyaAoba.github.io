@@ -2,6 +2,30 @@ import { Mesh, MeshBasicMaterial, Raycaster, Vector3 } from "three";
 import { expect, it } from "vitest";
 import { screwHeadGeometry } from "./hardware-geometry";
 import { bncBayonetGeometry } from "./bnc-geometry";
+import { turnedProfileGeometry } from "./turned-profile";
+
+it("旋削面では平面と内外の壁の法線を分け、段差と中心の開口を保つ", () => {
+  const geometry = turnedProfileGeometry([
+    [10, 0],
+    [10, 8],
+    [4, 8],
+    [4, 0],
+  ]);
+  const material = new MeshBasicMaterial();
+  const part = new Mesh(geometry, material);
+  const ray = new Raycaster(new Vector3(8, 12, 0), new Vector3(0, -1, 0));
+  expect(ray.intersectObject(part)[0]?.normal?.y).toBeCloseTo(1);
+  ray.ray.origin.x = 0;
+  expect(ray.intersectObject(part)).toHaveLength(0);
+  ray.set(new Vector3(0, 4, 0), new Vector3(1, 0, 0));
+  const [inner] = ray.intersectObject(part);
+  expect(inner?.point.x).toBeCloseTo(4);
+  expect(inner?.normal?.x).toBeCloseTo(-1);
+  ray.set(new Vector3(14, 4, 0), new Vector3(-1, 0, 0));
+  expect(ray.intersectObject(part)[0]?.normal?.x).toBeCloseTo(1);
+  geometry.dispose();
+  material.dispose();
+});
 
 it("ねじの十字穴を貫通させ、外側の面取りを残す", () => {
   const geometry = screwHeadGeometry();

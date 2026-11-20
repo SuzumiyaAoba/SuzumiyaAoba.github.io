@@ -65,12 +65,12 @@ export function createViewerScene(
   const span = Math.max(size.x, size.y, size.z, 50);
   scene.add(new HemisphereLight(0xff_ff_ff, 0x56_5b_66, 0.75));
   const key = new DirectionalLight(0xff_f9_f2, 2.7);
-  key.position.copy(center).add(new Vector3(-span * 0.75, span * 1.5, span));
+  key.position.copy(center).add(new Vector3(-span * 0.75, span * 2.6, span));
   key.target.position.copy(center);
   key.castShadow = true;
   // 視点を動かしても光源と模型は動かないため、影は内容変更時だけ再計算する。
   key.shadow.autoUpdate = false;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(1024, 1024);
   const shadowExtent = bounds.getBoundingSphere(new Sphere()).radius * 1.08;
   key.shadow.camera.left = -shadowExtent;
   key.shadow.camera.right = shadowExtent;
@@ -80,7 +80,7 @@ export function createViewerScene(
   key.shadow.camera.far = span * 4;
   key.shadow.normalBias = Math.max(0.008, span * 0.00012);
   key.shadow.bias = -0.00005;
-  key.shadow.radius = 5;
+  key.shadow.radius = 12;
   scene.add(key, key.target);
 
   const fill = new DirectionalLight(0xe4_ed_ff, 0.7);
@@ -96,7 +96,7 @@ export function createViewerScene(
 
   const floorGeometry = new PlaneGeometry(span * 5, span * 5);
   const floorMaterial = new ShadowMaterial({
-    opacity: modelId === "system" ? 0.14 : 0.18,
+    opacity: modelId === "system" ? 0.12 : 0.13,
   });
   const floor = new Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;

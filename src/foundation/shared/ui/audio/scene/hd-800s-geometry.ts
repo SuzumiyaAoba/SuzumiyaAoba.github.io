@@ -1,5 +1,15 @@
-import { BufferGeometry, Float32BufferAttribute, Shape, Vector3 } from "three";
-import { hd800sGrilleHeight } from "./hd-800s-grille";
+import {
+  BufferGeometry,
+  Float32BufferAttribute,
+  Shape,
+  ShapeGeometry,
+  Vector3,
+} from "three";
+import {
+  hd800sGrille,
+  hd800sGrilleHeight,
+  hd800sGrilleNormal,
+} from "./hd-800s-grille";
 
 export const hd800sDriver = { x: 2, y: -7, tilt: -0.16 } as const;
 
@@ -25,6 +35,19 @@ export function cupOutline(inset = 0) {
   }
   outline.closePath();
   return outline;
+}
+
+/** 内側の防塵布はパッドの下まで届き、傾けた振動板の後ろで開口全体を覆う。 */
+export function dustCoverGeometry(depth: number) {
+  const geometry = new ShapeGeometry(cupOutline(12));
+  const positions = geometry.getAttribute("position");
+  const uvs = geometry.getAttribute("uv");
+  for (let i = 0; i < positions.count; i += 1) {
+    uvs.setXY(i, positions.getX(i) / 62 + 0.5, positions.getY(i) / 62 + 0.5);
+  }
+  const x = hd800sDriver.x + depth * Math.sin(hd800sDriver.tilt);
+  geometry.translate(-x, -hd800sDriver.y, 0);
+  return geometry.scale(1 / Math.cos(hd800sDriver.tilt), 1, 1);
 }
 
 export function cupContourPoints(inset: number, z: number) {
@@ -222,39 +245,46 @@ export function earPadGeometry() {
 
 /** 遠景用のドーム。細かい開口は生成済みのアルファ画像で表す。 */
 export function distantGrilleGeometry() {
-  const radius = 28.5;
+  const { radius } = hd800sGrille;
   const segments = 64;
   const rings = 16;
-  const positions: number[] = [];
-  const uvs: number[] = [];
+  const positions = [0, 0, hd800sGrilleHeight(0, 0)];
+  const normals = [0, 0, 1];
+  const uvs = [0.5, 0.5];
   const indices: number[] = [];
-  for (let ring = 0; ring <= rings; ring += 1) {
+  const normal = new Vector3();
+  for (let ring = 1; ring <= rings; ring += 1) {
+    const start = 1 + (ring - 1) * segments;
     const r = (ring / rings) * radius;
-    for (let segment = 0; segment <= segments; segment += 1) {
+    for (let segment = 0; segment < segments; segment += 1) {
       const angle = (segment / segments) * Math.PI * 2;
       const x = Math.cos(angle) * r;
       const y = Math.sin(angle) * r;
       positions.push(x, y, hd800sGrilleHeight(x, y));
+      hd800sGrilleNormal(x, y, normal);
+      normals.push(normal.x, normal.y, normal.z);
       uvs.push(x / (radius * 2) + 0.5, y / (radius * 2) + 0.5);
-      if (ring > 0 && segment > 0) {
-        const current = ring * (segments + 1) + segment;
-        const previous = current - segments - 1;
+      const current = start + segment;
+      const next = start + ((segment + 1) % segments);
+      if (ring === 1) {
+        indices.push(0, current, next);
+      } else {
         indices.push(
-          previous - 1,
-          current - 1,
-          previous,
-          previous,
-          current - 1,
-          current
+          current - segments,
+          current,
+          next - segments,
+          next - segments,
+          current,
+          next
         );
       }
     }
   }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("normal", new Float32BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
   geometry.setIndex(indices);
-  geometry.computeVertexNormals();
   return geometry;
 }
 

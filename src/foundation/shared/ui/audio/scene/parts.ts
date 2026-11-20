@@ -5,7 +5,6 @@ import {
   ExtrudeGeometry,
   Group,
   InstancedMesh,
-  LatheGeometry,
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -14,12 +13,12 @@ import {
   SRGBColorSpace,
   Shape,
   TorusGeometry,
-  Vector2,
 } from "three";
 import type { BufferGeometry, Material, Texture } from "three";
 import { screwHeadGeometry } from "./hardware-geometry";
 import { applySurfaceFinish } from "./surface-finish";
 import { createTurnedFace } from "./turned-metal";
+import { turnedProfileGeometry } from "./turned-profile";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
@@ -281,15 +280,7 @@ export function createModelParts({
     material: Material,
     name: string
   ) => {
-    const part = mesh(
-      new LatheGeometry(
-        profile.map(([radius, length]) => new Vector2(radius, length)),
-        96
-      ),
-      material,
-      position,
-      name
-    );
+    const part = mesh(turnedProfileGeometry(profile), material, position, name);
     part.rotation.x = Math.PI / 2;
     return part;
   };

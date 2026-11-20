@@ -130,7 +130,7 @@ export function createAudioViewer({
     const resources = sceneResources;
     const { camera } = cameraController;
     try {
-      resources.updateDetail(camera, height);
+      resources.updateDetail(camera, height * pixelRatio);
       await prepareViewerShaders(renderer, resources.scene, camera);
       if (disposed || contextLost || attempt !== preparation) {
         return;
@@ -255,7 +255,12 @@ export function createAudioViewer({
           return;
         }
         try {
-          if (sceneResources.updateDetail(cameraController.camera, height)) {
+          if (
+            sceneResources.updateDetail(
+              cameraController.camera,
+              height * pixelRatio
+            )
+          ) {
             void prepare();
             return;
           }

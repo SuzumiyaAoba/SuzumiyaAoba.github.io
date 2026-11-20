@@ -1,4 +1,5 @@
 import { Box3, CylinderGeometry, Group, Matrix4, Shape, Vector3 } from "three";
+import type { Mesh } from "three";
 import { drawSennheiserWordmark } from "./sennheiser-wordmark";
 import { createHd800sParts } from "./hd-800s-parts";
 import type { Hd800sParts } from "./hd-800s-parts";
@@ -114,6 +115,14 @@ function createHeadband(parts: Hd800sParts) {
   }
 }
 
+function addBasketSpokes(driver: Group, spoke: Mesh, count: number) {
+  for (let index = 0; index < count; index += 1) {
+    const part = index === 0 ? spoke : spoke.clone();
+    part.rotation.z = (index / count) * Math.PI * 2;
+    driver.add(part);
+  }
+}
+
 function createDriver(parts: Hd800sParts, cup: Group, side: number) {
   const driver = new Group();
   driver.name = "Angled ring-radiator assembly";
@@ -127,14 +136,26 @@ function createDriver(parts: Hd800sParts, cup: Group, side: number) {
     parts.disc(28, [0, 0, 5], parts.black, "Recessed driver rear cavity")
   );
   driver.add(
-    parts.ovalRing(
-      [56, 56],
-      [28, 28],
-      1.8,
-      [0, 0, 6.5],
+    // 外周と内周の支持部からボイスコイルの溝へ折り返す振動板の断面。
+    parts.lathe(
+      [
+        [14, 6.5],
+        [28, 6.5],
+        [28, 7.8],
+        [26.7, 7.8],
+        [25.7, 8.15],
+        [24, 8.4],
+        [22.6, 8.25],
+        [20, 7.2],
+        [18.2, 8.15],
+        [16.8, 8.35],
+        [15.5, 8.15],
+        [14, 7.8],
+        [14, 6.5],
+      ],
+      [0, 0, 0],
       parts.driver,
-      "56 mm ring-radiator transducer",
-      0.2
+      "56 mm ring-radiator transducer"
     ),
     parts.cylinder(
       8.2,
@@ -168,28 +189,27 @@ function createDriver(parts: Hd800sParts, cup: Group, side: number) {
       0.15
     )
   );
-  for (let index = 0; index < 6; index += 1) {
-    const angle = (index / 6) * Math.PI * 2;
-    const shape = new Shape();
-    shape.moveTo(-1.6, 12.7);
-    shape.lineTo(1.6, 12.7);
-    shape.lineTo(3.2, 17.5);
-    shape.lineTo(8, 22.8);
-    shape.lineTo(6.2, 26.8);
-    shape.lineTo(2.8, 22.2);
-    shape.lineTo(-0.8, 18.4);
-    shape.closePath();
-    const spoke = parts.plate(
-      shape,
+  const outerSpoke = new Shape();
+  outerSpoke.moveTo(-1.6, 12.7);
+  outerSpoke.lineTo(1.6, 12.7);
+  outerSpoke.lineTo(3.2, 17.5);
+  outerSpoke.lineTo(8, 22.8);
+  outerSpoke.lineTo(6.2, 26.8);
+  outerSpoke.lineTo(2.8, 22.2);
+  outerSpoke.lineTo(-0.8, 18.4);
+  outerSpoke.closePath();
+  addBasketSpokes(
+    driver,
+    parts.plate(
+      outerSpoke,
       1.2,
       [0, 0, 9],
       parts.trim,
       "Swept six-spoke driver basket",
       0.3
-    );
-    spoke.rotation.z = angle;
-    driver.add(spoke);
-  }
+    ),
+    6
+  );
   driver.add(
     parts.lathe(
       [
@@ -260,36 +280,29 @@ function createDriver(parts: Hd800sParts, cup: Group, side: number) {
       0.15
     )
   );
-  for (let index = 0; index < 12; index += 1) {
-    const shape = new Shape();
-    shape.moveTo(-1, 8);
-    shape.lineTo(1, 8);
-    shape.lineTo(1, 13);
-    shape.lineTo(3.8, 18);
-    shape.lineTo(3.8, 25);
-    shape.lineTo(1.8, 25);
-    shape.lineTo(1.8, 19);
-    shape.lineTo(-1, 14);
-    shape.closePath();
-    const spoke = parts.plate(
-      shape,
+  const innerSpoke = new Shape();
+  innerSpoke.moveTo(-1, 8);
+  innerSpoke.lineTo(1, 8);
+  innerSpoke.lineTo(1, 13);
+  innerSpoke.lineTo(3.8, 18);
+  innerSpoke.lineTo(3.8, 25);
+  innerSpoke.lineTo(1.8, 25);
+  innerSpoke.lineTo(1.8, 19);
+  innerSpoke.lineTo(-1, 14);
+  innerSpoke.closePath();
+  addBasketSpokes(
+    driver,
+    parts.plate(
+      innerSpoke,
       0.8,
       [0, 0, -5.4],
       basket,
       "Swept twelve-spoke inner driver support",
       0.15
-    );
-    spoke.rotation.z = (index / 12) * Math.PI * 2;
-    driver.add(spoke);
-  }
-  const innerGrille = parts.disc(
-    31,
-    [0, 0, -7.5],
-    parts.acoustic,
-    "Inner driver protective mesh"
+    ),
+    12
   );
-  innerGrille.rotation.y = Math.PI;
-  driver.add(innerGrille);
+  driver.add(parts.dustCover());
 }
 
 function createCupFrame(parts: Hd800sParts, cup: Group) {
@@ -332,6 +345,14 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
   yoke.quadraticCurveTo(29, 61, 10, 62);
   yoke.lineTo(-15, 58);
   yoke.closePath();
+  const socketHousing = new Shape();
+  socketHousing.moveTo(18, -35);
+  socketHousing.quadraticCurveTo(27, -30, 31, -23);
+  socketHousing.lineTo(45.5, -28);
+  socketHousing.quadraticCurveTo(48, -29, 46.5, -32);
+  socketHousing.quadraticCurveTo(43, -41, 37, -46);
+  socketHousing.quadraticCurveTo(35, -48, 31, -45);
+  socketHousing.closePath();
   cup.add(
     parts.plate(
       yoke,
@@ -341,12 +362,13 @@ function createCupFrame(parts: Hd800sParts, cup: Group) {
       "Continuous curved single-sided ear-cup yoke",
       0.8
     ),
-    parts.box(
-      [15, 21, 14],
-      [38, -34, 12],
+    parts.plate(
+      new Shape(socketHousing.getPoints(12)),
+      9,
+      [0, 0, 8],
       parts.matte,
       "Lower yoke pivot and cable socket housing",
-      1
+      0.8
     )
   );
   cup.add(

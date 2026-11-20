@@ -122,17 +122,19 @@ if (process.argv.includes("--check")) {
     const outputs = await Promise.all(
       images.map(async ({ name, width, height, png }) => {
         const source = Buffer.from(png, "base64");
-        const [image, preview] = await Promise.all([
-          sharp(source)
-            .removeAlpha()
-            .webp({ lossless: true, effort: 6 })
-            .toBuffer(),
-          sharp(source)
-            .removeAlpha()
-            .resize({ width: 128 })
-            .webp({ lossless: true, effort: 6 })
-            .toBuffer(),
-        ]);
+        const full = sharp(source)
+          .removeAlpha()
+          .webp({ lossless: true, effort: 6 })
+          .toBuffer();
+        const thumbnail =
+          width > 128
+            ? sharp(source)
+                .removeAlpha()
+                .resize({ width: 128 })
+                .webp({ lossless: true, effort: 6 })
+                .toBuffer()
+            : full;
+        const [image, preview] = await Promise.all([full, thumbnail]);
         const [originalPixels, encodedPixels] = await Promise.all([
           sharp(source).removeAlpha().raw().toBuffer(),
           sharp(image).removeAlpha().raw().toBuffer(),
@@ -148,10 +150,10 @@ if (process.argv.includes("--check")) {
           .digest("hex");
         const filename = `${name}.${digest.slice(0, 12)}.webp`;
         const previewFilename = `${name}.${previewDigest.slice(0, 12)}.webp`;
-        await Promise.all([
-          writeFile(path.join(outputDirectory, filename), image),
-          writeFile(path.join(outputDirectory, previewFilename), preview),
-        ]);
+        await writeFile(path.join(outputDirectory, filename), image);
+        if (previewFilename !== filename) {
+          await writeFile(path.join(outputDirectory, previewFilename), preview);
+        }
         return {
           name,
           imageBytes: image.length,

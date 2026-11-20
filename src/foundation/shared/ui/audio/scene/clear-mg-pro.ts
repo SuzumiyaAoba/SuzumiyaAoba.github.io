@@ -1,4 +1,5 @@
 import { Box3, CatmullRomCurve3, TubeGeometry } from "three";
+import type { Camera } from "three";
 import { createClearMgCup } from "./clear-mg-cups";
 import {
   createClearFabricBores,
@@ -95,5 +96,10 @@ export function createClearMgPro() {
   createClearMgCup(parts, 1);
   const bounds = new Box3().setFromObject(parts.root);
   parts.root.position.y = -bounds.min.y;
-  return { group: parts.root, dispose: () => parts.dispose() };
+  return {
+    group: parts.root,
+    updateDetail: (camera: Camera, viewportHeight: number) =>
+      parts.detail.update(camera, viewportHeight),
+    dispose: () => parts.dispose(),
+  };
 }

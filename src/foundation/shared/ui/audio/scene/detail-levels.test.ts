@@ -72,3 +72,15 @@ it("境界付近では詳細を維持し、鏡像の部品でも大きさを正�
   camera.position.z = 350;
   expect(detail.update(camera, 800)).toBe(true);
 });
+
+it("視野の外にある微細形状は生成せず、視点を向けたときに生成する", () => {
+  const { detail, build, mesh, camera, root } = fixture();
+  mesh.position.x = 60;
+  root.updateMatrixWorld(true);
+  camera.position.z = 50;
+  expect(detail.update(camera, 800)).toBe(false);
+  expect(build).not.toHaveBeenCalled();
+  camera.lookAt(mesh.position);
+  expect(detail.update(camera, 800)).toBe(true);
+  expect(build).toHaveBeenCalledTimes(1);
+});

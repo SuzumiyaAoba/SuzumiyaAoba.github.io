@@ -11,10 +11,10 @@ function noiseSource(seed: number) {
   };
 }
 
-function textureSurface() {
+function textureSurface(size = textureSize) {
   const canvas = document.createElement("canvas");
-  canvas.width = textureSize;
-  canvas.height = textureSize;
+  canvas.width = size;
+  canvas.height = size;
   const context = canvas.getContext("2d");
   if (!context) {
     throw new Error("Cannot create the HD 800 S surface finish.");
@@ -37,10 +37,11 @@ function grayscale(
   context: CanvasRenderingContext2D,
   shadeAt: (x: number, y: number) => number
 ) {
-  const pixels = context.createImageData(textureSize, textureSize);
-  for (let y = 0; y < textureSize; y += 1) {
-    for (let x = 0; x < textureSize; x += 1) {
-      const index = (y * textureSize + x) * 4;
+  const { width, height } = context.canvas;
+  const pixels = context.createImageData(width, height);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const index = (y * width + x) * 4;
       const shade = shadeAt(x, y);
       pixels.data[index] = shade;
       pixels.data[index + 1] = shade;
@@ -95,18 +96,6 @@ function metalFinish() {
   };
 }
 
-function powderFinish() {
-  const random = noiseSource(505);
-  const height = textureSurface();
-  const roughness = textureSurface();
-  grayscale(height.context, () => 112 + random() * 40);
-  grayscale(roughness.context, () => 184 + random() * 60);
-  return {
-    height: finishTexture(height.canvas),
-    roughness: finishTexture(roughness.canvas),
-  };
-}
-
 function acousticCloth() {
   const surface = textureSurface();
   // 防塵布は黒い細線だけでなく、背後の支持枠を透かしつつ暗くする。
@@ -140,30 +129,33 @@ function acousticCloth() {
 
 /** 0.22 mm ピッチの織金網。色ではなく開口と線材の高さを別々に描く。 */
 function steelMeshFinish() {
-  const aperture = textureSurface();
-  const height = textureSurface();
-  const pitch = 16;
-  const wireProfile = (coordinate: number, width: number) => {
-    const distance = Math.abs((coordinate % pitch) - pitch / 2);
-    return Math.sqrt(Math.max(0, 1 - (distance / width) ** 2));
-  };
+  const pitch = 32;
+  const radius = pitch / 4;
+  const aperture = textureSurface(2 * pitch);
+  const height = textureSurface(2 * pitch);
+  const distance = (coordinate: number) =>
+    Math.abs(((coordinate + 0.5) % pitch) - pitch / 2);
+  const coverage = (coordinate: number) =>
+    Math.min(1, Math.max(0, radius + 0.5 - distance(coordinate)));
+  const profile = (coordinate: number) =>
+    Math.sqrt(Math.max(0, 1 - (distance(coordinate) / radius) ** 2));
+  // 画素内で糸が覆う面積を保存し、縮小時にも織金網の透け方を保つ。
   grayscale(
     aperture.context,
-    (x, y) =>
-      Math.min(1, Math.max(wireProfile(x, 2.2), wireProfile(y, 0.85)) * 3) * 255
+    (x, y) => 255 * (1 - (1 - coverage(x)) * (1 - coverage(y)))
   );
   grayscale(height.context, (x, y) => {
-    const crossing = (Math.floor(x / pitch) + Math.floor(y / pitch)) % 2;
-    const warp = wireProfile(x, 2.2) * (crossing === 0 ? 1 : 0.75);
-    const weft = wireProfile(y, 0.85) * (crossing === 1 ? 1 : 0.75);
+    const crossing =
+      Math.sin(((x + 0.5) * Math.PI) / pitch) *
+      Math.sin(((y + 0.5) * Math.PI) / pitch);
+    const warp = profile(x) * (0.76 + 0.24 * crossing);
+    const weft = profile(y) * (0.76 - 0.24 * crossing);
     return Math.max(warp, weft) * 255;
   });
-  const mask = finishTexture(aperture.canvas);
-  const relief = finishTexture(height.canvas);
-  for (const texture of [mask, relief]) {
-    texture.repeat.set(100 / (32 * 0.22), 126 / (32 * 0.22));
-  }
-  return { mask, height: relief };
+  return {
+    mask: finishTexture(aperture.canvas),
+    height: finishTexture(height.canvas),
+  };
 }
 
 function grilleMask() {
@@ -189,14 +181,12 @@ function grilleMask() {
 export function createHd800sTextures() {
   const fabric = microfiberFinish();
   const metal = metalFinish();
-  const powder = powderFinish();
   const cloth = acousticCloth();
   const mesh = steelMeshFinish();
   const grille = grilleMask();
   const textures = [
     ...Object.values(fabric),
     ...Object.values(metal),
-    ...Object.values(powder),
     cloth,
     ...Object.values(mesh),
     grille,
@@ -204,7 +194,6 @@ export function createHd800sTextures() {
   return {
     fabric,
     metal,
-    powder,
     cloth,
     mesh,
     grille,

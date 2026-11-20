@@ -259,8 +259,8 @@ export function createAudioquestCinnamon(
   const jacket = new MeshPhysicalMaterial({
     color: 0xd0_d0_d0,
     map: braid.color,
-    bumpMap: braid.height,
-    roughnessMap: braid.roughness,
+    bumpMap: braid.surface,
+    roughnessMap: braid.surface,
     bumpScale: 0.09,
     roughness: 0.92,
     sheen: 0.16,

@@ -1,5 +1,6 @@
 import { Mesh, MeshBasicMaterial, Raycaster, Vector3 } from "three";
 import { expect, it } from "vitest";
+import { btr17KnobGeometry } from "./btr17-knob";
 import {
   btr17Dimensions,
   btr17EndPlateGeometry,
@@ -8,6 +9,35 @@ import {
   btr17Outputs,
   btr17UsbPositions,
 } from "./btr17-geometry";
+
+it("少ない面で綾目の山と連続する斜め溝を実形状に残す", () => {
+  const geometry = btr17KnobGeometry();
+  const material = new MeshBasicMaterial();
+  const knob = new Mesh(geometry, material);
+  const radiusAt = (x: number, tooth: number) => {
+    const angle = (tooth * Math.PI * 2) / 72;
+    const direction = new Vector3(0, Math.cos(angle), Math.sin(angle));
+    const origin = new Vector3(x, 0, 0).addScaledVector(direction, 8);
+    const [hit] = new Raycaster(origin, direction.negate()).intersectObject(
+      knob
+    );
+    return hit ? 8 - hit.distance : 0;
+  };
+  const bandCenter = 1.7 + (3.25 - 1.7) / 8;
+  expect(radiusAt(bandCenter, 0.49)).toBeCloseTo(5.6, 2);
+  expect(radiusAt(bandCenter, 0.01)).toBeCloseTo(5.47, 2);
+  for (const fraction of [0.25, 0.6, 0.8]) {
+    const phase = fraction * 2.2 * 1.15;
+    const x = 3.275 + fraction * 2.175;
+    expect(radiusAt(x, phase + 0.49)).toBeCloseTo(5.6, 2);
+    expect(radiusAt(x, phase + 0.01)).toBeCloseTo(5.48, 2);
+  }
+  const corners =
+    geometry.index?.count ?? geometry.getAttribute("position").count;
+  expect(corners / 3).toBeLessThan(10_000);
+  geometry.dispose();
+  material.dispose();
+});
 
 it("公表寸法の筐体に前面の段差とノブの切り欠きを作る", () => {
   const geometry = btr17FrameGeometry();

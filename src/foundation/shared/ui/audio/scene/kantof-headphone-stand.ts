@@ -2,15 +2,15 @@ import {
   CylinderGeometry,
   ExtrudeGeometry,
   Group,
-  LatheGeometry,
   Mesh,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
   Shape,
-  Vector2,
 } from "three";
+import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 import { createPreparedTexture } from "./prepared-textures";
 import { applySurfaceFinish } from "./surface-finish";
+import { turnedProfileGeometry } from "./turned-profile";
 
 export const kantofStandPosition = [390, 0, 25] as const;
 export const kantofCradleName = "Curved walnut headphone cradle";
@@ -43,7 +43,8 @@ function cradleGeometry() {
     // 表面と面取りで投影を連続させ、木目の継ぎ目を目立たせない。
     uvs.setXY(index, (x + 50) / 100, (z + (y - 265) * 1.5 + 1) / 103);
   }
-  return geometry;
+  // 削り出した木部の曲面から面取りへ、三角形の境目をまたいで反射をつなぐ。
+  return toCreasedNormals(geometry, Math.PI / 4);
 }
 
 /** 公表寸法は mm。木部の曲率と支柱径は製品写真から推定。 */
@@ -52,10 +53,14 @@ export function createKantofHeadphoneStand() {
   group.name = "kantof headphone stand — millimetres";
   group.userData["audioStaticRoot"] = true;
   const woodTexture = createPreparedTexture("kantof-wood", true);
+  const pores = createPreparedTexture("wood-surface");
   const wood = new MeshPhysicalMaterial({
     map: woodTexture,
+    bumpMap: pores,
+    bumpScale: 0.12,
+    roughnessMap: pores,
     color: 0xb6_9c_87,
-    roughness: 0.62,
+    roughness: 0.97,
     clearcoat: 0.3,
     clearcoatRoughness: 0.5,
   });
@@ -67,17 +72,14 @@ export function createKantofHeadphoneStand() {
     }),
     { scale: [10, 0.4, 10], relief: 0.002, roughness: 0.045 }
   );
-  const baseGeometry = new LatheGeometry(
-    [
-      [0, 0],
-      [58.5, 0],
-      [60, 1.2],
-      [60, 6.8],
-      [58.5, 8],
-      [0, 8],
-    ].map(([radius, height]) => new Vector2(radius, height)),
-    96
-  );
+  const baseGeometry = turnedProfileGeometry([
+    [0, 0],
+    [58.5, 0],
+    [60, 1.2],
+    [60, 6.8],
+    [58.5, 8],
+    [0, 8],
+  ]);
   const base = new Mesh(baseGeometry, metal);
   base.name = "Black aluminium circular base";
   const postGeometry = new CylinderGeometry(4, 4, 266, 48);
@@ -98,6 +100,7 @@ export function createKantofHeadphoneStand() {
       metal.dispose();
       wood.dispose();
       woodTexture.dispose();
+      pores.dispose();
     },
   };
 }

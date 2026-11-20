@@ -3,18 +3,13 @@ import { createPreparedTexture } from "./prepared-textures";
 /** 生成済みの編組画像を使い、初回表示での画素単位の計算を避ける。 */
 export function cinnamonBraidTextures(length: number, radius: number) {
   const color = createPreparedTexture("cinnamon-braid-color", true, true);
-  const height = createPreparedTexture("cinnamon-braid-height", false, true);
-  const roughness = createPreparedTexture(
-    "cinnamon-braid-roughness",
-    false,
-    true
-  );
-  for (const texture of [color, height, roughness]) {
+  const surface = createPreparedTexture("cinnamon-braid-surface", false, true);
+  for (const texture of [color, surface]) {
     // 元の DataTexture と同じ向きで編み目を繰り返す。
     texture.flipY = false;
     texture.repeat.set(length / (Math.PI * radius), 2);
   }
-  return { color, height, roughness };
+  return { color, surface };
 }
 
 export function drawCinnamonMark(context: CanvasRenderingContext2D) {

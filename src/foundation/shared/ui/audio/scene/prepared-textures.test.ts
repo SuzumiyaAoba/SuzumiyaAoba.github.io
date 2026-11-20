@@ -53,10 +53,10 @@ it("初回は軽量画像だけを読み込み、同じ画像の要求を共有�
 
 it("USBケーブル単体では生成済みの編組画像だけを読み込む", async () => {
   const loading = textures.preloadAudioTextures("audioquest-cinnamon");
-  const previews = Object.entries(manifest.textures)
-    .filter(([name]) => name.startsWith("cinnamon-"))
-    .map(([, source]) => source.previewUrl);
-  expect(previews).toHaveLength(3);
+  const previews = [
+    manifest.textures["cinnamon-braid-color"].previewUrl,
+    manifest.textures["cinnamon-braid-surface"].previewUrl,
+  ];
   expect([...requests.keys()]).toStrictEqual(previews);
   resolveImages();
   await loading;
@@ -68,6 +68,7 @@ it("詳細画像へ更新しても材質が参照するTextureを交換せず、
   await preview;
   const active = textures.createPreparedTexture("ha-wood");
   const second = textures.createPreparedTexture("ha-wood");
+  expect(second.source).toBe(active.source);
   const disposed = textures.createPreparedTexture("ha-wood");
   const originalImage: unknown = active.image;
   const originalSource = active.source;
@@ -80,6 +81,7 @@ it("詳細画像へ更新しても材質が参照するTextureを交換せず、
   await expect(upgrade).resolves.toBe(true);
   expect(active.image).not.toBe(originalImage);
   expect(second.image).toBe(active.image);
+  expect(second.source).toBe(active.source);
   expect(active.source).not.toBe(originalSource);
   expect(active.repeat.toArray()).toStrictEqual([3, 2]);
   expect(releaseGpu).toHaveBeenCalledTimes(1);

@@ -1,5 +1,5 @@
 import { RepeatWrapping, SRGBColorSpace, Texture } from "three";
-import { bindTexture, getTextureImage } from "./texture-images";
+import { bindTexture, getTextureSource } from "./texture-images";
 import type { TextureName } from "./texture-images";
 
 export function createPreparedTexture(
@@ -7,7 +7,8 @@ export function createPreparedTexture(
   color = false,
   repeat = false
 ) {
-  const texture = new Texture(getTextureImage(name));
+  const texture = new Texture();
+  texture.source = getTextureSource(name);
   texture.anisotropy = 8;
   texture.needsUpdate = true;
   if (color) {

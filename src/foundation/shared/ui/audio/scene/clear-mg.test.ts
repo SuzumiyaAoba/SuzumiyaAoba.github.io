@@ -7,6 +7,7 @@ import {
   Mesh,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
+  PerspectiveCamera,
   Raycaster,
   Vector3,
 } from "three";
@@ -118,6 +119,47 @@ it("傾けた左右のカップでもスライダーを袖に接続し、3.5 mm�
     expect(hit?.distance).toBeCloseTo(12.1);
   }
   expect(new Box3().setFromObject(model.group).min.y).toBeCloseTo(0);
+  model.dispose();
+});
+
+it("パッドを拡大すると繊維と穴壁が現れ、再び近づくと同じ繊維形状を使う", () => {
+  stubCanvas();
+  const model = createClearMgPro();
+  model.group.updateMatrixWorld(true);
+  const cup = model.group.getObjectByName("Clear Mg Professional left ear cup");
+  const pile = cup?.getObjectByName("Short individual red microfiber fibers");
+  const bores = cup?.getObjectByName(
+    "Recessed perforation walls and floors beneath the fabric openings"
+  );
+  if (
+    !cup ||
+    !(pile instanceof Mesh) ||
+    !(pile.geometry instanceof BufferGeometry) ||
+    !bores
+  ) {
+    throw new Error("Missing Clear Mg ear-pad details.");
+  }
+  const camera = new PerspectiveCamera(35, 1, 0.5, 6000);
+  const center = cup.localToWorld(new Vector3(0, 0, -18));
+  const outward = new Vector3(0, 0, -1).transformDirection(cup.matrixWorld);
+  const viewFrom = (distance: number) => {
+    camera.position.copy(center).addScaledVector(outward, distance);
+    camera.lookAt(center);
+    model.updateDetail(camera, 500);
+  };
+  viewFrom(2500);
+  expect(pile.geometry.hasAttribute("position")).toBe(false);
+  expect(bores.visible).toBe(false);
+  viewFrom(130);
+  expect(pile.visible).toBe(true);
+  expect(bores.visible).toBe(true);
+  const detailed = pile.geometry;
+  expect(detailed.hasAttribute("position")).toBe(true);
+  viewFrom(2500);
+  expect(pile.visible).toBe(false);
+  expect(bores.visible).toBe(false);
+  viewFrom(130);
+  expect(pile.geometry).toBe(detailed);
   model.dispose();
 });
 
