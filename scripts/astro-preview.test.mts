@@ -72,7 +72,7 @@ void test("AI benchmarks compare scores and costs without treating missing costs
   );
   assert.match(
     (await table.locator("tbody tr").first().textContent()) ?? "",
-    /Claude Opus 5.5.*65.15.*13.20/u
+    /Claude Fable 5.2.*65.15.*14.56/u
   );
   assert.equal(
     await table.getByRole("columnheader", { name: /Effort/u }).count(),
@@ -164,12 +164,7 @@ void test("AI benchmarks compare scores and costs without treating missing costs
 
   const search = page.getByRole("searchbox", { name: "モデルを検索" });
   await search.fill("Beam");
-  await page
-    .getByText(
-      "この条件で比較できる費用データはありません。スコアは下の表で確認できます。",
-      { exact: true }
-    )
-    .waitFor();
+  await page.getByText("費用データがありません。", { exact: true }).waitFor();
   assert.match((await table.textContent()) ?? "", /Beam 1.0.*4.04.*未公表/u);
   await search.fill("does-not-exist");
   await page
@@ -284,7 +279,7 @@ void test("additional benchmarks preserve score units, settings, and sources", a
   );
   assert.match(
     (await table.locator("tbody tr").first().textContent()) ?? "",
-    /Default Fallback.*1813.57 Elo/u
+    /Default Fallback.*1812.63 Elo/u
   );
   assert.match(
     (await table.locator("caption").textContent()) ?? "",
@@ -296,7 +291,7 @@ void test("additional benchmarks preserve score units, settings, and sources", a
   );
   assert.match(
     (await page.locator("figcaption").textContent()) ?? "",
-    /1813.57 Elo/u
+    /1812.63 Elo/u
   );
 
   await select.selectOption("aa-omniscience");
@@ -324,7 +319,7 @@ void test("additional benchmarks preserve score units, settings, and sources", a
   await select.selectOption("hlab");
   assert.match(
     (await table.locator("caption").textContent()) ?? "",
-    /Vals AI、更新日 2026-10-30/u
+    /Vals AI、更新日 2026-11-19/u
   );
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(

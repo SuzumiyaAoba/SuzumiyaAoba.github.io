@@ -52,9 +52,32 @@ describe("公開ベンチマークデータの検証", () => {
     expect(briefcase?.results[0]?.configuration).toBe("Default Fallback");
     expect(critpt?.sourceUrl).toContain("subset=hard");
     expect(
-      critpt?.results.find((result) => result.id === "openai_gpt-6-astra")
-        ?.score
-    ).toBe(70.5);
+      critpt?.results.find(
+        (result) => result.id === "anthropic_claude-fable-5-2"
+      )
+    ).toMatchObject({
+      score: 76.5,
+      effort: "max",
+      configuration: "Default Fallback",
+    });
+  });
+
+  it("終了済み評価と、評価結果に対応する推論設定を保持する", () => {
+    const dataset = benchmarkDatasetSchema.parse(rawDataset);
+    const proof = dataset.benchmarks.find((item) => item.id === "proof-bench");
+    const science = dataset.benchmarks.find(
+      (item) => item.id === "terminal-bench-science"
+    );
+    const vibe = dataset.benchmarks.find((item) => item.id === "vcb-1-100");
+    expect(proof?.archived).toBe(true);
+    expect(vibe?.archived).toBe(true);
+    expect(
+      science?.results.find((result) => result.id === "openai_gpt-6.2-astra")
+    ).toMatchObject({
+      score: 71.429,
+      effort: "max",
+      harness: "Mini-SWE-agent",
+    });
   });
 
   it("負の費用・範囲外のスコアを拒否する", () => {
