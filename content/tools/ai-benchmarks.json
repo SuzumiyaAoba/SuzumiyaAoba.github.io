@@ -1,7 +1,7 @@
 {
-  "retrievedAt": "2026-11-01",
+  "retrievedAt": "2026-11-25",
   "source": "Vals AI / Artificial Analysis",
-  "selection": "既存の Vals AI 5評価は上位20件と費用比較用モデルの掲載範囲を維持。追加の Vals AI 2評価は公開表の全モデル、Artificial Analysis 7評価は取得時の既定表示モデルを各1設定ずつ掲載しています。評価元の全モデル・全推論設定を網羅するものではありません。",
+  "selection": "Terminal-Bench 4.0 と Terminal-Bench-Science は2026-11-25に公開表の上位20行を更新。その他の結果は2026-11-01時点のスナップショットです。評価元の全モデル・全推論設定を網羅するものではありません。",
   "benchmarks": [
     {
       "id": "terminal-bench-4",
@@ -11,20 +11,32 @@
       "methodology": "66タスクを mini-swe-agent で実行。pass@1 を3回測定した平均（avg@3）。",
       "version": "4.0",
       "sourceUrl": "https://www.vals.ai/benchmarks/terminal-bench-4",
-      "sourceUpdatedAt": "2026-10-29",
+      "sourceUpdatedAt": "2026-11-19",
       "archived": false,
       "results": [
+        {
+          "id": "anthropic_claude-fable-5-2",
+          "model": "Claude Fable 5.2",
+          "provider": "Anthropic",
+          "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-2",
+          "score": 65.15,
+          "costPerTaskUsd": 14.56,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
+        },
         {
           "id": "anthropic_claude-opus-5-5",
           "model": "Claude Opus 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-opus-5-5",
           "score": 65.15,
-          "costPerTaskUsd": 13.2,
+          "costPerTaskUsd": 12.04,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-sonnet-5-5",
@@ -32,11 +44,11 @@
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-sonnet-5-5",
           "score": 64.14,
-          "costPerTaskUsd": 16.51,
+          "costPerTaskUsd": 10.75,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "kimi_kimi-k3.1-pro",
@@ -48,7 +60,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
+        },
+        {
+          "id": "openai_gpt-6.2-astra",
+          "model": "GPT-6.2 Astra",
+          "provider": "OpenAI",
+          "modelUrl": "https://www.vals.ai/models/openai_gpt-6.2-astra",
+          "score": 63.13,
+          "costPerTaskUsd": 4.69,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
         },
         {
           "id": "google_gemini-4-carbon",
@@ -60,7 +84,31 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "high"
+          "effort": null
+        },
+        {
+          "id": "google_gemini-4-neon",
+          "model": "Gemini 4 Neon",
+          "provider": "Google",
+          "modelUrl": "https://www.vals.ai/models/google_gemini-4-neon",
+          "score": 61.62,
+          "costPerTaskUsd": 6.42,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
+        },
+        {
+          "id": "openai_gpt-6.2-sol",
+          "model": "GPT-6.2 Sol",
+          "provider": "OpenAI",
+          "modelUrl": "https://www.vals.ai/models/openai_gpt-6.2-sol",
+          "score": 60.61,
+          "costPerTaskUsd": 1.13,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
         },
         {
           "id": "openai_gpt-6-astra",
@@ -72,7 +120,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-fable-5-1",
@@ -84,7 +132,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "meta_muse-wonder-full",
@@ -96,7 +144,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "google_gemini-4-argon",
@@ -108,7 +156,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "high"
+          "effort": null
         },
         {
           "id": "openai_gpt-6.1-sol",
@@ -120,7 +168,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
+        },
+        {
+          "id": "google_gemini-4-hydrogen",
+          "model": "Gemini 4 Hydrogen",
+          "provider": "Google",
+          "modelUrl": "https://www.vals.ai/models/google_gemini-4-hydrogen",
+          "score": 54.04,
+          "costPerTaskUsd": 7.56,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
         },
         {
           "id": "anthropic_claude-opus-5",
@@ -132,7 +192,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "openai_gpt-6.1-terra",
@@ -144,7 +204,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "meta_muse-wonder",
@@ -156,7 +216,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
+        },
+        {
+          "id": "alibaba_qwen4-max",
+          "model": "Qwen 4 Max",
+          "provider": "Alibaba",
+          "modelUrl": "https://www.vals.ai/models/alibaba_qwen4-max",
+          "score": 48.48,
+          "costPerTaskUsd": 3.9,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
         },
         {
           "id": "openai_gpt-6-sol",
@@ -168,7 +240,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-fable-5",
@@ -180,157 +252,14 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "zai_glm-5.3",
-          "model": "GLM 5.3",
-          "provider": "Z.ai",
-          "modelUrl": "https://www.vals.ai/models/zai_glm-5.3",
-          "score": 38.89,
-          "costPerTaskUsd": 9.37,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "alibaba_qwen3.8-max-0902",
-          "model": "Qwen 3.8 Max 0902",
-          "provider": "Alibaba",
-          "modelUrl": "https://www.vals.ai/models/alibaba_qwen3.8-max-0902",
-          "score": 38.89,
-          "costPerTaskUsd": 12.15,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "openai_gpt-5.6-sol",
-          "model": "GPT-5.6 Sol",
-          "provider": "OpenAI",
-          "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-sol",
-          "score": 37.88,
-          "costPerTaskUsd": 7.98,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "zai_glm-5.3-flash",
-          "model": "GLM 5.3 Flash",
-          "provider": "Z.ai",
-          "modelUrl": "https://www.vals.ai/models/zai_glm-5.3-flash",
-          "score": 37.37,
-          "costPerTaskUsd": 1.22,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "anthropic_claude-haiku-5-5",
-          "model": "Claude Haiku 5.5",
-          "provider": "Anthropic",
-          "modelUrl": "https://www.vals.ai/models/anthropic_claude-haiku-5-5",
-          "score": 36.36,
-          "costPerTaskUsd": 3.12,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "alibaba_qwen3.8-max",
-          "model": "Qwen 3.8 Max",
-          "provider": "Alibaba",
-          "modelUrl": "https://www.vals.ai/models/alibaba_qwen3.8-max",
-          "score": 34.34,
-          "costPerTaskUsd": 10.63,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "deepseek_deepseek-v4.1-flash-1017",
-          "model": "DeepSeek V4.1 Flash 1017",
-          "provider": "DeepSeek",
-          "modelUrl": "https://www.vals.ai/models/deepseek_deepseek-v4.1-flash-1017",
-          "score": 31.82,
-          "costPerTaskUsd": 0.54,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "xiaomi_mimo-v2.6-pro",
-          "model": "MiMo V2.6 Pro",
-          "provider": "Xiaomi",
-          "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-pro",
-          "score": 31.31,
-          "costPerTaskUsd": 0.46,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "minimax_minimax-m3.1-flash",
-          "model": "MiniMax-M3.1-Flash",
-          "provider": "MiniMax",
-          "modelUrl": "https://www.vals.ai/models/minimax_MiniMax-M3.1-flash",
-          "score": 25.25,
-          "costPerTaskUsd": 0.73,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "xiaomi_mimo-v2.6-flash",
-          "model": "MiMo V2.6 Flash",
-          "provider": "Xiaomi",
-          "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-flash",
-          "score": 24.24,
-          "costPerTaskUsd": 0.21,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "deepseek_deepseek-v4.1-flash",
-          "model": "DeepSeek V4.1 Flash",
-          "provider": "DeepSeek",
-          "modelUrl": "https://www.vals.ai/models/deepseek_deepseek-v4.1-flash",
-          "score": 19.7,
-          "costPerTaskUsd": 0.5,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "high"
-        },
-        {
-          "id": "reflection_beam-1.0",
-          "model": "Beam 1.0",
-          "provider": "Reflection",
-          "modelUrl": "https://www.vals.ai/models/reflection_Beam-1.0",
-          "score": 4.04,
-          "costPerTaskUsd": null,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
           "effort": null
         }
       ],
-      "dataSourceUrl": "https://www.vals.ai/_astro/benchmark_view_terminal_bench_4.CV0GxyRX.json",
+      "dataSourceUrl": "https://www.vals.ai/benchmarks/terminal-bench-4",
       "source": "Vals AI",
       "scoreType": "percentage",
-      "scoreLabel": "スコア（%）"
+      "scoreLabel": "スコア（%）",
+      "selection": "2026-11-25 に公開表を確認し、上位20行を掲載。推論設定は公開表から確認できないため未公表。"
     },
     {
       "id": "proof-bench",
@@ -341,14 +270,14 @@
       "version": "1.1",
       "sourceUrl": "https://www.vals.ai/benchmarks/proof_bench",
       "sourceUpdatedAt": "2026-10-29",
-      "archived": false,
+      "archived": true,
       "results": [
         {
           "id": "anthropic_claude-sonnet-5-5",
           "model": "Claude Sonnet 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-sonnet-5-5",
-          "score": 100.0,
+          "score": 100,
           "costPerTaskUsd": 0.56,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -360,7 +289,7 @@
           "model": "Claude Opus 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-opus-5-5",
-          "score": 100.0,
+          "score": 100,
           "costPerTaskUsd": 0.96,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -372,7 +301,7 @@
           "model": "Claude Fable 5.1",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-1",
-          "score": 100.0,
+          "score": 100,
           "costPerTaskUsd": 2.7,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -384,7 +313,7 @@
           "model": "GPT-6.1 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-6.1-sol",
-          "score": 99.0,
+          "score": 99,
           "costPerTaskUsd": 0.23,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -396,7 +325,7 @@
           "model": "GPT-6 Astra",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-6-astra",
-          "score": 99.0,
+          "score": 99,
           "costPerTaskUsd": 1.71,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -408,7 +337,7 @@
           "model": "Gemini 4 Argon",
           "provider": "Google",
           "modelUrl": "https://www.vals.ai/models/google_gemini-4-argon",
-          "score": 99.0,
+          "score": 99,
           "costPerTaskUsd": 0.78,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -420,7 +349,7 @@
           "model": "Claude Opus 5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-opus-5",
-          "score": 99.0,
+          "score": 99,
           "costPerTaskUsd": 1.79,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -432,7 +361,7 @@
           "model": "Claude Fable 5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5",
-          "score": 95.0,
+          "score": 95,
           "costPerTaskUsd": 5.23,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -444,7 +373,7 @@
           "model": "Wonder Full",
           "provider": "Meta",
           "modelUrl": "https://www.vals.ai/models/meta_muse-wonder-full",
-          "score": 94.0,
+          "score": 94,
           "costPerTaskUsd": 0.86,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -456,7 +385,7 @@
           "model": "Kimi K3.1 Pro",
           "provider": "Moonshot AI",
           "modelUrl": "https://www.vals.ai/models/kimi_kimi-k3.1-pro",
-          "score": 91.0,
+          "score": 91,
           "costPerTaskUsd": 0.47,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -468,7 +397,7 @@
           "model": "Claude Haiku 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-haiku-5-5",
-          "score": 89.0,
+          "score": 89,
           "costPerTaskUsd": 0.17,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -480,7 +409,7 @@
           "model": "Kimi K3",
           "provider": "Moonshot AI",
           "modelUrl": "https://www.vals.ai/models/kimi_kimi-k3",
-          "score": 87.0,
+          "score": 87,
           "costPerTaskUsd": 1.65,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -492,7 +421,7 @@
           "model": "Wonder",
           "provider": "Meta",
           "modelUrl": "https://www.vals.ai/models/meta_muse-wonder",
-          "score": 84.0,
+          "score": 84,
           "costPerTaskUsd": 1.31,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -504,7 +433,7 @@
           "model": "GPT-6 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-6-sol",
-          "score": 83.0,
+          "score": 83,
           "costPerTaskUsd": 0.48,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -516,7 +445,7 @@
           "model": "GPT-5.6 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-sol",
-          "score": 83.0,
+          "score": 83,
           "costPerTaskUsd": 1.44,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -528,7 +457,7 @@
           "model": "Claude Sonnet 5",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-sonnet-5",
-          "score": 77.0,
+          "score": 77,
           "costPerTaskUsd": 1.37,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -540,7 +469,7 @@
           "model": "Hy4 Preview",
           "provider": "Tencent",
           "modelUrl": "https://www.vals.ai/models/tencent_hy4-preview",
-          "score": 75.0,
+          "score": 75,
           "costPerTaskUsd": 0.34,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -552,7 +481,7 @@
           "model": "GPT-5.6 Terra",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-terra",
-          "score": 74.0,
+          "score": 74,
           "costPerTaskUsd": 1.27,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -564,7 +493,7 @@
           "model": "MiMo V2.6 Pro",
           "provider": "Xiaomi",
           "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-pro",
-          "score": 70.0,
+          "score": 70,
           "costPerTaskUsd": 0.25,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -576,7 +505,7 @@
           "model": "MiMo V2.6 Flash",
           "provider": "Xiaomi",
           "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-flash",
-          "score": 63.0,
+          "score": 63,
           "costPerTaskUsd": 0.12,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -588,7 +517,7 @@
           "model": "DeepSeek V4.1 Flash",
           "provider": "DeepSeek",
           "modelUrl": "https://www.vals.ai/models/deepseek_deepseek-v4.1-flash",
-          "score": 54.0,
+          "score": 54,
           "costPerTaskUsd": 0.13,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -600,7 +529,7 @@
           "model": "Beam 1.0",
           "provider": "Reflection",
           "modelUrl": "https://www.vals.ai/models/reflection_Beam-1.0",
-          "score": 18.0,
+          "score": 18,
           "costPerTaskUsd": null,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -621,9 +550,33 @@
       "methodology": "v0.1.0 の70タスクの成功率。各モデル1回の pass@1。ハーネス移行中のため行ごとの条件を確認。",
       "version": "0.1.0",
       "sourceUrl": "https://www.vals.ai/benchmarks/terminal-bench-science",
-      "sourceUpdatedAt": "2026-10-25",
+      "sourceUpdatedAt": "2026-11-19",
       "archived": false,
       "results": [
+        {
+          "id": "openai_gpt-6.2-astra",
+          "model": "GPT-6.2 Astra",
+          "provider": "OpenAI",
+          "modelUrl": "https://www.vals.ai/models/openai_gpt-6.2-astra",
+          "score": 71.43,
+          "costPerTaskUsd": 11.08,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
+        },
+        {
+          "id": "google_gemini-4-neon",
+          "model": "Gemini 4 Neon",
+          "provider": "Google",
+          "modelUrl": "https://www.vals.ai/models/google_gemini-4-neon",
+          "score": 62.86,
+          "costPerTaskUsd": 13.74,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
+        },
         {
           "id": "openai_gpt-6-astra",
           "model": "GPT-6 Astra",
@@ -634,7 +587,31 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
+        },
+        {
+          "id": "openai_gpt-6.2-sol",
+          "model": "GPT-6.2 Sol",
+          "provider": "OpenAI",
+          "modelUrl": "https://www.vals.ai/models/openai_gpt-6.2-sol",
+          "score": 58.57,
+          "costPerTaskUsd": 2.53,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
+        },
+        {
+          "id": "anthropic_claude-fable-5-2",
+          "model": "Claude Fable 5.2",
+          "provider": "Anthropic",
+          "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-2",
+          "score": 55.71,
+          "costPerTaskUsd": 23.14,
+          "inputPerMillionUsd": null,
+          "outputPerMillionUsd": null,
+          "harness": "Mini-SWE-agent",
+          "effort": null
         },
         {
           "id": "openai_gpt-6.1-sol",
@@ -646,7 +623,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-opus-5-5",
@@ -658,7 +635,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-sonnet-5-5",
@@ -670,7 +647,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "google_gemini-4-argon",
@@ -682,19 +659,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "high"
+          "effort": null
         },
         {
           "id": "anthropic_claude-fable-5-1",
           "model": "Claude Fable 5.1",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-1",
-          "score": 40.0,
+          "score": 40,
           "costPerTaskUsd": 38.01,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "meta_muse-wonder-full",
@@ -706,7 +683,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "kimi_kimi-k3.1-pro",
@@ -718,19 +695,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "openai_gpt-6-sol",
           "model": "GPT-6 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-6-sol",
-          "score": 30.0,
+          "score": 30,
           "costPerTaskUsd": 5.82,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-opus-5",
@@ -742,7 +719,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "meta_muse-wonder",
@@ -754,19 +731,19 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "openai_gpt-5.6-sol",
           "model": "GPT-5.6 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-sol",
-          "score": 20.0,
+          "score": 20,
           "costPerTaskUsd": 7.32,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "anthropic_claude-fable-5",
@@ -778,7 +755,7 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
+          "effort": null
         },
         {
           "id": "alibaba_qwen3.8-max",
@@ -802,121 +779,26 @@
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "high"
+          "effort": null
         },
         {
           "id": "meta_muse_spark_1_3_max",
           "model": "Muse Spark 1.3 Max",
           "provider": "Meta",
           "modelUrl": "https://www.vals.ai/models/meta_muse_spark_1_3_max",
-          "score": 10.0,
+          "score": 10,
           "costPerTaskUsd": 6.09,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
           "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "grok_grok-4.7",
-          "model": "Grok 4.7",
-          "provider": "xAI",
-          "modelUrl": "https://www.vals.ai/models/grok_grok-4.7",
-          "score": 10.0,
-          "costPerTaskUsd": 17.04,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "xhigh"
-        },
-        {
-          "id": "anthropic_claude-haiku-5-5",
-          "model": "Claude Haiku 5.5",
-          "provider": "Anthropic",
-          "modelUrl": "https://www.vals.ai/models/anthropic_claude-haiku-5-5",
-          "score": 10.0,
-          "costPerTaskUsd": 4.52,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "openai_gpt-5.6-terra",
-          "model": "GPT-5.6 Terra",
-          "provider": "OpenAI",
-          "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-terra",
-          "score": 10.0,
-          "costPerTaskUsd": 5.19,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
-        },
-        {
-          "id": "google_gemini-3.8-flash",
-          "model": "Gemini 3.8 Flash",
-          "provider": "Google",
-          "modelUrl": "https://www.vals.ai/models/google_gemini-3.8-flash",
-          "score": 8.57,
-          "costPerTaskUsd": 5.64,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "high"
-        },
-        {
-          "id": "xiaomi_mimo-v2.6-flash",
-          "model": "MiMo V2.6 Flash",
-          "provider": "Xiaomi",
-          "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-flash",
-          "score": 4.29,
-          "costPerTaskUsd": 0.24,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
           "effort": null
-        },
-        {
-          "id": "xiaomi_mimo-v2.6-pro",
-          "model": "MiMo V2.6 Pro",
-          "provider": "Xiaomi",
-          "modelUrl": "https://www.vals.ai/models/xiaomi_mimo-v2.6-pro",
-          "score": 2.86,
-          "costPerTaskUsd": 0.62,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "reflection_beam-1.0",
-          "model": "Beam 1.0",
-          "provider": "Reflection",
-          "modelUrl": "https://www.vals.ai/models/reflection_Beam-1.0",
-          "score": 1.43,
-          "costPerTaskUsd": null,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": null
-        },
-        {
-          "id": "deepseek_deepseek-v4.1-flash",
-          "model": "DeepSeek V4.1 Flash",
-          "provider": "DeepSeek",
-          "modelUrl": "https://www.vals.ai/models/deepseek_deepseek-v4.1-flash",
-          "score": 0.0,
-          "costPerTaskUsd": 0.47,
-          "inputPerMillionUsd": null,
-          "outputPerMillionUsd": null,
-          "harness": "Mini-SWE-agent",
-          "effort": "max"
         }
       ],
-      "dataSourceUrl": "https://www.vals.ai/_astro/benchmark_view_terminal_bench_science.3WIeBdiC.json",
+      "dataSourceUrl": "https://www.vals.ai/benchmarks/terminal-bench-science",
       "source": "Vals AI",
       "scoreType": "percentage",
-      "scoreLabel": "スコア（%）"
+      "scoreLabel": "スコア（%）",
+      "selection": "2026-11-25 に公開表を確認し、上位20行を掲載。推論設定は公開表から確認できないため未公表。"
     },
     {
       "id": "fabv2-1",
@@ -1042,7 +924,7 @@
           "model": "GLM 5.3",
           "provider": "Z.ai",
           "modelUrl": "https://www.vals.ai/models/zai_glm-5.3",
-          "score": 65.0,
+          "score": 65,
           "costPerTaskUsd": 1.03,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -1217,8 +1099,8 @@
           "modelUrl": "https://www.vals.ai/models/google_gemini-3.1-pro-preview",
           "score": 95.45,
           "costPerTaskUsd": 0.081442,
-          "inputPerMillionUsd": 2.0,
-          "outputPerMillionUsd": 12.0,
+          "inputPerMillionUsd": 2,
+          "outputPerMillionUsd": 12,
           "harness": null,
           "effort": "high"
         },
@@ -1229,8 +1111,8 @@
           "modelUrl": "https://www.vals.ai/models/openai_gpt-5.6-sol",
           "score": 95.2,
           "costPerTaskUsd": 0.10996,
-          "inputPerMillionUsd": 4.0,
-          "outputPerMillionUsd": 20.0,
+          "inputPerMillionUsd": 4,
+          "outputPerMillionUsd": 20,
           "harness": null,
           "effort": "max"
         },
@@ -1241,8 +1123,8 @@
           "modelUrl": "https://www.vals.ai/models/grok_grok-4.6",
           "score": 94.7,
           "costPerTaskUsd": 0.045365,
-          "inputPerMillionUsd": 2.0,
-          "outputPerMillionUsd": 6.0,
+          "inputPerMillionUsd": 2,
+          "outputPerMillionUsd": 6,
           "harness": null,
           "effort": "high"
         },
@@ -1277,8 +1159,8 @@
           "modelUrl": "https://www.vals.ai/models/alibaba_qwen3.8-max",
           "score": 93.69,
           "costPerTaskUsd": 0.077028,
-          "inputPerMillionUsd": 2.0,
-          "outputPerMillionUsd": 6.0,
+          "inputPerMillionUsd": 2,
+          "outputPerMillionUsd": 6,
           "harness": null,
           "effort": null
         },
@@ -1301,8 +1183,8 @@
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-opus-5",
           "score": 93.43,
           "costPerTaskUsd": 0.095481,
-          "inputPerMillionUsd": 5.0,
-          "outputPerMillionUsd": 25.0,
+          "inputPerMillionUsd": 5,
+          "outputPerMillionUsd": 25,
           "harness": null,
           "effort": null
         },
@@ -1313,8 +1195,8 @@
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-1",
           "score": 93.43,
           "costPerTaskUsd": 0.204523,
-          "inputPerMillionUsd": 10.0,
-          "outputPerMillionUsd": 50.0,
+          "inputPerMillionUsd": 10,
+          "outputPerMillionUsd": 50,
           "harness": null,
           "effort": "max"
         },
@@ -1325,8 +1207,8 @@
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5",
           "score": 93.18,
           "costPerTaskUsd": 0.450473,
-          "inputPerMillionUsd": 10.0,
-          "outputPerMillionUsd": 50.0,
+          "inputPerMillionUsd": 10,
+          "outputPerMillionUsd": 50,
           "harness": null,
           "effort": "max"
         },
@@ -1337,8 +1219,8 @@
           "modelUrl": "https://www.vals.ai/models/openai_gpt-5.5",
           "score": 93.18,
           "costPerTaskUsd": 0.082767,
-          "inputPerMillionUsd": 5.0,
-          "outputPerMillionUsd": 30.0,
+          "inputPerMillionUsd": 5,
+          "outputPerMillionUsd": 30,
           "harness": null,
           "effort": "xhigh"
         },
@@ -1349,8 +1231,8 @@
           "modelUrl": "https://www.vals.ai/models/kimi_kimi-k3",
           "score": 92.93,
           "costPerTaskUsd": 0.088491,
-          "inputPerMillionUsd": 3.0,
-          "outputPerMillionUsd": 15.0,
+          "inputPerMillionUsd": 3,
+          "outputPerMillionUsd": 15,
           "harness": null,
           "effort": null
         },
@@ -1361,8 +1243,8 @@
           "modelUrl": "https://www.vals.ai/models/grok_grok-4.5",
           "score": 92.93,
           "costPerTaskUsd": 0.044029,
-          "inputPerMillionUsd": 2.0,
-          "outputPerMillionUsd": 6.0,
+          "inputPerMillionUsd": 2,
+          "outputPerMillionUsd": 6,
           "harness": null,
           "effort": "high"
         },
@@ -1374,7 +1256,7 @@
           "score": 92.68,
           "costPerTaskUsd": 0.063842,
           "inputPerMillionUsd": 1.5,
-          "outputPerMillionUsd": 9.0,
+          "outputPerMillionUsd": 9,
           "harness": null,
           "effort": "high"
         },
@@ -1397,8 +1279,8 @@
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-opus-4-8",
           "score": 92.42,
           "costPerTaskUsd": 0.339261,
-          "inputPerMillionUsd": 5.0,
-          "outputPerMillionUsd": 25.0,
+          "inputPerMillionUsd": 5,
+          "outputPerMillionUsd": 25,
           "harness": null,
           "effort": "max"
         },
@@ -1433,8 +1315,8 @@
           "modelUrl": "https://www.vals.ai/models/google_gemini-3-pro-preview",
           "score": 91.67,
           "costPerTaskUsd": 0.089573,
-          "inputPerMillionUsd": 2.0,
-          "outputPerMillionUsd": 12.0,
+          "inputPerMillionUsd": 2,
+          "outputPerMillionUsd": 12,
           "harness": null,
           "effort": "high"
         },
@@ -1446,7 +1328,7 @@
           "score": 91.67,
           "costPerTaskUsd": 0.149037,
           "inputPerMillionUsd": 1.75,
-          "outputPerMillionUsd": 14.0,
+          "outputPerMillionUsd": 14,
           "harness": null,
           "effort": "xhigh"
         }
@@ -1779,7 +1661,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 11.847146,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": "Stirrup",
@@ -2150,7 +2032,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 1293.06,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": "Stirrup",
@@ -2573,7 +2455,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 37.208028,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": "Stirrup",
@@ -2748,7 +2630,7 @@
           "model": "Wonder",
           "provider": "Meta",
           "modelUrl": "https://artificialanalysis.ai/models/muse-wonder",
-          "score": 39.0,
+          "score": 39,
           "costPerTaskUsd": 0.84180471,
           "inputPerMillionUsd": 4,
           "outputPerMillionUsd": 20,
@@ -2852,7 +2734,7 @@
           "model": "Qwen 3.8 Max 0902",
           "provider": "Alibaba",
           "modelUrl": "https://artificialanalysis.ai/models/qwen3-8-max",
-          "score": 24.0,
+          "score": 24,
           "costPerTaskUsd": 0.20676177,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 6,
@@ -2983,7 +2865,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 10.2,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": null,
@@ -3341,7 +3223,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": -5,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": null,
@@ -3438,7 +3320,7 @@
           "model": "GPT-6 Astra",
           "provider": "OpenAI",
           "modelUrl": "https://artificialanalysis.ai/models/gpt-6-astra",
-          "score": 31.0,
+          "score": 31,
           "costPerTaskUsd": 2.0758207,
           "inputPerMillionUsd": 10,
           "outputPerMillionUsd": 50,
@@ -3451,7 +3333,7 @@
           "model": "GPT-6.1 Sol",
           "provider": "OpenAI",
           "modelUrl": "https://artificialanalysis.ai/models/gpt-6-1-sol",
-          "score": 31.0,
+          "score": 31,
           "costPerTaskUsd": 0.41986644,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 10,
@@ -3568,7 +3450,7 @@
           "model": "Gemini 3.8 Flash",
           "provider": "Google",
           "modelUrl": "https://artificialanalysis.ai/models/gemini-3-8-flash",
-          "score": 21.0,
+          "score": 21,
           "costPerTaskUsd": 0.1089613,
           "inputPerMillionUsd": 0.75,
           "outputPerMillionUsd": 3.75,
@@ -3607,7 +3489,7 @@
           "model": "Grok 4.7",
           "provider": "xAI",
           "modelUrl": "https://artificialanalysis.ai/models/grok-4-7",
-          "score": 20.0,
+          "score": 20,
           "costPerTaskUsd": 0.32434356,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 6,
@@ -3750,7 +3632,7 @@
           "model": "Nemotron 3.5 Super VL",
           "provider": "NVIDIA",
           "modelUrl": "https://artificialanalysis.ai/models/nemotron-3-5-super-vl",
-          "score": 8.0,
+          "score": 8,
           "costPerTaskUsd": 0.02021154,
           "inputPerMillionUsd": 0.2,
           "outputPerMillionUsd": 0.5,
@@ -3764,7 +3646,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 7.4,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": null,
@@ -3835,7 +3717,7 @@
           "model": "Gemini 4 Carbon",
           "provider": "Google",
           "modelUrl": "https://artificialanalysis.ai/models/gemini-4-carbon",
-          "score": 63.0,
+          "score": 63,
           "costPerTaskUsd": 3.90705276,
           "inputPerMillionUsd": 4,
           "outputPerMillionUsd": 20,
@@ -3848,7 +3730,7 @@
           "model": "Claude Opus 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://artificialanalysis.ai/models/claude-opus-5-5",
-          "score": 61.0,
+          "score": 61,
           "costPerTaskUsd": 2.5767134,
           "inputPerMillionUsd": 4,
           "outputPerMillionUsd": 20,
@@ -3861,7 +3743,7 @@
           "model": "Claude Sonnet 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
-          "score": 56.0,
+          "score": 56,
           "costPerTaskUsd": 1.9267416,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 10,
@@ -3874,7 +3756,7 @@
           "model": "Wonder Full",
           "provider": "Meta",
           "modelUrl": "https://artificialanalysis.ai/models/muse-wonder-full",
-          "score": 53.0,
+          "score": 53,
           "costPerTaskUsd": null,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -3887,7 +3769,7 @@
           "model": "Claude Fable 5.1",
           "provider": "Anthropic",
           "modelUrl": "https://artificialanalysis.ai/models/claude-fable-5-1",
-          "score": 51.0,
+          "score": 51,
           "costPerTaskUsd": 4.55290807,
           "inputPerMillionUsd": 10,
           "outputPerMillionUsd": 50,
@@ -3900,7 +3782,7 @@
           "model": "Wonder",
           "provider": "Meta",
           "modelUrl": "https://artificialanalysis.ai/models/muse-wonder",
-          "score": 48.0,
+          "score": 48,
           "costPerTaskUsd": 1.81355879,
           "inputPerMillionUsd": 4,
           "outputPerMillionUsd": 20,
@@ -3913,7 +3795,7 @@
           "model": "Kimi K3.1 Pro",
           "provider": "Moonshot AI",
           "modelUrl": "https://artificialanalysis.ai/models/kimi-k3-1-pro",
-          "score": 45.0,
+          "score": 45,
           "costPerTaskUsd": 0.70172416,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 10,
@@ -3952,7 +3834,7 @@
           "model": "Claude Haiku 5.5",
           "provider": "Anthropic",
           "modelUrl": "https://artificialanalysis.ai/models/claude-haiku-5-5",
-          "score": 41.0,
+          "score": 41,
           "costPerTaskUsd": 0.10132409,
           "inputPerMillionUsd": 0.1,
           "outputPerMillionUsd": 0.5,
@@ -3978,7 +3860,7 @@
           "model": "MiMo V2.6 Pro",
           "provider": "Xiaomi",
           "modelUrl": "https://artificialanalysis.ai/models/mimo-v2-6-pro",
-          "score": 34.0,
+          "score": 34,
           "costPerTaskUsd": 0.1651958,
           "inputPerMillionUsd": 0.435,
           "outputPerMillionUsd": 0.87,
@@ -4017,7 +3899,7 @@
           "model": "Grok 4.7",
           "provider": "xAI",
           "modelUrl": "https://artificialanalysis.ai/models/grok-4-7",
-          "score": 32.0,
+          "score": 32,
           "costPerTaskUsd": 2.23692054,
           "inputPerMillionUsd": 2,
           "outputPerMillionUsd": 6,
@@ -4030,7 +3912,7 @@
           "model": "MiniMax-M3.1-Flash",
           "provider": "MiniMax",
           "modelUrl": "https://artificialanalysis.ai/models/minimax-m3-1-flash",
-          "score": 31.0,
+          "score": 31,
           "costPerTaskUsd": 0.16646213,
           "inputPerMillionUsd": 0.15,
           "outputPerMillionUsd": 0.6,
@@ -4082,7 +3964,7 @@
           "model": "Mistral Large 4",
           "provider": "Mistral AI",
           "modelUrl": "https://artificialanalysis.ai/models/mistral-large-4",
-          "score": 26.0,
+          "score": 26,
           "costPerTaskUsd": 0.31573445,
           "inputPerMillionUsd": 0.7,
           "outputPerMillionUsd": 2.1,
@@ -4095,7 +3977,7 @@
           "model": "DeepSeek V4.1 Flash 1017",
           "provider": "DeepSeek",
           "modelUrl": "https://artificialanalysis.ai/models/deepseek-v4-1-flash-1017",
-          "score": 24.0,
+          "score": 24,
           "costPerTaskUsd": 0.20002992,
           "inputPerMillionUsd": 0.3,
           "outputPerMillionUsd": 1.2,
@@ -4108,7 +3990,7 @@
           "model": "Inkling",
           "provider": "Thinking Machines",
           "modelUrl": "https://artificialanalysis.ai/models/inkling",
-          "score": 18.0,
+          "score": 18,
           "costPerTaskUsd": 0.55174313,
           "inputPerMillionUsd": 1,
           "outputPerMillionUsd": 4.05,
@@ -4135,7 +4017,7 @@
           "provider": "Institute of Foundation Models",
           "modelUrl": "https://artificialanalysis.ai/models/k2-horizon-375b-a23b",
           "score": 11.5,
-          "costPerTaskUsd": 0.0,
+          "costPerTaskUsd": 0,
           "inputPerMillionUsd": 0,
           "outputPerMillionUsd": 0,
           "harness": "Stirrup",
@@ -4147,7 +4029,7 @@
           "model": "Qwen3.8 27B",
           "provider": "Alibaba",
           "modelUrl": "https://artificialanalysis.ai/models/qwen3-8-27b",
-          "score": 4.0,
+          "score": 4,
           "costPerTaskUsd": 0.52487461,
           "inputPerMillionUsd": 0.5,
           "outputPerMillionUsd": 3,
@@ -4214,7 +4096,7 @@
           "model": "Claude Fable 5.1",
           "provider": "Anthropic",
           "modelUrl": "https://www.vals.ai/models/anthropic_claude-fable-5-1",
-          "score": 28.0,
+          "score": 28,
           "costPerTaskUsd": 149.664612,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -4520,7 +4402,7 @@
           "model": "Muse Spark Open",
           "provider": "Meta",
           "modelUrl": "https://www.vals.ai/models/meta_muse-spark-open",
-          "score": 25.0,
+          "score": 25,
           "costPerTaskUsd": 13.6316,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,
@@ -4808,7 +4690,7 @@
           "model": "Mercury 3",
           "provider": "Inception",
           "modelUrl": "https://www.vals.ai/models/inception_mercury-3",
-          "score": 5.0,
+          "score": 5,
           "costPerTaskUsd": 0.188085,
           "inputPerMillionUsd": null,
           "outputPerMillionUsd": null,

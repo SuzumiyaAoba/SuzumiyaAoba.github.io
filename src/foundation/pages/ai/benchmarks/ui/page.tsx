@@ -32,7 +32,7 @@ export default function Page() {
             <div>
               <h1 className="page-title">AIモデルのベンチマーク</h1>
               <p className="mt-2 text-xs text-muted-foreground">
-                取得日{" "}
+                最終取得日{" "}
                 <time dateTime={dataset.retrievedAt}>
                   {dataset.retrievedAt}
                 </time>
@@ -42,6 +42,7 @@ export default function Page() {
               {modelCount} モデル · {dataset.benchmarks.length} ベンチマーク
             </p>
           </header>
+          <p className="text-sm text-muted-foreground">{dataset.selection}</p>
           <AiNavigation active="benchmarks" />
           <BenchmarkExplorer dataset={dataset} />
           <section className="space-y-4" aria-labelledby="benchmark-sources">

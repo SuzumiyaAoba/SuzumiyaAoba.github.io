@@ -24,6 +24,9 @@ export function BenchmarkHeader({ benchmark }: { benchmark: Benchmark }) {
       <p className="text-sm leading-relaxed text-muted-foreground">
         {benchmark.methodology}
       </p>
+      {benchmark.selection && (
+        <p className="text-sm text-muted-foreground">{benchmark.selection}</p>
+      )}
       {benchmark.archived && (
         <p className="text-xs text-muted-foreground">更新終了</p>
       )}

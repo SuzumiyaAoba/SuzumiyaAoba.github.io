@@ -1,6 +1,60 @@
 version: 1
-updated: "2026-11-12"
+updated: "2026-11-25"
 events:
+  - year: 2026
+    date: 2026-11-22
+    title_ja: "Sarvam-105B-1711 (重み公開)"
+    summary_ja: |
+      Sarvam 105B の新しいチェックポイントを公開。対話、ツール利用、インドの言語への対応を改善し、BF16 と NVFP4 の重みを提供する。
+
+      [Sarvam-105B-1711 の発表 | Sarvam AI](https://www.sarvam.ai/blogs/sarvam-105b-1711)
+    tags: ["Sarvam AI", "Sarvam", "Open Weight Model", "LLM Model"]
+    series: ["Sarvam"]
+  - year: 2026
+    date: 2026-11-20
+    title_ja: "Inkling 2 Mini (重み公開)"
+    summary_ja: |
+      Thinking Machines Lab がループ構造を用いた 26.4B のマルチモーダル MoE モデルを公開。テキストと画像を入力でき、重みは Apache 2.0 で提供する。
+
+      [Inkling 2 Mini の発表 | Thinking Machines Lab](https://thinkingmachines.ai/news/inkling-2-mini/) / [モデルカード](https://thinkingmachines.ai/model-card/inkling-2-mini/)
+    tags: ["Thinking Machines Lab", "Inkling", "Open Weight Model", "LLM Model"]
+    series: ["Inkling"]
+  - year: 2026
+    date: 2026-11-18
+    title_ja: "Gemini 4 Neon"
+    summary_ja: |
+      Google がコーディング、業務、科学の複雑なタスク向けモデルを発表。Gemini API や Gemini アプリなどで提供を開始した。
+
+      [Gemini 4 Neon の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Neon"]
+  - year: 2026
+    date: 2026-11-17
+    title_ja: "GPT-6.2 Astra / GPT-6.2 Sol"
+    summary_ja: |
+      OpenAI が高度な推論と専門業務向けの Astra と、高速で汎用的な Sol を発表。ChatGPT Work、Codex、API で提供を開始した。
+
+      [GPT-6.2 Astra と Sol の発表 | OpenAI](https://openai.com/index/introducing-gpt-6-2-astra-sol/) / [API のリリースノート](https://help.openai.com/en/articles/9624314-model-release-notes)
+    tags: ["OpenAI", "GPT", "LLM Model"]
+    series: ["GPT"]
+  - year: 2026
+    date: 2026-11-16
+    title_ja: "Qwen4-Max"
+    summary_ja: |
+      Alibaba が画像入力と100万トークンのコンテキストに対応する Qwen4-Max を公開。QwenCloud の API と Token Plan で提供を開始した。
+
+      [Qwen4-Max の発表 | Alibaba Cloud](https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max)
+    tags: ["Alibaba", "Qwen", "LLM Model"]
+    series: ["Qwen"]
+  - year: 2026
+    date: 2026-11-12
+    title_ja: "Gemini 4 Hydrogen"
+    summary_ja: |
+      Google が日常的なコーディングやエージェント処理向けの Gemini 4 Hydrogen を発表。Gemini API、Gemini アプリ、Google 検索などで提供する。
+
+      [Gemini 4 Hydrogen の発表 | Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/)
+    tags: ["Google", "Gemini", "LLM Model"]
+    series: ["Gemini Hydrogen"]
   - year: 2026
     date: 2026-11-11
     title_ja: "Gemini Decision 1 (API)"
@@ -98,7 +152,8 @@ events:
       NVIDIA が自動運転向けの2B推論 VLA モデルの重みを OpenMDW-1.1 で公開。車載映像、自己位置の履歴、ナビゲーション指示から運転軌跡と因果説明を生成し、DRIVE AGX Thor 向けの推論最適化にも対応する。
 
       [Alpamayo 2 Edge のモデルカードと公開日 | NVIDIA](https://huggingface.co/nvidia/Alpamayo2-Edge) / [推論と提供情報 | NVIDIA Developer](https://developer.nvidia.com/blog/running-av-reasoning-models-within-onboard-compute-and-latency-limits/)
-    tags: ["NVIDIA", "Alpamayo", "Open Weight Model", "Autonomous Driving Model"]
+    tags:
+      ["NVIDIA", "Alpamayo", "Open Weight Model", "Autonomous Driving Model"]
     series: ["Alpamayo"]
   - year: 2026
     date: 2026-11-10
@@ -242,7 +297,14 @@ events:
       Preferred Networks が翻訳特化モデルを0.8B・2B・8B・31Bの4サイズで公開。53言語に対応し、PLaMo Community License の下で端末や社内サーバー上のオフライン翻訳に利用できる。
 
       [PLaMo 3 Translate の重み公開 | Preferred Networks](https://www.preferred.jp/en/news/pr20261105)
-    tags: ["Preferred Networks", "PLaMo", "Japanese", "Open Weight Model", "Translation Model"]
+    tags:
+      [
+        "Preferred Networks",
+        "PLaMo",
+        "Japanese",
+        "Open Weight Model",
+        "Translation Model",
+      ]
     series: ["PLaMo Translation"]
   - year: 2026
     date: 2026-11-05
@@ -1926,7 +1988,8 @@ events:
     series: ["Claude Sonnet"]
     model_specs:
       - name: "Claude Sonnet 5"
-        effective_capacity: { value: "~584B (90% interval: 183B–1.9T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~584B (90% interval: 183B–1.9T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -1966,7 +2029,8 @@ events:
     series: ["GLM"]
     model_specs:
       - name: "GLM-5.2"
-        effective_capacity: { value: "~1.0T (90% interval: 326B–3.3T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~1.0T (90% interval: 326B–3.3T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -1979,7 +2043,8 @@ events:
     series: ["Claude Fable", "Claude Mythos"]
     model_specs:
       - name: "Claude Fable 5"
-        effective_capacity: { value: "~3.5T (90% interval: 1.1T–11.2T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~3.5T (90% interval: 1.1T–11.2T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2037,7 +2102,8 @@ events:
     series: ["MiniMax"]
     model_specs:
       - name: "MiniMax M3"
-        effective_capacity: { value: "~313B (90% interval: 98B–1.0T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~313B (90% interval: 98B–1.0T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2059,7 +2125,8 @@ events:
     series: ["Claude Opus"]
     model_specs:
       - name: "Claude Opus 4.8"
-        effective_capacity: { value: "~236B (90% interval: 74B–753B)", basis: "estimated" }
+        effective_capacity:
+          { value: "~236B (90% interval: 74B–753B)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2084,7 +2151,8 @@ events:
     series: ["Qwen Max"]
     model_specs:
       - name: "Qwen3.7 Max"
-        effective_capacity: { value: "~887B (90% interval: 277B–2.8T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~887B (90% interval: 277B–2.8T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2152,11 +2220,13 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5.5"
-        effective_capacity: { value: "~4.7T (90% interval: 1.5T–15.1T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~4.7T (90% interval: 1.5T–15.1T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
       - name: "GPT-5.5 Pro"
-        effective_capacity: { value: "~5.3T (90% interval: 1.7T–17.1T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~5.3T (90% interval: 1.7T–17.1T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2222,7 +2292,8 @@ events:
     series: ["Claude Opus"]
     model_specs:
       - name: "Claude Opus 4.7 (thinking)"
-        effective_capacity: { value: "~738B (90% interval: 231B–2.4T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~738B (90% interval: 231B–2.4T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2313,14 +2384,16 @@ events:
         source_title: "Gemma 4 model card"
       - name: "Gemma 4 E2B"
         architecture: "Dense"
-        total_parameters: { value: "5.1B including embeddings", basis: "published" }
+        total_parameters:
+          { value: "5.1B including embeddings", basis: "published" }
         effective_parameters: { value: "2.3B", basis: "published" }
         layers: { value: "35", basis: "published" }
         source_url: "https://gemma.ai/models/gemma-4/model-card/"
         source_title: "Gemma 4 model card"
       - name: "Gemma 4 E4B"
         architecture: "Dense"
-        total_parameters: { value: "8B including embeddings", basis: "published" }
+        total_parameters:
+          { value: "8B including embeddings", basis: "published" }
         effective_parameters: { value: "4.5B", basis: "published" }
         layers: { value: "42", basis: "published" }
         source_url: "https://gemma.ai/models/gemma-4/model-card/"
@@ -2405,11 +2478,13 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5.4"
-        effective_capacity: { value: "~1.1T (90% interval: 334B–3.4T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~1.1T (90% interval: 334B–3.4T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
       - name: "GPT-5.4 Pro"
-        effective_capacity: { value: "~2.4T (90% interval: 744B–7.6T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.4T (90% interval: 744B–7.6T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2422,7 +2497,8 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5.3"
-        effective_capacity: { value: "~1.1T (90% interval: 330B–3.4T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~1.1T (90% interval: 330B–3.4T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2497,7 +2573,8 @@ events:
     series: ["Claude Sonnet"]
     model_specs:
       - name: "Claude Sonnet 4.6 (thinking)"
-        effective_capacity: { value: "~766B (90% interval: 240B–2.5T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~766B (90% interval: 240B–2.5T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2554,7 +2631,8 @@ events:
     series: ["Claude Opus"]
     model_specs:
       - name: "Claude Opus 4.6 (thinking)"
-        effective_capacity: { value: "~1.6T (90% interval: 503B–5.1T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~1.6T (90% interval: 503B–5.1T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2666,7 +2744,8 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5.2 Pro"
-        effective_capacity: { value: "~639B (90% interval: 200B–2.0T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~639B (90% interval: 200B–2.0T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2745,7 +2824,8 @@ events:
     series: ["Claude Opus"]
     model_specs:
       - name: "Claude Opus 4.5"
-        effective_capacity: { value: "~892B (90% interval: 279B–2.9T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~892B (90% interval: 279B–2.9T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -2824,7 +2904,8 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5.1"
-        effective_capacity: { value: "~634B (90% interval: 198B–2.0T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~634B (90% interval: 198B–2.0T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3005,7 +3086,8 @@ events:
     series: ["Qwen Max"]
     model_specs:
       - name: "Qwen3 Max"
-        effective_capacity: { value: "~606B (90% interval: 189B–1.9T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~606B (90% interval: 189B–1.9T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3152,11 +3234,13 @@ events:
     series: ["GPT"]
     model_specs:
       - name: "GPT-5 (thinking)"
-        effective_capacity: { value: "~2.0T (90% interval: 614B–6.3T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.0T (90% interval: 614B–6.3T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
       - name: "GPT-5 Pro"
-        effective_capacity: { value: "~2.1T (90% interval: 657B–6.7T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.1T (90% interval: 657B–6.7T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3184,7 +3268,8 @@ events:
     series: ["Claude Opus"]
     model_specs:
       - name: "Claude Opus 4.1 (thinking)"
-        effective_capacity: { value: "~847B (90% interval: 265B–2.7T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~847B (90% interval: 265B–2.7T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3359,7 +3444,8 @@ events:
     series: ["Grok"]
     model_specs:
       - name: "Grok 4"
-        effective_capacity: { value: "~2.0T (90% interval: 619B–6.3T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.0T (90% interval: 619B–6.3T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3556,7 +3642,8 @@ events:
     series: ["Gemini Pro"]
     model_specs:
       - name: "Gemini 2.5 Pro"
-        effective_capacity: { value: "~3.0T (90% interval: 943B–9.6T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~3.0T (90% interval: 943B–9.6T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3644,7 +3731,8 @@ events:
     model_specs:
       - name: "Qwen3 (0.6B–235B)"
         architecture: "Dense / MoE"
-        total_parameters: { value: "0.6B–235B (family range)", basis: "published" }
+        total_parameters:
+          { value: "0.6B–235B (family range)", basis: "published" }
         source_url: "https://github.com/QwenLM/Qwen3#news"
         source_title: "Qwen3 (0.6B–235B) の公式発表・公開情報 | Alibaba"
 
@@ -3664,7 +3752,8 @@ events:
     series: ["OpenAI o-series"]
     model_specs:
       - name: "OpenAI o3"
-        effective_capacity: { value: "~2.1T (90% interval: 650B–6.7T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.1T (90% interval: 650B–6.7T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3694,7 +3783,8 @@ events:
     series: ["GPT", "GPT mini", "GPT nano"]
     model_specs:
       - name: "GPT-4.1"
-        effective_capacity: { value: "~2.2T (90% interval: 677B–6.9T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.2T (90% interval: 677B–6.9T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -3939,7 +4029,8 @@ events:
     series: ["Grok", "Grok mini"]
     model_specs:
       - name: "Grok 3"
-        effective_capacity: { value: "~2.1T (90% interval: 642B–6.6T)", basis: "estimated" }
+        effective_capacity:
+          { value: "~2.1T (90% interval: 642B–6.6T)", basis: "estimated" }
         source_url: "https://arxiv.org/abs/2604.24827"
         source_title: "IKP study: effective-capacity estimate in open-model equivalents, 90% prediction interval"
 
@@ -4259,7 +4350,8 @@ events:
     series: ["Qwen Coder"]
     model_specs:
       - name: "Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B)"
-        total_parameters: { value: "0.5B / 1.5B / 3B / 7B / 14B / 32B", basis: "published" }
+        total_parameters:
+          { value: "0.5B / 1.5B / 3B / 7B / 14B / 32B", basis: "published" }
         source_url: "https://qwenlm.github.io/blog/qwen2.5-coder-family/"
         source_title: "Qwen2.5-Coder (0.5B, 1.5B, 3B, 7B, 14B, 32B) の公式発表・公開情報 | Alibaba"
 
